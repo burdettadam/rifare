@@ -1,0 +1,45 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Rifare: verify starter",
+      "type": "process",
+      "command": "python3",
+      "args": [
+        "tools/verify.py"
+      ],
+      "windows": {
+        "command": "py",
+        "args": [
+          "-3",
+          "tools/verify.py"
+        ]
+      },
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Rifare: render goals",
+      "type": "process",
+      "command": "python3",
+      "args": [
+        "tools/render_plan.py",
+        "--root",
+        "."
+      ],
+      "windows": {
+        "command": "py",
+        "args": [
+          "-3",
+          "tools/render_plan.py",
+          "--root",
+          "."
+        ]
+      },
+      "problemMatcher": []
+    }
+  ]
+}

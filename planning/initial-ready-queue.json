@@ -1,0 +1,7 @@
+{
+  "state": "not_started",
+  "can_begin_drafting": [
+    "M00-G01"
+  ],
+  "note": "Only the initial charter goal has no dependencies. No goal is preaccepted, assigned or authorized for external side effects."
+}

@@ -1,0 +1,7 @@
+{
+  "schema_version": "1.0",
+  "note": "EMPTY INITIAL TEMPLATE, not an accepted product baseline. Populate only through protected maintainer acceptance after real tests exist.",
+  "source_sha": null,
+  "test_obligations": [],
+  "capabilities": []
+}

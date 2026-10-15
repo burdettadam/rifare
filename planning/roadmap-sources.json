@@ -1,0 +1,48 @@
+{
+  "checked_on": "2026-10-15",
+  "sources": [
+    {
+      "id": "S01",
+      "title": "Agent Skills specification",
+      "url": "https://agentskills.io/specification",
+      "note": "Standard SKILL.md structure and experimental allowed-tools; not our commerce manifest."
+    },
+    {
+      "id": "S02",
+      "title": "Adding skills support",
+      "url": "https://agentskills.io/client-implementation/adding-skills-support",
+      "note": "File-based and content-tool delivery; progressive disclosure."
+    },
+    {
+      "id": "S03",
+      "title": "MCP authorization",
+      "url": "https://modelcontextprotocol.io/specification/2026-07-28/basic/authorization",
+      "note": "Audience-bound credentials and separation of upstream tokens."
+    },
+    {
+      "id": "S04",
+      "title": "Shopify returns apps",
+      "url": "https://shopify.dev/docs/apps/build/orders-fulfillment/returns-apps",
+      "note": "Native return/reverse-fulfillment lifecycle and returnProcess."
+    },
+    {
+      "id": "S05",
+      "title": "Shopify order editing",
+      "url": "https://shopify.dev/docs/apps/build/orders-fulfillment/order-management-apps/edit-orders",
+      "note": "Begin/edit/commit, scopes and supported order constraints."
+    },
+    {
+      "id": "S06",
+      "title": "Shopify webhooks",
+      "url": "https://shopify.dev/docs/apps/build/webhooks",
+      "note": "Event delivery behavior and reconciliation."
+    },
+    {
+      "id": "S07",
+      "title": "WooCommerce order refunds v3",
+      "url": "https://developer.woocommerce.com/docs/apis/rest-api/v3/order-refunds",
+      "note": "Refund resources and api_refund behavior; not general native return parity."
+    }
+  ],
+  "note": "Implementation references retained from the planning baseline. Reverify versions and capabilities during the owning development goal; not implementation evidence."
+}

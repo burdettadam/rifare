@@ -1,0 +1,33 @@
+{
+  "schema_version": "0.1",
+  "platform": "shopify",
+  "version": "0.1.0",
+  "status": "design_example_unverified",
+  "tested_api_version": null,
+  "operations": {
+    "orders.get": {
+      "state": "unverified"
+    },
+    "returns.create-request": {
+      "state": "unverified",
+      "intended_mapping": "native return record"
+    },
+    "refunds.execute": {
+      "state": "unverified",
+      "requires": [
+        "gateway qualification",
+        "amount preview",
+        "authorization",
+        "outcome reconciliation"
+      ]
+    },
+    "orders.commit-edit": {
+      "state": "unverified",
+      "requires": [
+        "confirmed fulfillment protection",
+        "qualified payment workflow"
+      ]
+    }
+  },
+  "unsupported_behavior": "unverified capabilities cannot be enabled for production writes"
+}

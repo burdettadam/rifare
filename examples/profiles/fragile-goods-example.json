@@ -1,0 +1,31 @@
+{
+  "schema_version": "0.1",
+  "profile_id": "fragile-goods-example",
+  "base_skill": "handle-return@0.1.0",
+  "platform_pack": "woocommerce@0.1.0",
+  "locale": "en-US",
+  "tone": "formal",
+  "returns": {
+    "window_days": 14,
+    "excluded_tags": [
+      "custom-made"
+    ],
+    "evidence_reasons": [
+      "damaged",
+      "wrong-item"
+    ],
+    "outcomes": [
+      "refund"
+    ],
+    "review_above_minor": 5000,
+    "currency": "USD"
+  },
+  "authority": {
+    "autonomy": "approval_required",
+    "platform_capabilities_override": false,
+    "publish_requires_human": true
+  },
+  "secrets": {
+    "commerce_account": "secret-ref:EXAMPLE-NOT-A-CREDENTIAL"
+  }
+}

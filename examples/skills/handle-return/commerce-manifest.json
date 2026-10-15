@@ -1,0 +1,30 @@
+{
+  "schema_version": "0.1",
+  "package": "handle-return",
+  "version": "0.1.0",
+  "contract_version": "0.1",
+  "status": "design_example_not_executable",
+  "instructions": "SKILL.md",
+  "required_actions": [
+    "orders.get",
+    "returns.evaluate-eligibility",
+    "returns.preview",
+    "returns.create-request",
+    "operations.get"
+  ],
+  "optional_actions": [
+    "support.handoff"
+  ],
+  "configuration_schema": "../../profile.schema.json",
+  "resource_paths": [
+    "references/workflow.md",
+    "references/platform-notes.md"
+  ],
+  "capability_requirements": [
+    "structured_action_proposals",
+    "source_reference_preservation"
+  ],
+  "default_autonomy": "approval_required",
+  "scripts_enabled": false,
+  "notes": "This companion manifest is an Rifare proposal, not a field set standardized by Agent Skills. Runtime authorization is enforced outside this file."
+}

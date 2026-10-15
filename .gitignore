@@ -1,0 +1,39 @@
+# Local credentials and runtime state
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Generated evidence is not source
+/evidence/
+/validation/
+/artifacts/
+/coverage/
+/test-results/
+/playwright-report/
+*.log
+
+# Host/tool caches and future build outputs
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+node_modules/
+dist/
+build/
+.DS_Store
+Thumbs.db
+*.swp
+*.tmp
+
+# Worktrees and local agent configuration
+.worktrees/
+.codex/config.local.toml
+.claude/settings.local.json
+
+# Local repository exports
+*.bundle
+*.zip

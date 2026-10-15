@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "name": "Rifare",
+  "slug": "rifare",
+  "stage": "planning_starter",
+  "purpose": "Merchant-owned commerce operations with tailorable skills and independent platforms, agents and models.",
+  "initial_goal_id": "M00-G01",
+  "default_branch": "main",
+  "publication": "local_only_no_remote",
+  "product_implemented": false,
+  "product_tests_executed": 0,
+  "license_decision_goal": "M00-G03",
+  "workflow": {
+    "source": "ElevenID/git-agent",
+    "version": "0.2.1",
+    "revision": "2ead37bfe9bf28489816bfdd4deeea137e23fa37",
+    "adoption": "reviewed_instruction_adaptation",
+    "initializer_executed": false
+  },
+  "counts": {
+    "milestones": 13,
+    "worker_goals": 190,
+    "acceptance_gates": 13,
+    "requirements": 151,
+    "test_specifications": 676,
+    "capability_targets": 44
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "schema_version": "0.1",
+  "profile_id": "apparel-example",
+  "base_skill": "handle-return@0.1.0",
+  "platform_pack": "shopify@0.1.0",
+  "locale": "en-US",
+  "tone": "warm",
+  "returns": {
+    "window_days": 30,
+    "excluded_tags": [
+      "final-sale"
+    ],
+    "evidence_reasons": [
+      "damaged"
+    ],
+    "outcomes": [
+      "refund",
+      "variant_exchange"
+    ],
+    "review_above_minor": 5000,
+    "currency": "USD"
+  },
+  "authority": {
+    "autonomy": "approval_required",
+    "platform_capabilities_override": false,
+    "publish_requires_human": true
+  },
+  "secrets": {
+    "commerce_account": "secret-ref:EXAMPLE-NOT-A-CREDENTIAL"
+  }
+}

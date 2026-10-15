@@ -1,0 +1,154 @@
+{
+  "status": "proposed",
+  "invariants": [
+    {
+      "id": "INV-01",
+      "name": "Tenant and verified-customer boundaries",
+      "introduced_by": "M01-G01",
+      "extended_by": [
+        "M01-G02",
+        "M02-G10",
+        "M12-G01"
+      ],
+      "oracle": "No cross-tenant/customer resource or secret access, including errors, logs, jobs and files."
+    },
+    {
+      "id": "INV-02",
+      "name": "Secrets and egress stay outside model authority",
+      "introduced_by": "M01-G03",
+      "extended_by": [
+        "M02-G20",
+        "M05-G10"
+      ],
+      "oracle": "Only approved server adapters resolve credentials and approved destinations receive allowed data."
+    },
+    {
+      "id": "INV-03",
+      "name": "Money, stock and authority are deterministic",
+      "introduced_by": "M02-G02",
+      "extended_by": [
+        "M02-G10",
+        "M03-G06",
+        "M08-G08"
+      ],
+      "oracle": "Exact currency-aware paid/quantity limits, current policy and native evidence determine effects; never generated prose."
+    },
+    {
+      "id": "INV-04",
+      "name": "Approval is bound and revocable",
+      "introduced_by": "M02-G11",
+      "extended_by": [
+        "M02-G21",
+        "M11-G06"
+      ],
+      "oracle": "Resource/configuration/amount changes or current revocation invalidate permission before execution."
+    },
+    {
+      "id": "INV-05",
+      "name": "Unknown effects reconcile before retries",
+      "introduced_by": "M02-G15",
+      "extended_by": [
+        "M03-G08",
+        "M04-G08",
+        "M08-G02"
+      ],
+      "oracle": "Stable operation identity and source records prevent blindly repeating uncertain financial/physical effects."
+    },
+    {
+      "id": "INV-06",
+      "name": "Ownership is fenced at actions and messages",
+      "introduced_by": "M02-G18",
+      "extended_by": [
+        "M05-G11",
+        "M07-G04"
+      ],
+      "oracle": "Late previous workers cannot mutate or speak for a case after ownership changes."
+    },
+    {
+      "id": "INV-07",
+      "name": "Skills tailor guidance, not permission",
+      "introduced_by": "M02-G05",
+      "extended_by": [
+        "M02-G10",
+        "M06-G14",
+        "M12-G02"
+      ],
+      "oracle": "Profile text cannot override capabilities/security; one base skill works across declared merchant profiles."
+    },
+    {
+      "id": "INV-08",
+      "name": "No-AI path remains available",
+      "introduced_by": "M01-G12",
+      "extended_by": [
+        "M03-G19",
+        "M04-G11",
+        "M07-G10"
+      ],
+      "oracle": "Every released deterministic operational action remains usable with models disabled; generated-only features have explicit limits."
+    },
+    {
+      "id": "INV-09",
+      "name": "Agent, model and platform portability",
+      "introduced_by": "M01-G14",
+      "extended_by": [
+        "M01-G15",
+        "M02-G26",
+        "M07-G04"
+      ],
+      "oracle": "Qualified substitutions preserve business records/actions/policies; unsupported configurations fail closed, not silently downgrade."
+    },
+    {
+      "id": "INV-10",
+      "name": "Consent and privacy survive queued work and restore",
+      "introduced_by": "M02-G24",
+      "extended_by": [
+        "M05-G06",
+        "M07-G14"
+      ],
+      "oracle": "Final send checks and storage-wide lifecycle controls prevent stale permission or restored deleted data."
+    },
+    {
+      "id": "INV-11",
+      "name": "Fulfillment is independent of payment and return status",
+      "introduced_by": "M03-G15",
+      "extended_by": [
+        "M04-G03",
+        "M04-G08",
+        "M08-G05"
+      ],
+      "oracle": "Delivered is not inspected; invoiced is not paid; manifested is not accepted; foreign holds cannot be cleared."
+    },
+    {
+      "id": "INV-12",
+      "name": "Missing evidence cannot become a success claim",
+      "introduced_by": "M00-G08",
+      "extended_by": [
+        "M07-G06",
+        "M07-G18",
+        "M10-G01"
+      ],
+      "oracle": "No app-test pass from a planning validator, no settlement from a record alone, no partnership/live pilot from a simulation."
+    },
+    {
+      "id": "INV-13",
+      "name": "Accepted features and tests cannot silently disappear",
+      "introduced_by": "M00-G07",
+      "extended_by": [
+        "M07-G99",
+        "M12-G06"
+      ],
+      "oracle": "Trusted baseline flags missing/disabled/reidentified obligations and protected oracle changes; independent review governs rebaselining."
+    },
+    {
+      "id": "INV-14",
+      "name": "Safe restore, migration and case continuity",
+      "introduced_by": "M02-G25",
+      "extended_by": [
+        "M07-G07",
+        "M07-G08",
+        "M12-G05"
+      ],
+      "oracle": "Restore/import start effect-disabled; one system owns writes; source facts and approved semantics remain recoverable."
+    }
+  ]
+}

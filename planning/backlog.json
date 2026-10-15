@@ -1,0 +1,4216 @@
+{
+  "plan_version": "0.1.0",
+  "status": "not_started",
+  "note": "Milestone is final acceptance point; thin slices may ship earlier. Existing BUILD IDs preserve research traceability. No product implementation is claimed.",
+  "items": [
+    {
+      "id": "BUILD-001",
+      "domain": "Foundation",
+      "priority": "P0",
+      "title": "Tenant and store isolation",
+      "acceptance_criteria": "A request authenticated to store A cannot enumerate, read or mutate store B through APIs, files, search, logs or worker jobs.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M01",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M00"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "A",
+      "source_requirement_id": "BUILD-001",
+      "acceptance_test_ids": [
+        "TEST-002",
+        "TEST-026",
+        "TEST-033",
+        "PORT-001"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-002",
+      "domain": "Foundation",
+      "priority": "P0",
+      "title": "Operator identity and roles",
+      "acceptance_criteria": "Owner, operator, reviewer, integration and agent roles have separately testable permissions; privileged changes produce audit events.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M02",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M01"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "A",
+      "source_requirement_id": "BUILD-002",
+      "acceptance_test_ids": [
+        "TEST-003",
+        "TEST-004",
+        "TEST-005",
+        "TEST-006"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-003",
+      "domain": "Foundation",
+      "priority": "P0",
+      "title": "Credential vault",
+      "acceptance_criteria": "Provider and operational secrets are encrypted with a separately managed wrapping key; APIs return opaque references rather than plaintext credentials.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M01",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M00"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "A",
+      "source_requirement_id": "BUILD-003",
+      "acceptance_test_ids": [
+        "TEST-002",
+        "TEST-026",
+        "TEST-033",
+        "PORT-001"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-004",
+      "domain": "Foundation",
+      "priority": "P0",
+      "title": "Credential rotation and revocation",
+      "acceptance_criteria": "Rotation supports safe cutover and revocation immediately blocks new work; secrets never enter model prompts or browser bundles.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M02",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M01"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "A",
+      "source_requirement_id": "BUILD-004",
+      "acceptance_test_ids": [
+        "TEST-003",
+        "TEST-004",
+        "TEST-005",
+        "TEST-006"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-005",
+      "domain": "Foundation",
+      "priority": "P0",
+      "title": "Capability registry",
+      "acceptance_criteria": "Each adapter declares supported operations, scopes, markets, resource states and API versions; unavailable actions stay unavailable to agents.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M01",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M00"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "A",
+      "source_requirement_id": "BUILD-005",
+      "acceptance_test_ids": [
+        "TEST-002",
+        "TEST-026",
+        "TEST-033",
+        "PORT-001"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-006",
+      "domain": "Foundation",
+      "priority": "P0",
+      "title": "Canonical commerce identifiers",
+      "acceptance_criteria": "Every resource stores tenant, source system, external ID and version/freshness metadata; cross-store ID collisions are harmless.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M01",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M00"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "A",
+      "source_requirement_id": "BUILD-006",
+      "acceptance_test_ids": [
+        "TEST-002",
+        "TEST-026",
+        "TEST-033",
+        "PORT-001"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-007",
+      "domain": "Foundation",
+      "priority": "P0",
+      "title": "Authenticated webhooks",
+      "acceptance_criteria": "Verify signature over original bytes, tenant routing and payload limits; persist accepted events before acknowledging delivery.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M02",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M01"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "A",
+      "source_requirement_id": "BUILD-007",
+      "acceptance_test_ids": [
+        "TEST-003",
+        "TEST-004",
+        "TEST-005",
+        "TEST-006"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-008",
+      "domain": "Foundation",
+      "priority": "P0",
+      "title": "Durable inbox and deduplication",
+      "acceptance_criteria": "Duplicate deliveries do not create duplicate cases, notifications, labels, exchanges or refunds.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M02",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M01"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "A",
+      "source_requirement_id": "BUILD-008",
+      "acceptance_test_ids": [
+        "TEST-003",
+        "TEST-004",
+        "TEST-005",
+        "TEST-006"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-009",
+      "domain": "Foundation",
+      "priority": "P0",
+      "title": "Outbox and retry control",
+      "acceptance_criteria": "Committed state changes emit durable work; retries are bounded, observable and separated from ambiguous remote outcomes.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M02",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M01"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "A",
+      "source_requirement_id": "BUILD-009",
+      "acceptance_test_ids": [
+        "TEST-003",
+        "TEST-004",
+        "TEST-005",
+        "TEST-006"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-010",
+      "domain": "Foundation",
+      "priority": "P0",
+      "title": "Reconciliation and drift queue",
+      "acceptance_criteria": "Pull authoritative changed resources periodically and surface mismatches with human repair tools.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M02",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M01"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "A",
+      "source_requirement_id": "BUILD-010",
+      "acceptance_test_ids": [
+        "TEST-003",
+        "TEST-004",
+        "TEST-005",
+        "TEST-006"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-011",
+      "domain": "Foundation",
+      "priority": "P0",
+      "title": "Money representation",
+      "acceptance_criteria": "Use decimal strings or currency-aware minor units, explicit currency, rounding policy and original/presentment amounts; never binary float money.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M02",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M01"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "A",
+      "source_requirement_id": "BUILD-011",
+      "acceptance_test_ids": [
+        "TEST-003",
+        "TEST-004",
+        "TEST-005",
+        "TEST-006"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-012",
+      "domain": "Foundation",
+      "priority": "P0",
+      "title": "Immutable operational audit",
+      "acceptance_criteria": "Append-only minimized operation receipts retain actor, action, state/configuration versions, approval and result references; redact sensitive payload stores by retention policy rather than promise immutable personal data.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M02",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M01"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "A",
+      "source_requirement_id": "BUILD-012",
+      "acceptance_test_ids": [
+        "TEST-003",
+        "TEST-004",
+        "TEST-005",
+        "TEST-006"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-013",
+      "domain": "Foundation",
+      "priority": "P0",
+      "title": "Policy versioning",
+      "acceptance_criteria": "Policies are validated structured data with draft, test, approved and published states; a natural-language policy draft cannot publish itself.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M02",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M01"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "A",
+      "source_requirement_id": "BUILD-013",
+      "acceptance_test_ids": [
+        "TEST-003",
+        "TEST-004",
+        "TEST-005",
+        "TEST-006"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-014",
+      "domain": "Foundation",
+      "priority": "P0",
+      "title": "Privacy lifecycle",
+      "acceptance_criteria": "Support data export/redaction, retention and uninstall cleanup across primary data, attachments, search indexes and agent memory.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M02",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M01"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "A",
+      "source_requirement_id": "BUILD-014",
+      "acceptance_test_ids": [
+        "TEST-003",
+        "TEST-004",
+        "TEST-005",
+        "TEST-006"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-015",
+      "domain": "Foundation",
+      "priority": "P0",
+      "title": "Backup and restore",
+      "acceptance_criteria": "Restore database, attachments and credential access in an isolated rehearsal without replaying live financial side effects.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M02",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M01"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "A",
+      "source_requirement_id": "BUILD-015",
+      "acceptance_test_ids": [
+        "TEST-003",
+        "TEST-004",
+        "TEST-005",
+        "TEST-006"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-016",
+      "domain": "Customer and operator surfaces",
+      "priority": "P0",
+      "title": "Customer order authentication",
+      "acceptance_criteria": "Require a verified customer session or scoped challenge; knowing an order number and email alone must not grant unrestricted actions.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M01",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M00"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "A",
+      "source_requirement_id": "BUILD-016",
+      "acceptance_test_ids": [
+        "TEST-002",
+        "TEST-026",
+        "TEST-033",
+        "PORT-001"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-017",
+      "domain": "Customer and operator surfaces",
+      "priority": "P0",
+      "title": "Branded self-service portal",
+      "acceptance_criteria": "Show eligible line items, allowed outcomes, policy explanations, exact fees and a human-contact path on mobile and keyboard-only input.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M03",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M02"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "A",
+      "source_requirement_id": "BUILD-017",
+      "acceptance_test_ids": [
+        "TEST-001",
+        "TEST-012",
+        "TEST-017",
+        "TEST-018"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-018",
+      "domain": "Customer and operator surfaces",
+      "priority": "P0",
+      "title": "Operator exception queue",
+      "acceptance_criteria": "List stale, blocked, high-risk and ambiguous cases with ownership, next action and complete execution timeline.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M02",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M01"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "A",
+      "source_requirement_id": "BUILD-018",
+      "acceptance_test_ids": [
+        "TEST-003",
+        "TEST-004",
+        "TEST-005",
+        "TEST-006"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-019",
+      "domain": "Customer and operator surfaces",
+      "priority": "P0",
+      "title": "Configuration readiness checks",
+      "acceptance_criteria": "A store cannot enable monetary autonomy until required scopes, accounts, fulfillment adapter and sandbox tests pass.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M02",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M01"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "A",
+      "source_requirement_id": "BUILD-019",
+      "acceptance_test_ids": [
+        "TEST-003",
+        "TEST-004",
+        "TEST-005",
+        "TEST-006"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-020",
+      "domain": "Customer and operator surfaces",
+      "priority": "P0",
+      "title": "Store simulator",
+      "acceptance_criteria": "Demo catalog, customers, shipments and payments are synthetic and isolated; replaying a recorded case cannot contact production providers.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M01",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M00"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "A",
+      "source_requirement_id": "BUILD-020",
+      "acceptance_test_ids": [
+        "TEST-002",
+        "TEST-026",
+        "TEST-033",
+        "PORT-001"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-021",
+      "domain": "Returns and exchanges",
+      "priority": "P0",
+      "title": "Eligibility evaluator",
+      "acceptance_criteria": "Return a structured allow/deny/review decision with item quantities, policy version, deadlines, reasoning codes and evidence requirements.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M03",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M02"
+      ],
+      "depends_on": [
+        "SKILL-005"
+      ],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "B",
+      "source_requirement_id": "BUILD-021",
+      "acceptance_test_ids": [
+        "TEST-001",
+        "TEST-012",
+        "TEST-017",
+        "TEST-018"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-022",
+      "domain": "Returns and exchanges",
+      "priority": "P0",
+      "title": "Return draft and native record",
+      "acceptance_criteria": "Approved return intent creates or links a native platform return and reverse-fulfillment record; manual platform changes are synchronized.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M03",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M02"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "B",
+      "source_requirement_id": "BUILD-022",
+      "acceptance_test_ids": [
+        "TEST-001",
+        "TEST-012",
+        "TEST-017",
+        "TEST-018"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-023",
+      "domain": "Returns and exchanges",
+      "priority": "P0",
+      "title": "Item-level mixed outcomes",
+      "acceptance_criteria": "A single case can contain refund, exchange and credit outcomes without confusing remaining quantities or balances.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M03",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M02"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "B",
+      "source_requirement_id": "BUILD-023",
+      "acceptance_test_ids": [
+        "TEST-001",
+        "TEST-012",
+        "TEST-017",
+        "TEST-018"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-024",
+      "domain": "Returns and exchanges",
+      "priority": "P0",
+      "title": "Reasons and evidence",
+      "acceptance_criteria": "Support structured reasons plus free text/photos, scoped attachment access, type/size validation, malware handling and retention.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M03",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M02"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "B",
+      "source_requirement_id": "BUILD-024",
+      "acceptance_test_ids": [
+        "TEST-001",
+        "TEST-012",
+        "TEST-017",
+        "TEST-018"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-025",
+      "domain": "Returns and exchanges",
+      "priority": "P0",
+      "title": "Human review and overrides",
+      "acceptance_criteria": "A reviewer can request evidence or override a policy with a recorded reason; the shopper sees an accurate status and appeal path.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M03",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M02"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "B",
+      "source_requirement_id": "BUILD-025",
+      "acceptance_test_ids": [
+        "TEST-001",
+        "TEST-012",
+        "TEST-017",
+        "TEST-018"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-026",
+      "domain": "Returns and exchanges",
+      "priority": "P0",
+      "title": "Refund quote",
+      "acceptance_criteria": "Show original paid allocation, discounts, shipping, duties, fees and tax before execution; quote expires when underlying resources change.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M03",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M02"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "B",
+      "source_requirement_id": "BUILD-026",
+      "acceptance_test_ids": [
+        "TEST-001",
+        "TEST-012",
+        "TEST-017",
+        "TEST-018"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-027",
+      "domain": "Returns and exchanges",
+      "priority": "P0",
+      "title": "Refund execution",
+      "acceptance_criteria": "Verify authorization, refundable balance and current payment state; reconcile timeout ambiguity before any resubmission.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M03",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M02"
+      ],
+      "depends_on": [
+        "BUILD-026",
+        "BUILD-044",
+        "BUILD-045",
+        "BUILD-010"
+      ],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "B",
+      "source_requirement_id": "BUILD-027",
+      "acceptance_test_ids": [
+        "TEST-001",
+        "TEST-004",
+        "PORT-013"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-028",
+      "domain": "Returns and exchanges",
+      "priority": "P0",
+      "title": "Store credit resolution",
+      "acceptance_criteria": "Issue credit using supported native instruments and record issuance/redemption references separately from cash refunds.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M03",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M02"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "B",
+      "source_requirement_id": "BUILD-028",
+      "acceptance_test_ids": [
+        "TEST-001",
+        "TEST-012",
+        "TEST-017",
+        "TEST-018"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-029",
+      "domain": "Returns and exchanges",
+      "priority": "P0",
+      "title": "Variant exchange quote",
+      "acceptance_criteria": "Recheck stock, available quantity, prices, discounts, shipping and expected balance before requesting approval.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M03",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M02"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "B",
+      "source_requirement_id": "BUILD-029",
+      "acceptance_test_ids": [
+        "TEST-001",
+        "TEST-012",
+        "TEST-017",
+        "TEST-018"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-030",
+      "domain": "Returns and exchanges",
+      "priority": "P0",
+      "title": "Exchange creation and fulfillment",
+      "acceptance_criteria": "Create the correct replacement once; maintain original-return linkage and reconcile replacement fulfillment state.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M03",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M02"
+      ],
+      "depends_on": [
+        "BUILD-029",
+        "BUILD-044"
+      ],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "B",
+      "source_requirement_id": "BUILD-030",
+      "acceptance_test_ids": [
+        "TEST-001",
+        "TEST-012",
+        "TEST-017",
+        "TEST-018"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-031",
+      "domain": "Returns and exchanges",
+      "priority": "P0",
+      "title": "Label quote and purchase",
+      "acceptance_criteria": "Separate rate quote from chargeable label purchase; deduplicate purchases and expose void/refund status.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M03",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M02"
+      ],
+      "depends_on": [
+        "BUILD-044",
+        "BUILD-010"
+      ],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "B",
+      "source_requirement_id": "BUILD-031",
+      "acceptance_test_ids": [
+        "TEST-028"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-032",
+      "domain": "Returns and exchanges",
+      "priority": "P0",
+      "title": "Return tracking",
+      "acceptance_criteria": "Process label, transit, delivery and warehouse-receipt as distinct events; no carrier event silently implies successful inspection.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M03",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M02"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "B",
+      "source_requirement_id": "BUILD-032",
+      "acceptance_test_ids": [
+        "TEST-001",
+        "TEST-012",
+        "TEST-017",
+        "TEST-018"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-033",
+      "domain": "Returns and exchanges",
+      "priority": "P0",
+      "title": "Receiving and grading",
+      "acceptance_criteria": "Capture expected versus received items, condition, quantity and discrepancies before resolving or restocking.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M03",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M02"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "B",
+      "source_requirement_id": "BUILD-033",
+      "acceptance_test_ids": [
+        "TEST-001",
+        "TEST-012",
+        "TEST-017",
+        "TEST-018"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-034",
+      "domain": "Returns and exchanges",
+      "priority": "P0",
+      "title": "Item disposition",
+      "acceptance_criteria": "Restock, quarantine, dispose or return to supplier only through explicit approved actions with inventory receipts.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M03",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M02"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "B",
+      "source_requirement_id": "BUILD-034",
+      "acceptance_test_ids": [
+        "TEST-001",
+        "TEST-012",
+        "TEST-017",
+        "TEST-018"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-035",
+      "domain": "Returns and exchanges",
+      "priority": "P0",
+      "title": "Return cancel and expiry",
+      "acceptance_criteria": "Close unused requests safely, void eligible labels, release reservations and notify all systems without undoing completed refunds.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M03",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M02"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "B",
+      "source_requirement_id": "BUILD-035",
+      "acceptance_test_ids": [
+        "TEST-001",
+        "TEST-012",
+        "TEST-017",
+        "TEST-018"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-036",
+      "domain": "Order editing",
+      "priority": "P0",
+      "title": "Per-action edit windows",
+      "acceptance_criteria": "Evaluate time, financial state, line fulfillment and merchant policy independently for address, cancellation and item changes.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M04",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M03"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "B",
+      "source_requirement_id": "BUILD-036",
+      "acceptance_test_ids": [
+        "TEST-007",
+        "TEST-008",
+        "TEST-009",
+        "TEST-010"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-037",
+      "domain": "Order editing",
+      "priority": "P0",
+      "title": "Downstream fulfillment hold",
+      "acceptance_criteria": "Confirm a warehouse-recognized hold before allowing an edit; an unverified tag alone cannot count as a confirmed hold.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M04",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M03"
+      ],
+      "depends_on": [
+        "BUILD-005"
+      ],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "B",
+      "source_requirement_id": "BUILD-037",
+      "acceptance_test_ids": [
+        "TEST-007",
+        "TEST-008",
+        "TEST-010"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-038",
+      "domain": "Order editing",
+      "priority": "P0",
+      "title": "Address change preview",
+      "acceptance_criteria": "Validate format and supported destination, show tax/shipping implications, and reject unsupported changes before commit.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M04",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M03"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "B",
+      "source_requirement_id": "BUILD-038",
+      "acceptance_test_ids": [
+        "TEST-007",
+        "TEST-008",
+        "TEST-009",
+        "TEST-010"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-039",
+      "domain": "Order editing",
+      "priority": "P0",
+      "title": "Equal-value item replacement",
+      "acceptance_criteria": "Begin a platform edit, recalculate against current stock and commit once with original-to-new line mapping.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M04",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M03"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "B",
+      "source_requirement_id": "BUILD-039",
+      "acceptance_test_ids": [
+        "TEST-007",
+        "TEST-008",
+        "TEST-009",
+        "TEST-010"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-040",
+      "domain": "Order editing",
+      "priority": "P0",
+      "title": "Cheaper edit refund",
+      "acceptance_criteria": "Commit the order change and reconcile the exact refund separately; partial failure appears in an exception queue.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M04",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M03"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "B",
+      "source_requirement_id": "BUILD-040",
+      "acceptance_test_ids": [
+        "TEST-007",
+        "TEST-008",
+        "TEST-009",
+        "TEST-010"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-041",
+      "domain": "Order editing",
+      "priority": "P0",
+      "title": "Cancellation consistency",
+      "acceptance_criteria": "Confirm cancellation with every fulfillment system that can still ship; uncertain cancellation requires operator attention.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M04",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M03"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "B",
+      "source_requirement_id": "BUILD-041",
+      "acceptance_test_ids": [
+        "TEST-007",
+        "TEST-008",
+        "TEST-009",
+        "TEST-010"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-042",
+      "domain": "Order editing",
+      "priority": "P0",
+      "title": "Hold release reconciliation",
+      "acceptance_criteria": "Release only after every blocking reason clears; payment, fraud and edit-window holds cannot overwrite one another.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M04",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M03"
+      ],
+      "depends_on": [
+        "BUILD-037"
+      ],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "B",
+      "source_requirement_id": "BUILD-042",
+      "acceptance_test_ids": [
+        "TEST-007",
+        "TEST-008",
+        "TEST-009",
+        "TEST-010"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-043",
+      "domain": "Agent-independent execution",
+      "priority": "P0",
+      "title": "Business-action gateway",
+      "acceptance_criteria": "One server-side action gateway enforces tenant, customer, policy, resource-state and approval checks for every write caller; REST/MCP/UI cannot bypass it.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M02",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M01"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "C",
+      "source_requirement_id": "BUILD-043",
+      "acceptance_test_ids": [
+        "TEST-003",
+        "TEST-004",
+        "TEST-005",
+        "TEST-006"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-044",
+      "domain": "Agent-independent execution",
+      "priority": "P0",
+      "title": "Preview and approval binding",
+      "acceptance_criteria": "Approvals bind tenant, actor, resource version, operation hash, currency, amount ceiling, expiry and use count.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M02",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M01"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "C",
+      "source_requirement_id": "BUILD-044",
+      "acceptance_test_ids": [
+        "TEST-003",
+        "TEST-004",
+        "TEST-005",
+        "TEST-006"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-045",
+      "domain": "Agent-independent execution",
+      "priority": "P0",
+      "title": "Policy-enforced action permissions",
+      "acceptance_criteria": "Evaluate action permissions server-side every time; a model cannot promote itself, fabricate approval or modify budgets.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M02",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M01"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "C",
+      "source_requirement_id": "BUILD-045",
+      "acceptance_test_ids": [
+        "TEST-003",
+        "TEST-004",
+        "TEST-005",
+        "TEST-006"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-046",
+      "domain": "Agent-independent execution",
+      "priority": "P0",
+      "title": "External agent REST interface",
+      "acceptance_criteria": "An independently written worker can claim a scoped task, submit a proposal and retrieve receipts without using our model runtime.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M01",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M00"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "C",
+      "source_requirement_id": "BUILD-046",
+      "acceptance_test_ids": [
+        "TEST-002",
+        "TEST-026",
+        "TEST-033",
+        "PORT-001"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-047",
+      "domain": "Agent-independent execution",
+      "priority": "P0",
+      "title": "MCP interface",
+      "acceptance_criteria": "Expose only typed permitted tools; validate audience and scopes; keep Shopify/payment credentials behind server-side adapters.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M01",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M00"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "C",
+      "source_requirement_id": "BUILD-047",
+      "acceptance_test_ids": [
+        "TEST-002",
+        "TEST-026",
+        "TEST-033",
+        "PORT-001"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-048",
+      "domain": "Agent-independent execution",
+      "priority": "P0",
+      "title": "Work leases and deadlines",
+      "acceptance_criteria": "External workers receive expiring leases with idempotent completion; a disconnected worker cannot hold a customer case indefinitely.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M02",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M01"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "C",
+      "source_requirement_id": "BUILD-048",
+      "acceptance_test_ids": [
+        "TEST-003",
+        "TEST-004",
+        "TEST-005",
+        "TEST-006"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-049",
+      "domain": "Agent-independent execution",
+      "priority": "P0",
+      "title": "BYO model adapters",
+      "acceptance_criteria": "Test at least two independently configured providers against the same tool/structured-output suite; use no provider-specific IDs in domain state.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M01",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M00"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "C",
+      "source_requirement_id": "BUILD-049",
+      "acceptance_test_ids": [
+        "TEST-002",
+        "TEST-026",
+        "TEST-033",
+        "PORT-001"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-050",
+      "domain": "Agent-independent execution",
+      "priority": "P0",
+      "title": "BYO local model endpoint",
+      "acceptance_criteria": "A declared local endpoint completes the read-only portability spike; its capability and quality limits are reported. Broader runtime qualification is completed by M07.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M01",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M00"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "C",
+      "source_requirement_id": "BUILD-050",
+      "acceptance_test_ids": [
+        "TEST-002",
+        "TEST-026",
+        "TEST-033",
+        "PORT-001"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-051",
+      "domain": "Agent-independent execution",
+      "priority": "P0",
+      "title": "Provider limits and failure behavior",
+      "acceptance_criteria": "Track requests, token usage and cost assumptions; reserve spend for in-flight work and stop at configured limits.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M05",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M03",
+        "M04"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "C",
+      "source_requirement_id": "BUILD-051",
+      "acceptance_test_ids": [
+        "TEST-023",
+        "TEST-024",
+        "TEST-025",
+        "TEST-029"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-052",
+      "domain": "Agent-independent execution",
+      "priority": "P0",
+      "title": "Knowledge with provenance",
+      "acceptance_criteria": "Retrieved policy/catalog/support material carries source, version, timestamp, tenant and access metadata.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M01",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M00"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "C",
+      "source_requirement_id": "BUILD-052",
+      "acceptance_test_ids": [
+        "TEST-002",
+        "TEST-026",
+        "TEST-033",
+        "PORT-001"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-053",
+      "domain": "Agent-independent execution",
+      "priority": "P0",
+      "title": "Untrusted-content isolation",
+      "acceptance_criteria": "Customer messages, attachments and retrieved documents cannot override tool authority or disclose secrets.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M01",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M00"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "C",
+      "source_requirement_id": "BUILD-053",
+      "acceptance_test_ids": [
+        "TEST-002",
+        "TEST-026",
+        "TEST-033",
+        "PORT-001"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-054",
+      "domain": "Agent-independent execution",
+      "priority": "P0",
+      "title": "Human handoff and takeover",
+      "acceptance_criteria": "Escalation preserves intent, evidence, attempts and receipts; human takeover stops further automatic customer-visible actions.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M05",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M03",
+        "M04"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "C",
+      "source_requirement_id": "BUILD-054",
+      "acceptance_test_ids": [
+        "TEST-023",
+        "TEST-024",
+        "TEST-025",
+        "TEST-029"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-055",
+      "domain": "Agent-independent execution",
+      "priority": "P0",
+      "title": "Agent kill switches",
+      "acceptance_criteria": "Per-store, per-action and global controls stop new executions immediately while preserving a safe reconciliation path.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M02",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M01"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "C",
+      "source_requirement_id": "BUILD-055",
+      "acceptance_test_ids": [
+        "TEST-003",
+        "TEST-004",
+        "TEST-005",
+        "TEST-006"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-056",
+      "domain": "Agent-independent execution",
+      "priority": "P0",
+      "title": "Evaluation harness",
+      "acceptance_criteria": "Re-run sanitized fixtures across agent/model versions and measure policy correctness, side effects, handoff quality and cost.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M01",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M00"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "C",
+      "source_requirement_id": "BUILD-056",
+      "acceptance_test_ids": [
+        "TEST-002",
+        "TEST-026",
+        "TEST-033",
+        "PORT-001"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-057",
+      "domain": "Agent-independent execution",
+      "priority": "P0",
+      "title": "No-AI operation",
+      "acceptance_criteria": "A merchant can complete every P0 operational workflow with deterministic screens and rules while all models are disabled.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M01",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M00"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "C",
+      "source_requirement_id": "BUILD-057",
+      "acceptance_test_ids": [
+        "TEST-002",
+        "TEST-026",
+        "TEST-033",
+        "PORT-001"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-058",
+      "domain": "Pilot completion and expansion",
+      "priority": "P1",
+      "title": "Additional-payment editing",
+      "acceptance_criteria": "Send a native invoice or checkout request, retain payment hold, verify settlement and release only after downstream reconciliation.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M04",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M03"
+      ],
+      "depends_on": [
+        "BUILD-037",
+        "BUILD-044"
+      ],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "D",
+      "source_requirement_id": "BUILD-058",
+      "acceptance_test_ids": [
+        "TEST-007",
+        "TEST-008",
+        "TEST-009",
+        "TEST-010"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-059",
+      "domain": "Pilot completion and expansion",
+      "priority": "P1",
+      "title": "Exchange price differences",
+      "acceptance_criteria": "Collect extra payment or issue residual credit/refund with an auditable order/return ledger; retries cannot double-charge.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M06",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M03",
+        "M04",
+        "M05"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "D",
+      "source_requirement_id": "BUILD-059",
+      "acceptance_test_ids": [
+        "TEST-013",
+        "TEST-014",
+        "TEST-015",
+        "TEST-016"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-060",
+      "domain": "Pilot completion and expansion",
+      "priority": "P1",
+      "title": "Catalog-wide exchanges",
+      "acceptance_criteria": "Offer permitted products with real stock, exclusions and margin-aware incentives; never manufacture nonexistent variants.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M06",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M03",
+        "M04",
+        "M05"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "D",
+      "source_requirement_id": "BUILD-060",
+      "acceptance_test_ids": [
+        "TEST-013",
+        "TEST-014",
+        "TEST-015",
+        "TEST-016"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-061",
+      "domain": "Pilot completion and expansion",
+      "priority": "P1",
+      "title": "Configurable return automation",
+      "acceptance_criteria": "Enable event-based actions only after pilot evidence; exceptions and monetary thresholds still route to review.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M05",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M03",
+        "M04"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "D",
+      "source_requirement_id": "BUILD-061",
+      "acceptance_test_ids": [
+        "TEST-023",
+        "TEST-024",
+        "TEST-025",
+        "TEST-029"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-062",
+      "domain": "Pilot completion and expansion",
+      "priority": "P1",
+      "title": "Branded tracking page",
+      "acceptance_criteria": "Show shipment groups, reliable timestamps, delays and next steps without presenting stale data as live.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M05",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M03",
+        "M04"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "D",
+      "source_requirement_id": "BUILD-062",
+      "acceptance_test_ids": [
+        "TEST-023",
+        "TEST-024",
+        "TEST-025",
+        "TEST-029"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-063",
+      "domain": "Pilot completion and expansion",
+      "priority": "P1",
+      "title": "Transactional notification adapter",
+      "acceptance_criteria": "Use merchant-owned sending accounts, templates and idempotent delivery; process bounce/unsubscribe/provider failure events.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M05",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M03",
+        "M04"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "D",
+      "source_requirement_id": "BUILD-063",
+      "acceptance_test_ids": [
+        "TEST-023",
+        "TEST-024",
+        "TEST-025",
+        "TEST-029"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-064",
+      "domain": "Pilot completion and expansion",
+      "priority": "P1",
+      "title": "Helpdesk adapter",
+      "acceptance_criteria": "Read case context, add internal notes and hand off with receipts; unsupported outbound/history operations are disclosed.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M05",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M03",
+        "M04"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "D",
+      "source_requirement_id": "BUILD-064",
+      "acceptance_test_ids": [
+        "TEST-023",
+        "TEST-024",
+        "TEST-025",
+        "TEST-029"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-065",
+      "domain": "Pilot completion and expansion",
+      "priority": "P1",
+      "title": "Consent ledger",
+      "acceptance_criteria": "Store channel, purpose, sender, source, timestamp, jurisdictional settings and withdrawal; suppression is checked at execution time.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M05",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M03",
+        "M04"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "D",
+      "source_requirement_id": "BUILD-065",
+      "acceptance_test_ids": [
+        "TEST-023",
+        "TEST-024",
+        "TEST-025",
+        "TEST-029"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-066",
+      "domain": "Pilot completion and expansion",
+      "priority": "P1",
+      "title": "Support rules",
+      "acceptance_criteria": "Version trigger-condition-action workflows with waits, business-hours logic, precedence, simulation and loop prevention.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M05",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M03",
+        "M04"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "D",
+      "source_requirement_id": "BUILD-066",
+      "acceptance_test_ids": [
+        "TEST-023",
+        "TEST-024",
+        "TEST-025",
+        "TEST-029"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-067",
+      "domain": "Pilot completion and expansion",
+      "priority": "P1",
+      "title": "Return-reason insights",
+      "acceptance_criteria": "Cluster sanitized free text and surface SKU trends with sample size, source cases and confidence; suggestions do not change policy automatically.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M05",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M03",
+        "M04"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "D",
+      "source_requirement_id": "BUILD-067",
+      "acceptance_test_ids": [
+        "TEST-023",
+        "TEST-024",
+        "TEST-025",
+        "TEST-029"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-068",
+      "domain": "Pilot completion and expansion",
+      "priority": "P1",
+      "title": "Operational analytics",
+      "acceptance_criteria": "Define completion, recontact, net margin, label cost, resolution cost and drift metrics; publish denominator and attribution rules.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M05",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M03",
+        "M04"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "D",
+      "source_requirement_id": "BUILD-068",
+      "acceptance_test_ids": [
+        "TEST-023",
+        "TEST-024",
+        "TEST-025",
+        "TEST-029"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-069",
+      "domain": "Pilot completion and expansion",
+      "priority": "P1",
+      "title": "Migration and export",
+      "acceptance_criteria": "Import allowed history/configuration through documented APIs or exports; export policies, cases, receipts and evaluations in portable formats.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M07",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M05",
+        "M06"
+      ],
+      "depends_on": [
+        "SKILL-007"
+      ],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "D",
+      "source_requirement_id": "BUILD-069",
+      "acceptance_test_ids": [
+        "TEST-027",
+        "PORT-018",
+        "PORT-019",
+        "PORT-020"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-070",
+      "domain": "Pilot completion and expansion",
+      "priority": "P1",
+      "title": "Public adapter conformance",
+      "acceptance_criteria": "Publish test fixtures for every supported operation and mark partial, sandbox-only and unavailable capabilities.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M07",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M05",
+        "M06"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "D",
+      "source_requirement_id": "BUILD-070",
+      "acceptance_test_ids": [
+        "TEST-027",
+        "PORT-018",
+        "PORT-019",
+        "PORT-020"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-071",
+      "domain": "Pilot completion and expansion",
+      "priority": "P1",
+      "title": "Production runbooks",
+      "acceptance_criteria": "Document ambiguous refund, lost webhook, expired token, stuck hold, provider outage, restore and agent incident procedures.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M07",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M05",
+        "M06"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "D",
+      "source_requirement_id": "BUILD-071",
+      "acceptance_test_ids": [
+        "TEST-027",
+        "PORT-018",
+        "PORT-019",
+        "PORT-020"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-072",
+      "domain": "Later optional modules",
+      "priority": "P2",
+      "title": "Bundle and promotion returns",
+      "acceptance_criteria": "Preserve component allocations and promotion eligibility; mixed partial returns never over-refund the original paid amount.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M06",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M03",
+        "M04",
+        "M05"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "E",
+      "source_requirement_id": "BUILD-072",
+      "acceptance_test_ids": [
+        "TEST-013",
+        "TEST-014",
+        "TEST-015",
+        "TEST-016"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-073",
+      "domain": "Later optional modules",
+      "priority": "P2",
+      "title": "Multi-currency and duties",
+      "acceptance_criteria": "Track shop/presentment money, exchange-rate provenance, duties and estimated versus finalized fees.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M06",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M03",
+        "M04",
+        "M05"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "E",
+      "source_requirement_id": "BUILD-073",
+      "acceptance_test_ids": [
+        "TEST-013",
+        "TEST-014",
+        "TEST-015",
+        "TEST-016"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-074",
+      "domain": "Later optional modules",
+      "priority": "P2",
+      "title": "Instant exchange authorization",
+      "acceptance_criteria": "Integrate a supported payment mandate and expiry/reauthorization lifecycle with explicit non-return terms and risk review.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M06",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M03",
+        "M04",
+        "M05"
+      ],
+      "depends_on": [
+        "BUILD-059",
+        "BUILD-044"
+      ],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "E",
+      "source_requirement_id": "BUILD-074",
+      "acceptance_test_ids": [
+        "TEST-013",
+        "TEST-014",
+        "TEST-015",
+        "TEST-016"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-075",
+      "domain": "Later optional modules",
+      "priority": "P2",
+      "title": "Warranty and registration",
+      "acceptance_criteria": "Link serial/product purchase proof, warranty terms, registration consent and repair/replace/refund outcomes.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M10",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M07"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "expansion",
+      "legacy_phase": "E",
+      "source_requirement_id": "BUILD-075",
+      "acceptance_test_ids": [
+        "PORT-028",
+        "PORT-029"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-076",
+      "domain": "Later optional modules",
+      "priority": "P2",
+      "title": "Shipping claims",
+      "acceptance_criteria": "Gather evidence, verify coverage/eligibility and route to merchant or partner; never imply uninsured losses are guaranteed.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M10",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M07"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "expansion",
+      "legacy_phase": "E",
+      "source_requirement_id": "BUILD-076",
+      "acceptance_test_ids": [
+        "PORT-028",
+        "PORT-029"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-077",
+      "domain": "Later optional modules",
+      "priority": "P2",
+      "title": "Dispute evidence preparation",
+      "acceptance_criteria": "Assemble truthful source-linked evidence, deadline reminders and human review; no invented delivery or consent evidence.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M10",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M07"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "expansion",
+      "legacy_phase": "E",
+      "source_requirement_id": "BUILD-077",
+      "acceptance_test_ids": [
+        "PORT-028",
+        "PORT-029"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-078",
+      "domain": "Later optional modules",
+      "priority": "P2",
+      "title": "Dispute submission adapter",
+      "acceptance_criteria": "Submit only through supported processor interfaces with deadline and duplicate-submission controls.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M10",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M07"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "expansion",
+      "legacy_phase": "E",
+      "source_requirement_id": "BUILD-078",
+      "acceptance_test_ids": [
+        "PORT-028",
+        "PORT-029"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-079",
+      "domain": "Later optional modules",
+      "priority": "P2",
+      "title": "Checkout experimentation",
+      "acceptance_criteria": "Use stable randomized assignments, holdouts, bot exclusions and net-margin outcomes; avoid automatic promotion of noisy winners.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M09",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M07"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "expansion",
+      "legacy_phase": "E",
+      "source_requirement_id": "BUILD-079",
+      "acceptance_test_ids": [
+        "TEST-034",
+        "PORT-026",
+        "PORT-027"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-080",
+      "domain": "Later optional modules",
+      "priority": "P2",
+      "title": "Pre-fulfillment upsells",
+      "acceptance_criteria": "Show eligible offers and handle added payment/stock/hold changes without creating an unintended second fulfillment.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M09",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M07"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "expansion",
+      "legacy_phase": "E",
+      "source_requirement_id": "BUILD-080",
+      "acceptance_test_ids": [
+        "TEST-034",
+        "PORT-026",
+        "PORT-027"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-081",
+      "domain": "Later optional modules",
+      "priority": "P2",
+      "title": "Rule-governed fraud assistance",
+      "acceptance_criteria": "AI risk suggestions must be explainable and reviewable; blanket automated denials are not the default.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M06",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M03",
+        "M04",
+        "M05"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "E",
+      "source_requirement_id": "BUILD-081",
+      "acceptance_test_ids": [
+        "TEST-013",
+        "TEST-014",
+        "TEST-015",
+        "TEST-016"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-082",
+      "domain": "Later optional modules",
+      "priority": "P2",
+      "title": "Multi-store agency workspace",
+      "acceptance_criteria": "Delegate operators across stores without sharing customer data, provider credentials or action limits.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M12",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M07"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "expansion",
+      "legacy_phase": "E",
+      "source_requirement_id": "BUILD-082",
+      "acceptance_test_ids": [
+        "PORT-032"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-083",
+      "domain": "Later optional modules",
+      "priority": "P2",
+      "title": "Warehouse routing",
+      "acceptance_criteria": "Choose only contracted destinations that accept the item/category/region and expose handling fees and expected disposition.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M06",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M03",
+        "M04",
+        "M05"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "E",
+      "source_requirement_id": "BUILD-083",
+      "acceptance_test_ids": [
+        "TEST-013",
+        "TEST-014",
+        "TEST-015",
+        "TEST-016"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-084",
+      "domain": "Deferred suite breadth",
+      "priority": "P3",
+      "title": "Inventory forecasting",
+      "acceptance_criteria": "Validate against holdout periods and naive baselines; disclose uncertainty and prohibit autonomous POs by default.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M11",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M07",
+        "M08"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "expansion",
+      "legacy_phase": "F",
+      "source_requirement_id": "BUILD-084",
+      "acceptance_test_ids": [
+        "PORT-030",
+        "PORT-031"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-085",
+      "domain": "Deferred suite breadth",
+      "priority": "P3",
+      "title": "Purchase orders and receiving",
+      "acceptance_criteria": "Support suppliers, lead times, minimums, partial receipts and approvals; reconcile received stock with the source system.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M11",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M07",
+        "M08"
+      ],
+      "depends_on": [
+        "EXP-004"
+      ],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "expansion",
+      "legacy_phase": "F",
+      "source_requirement_id": "BUILD-085",
+      "acceptance_test_ids": [
+        "PORT-030",
+        "PORT-031"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-086",
+      "domain": "Deferred suite breadth",
+      "priority": "P3",
+      "title": "BOM and production planning",
+      "acceptance_criteria": "Expand material requirements, handle units and yields, and connect production completion to inventory receipts.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M11",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M07",
+        "M08"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "expansion",
+      "legacy_phase": "F",
+      "source_requirement_id": "BUILD-086",
+      "acceptance_test_ids": [
+        "PORT-030",
+        "PORT-031"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-087",
+      "domain": "Deferred suite breadth",
+      "priority": "P3",
+      "title": "Campaign authoring",
+      "acceptance_criteria": "Generate editable content and audience proposals; enforce consent, deliverability, scheduling and spending controls outside the model.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M09",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M07"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "expansion",
+      "legacy_phase": "F",
+      "source_requirement_id": "BUILD-087",
+      "acceptance_test_ids": [
+        "TEST-034",
+        "PORT-026",
+        "PORT-027"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-088",
+      "domain": "Deferred suite breadth",
+      "priority": "P3",
+      "title": "Interactive email",
+      "acceptance_criteria": "Provide safe fallback, short-lived action links and explicit confirmation for irreversible actions; preview/scanner fetches cannot mutate orders.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M09",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M07"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "conditional_optional",
+      "legacy_phase": "F",
+      "source_requirement_id": "BUILD-088",
+      "acceptance_test_ids": [
+        "TEST-034",
+        "PORT-026",
+        "PORT-027"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-089",
+      "domain": "Deferred suite breadth",
+      "priority": "P3",
+      "title": "AI catalog visibility",
+      "acceptance_criteria": "Measure reproducible prompts and citations over time without promising placement or using prohibited scraping methods.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M09",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M07"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "expansion",
+      "legacy_phase": "F",
+      "source_requirement_id": "BUILD-089",
+      "acceptance_test_ids": [
+        "TEST-034",
+        "PORT-026",
+        "PORT-027"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-090",
+      "domain": "Deferred suite breadth",
+      "priority": "P3",
+      "title": "Try-before-buy",
+      "acceptance_criteria": "Add delivery-started trials only after processor authorization duration, capture, returns and non-return risk are contractually understood.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M10",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M07"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "conditional_optional",
+      "legacy_phase": "F",
+      "source_requirement_id": "BUILD-090",
+      "acceptance_test_ids": [
+        "PORT-028",
+        "PORT-029"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-091",
+      "domain": "Deferred suite breadth",
+      "priority": "P3",
+      "title": "Vision try-on",
+      "acceptance_criteria": "Require customer upload consent, retention controls and quality evaluations; treat this as optional rather than a core returns requirement.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M09",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M07"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "conditional_optional",
+      "legacy_phase": "F",
+      "source_requirement_id": "BUILD-091",
+      "acceptance_test_ids": [
+        "TEST-034",
+        "PORT-026",
+        "PORT-027"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-092",
+      "domain": "Deferred suite breadth",
+      "priority": "P3",
+      "title": "Agent code sandbox",
+      "acceptance_criteria": "Only add code mode after threat modeling; no ambient credentials/network, hard resource limits and the same business-action gateway.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M12",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M07"
+      ],
+      "depends_on": [
+        "SKILL-024"
+      ],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "conditional_optional",
+      "legacy_phase": "F",
+      "source_requirement_id": "BUILD-092",
+      "acceptance_test_ids": [
+        "PORT-032"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-093",
+      "domain": "Deferred suite breadth",
+      "priority": "P3",
+      "title": "Predictive return prevention",
+      "acceptance_criteria": "Evaluate bracketing/fit suggestions with honest experiments; do not remove paid items without customer authorization.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M06",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M03",
+        "M04",
+        "M05"
+      ],
+      "depends_on": [],
+      "delivery_mode": "build",
+      "readiness": "not_assessed",
+      "release_requirement": "required_in_declared_support_envelope",
+      "legacy_phase": "F",
+      "source_requirement_id": "BUILD-093",
+      "acceptance_test_ids": [
+        "TEST-013",
+        "TEST-014",
+        "TEST-015",
+        "TEST-016"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-094",
+      "domain": "Partner-only commercial services",
+      "priority": "Partner",
+      "title": "Coverage and protection partner",
+      "acceptance_criteria": "Publish who bears losses, eligibility, fee disclosures, settlement and claims obligations; do not treat checkout fees as guaranteed profit.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M10",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M07"
+      ],
+      "depends_on": [],
+      "delivery_mode": "partner",
+      "readiness": "not_assessed",
+      "release_requirement": "expansion",
+      "legacy_phase": "Partner",
+      "source_requirement_id": "BUILD-094",
+      "commercial_dependency": "Requires separately validated third-party access/terms; software does not provide the underlying commercial or physical service.",
+      "acceptance_test_ids": [
+        "PORT-028",
+        "PORT-029"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-095",
+      "domain": "Partner-only commercial services",
+      "priority": "Partner",
+      "title": "Cross-border tax and duties partner",
+      "acceptance_criteria": "Contract for calculation/remittance and any guarantees; distinguish estimate, collected amount and final customs assessment.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M10",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M07"
+      ],
+      "depends_on": [],
+      "delivery_mode": "partner",
+      "readiness": "not_assessed",
+      "release_requirement": "expansion",
+      "legacy_phase": "Partner",
+      "source_requirement_id": "BUILD-095",
+      "commercial_dependency": "Requires separately validated third-party access/terms; software does not provide the underlying commercial or physical service.",
+      "acceptance_test_ids": [
+        "PORT-028",
+        "PORT-029"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-096",
+      "domain": "Partner-only commercial services",
+      "priority": "Partner",
+      "title": "Reverse-logistics hubs",
+      "acceptance_criteria": "Use real contracted receiving, inspection, consolidation and disposition services with SLAs and reconciliation.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M10",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M07"
+      ],
+      "depends_on": [],
+      "delivery_mode": "partner",
+      "readiness": "not_assessed",
+      "release_requirement": "expansion",
+      "legacy_phase": "Partner",
+      "source_requirement_id": "BUILD-096",
+      "commercial_dependency": "Requires separately validated third-party access/terms; software does not provide the underlying commercial or physical service.",
+      "acceptance_test_ids": [
+        "PORT-028",
+        "PORT-029"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-097",
+      "domain": "Partner-only commercial services",
+      "priority": "Partner",
+      "title": "Identity-resolution provider",
+      "acceptance_criteria": "Require lawful data provenance and purpose-specific consent/opt-out handling; do not rebuild a cross-merchant graph from private data.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M09",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M07"
+      ],
+      "depends_on": [],
+      "delivery_mode": "partner",
+      "readiness": "not_assessed",
+      "release_requirement": "conditional_optional",
+      "legacy_phase": "Partner",
+      "source_requirement_id": "BUILD-097",
+      "commercial_dependency": "Requires separately validated third-party access/terms; software does not provide the underlying commercial or physical service.",
+      "acceptance_test_ids": [
+        "TEST-034",
+        "PORT-026",
+        "PORT-027"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-098",
+      "domain": "Partner-only commercial services",
+      "priority": "Partner",
+      "title": "HSA/FSA eligibility/payment partner",
+      "acceptance_criteria": "Obtain authoritative provider eligibility and payment flows; do not infer medical or tax eligibility with a general language model.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M10",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M07"
+      ],
+      "depends_on": [],
+      "delivery_mode": "partner",
+      "readiness": "not_assessed",
+      "release_requirement": "conditional_optional",
+      "legacy_phase": "Partner",
+      "source_requirement_id": "BUILD-098",
+      "commercial_dependency": "Requires separately validated third-party access/terms; software does not provide the underlying commercial or physical service.",
+      "acceptance_test_ids": [
+        "PORT-028",
+        "PORT-029"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "BUILD-099",
+      "domain": "Partner-only commercial services",
+      "priority": "Partner",
+      "title": "Network dispute alerts",
+      "acceptance_criteria": "Establish authorized processor/network access and economics before advertising prevention or recovery guarantees.",
+      "classification": "original_proposed_requirement",
+      "status": "not_started",
+      "estimated_effort": null,
+      "milestone": "M10",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M07"
+      ],
+      "depends_on": [],
+      "delivery_mode": "partner",
+      "readiness": "not_assessed",
+      "release_requirement": "expansion",
+      "legacy_phase": "Partner",
+      "source_requirement_id": "BUILD-099",
+      "commercial_dependency": "Requires separately validated third-party access/terms; software does not provide the underlying commercial or physical service.",
+      "acceptance_test_ids": [
+        "PORT-028",
+        "PORT-029"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "PLAN-001",
+      "milestone": "M00",
+      "title": "Approve product boundary and support envelope",
+      "acceptance_criteria": "Human-approved charter identifies target merchant, initial platform, excluded workflows, competitive scenarios and release claim boundaries.",
+      "domain": "Governance",
+      "depends_on": [],
+      "priority": "P0",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [],
+      "readiness": "not_assessed",
+      "classification": "original_roadmap_requirement",
+      "release_requirement": "required_in_declared_support_envelope",
+      "source_requirement_id": null,
+      "acceptance_test_ids": [],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "PLAN-002",
+      "milestone": "M00",
+      "title": "Choose licenses and publication policy",
+      "acceptance_criteria": "Record application/SDK/skill licenses, dependency review, contribution terms and merchant configuration treatment before public distribution.",
+      "domain": "Governance",
+      "depends_on": [
+        "PLAN-001"
+      ],
+      "priority": "P0",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [],
+      "readiness": "not_assessed",
+      "classification": "original_roadmap_requirement",
+      "release_requirement": "required_in_declared_support_envelope",
+      "source_requirement_id": null,
+      "acceptance_test_ids": [],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "PLAN-003",
+      "milestone": "M00",
+      "title": "Adopt existing git-agent workflow",
+      "acceptance_criteria": "Inspect actual framework version; document goal/worktree/review/evidence/human-release steps without copying another project or replacing native tooling.",
+      "domain": "Development",
+      "depends_on": [
+        "PLAN-001"
+      ],
+      "priority": "P0",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [],
+      "readiness": "not_assessed",
+      "classification": "original_roadmap_requirement",
+      "release_requirement": "required_in_declared_support_envelope",
+      "source_requirement_id": null,
+      "acceptance_test_ids": [],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "PLAN-004",
+      "milestone": "M00",
+      "title": "Create clean-checkout local environment",
+      "acceptance_criteria": "Standard project commands start isolated API, worker, UI and synthetic services; no production credentials or vendor runtime are required.",
+      "domain": "Development",
+      "depends_on": [
+        "PLAN-003"
+      ],
+      "priority": "P0",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [],
+      "readiness": "not_assessed",
+      "classification": "original_roadmap_requirement",
+      "release_requirement": "required_in_declared_support_envelope",
+      "source_requirement_id": null,
+      "acceptance_test_ids": [],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "PLAN-005",
+      "milestone": "M00",
+      "title": "Define release benchmark and pilot plan",
+      "acceptance_criteria": "Approve scenario categories, metric definitions, evaluation denominator, target gates, roles and merchant recruitment assumptions.",
+      "domain": "Validation",
+      "depends_on": [
+        "PLAN-001"
+      ],
+      "priority": "P0",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [],
+      "readiness": "not_assessed",
+      "classification": "original_roadmap_requirement",
+      "release_requirement": "required_in_declared_support_envelope",
+      "source_requirement_id": null,
+      "acceptance_test_ids": [],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "SKILL-001",
+      "milestone": "M01",
+      "title": "Load standard skill packages",
+      "acceptance_criteria": "Read SKILL.md metadata/instructions and scoped resources through a file or content-tool adapter; no provider-specific business storage.",
+      "domain": "Skills and portability",
+      "depends_on": [
+        "PLAN-004"
+      ],
+      "priority": "P0",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M00"
+      ],
+      "readiness": "not_assessed",
+      "classification": "original_roadmap_requirement",
+      "release_requirement": "required_in_declared_support_envelope",
+      "source_requirement_id": null,
+      "acceptance_test_ids": [
+        "TEST-002",
+        "TEST-026",
+        "TEST-033",
+        "PORT-001"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "SKILL-002",
+      "milestone": "M01",
+      "title": "Two-model and independent-runtime proof",
+      "acceptance_criteria": "One status skill completes against two cloud-provider configurations, a separate runtime and the manual UI; record exact supported model capabilities.",
+      "domain": "Skills and portability",
+      "depends_on": [
+        "SKILL-001"
+      ],
+      "priority": "P0",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M00"
+      ],
+      "readiness": "not_assessed",
+      "classification": "original_roadmap_requirement",
+      "release_requirement": "required_in_declared_support_envelope",
+      "source_requirement_id": null,
+      "acceptance_test_ids": [
+        "TEST-002",
+        "TEST-026",
+        "TEST-033",
+        "PORT-001"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "SKILL-003",
+      "milestone": "M01",
+      "title": "Two-merchant configuration fixture",
+      "acceptance_criteria": "Synthetic merchant profiles change approved tone/locale and data scope without duplicating base skills or exposing one merchant to another.",
+      "domain": "Skills and portability",
+      "depends_on": [
+        "SKILL-001"
+      ],
+      "priority": "P0",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M00"
+      ],
+      "readiness": "not_assessed",
+      "classification": "original_roadmap_requirement",
+      "release_requirement": "required_in_declared_support_envelope",
+      "source_requirement_id": null,
+      "acceptance_test_ids": [
+        "TEST-002",
+        "TEST-026",
+        "TEST-033",
+        "PORT-001"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "SKILL-004",
+      "milestone": "M02",
+      "title": "Define commerce-specific manifest extension",
+      "acceptance_criteria": "Publish JSON Schema for required actions, input/output references, version constraints and supported configuration; distinguish it from the Agent Skills standard.",
+      "domain": "Skills and portability",
+      "depends_on": [
+        "SKILL-001"
+      ],
+      "priority": "P0",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M01"
+      ],
+      "readiness": "not_assessed",
+      "classification": "original_roadmap_requirement",
+      "release_requirement": "required_in_declared_support_envelope",
+      "source_requirement_id": null,
+      "acceptance_test_ids": [
+        "TEST-003",
+        "TEST-004",
+        "TEST-005",
+        "TEST-006"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "SKILL-005",
+      "milestone": "M02",
+      "title": "Compose profile layers deterministically",
+      "acceptance_criteria": "Validate named layers, approved override paths, types, conflicts and provenance; reject ambiguous order rather than use last-loaded text.",
+      "domain": "Skills and portability",
+      "depends_on": [
+        "SKILL-004"
+      ],
+      "priority": "P0",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M01"
+      ],
+      "readiness": "not_assessed",
+      "classification": "original_roadmap_requirement",
+      "release_requirement": "required_in_declared_support_envelope",
+      "source_requirement_id": null,
+      "acceptance_test_ids": [
+        "PORT-005",
+        "PORT-006",
+        "PORT-007"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "SKILL-006",
+      "milestone": "M02",
+      "title": "Separate guidance from enforcement",
+      "acceptance_criteria": "Policy, authorization, money, consent, tenancy and action preconditions remain server-enforced when all skill instructions are ignored.",
+      "domain": "Skills and portability",
+      "depends_on": [
+        "SKILL-005",
+        "BUILD-045"
+      ],
+      "priority": "P0",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M01"
+      ],
+      "readiness": "not_assessed",
+      "classification": "original_roadmap_requirement",
+      "release_requirement": "required_in_declared_support_envelope",
+      "source_requirement_id": null,
+      "acceptance_test_ids": [
+        "TEST-003",
+        "TEST-004",
+        "TEST-005",
+        "TEST-006"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "SKILL-007",
+      "milestone": "M02",
+      "title": "Pin effective configuration",
+      "acceptance_criteria": "Persist skill/package digests, profile/policy versions, adapter contracts and activation decisions per case; new runs do not silently consume newer code.",
+      "domain": "Skills and portability",
+      "depends_on": [
+        "SKILL-005"
+      ],
+      "priority": "P0",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M01"
+      ],
+      "readiness": "not_assessed",
+      "classification": "original_roadmap_requirement",
+      "release_requirement": "required_in_declared_support_envelope",
+      "source_requirement_id": null,
+      "acceptance_test_ids": [
+        "PORT-008"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "SKILL-008",
+      "milestone": "M02",
+      "title": "Build configuration editor and simulator",
+      "acceptance_criteria": "A non-developer can change allowed return fields, see generated JSON/diff, run named scenarios and request publication without editing the core.",
+      "domain": "Skills and portability",
+      "depends_on": [
+        "SKILL-005",
+        "BUILD-013"
+      ],
+      "priority": "P0",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M01"
+      ],
+      "readiness": "not_assessed",
+      "classification": "original_roadmap_requirement",
+      "release_requirement": "required_in_declared_support_envelope",
+      "source_requirement_id": null,
+      "acceptance_test_ids": [
+        "TEST-003",
+        "TEST-004",
+        "TEST-005",
+        "TEST-006"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "SKILL-009",
+      "milestone": "M02",
+      "title": "Publish, rollback and revoke skills",
+      "acceptance_criteria": "Draft/test/review/publish states, immutable release pins, canary scope and emergency revocation work without letting agents self-publish.",
+      "domain": "Skills and portability",
+      "depends_on": [
+        "SKILL-007",
+        "SKILL-008"
+      ],
+      "priority": "P0",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M01"
+      ],
+      "readiness": "not_assessed",
+      "classification": "original_roadmap_requirement",
+      "release_requirement": "required_in_declared_support_envelope",
+      "source_requirement_id": null,
+      "acceptance_test_ids": [
+        "TEST-003",
+        "TEST-004",
+        "TEST-005",
+        "TEST-006"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "SKILL-010",
+      "milestone": "M02",
+      "title": "Establish trusted skill installation",
+      "acceptance_criteria": "Validate origins, digests and resources; disable package scripts by default; reject path traversal, symlink escape and unapproved network egress.",
+      "domain": "Skills and portability",
+      "depends_on": [
+        "SKILL-004"
+      ],
+      "priority": "P0",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M01"
+      ],
+      "readiness": "not_assessed",
+      "classification": "original_roadmap_requirement",
+      "release_requirement": "required_in_declared_support_envelope",
+      "source_requirement_id": null,
+      "acceptance_test_ids": [
+        "PORT-009"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "SKILL-011",
+      "milestone": "M02",
+      "title": "Build WooCommerce read-only spike",
+      "acceptance_criteria": "Use real test-store order/refund reads to challenge Shopify-shaped assumptions; publish native/emulated/unsupported capabilities.",
+      "domain": "Skills and portability",
+      "depends_on": [
+        "BUILD-005"
+      ],
+      "priority": "P0",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M01"
+      ],
+      "readiness": "not_assessed",
+      "classification": "original_roadmap_requirement",
+      "release_requirement": "required_in_declared_support_envelope",
+      "source_requirement_id": null,
+      "acceptance_test_ids": [
+        "TEST-003",
+        "TEST-004",
+        "TEST-005",
+        "TEST-006"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "SKILL-012",
+      "milestone": "M02",
+      "title": "Define independent agent contract",
+      "acceptance_criteria": "Accept scoped work leases/proposals and return durable receipts; bind workload/tenant/audience without passing through commerce-provider tokens.",
+      "domain": "Skills and portability",
+      "depends_on": [
+        "BUILD-046",
+        "BUILD-047",
+        "BUILD-048"
+      ],
+      "priority": "P0",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M01"
+      ],
+      "readiness": "not_assessed",
+      "classification": "original_roadmap_requirement",
+      "release_requirement": "required_in_declared_support_envelope",
+      "source_requirement_id": null,
+      "acceptance_test_ids": [
+        "PORT-010",
+        "PORT-011",
+        "TEST-032"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "SKILL-013",
+      "milestone": "M02",
+      "title": "Publish portable run envelope",
+      "acceptance_criteria": "External runtimes receive minimal facts, effective skill bundle, allowed operations and decision references, not provider threads, secrets or unrelated customer history.",
+      "domain": "Skills and portability",
+      "depends_on": [
+        "SKILL-007",
+        "SKILL-012"
+      ],
+      "priority": "P0",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M01"
+      ],
+      "readiness": "not_assessed",
+      "classification": "original_roadmap_requirement",
+      "release_requirement": "required_in_declared_support_envelope",
+      "source_requirement_id": null,
+      "acceptance_test_ids": [
+        "TEST-003",
+        "TEST-004",
+        "TEST-005",
+        "TEST-006"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "SKILL-014",
+      "milestone": "M03",
+      "title": "Ship return and exchange skill pack",
+      "acceptance_criteria": "Base workflows call canonical actions and use merchant policy results; platform differences live in packs/adapters with conformance tests.",
+      "domain": "Skills and portability",
+      "depends_on": [
+        "SKILL-009",
+        "BUILD-021"
+      ],
+      "priority": "P0",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M02"
+      ],
+      "readiness": "not_assessed",
+      "classification": "original_roadmap_requirement",
+      "release_requirement": "required_in_declared_support_envelope",
+      "source_requirement_id": null,
+      "acceptance_test_ids": [
+        "TEST-001",
+        "TEST-012",
+        "TEST-017",
+        "TEST-018"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "SKILL-015",
+      "milestone": "M04",
+      "title": "Ship safe-edit skill pack",
+      "acceptance_criteria": "Edit guidance uses server previews, independent holds, payment confirmation and receipts; no direct store writes by agent code.",
+      "domain": "Skills and portability",
+      "depends_on": [
+        "SKILL-009",
+        "BUILD-037"
+      ],
+      "priority": "P0",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M03"
+      ],
+      "readiness": "not_assessed",
+      "classification": "original_roadmap_requirement",
+      "release_requirement": "required_in_declared_support_envelope",
+      "source_requirement_id": null,
+      "acceptance_test_ids": [
+        "TEST-007",
+        "TEST-008",
+        "TEST-009",
+        "TEST-010"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "SKILL-016",
+      "milestone": "M05",
+      "title": "Ship support and tracking skill pack",
+      "acceptance_criteria": "Grounded answers, channel verification, consent, handoff and case status work through the same action contract across supported runtimes.",
+      "domain": "Skills and portability",
+      "depends_on": [
+        "SKILL-009",
+        "BUILD-064"
+      ],
+      "priority": "P0",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M03",
+        "M04"
+      ],
+      "readiness": "not_assessed",
+      "classification": "original_roadmap_requirement",
+      "release_requirement": "required_in_declared_support_envelope",
+      "source_requirement_id": null,
+      "acceptance_test_ids": [
+        "TEST-023",
+        "TEST-024",
+        "TEST-025",
+        "TEST-029"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "SKILL-017",
+      "milestone": "M05",
+      "title": "Certify per-skill autonomy",
+      "acceptance_criteria": "Publish capability/quality labels by skill × model × runtime; selectively disable financial or vision autonomy when not qualified.",
+      "domain": "Skills and portability",
+      "depends_on": [
+        "BUILD-056",
+        "SKILL-016"
+      ],
+      "priority": "P0",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M03",
+        "M04"
+      ],
+      "readiness": "not_assessed",
+      "classification": "original_roadmap_requirement",
+      "release_requirement": "required_in_declared_support_envelope",
+      "source_requirement_id": null,
+      "acceptance_test_ids": [
+        "TEST-023",
+        "TEST-024",
+        "TEST-025",
+        "TEST-029"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "SKILL-018",
+      "milestone": "M05",
+      "title": "Enforce provider consent and budgets",
+      "acceptance_criteria": "Merchant approves model destination/fallback policy; concurrency-aware spend reservations and circuit breakers halt new work without hiding completed actions.",
+      "domain": "Skills and portability",
+      "depends_on": [
+        "BUILD-051",
+        "SKILL-012"
+      ],
+      "priority": "P0",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M03",
+        "M04"
+      ],
+      "readiness": "not_assessed",
+      "classification": "original_roadmap_requirement",
+      "release_requirement": "required_in_declared_support_envelope",
+      "source_requirement_id": null,
+      "acceptance_test_ids": [
+        "TEST-023",
+        "TEST-024",
+        "TEST-025",
+        "TEST-029"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "SKILL-019",
+      "milestone": "M06",
+      "title": "Exercise differentiated merchant policies",
+      "acceptance_criteria": "At least apparel, fragile-goods and final-sale fixtures share base skills but differ in validated eligibility, evidence, routing and escalation.",
+      "domain": "Skills and portability",
+      "depends_on": [
+        "SKILL-014",
+        "SKILL-015"
+      ],
+      "priority": "P0",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M03",
+        "M04",
+        "M05"
+      ],
+      "readiness": "not_assessed",
+      "classification": "original_roadmap_requirement",
+      "release_requirement": "required_in_declared_support_envelope",
+      "source_requirement_id": null,
+      "acceptance_test_ids": [
+        "TEST-013",
+        "TEST-014",
+        "TEST-015",
+        "TEST-016"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "SKILL-020",
+      "milestone": "M07",
+      "title": "Complete second-platform write portability",
+      "acceptance_criteria": "WooCommerce shared subset completes status, return request, qualified refund and notification end-to-end; local RMA and gateway-settlement limitations are explicit.",
+      "domain": "Skills and portability",
+      "depends_on": [
+        "SKILL-011",
+        "SKILL-014"
+      ],
+      "priority": "P0",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M05",
+        "M06"
+      ],
+      "readiness": "not_assessed",
+      "classification": "original_roadmap_requirement",
+      "release_requirement": "required_in_declared_support_envelope",
+      "source_requirement_id": null,
+      "acceptance_test_ids": [
+        "PORT-018",
+        "PORT-019"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "SKILL-021",
+      "milestone": "M07",
+      "title": "Certify two independent runtimes",
+      "acceptance_criteria": "Switch a live test case between two orchestration implementations using the same skill bundle and policies; fence the previous owner and reconcile pending actions.",
+      "domain": "Skills and portability",
+      "depends_on": [
+        "SKILL-012",
+        "SKILL-020"
+      ],
+      "priority": "P0",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M05",
+        "M06"
+      ],
+      "readiness": "not_assessed",
+      "classification": "original_roadmap_requirement",
+      "release_requirement": "required_in_declared_support_envelope",
+      "source_requirement_id": null,
+      "acceptance_test_ids": [
+        "TEST-027",
+        "PORT-011"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "SKILL-022",
+      "milestone": "M07",
+      "title": "Publish compatibility and quality matrix",
+      "acceptance_criteria": "Matrix specifies platform/payment/fulfillment API versions, model capabilities, runtime support, tested scenarios and known gaps; unsupported means blocked.",
+      "domain": "Skills and portability",
+      "depends_on": [
+        "SKILL-020",
+        "SKILL-021",
+        "SKILL-017"
+      ],
+      "priority": "P0",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M05",
+        "M06"
+      ],
+      "readiness": "not_assessed",
+      "classification": "original_roadmap_requirement",
+      "release_requirement": "required_in_declared_support_envelope",
+      "source_requirement_id": null,
+      "acceptance_test_ids": [
+        "TEST-027",
+        "PORT-018",
+        "PORT-019",
+        "PORT-020"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "SKILL-023",
+      "milestone": "M07",
+      "title": "Export/import merchant-owned assets",
+      "acceptance_criteria": "Export policies, profiles, skill pins, case records, consent and evaluations; exclude secret plaintext and map credential references during import.",
+      "domain": "Skills and portability",
+      "depends_on": [
+        "BUILD-069",
+        "SKILL-007"
+      ],
+      "priority": "P0",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M05",
+        "M06"
+      ],
+      "readiness": "not_assessed",
+      "classification": "original_roadmap_requirement",
+      "release_requirement": "required_in_declared_support_envelope",
+      "source_requirement_id": null,
+      "acceptance_test_ids": [
+        "PORT-020"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "SKILL-024",
+      "milestone": "M12",
+      "title": "Curated extension distribution",
+      "acceptance_criteria": "Publish versioned artifacts through existing Git/releases or registries with ownership, license, provenance and conformance reports; no mandatory registry.",
+      "domain": "Skills and portability",
+      "depends_on": [
+        "SKILL-022"
+      ],
+      "priority": "P2",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M07"
+      ],
+      "readiness": "not_assessed",
+      "classification": "original_roadmap_requirement",
+      "release_requirement": "expansion",
+      "source_requirement_id": null,
+      "acceptance_test_ids": [
+        "PORT-032"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "SKILL-025",
+      "milestone": "M12",
+      "title": "Manage compatibility migrations",
+      "acceptance_criteria": "Profile/contract/skill changes declare semver impact, migrations, deprecations and rollback; active cases cannot silently change approved action semantics.",
+      "domain": "Skills and portability",
+      "depends_on": [
+        "SKILL-024"
+      ],
+      "priority": "P2",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M07"
+      ],
+      "readiness": "not_assessed",
+      "classification": "original_roadmap_requirement",
+      "release_requirement": "expansion",
+      "source_requirement_id": null,
+      "acceptance_test_ids": [
+        "PORT-032"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "OPS-001",
+      "milestone": "M07",
+      "title": "Run independent installation and upgrade drill",
+      "acceptance_criteria": "A non-author installs from a tagged artifact, upgrades, restores and uses documented recovery without private maintainer instructions.",
+      "domain": "Operations",
+      "depends_on": [
+        "BUILD-071",
+        "SKILL-023"
+      ],
+      "priority": "P0",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M05",
+        "M06"
+      ],
+      "readiness": "not_assessed",
+      "classification": "original_roadmap_requirement",
+      "release_requirement": "required_in_declared_support_envelope",
+      "source_requirement_id": null,
+      "acceptance_test_ids": [
+        "PORT-023"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "OPS-002",
+      "milestone": "M07",
+      "title": "Publish security and dependency posture",
+      "acceptance_criteria": "Release includes reporting policy, dependency/license inventory, SBOM, documented threat boundaries and no known unmitigated critical/high release blockers.",
+      "domain": "Operations",
+      "depends_on": [
+        "PLAN-002"
+      ],
+      "priority": "P0",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M05",
+        "M06"
+      ],
+      "readiness": "not_assessed",
+      "classification": "original_roadmap_requirement",
+      "release_requirement": "required_in_declared_support_envelope",
+      "source_requirement_id": null,
+      "acceptance_test_ids": [
+        "TEST-027",
+        "PORT-018",
+        "PORT-019",
+        "PORT-020"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "OPS-003",
+      "milestone": "M07",
+      "title": "Measure bounded pilot outcomes",
+      "acceptance_criteria": "Record predeclared cohort/scenarios, correct outcomes, seven-day reopen rates, costs and exceptions; do not replace insufficient live validation with simulated claims.",
+      "domain": "Validation",
+      "depends_on": [
+        "PLAN-005",
+        "BUILD-068"
+      ],
+      "priority": "P0",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M05",
+        "M06"
+      ],
+      "readiness": "not_assessed",
+      "classification": "original_roadmap_requirement",
+      "release_requirement": "required_in_declared_support_envelope",
+      "source_requirement_id": null,
+      "acceptance_test_ids": [
+        "TEST-027",
+        "PORT-018",
+        "PORT-019",
+        "PORT-020"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "OPS-004",
+      "milestone": "M07",
+      "title": "Verify privacy across all stores",
+      "acceptance_criteria": "Exercise customer erasure/export, uninstall, attachment/index/cache cleanup and retention rules while preserving minimized legally required records.",
+      "domain": "Operations",
+      "depends_on": [
+        "BUILD-014"
+      ],
+      "priority": "P0",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M05",
+        "M06"
+      ],
+      "readiness": "not_assessed",
+      "classification": "original_roadmap_requirement",
+      "release_requirement": "required_in_declared_support_envelope",
+      "source_requirement_id": null,
+      "acceptance_test_ids": [
+        "TEST-027",
+        "PORT-018",
+        "PORT-019",
+        "PORT-020"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "OPS-005",
+      "milestone": "M07",
+      "title": "Validate load and recovery envelope",
+      "acceptance_criteria": "Publish tested hardware, order/event volume, p95 latency by dependency, queue lag, reconciliation, RPO/RTO targets and restore results.",
+      "domain": "Operations",
+      "depends_on": [
+        "BUILD-015",
+        "BUILD-071"
+      ],
+      "priority": "P0",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M05",
+        "M06"
+      ],
+      "readiness": "not_assessed",
+      "classification": "original_roadmap_requirement",
+      "release_requirement": "required_in_declared_support_envelope",
+      "source_requirement_id": null,
+      "acceptance_test_ids": [
+        "TEST-027",
+        "PORT-018",
+        "PORT-019",
+        "PORT-020"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "OPS-006",
+      "milestone": "M07",
+      "title": "Test migration and parallel operation",
+      "acceptance_criteria": "Map exports/native IDs; import dry-run checks totals; prevent two systems from refunding/sending/fulfilling the same work; rehearsal supports rollback.",
+      "domain": "Operations",
+      "depends_on": [
+        "BUILD-069"
+      ],
+      "priority": "P0",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M05",
+        "M06"
+      ],
+      "readiness": "not_assessed",
+      "classification": "original_roadmap_requirement",
+      "release_requirement": "required_in_declared_support_envelope",
+      "source_requirement_id": null,
+      "acceptance_test_ids": [
+        "PORT-022"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "OPS-007",
+      "milestone": "M07",
+      "title": "Complete accessibility and locale review",
+      "acceptance_criteria": "Customer and operator critical flows are keyboard/screen-reader tested; timezone, currency, locale and error messages are explicit.",
+      "domain": "Product",
+      "depends_on": [
+        "BUILD-017"
+      ],
+      "priority": "P0",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M05",
+        "M06"
+      ],
+      "readiness": "not_assessed",
+      "classification": "original_roadmap_requirement",
+      "release_requirement": "required_in_declared_support_envelope",
+      "source_requirement_id": null,
+      "acceptance_test_ids": [
+        "TEST-027",
+        "PORT-018",
+        "PORT-019",
+        "PORT-020"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "OPS-008",
+      "milestone": "M07",
+      "title": "Approve public release evidence",
+      "acceptance_criteria": "Human maintainer accepts capability claims, pilot gaps, operations ownership, signed artifact provenance and security/regression review.",
+      "domain": "Governance",
+      "depends_on": [
+        "OPS-001",
+        "OPS-002",
+        "OPS-003",
+        "OPS-004",
+        "OPS-005",
+        "OPS-006",
+        "OPS-007",
+        "SKILL-022"
+      ],
+      "priority": "P0",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M05",
+        "M06"
+      ],
+      "readiness": "not_assessed",
+      "classification": "original_roadmap_requirement",
+      "release_requirement": "required_in_declared_support_envelope",
+      "source_requirement_id": null,
+      "acceptance_test_ids": [
+        "TEST-027",
+        "PORT-018",
+        "PORT-019",
+        "PORT-020"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "EXP-001",
+      "milestone": "M08",
+      "title": "Build carrier selection and batching",
+      "acceptance_criteria": "Merchant-owned accounts, approved service rules, label lifecycle and batch handling retain per-package receipts and recover uncertain outcomes.",
+      "domain": "Logistics",
+      "depends_on": [
+        "BUILD-031"
+      ],
+      "priority": "P2",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M07"
+      ],
+      "readiness": "not_assessed",
+      "classification": "original_roadmap_requirement",
+      "release_requirement": "expansion",
+      "source_requirement_id": null,
+      "acceptance_test_ids": [
+        "PORT-025"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "EXP-002",
+      "milestone": "M08",
+      "title": "Build scan-to-pack and manifest workflow",
+      "acceptance_criteria": "Validate expected items/counts, partial shipments and scan deduplication; manifest state is distinct from carrier acceptance.",
+      "domain": "Logistics",
+      "depends_on": [
+        "EXP-001"
+      ],
+      "priority": "P2",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M07"
+      ],
+      "readiness": "not_assessed",
+      "classification": "original_roadmap_requirement",
+      "release_requirement": "expansion",
+      "source_requirement_id": null,
+      "acceptance_test_ids": [
+        "PORT-025"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "EXP-003",
+      "milestone": "M08",
+      "title": "Qualify 3PL/WMS connectors",
+      "acceptance_criteria": "Connector tests prove hold/update/receipt semantics and stock reconciliation on named warehouse versions and configurations.",
+      "domain": "Logistics",
+      "depends_on": [
+        "BUILD-070",
+        "BUILD-037"
+      ],
+      "priority": "P2",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M07"
+      ],
+      "readiness": "not_assessed",
+      "classification": "original_roadmap_requirement",
+      "release_requirement": "expansion",
+      "source_requirement_id": null,
+      "acceptance_test_ids": [
+        "PORT-025"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "EXP-004",
+      "milestone": "M08",
+      "title": "Build inventory-movement reconciliation",
+      "acceptance_criteria": "Maintain source-referenced per-location adjustments/transfers with authoritative ownership and discrepancy queues.",
+      "domain": "Logistics",
+      "depends_on": [
+        "EXP-003",
+        "BUILD-034"
+      ],
+      "priority": "P2",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M07"
+      ],
+      "readiness": "not_assessed",
+      "classification": "original_roadmap_requirement",
+      "release_requirement": "expansion",
+      "source_requirement_id": null,
+      "acceptance_test_ids": [
+        "PORT-025"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "EXP-005",
+      "milestone": "M09",
+      "title": "Add shopping and cart skills",
+      "acceptance_criteria": "Recommendations and cart proposals use real inventory/prices and approved terms; unsupported payment/checkout actions remain disabled.",
+      "domain": "Growth",
+      "depends_on": [
+        "BUILD-079"
+      ],
+      "priority": "P2",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M07"
+      ],
+      "readiness": "not_assessed",
+      "classification": "original_roadmap_requirement",
+      "release_requirement": "expansion",
+      "source_requirement_id": null,
+      "acceptance_test_ids": [
+        "TEST-034",
+        "PORT-026",
+        "PORT-027"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "EXP-006",
+      "milestone": "M09",
+      "title": "Add segmentation and campaign integrations",
+      "acceptance_criteria": "Draft segments/templates/schedules through merchant provider accounts with consent, suppression, preview and approval.",
+      "domain": "Growth",
+      "depends_on": [
+        "BUILD-065",
+        "BUILD-087"
+      ],
+      "priority": "P2",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M07"
+      ],
+      "readiness": "not_assessed",
+      "classification": "original_roadmap_requirement",
+      "release_requirement": "expansion",
+      "source_requirement_id": null,
+      "acceptance_test_ids": [
+        "TEST-034",
+        "PORT-026",
+        "PORT-027"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "EXP-007",
+      "milestone": "M09",
+      "title": "Validate experiment measurement",
+      "acceptance_criteria": "Stable assignment, holdout integrity, attribution windows and contribution-margin reporting are verified against synthetic ground truth.",
+      "domain": "Growth",
+      "depends_on": [
+        "BUILD-079",
+        "BUILD-068"
+      ],
+      "priority": "P2",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M07"
+      ],
+      "readiness": "not_assessed",
+      "classification": "original_roadmap_requirement",
+      "release_requirement": "expansion",
+      "source_requirement_id": null,
+      "acceptance_test_ids": [
+        "TEST-034",
+        "PORT-026",
+        "PORT-027"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "EXP-008",
+      "milestone": "M09",
+      "title": "Add rescue/cart recovery workflows",
+      "acceptance_criteria": "Detect configured abandonment events and propose eligible outreach/offers; avoid claiming a human staffing service is implemented.",
+      "domain": "Growth",
+      "depends_on": [
+        "EXP-006",
+        "EXP-007"
+      ],
+      "priority": "P2",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M07"
+      ],
+      "readiness": "not_assessed",
+      "classification": "original_roadmap_requirement",
+      "release_requirement": "expansion",
+      "source_requirement_id": null,
+      "acceptance_test_ids": [
+        "TEST-034",
+        "PORT-026",
+        "PORT-027"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "EXP-009",
+      "milestone": "M10",
+      "title": "Record partner readiness and responsibility",
+      "acceptance_criteria": "Enable partner services only with access, contract, settlement/reconciliation, geography, data policy and incident owner documented.",
+      "domain": "Partner integrations",
+      "depends_on": [],
+      "priority": "P2",
+      "delivery_mode": "partner",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M07"
+      ],
+      "readiness": "not_assessed",
+      "classification": "original_roadmap_requirement",
+      "release_requirement": "expansion",
+      "source_requirement_id": null,
+      "acceptance_test_ids": [
+        "PORT-028",
+        "PORT-029"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "EXP-010",
+      "milestone": "M10",
+      "title": "Track international physical handoffs",
+      "acceptance_criteria": "Local-return and inspection events retain partner identities, receipt proof, fee/tax estimates and final cost references.",
+      "domain": "Partner integrations",
+      "depends_on": [
+        "EXP-009",
+        "BUILD-096"
+      ],
+      "priority": "P2",
+      "delivery_mode": "partner",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M07"
+      ],
+      "readiness": "not_assessed",
+      "classification": "original_roadmap_requirement",
+      "release_requirement": "expansion",
+      "source_requirement_id": null,
+      "acceptance_test_ids": [
+        "PORT-028",
+        "PORT-029"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "EXP-011",
+      "milestone": "M11",
+      "title": "Benchmark forecasts against baselines",
+      "acceptance_criteria": "Use timestamped training windows, holdout horizons and explicit metrics; report bias and stock/service outcomes instead of only model confidence.",
+      "domain": "Inventory",
+      "depends_on": [
+        "BUILD-084"
+      ],
+      "priority": "P2",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M07",
+        "M08"
+      ],
+      "readiness": "not_assessed",
+      "classification": "original_roadmap_requirement",
+      "release_requirement": "expansion",
+      "source_requirement_id": null,
+      "acceptance_test_ids": [
+        "PORT-030",
+        "PORT-031"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "EXP-012",
+      "milestone": "M11",
+      "title": "Qualify purchasing and receiving controls",
+      "acceptance_criteria": "PO approvals, partial receipt, units, supplier lead time and cost changes cannot double-count stock or bypass spending authority.",
+      "domain": "Inventory",
+      "depends_on": [
+        "BUILD-085",
+        "EXP-004"
+      ],
+      "priority": "P2",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M07",
+        "M08"
+      ],
+      "readiness": "not_assessed",
+      "classification": "original_roadmap_requirement",
+      "release_requirement": "expansion",
+      "source_requirement_id": null,
+      "acceptance_test_ids": [
+        "PORT-030",
+        "PORT-031"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "EXP-013",
+      "milestone": "M12",
+      "title": "Implement delegated multi-store administration",
+      "acceptance_criteria": "Agency roles, shared templates and reporting cannot cross tenant authority; store owners can accept/reject upgrades separately.",
+      "domain": "Ecosystem",
+      "depends_on": [
+        "BUILD-082",
+        "SKILL-025"
+      ],
+      "priority": "P2",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M07"
+      ],
+      "readiness": "not_assessed",
+      "classification": "original_roadmap_requirement",
+      "release_requirement": "expansion",
+      "source_requirement_id": null,
+      "acceptance_test_ids": [
+        "PORT-032"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    },
+    {
+      "id": "EXP-014",
+      "milestone": "M12",
+      "title": "Document contributor and deprecation governance",
+      "acceptance_criteria": "At least one external extension passes review, fixture tests and support ownership; retiring versions follow documented notice and migration.",
+      "domain": "Ecosystem",
+      "depends_on": [
+        "SKILL-024"
+      ],
+      "priority": "P2",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M07"
+      ],
+      "readiness": "not_assessed",
+      "classification": "original_roadmap_requirement",
+      "release_requirement": "expansion",
+      "source_requirement_id": null,
+      "acceptance_test_ids": [
+        "PORT-032"
+      ],
+      "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing."
+    }
+  ]
+}

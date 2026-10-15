@@ -1,0 +1,48 @@
+{
+  "status": "not_executed",
+  "fixtures_are_synthetic": true,
+  "cases": [
+    {
+      "id": "EX-01",
+      "profile": "apparel-example",
+      "facts": {
+        "days_since_delivery": 20,
+        "tags": [],
+        "reason": "size"
+      },
+      "expected_eligibility": "eligible_subject_to_other_checks"
+    },
+    {
+      "id": "EX-02",
+      "profile": "fragile-goods-example",
+      "facts": {
+        "days_since_delivery": 20,
+        "tags": [],
+        "reason": "unwanted"
+      },
+      "expected_eligibility": "outside_window_requires_review"
+    },
+    {
+      "id": "EX-03",
+      "profile": "clearance-example",
+      "facts": {
+        "days_since_delivery": 3,
+        "tags": [
+          "final-sale"
+        ],
+        "reason": "unwanted"
+      },
+      "expected_eligibility": "excluded_by_published_rule"
+    },
+    {
+      "id": "EX-04",
+      "profile": "apparel-example",
+      "facts": {
+        "days_since_delivery": 3,
+        "tags": [],
+        "reason": "damaged"
+      },
+      "expected_eligibility": "evidence_required_before_resolution"
+    }
+  ]
+}
