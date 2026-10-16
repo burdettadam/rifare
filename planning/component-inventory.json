@@ -70,6 +70,7 @@
         "docs/decisions/0009-candidate-bound-evidence.md",
         "docs/decisions/0010-integrated-milestone-qualification.md",
         "docs/decisions/0011-delegated-review-and-integration.md",
+        "docs/decisions/0012-five-goal-local-implementation.md",
         "docs/decisions/README.md",
         "goals/M00/M00-G01.md",
         "goals/M00/M00-G02.md",
