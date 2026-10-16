@@ -149,3 +149,18 @@ native test-ID checks, and source-bound reports. Node's existing package/lock
 remain unchanged. The browser suite runs Chromium against in-memory source and a
 fake response boundary; it does not qualify a served React/PostgreSQL application.
 M00-G05/M00-G06 remain unaccepted pending their full prerequisites and reviews.
+
+## M00-G07 trusted regression controller
+
+Run the new controller self-tests locally:
+
+```sh
+python3 -m unittest discover -s tests -p test_regression_gate.py -v
+```
+
+For full retained-obligation enforcement, use the [external-controller guide](docs/TRUSTED-REGRESSION-GATE.md)
+and [test map](docs/REGRESSION-TEST-MAP.md). It executes the native suites using
+separately pinned verifier/baseline bytes. Do not treat candidate-owned verification
+scripts or copied pass reports as a trusted baseline. M00-G05/M00-G06 target-stack
+qualification and independent reviews remain open; this preparatory goal does not
+change their acceptance or authorize a release.

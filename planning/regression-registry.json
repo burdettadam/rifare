@@ -58,6 +58,14 @@
       "contract_files": [
         "goals/M00/M00-G06.md"
       ]
+    },
+    {
+      "id": "FEATURE-M00-G07",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M00/M00-G07.md"
+      ]
     }
   ],
   "tests": [
@@ -1138,6 +1146,412 @@
       "runner_case_id": "test_plan_tools.PlanStructureTests.test_unknown_dependency_fails",
       "source": "tests/test_plan_tools.py",
       "capability_id": "FEATURE-BOOTSTRAP"
+    },
+    {
+      "id": "python:test_regression_gate.BaselineRetentionTests.test_CASE_M00_G07_02_candidate_cannot_drop_registration",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.BaselineRetentionTests.test_CASE_M00_G07_02_candidate_cannot_drop_registration",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.BaselineRetentionTests.test_CASE_M00_G07_03_same_count_tautological_assertion_requires_review",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.BaselineRetentionTests.test_CASE_M00_G07_03_same_count_tautological_assertion_requires_review",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.BaselineRetentionTests.test_candidate_approval_text_cannot_override_changed_oracle",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.BaselineRetentionTests.test_candidate_approval_text_cannot_override_changed_oracle",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.BaselineRetentionTests.test_disabling_capability_fails",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.BaselineRetentionTests.test_disabling_capability_fails",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.BaselineRetentionTests.test_duplicate_native_ids_are_rejected",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.BaselineRetentionTests.test_duplicate_native_ids_are_rejected",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.BaselineRetentionTests.test_empty_registry_is_rejected",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.BaselineRetentionTests.test_empty_registry_is_rejected",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.BaselineRetentionTests.test_orphan_capability_is_rejected",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.BaselineRetentionTests.test_orphan_capability_is_rejected",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.BaselineRetentionTests.test_path_traversal_is_rejected",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.BaselineRetentionTests.test_path_traversal_is_rejected",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.BaselineRetentionTests.test_relabeling_diagnostic_as_accepted_is_not_allowed",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.BaselineRetentionTests.test_relabeling_diagnostic_as_accepted_is_not_allowed",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.BaselineRetentionTests.test_removing_protected_fixture_pin_is_detected",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.BaselineRetentionTests.test_removing_protected_fixture_pin_is_detected",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.BaselineRetentionTests.test_renamed_id_is_not_same_test",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.BaselineRetentionTests.test_renamed_id_is_not_same_test",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.BaselineRetentionTests.test_same_count_changed_independent_fixture_requires_review",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.BaselineRetentionTests.test_same_count_changed_independent_fixture_requires_review",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.BaselineRetentionTests.test_source_mode_change_requires_review",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.BaselineRetentionTests.test_source_mode_change_requires_review",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.BaselineRetentionTests.test_source_paths_cannot_disappear",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.BaselineRetentionTests.test_source_paths_cannot_disappear",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.BaselineRetentionTests.test_source_symlink_in_commit_is_not_supported",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.BaselineRetentionTests.test_source_symlink_in_commit_is_not_supported",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.BaselineRetentionTests.test_switching_or_disabling_inventory_guard_is_not_allowed",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.BaselineRetentionTests.test_switching_or_disabling_inventory_guard_is_not_allowed",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.BaselineRetentionTests.test_symlink_baseline_path_is_rejected",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.BaselineRetentionTests.test_symlink_baseline_path_is_rejected",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.BaselineRetentionTests.test_unknown_runner_is_rejected",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.BaselineRetentionTests.test_unknown_runner_is_rejected",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.BaselineRetentionTests.test_whitespace_changes_remain_explicit_review",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.BaselineRetentionTests.test_whitespace_changes_remain_explicit_review",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.NativeAdapterTests.test_class_setup_error_is_not_pass",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.NativeAdapterTests.test_class_setup_error_is_not_pass",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.NativeAdapterTests.test_controller_requires_every_module",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.NativeAdapterTests.test_controller_requires_every_module",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.NativeAdapterTests.test_duplicate_json_fields_are_not_silently_overridden",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.NativeAdapterTests.test_duplicate_json_fields_are_not_silently_overridden",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.NativeAdapterTests.test_expected_failure_is_not_pass",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.NativeAdapterTests.test_expected_failure_is_not_pass",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.NativeAdapterTests.test_failed_assertion_is_not_pass",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.NativeAdapterTests.test_failed_assertion_is_not_pass",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.NativeAdapterTests.test_real_unittest_success_has_native_id",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.NativeAdapterTests.test_real_unittest_success_has_native_id",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.NativeAdapterTests.test_relative_path_cannot_contain_git_or_traversal",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.NativeAdapterTests.test_relative_path_cannot_contain_git_or_traversal",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.NativeAdapterTests.test_renamed_test_is_not_equivalent",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.NativeAdapterTests.test_renamed_test_is_not_equivalent",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.NativeAdapterTests.test_secret_print_during_native_run_fails",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.NativeAdapterTests.test_secret_print_during_native_run_fails",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.NativeAdapterTests.test_subtest_failure_is_not_hidden",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.NativeAdapterTests.test_subtest_failure_is_not_hidden",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.NativeAdapterTests.test_unittest_skip_is_not_pass",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.NativeAdapterTests.test_unittest_skip_is_not_pass",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.NativeAdapterTests.test_zero_native_tests_fails",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.NativeAdapterTests.test_zero_native_tests_fails",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.PinnedExecutionTests.test_CASE_M00_G07_01_retained_tests_and_addition_execute",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.PinnedExecutionTests.test_CASE_M00_G07_01_retained_tests_and_addition_execute",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.PinnedExecutionTests.test_addition_cannot_be_skipped",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.PinnedExecutionTests.test_addition_cannot_be_skipped",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.PinnedExecutionTests.test_baseline_change_during_execution_is_rejected",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.PinnedExecutionTests.test_baseline_change_during_execution_is_rejected",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.PinnedExecutionTests.test_baseline_inside_checkout_is_not_trusted",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.PinnedExecutionTests.test_baseline_inside_checkout_is_not_trusted",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.PinnedExecutionTests.test_branch_name_is_not_a_commit_pin",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.PinnedExecutionTests.test_branch_name_is_not_a_commit_pin",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.PinnedExecutionTests.test_candidate_fake_report_is_not_consumed",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.PinnedExecutionTests.test_candidate_fake_report_is_not_consumed",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.PinnedExecutionTests.test_changed_baseline_is_rejected",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.PinnedExecutionTests.test_changed_baseline_is_rejected",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.PinnedExecutionTests.test_changed_controller_module_is_rejected",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.PinnedExecutionTests.test_changed_controller_module_is_rejected",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.PinnedExecutionTests.test_controller_from_checkout_cannot_be_used",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.PinnedExecutionTests.test_controller_from_checkout_cannot_be_used",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.PinnedExecutionTests.test_dirty_source_is_rejected",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.PinnedExecutionTests.test_dirty_source_is_rejected",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.PinnedExecutionTests.test_existing_baseline_executes_exactly_one",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.PinnedExecutionTests.test_existing_baseline_executes_exactly_one",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.PinnedExecutionTests.test_failing_addition_blocks_even_with_retained_success",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.PinnedExecutionTests.test_failing_addition_blocks_even_with_retained_success",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.PinnedExecutionTests.test_hidden_assume_unchanged_source_is_rejected",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.PinnedExecutionTests.test_hidden_assume_unchanged_source_is_rejected",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.PinnedExecutionTests.test_ignored_executable_input_is_rejected",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.PinnedExecutionTests.test_ignored_executable_input_is_rejected",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.PinnedExecutionTests.test_native_command_uses_external_adapter",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.PinnedExecutionTests.test_native_command_uses_external_adapter",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.PinnedExecutionTests.test_reusing_output_directory_is_rejected",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.PinnedExecutionTests.test_reusing_output_directory_is_rejected",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.PinnedExecutionTests.test_unregistered_new_test_cannot_hide",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.PinnedExecutionTests.test_unregistered_new_test_cannot_hide",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.PinnedExecutionTests.test_wrong_controller_digest_is_rejected_before_running",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.PinnedExecutionTests.test_wrong_controller_digest_is_rejected_before_running",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.PinnedExecutionTests.test_wrong_full_candidate_sha_is_rejected",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.PinnedExecutionTests.test_wrong_full_candidate_sha_is_rejected",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.SourceExtensionTests.test_control_change_after_run_is_blocked",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.SourceExtensionTests.test_control_change_after_run_is_blocked",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.SourceExtensionTests.test_exact_source_count_is_required",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.SourceExtensionTests.test_exact_source_count_is_required",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.SourceExtensionTests.test_inventory_cannot_count_a_file_twice",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.SourceExtensionTests.test_inventory_cannot_count_a_file_twice",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.SourceExtensionTests.test_inventory_cannot_omit_a_tracked_file",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.SourceExtensionTests.test_inventory_cannot_omit_a_tracked_file",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.SourceExtensionTests.test_output_cannot_overwrite_controller",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.SourceExtensionTests.test_output_cannot_overwrite_controller",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.SourceExtensionTests.test_partial_membership_configuration_is_invalid",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.SourceExtensionTests.test_partial_membership_configuration_is_invalid",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.SourceExtensionTests.test_source_count_exception_does_not_allow_oracle_changes",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.SourceExtensionTests.test_source_count_exception_does_not_allow_oracle_changes",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_regression_gate.SourceExtensionTests.test_structural_source_count_extension_preserves_other_expectations",
+      "suite": "python",
+      "runner_case_id": "test_regression_gate.SourceExtensionTests.test_structural_source_count_extension_preserves_other_expectations",
+      "source": "tests/test_regression_gate.py",
+      "capability_id": "FEATURE-M00-G07"
     },
     {
       "id": "python:test_release_benchmark.ReleaseBenchmarkTests.test_CASE_M00_G02_01_hand_calculated_cohort_matches_every_aggregate_value",

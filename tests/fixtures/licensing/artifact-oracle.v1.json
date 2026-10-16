@@ -1,6 +1,6 @@
 {
-  "source_file_count": 404,
-  "source_count_reason": "All 401 prior source paths retained; three bounded M00-G07 authority and registration paths added. Other inventory expectations unchanged.",
+  "source_file_count": 409,
+  "source_count_reason": "All 401 M00-G06 source paths retained; 8 bounded M00-G07 authority, registration, controller, test and documentation paths added. Other oracle fields and original test assertions unchanged.",
   "component_ids": [
     "git-agent-adaptations",
     "rifare-developer-helpers",

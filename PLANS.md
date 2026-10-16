@@ -10,8 +10,9 @@ into `main` without rewriting their source commits. See
 the exception is disclosed. No product milestone or runtime is qualified.
 
 M00-G04 is accepted and merged with its branch preserved. M00-G05 has a partial
-diagnostic runtime on its branch. M00-G06 has authorized preparatory test-harness
-work under ADR-0007; neither goal is accepted and main remains unchanged. Existing proposal
+diagnostic runtime on its branch. M00-G06 has preparatory diagnostic test-harness work under ADR-0007. M00-G07
+has preparatory trusted-regression-controller work under ADR-0008. These three
+goals remain unaccepted and main remains unchanged. Existing proposal
 JSON and the initial `planning/goal-state.json` remain immutable historical
 specifications; their pending/unstarted fields do not override work records.
 
@@ -26,6 +27,6 @@ belong under `work/`, not in a new scheduler or task database.
 
 Use the accepted scope, benchmark and licensing direction as the planning baseline.
 Continue target-stack qualification on M00-G05 and preparatory harness work only
-within ADR-0007. Keep future application,
+within ADR-0007 and regression-controller preparation within ADR-0008. Keep future application,
 runtime isolation and test-harness work in M00-G05/M00-G06. Acceptance means the
 particular documented development outcome, not live product feature completion.
