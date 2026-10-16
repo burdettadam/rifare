@@ -51,6 +51,20 @@ Raw red/green output, retained-suite results, fault candidates, candidate commit
 identity, controller pins and restore results are kept in the separate evidence
 package rather than committed as self-authored approval records.
 
+## Executed review proof
+
+The unchanged retained controller from d32342c executed all 945 registered tests
+against implementation commit 657b0c8: 502 Python, 415 runtime, 15 unit, 7 database
+and 6 browser-component checks. There were no failures or skips. All 830 old
+registrations and their 36 executable source files remained unchanged.
+
+Five separate temporary Git worktrees held deliberately broken implementations.
+The local model digest check, hostile-data instruction separation, factual scoring,
+current action restriction and exact large-money conversion were individually
+weakened. Each full corresponding new test file failed with an assertion error.
+The faults were removed with their disposable worktrees; no mutated source was
+merged. Earlier genuine review failures and the repaired tests are also retained.
+
 ## Remaining limitations
 
 - The actual local probe found no installed service at the explicitly requested
@@ -69,9 +83,10 @@ package rather than committed as self-authored approval records.
 
 ## Local integration decision
 
-The implementation is eligible for local integration only after the unchanged
-retained suite plus new tests pass at a fixed commit and the targeted fault
-proofs fail for their intended behavioral reasons. The actual decision and
-immutable pins are recorded by Git history and the separate delivery report.
+The reviewed diagnostic implementation is approved for local integration under
+DELEGATED-LOCAL-06 on the observed suite and fault evidence above. Refresh the
+externally retained baseline to include the 115 new obligations, then verify the
+merged commit and restored distributions. Immutable pins and actual restoration
+outcomes belong in the separate delivery report, not an invented review identity.
 No full M01/M02 acceptance, public release, live payment, message delivery,
 model download or hosted publication is authorized by this review.

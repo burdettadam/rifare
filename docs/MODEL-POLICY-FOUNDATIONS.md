@@ -86,7 +86,7 @@ node --experimental-strip-types tools/evaluate-status.mts \
 A valid report with failed cases exits 1; invalid inputs fail. The independently
 hand-calculated five-case fixture is in `tests/fixtures/model-policy/`: two correct
 cases out of five, one factual answer, one required handoff, one authority violation,
-and unknown aggregate cost/follow-up latency. It intentionally does not pass quality.
+and unknown aggregate cost/latency. It intentionally does not pass quality.
 No threshold in the release benchmark is modified by this evaluator.
 
 ## Roles and action/resource scopes (M02-G01)
