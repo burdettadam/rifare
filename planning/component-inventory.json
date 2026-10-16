@@ -66,6 +66,7 @@
         "docs/decisions/0007-deterministic-test-harness.md",
         "docs/decisions/0008-trusted-regression-controller.md",
         "docs/decisions/0009-candidate-bound-evidence.md",
+        "docs/decisions/0010-integrated-milestone-qualification.md",
         "docs/decisions/README.md",
         "goals/M00/M00-G01.md",
         "goals/M00/M00-G02.md",
@@ -324,7 +325,8 @@
         "work/records/M00-G05.md",
         "work/records/M00-G06.md",
         "work/records/M00-G07.md",
-        "work/records/M00-G08.md"
+        "work/records/M00-G08.md",
+        "work/records/M00-G99.md"
       ],
       "notices": []
     },
