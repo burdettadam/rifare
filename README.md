@@ -103,7 +103,7 @@ qualification and target-stack startup remain separate work.
 The project ZIP contains a standalone `.git` history. The bundle can be cloned:
 
 ```sh
-git clone -b goal/M00-G05 /path/to/Rifare-M00-G05.bundle Rifare
+git clone -b main /path/to/Rifare-reviewed-main.bundle Rifare
 cd Rifare
 git remote remove origin
 python3 tools/verify.py
@@ -133,13 +133,15 @@ native regression controller, records source/configuration/artifact identity and
 checks external review facts without granting acceptance. See
 [the evidence guide](docs/EVIDENCE-GATE.md) and
 [the current work record](work/records/M00-G08.md).
-The current registry has 565 executable diagnostic/helper checks: 466 retained
-and 99 new. Full target-stack qualification and independent review remain open.
+The current registry has 582 executable diagnostic/helper checks: 565 retained
+and 17 added by the integration review. The delegated local review is complete;
+full target-stack qualification remains open.
 All 676 commerce scenarios remain planning specifications.
 
 ## Integrated M00 qualification
 
-The M00-G99 assessment reuses the existing 565-check suite and evidence controllers.
+The original M00-G99 assessment used 565 checks. The integrated source retains
+those checks, adds 17 review regressions and reuses the same evidence controllers.
 The milestone remains blocked by target-stack qualification and unaccepted
 prerequisites; a green diagnostic run is not milestone acceptance. See
 [qualification and repair order](docs/M00-QUALIFICATION.md) and
