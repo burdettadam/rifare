@@ -194,6 +194,46 @@
       "contract_files": [
         "goals/M01/M01-G15.md"
       ]
+    },
+    {
+      "id": "FEATURE-M01-G16",
+      "enabled": true,
+      "qualification": "retained_diagnostic_not_accepted",
+      "contract_files": [
+        "goals/M01/M01-G16.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M01-G17",
+      "enabled": true,
+      "qualification": "retained_diagnostic_not_accepted",
+      "contract_files": [
+        "goals/M01/M01-G17.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M01-G18",
+      "enabled": true,
+      "qualification": "retained_diagnostic_not_accepted",
+      "contract_files": [
+        "goals/M01/M01-G18.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M02-G01",
+      "enabled": true,
+      "qualification": "retained_diagnostic_not_accepted",
+      "contract_files": [
+        "goals/M02/M02-G01.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M02-G02",
+      "enabled": true,
+      "qualification": "retained_diagnostic_not_accepted",
+      "contract_files": [
+        "goals/M02/M02-G02.md"
+      ]
     }
   ],
   "tests": [
@@ -6006,6 +6046,811 @@
       "runner_case_id": "M01-G15-PROVIDER-DISABLED-HTTP",
       "source": "tests/development/agent-external.test.mts",
       "capability_id": "FEATURE-M01-G15"
+    },
+    {
+      "id": "runtime:CASE-M01-G16-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M01-G16-01",
+      "source": "tests/development/local-model.test.mts",
+      "capability_id": "FEATURE-M01-G16"
+    },
+    {
+      "id": "runtime:CASE-M01-G16-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M01-G16-02",
+      "source": "tests/development/local-model.test.mts",
+      "capability_id": "FEATURE-M01-G16"
+    },
+    {
+      "id": "runtime:CASE-M01-G16-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M01-G16-03",
+      "source": "tests/development/local-model.test.mts",
+      "capability_id": "FEATURE-M01-G16"
+    },
+    {
+      "id": "runtime:M01-G16-NO-DNS-OR-REMOTE",
+      "suite": "runtime",
+      "runner_case_id": "M01-G16-NO-DNS-OR-REMOTE",
+      "source": "tests/development/local-model.test.mts",
+      "capability_id": "FEATURE-M01-G16"
+    },
+    {
+      "id": "runtime:M01-G16-CLOUD-DISABLED-REQUIRED",
+      "suite": "runtime",
+      "runner_case_id": "M01-G16-CLOUD-DISABLED-REQUIRED",
+      "source": "tests/development/local-model.test.mts",
+      "capability_id": "FEATURE-M01-G16"
+    },
+    {
+      "id": "runtime:M01-G16-DIGEST-MISMATCH",
+      "suite": "runtime",
+      "runner_case_id": "M01-G16-DIGEST-MISMATCH",
+      "source": "tests/development/local-model.test.mts",
+      "capability_id": "FEATURE-M01-G16"
+    },
+    {
+      "id": "runtime:M01-G16-REMOTE-MODEL-REFUSED",
+      "suite": "runtime",
+      "runner_case_id": "M01-G16-REMOTE-MODEL-REFUSED",
+      "source": "tests/development/local-model.test.mts",
+      "capability_id": "FEATURE-M01-G16"
+    },
+    {
+      "id": "runtime:M01-G16-MISSING-MODEL",
+      "suite": "runtime",
+      "runner_case_id": "M01-G16-MISSING-MODEL",
+      "source": "tests/development/local-model.test.mts",
+      "capability_id": "FEATURE-M01-G16"
+    },
+    {
+      "id": "runtime:M01-G16-REDIRECT-NOT-FOLLOWED",
+      "suite": "runtime",
+      "runner_case_id": "M01-G16-REDIRECT-NOT-FOLLOWED",
+      "source": "tests/development/local-model.test.mts",
+      "capability_id": "FEATURE-M01-G16"
+    },
+    {
+      "id": "runtime:M01-G16-DEADLINE",
+      "suite": "runtime",
+      "runner_case_id": "M01-G16-DEADLINE",
+      "source": "tests/development/local-model.test.mts",
+      "capability_id": "FEATURE-M01-G16"
+    },
+    {
+      "id": "runtime:M01-G16-NO-SECRET-OR-AUTH-HEADER",
+      "suite": "runtime",
+      "runner_case_id": "M01-G16-NO-SECRET-OR-AUTH-HEADER",
+      "source": "tests/development/local-model.test.mts",
+      "capability_id": "FEATURE-M01-G16"
+    },
+    {
+      "id": "runtime:M01-G16-CONTEXT-NOT-TRUNCATED",
+      "suite": "runtime",
+      "runner_case_id": "M01-G16-CONTEXT-NOT-TRUNCATED",
+      "source": "tests/development/local-model.test.mts",
+      "capability_id": "FEATURE-M01-G16"
+    },
+    {
+      "id": "runtime:M01-G16-OUTPUT-BOUNDED",
+      "suite": "runtime",
+      "runner_case_id": "M01-G16-OUTPUT-BOUNDED",
+      "source": "tests/development/local-model.test.mts",
+      "capability_id": "FEATURE-M01-G16"
+    },
+    {
+      "id": "runtime:M01-G16-PROSE-IS-NOT-FACT-EVIDENCE",
+      "suite": "runtime",
+      "runner_case_id": "M01-G16-PROSE-IS-NOT-FACT-EVIDENCE",
+      "source": "tests/development/local-model.test.mts",
+      "capability_id": "FEATURE-M01-G16"
+    },
+    {
+      "id": "runtime:M01-G16-TRUNCATED-RESPONSE",
+      "suite": "runtime",
+      "runner_case_id": "M01-G16-TRUNCATED-RESPONSE",
+      "source": "tests/development/local-model.test.mts",
+      "capability_id": "FEATURE-M01-G16"
+    },
+    {
+      "id": "runtime:M01-G16-IDENTITY-RECHECK-AFTER-RESPONSE",
+      "suite": "runtime",
+      "runner_case_id": "M01-G16-IDENTITY-RECHECK-AFTER-RESPONSE",
+      "source": "tests/development/local-model.test.mts",
+      "capability_id": "FEATURE-M01-G16"
+    },
+    {
+      "id": "runtime:M01-G16-WRITES-ARE-NOT-EXECUTED",
+      "suite": "runtime",
+      "runner_case_id": "M01-G16-WRITES-ARE-NOT-EXECUTED",
+      "source": "tests/development/local-model.test.mts",
+      "capability_id": "FEATURE-M01-G16"
+    },
+    {
+      "id": "runtime:M01-G16-NO-NATIVE-THINKING-RECEIPT",
+      "suite": "runtime",
+      "runner_case_id": "M01-G16-NO-NATIVE-THINKING-RECEIPT",
+      "source": "tests/development/local-model.test.mts",
+      "capability_id": "FEATURE-M01-G16"
+    },
+    {
+      "id": "runtime:M01-G16-EMPTY-USAGE-IS-UNKNOWN",
+      "suite": "runtime",
+      "runner_case_id": "M01-G16-EMPTY-USAGE-IS-UNKNOWN",
+      "source": "tests/development/local-model.test.mts",
+      "capability_id": "FEATURE-M01-G16"
+    },
+    {
+      "id": "runtime:M01-G16-SEPARATE-STORE",
+      "suite": "runtime",
+      "runner_case_id": "M01-G16-SEPARATE-STORE",
+      "source": "tests/development/local-model.test.mts",
+      "capability_id": "FEATURE-M01-G16"
+    },
+    {
+      "id": "runtime:CASE-M01-G17-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M01-G17-01",
+      "source": "tests/development/hostile-content.test.mts",
+      "capability_id": "FEATURE-M01-G17"
+    },
+    {
+      "id": "runtime:CASE-M01-G17-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M01-G17-02",
+      "source": "tests/development/hostile-content.test.mts",
+      "capability_id": "FEATURE-M01-G17"
+    },
+    {
+      "id": "runtime:CASE-M01-G17-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M01-G17-03",
+      "source": "tests/development/hostile-content.test.mts",
+      "capability_id": "FEATURE-M01-G17"
+    },
+    {
+      "id": "runtime:TEST-026",
+      "suite": "runtime",
+      "runner_case_id": "TEST-026",
+      "source": "tests/development/hostile-content.test.mts",
+      "capability_id": "FEATURE-M01-G17"
+    },
+    {
+      "id": "runtime:M01-G17-UNKNOWN-FIELDS-NO-AUTHORITY",
+      "suite": "runtime",
+      "runner_case_id": "M01-G17-UNKNOWN-FIELDS-NO-AUTHORITY",
+      "source": "tests/development/hostile-content.test.mts",
+      "capability_id": "FEATURE-M01-G17"
+    },
+    {
+      "id": "runtime:M01-G17-MESSAGE-LIMIT",
+      "suite": "runtime",
+      "runner_case_id": "M01-G17-MESSAGE-LIMIT",
+      "source": "tests/development/hostile-content.test.mts",
+      "capability_id": "FEATURE-M01-G17"
+    },
+    {
+      "id": "runtime:M01-G17-KNOWLEDGE-NOT-SKILL",
+      "suite": "runtime",
+      "runner_case_id": "M01-G17-KNOWLEDGE-NOT-SKILL",
+      "source": "tests/development/hostile-content.test.mts",
+      "capability_id": "FEATURE-M01-G17"
+    },
+    {
+      "id": "runtime:M01-G17-REVOKED-DOCUMENT",
+      "suite": "runtime",
+      "runner_case_id": "M01-G17-REVOKED-DOCUMENT",
+      "source": "tests/development/hostile-content.test.mts",
+      "capability_id": "FEATURE-M01-G17"
+    },
+    {
+      "id": "runtime:M01-G17-HOSTILE-MODEL-TOOL-CALL",
+      "suite": "runtime",
+      "runner_case_id": "M01-G17-HOSTILE-MODEL-TOOL-CALL",
+      "source": "tests/development/hostile-content.test.mts",
+      "capability_id": "FEATURE-M01-G17"
+    },
+    {
+      "id": "runtime:M01-G17-NO-CREDENTIALS-IN-PROMPT",
+      "suite": "runtime",
+      "runner_case_id": "M01-G17-NO-CREDENTIALS-IN-PROMPT",
+      "source": "tests/development/hostile-content.test.mts",
+      "capability_id": "FEATURE-M01-G17"
+    },
+    {
+      "id": "runtime:M01-G17-OTHER-STORE-SOURCES-EXCLUDED",
+      "suite": "runtime",
+      "runner_case_id": "M01-G17-OTHER-STORE-SOURCES-EXCLUDED",
+      "source": "tests/development/hostile-content.test.mts",
+      "capability_id": "FEATURE-M01-G17"
+    },
+    {
+      "id": "runtime:M01-G17-OTHER-ORDER-SOURCES-EXCLUDED",
+      "suite": "runtime",
+      "runner_case_id": "M01-G17-OTHER-ORDER-SOURCES-EXCLUDED",
+      "source": "tests/development/hostile-content.test.mts",
+      "capability_id": "FEATURE-M01-G17"
+    },
+    {
+      "id": "runtime:M01-G17-PROFILE-CANNOT-INSTALL-ENDPOINT",
+      "suite": "runtime",
+      "runner_case_id": "M01-G17-PROFILE-CANNOT-INSTALL-ENDPOINT",
+      "source": "tests/development/hostile-content.test.mts",
+      "capability_id": "FEATURE-M01-G17"
+    },
+    {
+      "id": "runtime:M01-G17-REJECT-HTML",
+      "suite": "runtime",
+      "runner_case_id": "M01-G17-REJECT-HTML",
+      "source": "tests/development/hostile-content.test.mts",
+      "capability_id": "FEATURE-M01-G17"
+    },
+    {
+      "id": "runtime:M01-G17-REJECT-PATH",
+      "suite": "runtime",
+      "runner_case_id": "M01-G17-REJECT-PATH",
+      "source": "tests/development/hostile-content.test.mts",
+      "capability_id": "FEATURE-M01-G17"
+    },
+    {
+      "id": "runtime:M01-G17-REJECT-ZIP",
+      "suite": "runtime",
+      "runner_case_id": "M01-G17-REJECT-ZIP",
+      "source": "tests/development/hostile-content.test.mts",
+      "capability_id": "FEATURE-M01-G17"
+    },
+    {
+      "id": "runtime:M01-G17-REJECT-PHOTO-TEXT",
+      "suite": "runtime",
+      "runner_case_id": "M01-G17-REJECT-PHOTO-TEXT",
+      "source": "tests/development/hostile-content.test.mts",
+      "capability_id": "FEATURE-M01-G17"
+    },
+    {
+      "id": "runtime:CASE-M01-G18-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M01-G18-01",
+      "source": "tests/development/source-evaluation.test.mts",
+      "capability_id": "FEATURE-M01-G18"
+    },
+    {
+      "id": "runtime:CASE-M01-G18-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M01-G18-02",
+      "source": "tests/development/source-evaluation.test.mts",
+      "capability_id": "FEATURE-M01-G18"
+    },
+    {
+      "id": "runtime:CASE-M01-G18-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M01-G18-03",
+      "source": "tests/development/source-evaluation.test.mts",
+      "capability_id": "FEATURE-M01-G18"
+    },
+    {
+      "id": "runtime:M01-G18-FROZEN-EXPECTED-VALUES",
+      "suite": "runtime",
+      "runner_case_id": "M01-G18-FROZEN-EXPECTED-VALUES",
+      "source": "tests/development/source-evaluation.test.mts",
+      "capability_id": "FEATURE-M01-G18"
+    },
+    {
+      "id": "runtime:M01-G18-DUPLICATE-SUCCESS",
+      "suite": "runtime",
+      "runner_case_id": "M01-G18-DUPLICATE-SUCCESS",
+      "source": "tests/development/source-evaluation.test.mts",
+      "capability_id": "FEATURE-M01-G18"
+    },
+    {
+      "id": "runtime:M01-G18-UNKNOWN-CASE",
+      "suite": "runtime",
+      "runner_case_id": "M01-G18-UNKNOWN-CASE",
+      "source": "tests/development/source-evaluation.test.mts",
+      "capability_id": "FEATURE-M01-G18"
+    },
+    {
+      "id": "runtime:M01-G18-EMPTY-RUN",
+      "suite": "runtime",
+      "runner_case_id": "M01-G18-EMPTY-RUN",
+      "source": "tests/development/source-evaluation.test.mts",
+      "capability_id": "FEATURE-M01-G18"
+    },
+    {
+      "id": "runtime:M01-G18-CONFIGURATIONS-NOT-POOLED",
+      "suite": "runtime",
+      "runner_case_id": "M01-G18-CONFIGURATIONS-NOT-POOLED",
+      "source": "tests/development/source-evaluation.test.mts",
+      "capability_id": "FEATURE-M01-G18"
+    },
+    {
+      "id": "runtime:M01-G18-SYNTHETIC-NOT-LIVE",
+      "suite": "runtime",
+      "runner_case_id": "M01-G18-SYNTHETIC-NOT-LIVE",
+      "source": "tests/development/source-evaluation.test.mts",
+      "capability_id": "FEATURE-M01-G18"
+    },
+    {
+      "id": "runtime:M01-G18-HANDOFF-NOT-AUTONOMOUS-ANSWER",
+      "suite": "runtime",
+      "runner_case_id": "M01-G18-HANDOFF-NOT-AUTONOMOUS-ANSWER",
+      "source": "tests/development/source-evaluation.test.mts",
+      "capability_id": "FEATURE-M01-G18"
+    },
+    {
+      "id": "runtime:M01-G18-EXTRA-CLAIM-IS-INCORRECT",
+      "suite": "runtime",
+      "runner_case_id": "M01-G18-EXTRA-CLAIM-IS-INCORRECT",
+      "source": "tests/development/source-evaluation.test.mts",
+      "capability_id": "FEATURE-M01-G18"
+    },
+    {
+      "id": "runtime:M01-G18-CLAIM-ORDER-DOES-NOT-MATTER",
+      "suite": "runtime",
+      "runner_case_id": "M01-G18-CLAIM-ORDER-DOES-NOT-MATTER",
+      "source": "tests/development/source-evaluation.test.mts",
+      "capability_id": "FEATURE-M01-G18"
+    },
+    {
+      "id": "runtime:M01-G18-UNAUTHORIZED-ACTION-FAILS-CORRECT-FACTS",
+      "suite": "runtime",
+      "runner_case_id": "M01-G18-UNAUTHORIZED-ACTION-FAILS-CORRECT-FACTS",
+      "source": "tests/development/source-evaluation.test.mts",
+      "capability_id": "FEATURE-M01-G18"
+    },
+    {
+      "id": "runtime:M01-G18-PENDING-REMAINS-IN-DENOMINATOR",
+      "suite": "runtime",
+      "runner_case_id": "M01-G18-PENDING-REMAINS-IN-DENOMINATOR",
+      "source": "tests/development/source-evaluation.test.mts",
+      "capability_id": "FEATURE-M01-G18"
+    },
+    {
+      "id": "runtime:M01-G18-COST-UNKNOWN-NOT-ZERO",
+      "suite": "runtime",
+      "runner_case_id": "M01-G18-COST-UNKNOWN-NOT-ZERO",
+      "source": "tests/development/source-evaluation.test.mts",
+      "capability_id": "FEATURE-M01-G18"
+    },
+    {
+      "id": "runtime:M01-G18-COST-EXACT-AND-P95",
+      "suite": "runtime",
+      "runner_case_id": "M01-G18-COST-EXACT-AND-P95",
+      "source": "tests/development/source-evaluation.test.mts",
+      "capability_id": "FEATURE-M01-G18"
+    },
+    {
+      "id": "runtime:M01-G18-COST-NUMBER-AND-NEGATIVE-REFUSED",
+      "suite": "runtime",
+      "runner_case_id": "M01-G18-COST-NUMBER-AND-NEGATIVE-REFUSED",
+      "source": "tests/development/source-evaluation.test.mts",
+      "capability_id": "FEATURE-M01-G18"
+    },
+    {
+      "id": "runtime:M01-G18-REPORT-DOES-NOT-REPEAT-RAW-FACTS",
+      "suite": "runtime",
+      "runner_case_id": "M01-G18-REPORT-DOES-NOT-REPEAT-RAW-FACTS",
+      "source": "tests/development/source-evaluation.test.mts",
+      "capability_id": "FEATURE-M01-G18"
+    },
+    {
+      "id": "runtime:M01-G18-CANDIDATE-PROSE-IS-NOT-AN-ORACLE",
+      "suite": "runtime",
+      "runner_case_id": "M01-G18-CANDIDATE-PROSE-IS-NOT-AN-ORACLE",
+      "source": "tests/development/source-evaluation.test.mts",
+      "capability_id": "FEATURE-M01-G18"
+    },
+    {
+      "id": "runtime:M01-G18-DUPLICATE-CLAIM",
+      "suite": "runtime",
+      "runner_case_id": "M01-G18-DUPLICATE-CLAIM",
+      "source": "tests/development/source-evaluation.test.mts",
+      "capability_id": "FEATURE-M01-G18"
+    },
+    {
+      "id": "runtime:M01-G18-NATIVE-RUN-OBSERVATION",
+      "suite": "runtime",
+      "runner_case_id": "M01-G18-NATIVE-RUN-OBSERVATION",
+      "source": "tests/development/source-evaluation.test.mts",
+      "capability_id": "FEATURE-M01-G18"
+    },
+    {
+      "id": "runtime:CASE-M02-G01-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M02-G01-01",
+      "source": "tests/development/roles.test.mts",
+      "capability_id": "FEATURE-M02-G01"
+    },
+    {
+      "id": "runtime:CASE-M02-G01-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M02-G01-02",
+      "source": "tests/development/roles.test.mts",
+      "capability_id": "FEATURE-M02-G01"
+    },
+    {
+      "id": "runtime:CASE-M02-G01-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M02-G01-03",
+      "source": "tests/development/roles.test.mts",
+      "capability_id": "FEATURE-M02-G01"
+    },
+    {
+      "id": "runtime:M02-G01-NO-ROLE-FORGED-IN-SCOPE",
+      "suite": "runtime",
+      "runner_case_id": "M02-G01-NO-ROLE-FORGED-IN-SCOPE",
+      "source": "tests/development/roles.test.mts",
+      "capability_id": "FEATURE-M02-G01"
+    },
+    {
+      "id": "runtime:M02-G01-CROSS-STORE-GRANT",
+      "suite": "runtime",
+      "runner_case_id": "M02-G01-CROSS-STORE-GRANT",
+      "source": "tests/development/roles.test.mts",
+      "capability_id": "FEATURE-M02-G01"
+    },
+    {
+      "id": "runtime:M02-G01-SCOPED-ORDER-AND-LIST",
+      "suite": "runtime",
+      "runner_case_id": "M02-G01-SCOPED-ORDER-AND-LIST",
+      "source": "tests/development/roles.test.mts",
+      "capability_id": "FEATURE-M02-G01"
+    },
+    {
+      "id": "runtime:M02-G01-REISSUED-SESSIONS-NO-ESCALATION",
+      "suite": "runtime",
+      "runner_case_id": "M02-G01-REISSUED-SESSIONS-NO-ESCALATION",
+      "source": "tests/development/roles.test.mts",
+      "capability_id": "FEATURE-M02-G01"
+    },
+    {
+      "id": "runtime:M02-G01-STALE-AUTHORITY-REVISION",
+      "suite": "runtime",
+      "runner_case_id": "M02-G01-STALE-AUTHORITY-REVISION",
+      "source": "tests/development/roles.test.mts",
+      "capability_id": "FEATURE-M02-G01"
+    },
+    {
+      "id": "runtime:M02-G01-LAST-OWNER-PRESERVED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G01-LAST-OWNER-PRESERVED",
+      "source": "tests/development/roles.test.mts",
+      "capability_id": "FEATURE-M02-G01"
+    },
+    {
+      "id": "runtime:M02-G01-OWNER-CANNOT-LOCK-OUT-ADMIN",
+      "suite": "runtime",
+      "runner_case_id": "M02-G01-OWNER-CANNOT-LOCK-OUT-ADMIN",
+      "source": "tests/development/roles.test.mts",
+      "capability_id": "FEATURE-M02-G01"
+    },
+    {
+      "id": "runtime:M02-G01-UNKNOWN-ACTIONS-NO-DEFAULT-ALLOW",
+      "suite": "runtime",
+      "runner_case_id": "M02-G01-UNKNOWN-ACTIONS-NO-DEFAULT-ALLOW",
+      "source": "tests/development/roles.test.mts",
+      "capability_id": "FEATURE-M02-G01"
+    },
+    {
+      "id": "runtime:M02-G01-ROLES-CANNOT-GRANT-UNAVAILABLE-ACTIONS",
+      "suite": "runtime",
+      "runner_case_id": "M02-G01-ROLES-CANNOT-GRANT-UNAVAILABLE-ACTIONS",
+      "source": "tests/development/roles.test.mts",
+      "capability_id": "FEATURE-M02-G01"
+    },
+    {
+      "id": "runtime:M02-G01-REVIEWER-CANNOT-CHANGE-PROFILE",
+      "suite": "runtime",
+      "runner_case_id": "M02-G01-REVIEWER-CANNOT-CHANGE-PROFILE",
+      "source": "tests/development/roles.test.mts",
+      "capability_id": "FEATURE-M02-G01"
+    },
+    {
+      "id": "runtime:M02-G01-AGENT-CANNOT-INGEST",
+      "suite": "runtime",
+      "runner_case_id": "M02-G01-AGENT-CANNOT-INGEST",
+      "source": "tests/development/roles.test.mts",
+      "capability_id": "FEATURE-M02-G01"
+    },
+    {
+      "id": "runtime:M02-G01-INTEGRATION-CAN-INGEST-NOT-ADMIN",
+      "suite": "runtime",
+      "runner_case_id": "M02-G01-INTEGRATION-CAN-INGEST-NOT-ADMIN",
+      "source": "tests/development/roles.test.mts",
+      "capability_id": "FEATURE-M02-G01"
+    },
+    {
+      "id": "runtime:M02-G01-PRIVATE-AUDIT-SCOPING",
+      "suite": "runtime",
+      "runner_case_id": "M02-G01-PRIVATE-AUDIT-SCOPING",
+      "source": "tests/development/roles.test.mts",
+      "capability_id": "FEATURE-M02-G01"
+    },
+    {
+      "id": "runtime:M02-G01-CANNOT-MODIFY-ANOTHER-TENANT",
+      "suite": "runtime",
+      "runner_case_id": "M02-G01-CANNOT-MODIFY-ANOTHER-TENANT",
+      "source": "tests/development/roles.test.mts",
+      "capability_id": "FEATURE-M02-G01"
+    },
+    {
+      "id": "runtime:M02-G01-PROFILE-TEXT-CANNOT-CHANGE-AUTHORITY",
+      "suite": "runtime",
+      "runner_case_id": "M02-G01-PROFILE-TEXT-CANNOT-CHANGE-AUTHORITY",
+      "source": "tests/development/roles.test.mts",
+      "capability_id": "FEATURE-M02-G01"
+    },
+    {
+      "id": "runtime:M02-G01-PRIVILEGED-CHANGE-ATOMIC-AUDIT",
+      "suite": "runtime",
+      "runner_case_id": "M02-G01-PRIVILEGED-CHANGE-ATOMIC-AUDIT",
+      "source": "tests/development/roles.test.mts",
+      "capability_id": "FEATURE-M02-G01"
+    },
+    {
+      "id": "runtime:M02-G01-MIDFLIGHT-MODEL-REVOCATION",
+      "suite": "runtime",
+      "runner_case_id": "M02-G01-MIDFLIGHT-MODEL-REVOCATION",
+      "source": "tests/development/roles.test.mts",
+      "capability_id": "FEATURE-M02-G01"
+    },
+    {
+      "id": "runtime:M02-G01-OWNER-POLICY-HTTP",
+      "suite": "runtime",
+      "runner_case_id": "M02-G01-OWNER-POLICY-HTTP",
+      "source": "tests/development/roles.test.mts",
+      "capability_id": "FEATURE-M02-G01"
+    },
+    {
+      "id": "runtime:M02-G01-AGENT-HTTP-NO-SELF-APPROVAL",
+      "suite": "runtime",
+      "runner_case_id": "M02-G01-AGENT-HTTP-NO-SELF-APPROVAL",
+      "source": "tests/development/roles.test.mts",
+      "capability_id": "FEATURE-M02-G01"
+    },
+    {
+      "id": "runtime:M02-G01-TABLES-FROZEN",
+      "suite": "runtime",
+      "runner_case_id": "M02-G01-TABLES-FROZEN",
+      "source": "tests/development/roles.test.mts",
+      "capability_id": "FEATURE-M02-G01"
+    },
+    {
+      "id": "runtime:CASE-M02-G02-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M02-G02-01",
+      "source": "tests/development/money.test.mts",
+      "capability_id": "FEATURE-M02-G02"
+    },
+    {
+      "id": "runtime:CASE-M02-G02-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M02-G02-02",
+      "source": "tests/development/money.test.mts",
+      "capability_id": "FEATURE-M02-G02"
+    },
+    {
+      "id": "runtime:CASE-M02-G02-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M02-G02-03",
+      "source": "tests/development/money.test.mts",
+      "capability_id": "FEATURE-M02-G02"
+    },
+    {
+      "id": "runtime:M02-G02-NO-FLOAT-LOSS",
+      "suite": "runtime",
+      "runner_case_id": "M02-G02-NO-FLOAT-LOSS",
+      "source": "tests/development/money.test.mts",
+      "capability_id": "FEATURE-M02-G02"
+    },
+    {
+      "id": "runtime:M02-G02-DECIMAL-TENTHS",
+      "suite": "runtime",
+      "runner_case_id": "M02-G02-DECIMAL-TENTHS",
+      "source": "tests/development/money.test.mts",
+      "capability_id": "FEATURE-M02-G02"
+    },
+    {
+      "id": "runtime:M02-G02-JPY-ZERO-PRECISION",
+      "suite": "runtime",
+      "runner_case_id": "M02-G02-JPY-ZERO-PRECISION",
+      "source": "tests/development/money.test.mts",
+      "capability_id": "FEATURE-M02-G02"
+    },
+    {
+      "id": "runtime:M02-G02-KWD-THREE-PLACES",
+      "suite": "runtime",
+      "runner_case_id": "M02-G02-KWD-THREE-PLACES",
+      "source": "tests/development/money.test.mts",
+      "capability_id": "FEATURE-M02-G02"
+    },
+    {
+      "id": "runtime:M02-G02-UNKNOWN-CURRENCY",
+      "suite": "runtime",
+      "runner_case_id": "M02-G02-UNKNOWN-CURRENCY",
+      "source": "tests/development/money.test.mts",
+      "capability_id": "FEATURE-M02-G02"
+    },
+    {
+      "id": "runtime:M02-G02-STRING-MINOR-UNITS-ONLY",
+      "suite": "runtime",
+      "runner_case_id": "M02-G02-STRING-MINOR-UNITS-ONLY",
+      "source": "tests/development/money.test.mts",
+      "capability_id": "FEATURE-M02-G02"
+    },
+    {
+      "id": "runtime:M02-G02-SIGNED-EXPLICIT",
+      "suite": "runtime",
+      "runner_case_id": "M02-G02-SIGNED-EXPLICIT",
+      "source": "tests/development/money.test.mts",
+      "capability_id": "FEATURE-M02-G02"
+    },
+    {
+      "id": "runtime:M02-G02-NEGATIVE-REMAINING-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G02-NEGATIVE-REMAINING-REJECTED",
+      "source": "tests/development/money.test.mts",
+      "capability_id": "FEATURE-M02-G02"
+    },
+    {
+      "id": "runtime:M02-G02-NO-CROSS-CURRENCY-PRIOR",
+      "suite": "runtime",
+      "runner_case_id": "M02-G02-NO-CROSS-CURRENCY-PRIOR",
+      "source": "tests/development/money.test.mts",
+      "capability_id": "FEATURE-M02-G02"
+    },
+    {
+      "id": "runtime:M02-G02-HALF-EVEN-EXPLICIT",
+      "suite": "runtime",
+      "runner_case_id": "M02-G02-HALF-EVEN-EXPLICIT",
+      "source": "tests/development/money.test.mts",
+      "capability_id": "FEATURE-M02-G02"
+    },
+    {
+      "id": "runtime:M02-G02-HALF-UP-EXPLICIT",
+      "suite": "runtime",
+      "runner_case_id": "M02-G02-HALF-UP-EXPLICIT",
+      "source": "tests/development/money.test.mts",
+      "capability_id": "FEATURE-M02-G02"
+    },
+    {
+      "id": "runtime:M02-G02-NEGATIVE-FLOOR-CEILING",
+      "suite": "runtime",
+      "runner_case_id": "M02-G02-NEGATIVE-FLOOR-CEILING",
+      "source": "tests/development/money.test.mts",
+      "capability_id": "FEATURE-M02-G02"
+    },
+    {
+      "id": "runtime:M02-G02-ROUNDING-NOT-IMPLICIT",
+      "suite": "runtime",
+      "runner_case_id": "M02-G02-ROUNDING-NOT-IMPLICIT",
+      "source": "tests/development/money.test.mts",
+      "capability_id": "FEATURE-M02-G02"
+    },
+    {
+      "id": "runtime:M02-G02-RATIONAL-RESIDUE",
+      "suite": "runtime",
+      "runner_case_id": "M02-G02-RATIONAL-RESIDUE",
+      "source": "tests/development/money.test.mts",
+      "capability_id": "FEATURE-M02-G02"
+    },
+    {
+      "id": "runtime:M02-G02-ALLOCATION-PERMUTATION",
+      "suite": "runtime",
+      "runner_case_id": "M02-G02-ALLOCATION-PERMUTATION",
+      "source": "tests/development/money.test.mts",
+      "capability_id": "FEATURE-M02-G02"
+    },
+    {
+      "id": "runtime:M02-G02-ALLOCATION-ZERO-WEIGHT",
+      "suite": "runtime",
+      "runner_case_id": "M02-G02-ALLOCATION-ZERO-WEIGHT",
+      "source": "tests/development/money.test.mts",
+      "capability_id": "FEATURE-M02-G02"
+    },
+    {
+      "id": "runtime:M02-G02-ALLOCATION-INVALID",
+      "suite": "runtime",
+      "runner_case_id": "M02-G02-ALLOCATION-INVALID",
+      "source": "tests/development/money.test.mts",
+      "capability_id": "FEATURE-M02-G02"
+    },
+    {
+      "id": "runtime:M02-G02-PARTIAL-RETURNS-RETAIN-CENTS",
+      "suite": "runtime",
+      "runner_case_id": "M02-G02-PARTIAL-RETURNS-RETAIN-CENTS",
+      "source": "tests/development/money.test.mts",
+      "capability_id": "FEATURE-M02-G02"
+    },
+    {
+      "id": "runtime:M02-G02-PARTIAL-RETURN-GROUPING",
+      "suite": "runtime",
+      "runner_case_id": "M02-G02-PARTIAL-RETURN-GROUPING",
+      "source": "tests/development/money.test.mts",
+      "capability_id": "FEATURE-M02-G02"
+    },
+    {
+      "id": "runtime:M02-G02-QUANTITY-LIMIT",
+      "suite": "runtime",
+      "runner_case_id": "M02-G02-QUANTITY-LIMIT",
+      "source": "tests/development/money.test.mts",
+      "capability_id": "FEATURE-M02-G02"
+    },
+    {
+      "id": "runtime:M02-G02-ORIGINAL-PRESENTMENT-NO-FX",
+      "suite": "runtime",
+      "runner_case_id": "M02-G02-ORIGINAL-PRESENTMENT-NO-FX",
+      "source": "tests/development/money.test.mts",
+      "capability_id": "FEATURE-M02-G02"
+    },
+    {
+      "id": "runtime:M02-G02-IMMUTABLE-VALUES",
+      "suite": "runtime",
+      "runner_case_id": "M02-G02-IMMUTABLE-VALUES",
+      "source": "tests/development/money.test.mts",
+      "capability_id": "FEATURE-M02-G02"
+    },
+    {
+      "id": "runtime:M02-G02-ARITHMETIC-LIMITS",
+      "suite": "runtime",
+      "runner_case_id": "M02-G02-ARITHMETIC-LIMITS",
+      "source": "tests/development/money.test.mts",
+      "capability_id": "FEATURE-M02-G02"
+    },
+    {
+      "id": "runtime:REVIEW-POLICY-UPGRADE-RETAINS-OLD-SESSIONS",
+      "suite": "runtime",
+      "runner_case_id": "REVIEW-POLICY-UPGRADE-RETAINS-OLD-SESSIONS",
+      "source": "tests/development/model-policy-review.test.mts",
+      "capability_id": "FEATURE-M02-G01"
+    },
+    {
+      "id": "runtime:REVIEW-POLICY-ALLOCATION-RESIDUES-SUM-ZERO",
+      "suite": "runtime",
+      "runner_case_id": "REVIEW-POLICY-ALLOCATION-RESIDUES-SUM-ZERO",
+      "source": "tests/development/model-policy-review.test.mts",
+      "capability_id": "FEATURE-M02-G02"
+    },
+    {
+      "id": "runtime:REVIEW-POLICY-EVALUATION-REJECTS-NONJSON-FACTS",
+      "suite": "runtime",
+      "runner_case_id": "REVIEW-POLICY-EVALUATION-REJECTS-NONJSON-FACTS",
+      "source": "tests/development/model-policy-review.test.mts",
+      "capability_id": "FEATURE-M01-G18"
+    },
+    {
+      "id": "runtime:REVIEW-POLICY-HTTP-HOSTILE-INPUT",
+      "suite": "runtime",
+      "runner_case_id": "REVIEW-POLICY-HTTP-HOSTILE-INPUT",
+      "source": "tests/development/model-policy-review.test.mts",
+      "capability_id": "FEATURE-M01-G17"
+    },
+    {
+      "id": "runtime:REVIEW-POLICY-AGENT-RESTRICTED-INVOKE-RECHECK",
+      "suite": "runtime",
+      "runner_case_id": "REVIEW-POLICY-AGENT-RESTRICTED-INVOKE-RECHECK",
+      "source": "tests/development/model-policy-review.test.mts",
+      "capability_id": "FEATURE-M02-G01"
+    },
+    {
+      "id": "runtime:REVIEW-POLICY-SKILL-REMOVAL-RECHECK",
+      "suite": "runtime",
+      "runner_case_id": "REVIEW-POLICY-SKILL-REMOVAL-RECHECK",
+      "source": "tests/development/model-policy-review.test.mts",
+      "capability_id": "FEATURE-M02-G01"
+    },
+    {
+      "id": "runtime:REVIEW-POLICY-SIMULATOR-MUTATIONS-RECHECK",
+      "suite": "runtime",
+      "runner_case_id": "REVIEW-POLICY-SIMULATOR-MUTATIONS-RECHECK",
+      "source": "tests/development/model-policy-review.test.mts",
+      "capability_id": "FEATURE-M02-G01"
+    },
+    {
+      "id": "runtime:REVIEW-POLICY-CAPABILITY-DISCOVERY-RECHECK",
+      "suite": "runtime",
+      "runner_case_id": "REVIEW-POLICY-CAPABILITY-DISCOVERY-RECHECK",
+      "source": "tests/development/model-policy-review.test.mts",
+      "capability_id": "FEATURE-M02-G01"
     }
   ],
   "protected_files": [
@@ -6225,6 +7070,7 @@
     "goals/M12/M12-G08.md",
     "goals/M12/M12-G09.md",
     "goals/M12/M12-G99.md",
+    "packages/commerce/contracts/read-api.openapi.json",
     "planning/capability-targets.json",
     "planning/goals.json",
     "planning/invariants.json",
@@ -6235,9 +7081,20 @@
     "planning/workflow-policy.json",
     "templates/evidence-bundle.v1.schema.json",
     "tests/browser/component.py",
+    "tests/browser/manual_component.py",
+    "tests/browser/manual_status.py",
+    "tests/development/agent-external.test.mts",
+    "tests/development/agent-helpers.mts",
+    "tests/development/agent-manual.test.mts",
+    "tests/development/agent-mcp.test.mts",
+    "tests/development/agent-provider-helpers.mts",
+    "tests/development/agent-runner.test.mts",
+    "tests/development/agent-second-provider.test.mts",
     "tests/development/config.test.mts",
     "tests/development/helpers.mts",
     "tests/development/integration.test.mts",
+    "tests/development/local-model-helpers.mts",
+    "tests/development/read-workflow-helpers.mts",
     "tests/development/store.test.mts",
     "tests/fixtures/development/command-manifests.v1.json",
     "tests/fixtures/harness/expected.v1.json",
@@ -6247,6 +7104,13 @@
     "tests/fixtures/licensing/artifact-oracle.v1.json",
     "tests/fixtures/licensing/expected-policy.v1.json",
     "tests/fixtures/licensing/retained-obligations.v1.json",
+    "tests/fixtures/model-policy/evaluation-configuration.json",
+    "tests/fixtures/model-policy/evaluation-expected.json",
+    "tests/fixtures/model-policy/evaluation-observations.json",
+    "tests/fixtures/model-policy/evaluation-suite.json",
+    "tests/fixtures/model-policy/money-golden.json",
+    "tests/fixtures/read-workflows/presentations.json",
+    "tests/fixtures/read-workflows/shopify-order.json",
     "tests/fixtures/release-benchmark/COMMANDS.md",
     "tests/fixtures/release-benchmark/HAND-CALCULATION.md",
     "tests/fixtures/release-benchmark/cohort.manifest.SYNTHETIC.json",
@@ -6267,6 +7131,7 @@
     "tests/harness/fixtures.mts",
     "tests/harness/network-deny.mts",
     "tests/harness/unit.test.mts",
+    "tests/qualification/manual-served.mts",
     "tests/test_distribution.py",
     "tests/test_evidence_gate.py",
     "tests/test_native_harness.py",
@@ -6281,21 +7146,7 @@
     "tools/test_harness.py",
     "tools/test_runtime.py",
     "tools/verify.py",
-    "work/accepted-goals.json",
-    "packages/commerce/contracts/read-api.openapi.json",
-    "tests/fixtures/read-workflows/shopify-order.json",
-    "tests/fixtures/read-workflows/presentations.json",
-    "tests/development/read-workflow-helpers.mts",
-    "tests/development/agent-mcp.test.mts",
-    "tests/development/agent-manual.test.mts",
-    "tests/development/agent-runner.test.mts",
-    "tests/development/agent-second-provider.test.mts",
-    "tests/development/agent-external.test.mts",
-    "tests/development/agent-helpers.mts",
-    "tests/development/agent-provider-helpers.mts",
-    "tests/browser/manual_component.py",
-    "tests/browser/manual_status.py",
-    "tests/qualification/manual-served.mts"
+    "work/accepted-goals.json"
   ],
   "source_count_fixture": "tests/fixtures/licensing/artifact-oracle.v1.json",
   "source_inventory": "planning/component-inventory.json"

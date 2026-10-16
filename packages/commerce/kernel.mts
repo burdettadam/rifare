@@ -1,9 +1,10 @@
+import { ROLE_ACTIONS,permissionDecision,recordSecurity } from './authorization.mts';
 import { createHash, randomBytes } from 'node:crypto';
 import { readFileSync, readdirSync } from 'node:fs';
 import type { DatabaseSync } from 'node:sqlite';
 
 export type Scope = Readonly<object>;
-export type Role = 'operator' | 'worker' | 'customer';
+export type Role = 'owner'|'operator'|'reviewer'|'integration'|'agent'|'worker'|'customer';
 export type Row = Record<string, any>;
 export const KINDS = ['order', 'customer', 'shipment', 'catalog', 'payment'] as const;
 export const token = () => randomBytes(32).toString('base64url');
@@ -61,9 +62,9 @@ export class CommerceKernel {
     id(tenant); id(store); id(market);
     this.db.prepare('INSERT INTO commerce_stores VALUES(?,?,?,1)').run(tenant,store,market);
   }
-  provisionMember(tenant: string, store: string, actor: string, role: 'operator'|'worker' = 'operator') {
+  provisionMember(tenant: string, store: string, actor: string, role: Exclude<Role,'customer'> = 'operator') {
     id(tenant); id(store); id(actor);
-    if (!['operator','worker'].includes(role)) throw new Error('INVALID_INPUT');
+    if (!Object.hasOwn(ROLE_ACTIONS,role)||role==='customer') throw new Error('INVALID_INPUT');
     this.db.prepare('INSERT INTO commerce_members VALUES(?,?,?,?,1)').run(tenant,store,actor,role);
   }
   issueSession(tenant: string, store: string, actor: string, lifetime = 3600000) {
@@ -81,14 +82,15 @@ export class CommerceKernel {
     if (typeof value !== 'string' || !/^[A-Za-z0-9_-]{43}$/.test(value)) throw new Error('ACCESS_DENIED');
     const scope=Object.freeze({}); this.#scopes.set(scope,digest(value)); this.require(scope); return scope;
   }
-  require(scope: Scope, roles: Role[] = ['operator','worker','customer']): Row {
+  require(scope: Scope, roles: Role[] = ['owner','operator','reviewer','integration','agent','worker','customer']): Row {
     const hash = scope && typeof scope==='object' ? this.#scopes.get(scope) : undefined;
     if (!hash) throw new Error('ACCESS_DENIED');
     const now=this.clock();
     const row=this.db.prepare(`SELECT ss.* FROM commerce_sessions ss JOIN commerce_stores s USING(tenant_id,store_id)
       WHERE ss.token_hash=? AND ss.revoked=0 AND s.active=1 AND ss.expires_at>? AND ss.last_seen>?`)
       .get(hash,now,now-900000) as Row;
-    if (!row || !roles.includes(row.role)) throw new Error('ACCESS_DENIED');
+    const compatible=row?.role==='owner'?'operator':['agent','reviewer','integration'].includes(row?.role)?'worker':row?.role;
+    if (!row || (row.role!=='owner'&&!roles.includes(row.role)&&!roles.includes(compatible))) throw new Error('ACCESS_DENIED');
     if (row.role === 'customer') {
       const owner=this.db.prepare(`SELECT 1 FROM commerce_resources WHERE tenant_id=? AND store_id=? AND id=?
         AND kind='order' AND customer_id=?`).get(row.tenant_id,row.store_id,row.resource_id,row.customer_id);
@@ -101,6 +103,11 @@ export class CommerceKernel {
     this.db.prepare('UPDATE commerce_sessions SET last_seen=? WHERE token_hash=?').run(now,hash);
     return row;
   }
+  authorize(scope:Scope,action:string,resource:string|null=null):Row {
+    const s=this.require(scope);if(resource!==null)id(resource);const decision=permissionDecision(this.db,s,action,resource);
+    if(!decision.allowed){recordSecurity(this.db,s,decision.action,'denied',this.clock(),decision.authority_revision);throw new Error('ACCESS_DENIED');}
+    return s;
+  }
   revoke(scope: Scope) {
     const s=this.require(scope); this.db.prepare('UPDATE commerce_sessions SET revoked=1 WHERE token_hash=?').run(s.token_hash);
   }
@@ -110,7 +117,7 @@ export class CommerceKernel {
       .run(s.tenant_id,s.store_id,s.actor_id,operation,decision,this.clock());
   }
   auditRows(scope: Scope) {
-    const s=this.require(scope,['operator']);
+    const s=this.authorize(scope,'audit.read');
     return this.db.prepare('SELECT actor_id,operation,decision,observed_at FROM commerce_audit WHERE tenant_id=? AND store_id=? ORDER BY id DESC LIMIT 100')
       .all(s.tenant_id,s.store_id);
   }
@@ -123,6 +130,7 @@ export class CommerceKernel {
     const encoded=boundedJSON(r.payload); const now=this.clock();
     if (r.source_updated_at>now) throw new Error('INVALID_INPUT');
     const canonical=resourceKey(s.tenant_id,s.store_id,r.kind,r.source_system,r.external_id);
+    this.authorize(scope,'resource.ingest',canonical);
     this.transaction(() => {
       const prev=this.db.prepare('SELECT * FROM commerce_resources WHERE tenant_id=? AND store_id=? AND id=?').get(s.tenant_id,s.store_id,canonical) as Row;
       if (prev && r.source_version<=prev.source_version) {
@@ -142,8 +150,9 @@ export class CommerceKernel {
     return {...facts, payload:JSON.parse(payload),freshness:{observed_at:row.observed_at,source_updated_at:row.source_updated_at}};
   }
   get(scope: Scope, resource: string) {
-    const s=this.require(scope); id(resource);
+    const s=this.require(scope);id(resource);
     if (s.role==='customer' && s.resource_id!==resource) throw new Error('NOT_FOUND');
+    this.authorize(scope,'resource.read',resource);
     const row=this.db.prepare('SELECT * FROM commerce_resources WHERE tenant_id=? AND store_id=? AND id=?')
       .get(s.tenant_id,s.store_id,resource) as Row;
     if (!row) throw new Error('NOT_FOUND');
@@ -151,6 +160,7 @@ export class CommerceKernel {
   }
   lookup(scope: Scope, kind: string, source: string, external: string) {
     const s=this.require(scope,['operator','worker']); id(kind);id(source);id(external);
+    this.authorize(scope,'resource.read',resourceKey(s.tenant_id,s.store_id,kind,source,external));
     const row=this.db.prepare('SELECT * FROM commerce_resources WHERE tenant_id=? AND store_id=? AND kind=? AND source_system=? AND external_id=?')
       .get(s.tenant_id,s.store_id,kind,source,external) as Row;
     if (!row) throw new Error('NOT_FOUND'); return this.project(row);
@@ -159,10 +169,10 @@ export class CommerceKernel {
     const s=this.require(scope,['operator','worker']); id(kind);integer(limit,1);
     if (!KINDS.includes(kind as any) || limit>100) throw new Error('INVALID_INPUT');
     return this.db.prepare('SELECT * FROM commerce_resources WHERE tenant_id=? AND store_id=? AND kind=? ORDER BY id LIMIT ?')
-      .all(s.tenant_id,s.store_id,kind,limit).map(r=>this.project(r as Row));
+      .all(s.tenant_id,s.store_id,kind,limit).filter(r=>permissionDecision(this.db,s,'resource.read',(r as Row).id).allowed).map(r=>this.project(r as Row));
   }
   enqueueRead(scope: Scope, resource: string) {
-    const s=this.require(scope,['operator']); this.get(scope,resource); const job='job_'+token().slice(0,32);
+    const s=this.require(scope,['operator']); this.authorize(scope,'job.enqueue',resource);this.get(scope,resource); const job='job_'+token().slice(0,32);
     this.db.prepare("INSERT INTO commerce_read_jobs VALUES(?,?,?,?,'pending',NULL)").run(s.tenant_id,s.store_id,job,resource);
     return {id:job,state:'pending'};
   }
@@ -171,6 +181,7 @@ export class CommerceKernel {
     return this.transaction(() => {
       const row=this.db.prepare('SELECT * FROM commerce_read_jobs WHERE tenant_id=? AND store_id=? AND id=?').get(s.tenant_id,s.store_id,job) as Row;
       if (!row) throw new Error('NOT_FOUND');
+      this.authorize(scope,'job.run',row.resource_id);
       if (row.state==='completed') return JSON.parse(row.result);
       const result=this.get(scope,row.resource_id);
       this.db.prepare("UPDATE commerce_read_jobs SET state='completed',result=? WHERE tenant_id=? AND store_id=? AND id=?")
@@ -178,13 +189,13 @@ export class CommerceKernel {
     });
   }
   attach(scope: Scope, resource: string, value: unknown) {
-    const s=this.require(scope,['operator','worker']);this.get(scope,resource); const ref='att_'+token().slice(0,32);
+    const s=this.require(scope,['operator','worker']);this.authorize(scope,'attachment.write',resource);this.get(scope,resource); const ref='att_'+token().slice(0,32);
     this.db.prepare('INSERT INTO commerce_attachments VALUES(?,?,?,?,?)').run(s.tenant_id,s.store_id,ref,resource,boundedJSON(value));return ref;
   }
   attachment(scope: Scope, ref: string) {
     const s=this.require(scope);id(ref);
     const row=this.db.prepare('SELECT * FROM commerce_attachments WHERE tenant_id=? AND store_id=? AND id=?').get(s.tenant_id,s.store_id,ref) as Row;
     if (!row || (s.role==='customer' && s.resource_id!==row.resource_id)) throw new Error('NOT_FOUND');
-    this.get(scope,row.resource_id); return JSON.parse(row.content);
+    this.authorize(scope,'attachment.read',row.resource_id);this.get(scope,row.resource_id); return JSON.parse(row.content);
   }
 }

@@ -64,6 +64,7 @@ export class SecretVault {
     if(!row)throw new Error('SECRET_UNAVAILABLE');return row;
   }
   put(scope:Scope,input:unknown) {
+    this.#kernel.authorize(scope,'secret.manage');
     const s=this.#kernel.require(scope,['operator']),r=exact(input,['provider','adapter','value']);id(r.provider);id(r.adapter);
     if((!this.#adapters.has(r.adapter)&&!this.#readers.has(r.adapter))||typeof r.value!=='string'||!r.value.length||Buffer.byteLength(r.value)>4096) throw new Error('INVALID_INPUT');
     const keyId=this.#keys.activeId, kek=this.#key(keyId),dek=randomBytes(32),plaintext=Buffer.from(r.value);
@@ -76,16 +77,19 @@ export class SecretVault {
     } finally {kek.fill(0);dek.fill(0);plaintext.fill(0);}
   }
   list(scope:Scope) {
+    this.#kernel.authorize(scope,'secret.manage');
     const s=this.#kernel.require(scope,['operator']);
     return this.#kernel.db.prepare('SELECT ref,provider,adapter,created_at FROM commerce_secrets WHERE tenant_id=? AND store_id=? AND revoked=0 ORDER BY ref')
       .all(s.tenant_id,s.store_id);
   }
   revoke(scope:Scope,ref:string) {
+    this.#kernel.authorize(scope,'secret.manage');
     const s=this.#kernel.require(scope,['operator']);this.#row(scope,ref);
     this.#kernel.db.prepare('UPDATE commerce_secrets SET revoked=1 WHERE tenant_id=? AND store_id=? AND ref=?').run(s.tenant_id,s.store_id,ref);
     return {revoked:true};
   }
   async probe(scope:Scope,ref:string,adapter:string) {
+    this.#kernel.authorize(scope,'secret.invoke');
     let plaintext:Buffer|undefined, dek:Buffer|undefined, kek:Buffer|undefined;
     const s=this.#kernel.require(scope,['operator','worker']);const row=this.#row(scope,ref);
     if(row.adapter!==adapter||!this.#adapters.has(adapter))throw new Error('SECRET_UNAVAILABLE');
@@ -98,7 +102,7 @@ export class SecretVault {
     } catch {kek?.fill(0);dek?.fill(0);plaintext?.fill(0);throw new Error('SECRET_UNAVAILABLE');}
     try {
       const configured=await this.#adapters.get(adapter)!(plaintext!);
-      this.#kernel.require(scope,['operator','worker']);this.#row(scope,ref);
+      this.#kernel.require(scope,['operator','worker']);this.#kernel.authorize(scope,'secret.invoke');this.#row(scope,ref);
       if(typeof configured!=='boolean')throw new Error('ADAPTER_UNAVAILABLE');
       return {adapter,configured,qualification:'synthetic_probe_only'};
     } catch {throw new Error('ADAPTER_UNAVAILABLE');}
@@ -106,6 +110,7 @@ export class SecretVault {
   }
   // Only server-installed reader code receives plaintext; no corresponding HTTP method exists.
   async invokeReader(scope:Scope,ref:string,adapter:string,input:unknown):Promise<unknown> {
+    this.#kernel.authorize(scope,'secret.invoke');
     const s=this.#kernel.require(scope,['operator','worker']),row=this.#row(scope,ref),reader=this.#readers.get(adapter);
     if(!reader||row.adapter!==adapter||row.provider!==reader.provider)throw new Error('SECRET_UNAVAILABLE');
     let plaintext:Buffer|undefined,dek:Buffer|undefined,kek:Buffer|undefined;
@@ -118,12 +123,13 @@ export class SecretVault {
     } catch {kek?.fill(0);dek?.fill(0);plaintext?.fill(0);throw new Error('SECRET_UNAVAILABLE');}
     try {
       const result=await reader.execute(plaintext,input);
-      this.#kernel.require(scope,['operator','worker']);this.#row(scope,ref);
+      this.#kernel.require(scope,['operator','worker']);this.#kernel.authorize(scope,'secret.invoke');this.#row(scope,ref);
       return result;
     } catch {throw new Error('ADAPTER_UNAVAILABLE');}
     finally {kek?.fill(0);dek?.fill(0);plaintext?.fill(0);}
   }
   rewrap(scope:Scope,ref:string) {
+    this.#kernel.authorize(scope,'secret.manage');
     const s=this.#kernel.require(scope,['operator']);
     return this.#kernel.transaction(()=>{
       const row=this.#row(scope,ref),newId=this.#keys.activeId;

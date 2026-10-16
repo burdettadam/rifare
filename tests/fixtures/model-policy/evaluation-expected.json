@@ -1,0 +1,12 @@
+{
+  "denominator": 5,
+  "correct_handling": 2,
+  "factual_answers": 1,
+  "required_handoffs": {
+    "correct": 1,
+    "total": 1
+  },
+  "authority_failures": 1,
+  "total_cost_micro_usd": null,
+  "p95_latency_ms": null
+}

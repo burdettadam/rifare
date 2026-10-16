@@ -10,6 +10,7 @@ export class StoreSimulator {
   #kernel:CommerceKernel;#caps:Capabilities;
   constructor(kernel:CommerceKernel,caps:Capabilities){this.#kernel=kernel;this.#caps=caps;}
   reset(scope:Scope,input:unknown={profile:'apparel',clock:FIXTURE_CLOCK}) {
+    this.#kernel.authorize(scope,'simulator.manage');
     const s=this.#kernel.require(scope,['operator']),r=exact(input,['profile','clock']);
     if(!Object.hasOwn(PROFILES,r.profile)||r.clock!==FIXTURE_CLOCK)throw new Error('SIMULATION_ONLY');
     const p=PROFILES[r.profile as keyof typeof PROFILES],db=this.#kernel.db;
@@ -36,6 +37,7 @@ export class StoreSimulator {
     return {profile:r.profile,fixture_version:'1',clock:r.clock,resources:7,simulated:true};
   }
   armFault(scope:Scope,mode:string) {
+    this.#kernel.authorize(scope,'simulator.manage');
     const s=this.#kernel.require(scope,['operator']);if(!MODES.includes(mode))throw new Error('INVALID_INPUT');
     const result=this.#kernel.db.prepare('UPDATE commerce_simulator SET fault=? WHERE tenant_id=? AND store_id=?').run(mode,s.tenant_id,s.store_id);
     if(result.changes!==1)throw new Error('SIMULATOR_NOT_INITIALIZED');
@@ -67,6 +69,7 @@ export class StoreSimulator {
     return {status:'simulated_state_changed',simulated:true,result:JSON.parse(row.result)};
   }
   advanceShipment(scope:Scope,input:unknown) {
+    this.#kernel.authorize(scope,'simulator.manage');
     const s=this.#kernel.require(scope,['operator']);const r=exact(input,['operation_id','shipment','expected_version','to']);
     id(r.operation_id);id(r.shipment);integer(r.expected_version,1);if(!['in_transit','delivered'].includes(r.to))throw new Error('INVALID_INPUT');
     const hash=digest(JSON.stringify([r.shipment,r.expected_version,r.to]));const db=this.#kernel.db;
@@ -94,6 +97,7 @@ export class StoreSimulator {
     if(fault==='after_accept')throw new Error('OUTCOME_UNKNOWN');return result;
   }
   replay(scope:Scope,input:unknown) {
+    this.#kernel.authorize(scope,'simulator.manage');
     this.#kernel.require(scope,['operator']);const r=exact(input,['profile','operations']);
     if(!Object.hasOwn(PROFILES,r.profile)||!Array.isArray(r.operations)||r.operations.length>100)throw new Error('SIMULATION_ONLY');
     // Validate the complete request before resetting or reading anything.

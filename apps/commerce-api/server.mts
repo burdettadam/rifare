@@ -1,3 +1,4 @@
+import { Permissions } from '../../packages/commerce/authorization.mts';
 import { createServer } from 'node:http';
 import { readFileSync } from 'node:fs';
 import { body,listen,sameOrigin,send } from '../../packages/development/http.mts';
@@ -12,10 +13,10 @@ import { ReadMcp,MCP_VERSION } from '../../packages/agent/mcp.mts';
 import { ReadContext } from '../../packages/commerce/read-context.mts';
 
 const SAFE_CODES=new Set(['ACCESS_DENIED','NOT_FOUND','INVALID_INPUT','JSON_REQUIRED','BODY_TOO_LARGE','INVALID_JSON',
-  'RESOURCE_DENIED','INVALID_SKILL','SKILL_CHANGED','PROFILE_STALE','PROFILE_ACTION_DENIED','INVALID_PROFILE',
+  'INVALID_PERMISSION','AUTHORITY_CHANGED','LAST_OWNER','RESOURCE_DENIED','INVALID_SKILL','SKILL_CHANGED','PROFILE_STALE','PROFILE_ACTION_DENIED','INVALID_PROFILE',
   'NO_CONFIGURATION','RUN_IN_PROGRESS','TASK_CONTEXT_CHANGED','UNKNOWN_READ_ACTION','CURRENT_FACTS_UNAVAILABLE','TASK_LIMIT','HOST_DENIED','ORIGIN_DENIED','VERIFICATION_FAILED','SECRET_UNAVAILABLE','ADAPTER_UNAVAILABLE','PROVIDER_REJECTED','PROVIDER_UNAVAILABLE','OUTCOME_UNKNOWN']);
 export async function startCommerceServer(options:{kernel:CommerceKernel;caps:Capabilities;customers:CustomerAccess;
-  simulator:StoreSimulator;vault?:SecretVault;reads?:ReadContext;runner?:{run:(scope:object,taskId:string,configurationId:string)=>Promise<unknown>;receipt:(scope:object,taskId:string,receiptId:string)=>unknown};port?:number;log?:(entry:unknown)=>void}) {
+  simulator:StoreSimulator;vault?:SecretVault;reads?:ReadContext;runner?:{run:(scope:object,taskId:string,configurationId:string,untrustedInput?:unknown)=>Promise<unknown>;receipt:(scope:object,taskId:string,receiptId:string)=>unknown};port?:number;log?:(entry:unknown)=>void}) {
   const {kernel,caps,customers,simulator,vault}=options;const reads=options.reads??new ReadContext(kernel,caps);const mcp=new ReadMcp(kernel,reads);let port=0;
   const log=(status:number,code:string)=>{try{options.log?.({event:'http_result',status,code});}catch{/* logging cannot grant access */}};
   const server=createServer(async(req,res)=>{
@@ -53,7 +54,13 @@ export async function startCommerceServer(options:{kernel:CommerceKernel;caps:Ca
       const auth=req.headers.authorization;
       if(typeof auth!=='string'||!auth.startsWith('Bearer '))throw new Error('ACCESS_DENIED');
       const scope=kernel.authenticate(auth.slice(7));
-      if(req.method==='POST'&&url.pathname==='/v1/mcp-grants') {
+      if(req.method==='GET'&&url.pathname==='/v1/permissions'){
+        const p=new Permissions(kernel);send(res,200,{decisions:['resource.read','model.run','authority.manage','audit.read'].map(a=>p.preview(scope,a)),execution_authorized:false});
+      } else if(req.method==='POST'&&url.pathname==='/v1/permissions/change'){
+        send(res,200,new Permissions(kernel).change(scope,await body(req)));
+      } else if(req.method==='GET'&&url.pathname==='/v1/permissions/events'){
+        send(res,200,{events:new Permissions(kernel).events(scope)});
+      } else if(req.method==='POST'&&url.pathname==='/v1/mcp-grants') {
         send(res,201,mcp.issue(scope,await body(req),`http://127.0.0.1:${port}/mcp`));
       } else if(req.method==='GET'&&url.pathname==='/v1/read-contract') {
         send(res,200,JSON.parse(readFileSync(new URL('../../packages/commerce/contracts/read-api.openapi.json',import.meta.url),'utf8')));
@@ -71,8 +78,9 @@ export async function startCommerceServer(options:{kernel:CommerceKernel;caps:Ca
         send(res,200,reads.profiles.get(scope,id(url.pathname.split('/')[3])));
       } else if(req.method==='POST'&&/^\/v1\/read-tasks\/[A-Za-z0-9_-]+\/assist$/.test(url.pathname)) {
         if(!options.runner)throw new Error('ADAPTER_UNAVAILABLE');
-        const input=exact(await body(req),['configuration_id']);
-        send(res,200,await options.runner.run(scope,id(url.pathname.split('/')[3]),id(input.configuration_id)));
+        const value=await body(req);
+        const input=exact(value,value&&typeof value==='object'&&Object.hasOwn(value,'untrusted_input')?['configuration_id','untrusted_input']:['configuration_id']);
+        send(res,200,await options.runner.run(scope,id(url.pathname.split('/')[3]),id(input.configuration_id),input.untrusted_input));
       } else if(req.method==='GET'&&/^\/v1\/read-tasks\/[A-Za-z0-9_-]+\/receipts\/[A-Za-z0-9_-]+$/.test(url.pathname)) {
         if(!options.runner)throw new Error('ADAPTER_UNAVAILABLE');
         send(res,200,options.runner.receipt(scope,id(url.pathname.split('/')[3]),id(url.pathname.split('/')[5])));

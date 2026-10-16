@@ -19,6 +19,7 @@ export class Capabilities {
   #kernel:CommerceKernel;
   constructor(kernel:CommerceKernel){this.#kernel=kernel;}
   configure(scope:Scope,input:unknown) {
+    this.#kernel.authorize(scope,'connection.manage');
     const s=this.#kernel.require(scope,['operator']);const r=exact(input,['adapter','contract_version','granted_scopes','qualification']);
     id(r.adapter);id(r.contract_version);
     if(!['simulator','shopify','woocommerce'].includes(r.adapter)||!['synthetic','unverified'].includes(r.qualification)
@@ -32,6 +33,7 @@ export class Capabilities {
       .run(s.tenant_id,s.store_id,r.adapter,r.contract_version,JSON.stringify(r.granted_scopes),r.qualification,evidence);
   }
   evaluate(scope:Scope,action:string,resourceId?:string) {
+    this.#kernel.authorize(scope,'capability.read');
     const k=this.#kernel,s=k.require(scope);
     const connection=k.db.prepare('SELECT * FROM commerce_connections WHERE tenant_id=? AND store_id=?').get(s.tenant_id,s.store_id) as Row;
     const store=k.db.prepare('SELECT market FROM commerce_stores WHERE tenant_id=? AND store_id=?').get(s.tenant_id,s.store_id) as Row;
