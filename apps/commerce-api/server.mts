@@ -1,3 +1,8 @@
+import { ActionGateway } from '../../packages/commerce/action-gateway.mts';
+import { ActionMcp } from '../../packages/agent/action-mcp.mts';
+import { SkillReleases } from '../../packages/commerce/skill-releases.mts';
+import { WEBHOOK_MAX_BYTES } from '../../packages/commerce/webhook-inbox.mts';
+import type { WebhookInbox } from '../../packages/commerce/webhook-inbox.mts';
 import { ProfileEditor } from '../../packages/commerce/profile-editor.mts';
 import { Policies } from '../../packages/commerce/policies.mts';
 import { ConfigurationError } from '../../packages/commerce/configuration-values.mts';
@@ -16,12 +21,12 @@ import type { StoreSimulator } from '../../packages/commerce/simulator.mts';
 import { ReadMcp,MCP_VERSION } from '../../packages/agent/mcp.mts';
 import { ReadContext } from '../../packages/commerce/read-context.mts';
 
-const SAFE_CODES=new Set(['PROFILE_EXISTS','PROFILE_CHANGED','PROFILE_NOT_READY','SIMULATION_REQUIRED','SIMULATION_STALE','DRAFT_HISTORY_LIMIT','POLICY_CHANGED','POLICY_INTEGRITY','POLICY_UNAVAILABLE','POLICY_REVOKED','POLICY_TRANSITION','SELF_REVIEW_DENIED','POLICY_TEST_FAILED','REVIEW_AUTHORITY_CHANGED','ACTIVATION_CONFLICT','ACTIVATION_ORDER','SKILL_APPROVAL_REQUIRED','SKILL_DOWNGRADE_DENIED','ACCESS_DENIED','NOT_FOUND','INVALID_INPUT','JSON_REQUIRED','BODY_TOO_LARGE','INVALID_JSON',
+const SAFE_CODES=new Set(['CASE_CHANGED','CASE_EXISTS','CASE_PIN_INTEGRITY','CASE_CUSTOMER_CHANGED','CASE_CONTEXT_UNSUPPORTED','SKILL_PIN_MISSING','SKILL_REVOKED','CONFIGURATION_REPREVIEW_REQUIRED','CONFIGURATION_NOT_APPROVED','CUSTOMER_VERIFICATION_REQUIRED','CAPABILITY_CHANGED','CAPABILITY_UNAVAILABLE','UNSUPPORTED_ACTION','SOURCE_STALE','SOURCE_FACTS_MISSING','POLICY_DENIED','PREVIEW_INTEGRITY','PREVIEW_STALE','PREVIEW_EXPIRED','SELF_APPROVAL_DENIED','APPROVAL_EXISTS','APPROVAL_UNAVAILABLE','APPROVAL_AUTHORITY_CHANGED','RECEIPT_INTEGRITY','RELEASE_TRANSITION','RELEASE_INTEGRITY','ACTIVATION_CHANGED','CANARY_FALLBACK_REQUIRED','ROLLBACK_TARGET_INVALID','WEBHOOK_BODY_LIMIT','WEBHOOK_HEADERS_INVALID','WEBHOOK_SIGNATURE_INVALID','WEBHOOK_ROUTE_MISMATCH','WEBHOOK_EXPIRED','WEBHOOK_CONTENT_TYPE','WEBHOOK_ROUTE_UNAVAILABLE','WEBHOOK_KEY_UNAVAILABLE','WEBHOOK_PAYLOAD_INVALID','WEBHOOK_DELIVERY_CONFLICT','WEBHOOK_PERSISTENCE_FAILED','PROFILE_EXISTS','PROFILE_CHANGED','PROFILE_NOT_READY','SIMULATION_REQUIRED','SIMULATION_STALE','DRAFT_HISTORY_LIMIT','POLICY_CHANGED','POLICY_INTEGRITY','POLICY_UNAVAILABLE','POLICY_REVOKED','POLICY_TRANSITION','SELF_REVIEW_DENIED','POLICY_TEST_FAILED','REVIEW_AUTHORITY_CHANGED','ACTIVATION_CONFLICT','ACTIVATION_ORDER','SKILL_APPROVAL_REQUIRED','SKILL_DOWNGRADE_DENIED','ACCESS_DENIED','NOT_FOUND','INVALID_INPUT','JSON_REQUIRED','BODY_TOO_LARGE','INVALID_JSON',
   'INVALID_PERMISSION','AUTHORITY_CHANGED','LAST_OWNER','RESOURCE_DENIED','INVALID_SKILL','SKILL_CHANGED','PROFILE_STALE','PROFILE_ACTION_DENIED','INVALID_PROFILE',
   'NO_CONFIGURATION','RUN_IN_PROGRESS','TASK_CONTEXT_CHANGED','UNKNOWN_READ_ACTION','CURRENT_FACTS_UNAVAILABLE','TASK_LIMIT','HOST_DENIED','ORIGIN_DENIED','VERIFICATION_FAILED','SECRET_UNAVAILABLE','ADAPTER_UNAVAILABLE','PROVIDER_REJECTED','PROVIDER_UNAVAILABLE','OUTCOME_UNKNOWN']);
 export async function startCommerceServer(options:{kernel:CommerceKernel;caps:Capabilities;customers:CustomerAccess;
-  simulator:StoreSimulator;vault?:SecretVault;reads?:ReadContext;runner?:{run:(scope:object,taskId:string,configurationId:string,untrustedInput?:unknown)=>Promise<unknown>;receipt:(scope:object,taskId:string,receiptId:string)=>unknown};port?:number;log?:(entry:unknown)=>void}) {
-  const {kernel,caps,customers,simulator,vault}=options;const reads=options.reads??new ReadContext(kernel,caps);const mcp=new ReadMcp(kernel,reads);const editor=new ProfileEditor(kernel,caps),policies=new Policies(kernel);let port=0;
+  simulator:StoreSimulator;vault?:SecretVault;inbox?:WebhookInbox;reads?:ReadContext;runner?:{run:(scope:object,taskId:string,configurationId:string,untrustedInput?:unknown)=>Promise<unknown>;receipt:(scope:object,taskId:string,receiptId:string)=>unknown};port?:number;log?:(entry:unknown)=>void}) {
+  const {kernel,caps,customers,simulator,vault}=options;const reads=options.reads??new ReadContext(kernel,caps);const mcp=new ReadMcp(kernel,reads);const editor=new ProfileEditor(kernel,caps),policies=new Policies(kernel);let port=0;const gateway=new ActionGateway(kernel),actionMcp=new ActionMcp(kernel,gateway),releases=new SkillReleases(kernel);
   const log=(status:number,code:string)=>{try{options.log?.({event:'http_result',status,code});}catch{/* logging cannot grant access */}};
   const server=createServer(async(req,res)=>{
     try {
@@ -29,7 +34,7 @@ export async function startCommerceServer(options:{kernel:CommerceKernel;caps:Ca
       const url=new URL(req.url??'/',`http://127.0.0.1:${port}`);
       if(url.origin!==`http://127.0.0.1:${port}`)throw new Error('HOST_DENIED');
       if(url.pathname==='/health'&&req.method==='GET'){send(res,200,{ready:true,profile:'commerce-sqlite-diagnostic',production_qualified:false});return;}
-      const assets:Record<string,[string,string]>={'/configuration':['configuration.html','text/html'],'/configuration-client.js':['configuration-client.js','text/javascript'],'/configuration.css':['configuration.css','text/css'],'/':['index.html','text/html'],'/client.js':['client.js','text/javascript'],'/style.css':['style.css','text/css'],'/status':['status.html','text/html'],'/status-client.js':['status-client.js','text/javascript'],'/status.css':['status.css','text/css']};
+      const assets:Record<string,[string,string]>={'/execution':['execution.html','text/html'],'/execution-client.js':['execution-client.js','text/javascript'],'/configuration':['configuration.html','text/html'],'/configuration-client.js':['configuration-client.js','text/javascript'],'/configuration.css':['configuration.css','text/css'],'/':['index.html','text/html'],'/client.js':['client.js','text/javascript'],'/style.css':['style.css','text/css'],'/status':['status.html','text/html'],'/status-client.js':['status-client.js','text/javascript'],'/status.css':['status.css','text/css']};
       if(req.method==='GET'&&assets[url.pathname]&&!url.search){
         const [file,mime]=assets[url.pathname];res.writeHead(200,{'content-type':mime+'; charset=utf-8','cache-control':'no-store',
           'content-security-policy':"default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'",
@@ -55,9 +60,43 @@ export async function startCommerceServer(options:{kernel:CommerceKernel;caps:Ca
         if(result===null){res.writeHead(202,{'cache-control':'no-store'});res.end();}else send(res,200,result);
         return;
       }
+      if(req.method==='POST'&&/^\/webhooks\/[A-Za-z0-9_-]+$/.test(url.pathname)){
+        if(!options.inbox){send(res,404,{error:'NOT_FOUND'});return;}
+        const chunks:Buffer[]=[];let length=0;
+        if(Number(req.headers['content-length']??0)>WEBHOOK_MAX_BYTES)throw new Error('WEBHOOK_BODY_LIMIT');
+        for await(const value of req){const b=Buffer.from(value);length+=b.length;if(length>WEBHOOK_MAX_BYTES)throw new Error('WEBHOOK_BODY_LIMIT');chunks.push(b);}
+        const result=options.inbox.receive(url.pathname.split('/')[2],req.rawHeaders,Buffer.concat(chunks));send(res,result.http_status,result);return;
+      }
+      if(url.pathname==='/execution-mcp'){
+        const authorization=req.headers.authorization;if(typeof authorization!=='string'||!authorization.startsWith('Bearer '))throw new Error('ACCESS_DENIED');
+        const value=authorization.slice(7),audience=`http://127.0.0.1:${port}/execution-mcp`;actionMcp.authenticate(value,audience);
+        if(req.method!=='POST'){res.setHeader('allow','POST');send(res,405,{error:'METHOD_NOT_ALLOWED'});return;}
+        if(!req.headers.accept?.includes('application/json')||!req.headers.accept.includes('text/event-stream')){send(res,406,{error:'MCP_ACCEPT_REQUIRED'});return;}
+        const version=req.headers['mcp-protocol-version'];if(version!==undefined&&version!==MCP_VERSION){send(res,400,{error:'UNSUPPORTED_MCP_VERSION'});return;}
+        const result=actionMcp.dispatch(value,audience,await body(req),typeof version==='string'?version:undefined);
+        if(result===null){res.writeHead(202,{'cache-control':'no-store'});res.end();}else send(res,200,result);return;
+      }
       const auth=req.headers.authorization;
       if(typeof auth!=='string'||!auth.startsWith('Bearer '))throw new Error('ACCESS_DENIED');
       const scope=kernel.authenticate(auth.slice(7));
+      if(req.method==='POST'&&url.pathname==='/v1/cases'){send(res,201,gateway.cases.create(scope,await body(req)));return;}
+      if(req.method==='GET'&&/^\/v1\/cases\/[A-Za-z0-9_-]+$/.test(url.pathname)){send(res,200,gateway.cases.resume(scope,url.pathname.split('/')[3]));return;}
+      if(req.method==='POST'&&/^\/v1\/cases\/[A-Za-z0-9_-]+\/migrate$/.test(url.pathname)){send(res,200,gateway.cases.migrate(scope,url.pathname.split('/')[3],await body(req)));return;}
+      if(req.method==='GET'&&url.pathname==='/v1/execution-contract'){send(res,200,JSON.parse(readFileSync(new URL('../../packages/commerce/contracts/execution-api.openapi.json',import.meta.url),'utf8')));return;}
+      if(req.method==='POST'&&url.pathname==='/v1/execution/grants'){send(res,201,actionMcp.issue(scope,await body(req),`http://127.0.0.1:${port}/execution-mcp`));return;}
+      if(req.method==='POST'&&/^\/v1\/execution\/(configure|preview|approve|execute)$/.test(url.pathname)){
+        const action=url.pathname.split('/')[3],value=await body(req);
+        send(res,200,action==='preview'?gateway.prepare(scope,value):action==='configure'?gateway.configure(scope,value):action==='approve'?gateway.approve(scope,value):gateway.execute(scope,value));return;
+      }
+      if(req.method==='POST'&&/^\/v1\/execution\/approvals\/[A-Za-z0-9_-]+\/revoke$/.test(url.pathname)){exact(await body(req),[]);send(res,200,gateway.revokeApproval(scope,url.pathname.split('/')[4]));return;}
+      if(req.method==='GET'&&/^\/v1\/execution\/receipts\/[A-Za-z0-9_-]+$/.test(url.pathname)){send(res,200,gateway.receipt(scope,url.pathname.split('/')[4]));return;}
+      if(req.method==='GET'&&/^\/v1\/execution\/state\/[A-Za-z0-9_-]+$/.test(url.pathname)){send(res,200,gateway.state(scope,url.pathname.split('/')[4]));return;}
+      if(req.method==='POST'&&/^\/v1\/skill-releases\/(stage|evaluate|review|publish|rollback|revoke)$/.test(url.pathname)){
+        const action=url.pathname.split('/')[3],p=await body(req);
+        const result=action==='evaluate'?releases.evaluate(scope,exact(p,['release_id']).release_id):releases[action as 'stage'|'review'|'publish'|'rollback'|'revoke'](scope,p);send(res,200,result);return;
+      }
+      if(req.method==='GET'&&/^\/v1\/webhook-inbox\/[A-Za-z0-9_-]+$/.test(url.pathname)){if(!options.inbox)throw new Error('NOT_FOUND');send(res,200,options.inbox.read(scope,url.pathname.split('/')[3]));return;}
+
       if(req.method==='GET'&&url.pathname==='/v1/skill-manifest-schema'){
         kernel.authorize(scope,'skill.read');send(res,200,manifestSchema());
       } else if(req.method==='POST'&&url.pathname==='/v1/skill-manifest/validate'){
@@ -146,7 +185,7 @@ export async function startCommerceServer(options:{kernel:CommerceKernel;caps:Ca
       if(error instanceof ConfigurationError){send(res,400,{error:error.message,issues:error.issues});log(400,error.message);return;}
       if(error instanceof CapabilityLimitation){send(res,403,{error:'CAPABILITY_UNAVAILABLE',reason:error.reason});log(403,'CAPABILITY_UNAVAILABLE');return;}
       const code=error instanceof Error&&SAFE_CODES.has(error.message)?error.message:'INTERNAL_ERROR';
-      const status=['ACCESS_DENIED','HOST_DENIED','ORIGIN_DENIED','VERIFICATION_FAILED'].includes(code)?403:code==='NOT_FOUND'?404:code==='INTERNAL_ERROR'?500:
+      const status=code==='WEBHOOK_PERSISTENCE_FAILED'?503:code==='WEBHOOK_BODY_LIMIT'?413:code==='WEBHOOK_SIGNATURE_INVALID'?401:['ACCESS_DENIED','HOST_DENIED','ORIGIN_DENIED','VERIFICATION_FAILED'].includes(code)?403:code==='NOT_FOUND'?404:code==='INTERNAL_ERROR'?500:
         ['SECRET_UNAVAILABLE','ADAPTER_UNAVAILABLE','PROVIDER_UNAVAILABLE','OUTCOME_UNKNOWN'].includes(code)?503:400;
       send(res,status,{error:code});log(status,code);
     }

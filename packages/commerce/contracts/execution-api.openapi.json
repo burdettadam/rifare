@@ -1,0 +1,209 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Rifare diagnostic execution",
+    "version": "1.0.0",
+    "description": "Reversible local case-plan actions only. No payment or external effect."
+  },
+  "paths": {
+    "/v1/execution/preview": {
+      "post": {
+        "operationId": "preview",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "case_id",
+                  "action",
+                  "arguments"
+                ],
+                "properties": {
+                  "case_id": {
+                    "type": "string"
+                  },
+                  "action": {
+                    "const": "diagnostic.resolution.set"
+                  },
+                  "arguments": {
+                    "type": "object",
+                    "required": [
+                      "resolution"
+                    ],
+                    "additionalProperties": false,
+                    "properties": {
+                      "resolution": {
+                        "enum": [
+                          "none",
+                          "refund",
+                          "exchange"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Exact server outcome; not product qualification"
+          },
+          "400": {
+            "description": "Invalid, stale, or denied request"
+          },
+          "403": {
+            "description": "Current authority required"
+          }
+        }
+      }
+    },
+    "/v1/execution/approve": {
+      "post": {
+        "operationId": "approve",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "preview_id",
+                  "preview_digest"
+                ],
+                "properties": {
+                  "preview_id": {
+                    "type": "string"
+                  },
+                  "preview_digest": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Exact server outcome; not product qualification"
+          },
+          "400": {
+            "description": "Invalid, stale, or denied request"
+          },
+          "403": {
+            "description": "Current authority required"
+          }
+        }
+      }
+    },
+    "/v1/execution/execute": {
+      "post": {
+        "operationId": "execute",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "preview_id",
+                  "preview_digest",
+                  "approval_id"
+                ],
+                "properties": {
+                  "preview_id": {
+                    "type": "string"
+                  },
+                  "preview_digest": {
+                    "type": "string"
+                  },
+                  "approval_id": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Exact server outcome; not product qualification"
+          },
+          "400": {
+            "description": "Invalid, stale, or denied request"
+          },
+          "403": {
+            "description": "Current authority required"
+          }
+        }
+      }
+    },
+    "/v1/execution/configure": {
+      "post": {
+        "operationId": "configure",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "enabled",
+                  "expected_revision",
+                  "profile_id",
+                  "policy_id"
+                ],
+                "properties": {
+                  "enabled": {
+                    "type": "boolean"
+                  },
+                  "expected_revision": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "profile_id": {
+                    "type": "string"
+                  },
+                  "policy_id": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Exact server outcome; not product qualification"
+          },
+          "400": {
+            "description": "Invalid, stale, or denied request"
+          },
+          "403": {
+            "description": "Current authority required"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "session": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  },
+  "security": [
+    {
+      "session": []
+    }
+  ]
+}
