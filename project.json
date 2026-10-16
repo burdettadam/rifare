@@ -26,5 +26,11 @@
     "test_specifications": 676,
     "capability_targets": 44
   },
-  "development_checkpoint": "M00-G04"
+  "development_checkpoint": "M00-G05-partial-smoke",
+  "runtime_smoke_profile": {
+    "name": "smoke-sqlite",
+    "target_stack_qualified": false,
+    "goal_accepted": false,
+    "instructions": "docs/LOCAL-ENVIRONMENT.md"
+  }
 }

@@ -9,7 +9,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
 
-EXCLUDED_PARTS = {'.git', '__pycache__', '.venv', 'node_modules', 'evidence', 'artifacts', 'validation', '.worktrees'}
+EXCLUDED_PARTS = {'.git', '__pycache__', '.venv', 'node_modules', 'evidence', 'artifacts', 'validation', '.worktrees', 'runtime'}
 REQUIRED_PATHS = (
     'README.md', 'AGENTS.md', 'GOVERNANCE.md', 'DEVELOPMENT.md', 'ARCHITECTURE.md', 'PLANS.md',
     'ROADMAP.md', 'project.json', 'LICENSE-STATUS.md', 'THIRD-PARTY-NOTICES.md',

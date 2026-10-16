@@ -40,6 +40,36 @@
         ]
       },
       "problemMatcher": []
+    },
+    {
+      "label": "Rifare: start explicit smoke profile",
+      "type": "process",
+      "command": "node",
+      "args": [
+        "--experimental-strip-types",
+        "tools/dev-smoke.mts"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Rifare: stop this smoke instance",
+      "type": "process",
+      "command": "node",
+      "args": [
+        "--experimental-strip-types",
+        "tools/dev-stop.mts"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Rifare: verify including runtime smoke",
+      "type": "process",
+      "command": "python3",
+      "args": [
+        "tools/verify.py",
+        "--runtime"
+      ],
+      "problemMatcher": []
     }
   ]
 }

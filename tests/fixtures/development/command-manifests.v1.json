@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "kind": "rifare-zero-dependency-smoke-commands",
+  "profile": "smoke-sqlite",
+  "third_party_packages": [],
+  "sha256": {
+    "package.json": "5be47c6e8a24e36e832508633175a14ab99fc7105c7b61c19682117211d23efc",
+    "package-lock.json": "7d6ea07a45c6e64c7049e7fec6772737b48bd53de565b980d0d8f5eb1b7924ff",
+    ".npmrc": "adad6b1cb980000952d236e9b6c0f28ef46470612cbc6dedc75f9e895783491c",
+    ".node-version": "177d20030d4dcc37eae9ef92865ec54dadce60e8f19e9a34a5d4f37502195a36"
+  }
+}

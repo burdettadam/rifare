@@ -2,7 +2,7 @@
 
 ## Requirements and actual commands
 
-The starter requires Git and Python 3.10+ (standard library only). Git Bash is recommended for shell examples on Windows. No application dependency manager or container runtime is configured yet.
+The starter requires Git and Python 3.10+ (standard library only). Git Bash is recommended for shell examples on Windows. The explicit smoke profile additionally requires Node with its bundled npm; see the M00-G05 section below. No target-stack container runtime is qualified.
 
 ```sh
 python3 tools/verify.py                         # starter and document-contract checks
@@ -20,7 +20,7 @@ On Windows with the Python launcher, substitute `py -3` for `python3`. `make ver
 
 ## What is not configured
 
-There is no running API, web application, database, worker queue, commerce adapter, model integration or deployment. Product build/start/test/migration commands and source module layout are M00-G05/M00-G06 work. Do not claim that a documentation directory is an implementation or invent successful startup commands.
+M00-G05 adds a real local API/worker/browser diagnostic using SQLite. It is not the target PostgreSQL/React stack and contains no commerce adapter, model integration or deployment. Its full goal remains unaccepted. Use only the explicit smoke commands below; default target startup fails closed.
 
 ## Worktrees and evidence
 
@@ -115,3 +115,20 @@ These are read-only checks, not a new worker command protocol. Native Git create
 worktrees. The checker never merges, locks, schedules or releases. Evidence must
 be separately pinned to the accepted policy base; see `docs/WORKFLOW-CHECKS.md`.
 No global initializer or named model/client is required for these commands.
+
+## M00-G05 synthetic runtime slice
+
+Read [local environment instructions](docs/LOCAL-ENVIRONMENT.md) and the
+[test/evidence mapping](docs/RUNTIME-TESTS.md) before starting.
+
+```sh
+npm ci --offline --ignore-scripts
+npm run dev:smoke                  # foreground; prints actual loopback URLs
+npm run stop:smoke                 # separate terminal in the same worktree
+python3 tools/verify.py --runtime  # planning + Python helpers + Node smoke tests
+```
+
+The process launcher is a local product start/stop script, not an agent scheduler.
+No paid services, model keys or production accounts are used. Root npm metadata
+contains no dependency packages. PostgreSQL, React and OS-level outbound network
+isolation remain unqualified; `npm run dev` exits 2 rather than substituting smoke.

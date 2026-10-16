@@ -1,5 +1,7 @@
 # Rifare
 
+**Current work: M00-G05 is partial, not accepted.** A real, explicit synthetic smoke environment is available. PostgreSQL/React target setup remains blocked. [Start the local diagnostic](docs/LOCAL-ENVIRONMENT.md).
+
 Merchant-owned commerce operations with tailorable skills and independently
 replaceable platforms, agents and models.
 
