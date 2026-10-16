@@ -7,7 +7,8 @@ replaceable platforms, agents and models.
 
 **Current checkpoint:** M00-G01 through M00-G04 are accepted for local development
 and merged into `main`. Their branches and original commits are retained.
-**No commerce application is implemented.** M00-G05 is next; it has not started.
+**No commerce application is implemented.** M00-G05 has a separately tested
+`smoke-sqlite` diagnostic slice on `goal/M00-G05`; the full goal is not accepted.
 
 The owner delegated project decisions. [ADR-0004](docs/decisions/0004-delegated-development-authority.md)
 records the adopted scope, benchmark, licensing direction and narrow bootstrap
@@ -25,17 +26,29 @@ python3 tools/verify.py
 python3 tools/check_workflow.py --root .
 ```
 
-Use Git and Python 3.10+ with the standard library. No API keys, paid model,
-application package manager, container runtime or global initializer is required
-for the current commands. Windows users can use `py -3`; cross-platform
+The planning commands above use Git and Python 3.10+ with the standard library.
+The optional smoke runtime also requires Node and npm; see its prerequisites below.
+No API keys, paid model, container runtime or global initializer is required
+for these diagnostic commands. Windows users can use `py -3`; cross-platform
 qualification has not been performed by this checkpoint's Linux checks.
 
 Read [AGENTS.md](AGENTS.md), [GOVERNANCE.md](GOVERNANCE.md), [PLANS.md](PLANS.md)
-and [DEVELOPMENT.md](DEVELOPMENT.md). When the next goal is assigned:
+and [DEVELOPMENT.md](DEVELOPMENT.md). The delivered checkout is already on
+`goal/M00-G05`; resume that branch rather than creating it again from `main`.
+Check `git worktree list` before claiming a writer or starting another instance.
+
+For the explicit diagnostic runtime:
 
 ```sh
-git worktree add ../Rifare-M00-G05 -b goal/M00-G05 main
+npm ci --offline --ignore-scripts
+python3 tools/verify.py --runtime
+npm run dev:smoke
+# In a second terminal in the same worktree:
+npm run stop:smoke
 ```
+
+`npm run dev` exits 2 until the target React/PostgreSQL setup is qualified.
+The smoke profile does not silently replace that target.
 
 Set your own repository-local Git identity before authoring your own commits.
 Do not restart accepted goals or infer assignments from the initial ready queue.
@@ -56,7 +69,9 @@ Do not restart accepted goals or infer assignments from the initial ready queue.
 | [Workflow checks](docs/WORKFLOW-CHECKS.md) | Candidate-bound tests/reviews, writer ownership and release scope. |
 | [Skill architecture](docs/SKILL-ARCHITECTURE.md) | Merchant/platform-tailorable product skills, separate from development skills. |
 | [Regression strategy](docs/REGRESSION-STRATEGY.md) | Retained behavior and meaningful fault proof. |
-| [M00-G04 work record](work/records/M00-G04.md) | Implemented outcome, evidence and delegated acceptance. |
+| [M00-G04 work record](work/records/M00-G04.md) | Accepted workflow foundation. |
+| [M00-G05 work record](work/records/M00-G05.md) | Partial runtime outcome, actual checks and remaining blockers. |
+| [Local environment](docs/LOCAL-ENVIRONMENT.md) | Runtime commands, isolation, recovery and qualification boundaries. |
 
 The goal cards/catalogue are generated from planning JSON. Live decisions belong
 under `work/`. Raw evidence stays ignored. No task database, worker scheduler,
@@ -64,23 +79,28 @@ custom Git command protocol or mandatory agent provider has been added.
 
 ## Verified development boundary
 
-The integrated suite has 289 executable planning/helper/workflow tests: 239
-retained tests and 50 M00-G04 tests. Six deliberately broken workflow changes
-were caught by behavioral assertions. Native Git worktrees and two separate
-loopback fixture servers were exercised; this is not product database/queue or
-provider isolation. Tests use explicitly synthetic reviewers where needed.
+The accepted `main` baseline has 289 Python planning/helper/workflow tests. The
+M00-G05 branch adds 8 manifest-intake tests and 44 native Node diagnostic tests.
+The current full run is 297 Python tests plus 44 Node tests, without skips.
+Runtime cases exercise two linked worktrees, separate SQLite databases and queues,
+local attachments, migrations, instance-bound stopping, restart persistence,
+external-request denial and a clean offline install from the zero-package lock.
+They do not establish PostgreSQL behavior, React rendering, OS-wide egress
+containment, commerce qualification or independent review. Interactive Chromium
+navigation was blocked by the execution host's browser policy; no visual pass is
+claimed. Exact logs and fault demonstrations remain in ignored review evidence.
 
 The workflow checker is read-only. It does not authenticate identities, grant
 permissions, lock OS writers, merge branches or create releases. The global
 initializer and a specific agent client were not executed. Actual client/host
-qualification and product startup remain separate work.
+qualification and target-stack startup remain separate work.
 
 ## Source retention and publication
 
 The project ZIP contains a standalone `.git` history. The bundle can be cloned:
 
 ```sh
-git clone -b main /path/to/Rifare-M00-G04.bundle Rifare
+git clone -b goal/M00-G05 /path/to/Rifare-M00-G05.bundle Rifare
 cd Rifare
 git remote remove origin
 python3 tools/verify.py
