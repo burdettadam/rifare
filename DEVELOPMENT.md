@@ -5,7 +5,7 @@
 The starter requires Git and Python 3.10+ (standard library only). Git Bash is recommended for shell examples on Windows. No application dependency manager or container runtime is configured yet.
 
 ```sh
-python3 tools/verify.py                         # all starter checks
+python3 tools/verify.py                         # starter and document-contract checks
 python3 tools/validate_plan.py --root .         # IDs, dependencies and retained criteria
 python3 -m unittest discover -s tests -v        # planning/helper/repository tests
 python3 tools/check_repository.py --root .      # layout, JSON, internal links and initial state
@@ -52,3 +52,15 @@ python3 tools/verify.py
 ```
 
 Run environment/version-specific qualification again on an untested host. Restore from this checkpoint does not recover live accounts, production data or external evidence because none are included.
+
+## M00-G01 document contracts
+
+```sh
+python3 tools/check_support_envelope.py --root .
+python3 tools/check_support_envelope.py --root . --scenarios tests/fixtures/support-envelope/scenarios.json
+python3 -m unittest discover -s tests -p test_support_envelope.py -v
+```
+
+These commands check proposed scope and meaningful regression cases, not native
+commerce effects or human approval. Full `verify.py` includes this contract and
+all retained helper tests. See [support-envelope checks](docs/SUPPORT-ENVELOPE.md).

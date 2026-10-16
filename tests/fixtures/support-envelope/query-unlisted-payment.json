@@ -1,0 +1,11 @@
+{
+  "action": "returns.refund",
+  "context": {
+    "platform": "shopify",
+    "payment": "unlisted_payment_route",
+    "fulfillment": "native_hold",
+    "market": "US",
+    "currency": "USD",
+    "order_kind": "one_time_physical"
+  }
+}
