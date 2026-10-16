@@ -8,14 +8,15 @@ import type { CustomerAccess } from '../../packages/commerce/customer-access.mts
 import type { SecretVault } from '../../packages/commerce/secrets.mts';
 import type { StoreSimulator } from '../../packages/commerce/simulator.mts';
 
+import { ReadMcp,MCP_VERSION } from '../../packages/agent/mcp.mts';
 import { ReadContext } from '../../packages/commerce/read-context.mts';
 
 const SAFE_CODES=new Set(['ACCESS_DENIED','NOT_FOUND','INVALID_INPUT','JSON_REQUIRED','BODY_TOO_LARGE','INVALID_JSON',
   'RESOURCE_DENIED','INVALID_SKILL','SKILL_CHANGED','PROFILE_STALE','PROFILE_ACTION_DENIED','INVALID_PROFILE',
-  'TASK_CONTEXT_CHANGED','UNKNOWN_READ_ACTION','CURRENT_FACTS_UNAVAILABLE','TASK_LIMIT','HOST_DENIED','ORIGIN_DENIED','VERIFICATION_FAILED','SECRET_UNAVAILABLE','ADAPTER_UNAVAILABLE','PROVIDER_REJECTED','PROVIDER_UNAVAILABLE','OUTCOME_UNKNOWN']);
+  'NO_CONFIGURATION','RUN_IN_PROGRESS','TASK_CONTEXT_CHANGED','UNKNOWN_READ_ACTION','CURRENT_FACTS_UNAVAILABLE','TASK_LIMIT','HOST_DENIED','ORIGIN_DENIED','VERIFICATION_FAILED','SECRET_UNAVAILABLE','ADAPTER_UNAVAILABLE','PROVIDER_REJECTED','PROVIDER_UNAVAILABLE','OUTCOME_UNKNOWN']);
 export async function startCommerceServer(options:{kernel:CommerceKernel;caps:Capabilities;customers:CustomerAccess;
-  simulator:StoreSimulator;vault?:SecretVault;reads?:ReadContext;port?:number;log?:(entry:unknown)=>void}) {
-  const {kernel,caps,customers,simulator,vault}=options;const reads=options.reads??new ReadContext(kernel,caps);let port=0;
+  simulator:StoreSimulator;vault?:SecretVault;reads?:ReadContext;runner?:{run:(scope:object,taskId:string,configurationId:string)=>Promise<unknown>;receipt:(scope:object,taskId:string,receiptId:string)=>unknown};port?:number;log?:(entry:unknown)=>void}) {
+  const {kernel,caps,customers,simulator,vault}=options;const reads=options.reads??new ReadContext(kernel,caps);const mcp=new ReadMcp(kernel,reads);let port=0;
   const log=(status:number,code:string)=>{try{options.log?.({event:'http_result',status,code});}catch{/* logging cannot grant access */}};
   const server=createServer(async(req,res)=>{
     try {
@@ -23,7 +24,7 @@ export async function startCommerceServer(options:{kernel:CommerceKernel;caps:Ca
       const url=new URL(req.url??'/',`http://127.0.0.1:${port}`);
       if(url.origin!==`http://127.0.0.1:${port}`)throw new Error('HOST_DENIED');
       if(url.pathname==='/health'&&req.method==='GET'){send(res,200,{ready:true,profile:'commerce-sqlite-diagnostic',production_qualified:false});return;}
-      const assets:Record<string,[string,string]>={'/':['index.html','text/html'],'/client.js':['client.js','text/javascript'],'/style.css':['style.css','text/css']};
+      const assets:Record<string,[string,string]>={'/':['index.html','text/html'],'/client.js':['client.js','text/javascript'],'/style.css':['style.css','text/css'],'/status':['status.html','text/html'],'/status-client.js':['status-client.js','text/javascript'],'/status.css':['status.css','text/css']};
       if(req.method==='GET'&&assets[url.pathname]&&!url.search){
         const [file,mime]=assets[url.pathname];res.writeHead(200,{'content-type':mime+'; charset=utf-8','cache-control':'no-store',
           'content-security-policy':"default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'",
@@ -36,10 +37,25 @@ export async function startCommerceServer(options:{kernel:CommerceKernel;caps:Ca
       if(req.method==='POST'&&url.pathname==='/v1/customer/verify'){
         send(res,200,customers.complete(await body(req)));log(200,'CUSTOMER_VERIFIED');return;
       }
+      if(url.pathname==='/mcp') {
+        const auth=req.headers.authorization;
+        if(typeof auth!=='string'||!auth.startsWith('Bearer '))throw new Error('ACCESS_DENIED');
+        const value=auth.slice(7),audience=`http://127.0.0.1:${port}/mcp`;
+        mcp.authenticate(value,audience);
+        if(req.method!=='POST'){res.setHeader('allow','POST');send(res,405,{error:'METHOD_NOT_ALLOWED'});return;}
+        if(!req.headers.accept?.includes('application/json')||!req.headers.accept.includes('text/event-stream')){send(res,406,{error:'MCP_ACCEPT_REQUIRED'});return;}
+        const message=await body(req),version=req.headers['mcp-protocol-version'];
+        if(version!==undefined&&version!==MCP_VERSION){send(res,400,{error:'UNSUPPORTED_MCP_VERSION'});return;}
+        const result=mcp.dispatch(value,audience,message,typeof version==='string'?version:undefined);
+        if(result===null){res.writeHead(202,{'cache-control':'no-store'});res.end();}else send(res,200,result);
+        return;
+      }
       const auth=req.headers.authorization;
       if(typeof auth!=='string'||!auth.startsWith('Bearer '))throw new Error('ACCESS_DENIED');
       const scope=kernel.authenticate(auth.slice(7));
-      if(req.method==='GET'&&url.pathname==='/v1/read-contract') {
+      if(req.method==='POST'&&url.pathname==='/v1/mcp-grants') {
+        send(res,201,mcp.issue(scope,await body(req),`http://127.0.0.1:${port}/mcp`));
+      } else if(req.method==='GET'&&url.pathname==='/v1/read-contract') {
         send(res,200,JSON.parse(readFileSync(new URL('../../packages/commerce/contracts/read-api.openapi.json',import.meta.url),'utf8')));
       } else if(req.method==='GET'&&/^\/v1\/orders\/[A-Za-z0-9_-]+\/status$/.test(url.pathname)) {
         send(res,200,reads.orderStatus(scope,id(url.pathname.split('/')[3])));
@@ -53,6 +69,13 @@ export async function startCommerceServer(options:{kernel:CommerceKernel;caps:Ca
         send(res,200,reads.skills.read(scope,id(url.searchParams.get('skill_id')),url.searchParams.get('resource')!,url.searchParams.get('bundle_digest')!));
       } else if(req.method==='GET'&&/^\/v1\/profiles\/[A-Za-z0-9_-]+$/.test(url.pathname)) {
         send(res,200,reads.profiles.get(scope,id(url.pathname.split('/')[3])));
+      } else if(req.method==='POST'&&/^\/v1\/read-tasks\/[A-Za-z0-9_-]+\/assist$/.test(url.pathname)) {
+        if(!options.runner)throw new Error('ADAPTER_UNAVAILABLE');
+        const input=exact(await body(req),['configuration_id']);
+        send(res,200,await options.runner.run(scope,id(url.pathname.split('/')[3]),id(input.configuration_id)));
+      } else if(req.method==='GET'&&/^\/v1\/read-tasks\/[A-Za-z0-9_-]+\/receipts\/[A-Za-z0-9_-]+$/.test(url.pathname)) {
+        if(!options.runner)throw new Error('ADAPTER_UNAVAILABLE');
+        send(res,200,options.runner.receipt(scope,id(url.pathname.split('/')[3]),id(url.pathname.split('/')[5])));
       } else if(req.method==='POST'&&url.pathname==='/v1/read-tasks') {
         send(res,201,reads.createTask(scope,await body(req)));
       } else if(req.method==='GET'&&/^\/v1\/read-tasks\/[A-Za-z0-9_-]+$/.test(url.pathname)) {

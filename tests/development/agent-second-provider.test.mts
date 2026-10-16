@@ -1,0 +1,25 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import { useModel } from './agent-provider-helpers.mts';
+import { ReadRunner } from '../../packages/agent/runner.mts';
+import { encodeRequest,providerReader } from '../../packages/agent/providers.mts';
+
+test('CASE-M01-G14-01',()=>useModel(async f=>{const a=await f.runner.run(f.a.scope,f.task.id,'openai'),b=await f.runner.run(f.a.scope,f.task.id,'anthropic');
+ assert.equal(b.status,'grounded_read');assert.deepEqual(a.claims,b.claims);assert.equal(a.source_digest,b.source_digest);assert.equal(b.receipt.configuration.provider,'anthropic');}));
+test('CASE-M01-G14-02',()=>useModel(async f=>{const configs=structuredClone(f.configs);configs[1].capabilities=['tool_calls'];const r=await new ReadRunner(f.kernel,f.reads,f.vault,configs).run(f.a.scope,f.task.id,'anthropic');assert.equal(r.reason,'CAPABILITY_UNAVAILABLE');assert.equal(f.requests.length,0);}));
+test('CASE-M01-G14-03',()=>useModel(async f=>{const schema=f.db.prepare("SELECT sql FROM sqlite_master WHERE type='table' ORDER BY name").all();
+ await f.runner.run(f.a.scope,f.task.id,'openai');const b=await new ReadRunner(f.kernel,f.reads,f.vault,[f.configs[1]]).run(f.a.scope,f.task.id,'anthropic');
+ assert.equal(b.task_id,f.task.id);assert.deepEqual(schema,f.db.prepare("SELECT sql FROM sqlite_master WHERE type='table' ORDER BY name").all());assert.deepEqual(f.reads.task(f.a.scope,f.task.id),f.task);}));
+test('M01-G14-DISTINCT-WIRE-FORMATS',()=>useModel(async f=>{await f.runner.run(f.a.scope,f.task.id,'openai');await f.runner.run(f.a.scope,f.task.id,'anthropic');
+ const a=f.requests.find(r=>r.provider==='openai'),b=f.requests.find(r=>r.provider==='anthropic');assert.equal(a.url,'https://api.openai.com/v1/responses');assert.equal(b.url,'https://api.anthropic.com/v1/messages');
+ assert.equal(a.body.store,false);assert.ok(b.body.messages);assert.equal(b.headers['anthropic-version'],'2023-06-01');assert.equal(b.headers['x-api-key'],'anthropic-synthetic-key');assert.equal(b.headers.authorization,undefined);}));
+test('M01-G14-STATELESS-TRANSCRIPT',()=>useModel(async f=>{await f.runner.run(f.a.scope,f.task.id,'anthropic');const body=f.requests.at(-1).body;
+ assert.equal(body.messages[1].content[0].type,'tool_use');assert.equal(body.messages[2].content[0].type,'tool_result');assert.equal(body.messages[1].content[0].id,body.messages[2].content[0].tool_use_id);
+ assert.equal(JSON.stringify(f.db.prepare('SELECT body FROM commerce_assistance_receipts').all()).includes('private_message'),false);}));
+test('M01-G14-UNSUPPORTED-MODEL',async()=>{let calls=0;const reader=providerReader('anthropic',{fixtureTransport:async()=>{calls++;return new Response('{}');},approvedModels:['a']});
+ await assert.rejects(()=>reader.execute(Buffer.from('key'),{model:'b',max_output_tokens:512,instruction:'read',context:{},turns:[]}),/MODEL_NOT_APPROVED/);assert.equal(calls,0);});
+test('M01-G14-HALLUCINATED-B',()=>useModel(async f=>{f.setMutate((r,p)=>{if(p==='anthropic'&&r.content[0].name==='finish_status')r.content[0].input.fact_ids.push('delivery.tomorrow');return r;});assert.equal((await f.runner.run(f.a.scope,f.task.id,'anthropic')).reason,'UNGROUNDED_OUTPUT');}));
+test('M01-G14-TRUNCATED-B',()=>useModel(async f=>{f.setMutate((r,p)=>p==='anthropic'?{...r,stop_reason:'max_tokens'}:r);const r=await f.runner.run(f.a.scope,f.task.id,'anthropic');assert.equal(r.reason,'MODEL_HANDOFF');assert.equal(f.requests.some(x=>x.provider==='openai'),false);}));
+test('M01-G14-STRICT-APP-CONTRACT',()=>useModel(async f=>{f.setMutate((r,p)=>{if(p==='anthropic')r.content[0].input={credential:'please'};return r;});assert.equal((await f.runner.run(f.a.scope,f.task.id,'anthropic')).status,'handoff');}));
+test('M01-G14-NO-FREE-TEXT',()=>useModel(async f=>{f.setMutate((r,p)=>{if(p==='anthropic')r.content.push({type:'text',text:'Delivered tomorrow'});return r;});assert.equal((await f.runner.run(f.a.scope,f.task.id,'anthropic')).reason,'MODEL_HANDOFF');}));
+test('M01-G14-SETTINGS-PINS',()=>useModel(async f=>{await f.runner.run(f.a.scope,f.task.id,'anthropic');assert.ok(f.requests.every(x=>x.body.max_tokens===512&&x.body.model==='fixture-b'));assert.ok(f.requests.every(x=>x.body.tool_choice.disable_parallel_tool_use));}));
+test('M01-G14-UNKNOWN-PROVIDER',()=>{assert.throws(()=>providerReader('unconfigured' as any),/INVALID_PROVIDER/);});
