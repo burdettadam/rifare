@@ -164,3 +164,18 @@ separately pinned verifier/baseline bytes. Do not treat candidate-owned verifica
 scripts or copied pass reports as a trusted baseline. M00-G05/M00-G06 target-stack
 qualification and independent reviews remain open; this preparatory goal does not
 change their acceptance or authorize a release.
+
+## M00-G08 commit-bound evidence
+
+The [evidence gate](docs/EVIDENCE-GATE.md) captures a fresh pinned native run and
+verifies source/configuration/artifact identity against an external request and
+receipt. Acceptance checks reuse the governing workflow and require separately
+trusted review inputs. No automatic acceptance, merge, release or new dependency.
+
+```sh
+python3 -m unittest discover -s tests -p test_evidence_gate.py -v
+```
+
+Full verification discovers these tests automatically. For candidate evidence,
+use the separately exported controller and independently retained pins described
+in the guide; candidate-authored checks alone are not an external trust anchor.

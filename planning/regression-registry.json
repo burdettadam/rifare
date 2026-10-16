@@ -66,6 +66,14 @@
       "contract_files": [
         "goals/M00/M00-G07.md"
       ]
+    },
+    {
+      "id": "FEATURE-M00-G08",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M00/M00-G08.md"
+      ]
     }
   ],
   "tests": [
@@ -3330,6 +3338,699 @@
       "runner_case_id": "SEED-05",
       "source": "tests/harness/unit.test.mts",
       "capability_id": "FEATURE-M00-G06"
+    },
+    {
+      "id": "python:test_evidence_gate.CaptureAndIntegrityTests.test_CASE_M00_G08_01_real_native_capture_and_separate_decision",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.CaptureAndIntegrityTests.test_CASE_M00_G08_01_real_native_capture_and_separate_decision",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.CaptureAndIntegrityTests.test_actual_source_digest_is_not_git_tree_sha",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.CaptureAndIntegrityTests.test_actual_source_digest_is_not_git_tree_sha",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.CaptureAndIntegrityTests.test_relocation_preserves_content_identity",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.CaptureAndIntegrityTests.test_relocation_preserves_content_identity",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.CaptureAndIntegrityTests.test_fresh_capture_runs_native_again",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.CaptureAndIntegrityTests.test_fresh_capture_runs_native_again",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.CaptureAndIntegrityTests.test_existing_bundle_cannot_be_overwritten",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.CaptureAndIntegrityTests.test_existing_bundle_cannot_be_overwritten",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.CaptureAndIntegrityTests.test_existing_receipt_cannot_be_overwritten",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.CaptureAndIntegrityTests.test_existing_receipt_cannot_be_overwritten",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.CaptureAndIntegrityTests.test_failed_native_run_creates_no_receipt",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.CaptureAndIntegrityTests.test_failed_native_run_creates_no_receipt",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.CaptureAndIntegrityTests.test_required_notes_cannot_be_omitted",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.CaptureAndIntegrityTests.test_required_notes_cannot_be_omitted",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.CaptureAndIntegrityTests.test_supporting_file_mutation_rejected_before_capture",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.CaptureAndIntegrityTests.test_supporting_file_mutation_rejected_before_capture",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.CaptureAndIntegrityTests.test_receipt_must_stay_outside_candidate",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.CaptureAndIntegrityTests.test_receipt_must_stay_outside_candidate",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.CaptureAndIntegrityTests.test_receipt_cannot_live_inside_bundle",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.CaptureAndIntegrityTests.test_receipt_cannot_live_inside_bundle",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.CaptureAndIntegrityTests.test_candidate_owned_controller_is_rejected",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.CaptureAndIntegrityTests.test_candidate_owned_controller_is_rejected",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.CaptureAndIntegrityTests.test_changed_pinned_controller_is_rejected",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.CaptureAndIntegrityTests.test_changed_pinned_controller_is_rejected",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.CaptureAndIntegrityTests.test_changed_external_request_is_rejected",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.CaptureAndIntegrityTests.test_changed_external_request_is_rejected",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.CaptureAndIntegrityTests.test_changed_external_receipt_is_rejected",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.CaptureAndIntegrityTests.test_changed_external_receipt_is_rejected",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.CaptureAndIntegrityTests.test_changed_baseline_is_rejected",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.CaptureAndIntegrityTests.test_changed_baseline_is_rejected",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.CaptureAndIntegrityTests.test_missing_expected_receipt_hash_is_rejected",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.CaptureAndIntegrityTests.test_missing_expected_receipt_hash_is_rejected",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.CaptureAndIntegrityTests.test_CASE_M00_G08_02_source_and_native_bytes_cannot_reuse_capture",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.CaptureAndIntegrityTests.test_CASE_M00_G08_02_source_and_native_bytes_cannot_reuse_capture",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.CaptureAndIntegrityTests.test_hidden_source_change_is_detected",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.CaptureAndIntegrityTests.test_hidden_source_change_is_detected",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.CaptureAndIntegrityTests.test_new_candidate_commit_requires_recapture",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.CaptureAndIntegrityTests.test_new_candidate_commit_requires_recapture",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.CaptureAndIntegrityTests.test_branch_name_is_not_immutable_pin",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.CaptureAndIntegrityTests.test_branch_name_is_not_immutable_pin",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.CaptureAndIntegrityTests.test_modified_artifact_bytes_rejected",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.CaptureAndIntegrityTests.test_modified_artifact_bytes_rejected",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.CaptureAndIntegrityTests.test_removed_artifact_rejected",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.CaptureAndIntegrityTests.test_removed_artifact_rejected",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.CaptureAndIntegrityTests.test_extra_artifact_rejected",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.CaptureAndIntegrityTests.test_extra_artifact_rejected",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.CaptureAndIntegrityTests.test_symlink_artifact_rejected",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.CaptureAndIntegrityTests.test_symlink_artifact_rejected",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.CaptureAndIntegrityTests.test_hardlinked_artifact_rejected",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.CaptureAndIntegrityTests.test_hardlinked_artifact_rejected",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.CaptureAndIntegrityTests.test_symlink_ancestor_rejected",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.CaptureAndIntegrityTests.test_symlink_ancestor_rejected",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.CaptureAndIntegrityTests.test_nonregular_artifact_does_not_block_on_fifo",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.CaptureAndIntegrityTests.test_nonregular_artifact_does_not_block_on_fifo",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.CaptureAndIntegrityTests.test_case_colliding_paths_rejected",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.CaptureAndIntegrityTests.test_case_colliding_paths_rejected",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.CaptureAndIntegrityTests.test_no_leaking_known_secret_in_exception_text",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.CaptureAndIntegrityTests.test_no_leaking_known_secret_in_exception_text",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.CaptureAndIntegrityTests.test_private_key_artifact_rejected",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.CaptureAndIntegrityTests.test_private_key_artifact_rejected",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.CaptureAndIntegrityTests.test_artifact_size_limit_precedes_read",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.CaptureAndIntegrityTests.test_artifact_size_limit_precedes_read",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.CaptureAndIntegrityTests.test_total_inventory_limit_rejected",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.CaptureAndIntegrityTests.test_total_inventory_limit_rejected",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.SemanticEvidenceTests.test_CASE_M00_G08_03_other_goal_and_self_approval_are_rejected",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.SemanticEvidenceTests.test_CASE_M00_G08_03_other_goal_and_self_approval_are_rejected",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.SemanticEvidenceTests.test_self_authored_approved_flag_is_unknown_field",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.SemanticEvidenceTests.test_self_authored_approved_flag_is_unknown_field",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.SemanticEvidenceTests.test_self_authored_reviewer_is_not_imported",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.SemanticEvidenceTests.test_self_authored_reviewer_is_not_imported",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.SemanticEvidenceTests.test_copied_receipt_for_other_goal_rejected",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.SemanticEvidenceTests.test_copied_receipt_for_other_goal_rejected",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.SemanticEvidenceTests.test_stale_manifest_configuration_rejected",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.SemanticEvidenceTests.test_stale_manifest_configuration_rejected",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.SemanticEvidenceTests.test_changed_source_configuration_pin_rejected",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.SemanticEvidenceTests.test_changed_source_configuration_pin_rejected",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.SemanticEvidenceTests.test_inapplicable_runtime_pin_rejected",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.SemanticEvidenceTests.test_inapplicable_runtime_pin_rejected",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.SemanticEvidenceTests.test_unpinned_governing_policy_rejected",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.SemanticEvidenceTests.test_unpinned_governing_policy_rejected",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.SemanticEvidenceTests.test_changed_base_policy_rejected",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.SemanticEvidenceTests.test_changed_base_policy_rejected",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.SemanticEvidenceTests.test_false_compiled_build_claim_rejected",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.SemanticEvidenceTests.test_false_compiled_build_claim_rejected",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.SemanticEvidenceTests.test_build_digest_rejected",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.SemanticEvidenceTests.test_build_digest_rejected",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.SemanticEvidenceTests.test_changed_source_tree_digest_rejected",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.SemanticEvidenceTests.test_changed_source_tree_digest_rejected",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.SemanticEvidenceTests.test_unbound_manifest_bytes_fail_receipt",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.SemanticEvidenceTests.test_unbound_manifest_bytes_fail_receipt",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.SemanticEvidenceTests.test_report_status_cannot_be_fabricated",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.SemanticEvidenceTests.test_report_status_cannot_be_fabricated",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.SemanticEvidenceTests.test_report_source_cannot_change",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.SemanticEvidenceTests.test_report_source_cannot_change",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.SemanticEvidenceTests.test_report_configuration_cannot_change",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.SemanticEvidenceTests.test_report_configuration_cannot_change",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.SemanticEvidenceTests.test_report_baseline_cannot_change",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.SemanticEvidenceTests.test_report_baseline_cannot_change",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.SemanticEvidenceTests.test_missing_native_layer_rejected",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.SemanticEvidenceTests.test_missing_native_layer_rejected",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.SemanticEvidenceTests.test_nonzero_native_exit_rejected",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.SemanticEvidenceTests.test_nonzero_native_exit_rejected",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.SemanticEvidenceTests.test_boolean_exit_code_is_not_integer",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.SemanticEvidenceTests.test_boolean_exit_code_is_not_integer",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.SemanticEvidenceTests.test_zero_native_xml_cannot_reuse_green_counts",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.SemanticEvidenceTests.test_zero_native_xml_cannot_reuse_green_counts",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.SemanticEvidenceTests.test_skipped_native_xml_cannot_be_green",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.SemanticEvidenceTests.test_skipped_native_xml_cannot_be_green",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.SemanticEvidenceTests.test_native_inventory_cannot_be_reidentified",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.SemanticEvidenceTests.test_native_inventory_cannot_be_reidentified",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.SemanticEvidenceTests.test_duplicate_native_ids_rejected",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.SemanticEvidenceTests.test_duplicate_native_ids_rejected",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.SemanticEvidenceTests.test_normalized_counts_must_match_native",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.SemanticEvidenceTests.test_normalized_counts_must_match_native",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.SemanticEvidenceTests.test_discovery_inventory_cannot_be_shrunk",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.SemanticEvidenceTests.test_discovery_inventory_cannot_be_shrunk",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.SemanticEvidenceTests.test_command_text_is_checked_against_run",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.SemanticEvidenceTests.test_command_text_is_checked_against_run",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.SemanticEvidenceTests.test_diagnostics_are_hashed",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.SemanticEvidenceTests.test_diagnostics_are_hashed",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.SemanticEvidenceTests.test_caught_network_marker_cannot_be_hidden",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.SemanticEvidenceTests.test_caught_network_marker_cannot_be_hidden",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.SemanticEvidenceTests.test_duplicate_json_key_rejected",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.SemanticEvidenceTests.test_duplicate_json_key_rejected",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.SemanticEvidenceTests.test_expired_request_is_blocked",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.SemanticEvidenceTests.test_expired_request_is_blocked",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.SemanticEvidenceTests.test_future_request_is_blocked",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.SemanticEvidenceTests.test_future_request_is_blocked",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.SemanticEvidenceTests.test_naive_timestamp_is_blocked",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.SemanticEvidenceTests.test_naive_timestamp_is_blocked",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.SemanticEvidenceTests.test_run_time_outside_request_is_blocked",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.SemanticEvidenceTests.test_run_time_outside_request_is_blocked",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.SemanticEvidenceTests.test_retention_before_capture_is_blocked",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.SemanticEvidenceTests.test_retention_before_capture_is_blocked",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.SemanticEvidenceTests.test_automatic_cleanup_cannot_be_requested",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.SemanticEvidenceTests.test_automatic_cleanup_cannot_be_requested",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.SemanticEvidenceTests.test_traversal_in_supporting_path_is_blocked",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.SemanticEvidenceTests.test_traversal_in_supporting_path_is_blocked",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.SemanticEvidenceTests.test_rerendered_demo_even_with_bundle_reseal_needs_request_pin",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.SemanticEvidenceTests.test_rerendered_demo_even_with_bundle_reseal_needs_request_pin",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.ReviewBoundaryTests.test_two_synthetic_independent_reviews_satisfy_checks_not_acceptance",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.ReviewBoundaryTests.test_two_synthetic_independent_reviews_satisfy_checks_not_acceptance",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.ReviewBoundaryTests.test_empty_review_index_cannot_approve",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.ReviewBoundaryTests.test_empty_review_index_cannot_approve",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.ReviewBoundaryTests.test_author_cannot_review_itself",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.ReviewBoundaryTests.test_author_cannot_review_itself",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.ReviewBoundaryTests.test_author_session_cannot_review_itself",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.ReviewBoundaryTests.test_author_session_cannot_review_itself",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.ReviewBoundaryTests.test_same_reviewer_cannot_supply_both_roles",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.ReviewBoundaryTests.test_same_reviewer_cannot_supply_both_roles",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.ReviewBoundaryTests.test_stale_candidate_review_rejected",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.ReviewBoundaryTests.test_stale_candidate_review_rejected",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.ReviewBoundaryTests.test_stale_configuration_review_rejected",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.ReviewBoundaryTests.test_stale_configuration_review_rejected",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.ReviewBoundaryTests.test_copied_other_bundle_review_rejected",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.ReviewBoundaryTests.test_copied_other_bundle_review_rejected",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.ReviewBoundaryTests.test_copied_other_receipt_index_rejected",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.ReviewBoundaryTests.test_copied_other_receipt_index_rejected",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.ReviewBoundaryTests.test_unreferenced_blocking_review_cannot_be_ignored",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.ReviewBoundaryTests.test_unreferenced_blocking_review_cannot_be_ignored",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.ReviewBoundaryTests.test_blocking_review_cannot_be_outvoted",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.ReviewBoundaryTests.test_blocking_review_cannot_be_outvoted",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.ReviewBoundaryTests.test_review_before_capture_is_invalid",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.ReviewBoundaryTests.test_review_before_capture_is_invalid",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.ReviewBoundaryTests.test_expired_review_is_invalid",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.ReviewBoundaryTests.test_expired_review_is_invalid",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.ReviewBoundaryTests.test_recorded_blocker_prevents_completion",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.ReviewBoundaryTests.test_recorded_blocker_prevents_completion",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.ReviewBoundaryTests.test_duplicate_writer_prevents_completion",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.ReviewBoundaryTests.test_duplicate_writer_prevents_completion",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.ReviewBoundaryTests.test_review_round_must_match",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.ReviewBoundaryTests.test_review_round_must_match",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.ReviewBoundaryTests.test_general_delegation_is_not_tag_authority",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.ReviewBoundaryTests.test_general_delegation_is_not_tag_authority",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.ReviewBoundaryTests.test_candidate_supplied_approved_flag_in_index_is_invalid",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.ReviewBoundaryTests.test_candidate_supplied_approved_flag_in_index_is_invalid",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.ReviewBoundaryTests.test_unverified_evidence_cannot_enter_assessment",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.ReviewBoundaryTests.test_unverified_evidence_cannot_enter_assessment",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.ReviewBoundaryTests.test_missing_dependency_in_trusted_base_blocks_even_reviewed_evidence",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.ReviewBoundaryTests.test_missing_dependency_in_trusted_base_blocks_even_reviewed_evidence",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.AdditionalBoundaryTests.test_schema_matches_actual_capture_fields",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.AdditionalBoundaryTests.test_schema_matches_actual_capture_fields",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.AdditionalBoundaryTests.test_artifact_integer_cannot_be_boolean",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.AdditionalBoundaryTests.test_artifact_integer_cannot_be_boolean",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.AdditionalBoundaryTests.test_source_changed_during_verification_is_detected",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.AdditionalBoundaryTests.test_source_changed_during_verification_is_detected",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.AdditionalBoundaryTests.test_receipt_changed_during_verification_is_detected",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.AdditionalBoundaryTests.test_receipt_changed_during_verification_is_detected",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.AdditionalBoundaryTests.test_unknown_release_approval_cannot_be_attached_to_local_merge",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.AdditionalBoundaryTests.test_unknown_release_approval_cannot_be_attached_to_local_merge",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.AdditionalBoundaryTests.test_stale_release_evidence_cannot_be_reused",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.AdditionalBoundaryTests.test_stale_release_evidence_cannot_be_reused",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.AdditionalBoundaryTests.test_interpreted_source_build_digest_is_explicit",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.AdditionalBoundaryTests.test_interpreted_source_build_digest_is_explicit",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_evidence_gate.AdditionalBoundaryTests.test_missing_dependency_lock_pin_rejected",
+      "suite": "python",
+      "runner_case_id": "test_evidence_gate.AdditionalBoundaryTests.test_missing_dependency_lock_pin_rejected",
+      "source": "tests/test_evidence_gate.py",
+      "capability_id": "FEATURE-M00-G08"
     }
   ],
   "protected_files": [
@@ -3557,6 +4258,7 @@
     "planning/support-envelope.json",
     "planning/test-specifications.json",
     "planning/workflow-policy.json",
+    "templates/evidence-bundle.v1.schema.json",
     "tests/browser/component.py",
     "tests/development/config.test.mts",
     "tests/development/helpers.mts",
@@ -3591,6 +4293,7 @@
     "tests/harness/network-deny.mts",
     "tests/harness/unit.test.mts",
     "tests/test_distribution.py",
+    "tests/test_evidence_gate.py",
     "tests/test_native_harness.py",
     "tests/test_plan_tools.py",
     "tests/test_release_benchmark.py",

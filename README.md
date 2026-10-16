@@ -81,7 +81,7 @@ custom Git command protocol or mandatory agent provider has been added.
 
 The accepted `main` baseline has 289 Python planning/helper/workflow tests. The
 M00-G05 branch adds 8 manifest-intake tests and 44 native Node diagnostic tests.
-The current full run is 297 Python tests plus 44 Node tests, without skips.
+That M00-G05 verification ran 297 Python tests plus 44 Node tests, without skips.
 Runtime cases exercise two linked worktrees, separate SQLite databases and queues,
 local attachments, migrations, instance-bound stopping, restart persistence,
 external-request denial and a clean offline install from the zero-package lock.
@@ -122,3 +122,14 @@ host meeting the [test-harness requirements](docs/TEST-HARNESS.md). Unit/databas
 layers need no added npm dependencies; browser tests require the separately
 installed Playwright/Chromium tooling. These results do not close target-stack
 qualification or grant goal acceptance. See [the current work record](work/records/M00-G06.md).
+
+## Candidate-bound evidence
+
+M00-G08 adds a separately pinned evidence capture/verifier. It runs the retained
+native regression controller, records source/configuration/artifact identity and
+checks external review facts without granting acceptance. See
+[the evidence guide](docs/EVIDENCE-GATE.md) and
+[the current work record](work/records/M00-G08.md).
+The current registry has 565 executable diagnostic/helper checks: 466 retained
+and 99 new. Full target-stack qualification and independent review remain open.
+All 676 commerce scenarios remain planning specifications.
