@@ -1,0 +1,5 @@
+{
+  "apparel": {"tone":"warm","locale":"en-US"},
+  "fragile": {"tone":"formal","locale":"en-GB"},
+  "third": {"tone":"neutral","locale":"fr-CA"}
+}
