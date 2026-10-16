@@ -37,3 +37,13 @@ Thumbs.db
 # Local repository exports
 *.bundle
 *.zip
+
+# Private merchant instances; never source distribution inputs
+/private/
+/merchant-data/
+/merchant-config/
+/merchant-profiles/
+/customer-data/
+/secrets/
+/runtime/
+/backups/
