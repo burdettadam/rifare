@@ -1,3 +1,4 @@
+import { assertNotErased, erasedResource, assertRecoveryAction } from './data-guards.mts';
 import { assertExecution } from './execution-stops.mts';
 import { ROLE_ACTIONS,permissionDecision,recordSecurity } from './authorization.mts';
 import { createHash, randomBytes } from 'node:crypto';
@@ -111,7 +112,7 @@ export class CommerceKernel {
     return row;
   }
   authorize(scope:Scope,action:string,resource:string|null=null):Row {
-    const s=this.require(scope);if(resource!==null)id(resource);
+    const s=this.require(scope);assertRecoveryAction(this,action);if(resource!==null){id(resource);assertNotErased(this,s,resource);}
     const limits=this.#limits.get(scope);
     if(limits&&(!limits.actions.includes(action)||(resource!==null&&resource!==limits.resource)))throw new Error('WORK_SCOPE_DENIED');
     if(action==='model.run')assertExecution(this,s,'model.run');
@@ -149,6 +150,7 @@ export class CommerceKernel {
     const canonical=resourceKey(s.tenant_id,s.store_id,r.kind,r.source_system,r.external_id);
     this.authorize(scope,'resource.ingest',canonical);
     this.transaction(() => {
+      this.authorize(scope,'resource.ingest',canonical);assertNotErased(this,s,canonical,r.customer_id??(r.kind==='customer'?r.external_id:null));
       const prev=this.db.prepare('SELECT * FROM commerce_resources WHERE tenant_id=? AND store_id=? AND id=?').get(s.tenant_id,s.store_id,canonical) as Row;
       if (prev && r.source_version<=prev.source_version) {
         if (r.source_version===prev.source_version && prev.payload===encoded && prev.customer_id===r.customer_id
@@ -180,13 +182,13 @@ export class CommerceKernel {
     this.authorize(scope,'resource.read',resourceKey(s.tenant_id,s.store_id,kind,source,external));
     const row=this.db.prepare('SELECT * FROM commerce_resources WHERE tenant_id=? AND store_id=? AND kind=? AND source_system=? AND external_id=?')
       .get(s.tenant_id,s.store_id,kind,source,external) as Row;
-    if (!row) throw new Error('NOT_FOUND'); return this.project(row);
+    if (!row) throw new Error('NOT_FOUND'); assertNotErased(this,s,row.id);return this.project(row);
   }
   list(scope: Scope, kind: string, limit=50) {
     const s=this.require(scope,['operator','worker']); id(kind);integer(limit,1);
     if (!KINDS.includes(kind as any) || limit>100) throw new Error('INVALID_INPUT');
     return this.db.prepare('SELECT * FROM commerce_resources WHERE tenant_id=? AND store_id=? AND kind=? ORDER BY id LIMIT ?')
-      .all(s.tenant_id,s.store_id,kind,limit).filter(r=>permissionDecision(this.db,s,'resource.read',(r as Row).id).allowed).map(r=>this.project(r as Row));
+      .all(s.tenant_id,s.store_id,kind,limit).filter(r=>permissionDecision(this.db,s,'resource.read',(r as Row).id).allowed).filter(r=>!erasedResource(this,s,(r as Row).id)).map(r=>this.project(r as Row));
   }
   enqueueRead(scope: Scope, resource: string) {
     const s=this.require(scope,['operator']); this.authorize(scope,'job.enqueue',resource);this.get(scope,resource); const job='job_'+token().slice(0,32);

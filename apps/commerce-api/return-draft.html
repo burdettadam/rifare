@@ -1,0 +1,7 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Rifare · Return draft preview</title><link rel="stylesheet" href="/configuration.css"></head><body>
+<main><header><p>RIFARE · LOCAL DIAGNOSTIC</p><h1>Review a case-plan change</h1><p>No payment, message, or commerce-platform mutation is available here.</p></header>
+<form id="proposal"><label>Session token <input id="token" type="password" autocomplete="off" required></label><label>Case ID <input id="case" value="case_one" required></label>
+<label>Resolution <select id="resolution"><option value="refund">Refund proposal</option><option value="exchange">Exchange proposal</option></select></label><button id="preview-button">Create preview</button></form>
+<p id="notice" role="status">Use a scoped operator session. A different authorized reviewer must approve the exact preview.</p>
+<section id="review" hidden><h2>Server preview</h2><pre id="preview"></pre><form id="approval"><label>Reviewer session <input id="reviewer" type="password" autocomplete="off" required></label><button>Approve this preview</button></form><button id="execute" disabled>Execute synthetic change once</button></section>
+<button id="logout">Sign out and clear</button><pre id="result" aria-live="polite"></pre><button id="resume" type="button">Resume this case draft</button></main><script src="/return-draft-client.js" defer></script></body></html>

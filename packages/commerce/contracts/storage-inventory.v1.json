@@ -1,0 +1,1042 @@
+{
+  "version": 1,
+  "schema_digest": "919586efbc5ec268729033edd7c69e8facbd41c2dfb84cf9df478e5484831a8c",
+  "tables": [
+    {
+      "name": "commerce_action_approvals",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "preview_id",
+        "preview_digest",
+        "approver",
+        "authority_revision",
+        "expires_at",
+        "max_uses",
+        "uses",
+        "revoked"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_action_previews",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "case_id",
+        "body",
+        "digest",
+        "proposer"
+      ],
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_action_readiness",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "action",
+        "connection_revision",
+        "contract_digest",
+        "settings_revision",
+        "evidence_digest",
+        "checked_at",
+        "expires_at",
+        "revoked"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_action_receipts",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "case_id",
+        "preview_id",
+        "body",
+        "digest"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_assistance_receipts",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "task_id",
+        "created_at",
+        "body"
+      ],
+      "handling": "customer_content_logical_erase"
+    },
+    {
+      "name": "commerce_attachments",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "resource_id",
+        "content"
+      ],
+      "handling": "customer_content_logical_erase"
+    },
+    {
+      "name": "commerce_audit",
+      "columns": [
+        "id",
+        "tenant_id",
+        "store_id",
+        "actor_id",
+        "operation",
+        "decision",
+        "observed_at"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_case_configurations",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "case_id",
+        "revision",
+        "body",
+        "digest",
+        "reason",
+        "actor",
+        "created_at"
+      ],
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_case_effects",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "case_id",
+        "revision",
+        "resolution",
+        "amount_minor",
+        "currency"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_case_work",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "case_id",
+        "resource_id",
+        "generation",
+        "owner",
+        "grant_hash",
+        "state",
+        "expires_at",
+        "deadline_at",
+        "configuration_digest",
+        "control_stamp"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_cases",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "revision",
+        "resource_id",
+        "customer_id",
+        "verification_hash",
+        "author"
+      ],
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_challenge_rates",
+      "columns": [
+        "bucket",
+        "window_start",
+        "count"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_challenges",
+      "columns": [
+        "id",
+        "proof_hash",
+        "tenant_id",
+        "store_id",
+        "resource_id",
+        "customer_id",
+        "owner_hash",
+        "expires_at",
+        "attempts",
+        "consumed"
+      ],
+      "handling": "customer_content_logical_erase"
+    },
+    {
+      "name": "commerce_configuration_drafts",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "revision",
+        "body",
+        "history",
+        "actor",
+        "simulation_digest",
+        "request_digest"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_connections",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "adapter",
+        "contract_version",
+        "granted_scopes",
+        "qualification",
+        "evidence_hash",
+        "revision"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_context_tasks",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "resource_id",
+        "profile_id",
+        "profile_revision",
+        "skill_digest",
+        "created_at",
+        "expires_at"
+      ],
+      "handling": "customer_content_logical_erase"
+    },
+    {
+      "name": "commerce_control_events",
+      "columns": [
+        "seq",
+        "tenant_id",
+        "store_id",
+        "code",
+        "actor_id",
+        "subject_id",
+        "generation",
+        "observed_at"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_credential_calls",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "slot_id",
+        "version",
+        "revision",
+        "state",
+        "started_at",
+        "finished_at"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_credential_slots",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "provider",
+        "adapter",
+        "version",
+        "revision",
+        "active"
+      ],
+      "handling": "revocable_security_material"
+    },
+    {
+      "name": "commerce_credential_versions",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "slot_id",
+        "version",
+        "secret_ref",
+        "created_at"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_event_consumption",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "inbox_id",
+        "event_id",
+        "event_hash",
+        "resource_id",
+        "disposition",
+        "operation_id",
+        "observed_at"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_event_identities",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "event_id",
+        "event_hash",
+        "inbox_id",
+        "resource_id"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_event_projections",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "resource_id",
+        "source_version",
+        "source_updated_at",
+        "state",
+        "state_hash",
+        "inbox_id"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_execution_settings",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "enabled",
+        "revision",
+        "profile_id",
+        "policy_id"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_execution_stops",
+      "columns": [
+        "scope_key",
+        "tenant_id",
+        "store_id",
+        "action",
+        "revision",
+        "stopped",
+        "reason",
+        "changed_by",
+        "changed_at"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_knowledge",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "revision",
+        "kind",
+        "title",
+        "content",
+        "source_uri",
+        "source_updated_at",
+        "observed_at",
+        "expires_at",
+        "visibility",
+        "owner_actor_id",
+        "resource_id",
+        "revoked"
+      ],
+      "handling": "customer_content_logical_erase"
+    },
+    {
+      "name": "commerce_members",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "actor_id",
+        "role",
+        "active"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_migrations",
+      "columns": [
+        "version",
+        "sha256"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_operation_controls",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "operation_id",
+        "stamp",
+        "revision"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_operation_keys",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "key",
+        "operation_id",
+        "payload_hash"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_operation_receipts",
+      "columns": [
+        "seq",
+        "tenant_id",
+        "store_id",
+        "operation_id",
+        "id",
+        "body",
+        "digest"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_operation_targets",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "operation_id",
+        "provider_id",
+        "provider_identity",
+        "contract"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_operation_work",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "operation_id",
+        "state",
+        "attempts",
+        "available_at",
+        "lease_token",
+        "lease_until",
+        "owner",
+        "last_code"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_operations",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "resource_id",
+        "source_kind",
+        "source_id",
+        "command",
+        "payload_hash",
+        "state",
+        "revision",
+        "provider_ref",
+        "created_at",
+        "updated_at"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_order_observations",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "resource_id",
+        "native_id",
+        "connection_revision",
+        "state",
+        "attempted_at",
+        "successful_at",
+        "response_digest",
+        "source_updated_at",
+        "observation_revision",
+        "retry_after_seconds"
+      ],
+      "handling": "customer_content_logical_erase"
+    },
+    {
+      "name": "commerce_permissions",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "actor_id",
+        "revision",
+        "actions",
+        "resource_ids"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_policy_pins",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "policy_id",
+        "version",
+        "mode",
+        "facts",
+        "author"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_policy_versions",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "policy_id",
+        "version",
+        "body",
+        "digest",
+        "author",
+        "state",
+        "test_digest",
+        "reviewer",
+        "reviewer_revision",
+        "effective_at",
+        "created_at"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_privacy_events",
+      "columns": [
+        "seq",
+        "tenant_id",
+        "store_id",
+        "subject_hash",
+        "event",
+        "reason",
+        "observed_at"
+      ],
+      "handling": "suppression_or_restore_control"
+    },
+    {
+      "name": "commerce_privacy_holds",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "subject_hash",
+        "reason",
+        "authority_ref",
+        "expires_at",
+        "released"
+      ],
+      "handling": "suppression_or_restore_control"
+    },
+    {
+      "name": "commerce_privacy_resources",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "resource_id",
+        "subject_hash",
+        "erased_at"
+      ],
+      "handling": "suppression_or_restore_control"
+    },
+    {
+      "name": "commerce_privacy_subjects",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "subject_hash",
+        "erased_at"
+      ],
+      "handling": "suppression_or_restore_control"
+    },
+    {
+      "name": "commerce_profiles",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "revision",
+        "body"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_read_jobs",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "resource_id",
+        "state",
+        "result"
+      ],
+      "handling": "customer_content_logical_erase"
+    },
+    {
+      "name": "commerce_receipt_payloads",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "receipt_id",
+        "subject_ref",
+        "kind",
+        "content",
+        "expires_at"
+      ],
+      "handling": "customer_content_logical_erase"
+    },
+    {
+      "name": "commerce_reconciliation_drift",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "operation_id",
+        "code",
+        "source_ref",
+        "observed_at"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_reconciliation_runs",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "provider_id",
+        "provider_identity",
+        "cursor",
+        "ceiling",
+        "state"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_recovery_state",
+      "columns": [
+        "id",
+        "restore_id",
+        "mode",
+        "source_digest",
+        "suppression_digest",
+        "created_at"
+      ],
+      "handling": "suppression_or_restore_control"
+    },
+    {
+      "name": "commerce_resources",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "kind",
+        "source_system",
+        "external_id",
+        "source_version",
+        "source_updated_at",
+        "observed_at",
+        "customer_id",
+        "payload"
+      ],
+      "handling": "customer_content_logical_erase"
+    },
+    {
+      "name": "commerce_restored_operations",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "operation_id"
+      ],
+      "handling": "suppression_or_restore_control"
+    },
+    {
+      "name": "commerce_return_drafts",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "case_id",
+        "request_key",
+        "request_digest",
+        "preview_id"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_secrets",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "ref",
+        "provider",
+        "adapter",
+        "key_id",
+        "envelope",
+        "created_at",
+        "revoked"
+      ],
+      "handling": "revocable_security_material"
+    },
+    {
+      "name": "commerce_security_events",
+      "columns": [
+        "id",
+        "tenant_id",
+        "store_id",
+        "actor_id",
+        "target_actor",
+        "operation",
+        "decision",
+        "authority_revision",
+        "observed_at"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_sessions",
+      "columns": [
+        "token_hash",
+        "tenant_id",
+        "store_id",
+        "actor_id",
+        "role",
+        "resource_id",
+        "customer_id",
+        "expires_at",
+        "last_seen",
+        "revoked"
+      ],
+      "handling": "revocable_security_material"
+    },
+    {
+      "name": "commerce_shopify_connections",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "domain",
+        "secret_ref",
+        "granted_scopes",
+        "mode",
+        "revision"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_simulator",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "profile",
+        "clock",
+        "fault"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_simulator_receipts",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "operation_id",
+        "input_hash",
+        "result"
+      ],
+      "handling": "customer_content_logical_erase"
+    },
+    {
+      "name": "commerce_skill_activation",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "skill_id",
+        "revision",
+        "release_id",
+        "fallback_id"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_skill_activation_log",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "skill_id",
+        "revision",
+        "release_id",
+        "fallback_id",
+        "operation",
+        "actor",
+        "created_at"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_skill_approvals",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "origin",
+        "bundle_digest",
+        "skill_id",
+        "version",
+        "expires_at",
+        "approver",
+        "revoked"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_skill_archive",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "skill_id",
+        "bundle_digest",
+        "bundle",
+        "approval_id"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_skill_installations",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "skill_id",
+        "approval_id",
+        "bundle_digest"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_skill_releases",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "skill_id",
+        "bundle_digest",
+        "rollout_percent",
+        "author",
+        "state",
+        "test_digest",
+        "reviewer",
+        "reviewer_revision",
+        "created_at"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_skill_revocations",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "skill_id",
+        "bundle_digest",
+        "actor_id",
+        "revoked_at"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_skills",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "bundle_digest",
+        "bundle"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_stores",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "market",
+        "active"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_webhook_inbox",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "route_id",
+        "delivery_id",
+        "body",
+        "sha256",
+        "metadata",
+        "status",
+        "received_at"
+      ],
+      "handling": "customer_content_logical_erase"
+    },
+    {
+      "name": "commerce_webhook_routes",
+      "columns": [
+        "id",
+        "tenant_id",
+        "store_id",
+        "provider",
+        "topic",
+        "shop_domain",
+        "api_version",
+        "key_ref",
+        "key_fingerprint",
+        "enabled"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_woocommerce_connections",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "origin",
+        "secret_ref",
+        "granted_scopes",
+        "mode",
+        "revision"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_woocommerce_observations",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "resource_id",
+        "native_id",
+        "connection_revision",
+        "revision",
+        "state",
+        "observed_at",
+        "source_updated_at",
+        "payload",
+        "digest"
+      ],
+      "handling": "customer_content_logical_erase"
+    },
+    {
+      "name": "commerce_worker_completions",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "case_id",
+        "generation",
+        "grant_hash",
+        "request_digest",
+        "body",
+        "digest"
+      ],
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_worker_effects",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "submission_id",
+        "approval_id",
+        "body",
+        "digest"
+      ],
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_worker_grants",
+      "columns": [
+        "token_hash",
+        "tenant_id",
+        "store_id",
+        "case_id",
+        "actor_id",
+        "parent_session_hash",
+        "audience",
+        "expires_at",
+        "revoked"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_worker_submissions",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "case_id",
+        "generation",
+        "grant_hash",
+        "request_key",
+        "request_digest",
+        "body",
+        "digest"
+      ],
+      "handling": "subject_linked_pseudonymize_and_disable"
+    }
+  ],
+  "external_surfaces": [
+    {
+      "surface": "attachments",
+      "handling": "embedded commerce_attachments; smoke-development files are synthetic and separate"
+    },
+    {
+      "surface": "retrieval_index",
+      "handling": "lexical commerce_knowledge; delete source rows, deny suppressed reimport"
+    },
+    {
+      "surface": "agent_context",
+      "handling": "persistent tasks/receipts erased; future requests and async completion revalidate; caller memory cannot be recalled"
+    },
+    {
+      "surface": "proof_delivery_outbox_logs_provider_copies",
+      "handling": "external cleanup required; no complete erasure attestation without operator evidence"
+    },
+    {
+      "surface": "backup",
+      "handling": "private snapshot; independently retained suppression checkpoint required on restore"
+    }
+  ],
+  "claims": {
+    "physical_erasure": false,
+    "legal_compliance_certification": false,
+    "caller_memory_erasure": false
+  }
+}

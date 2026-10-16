@@ -3,22 +3,20 @@
 Merchant-owned commerce operations with tailorable skills and independently
 replaceable platforms, agents and models.
 
-**Current checkpoint: forty commerce goals have local diagnostic implementations.**
-The latest five add finite worker leases, portable task/proposal APIs, encrypted
-credential cutover, execution stop controls and an actionable operator exception
-queue. Existing operation identity, reconciliation, approvals, policy and skill
-pins remain authoritative.
+**Current checkpoint: forty-five commerce goals have local diagnostic implementations.**
+The latest five add action-readiness gates, a scoped privacy lifecycle, private
+snapshots with quarantined restore, a second-platform read adapter and a portable
+return-draft workflow. Skills, profiles, approvals and operations remain shared
+across callers; the available write is only a local synthetic case-plan change.
 
-**This is still the SQLite diagnostic implementation.** PostgreSQL/React,
-live Shopify/model qualification and the actual served-browser journey remain
-open. An actual local-model probe found no installed service. Protocol fixtures
-and arithmetic evaluations are labeled synthetic; they do not qualify a model.
+**This is still the SQLite diagnostic implementation.** PostgreSQL/React, live
+platform/model behavior and actual served-browser qualification remain open.
+The WooCommerce transport is fixture-only; no live refund or payment is enabled.
 
-[Implementation and commands](docs/WORKER-CONTROLS.md) ·
-[Current review](docs/WORKER-CONTROLS-REVIEW.md) ·
-[Delegated authority](docs/decisions/0019-worker-leases-credential-cutover-and-stops.md) ·
-[Earlier model and policy foundations](docs/MODEL-POLICY-FOUNDATIONS.md).
-Full goal acceptance remains separate from approved local integration.
+[Implementation and commands](docs/READINESS-PRIVACY-RECOVERY.md) ·
+[Current review](docs/READINESS-PRIVACY-REVIEW.md) ·
+[Delegated authority](docs/decisions/0020-readiness-privacy-recovery.md).
+Local integration does not imply full goal or milestone qualification.
 
 ## Start
 

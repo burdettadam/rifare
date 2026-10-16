@@ -1,3 +1,4 @@
+import { assertReady,DRAFT_ACTION } from './integration-readiness.mts';
 import { assertOperationExecution } from './execution-stops.mts';
 import { CommerceKernel,id,integer,token } from './kernel.mts';
 import type { Scope,Row } from './kernel.mts';
@@ -42,13 +43,13 @@ export class DurableWork {
   recover(scope:Scope,operationId:string){const k=this.#k;return k.transaction(()=>{const {s,op}=this.#auth(scope,operationId);this.#recover(s,op,this.#work(s,op.id));return new BusinessOperations(k).read(scope,op.id);});}
   claim(scope:Scope,operationId:string,leaseMs=10000){integer(leaseMs,10);if(leaseMs>30000)throw new Error('INVALID_INPUT');
     const k=this.#k;return k.transaction(()=>{const {s,op}=this.#auth(scope,operationId);this.#recover(s,op,this.#work(s,op.id));
-      assertOperationExecution(k,s,op);const w=this.#work(s,op.id);if(!['pending','retry_wait'].includes(w.state)||w.available_at>k.clock()||w.attempts>=MAX_OPERATION_ATTEMPTS||blockingOperation(k,s,op)!==null)return null;
+      assertOperationExecution(k,s,op);if(JSON.parse(op.command).action==='diagnostic.case.record')assertReady(k,s,DRAFT_ACTION);const w=this.#work(s,op.id);if(!['pending','retry_wait'].includes(w.state)||w.available_at>k.clock()||w.attempts>=MAX_OPERATION_ATTEMPTS||blockingOperation(k,s,op)!==null)return null;
       const lease='lease_'+token().slice(0,32),until=k.clock()+leaseMs;
       k.db.prepare("UPDATE commerce_operation_work SET state='leased',attempts=attempts+1,lease_token=?,lease_until=?,owner=? WHERE tenant_id=? AND store_id=? AND operation_id=?")
         .run(lease,until,s.actor_id,s.tenant_id,s.store_id,op.id);
       return {operation_id:op.id,lease_token:lease,lease_until:until,attempt:w.attempts+1};});}
   beginSend(scope:Scope,operationId:string,lease:string){const k=this.#k;id(lease);return k.transaction(()=>{
-    const {s,op}=this.#auth(scope,operationId),w=this.#work(s,op.id);this.#lease(s,w,lease,'leased');assertOperationExecution(k,s,op);
+    const {s,op}=this.#auth(scope,operationId),w=this.#work(s,op.id);this.#lease(s,w,lease,'leased');assertOperationExecution(k,s,op);if(JSON.parse(op.command).action==='diagnostic.case.record')assertReady(k,s,DRAFT_ACTION);
     k.db.prepare("UPDATE commerce_operation_work SET state='sending' WHERE tenant_id=? AND store_id=? AND operation_id=?").run(s.tenant_id,s.store_id,op.id);
     const target=k.db.prepare('SELECT provider_identity FROM commerce_operation_targets WHERE tenant_id=? AND store_id=? AND operation_id=?').get(s.tenant_id,s.store_id,op.id) as Row;
     if(!target)throw new Error('SOURCE_UNBOUND');
@@ -76,7 +77,7 @@ export class DurableWork {
     const s=this.#k.require(scope);verifyJournal(s,journal);this.bind(scope,operationId,journal);const claim=this.claim(scope,operationId,options.lease_ms);
     if(!claim)return new BusinessOperations(this.#k).read(scope,operationId);
     const command=this.beginSend(scope,operationId,claim.lease_token);let timer:ReturnType<typeof setTimeout>|undefined,response:unknown;
-    try{response=await Promise.race([Promise.resolve().then(()=>{assertOperationExecution(this.#k,this.#k.require(scope),operationRow(this.#k,s,operationId));return journal.send(command);}),new Promise((_,reject)=>{timer=setTimeout(()=>reject(new Error('RESPONSE_TIMEOUT')),options.timeout_ms);})]);}
+    try{response=await Promise.race([Promise.resolve().then(()=>{assertOperationExecution(this.#k,this.#k.require(scope),operationRow(this.#k,s,operationId));if(command.action==='diagnostic.case.record')assertReady(this.#k,s,DRAFT_ACTION);return journal.send(command);}),new Promise((_,reject)=>{timer=setTimeout(()=>reject(new Error('RESPONSE_TIMEOUT')),options.timeout_ms);})]);}
     catch{response={kind:'unknown'};}finally{if(timer)clearTimeout(timer);}
     return this.finish(scope,operationId,claim.lease_token,response);
   }

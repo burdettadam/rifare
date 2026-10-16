@@ -2,20 +2,19 @@
 
 ## Current integrated development
 
-The accumulated M00/M01 source and M02-G01/G02 remain intact. ADR-0016 assigns
-M02-G03 through M02-G07: structured policy authority, the v2 commerce manifest,
-deterministic merchant layers, a manual draft editor/simulator and approved
-instruction bundles. Read [the guide](docs/POLICY-CUSTOMIZATION.md) and
-[review](docs/POLICY-CUSTOMIZATION-REVIEW.md). Skills and agents remain replaceable.
-No new model provider, package dependency or scheduler is required.
+M02-G23 through M02-G27 add readiness, scoped privacy, quarantined restore,
+fixture-only WooCommerce reads and a portable safe return draft. See
+[the guide](docs/READINESS-PRIVACY-RECOVERY.md) and
+[review](docs/READINESS-PRIVACY-REVIEW.md). Prior source, tests, skill/model neutrality
+and benchmark contracts remain intact. No new dependency or scheduler is required.
 
 ## Remaining qualifications
 
-PostgreSQL/React, real platform/model and actual served-browser qualification remain
-open. Local delegated integration does not satisfy the original milestone gates.
-The next product packet is M02-G08, pinning run inputs; it is not automatically
-assigned by this document. Continue target-stack repair from accumulated main,
-not an earlier branch. No independent reviews or external observations are invented.
+M02-G99 is the next milestone assessment. PostgreSQL/React, real platform/model,
+production privacy/recovery and actual served-browser qualification remain open.
+Readiness can qualify only the reversible local diagnostic case plan; it does not
+certify financial integrations or warehouse holds. Continue from accumulated main,
+not older goal branches. No independent reviews or external observations are invented.
 
 ## Source of truth
 
