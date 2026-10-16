@@ -1,0 +1,77 @@
+{
+  "allocations": [
+    {
+      "currency": "USD",
+      "minor": "100",
+      "weights": [
+        {
+          "id": "a",
+          "weight": "1"
+        },
+        {
+          "id": "b",
+          "weight": "1"
+        },
+        {
+          "id": "c",
+          "weight": "1"
+        }
+      ],
+      "expected": [
+        "34",
+        "33",
+        "33"
+      ]
+    },
+    {
+      "currency": "JPY",
+      "minor": "5",
+      "weights": [
+        {
+          "id": "x",
+          "weight": "1"
+        },
+        {
+          "id": "y",
+          "weight": "3"
+        }
+      ],
+      "expected": [
+        "1",
+        "4"
+      ]
+    },
+    {
+      "currency": "KWD",
+      "minor": "1001",
+      "weights": [
+        {
+          "id": "a",
+          "weight": "1"
+        },
+        {
+          "id": "b",
+          "weight": "1"
+        }
+      ],
+      "expected": [
+        "501",
+        "500"
+      ]
+    }
+  ],
+  "partial_returns": {
+    "currency": "USD",
+    "minor": "100",
+    "quantity": "3",
+    "expected": [
+      "33",
+      "33",
+      "34"
+    ]
+  },
+  "large": {
+    "input": "9007199254740993.01",
+    "minor": "900719925474099301"
+  }
+}

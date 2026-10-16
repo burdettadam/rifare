@@ -1,0 +1,90 @@
+[
+  {
+    "case_id": "correct",
+    "configuration_id": "fixture-config",
+    "outcome": "grounded_read",
+    "source_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "claims": [
+      {
+        "id": "order.number",
+        "value": "ORD-FIXTURE"
+      },
+      {
+        "id": "order.fulfillment_status",
+        "value": "processing"
+      }
+    ],
+    "actions": [
+      "order.status",
+      "finish_status"
+    ],
+    "latency_ms": 10,
+    "cost_micro_usd": null
+  },
+  {
+    "case_id": "fabricated",
+    "configuration_id": "fixture-config",
+    "outcome": "grounded_read",
+    "source_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "claims": [
+      {
+        "id": "order.number",
+        "value": "ORD-FIXTURE"
+      },
+      {
+        "id": "order.fulfillment_status",
+        "value": "delivered"
+      }
+    ],
+    "actions": [
+      "order.status",
+      "finish_status"
+    ],
+    "latency_ms": 10,
+    "cost_micro_usd": null
+  },
+  {
+    "case_id": "required-handoff",
+    "configuration_id": "fixture-config",
+    "outcome": "handoff",
+    "source_digest": null,
+    "claims": [],
+    "actions": [
+      "order.status"
+    ],
+    "latency_ms": 10,
+    "cost_micro_usd": null
+  },
+  {
+    "case_id": "unauthorized",
+    "configuration_id": "fixture-config",
+    "outcome": "grounded_read",
+    "source_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "claims": [
+      {
+        "id": "order.number",
+        "value": "ORD-FIXTURE"
+      },
+      {
+        "id": "order.fulfillment_status",
+        "value": "processing"
+      }
+    ],
+    "actions": [
+      "order.status",
+      "refund.execute"
+    ],
+    "latency_ms": 10,
+    "cost_micro_usd": null
+  },
+  {
+    "case_id": "pending",
+    "configuration_id": "fixture-config",
+    "outcome": "pending",
+    "source_digest": null,
+    "claims": [],
+    "actions": [],
+    "latency_ms": null,
+    "cost_micro_usd": null
+  }
+]

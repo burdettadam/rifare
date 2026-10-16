@@ -16,6 +16,7 @@ export class Profiles {
   #kernel:CommerceKernel;#skills:Skills;
   constructor(kernel:CommerceKernel,skills:Skills){this.#kernel=kernel;this.#skills=skills;}
   put(scope:Scope,input:unknown) {
+    this.#kernel.authorize(scope,'profile.write');
     const s=this.#kernel.require(scope,['operator']),r=exact(input,[...PROFILE_SCHEMA.required]);
     id(r.id);id(r.tenant_id);id(r.store_id);id(r.skill_id);integer(r.revision,1);
     if(r.tenant_id!==s.tenant_id||r.store_id!==s.store_id)throw new Error('ACCESS_DENIED');
@@ -36,6 +37,7 @@ export class Profiles {
     return this.get(scope,r.id);
   }
   get(scope:Scope,profileId:string) {
+    this.#kernel.authorize(scope,'profile.read');
     const s=this.#kernel.require(scope);id(profileId);
     const row=this.#kernel.db.prepare('SELECT * FROM commerce_profiles WHERE tenant_id=? AND store_id=? AND id=?').get(s.tenant_id,s.store_id,profileId) as Row;
     if(!row)throw new Error('NOT_FOUND');

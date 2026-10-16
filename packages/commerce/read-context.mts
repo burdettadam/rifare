@@ -50,6 +50,7 @@ export class ReadContext {
     }
   }
   createTask(scope:Scope,input:unknown) {
+    this.#kernel.authorize(scope,'task.read');
     const k=this.#kernel,s=k.require(scope),r=exact(input,['order_id','profile_id']);id(r.order_id);id(r.profile_id);
     const current=this.orderStatus(scope,r.order_id);
     if(!current.order)throw new Error('CURRENT_FACTS_UNAVAILABLE');
@@ -71,12 +72,14 @@ export class ReadContext {
     return {r,p};
   }
   task(scope:Scope,taskId:string) {
+    this.#kernel.authorize(scope,'task.read');
     const {r,p}=this.#record(scope,taskId);
     return {contract_version:'1.0.0',id:r.id,type:'order-status-read',state:'read_context',created_at:r.created_at,expires_at:r.expires_at,
       order_id:r.resource_id,profile:p,skill:this.skills.describe(scope,p.skill_id),facts:this.orderStatus(scope,r.resource_id),
       financial_actions_available:false,agent_runtime_required:false};
   }
   taskAction(scope:Scope,taskId:string,action:string,args:unknown) {
+    this.#kernel.authorize(scope,'task.read');
     const {r,p}=this.#record(scope,taskId);this.profiles.permit(scope,r.profile_id,action);
     if(action==='order.status') {
       const input=exact(args,['order_id']);if(input.order_id!==r.resource_id)throw new Error('ACCESS_DENIED');

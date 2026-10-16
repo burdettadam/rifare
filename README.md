@@ -3,21 +3,21 @@
 Merchant-owned commerce operations with tailorable skills and independently
 replaceable platforms, agents and models.
 
-**Current checkpoint: fifteen commerce goals have local diagnostic implementations.**
-The latest five add task-bound MCP reads, a no-model manual status page, a provider-neutral
-read runner, two synthetic-tested provider wire adapters and a separately written
-Python orchestrator. Existing tenant isolation, verification, vault, platform reads,
-skills, profiles and portable tasks remain intact.
+**Current checkpoint: twenty commerce goals have local diagnostic implementations.**
+The latest five add a pinned loopback model adapter, isolated untrusted-input
+handling, source-checked evaluations, current role/action permissions and exact
+money primitives. Existing portable skills, profiles, tasks, REST/MCP interfaces,
+manual UI, provider adapters and external-client example remain intact.
 
 **This is still the SQLite diagnostic implementation.** PostgreSQL/React,
-live Shopify/model qualification and the actual served-browser journey remain open.
-No model, payment or messaging service was called. Component tests and provider wire
-fixtures are labeled explicitly and do not qualify external services.
+live Shopify/model qualification and the actual served-browser journey remain
+open. An actual local-model probe found no installed service. Protocol fixtures
+and arithmetic evaluations are labeled synthetic; they do not qualify a model.
 
-[Agent access and commands](docs/AGENT-ACCESS.md) ·
-[Current review](docs/AGENT-ACCESS-REVIEW.md) ·
-[Delegated authority](docs/decisions/0014-agent-access-and-runners.md) ·
-[Earlier portable reads](docs/PORTABLE-READ-WORKFLOWS.md).
+[Implementation and commands](docs/MODEL-POLICY-FOUNDATIONS.md) ·
+[Current review](docs/MODEL-POLICY-REVIEW.md) ·
+[Delegated authority](docs/decisions/0015-local-model-evaluation-and-policy.md) ·
+[Earlier agent access](docs/AGENT-ACCESS.md).
 Full goal acceptance remains separate from approved local integration.
 
 ## Start
@@ -94,13 +94,11 @@ custom Git command protocol or mandatory agent provider has been added.
 
 ## Verified development boundary
 
-The previous checkpoint had 758 checks. This batch adds 72, for 830 registered
-checks: 502 Python/helper, 300 native runtime, 15 unit harness, 7 database harness
-and 6 retained browser-component checks. The 300 runtime cases include seven new
-manual-screen component cases. Final source-bound execution and restoration results
-are recorded in the separate delivery report. The live served-screen qualification
-is a separate command and remains blocked by the host policy. No test is relabeled
-as a live model evaluation.
+The previous checkpoint had 830 checks. This batch adds 115, for 945 registered
+checks: 502 Python/helper, 415 native runtime, 15 unit harness, 7 database harness
+and 6 retained browser-component checks. Final source-bound execution and
+restoration results are recorded in the separate delivery report. The actual
+served-browser and installed-model qualifications remain separate and open.
 
 Controllers remain read-only and do not authenticate people, sandbox native code,
 merge branches or authorize releases. Models and external agents remain replaceable
@@ -111,7 +109,7 @@ by design; none has been falsely counted as an independently qualified integrati
 The project ZIP contains a standalone `.git` history. The bundle can be cloned:
 
 ```sh
-git clone -b main /path/to/Rifare-agent-access.bundle Rifare
+git clone -b main /path/to/Rifare-model-policy.bundle Rifare
 cd Rifare
 git remote remove origin
 python3 tools/verify.py
@@ -141,8 +139,8 @@ native regression controller, records source/configuration/artifact identity and
 checks external review facts without granting acceptance. See
 [the evidence guide](docs/EVIDENCE-GATE.md) and
 [the current work record](work/records/M00-G08.md).
-The current registry has 830 executable checks: all 758 prior checks plus
-72 agent-access/read-runner regressions. Delegated local integration review
+The current registry has 945 executable checks: all 830 prior checks plus
+115 local-model, hostile-input, evaluation, role and money regressions. Delegated local integration review
 is complete; full target-stack qualification remains open.
 All 676 commerce scenarios remain planning specifications.
 

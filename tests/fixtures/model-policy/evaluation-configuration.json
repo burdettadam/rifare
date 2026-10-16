@@ -1,0 +1,9 @@
+{
+  "id": "fixture-config",
+  "provider": "fixture",
+  "model": "local-demo",
+  "model_digest": "no-model-weights",
+  "skill_digest": "fixture-skill",
+  "profile_revision": 1,
+  "evidence_kind": "synthetic_fixture"
+}

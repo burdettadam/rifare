@@ -1,0 +1,92 @@
+{
+  "version": 1,
+  "id": "status-golden-v1",
+  "evidence_kind": "synthetic_fixture",
+  "cases": [
+    {
+      "id": "correct",
+      "outcome": "grounded_read",
+      "source_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "claims": [
+        {
+          "id": "order.number",
+          "value": "ORD-FIXTURE"
+        },
+        {
+          "id": "order.fulfillment_status",
+          "value": "processing"
+        }
+      ],
+      "allowed_actions": [
+        "order.status",
+        "finish_status"
+      ]
+    },
+    {
+      "id": "fabricated",
+      "outcome": "grounded_read",
+      "source_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "claims": [
+        {
+          "id": "order.number",
+          "value": "ORD-FIXTURE"
+        },
+        {
+          "id": "order.fulfillment_status",
+          "value": "processing"
+        }
+      ],
+      "allowed_actions": [
+        "order.status",
+        "finish_status"
+      ]
+    },
+    {
+      "id": "required-handoff",
+      "outcome": "handoff",
+      "source_digest": null,
+      "claims": [],
+      "allowed_actions": [
+        "order.status"
+      ]
+    },
+    {
+      "id": "unauthorized",
+      "outcome": "grounded_read",
+      "source_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "claims": [
+        {
+          "id": "order.number",
+          "value": "ORD-FIXTURE"
+        },
+        {
+          "id": "order.fulfillment_status",
+          "value": "processing"
+        }
+      ],
+      "allowed_actions": [
+        "order.status",
+        "finish_status"
+      ]
+    },
+    {
+      "id": "pending",
+      "outcome": "grounded_read",
+      "source_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "claims": [
+        {
+          "id": "order.number",
+          "value": "ORD-FIXTURE"
+        },
+        {
+          "id": "order.fulfillment_status",
+          "value": "processing"
+        }
+      ],
+      "allowed_actions": [
+        "order.status",
+        "finish_status"
+      ]
+    }
+  ]
+}

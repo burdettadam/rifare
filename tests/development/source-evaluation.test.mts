@@ -1,0 +1,27 @@
+import test from 'node:test';import assert from 'node:assert/strict';import { readFileSync } from 'node:fs';
+import { evaluate,suiteDigest,observationFromRun } from '../../packages/agent/evaluation.mts';
+import { useModel } from './agent-provider-helpers.mts';
+const load=(name:string)=>JSON.parse(readFileSync(new URL('../fixtures/model-policy/'+name+'.json',import.meta.url),'utf8'));
+const config={id:'fixture-config',provider:'fixture',model:'local-demo',model_digest:'no-model-weights',skill_digest:'fixture-skill',profile_revision:1,evidence_kind:'synthetic_fixture'};
+function setup(){const suite=load('evaluation-suite'),rows=load('evaluation-observations'),pin=suiteDigest(suite);return {suite,rows,pin,score:()=>evaluate(suite,pin,config,rows)};}
+test('CASE-M01-G18-01',()=>{const f=setup(),r=f.score(),gold=load('evaluation-expected');for(const [key,value] of Object.entries(gold))assert.deepEqual(r[key],value);assert.equal(r.correct_handling_rate,.4);});
+test('CASE-M01-G18-02',()=>{const f=setup();f.rows.splice(1,1);assert.throws(f.score,/INCOMPLETE_EVALUATION/);});
+test('CASE-M01-G18-03',()=>{const f=setup();f.rows[0].source_digest='b'.repeat(64);const r=f.score();assert.equal(r.correct_handling,1);assert.equal(r.results[0].source_match,false);});
+test('M01-G18-FROZEN-EXPECTED-VALUES',()=>{const f=setup();f.suite.cases[1].claims[1].value='delivered';assert.throws(f.score,/EVALUATION_BASELINE_CHANGED/);});
+test('M01-G18-DUPLICATE-SUCCESS',()=>{const f=setup();f.rows[1]=structuredClone(f.rows[0]);assert.throws(f.score,/INVALID_CASE_MEMBERSHIP/);});
+test('M01-G18-UNKNOWN-CASE',()=>{const f=setup();f.rows[0].case_id='new';assert.throws(f.score,/INVALID_CASE_MEMBERSHIP/);});
+test('M01-G18-EMPTY-RUN',()=>{const f=setup();assert.throws(()=>evaluate(f.suite,f.pin,config,[]),/INCOMPLETE_EVALUATION/);});
+test('M01-G18-CONFIGURATIONS-NOT-POOLED',()=>{const f=setup();f.rows[0].configuration_id='another-provider';assert.throws(f.score,/CONFIGURATION_MISMATCH/);});
+test('M01-G18-SYNTHETIC-NOT-LIVE',()=>{const f=setup();assert.throws(()=>evaluate(f.suite,f.pin,{...config,evidence_kind:'observed_unqualified'},f.rows),/EVIDENCE_KIND_MISMATCH/);});
+test('M01-G18-HANDOFF-NOT-AUTONOMOUS-ANSWER',()=>{const r=setup().score();assert.equal(r.required_handoffs.correct,1);assert.equal(r.factual_answers,1);});
+test('M01-G18-EXTRA-CLAIM-IS-INCORRECT',()=>{const f=setup();f.rows[0].claims.push({id:'promised.delivery',value:'tomorrow'});assert.equal(f.score().results[0].correct,false);});
+test('M01-G18-CLAIM-ORDER-DOES-NOT-MATTER',()=>{const f=setup();f.rows[0].claims.reverse();assert.equal(f.score().results[0].correct,true);});
+test('M01-G18-UNAUTHORIZED-ACTION-FAILS-CORRECT-FACTS',()=>{const r=setup().score();assert.equal(r.results[3].fact_match,true);assert.equal(r.results[3].correct,false);assert.equal(r.authority_failures,1);});
+test('M01-G18-PENDING-REMAINS-IN-DENOMINATOR',()=>{const f=setup();for(const outcome of ['failed','pending','cancelled']){f.rows[4].outcome=outcome;assert.equal(f.score().denominator,5);assert.equal(f.score().correct_handling,2);}});
+test('M01-G18-COST-UNKNOWN-NOT-ZERO',()=>{const r=setup().score();assert.equal(r.total_cost_micro_usd,null);assert.equal(r.p95_latency_ms,null);});
+test('M01-G18-COST-EXACT-AND-P95',()=>{const f=setup();for(const [i,r] of f.rows.entries()){r.cost_micro_usd='9007199254740993';r.latency_ms=10+i;}const r=f.score();assert.equal(r.total_cost_micro_usd,'45035996273704965');assert.equal(r.p95_latency_ms,14);});
+test('M01-G18-COST-NUMBER-AND-NEGATIVE-REFUSED',()=>{for(const value of [1,-1,'-1','1.2','NaN']){const f=setup();f.rows[0].cost_micro_usd=value;assert.throws(f.score,/INVALID_COST/);}});
+test('M01-G18-REPORT-DOES-NOT-REPEAT-RAW-FACTS',()=>{assert.equal(JSON.stringify(setup().score()).includes('ORD-FIXTURE'),false);});
+test('M01-G18-CANDIDATE-PROSE-IS-NOT-AN-ORACLE',()=>{const f=setup();f.rows[0].judge='perfect answer';assert.throws(f.score,/INVALID_INPUT/);});
+test('M01-G18-DUPLICATE-CLAIM',()=>{const f=setup();f.rows[0].claims.push(f.rows[0].claims[0]);assert.throws(f.score,/DUPLICATE_CLAIM/);});
+test('M01-G18-NATIVE-RUN-OBSERVATION',()=>useModel(async f=>{const r=await f.runner.run(f.a.scope,f.task.id,'openai');const o=observationFromRun('case','cfg',r,10);assert.equal(o.outcome,'grounded_read');assert.equal(o.claims[0].id,'order.number');assert.ok(!JSON.stringify(o).includes('secret_ref'));assert.equal(o.cost_micro_usd,null);}));

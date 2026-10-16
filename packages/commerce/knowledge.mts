@@ -11,6 +11,7 @@ export class Knowledge {
 
   // Ingestion is an operator action; retrieval never converts prose into policy.
   put(scope: Scope, input: unknown) {
+    this.#kernel.authorize(scope,'knowledge.write');
     const s = this.#kernel.require(scope, ['operator']);
     const r = exact(input, ['id','revision','kind','title','content','source_uri','source_updated_at','expires_at','visibility','resource_id']);
     id(r.id); integer(r.revision, 1); integer(r.source_updated_at); integer(r.expires_at);
@@ -37,6 +38,7 @@ export class Knowledge {
     return this.get(scope, r.id, r.revision);
   }
   revoke(scope: Scope, sourceId: string) {
+    this.#kernel.authorize(scope,'knowledge.write');
     const s = this.#kernel.require(scope, ['operator']); id(sourceId);
     this.#kernel.db.prepare('UPDATE commerce_knowledge SET revoked=1 WHERE tenant_id=? AND store_id=? AND id=?').run(s.tenant_id,s.store_id,sourceId);
   }
@@ -57,12 +59,14 @@ export class Knowledge {
       access:{tenant_id:r.tenant_id,store_id:r.store_id,visibility:r.visibility,resource_id:r.resource_id}};
   }
   get(scope: Scope, sourceId: string, revision: number, resourceId?: string) {
+    this.#kernel.authorize(scope,'knowledge.read');
     id(sourceId); integer(revision,1);
     const row = this.#rows(scope,resourceId).find(r => r.id === sourceId && r.revision === revision);
     if (!row) throw new Error('NOT_FOUND');
     return this.#project(row);
   }
   search(scope: Scope, query: string, limit = 5, resourceId?: string) {
+    this.#kernel.authorize(scope,'knowledge.read');
     text(query, 200); integer(limit,1); if (limit > 20) throw new Error('INVALID_INPUT');
     const terms = query.toLocaleLowerCase('en-US').trim().split(/\s+/).slice(0,10);
     const rows = this.#rows(scope,resourceId).filter(r => terms.every(t => (r.title+' '+r.content).toLocaleLowerCase('en-US').includes(t))).slice(0,limit);

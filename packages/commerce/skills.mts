@@ -50,6 +50,7 @@ export class Skills {
   #kernel:CommerceKernel;
   constructor(kernel:CommerceKernel){this.#kernel=kernel;}
   install(scope:Scope,bundle:SkillBundle) {
+    this.#kernel.authorize(scope,'skill.write');
     const s=this.#kernel.require(scope,['operator']); const checked=checkedBundle(bundle.files);
     if (checked.digest!==bundle.digest || checked.id!==bundle.id || checked.version!==bundle.version) throw new Error('INVALID_SKILL');
     this.#kernel.db.prepare(`INSERT INTO commerce_skills VALUES(?,?,?,?,?) ON CONFLICT(tenant_id,store_id,id)
@@ -66,16 +67,18 @@ export class Skills {
     return checked;
   }
   describe(scope:Scope,skillId:string) {
+    this.#kernel.authorize(scope,'skill.read');
     const b=this.#bundle(scope,skillId);
     return {id:b.id,version:b.version,bundle_digest:b.digest,authority:'guidance_only',
       resources:Object.keys(b.files).sort().map(path=>({path,sha256:digest(b.files[path])}))};
   }
   read(scope:Scope,skillId:string,path:string,expectedDigest?:string) {
+    this.#kernel.authorize(scope,'skill.read');
     resourcePath(path); const b=this.#bundle(scope,skillId);
     if(expectedDigest!==undefined&&expectedDigest!==b.digest)throw new Error('SKILL_CHANGED');
     if(!Object.hasOwn(b.files,path))throw new Error('RESOURCE_DENIED');
     return {skill_id:b.id,bundle_digest:b.digest,path,content:b.files[path],sha256:digest(b.files[path]),authority:'guidance_only'};
   }
-  remove(scope:Scope,skillId:string){const s=this.#kernel.require(scope,['operator']);id(skillId);
+  remove(scope:Scope,skillId:string){this.#kernel.authorize(scope,'skill.write');const s=this.#kernel.require(scope,['operator']);id(skillId);
     this.#kernel.db.prepare('DELETE FROM commerce_skills WHERE tenant_id=? AND store_id=? AND id=?').run(s.tenant_id,s.store_id,skillId);}
 }

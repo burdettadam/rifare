@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "milestone": "M01",
+  "status": "blocked_not_accepted",
+  "assessment_kind": "integrated_diagnostic_review",
+  "new_work": [
+    "M01-G16",
+    "M01-G17",
+    "M01-G18"
+  ],
+  "bounded_dependent_work": [
+    "M02-G01",
+    "M02-G02"
+  ],
+  "source_base": "d32342c",
+  "authority": "docs/decisions/0015-local-model-evaluation-and-policy.md",
+  "remaining_obligations": [
+    {
+      "goal": "M00-G05",
+      "missing": "PostgreSQL/React target implementation and worktree qualification"
+    },
+    {
+      "goal": "M01-G06",
+      "missing": "Live Shopify test-store observation comparison"
+    },
+    {
+      "goal": "M01-G12",
+      "missing": "Actual served target browser journey"
+    },
+    {
+      "goal": "M01-G14",
+      "missing": "Real-model capability and quality observations for approved configurations"
+    },
+    {
+      "goal": "M01-G15",
+      "missing": "External AI-runtime qualification beyond deterministic client orchestration"
+    },
+    {
+      "goal": "M01-G16",
+      "missing": "Installed local model service and actual inference quality observations"
+    }
+  ],
+  "independent_reviews": [],
+  "local_review": "delegated_maintainer_not_independent",
+  "no_claims": [
+    "production_qualified",
+    "milestone_accepted",
+    "release_authorized"
+  ]
+}
