@@ -1,6 +1,6 @@
 {
-  "source_file_count": 457,
-  "source_count_reason": "All prior source paths retained. Added the five-goal commerce diagnostic implementation, tests and decision records; no other oracle fields change.",
+  "source_file_count": 477,
+  "source_count_reason": "Explicit additive portable read workflow source and test registration; prior paths preserved.",
   "component_ids": [
     "git-agent-adaptations",
     "rifare-developer-helpers",
