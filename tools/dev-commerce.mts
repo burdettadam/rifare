@@ -30,7 +30,7 @@ try {
   key=keyPath?readWrappingKey(resolve(keyPath),root):undefined;
   const kernel=new CommerceKernel(smoke.db),caps=new Capabilities(kernel),simulator=new StoreSimulator(kernel,caps);
   const reads=new ReadContext(kernel,caps);
-  const skill=loadSkillDirectory(join(root,'product-skills/order-status'));
+  const skill=loadSkillDirectory(join(root,'packages/commerce/skill-bundles/order-status'));
   const operators=[];
   for(const profile of ['apparel','fragile']){
     const tenant='demo-'+profile,store='store-'+profile;
@@ -41,7 +41,7 @@ try {
     if(!smoke.db.prepare('SELECT 1 FROM commerce_simulator WHERE tenant_id=? AND store_id=?').get(tenant,store))simulator.reset(scope,{profile,clock:FIXTURE_CLOCK});
     reads.skills.install(scope,skill);
     if(!smoke.db.prepare('SELECT 1 FROM commerce_profiles WHERE tenant_id=? AND store_id=? AND id=?').get(tenant,store,'default')) {
-      const presentation=JSON.parse(readFileSync(join(root,'tests/fixtures/read-workflows/presentations.json'),'utf8'))[profile];
+      const presentation=profile==='apparel'?{tone:'warm',locale:'en-US'}:{tone:'formal',locale:'en-GB'};
       reads.profiles.put(scope,{id:'default',revision:1,tenant_id:tenant,store_id:store,skill_id:skill.id,skill_digest:skill.digest,
         ...presentation,actions:['order.status','knowledge.search','knowledge.get','skill.read'],data_scope:{order:'session_or_store',knowledge:'visible_only'}});
       reads.knowledge.put(scope,{id:'shipping-policy',revision:1,kind:'support',title:'Shipping support',

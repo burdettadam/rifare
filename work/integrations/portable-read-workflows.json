@@ -17,8 +17,8 @@
   "review_basis": "delegated_maintainer_self_review_explicit_exception",
   "test_inventory": {
     "retained": 683,
-    "added": 74,
-    "total": 757
+    "added": 75,
+    "total": 758
   },
   "mutation_trials": 5,
   "mutations_caught": 5,

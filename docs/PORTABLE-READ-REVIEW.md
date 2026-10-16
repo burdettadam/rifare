@@ -31,6 +31,15 @@ M01-G09-REVIEW-TASK-KNOWLEDGE-SCOPE, M01-G06-REVIEW-CONCURRENT-REFRESH,
 and M01-G06-REVIEW-TORN-SNAPSHOT. The profile schema was also aligned with its
 runtime requirement that an order-status profile include the order.status action.
 
+4. **Minimal runtime startup was broken by bootstrap-only asset dependencies.**
+   The retained M01-G05-CLI-01 failed in the first complete candidate run: the new
+   entrypoint expected top-level skill assets and a file in the test directory.
+   The canonical skill now lives within packages/commerce/skill-bundles, and default
+   presentations are explicit startup configuration rather than imported test data.
+   A new actual subprocess regression starts a package without a tests directory,
+   creates a read task and verifies the installed skill/profile and current order.
+   The original failing test and all its assertions remain unchanged.
+
 ## Goal-specific deliberate faults
 
 Temporary detached Git worktrees were used to remove freshness expiry, tenant
@@ -41,8 +50,8 @@ Patches and commands are in the separate evidence, not the source tree.
 
 ## Preserved contracts and test selection
 
-All 683 previously registered checks remain, with 74 additional native cases.
-The resulting inventory is 502 Python/helper, 227 runtime, 15 unit harness,
+All 683 previously registered checks remain, with 75 additional native cases.
+The resulting inventory is 502 Python/helper, 228 runtime, 15 unit harness,
 7 database harness and 6 browser-component cases. The external baseline and
 controller are exported from the prior integrated main, not this candidate.
 No prior executable test file, package input, goal packet, benchmark threshold,

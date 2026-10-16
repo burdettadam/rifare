@@ -1,6 +1,10 @@
 import test from 'node:test';import assert from 'node:assert/strict';
-import { execFile } from 'node:child_process';import { promisify } from 'node:util';import { fileURLToPath } from 'node:url';
-import { readFileSync } from 'node:fs';
+import { execFile,spawn } from 'node:child_process';import { promisify } from 'node:util';import { fileURLToPath } from 'node:url';
+import { readFileSync,cpSync,existsSync } from 'node:fs';
+import { join } from 'node:path';
+import { setTimeout as delay } from 'node:timers/promises';
+import { fixture,git,ROOT } from './helpers.mts';
+import { configuration,childEnvironment } from '../../packages/development/config.mts';
 import { readFixture } from './read-workflow-helpers.mts';
 import { startCommerceServer } from '../../apps/commerce-api/server.mts';
 import { CustomerAccess } from '../../packages/commerce/customer-access.mts';
@@ -96,3 +100,30 @@ test('M01-G10-SHIPMENT-SCOPE',()=>use(async f=>{
   const facts=await(await f.request('/v1/orders/'+f.order().id+'/status')).json();
   assert.deepEqual(facts.order.shipments,[]);assert.equal(facts.order.shipments_status,'required_scope_missing');
 }));
+
+test('M01-G10-PACKAGED-BOOTSTRAP',async()=>{
+  const f=fixture();let child:ReturnType<typeof spawn>|undefined;let exited:Promise<unknown>|undefined;
+  try{
+    assert.equal(existsSync(join(f.root,'tests')),false);
+    cpSync(join(ROOT,'tools/dev-commerce.mts'),join(f.root,'tools/dev-commerce.mts'));
+    git(f.root,'add','.');git(f.root,'commit','-qm','Package diagnostic read entrypoint');
+    child=spawn(process.execPath,['--experimental-strip-types','tools/dev-commerce.mts'],{cwd:f.root,env:childEnvironment(),stdio:['ignore','pipe','pipe']});
+    exited=new Promise(resolve=>child!.once('exit',resolve));let output='';child.stdout!.on('data',b=>output+=b);child.stderr!.on('data',b=>output+=b);
+    const runFile=join(configuration(f.root,{}).dataDir,'commerce-run.json');let ready=false;
+    for(let i=0;i<100;i++){
+      if(child.exitCode!==null)break;
+      if(existsSync(runFile)&&output.includes('commerce_ready')){ready=true;break;}
+      await delay(40);
+    }
+    assert.equal(ready,true,'minimal package must start without test fixtures');
+    const run=JSON.parse(readFileSync(runFile,'utf8')),headers={authorization:'Bearer '+run.operators[0].bearer};
+    const order=await(await fetch(run.url+'/v1/lookup?kind=order&external_id=ORD-1001',{headers,signal:AbortSignal.timeout(3000)})).json();
+    const response=await fetch(run.url+'/v1/read-tasks',{method:'POST',headers:{...headers,'content-type':'application/json'},body:JSON.stringify({order_id:order.id,profile_id:'default'}),signal:AbortSignal.timeout(3000)});
+    assert.equal(response.status,201);const task=await response.json();
+    assert.equal(task.profile.tone,'warm');assert.equal(task.skill.id,'order-status');assert.equal(task.facts.order.number,'ORD-1001');
+    assert.equal(task.agent_runtime_required,false);
+  }finally{
+    if(child&&child.exitCode===null){child.kill('SIGTERM');await Promise.race([exited,delay(5000)]);if(child.exitCode===null){child.kill('SIGKILL');await exited;}}
+    f.cleanup();
+  }
+});

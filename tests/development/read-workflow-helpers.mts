@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 export function readFixture() {
   const f=commerceFixture(),caps=new Capabilities(f.kernel),simulator=new StoreSimulator(f.kernel,caps),reads=new ReadContext(f.kernel,caps);
   simulator.reset(f.a.scope);simulator.reset(f.b.scope,{profile:'fragile',clock:FIXTURE_CLOCK});simulator.reset(f.c.scope);
-  const bundle=loadSkillDirectory(fileURLToPath(new URL('../../product-skills/order-status/',import.meta.url)));
+  const bundle=loadSkillDirectory(fileURLToPath(new URL('../../packages/commerce/skill-bundles/order-status/',import.meta.url)));
   for(const store of [f.a,f.b,f.c])reads.skills.install(store.scope,bundle);
   const profile=(store=f.a,extras={})=>({id:'default',revision:1,tenant_id:store.tenant,store_id:store.store,
     skill_id:bundle.id,skill_digest:bundle.digest,tone:'neutral',locale:'en-US',

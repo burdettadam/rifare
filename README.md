@@ -94,7 +94,7 @@ custom Git command protocol or mandatory agent provider has been added.
 ## Verified development boundary
 
 The previous integrated checkpoint had 683 registered checks. This five-goal batch
-adds 74, for 757: 502 Python/helper, 227 native runtime, 15 unit harness,
+adds 75, for 758: 502 Python/helper, 228 native runtime, 15 unit harness,
 7 database harness and 6 retained browser-component checks. Source-bound execution
 and restoration results are retained in the separate delivery verification report.
 The independent Python client uses actual loopback HTTP and imports no server code.
@@ -140,8 +140,8 @@ native regression controller, records source/configuration/artifact identity and
 checks external review facts without granting acceptance. See
 [the evidence guide](docs/EVIDENCE-GATE.md) and
 [the current work record](work/records/M00-G08.md).
-The current registry has 757 executable checks: all 683 prior checks plus
-74 portable-read workflow regressions. Delegated local integration review
+The current registry has 758 executable checks: all 683 prior checks plus
+75 portable-read workflow regressions. Delegated local integration review
 is complete; full target-stack qualification remains open.
 All 676 commerce scenarios remain planning specifications.
 
@@ -160,6 +160,6 @@ M01-G10 are implemented for local diagnostic integration, not full qualification
 
 Resume **M00-G05** from this `main`: implement and install the target React/PostgreSQL
 stack, then extend M00-G06 to the actually served application. Preserve the existing
-757 diagnostic and commerce tests. Do not add more governance machinery merely to postpone
+758 diagnostic and commerce tests. Do not add more governance machinery merely to postpone
 this implementation. The [qualification guide](docs/M00-QUALIFICATION.md) separates
 these engineering gaps from the completed local integration review.

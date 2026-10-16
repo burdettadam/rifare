@@ -5455,6 +5455,13 @@
       "runner_case_id": "M01-G08-REMOVED",
       "source": "tests/development/read-skills.test.mts",
       "capability_id": "FEATURE-M01-G08"
+    },
+    {
+      "id": "runtime:M01-G10-PACKAGED-BOOTSTRAP",
+      "suite": "runtime",
+      "runner_case_id": "M01-G10-PACKAGED-BOOTSTRAP",
+      "source": "tests/development/read-api.test.mts",
+      "capability_id": "FEATURE-M01-G10"
     }
   ],
   "protected_files": [

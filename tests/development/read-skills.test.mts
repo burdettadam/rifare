@@ -22,7 +22,7 @@ test('CASE-M01-G08-03',()=>useRead(f=>{
   assert.equal(f.reads.action(f.a.scope,'order.status',{order_id:f.order().id}).order.number,'ORD-1001');
 }));
 function copied(fn:(path:string)=>void){const dir=mkdtempSync(join(tmpdir(),'rifare-skill-'));const target=join(dir,'order-status');
-  cpSync(fileURLToPath(new URL('../../product-skills/order-status/',import.meta.url)),target,{recursive:true});
+  cpSync(fileURLToPath(new URL('../../packages/commerce/skill-bundles/order-status/',import.meta.url)),target,{recursive:true});
   try{fn(target);}finally{rmSync(dir,{recursive:true,force:true});}}
 test('M01-G08-SYMLINK',()=>copied(path=>{
   const resource=join(path,'references/read-contract.md');unlinkSync(resource);symlinkSync('/etc/passwd',resource);

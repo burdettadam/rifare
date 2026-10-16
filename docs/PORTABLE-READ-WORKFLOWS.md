@@ -82,7 +82,7 @@ The client is independent code, not an independent security reviewer or AI runti
 
 ## Skill and profile handling
 
-`product-skills/order-status/SKILL.md` is one reusable base. Its sibling
+`packages/commerce/skill-bundles/order-status/SKILL.md` is one reusable base. Its sibling
 `commerce-manifest.json` is a Rifare extension listing supported resource paths.
 The loader supports the required `name` and single-line `description` frontmatter
 in that order with LF line endings. Other YAML forms, optional fields and scripts
