@@ -1,30 +1,28 @@
 # Rifare plans and current state
 
-## State at this checkpoint
+## Accepted development work
 
-M00-G01 is prepared for review; see [its work record](work/records/M00-G01.md).
-The continuation request authorizes preparatory M00-G02 proposal/check work on that
-unaccepted base; see [the M00-G02 record](work/records/M00-G02.md). M00-G03 now has preparatory license/inventory and source-review work; see
-[its work record](work/records/M00-G03.md). None of these goals is accepted,
-and no dependency or reviewer requirement is waived. No product goal is accepted. `planning/goal-state.json` is an initial unstarted snapshot, not an automatically maintained task database. The first proposed goal is [M00-G01](goals/M00/M00-G01.md).
+M00-G01, M00-G02 and M00-G03 are accepted for local development under the owner's
+explicit delegation and BOOTSTRAP-LOCAL-01. Their original branches are merged
+into `main` without rewriting their source commits. See
+[the decision](docs/decisions/0004-delegated-development-authority.md) and
+[acceptance ledger](work/accepted-goals.json). Independent reviews were not run;
+the exception is disclosed. No product milestone or runtime is qualified.
+
+M00-G04 is the current assigned goal. M00-G05 remains unstarted. Existing proposal
+JSON and the initial `planning/goal-state.json` remain immutable historical
+specifications; their pending/unstarted fields do not override work records.
 
 ## Sources of truth
 
-[ROADMAP.md](ROADMAP.md) explains direction. `planning/roadmap.json` defines milestones. `planning/goals.json` and `planning/test-specifications.json` define bounded contracts. `planning/requirement-coverage.json` preserves conjunctive requirement ownership. The requirement/scenario baselines under `reference/` protect original acceptance text.
+`planning/goals.json`, `planning/test-specifications.json`, roadmap, coverage and
+reference baselines define the preserved contracts. Render goal cards with the
+existing command; do not edit generated cards alone. Live assignments and decisions
+belong under `work/`, not in a new scheduler or task database.
 
-`WORKER-GOALS.html`, `WORKER-GOALS.md`, `goals/`, `milestones/` and the dependency-wave/initial-queue files are derived views. Update canonical inputs under accepted change control and regenerate them. The catalogue deliberately does not claim live completion.
+## Development sequence
 
-## Assignment and live progress
-
-The integration owner assigns one dependency-ready goal and exact write scope. Copy `templates/GOAL-WORK-RECORD.md` to `work/records/<goal-id>.md`. Record the named writer, branch/worktree, base, included candidate revisions, accepted dependencies, evidence links, blockers and next action.
-
-Workers update their branch record; the integration owner owns the integrated record. Use `not_started`, `in_progress`, `blocked`, `ready_for_review`, `needs_changes`, `accepted`, `cancelled` or `superseded` with actual evidence. An author may request acceptance, never declare it. Preserve terminal reasons and replacement links.
-
-Dependencies are necessary but not sufficient: scope, permissions, credentials, independent reviewers, capacity and nonoverlapping file ownership must also exist. Static waves are not a calendar, worker assignment or authorization.
-
-## Next sequence
-
-Obtain the owner's actual M00-G01 support-envelope decision and required independent reviews.
-Review the prepared M00-G02 benchmark/pilot proposal only against the accepted scope. M00-G02 through M00-G04 can then proceed where their concrete ownership does not conflict. Repository scaffolding here does not preaccept the workflow-adoption, environment or test-harness product goals.
-
-Use [FIRST-DISPATCH.md](docs/FIRST-DISPATCH.md), [the worker contract](docs/WORKER-CONTRACT.md) and [dispatch rules](docs/DISPATCH-AND-PARALLELISM.md). No autonomous dispatcher is included.
+Use the accepted scope, benchmark and licensing direction as the planning baseline.
+Implement M00-G04 on its own worktree from the merged main. Keep future application,
+runtime isolation and test-harness work in M00-G05/M00-G06. Acceptance means the
+particular documented development outcome, not live product feature completion.

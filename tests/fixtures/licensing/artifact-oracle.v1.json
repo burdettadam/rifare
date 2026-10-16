@@ -1,5 +1,5 @@
 {
-  "source_file_count": 344,
+  "source_file_count": 347,
   "source_count_reason": "331 files retained from M00-G02 plus 13 explicitly scoped new sources; no removed files.",
   "component_ids": [
     "git-agent-adaptations",

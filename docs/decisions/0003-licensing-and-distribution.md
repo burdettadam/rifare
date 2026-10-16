@@ -1,3 +1,5 @@
+> Current development decision: accepted under delegated bootstrap authority; see [ADR-0004](0004-delegated-development-authority.md). Original submission/proposal wording below is retained for audit and is not the current acceptance state. No product qualification or independent review is implied.
+
 # ADR-0003 — Component licensing and source-distribution boundaries
 
 Status: proposed; owner decision and independent reviews pending

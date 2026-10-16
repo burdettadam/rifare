@@ -1,27 +1,56 @@
 # Rifare governance
 
-This file supplies conservative bootstrap working rules. Product scope, numeric release thresholds, licensing, reviewers, repository administration and operational ownership still require explicit decisions in their assigned goals. A starter commit is not those decisions.
+## Current authority
 
-## Authority
+The owner delegated project decisions and requested branch integration. The actual
+instruction, adopted choices and limited review exception are recorded in
+[ADR-0004](docs/decisions/0004-delegated-development-authority.md) and its prior
+Git authority checkpoint. The delegated maintainer assigns bounded goals, chooses
+implementation details, makes development acceptance decisions and integrates
+verified local changes. Do not repeatedly request approval for delegated decisions.
+No file or agent identity can manufacture external rights, consent or observations.
 
-The project owner authorizes work, scope changes, publishing, paid/production effects and releases. The integration owner assigns branches, collects current candidate evidence and maintains canonical progress. A worker proposes and implements only its assigned bounded change.
+## Review policy
 
-Use independent authority/security and regression reviewers. The provisional review baseline is two independently assigned reviewers and no more than three corrective rounds before escalation; acceptance owners may adopt a different policy explicitly. A changed candidate needs refreshed applicable checks/review. A valid blocker is not resolved by majority vote.
+[The workflow policy](planning/workflow-policy.json) retains two independent review
+roles (authority/security and regression) and at most three corrective rounds.
+A changed candidate needs refreshed evidence and review. A valid blocker survives
+majority opinion. Reviewers may use any suitable agent/model; changing models does
+not create independence when the same author simply reviews its own work.
 
-Do not self-approve, impersonate reviewers or treat a JSON `approved` flag as trusted identity. Human approval is required before a version-producing merge or public release. Local setup establishes no hosted enforcement or authenticated review integration.
+BOOTSTRAP-LOCAL-01 replaces missing independent reviews only for local, nonrelease
+integration of M00-G01 through M00-G04 under the owner's explicit instruction.
+Record it as an exception, never as completed reviews. It cannot waive failing
+checks, stale evidence, overlapping writers, product qualification or release
+controls. It is unavailable to later goals and tagged/public releases. Routine
+choices remain delegated; new control exceptions require a separate reasoned
+maintainer decision before the affected candidate is implemented.
 
-## Controls and regressions
+## Controls and evidence
 
-A candidate cannot weaken the rules for its own acceptance. Evaluate policy, baseline, test, oracle and scope changes under the previous accepted controls. Deleted features, hidden capability restrictions, skipped cases, weakened expectations, reduced denominators and discarded original criteria require explicit independent review.
+A candidate cannot change its own accepted baseline or acceptance conditions.
+Use the governing policy from the protected base. Keep behavioral tests, oracles,
+denominators, capability claims and previous source requirements. Policy changes
+require an explicit prior authority record; a revision bump is not approval.
+Bind results to source/base/configuration and actual observed effect stages.
+Simulations cannot replace real external qualification. Source-generated reports
+are observations, not authentication of reviewers or approval identities.
 
-A result must be linked to actual immutable source/configuration and its observed financial or physical stage. Required external qualification cannot be replaced by simulation. Optional features may be explicitly excluded by the owner; exclusion is not implementation.
+## Integration, releases and external effects
 
-## Decisions and records
+Local nonrelease merges are authorized within the assigned scope. Version tags,
+public publication, production and paid effects are not part of this execution.
+A tagged release requires a current, specifically scoped owner release decision,
+passing checks and the required independent reviews; a general delegation or a
+bootstrap exception is not that release record. Retain source before cleanup.
+Do not invent remote retention; this repository has no hosted remote or protections.
 
-Use `templates/ADR.md`, `templates/GOAL-WORK-RECORD.md`, the worker handoff and milestone-decision templates. Track concise decisions under `docs/decisions/` and `work/records/`. Keep raw evidence ignored and share only authorized minimized records. No assumed legal, contractual or partner authority.
+## Records and remaining duties
 
-Use [the full development governance proposal](docs/DEVELOPMENT-GOVERNANCE.md) and the assigned milestone criteria for product qualification. Where proposal and accepted controls conflict, stop and obtain a recorded decision; do not silently choose the easier gate.
-
-## Publishing and license
-
-No hosted remote is configured. Keep any separately authorized development remote private unless the owner explicitly approves publication. Product licensing and a public release remain M00-G03 work. Do not infer that upstream MIT notices license all Rifare content.
+Current development acceptance is in [the acceptance ledger](work/accepted-goals.json)
+and individual work records. Original proposals and the initial planning-state
+snapshot remain historical specifications, not a live scheduler. Use native Git,
+ordinary project commands and the checked-in work-goal/worktree-flow skills.
+Keep raw evidence ignored, retain concise decisions, and protect private data.
+Read [development governance](docs/DEVELOPMENT-GOVERNANCE.md) for product gates;
+ADR-0004 overrides only its explicitly identified bootstrap approval boundary.

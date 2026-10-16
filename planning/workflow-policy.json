@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "id": "rifare-workflow-policy",
+  "revision": 1,
+  "authority_commit": "ef5e9eb648082cbc59f36f20bba96772d5a45cef",
+  "authority_record": "docs/decisions/0004-delegated-development-authority.md",
+  "required_review_roles": [
+    "authority_security",
+    "regression"
+  ],
+  "minimum_independent_reviewers": 2,
+  "maximum_review_rounds": 3,
+  "require_candidate_bound_tests": true,
+  "require_clean_candidate": true,
+  "require_explicit_tagged_release_approval": true,
+  "allow_paid_or_production_effects": false,
+  "bootstrap_local_integration_exception": {
+    "id": "BOOTSTRAP-LOCAL-01",
+    "goals": [
+      "M00-G01",
+      "M00-G02",
+      "M00-G03",
+      "M00-G04"
+    ],
+    "intent": "local_merge",
+    "delegate_id": "rifare-development-assistant",
+    "replaces": "missing_independent_reviews_only",
+    "scope": "planning, offline developer helpers, and workflow adoption only",
+    "never_waives": [
+      "test_failures",
+      "skipped_tests",
+      "stale_candidate",
+      "declared_blockers",
+      "multiple_writers",
+      "product_qualification",
+      "release_approval"
+    ],
+    "expires_after_goal": "M00-G04",
+    "g04_allowed_paths": [
+      "README.md",
+      "DEVELOPMENT.md",
+      "PLANS.md",
+      "project.json",
+      "docs/WORKFLOW-ADOPTION.md",
+      "docs/WORKFLOW-CHECKS.md",
+      "docs/decisions/0005-workflow-adoption.md",
+      "planning/workflow-adoption.json",
+      "planning/component-inventory.json",
+      "templates/WORKFLOW-CHECKPOINT.json",
+      "tests/fixtures/workflow/scenarios.SYNTHETIC.json",
+      "tests/fixtures/licensing/artifact-oracle.v1.json",
+      "tests/test_workflow.py",
+      "tools/check_workflow.py",
+      "tools/verify.py",
+      "work/records/M00-G04.md"
+    ]
+  },
+  "qualification_limits": [
+    "No agent-client discovery inferred from filesystem presence",
+    "No runtime isolation inferred from Git worktrees",
+    "No hosted enforcement inferred from local checks",
+    "No independent review inferred from author self-audit"
+  ]
+}

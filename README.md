@@ -1,3 +1,5 @@
+> Current checkpoint: M00-G01 through M00-G03 merged and accepted for local development under [delegated authority](docs/decisions/0004-delegated-development-authority.md). M00-G04 is next. Historical pending proposal fields are not current task state. No product runtime is implemented.
+
 # Rifare
 
 Merchant-owned commerce operations with tailorable skills and independently replaceable platforms, agents and model providers.

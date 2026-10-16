@@ -1,3 +1,5 @@
+> The licensing direction is now selected by [ADR-0004](docs/decisions/0004-delegated-development-authority.md). The historical proposal below remains the release-preflight baseline. License text/application and public distribution qualification remain separate work, not another request to decide the direction.
+
 # Rifare license status
 
 No application, SDK, original skill, contribution or public distribution license

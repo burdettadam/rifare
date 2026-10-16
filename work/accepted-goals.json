@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "record_kind": "development_acceptance_not_product_qualification",
+  "authority_commit": "ef5e9eb648082cbc59f36f20bba96772d5a45cef",
+  "decision_ref": "docs/decisions/0004-delegated-development-authority.md",
+  "acceptances": [
+    {
+      "goal_id": "M00-G01",
+      "source_commit": "82c00a54d2d219ca59aa9663989fdebae734a90b",
+      "state": "accepted",
+      "basis": "explicit_owner_delegation_with_bootstrap_review_exception",
+      "exception_id": "BOOTSTRAP-LOCAL-01",
+      "independent_reviews": [],
+      "author_audit_only": true,
+      "product_qualified": false
+    },
+    {
+      "goal_id": "M00-G02",
+      "source_commit": "1994c44ca7868bb5dc5145c1654b6b6ac9702fb8",
+      "state": "accepted",
+      "basis": "explicit_owner_delegation_with_bootstrap_review_exception",
+      "exception_id": "BOOTSTRAP-LOCAL-01",
+      "independent_reviews": [],
+      "author_audit_only": true,
+      "product_qualified": false
+    },
+    {
+      "goal_id": "M00-G03",
+      "source_commit": "5543540c812b45f8bb4237f8d23c275bf52da8ee",
+      "state": "accepted",
+      "basis": "explicit_owner_delegation_with_bootstrap_review_exception",
+      "exception_id": "BOOTSTRAP-LOCAL-01",
+      "independent_reviews": [],
+      "author_audit_only": true,
+      "product_qualified": false
+    }
+  ]
+}

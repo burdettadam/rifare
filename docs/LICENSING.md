@@ -1,3 +1,5 @@
+> Current development decision: accepted under delegated bootstrap authority; see [ADR-0004](decisions/0004-delegated-development-authority.md). Original submission/proposal wording below is retained for audit and is not the current acceptance state. No product qualification or independent review is implied.
+
 # Rifare licensing proposal
 
 Status: proposed for M00-G03; no owner decision, rights holder, public license grant,

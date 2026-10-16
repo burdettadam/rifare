@@ -6,7 +6,7 @@ Read `GOVERNANCE.md`, `DEVELOPMENT.md`, `ARCHITECTURE.md`, `PLANS.md`, the assig
 
 ## Bootstrap boundary
 
-This repository contains planning and developer helpers, not a commerce application. All product goals are initially unassigned and unaccepted. Begin only an explicitly assigned goal. M00-G01 is dependency-ready for drafting, not automatically approved. Do not implement subsequent milestones merely because their files exist.
+This repository contains planning and developer helpers, not a commerce application. Initial planning snapshots remain unchanged; consult `work/accepted-goals.json` and ADR-0004 for current delegated development acceptance. Begin only an assigned goal. Do not implement subsequent milestones merely because their files exist.
 
 Use Rifare as the sole project identity in code, documentation, generated views, Git metadata and issue text. Do not import external product research archives, vendor-named positioning or obsolete project branding. Keep requirements stated as Rifare targets rather than assertions that features already exist.
 
@@ -20,7 +20,7 @@ Scope changes, paid/production operations, remote publication, account administr
 
 Write behavioral tests first or demonstrate the goal's targeted fault. Preserve accepted features, tests, oracle fixtures, denominators and capability claims. A green count is not evidence when relevant tests are skipped, deleted or weakened. Bind actual reports to the exact candidate/configuration and obtain independent authority/security and regression review.
 
-Do not self-accept, impersonate a reviewer, fabricate a pilot or infer settlement from a local record. Keep missing prerequisites blocked. Product test results remain specifications until real tests exist and run. A helper-suite pass cannot accept a product goal.
+Only the delegated maintainer can record acceptance under the actual owner instruction and named scope; ordinary workers cannot self-accept. Never impersonate a reviewer, fabricate a pilot or infer settlement from a local record. Keep missing prerequisites blocked. Product test results remain specifications until real tests exist and run. A helper-suite pass cannot accept a product goal.
 
 ## Canonical records
 
