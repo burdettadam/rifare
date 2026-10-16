@@ -66,3 +66,14 @@ document-contract tests. See [the work record](work/records/M00-G01.md) for live
 state and review blockers. Original planning views and initial-state snapshots
 remain unchanged; they do not represent completion. Human approval and independent
 review are still required. No commerce runtime or product release is implemented.
+
+## Next goal implementation
+
+M00-G02 adds a [versioned benchmark](planning/release-benchmark.json),
+[scenario inventory](planning/benchmark-scenarios.json),
+[scoring and regression guide](docs/RELEASE-BENCHMARK.md), and
+[bounded pilot proposal](docs/PILOT-PLAN.md). Its offline scorer checks frozen
+cohort membership and independent hand-calculated synthetic outcomes. It neither
+implements a commerce feature nor authenticates live evidence. See
+[the current work record](work/records/M00-G02.md) for the exact prerequisite and
+review boundaries. M00-G01 remains awaiting acceptance; no pilot is authorized.

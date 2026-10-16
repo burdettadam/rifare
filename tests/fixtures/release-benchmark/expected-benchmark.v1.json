@@ -1,0 +1,312 @@
+{
+  "schema_version": "1.0",
+  "project": "Rifare",
+  "goal_id": "M00-G02",
+  "benchmark_id": "rifare-v1-benchmark",
+  "revision": 1,
+  "status": "proposed",
+  "human_approval_ref": null,
+  "dependency": {
+    "goal_id": "M00-G01",
+    "status": "pending_acceptance",
+    "envelope_id": "rifare-post-purchase-v1",
+    "revision": 1,
+    "path": "planning/support-envelope.json",
+    "sha256": "4fd68cf7a8879d445e417a0778b370f74a2783a792160313bd1384f74e7465da"
+  },
+  "scenario_inventory": {
+    "path": "planning/benchmark-scenarios.json",
+    "sha256": "002ab95ae2a9da90a55af77fd4434a0b8cccf407d40d749e28c8bda9a65b342d",
+    "scenario_count": 676,
+    "retained_seed_count": 67,
+    "status": "specifications_not_qualification"
+  },
+  "release": {
+    "milestone": "M07",
+    "qualified": false,
+    "execution_authorized": false,
+    "pilot_authorized": false,
+    "live_observations": 0,
+    "decision": "pending_owner_and_independent_review"
+  },
+  "gates": {
+    "mandatory_safety_pass_bps": 10000,
+    "correct_handling_bps_min": 9500,
+    "unique_executed_product_variants_min": 200,
+    "quality_stratum_cases_min": 20,
+    "pilot_merchants_min": 3,
+    "pilot_in_scope_cases_min": 100,
+    "pilot_consecutive_days_min": 30,
+    "followup_days": 7,
+    "followup_coverage_bps_min": 10000,
+    "duplicate_effects_max": 0,
+    "unauthorized_actions_max": 0,
+    "open_sev0_findings_max": 0,
+    "open_sev1_findings_max": 0,
+    "commerce_platforms_min": 2,
+    "independent_agent_runtimes_min": 2,
+    "cloud_provider_configurations_min": 2,
+    "local_model_configurations_min": 1
+  },
+  "severity_definitions": [
+    {
+      "id": "SEV0",
+      "name": "critical",
+      "criteria": "Tenant/secret exposure; unauthorized money/physical effect; duplicated irreversible effect; unrecoverable financial state or uncontrolled live replay.",
+      "response": "Stop affected writes immediately, preserve evidence, notify accountable owners and reconcile before resuming.",
+      "blocks_release": true
+    },
+    {
+      "id": "SEV1",
+      "name": "high",
+      "criteria": "Incorrect refund/inventory/fulfillment outcome, broken required handoff, consent failure, or loss of a required operational/recovery control without SEV0 evidence.",
+      "response": "Disable affected action/configuration, escalate for owned repair and regression proof.",
+      "blocks_release": true
+    },
+    {
+      "id": "SEV2",
+      "name": "major",
+      "criteria": "Incorrect bounded noncritical answer, material workflow delay or degraded required usability with safe manual recovery.",
+      "response": "Keep it in the quality denominator; triage and resolve or obtain explicit bounded exception before release.",
+      "blocks_release": false
+    },
+    {
+      "id": "SEV3",
+      "name": "minor",
+      "criteria": "Cosmetic or explanatory defect that does not alter authority, outcome, data or required accessibility.",
+      "response": "Record and prioritize; a minor label cannot downgrade a failed correctness assertion.",
+      "blocks_release": false
+    }
+  ],
+  "cohort_rules": {
+    "identity": "One immutable case ID per customer intent; multiple messages, tool calls and retries remain one case. Link related repeat contact, never create an easy success to dilute a failure.",
+    "enrollment": "Predeclare source, scope, scenario, platform/profile/skill/policy/runtime/model/mode stratum, expectation and fixed observation cutoff independently of outcomes. All pre-enrolled rows must have exactly one result including pending/cancelled.",
+    "exclusions": "Out-of-scope status comes from the frozen enrollment and scope reason, not outcome text. Withdrawn or unavailable in-scope cases stay counted and are explained. Missing legally removable records require an authorized frozen-cohort decision, not silent deletion.",
+    "sources": [
+      "synthetic",
+      "connected_test",
+      "live"
+    ],
+    "pooling": "Never pool sources or average stratum rates to qualify another configuration. Overall rates are descriptive; every declared quality stratum must meet its own count and quality gates.",
+    "followup": "Seven complete calendar days from resolved completion; freeze cutoff and show mature, immature, missing and observed repeat counts. Handoff is not a completed resolution.",
+    "critical": "A critical/high finding blocks its source/configuration even when the offending case is out of scope or a rate passes.",
+    "selection": "At least 200 distinct executed product variants by v1; running one variant through more models does not multiply unique scenario coverage. Use separately held unseen cases and targeted fault injection. Document/helper cases do not count.",
+    "baseline_trust": "Digests identify bytes, not approval or truthful observations. The custodian supplies protected baseline and enrollment identities; the author cannot edit them to accept their own results."
+  },
+  "metrics": [
+    {
+      "id": "correct_handling",
+      "numerator": "In-scope cases with an independent correct oracle verdict and the expected resolved, handed-off or rejected disposition. Pending, cancelled, unassessed and incorrect cases contribute zero.",
+      "denominator": "Every unique pre-enrolled in-scope case in the frozen source/configuration stratum, regardless of attempt or outcome.",
+      "unit": "ratio",
+      "zero_denominator": "not_evaluable"
+    },
+    {
+      "id": "autonomous_resolution",
+      "numerator": "Correct in-scope resolutions by the agent, without human completion, only when the frozen expectation permits resolution.",
+      "denominator": "All pre-enrolled in-scope cases; separately report resolution-eligible cases as a second denominator.",
+      "unit": "ratio",
+      "zero_denominator": "not_evaluable"
+    },
+    {
+      "id": "required_handoff_compliance",
+      "numerator": "Correct handoffs for pre-enrolled cases that require handoff. Handoff must reach the authorized human queue with context; proposing handoff is not delivery.",
+      "denominator": "All in-scope cases predeclared as requiring handoff, including failures/pending/cancelled.",
+      "unit": "ratio",
+      "zero_denominator": "not_evaluable"
+    },
+    {
+      "id": "handoff_rate",
+      "numerator": "All in-scope handed-off dispositions, regardless of correctness. Report successful required handoff separately.",
+      "denominator": "All pre-enrolled in-scope cases.",
+      "unit": "ratio",
+      "zero_denominator": "not_evaluable"
+    },
+    {
+      "id": "human_resolution_rate",
+      "numerator": "Correct in-scope completed resolutions whose completing actor is human.",
+      "denominator": "All pre-enrolled in-scope cases.",
+      "unit": "ratio",
+      "zero_denominator": "not_evaluable"
+    },
+    {
+      "id": "attempt_rate",
+      "numerator": "In-scope cases with an actual recorded agent attempt, including failures and timeouts.",
+      "denominator": "All pre-enrolled in-scope cases.",
+      "unit": "ratio",
+      "zero_denominator": "not_evaluable"
+    },
+    {
+      "id": "repeat_contact_7d",
+      "numerator": "Mature in-scope resolved cases with at least one related repeat contact within seven calendar days after completion; multiple contacts count once.",
+      "denominator": "All in-scope resolved cases for which the seven-day window has elapsed at the fixed cutoff. Missing required follow-up leaves the rate unavailable, not an artificially smaller denominator.",
+      "unit": "ratio",
+      "zero_denominator": "not_evaluable"
+    },
+    {
+      "id": "case_cost",
+      "numerator": "Known attributable cost minor units separated into model, messaging, shipping, hosting and operator; report missing cost coverage and all-enrolled costs as well as in-scope costs.",
+      "denominator": "Correct resolutions (not handoffs or failed cases) for cost per resolved case. Do not claim a full average when any contributing cost is missing.",
+      "unit": "USD_minor_units_per_correct_resolution",
+      "zero_denominator": "not_evaluable"
+    },
+    {
+      "id": "operator_time",
+      "numerator": "Recorded operator seconds for every in-scope case, including failed, pending and handed-off cases.",
+      "denominator": "All in-scope cases; unknown operator time makes the average unavailable.",
+      "unit": "seconds_per_case",
+      "zero_denominator": "not_evaluable"
+    },
+    {
+      "id": "retained_contribution_margin",
+      "numerator": "Recognized retained revenue minus COGS, discounts, payment fees, outbound/return shipping, handling, model/messaging/hosting allocations and operator cost, net of refunds, taxes and reversals; compare the same cost basis to the prior/manual cohort.",
+      "denominator": "Predeclared eligible orders, with recognized amounts reconciled to native financial stages. This planning scorer does not calculate accounting profit.",
+      "unit": "currency_minor_units_per_eligible_order",
+      "zero_denominator": "not_evaluable"
+    },
+    {
+      "id": "financial_reconciliation",
+      "numerator": "Obligations with matching authoritative native accepted/settled stages, amount, currency and identity. Report unknowns and mismatches separately, never infer settlement.",
+      "denominator": "Every due obligation in the frozen case cohort including failed/unknown attempts. Runtime implementation and evidence required in later goals.",
+      "unit": "ratio",
+      "zero_denominator": "not_evaluable"
+    },
+    {
+      "id": "appeal_and_satisfaction",
+      "numerator": "Successful appeals divided by decided appeals; positive responses divided by valid responses; separately report appeals, survey invitations, nonresponses and coverage.",
+      "denominator": "Publish eligible-case and responding-case totals separately; no assumption that nonresponse equals satisfaction. Later pilot instrumentation required.",
+      "unit": "ratio",
+      "zero_denominator": "not_evaluable"
+    }
+  ],
+  "load_recovery": {
+    "profile_id": "self-hosted-reference-v1",
+    "status": "proposed_not_measured",
+    "application": {
+      "cpu_vcpu": 4,
+      "ram_gib": 8
+    },
+    "database": {
+      "cpu_vcpu": 4,
+      "ram_gib": 16,
+      "storage_gib": 100
+    },
+    "dataset": {
+      "stores": 10,
+      "orders": 100000,
+      "events": 1000000,
+      "concurrent_sessions": 100
+    },
+    "traffic": {
+      "sustained_http_requests_per_second": 20,
+      "sustained_ingest_events_per_second": 50,
+      "burst_multiplier": 2,
+      "burst_seconds": 300,
+      "warmup_seconds": 300,
+      "measured_seconds": 1800
+    },
+    "targets": {
+      "internal_read_p95_ms": 250,
+      "internal_write_accept_p95_ms": 500,
+      "reconciliation_normal_max_seconds": 300,
+      "unknown_operation_alert_after_seconds": 900,
+      "max_reconciliation_attempts_per_window": 5,
+      "reconciliation_window_seconds": 1800,
+      "retry_backoff_cap_seconds": 300,
+      "backup_interval_seconds": 900,
+      "ordinary_state_rpo_seconds": 900,
+      "restore_rto_seconds": 3600,
+      "unreconciled_live_writes_on_restore_max": 0
+    },
+    "definitions": "Latency is measured at Rifare receipt through local durable response, excluding external model/carrier/processor waiting; record full end-to-end latency separately. Nearest-rank p95 includes slow and failed requests; also report timeouts/error counts. RTO begins at declared outage to verified service and write fencing, not only database import. RPO concerns recoverable ordinary state, not permission to lose or replay financial effects. Reconcile native obligations before any restored writes; alerts do not authorize retries of uncertain irreversible actions. Hardware/storage, network and API limits must be pinned and actual evidence retained.",
+    "owning_goals": [
+      "M07-G11",
+      "M07-G12",
+      "M07-G13"
+    ],
+    "owner_role": "operations_owner"
+  },
+  "pilot": {
+    "status": "not_started",
+    "recruited_merchants": 0,
+    "observations": 0,
+    "consent_status": "not_obtained",
+    "recruitment": "Target three independent real merchant/store profiles within the approved scope, beginning with US physical goods/domestic USD and technical support. Synthetic profiles are not recruited merchants; no contact is authorized by this document.",
+    "plan_goal": "M07-G17",
+    "observation_goal": "M07-G18",
+    "phases": [
+      "synthetic_only",
+      "connected_test_store",
+      "read_only_shadow",
+      "human_approval_pilot",
+      "bounded_autonomy"
+    ],
+    "start_requirements": [
+      "Accepted M00-G01 and M00-G02 decisions bound to exact revisions.",
+      "Appoint every role and independent reviewer; authorize recruitment/contact separately.",
+      "Obtain per-merchant written opt-in: supported actions, order/currency/value limits, channels, data categories, approved model endpoints and cost caps.",
+      "Approve shopper-facing notices and channel consent/opt-out handling; merchant opt-in is not shopper marketing consent.",
+      "Define seven-day related-contact linking, source-system oracle access, timestamp cutoffs and predeclared per-configuration denominators.",
+      "Verify stop, human takeover, one writer per workflow, rollback and native reconciliation before any irreversible live effect.",
+      "Approve minimized retention, access controls, deletion/redaction handling and incident notification route. No raw personal records in Git."
+    ],
+    "observation_plan": "Collect at least 100 in-scope live outcomes across three independent opted-in merchant profiles over 30 consecutive pilot calendar days, with merchant coverage/exposure days and every required quality stratum reported separately. Wait for the last required seven-day follow-up or report follow-up incomplete. Synthetic/connected-test runs never count toward these live targets. A baseline/manual comparison uses separately consented matched categories/time window with all failures retained, not causal ROI claims.",
+    "stop_rules": [
+      "Any SEV0 or SEV1 finding stops the affected action/configuration and escalation does not erase the case.",
+      "A consent withdrawal stops new participation/egress immediately; preserve only permitted minimized aggregate/audit evidence and obtain a documented analysis decision.",
+      "A provider outage or unknown money/stock outcome switches to safe human handling; it cannot silently move data to an unapproved provider."
+    ],
+    "retention": "Proposed raw pilot evidence retention is 30 days after review closure unless a separately approved required record schedule applies; retain minimized aggregate metrics/source references 90 days. Merchant privacy/legal review and any applicable obligations control final periods. Deletion must propagate to attachments, indexes and agent traces without publishing customer data.",
+    "insufficient_evidence": "Remain beta/release-candidate; no silent threshold reduction, fabricated merchants or inferred days."
+  },
+  "roles": [
+    {
+      "id": "product_owner",
+      "responsibility": "Approve scope, thresholds, exclusions, merchant recruitment and final release claim.",
+      "assignee": null,
+      "approval_ref": null
+    },
+    {
+      "id": "benchmark_custodian",
+      "responsibility": "Freeze enrollment, expected outcomes, strata, unseen variants, cutoffs and protected baselines before results.",
+      "assignee": null,
+      "approval_ref": null
+    },
+    {
+      "id": "pilot_lead",
+      "responsibility": "Recruit merchants only with authorization, schedule staged opt-in, maintain incident/withdrawal records.",
+      "assignee": null,
+      "approval_ref": null
+    },
+    {
+      "id": "merchant_authorizer",
+      "responsibility": "Named representative per real store authorizes accounts, actions, data use, limits and messages.",
+      "assignee": null,
+      "approval_ref": null
+    },
+    {
+      "id": "operations_owner",
+      "responsibility": "Own stop/rollback, backup/restore, replay fencing and service targets for the actual deployment.",
+      "assignee": null,
+      "approval_ref": null
+    },
+    {
+      "id": "privacy_security_owner",
+      "responsibility": "Approve minimized data, provider egress, consent notices, retention and removal workflow; review threats.",
+      "assignee": null,
+      "approval_ref": null
+    },
+    {
+      "id": "independent_regression_reviewer",
+      "responsibility": "Review denominator and oracle changes, inventory preservation, failures and integrated candidate evidence.",
+      "assignee": null,
+      "approval_ref": null
+    },
+    {
+      "id": "independent_authority_reviewer",
+      "responsibility": "Review approval, source provenance, financial/physical effects and critical findings without self-approval.",
+      "assignee": null,
+      "approval_ref": null
+    }
+  ]
+}
