@@ -6,6 +6,7 @@ import type { Row, Scope } from './kernel.mts';
 
 export type Keyring = {activeId: string; get:(keyId:string)=>Buffer|undefined};
 type Box = {iv:string;body:string;tag:string};
+export type CredentialReader = {provider:string; execute:(credential:Buffer,input:unknown)=>Promise<unknown>};
 type Probe = (credential:Buffer)=>Promise<boolean>|boolean;
 function box(key:Buffer,plaintext:Buffer,aad:string): Box {
   const iv=randomBytes(12),cipher=createCipheriv('aes-256-gcm',key,iv,{authTagLength:16});
@@ -45,8 +46,10 @@ export class SecretVault {
   #kernel: CommerceKernel;
   #keys:Keyring;
   #adapters:Map<string,Probe>;
-  constructor(kernel:CommerceKernel,keys:Keyring,adapters:Record<string,Probe>) {
-    this.#kernel=kernel;this.#keys=keys;this.#adapters=new Map(Object.entries(adapters));
+  #readers:Map<string,CredentialReader>;
+  constructor(kernel:CommerceKernel,keys:Keyring,adapters:Record<string,Probe>, readers:Record<string,CredentialReader> = {}) {
+    this.#kernel=kernel;this.#keys=keys;this.#adapters=new Map(Object.entries(adapters));this.#readers=new Map(Object.entries(readers));
+    for(const [name,reader] of this.#readers){id(name);id(reader.provider);if(typeof reader.execute!=='function')throw new Error('INVALID_INPUT');}
     for(const [name,probe] of this.#adapters){id(name);if(typeof probe!=='function')throw new Error('INVALID_INPUT');}
   }
   #key(keyId:string):Buffer {
@@ -62,7 +65,7 @@ export class SecretVault {
   }
   put(scope:Scope,input:unknown) {
     const s=this.#kernel.require(scope,['operator']),r=exact(input,['provider','adapter','value']);id(r.provider);id(r.adapter);
-    if(!this.#adapters.has(r.adapter)||typeof r.value!=='string'||!r.value.length||Buffer.byteLength(r.value)>4096) throw new Error('INVALID_INPUT');
+    if((!this.#adapters.has(r.adapter)&&!this.#readers.has(r.adapter))||typeof r.value!=='string'||!r.value.length||Buffer.byteLength(r.value)>4096) throw new Error('INVALID_INPUT');
     const keyId=this.#keys.activeId, kek=this.#key(keyId),dek=randomBytes(32),plaintext=Buffer.from(r.value);
     const ref='sec_'+token(),aad=this.#aad(s,ref,r.provider,r.adapter);
     try {
@@ -98,6 +101,25 @@ export class SecretVault {
       this.#kernel.require(scope,['operator','worker']);this.#row(scope,ref);
       if(typeof configured!=='boolean')throw new Error('ADAPTER_UNAVAILABLE');
       return {adapter,configured,qualification:'synthetic_probe_only'};
+    } catch {throw new Error('ADAPTER_UNAVAILABLE');}
+    finally {kek?.fill(0);dek?.fill(0);plaintext?.fill(0);}
+  }
+  // Only server-installed reader code receives plaintext; no corresponding HTTP method exists.
+  async invokeReader(scope:Scope,ref:string,adapter:string,input:unknown):Promise<unknown> {
+    const s=this.#kernel.require(scope,['operator','worker']),row=this.#row(scope,ref),reader=this.#readers.get(adapter);
+    if(!reader||row.adapter!==adapter||row.provider!==reader.provider)throw new Error('SECRET_UNAVAILABLE');
+    let plaintext:Buffer|undefined,dek:Buffer|undefined,kek:Buffer|undefined;
+    try {
+      kek=this.#key(row.key_id);const env=exact(JSON.parse(row.envelope),['version','key','data']);
+      if(env.version!==1)throw new Error('SECRET_UNAVAILABLE');
+      const aad=this.#aad(s,ref,row.provider,row.adapter);
+      dek=unbox(kek,env.key,aad+':key:'+row.key_id);if(dek.length!==32)throw new Error('SECRET_UNAVAILABLE');
+      plaintext=unbox(dek,env.data,aad+':data');
+    } catch {kek?.fill(0);dek?.fill(0);plaintext?.fill(0);throw new Error('SECRET_UNAVAILABLE');}
+    try {
+      const result=await reader.execute(plaintext,input);
+      this.#kernel.require(scope,['operator','worker']);this.#row(scope,ref);
+      return result;
     } catch {throw new Error('ADAPTER_UNAVAILABLE');}
     finally {kek?.fill(0);dek?.fill(0);plaintext?.fill(0);}
   }
