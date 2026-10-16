@@ -82,6 +82,14 @@
       "contract_files": [
         "goals/M01/M01-G01.md"
       ]
+    },
+    {
+      "id": "FEATURE-M01-G02",
+      "enabled": true,
+      "qualification": "retained_diagnostic_not_accepted",
+      "contract_files": [
+        "goals/M01/M01-G02.md"
+      ]
     }
   ],
   "tests": [
@@ -4277,6 +4285,132 @@
       "runner_case_id": "M01-G01-17",
       "source": "tests/development/commerce-resources.test.mts",
       "capability_id": "FEATURE-M01-G01"
+    },
+    {
+      "id": "runtime:M01-G02-01",
+      "suite": "runtime",
+      "runner_case_id": "M01-G02-01",
+      "source": "tests/development/commerce-customer.test.mts",
+      "capability_id": "FEATURE-M01-G02"
+    },
+    {
+      "id": "runtime:M01-G02-02",
+      "suite": "runtime",
+      "runner_case_id": "M01-G02-02",
+      "source": "tests/development/commerce-customer.test.mts",
+      "capability_id": "FEATURE-M01-G02"
+    },
+    {
+      "id": "runtime:M01-G02-03",
+      "suite": "runtime",
+      "runner_case_id": "M01-G02-03",
+      "source": "tests/development/commerce-customer.test.mts",
+      "capability_id": "FEATURE-M01-G02"
+    },
+    {
+      "id": "runtime:M01-G02-04",
+      "suite": "runtime",
+      "runner_case_id": "M01-G02-04",
+      "source": "tests/development/commerce-customer.test.mts",
+      "capability_id": "FEATURE-M01-G02"
+    },
+    {
+      "id": "runtime:M01-G02-05",
+      "suite": "runtime",
+      "runner_case_id": "M01-G02-05",
+      "source": "tests/development/commerce-customer.test.mts",
+      "capability_id": "FEATURE-M01-G02"
+    },
+    {
+      "id": "runtime:M01-G02-06",
+      "suite": "runtime",
+      "runner_case_id": "M01-G02-06",
+      "source": "tests/development/commerce-customer.test.mts",
+      "capability_id": "FEATURE-M01-G02"
+    },
+    {
+      "id": "runtime:M01-G02-07",
+      "suite": "runtime",
+      "runner_case_id": "M01-G02-07",
+      "source": "tests/development/commerce-customer.test.mts",
+      "capability_id": "FEATURE-M01-G02"
+    },
+    {
+      "id": "runtime:M01-G02-08",
+      "suite": "runtime",
+      "runner_case_id": "M01-G02-08",
+      "source": "tests/development/commerce-customer.test.mts",
+      "capability_id": "FEATURE-M01-G02"
+    },
+    {
+      "id": "runtime:M01-G02-09",
+      "suite": "runtime",
+      "runner_case_id": "M01-G02-09",
+      "source": "tests/development/commerce-customer.test.mts",
+      "capability_id": "FEATURE-M01-G02"
+    },
+    {
+      "id": "runtime:M01-G02-10",
+      "suite": "runtime",
+      "runner_case_id": "M01-G02-10",
+      "source": "tests/development/commerce-customer.test.mts",
+      "capability_id": "FEATURE-M01-G02"
+    },
+    {
+      "id": "runtime:M01-G02-11",
+      "suite": "runtime",
+      "runner_case_id": "M01-G02-11",
+      "source": "tests/development/commerce-customer.test.mts",
+      "capability_id": "FEATURE-M01-G02"
+    },
+    {
+      "id": "runtime:M01-G02-12",
+      "suite": "runtime",
+      "runner_case_id": "M01-G02-12",
+      "source": "tests/development/commerce-customer.test.mts",
+      "capability_id": "FEATURE-M01-G02"
+    },
+    {
+      "id": "runtime:M01-G02-13",
+      "suite": "runtime",
+      "runner_case_id": "M01-G02-13",
+      "source": "tests/development/commerce-customer.test.mts",
+      "capability_id": "FEATURE-M01-G02"
+    },
+    {
+      "id": "runtime:M01-G02-14",
+      "suite": "runtime",
+      "runner_case_id": "M01-G02-14",
+      "source": "tests/development/commerce-customer.test.mts",
+      "capability_id": "FEATURE-M01-G02"
+    },
+    {
+      "id": "runtime:M01-G02-15",
+      "suite": "runtime",
+      "runner_case_id": "M01-G02-15",
+      "source": "tests/development/commerce-customer.test.mts",
+      "capability_id": "FEATURE-M01-G02"
+    },
+    {
+      "id": "runtime:M01-G02-16",
+      "suite": "runtime",
+      "runner_case_id": "M01-G02-16",
+      "source": "tests/development/commerce-customer.test.mts",
+      "capability_id": "FEATURE-M01-G02"
+    },
+    {
+      "id": "runtime:M01-G02-17",
+      "suite": "runtime",
+      "runner_case_id": "M01-G02-17",
+      "source": "tests/development/commerce-customer.test.mts",
+      "capability_id": "FEATURE-M01-G02"
+    },
+    {
+      "id": "runtime:M01-G02-18",
+      "suite": "runtime",
+      "runner_case_id": "M01-G02-18",
+      "source": "tests/development/commerce-customer.test.mts",
+      "capability_id": "FEATURE-M01-G02"
     }
   ],
   "protected_files": [

@@ -276,6 +276,7 @@
         "goals/M12/M12-G09.md",
         "goals/M12/M12-G99.md",
         "migrations/commerce/001-foundation.sql",
+        "migrations/commerce/002-customer-access.sql",
         "milestones/M00.md",
         "milestones/M01.md",
         "milestones/M02.md",
@@ -291,6 +292,7 @@
         "milestones/M12.md",
         "package-lock.json",
         "package.json",
+        "packages/commerce/customer-access.mts",
         "packages/commerce/kernel.mts",
         "planning/acceptance-tests.json",
         "planning/accepted-regression-baseline.EMPTY.json",
@@ -335,7 +337,8 @@
         "work/records/M00-G07.md",
         "work/records/M00-G08.md",
         "work/records/M00-G99.md",
-        "work/records/M01-G01.md"
+        "work/records/M01-G01.md",
+        "work/records/M01-G02.md"
       ],
       "notices": []
     },
@@ -372,6 +375,7 @@
         "templates/evidence-manifest.DRAFT.json",
         "templates/evidence-manifest.schema.json",
         "tests/browser/component.py",
+        "tests/development/commerce-customer.test.mts",
         "tests/development/commerce-helpers.mts",
         "tests/development/commerce-resources.test.mts",
         "tests/development/config.test.mts",
