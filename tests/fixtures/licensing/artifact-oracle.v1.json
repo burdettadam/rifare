@@ -1,6 +1,6 @@
 {
-  "source_file_count": 609,
-  "source_count_reason": "Add immutable cases, controlled skill release, one-use approved synthetic actions, durable signed inbox, and bound regressions; retain every earlier path and behavioral obligation.",
+  "source_file_count": 634,
+  "source_count_reason": "Retains every previous source path and adds explicitly inventoried M02-G13 through M02-G17 reliability modules, migration, tests, demo and records.",
   "component_ids": [
     "git-agent-adaptations",
     "rifare-developer-helpers",

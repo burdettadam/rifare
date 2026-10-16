@@ -1,3 +1,5 @@
+import { BusinessOperations } from '../../packages/commerce/operation-store.mts';
+import { OperationReceipts } from '../../packages/commerce/operation-receipts.mts';
 import { ActionGateway } from '../../packages/commerce/action-gateway.mts';
 import { ActionMcp } from '../../packages/agent/action-mcp.mts';
 import { SkillReleases } from '../../packages/commerce/skill-releases.mts';
@@ -79,6 +81,10 @@ export async function startCommerceServer(options:{kernel:CommerceKernel;caps:Ca
       const auth=req.headers.authorization;
       if(typeof auth!=='string'||!auth.startsWith('Bearer '))throw new Error('ACCESS_DENIED');
       const scope=kernel.authenticate(auth.slice(7));
+      if(req.method==='GET'&&/^\/v1\/operations\/[A-Za-z0-9_-]+$/.test(url.pathname)){send(res,200,new BusinessOperations(kernel).read(scope,url.pathname.split('/')[3]));return;}
+      if(req.method==='GET'&&/^\/v1\/operations\/[A-Za-z0-9_-]+\/receipts$/.test(url.pathname)){send(res,200,new OperationReceipts(kernel).list(scope,url.pathname.split('/')[3]));return;}
+      if(req.method==='GET'&&/^\/v1\/resources\/[A-Za-z0-9_-]+\/operations$/.test(url.pathname)){send(res,200,new BusinessOperations(kernel).list(scope,url.pathname.split('/')[3]));return;}
+      if(req.method==='POST'&&url.pathname==='/v1/operations/by-receipt'){send(res,200,new BusinessOperations(kernel).fromReceipt(scope,await body(req)));return;}
       if(req.method==='POST'&&url.pathname==='/v1/cases'){send(res,201,gateway.cases.create(scope,await body(req)));return;}
       if(req.method==='GET'&&/^\/v1\/cases\/[A-Za-z0-9_-]+$/.test(url.pathname)){send(res,200,gateway.cases.resume(scope,url.pathname.split('/')[3]));return;}
       if(req.method==='POST'&&/^\/v1\/cases\/[A-Za-z0-9_-]+\/migrate$/.test(url.pathname)){send(res,200,gateway.cases.migrate(scope,url.pathname.split('/')[3],await body(req)));return;}
