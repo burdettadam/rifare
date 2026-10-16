@@ -1,4 +1,4 @@
-> Current checkpoint: M00-G01 through M00-G03 merged and accepted for local development under [delegated authority](docs/decisions/0004-delegated-development-authority.md). M00-G04 is next. Historical pending proposal fields are not current task state. No product runtime is implemented.
+> Current checkpoint: M00-G01 through M00-G03 merged and accepted for local development under [delegated authority](docs/decisions/0004-delegated-development-authority.md). M00-G04 supplies the adopted workflow and completion checks. Consult the acceptance ledger for its integrated state. Historical pending proposal fields are not current task state. No product runtime is implemented.
 
 # Rifare
 
@@ -11,7 +11,7 @@ Merchant-owned commerce operations with tailorable skills and independently repl
 1. Read [AGENTS.md](AGENTS.md), [PLANS.md](PLANS.md) and [DEVELOPMENT.md](DEVELOPMENT.md).
 2. Run `python3 tools/verify.py`. These are offline planning/helper checks, not application tests.
 3. Open [the goal catalogue](WORKER-GOALS.html) or [its Markdown index](WORKER-GOALS.md).
-4. Begin with [M00-G01](goals/M00/M00-G01.md), following [the first dispatch](docs/FIRST-DISPATCH.md).
+4. Read [current acceptance](work/accepted-goals.json) and the assigned work record. After M00-G04 integration, the next goal is [M00-G05](goals/M00/M00-G05.md); do not restart accepted goals.
 
 Use Python 3.10 or newer. On Windows, use Git Bash for Git/shell examples; `py -3 tools/verify.py` also runs the Python checks from PowerShell. No package installation, API keys, containers or model subscription are needed for this starter.
 
@@ -46,8 +46,8 @@ git log -1 --oneline
 git config user.name "Your Name"
 git config user.email "your-address@example.com"
 
-# Create the first worktree only when the goal is assigned.
-git worktree add ../Rifare-M00-G01 -b goal/M00-G01 main
+# Create the next worktree only when the goal is assigned.
+git worktree add ../Rifare-M00-G05 -b goal/M00-G05 main
 ```
 
 Do not run initialization again just to begin work. The recorded workflow is already readable in the checkout. [Workflow adoption](docs/WORKFLOW-ADOPTION.md) identifies its source and remaining client verification.
@@ -58,7 +58,7 @@ AI proposes actions; Rifare must enforce identity, permissions, policy, money, i
 
 Current checks validate planning, document contracts and helper behavior. Three M00-G01 specification IDs are now bound to executable document tests; no commerce runtime qualification is executed. The empty accepted-product baseline intentionally cannot pass a product-release inventory check.
 
-The intended distribution is open source, but the project's license/publication decision remains M00-G03. [LICENSE-STATUS.md](LICENSE-STATUS.md) is not a software license grant. The retained upstream workflow notice is in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
+The licensing direction is selected in ADR-0004; applying exact license texts and candidate-specific public-release qualification remain separate publication prerequisites. [LICENSE-STATUS.md](LICENSE-STATUS.md) is not a software license grant. The retained upstream workflow notice is in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
 
 ## First goal implementation
 
@@ -66,8 +66,7 @@ M00-G01 now has a [charter](docs/CHARTER.md), a [versioned support envelope](pla
 an [executable contract guide](docs/SUPPORT-ENVELOPE.md), and permanent
 document-contract tests. See [the work record](work/records/M00-G01.md) for live
 state and review blockers. Original planning views and initial-state snapshots
-remain unchanged; they do not represent completion. Human approval and independent
-review are still required. No commerce runtime or product release is implemented.
+remain unchanged; they do not represent completion. Current acceptance and the bounded bootstrap review exception are in ADR-0004; historical pending fields below are not the current development state. No commerce runtime or product release is implemented.
 
 ## Next goal implementation
 
@@ -88,3 +87,12 @@ The [licensing proposal](docs/LICENSING.md), [component inventory](planning/comp
 No license or public release is approved. `python3 tools/check_distribution.py --root .`
 checks local source completeness; adding `--public-release` deliberately blocks.
 See [the M00-G03 work record](work/records/M00-G03.md) for actual candidate evidence.
+
+## Adopted development workflow
+
+[The adoption record](docs/WORKFLOW-ADOPTION.md) maps goal IDs to native Git
+branches/worktrees, the two checked-in skills, evidence and review roles.
+[Workflow checks](docs/WORKFLOW-CHECKS.md) cover current source/configuration,
+writer assignments, independent review records and exact release scope. They
+never perform operations or authenticate identities. No product runtime or
+mandatory agent/model framework has been added.

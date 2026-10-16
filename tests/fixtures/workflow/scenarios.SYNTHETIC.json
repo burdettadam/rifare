@@ -1,0 +1,100 @@
+{
+  "classification": "synthetic_executable_workflow_contract_not_real_reviews",
+  "binding": {
+    "goal_id": "M00-G04",
+    "candidate_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "base_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "configuration_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "worktree": "/tmp/rifare-synthetic-one",
+    "branch": "goal/M00-G04",
+    "clean": true,
+    "dependencies_accepted": true,
+    "change_class": "bootstrap_development",
+    "changed_paths": [
+      "tools/check_workflow.py"
+    ]
+  },
+  "checkpoint": {
+    "schema_version": 1,
+    "goal_id": "M00-G04",
+    "candidate_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "base_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "configuration_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "branch": "goal/M00-G04",
+    "writer_id": "rifare-development-assistant",
+    "writer_session_id": "synthetic-author-session",
+    "review_round": 1,
+    "intent": "local_merge",
+    "tag": null,
+    "blockers": [],
+    "external_effects": [],
+    "checks": {
+      "candidate_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "base_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "configuration_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "status": "pass",
+      "commands": [
+        "python3 tools/verify.py"
+      ],
+      "discovered": 12,
+      "executed": 12,
+      "failures": 0,
+      "skipped": 0,
+      "report_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+    },
+    "review_refs": [
+      "synthetic-authority-review",
+      "synthetic-regression-review"
+    ],
+    "exception_id": null
+  },
+  "attestations": {
+    "evidence_kind": "SYNTHETIC_REHEARSAL_ONLY",
+    "verified_report_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "assignments": [
+      {
+        "worktree": "/tmp/rifare-synthetic-one",
+        "branch": "goal/M00-G04",
+        "writer_id": "rifare-development-assistant",
+        "active": true
+      }
+    ],
+    "reviews": {
+      "synthetic-authority-review": {
+        "goal_id": "M00-G04",
+        "candidate_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "base_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "configuration_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "reviewer_id": "synthetic-authority-reviewer",
+        "session_id": "synthetic-authority-session",
+        "role": "authority_security",
+        "round": 1,
+        "status": "pass",
+        "blockers": []
+      },
+      "synthetic-regression-review": {
+        "goal_id": "M00-G04",
+        "candidate_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "base_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "configuration_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "reviewer_id": "synthetic-regression-reviewer",
+        "session_id": "synthetic-regression-session",
+        "role": "regression",
+        "round": 1,
+        "status": "pass",
+        "blockers": []
+      }
+    },
+    "release_approval": null
+  },
+  "expected": {
+    "ordinary_review_records": 2,
+    "exception_review_records": 0,
+    "requires_actual_authorization": true
+  },
+  "case_bindings": {
+    "CASE-M00-G04-01": "test_CASE_M00_G04_01_native_worktree_goal_rehearsal",
+    "CASE-M00-G04-02": "test_CASE_M00_G04_02_duplicate_writer_and_unauthorized_tag_rejected",
+    "CASE-M00-G04-03": "test_CASE_M00_G04_03_changed_candidate_or_missing_review_revokes_readiness"
+  }
+}

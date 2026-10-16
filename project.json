@@ -14,8 +14,9 @@
     "source": "ElevenID/git-agent",
     "version": "0.2.1",
     "revision": "2ead37bfe9bf28489816bfdd4deeea137e23fa37",
-    "adoption": "reviewed_instruction_adaptation",
-    "initializer_executed": false
+    "adoption": "native_workflow_with_explicit_completion_checks",
+    "initializer_executed": false,
+    "qualification_record": "docs/WORKFLOW-ADOPTION.md"
   },
   "counts": {
     "milestones": 13,
@@ -24,5 +25,6 @@
     "requirements": 151,
     "test_specifications": 676,
     "capability_targets": 44
-  }
+  },
+  "development_checkpoint": "M00-G04"
 }

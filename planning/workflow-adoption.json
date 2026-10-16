@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "id": "rifare-workflow-adoption",
+  "revision": 1,
+  "upstream": {
+    "repository": "ElevenID/git-agent",
+    "version": "0.2.1",
+    "commit": "2ead37bfe9bf28489816bfdd4deeea137e23fa37",
+    "kind": "adapted_instruction_files_not_bundled_initializer"
+  },
+  "skills": [
+    {
+      "name": "work-goal",
+      "path": ".agents/skills/work-goal/SKILL.md",
+      "sha256": "fc7d8ee00c5697747bb2395755a6ca12625bf01533e4714b03d411790e1607ef"
+    },
+    {
+      "name": "worktree-flow",
+      "path": ".agents/skills/worktree-flow/SKILL.md",
+      "sha256": "c3ab044ebe06e0355ce9c7a4a06fb03d94a66bc0bd58ffc2d090363276e117cb"
+    }
+  ],
+  "goal_mapping": {
+    "packet": "goals/<milestone>/<goal-id>.md",
+    "branch": "goal/<goal-id>",
+    "work_record": "work/records/<goal-id>.md",
+    "evidence": "evidence/<goal-id>/<candidate-sha>/"
+  },
+  "mandatory_model_provider": null,
+  "custom_orchestrator": false,
+  "product_runtime_qualified": false,
+  "native_commands": [
+    "git status --short",
+    "git worktree list --porcelain",
+    "git worktree add <path> -b goal/<goal-id> <accepted-base>",
+    "python3 tools/verify.py",
+    "python3 tools/check_workflow.py --root .",
+    "git diff --check"
+  ],
+  "observed_host": {
+    "os": "Linux",
+    "git": "2.47.3",
+    "python": "3.13.5",
+    "bash": "5.2.37",
+    "global_initializer_present": false,
+    "initializer_executed": false,
+    "specific_agent_client_present": false,
+    "client_discovery_executed": false
+  },
+  "host_limits": [
+    "macOS and Windows not executed",
+    "Native Git/Python operations and synthetic fixture services only",
+    "Checked-in skills work independently of the optional global initializer"
+  ]
+}

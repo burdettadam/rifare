@@ -9,7 +9,7 @@ into `main` without rewriting their source commits. See
 [acceptance ledger](work/accepted-goals.json). Independent reviews were not run;
 the exception is disclosed. No product milestone or runtime is qualified.
 
-M00-G04 is the current assigned goal. M00-G05 remains unstarted. Existing proposal
+M00-G04 implementation and evidence are in its work record; the acceptance ledger determines its integrated status. M00-G05 remains unstarted. Existing proposal
 JSON and the initial `planning/goal-state.json` remain immutable historical
 specifications; their pending/unstarted fields do not override work records.
 
