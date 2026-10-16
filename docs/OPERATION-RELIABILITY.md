@@ -49,8 +49,8 @@ reports and fault demonstrations belong in the separate evidence archive.
 ## Work states and retry rules
 
 The work path is `pending -> leased -> sending -> done`. Only a source adapter's
-explicit **known not sent** result permits `retry_wait`; delays are 1, 2 and then
-4 seconds within a three-attempt maximum. Rejection is terminal. Retry exhaustion
+explicit **known not sent** result permits `retry_wait`; the two available retry
+delays are 1 and 2 seconds, within a three-attempt maximum. Rejection is terminal. Retry exhaustion
 is `dead` and the operation is `failed`. Claims that repeatedly expire before
 sending also exhaust the same budget. There is no unbounded retry loop.
 
