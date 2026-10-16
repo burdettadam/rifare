@@ -3,20 +3,19 @@
 Merchant-owned commerce operations with tailorable skills and independently
 replaceable platforms, agents and models.
 
-**Current checkpoint: thirty commerce goals have local diagnostic implementations.**
-The latest five add immutable case configuration, controlled skill release and
-revocation, a shared reversible action gateway, exact-preview approvals, and
-raw-byte authenticated webhook persistence. Previous policies, settings, portable
-reads, provider adapters, roles and exact money remain intact.
+**Current checkpoint: thirty-five commerce goals have local diagnostic implementations.**
+The latest five add ordered event processing, atomic outgoing work, stable operation
+identities, source-bound reconciliation, and minimized immutable receipts. Existing
+case pins, approvals, policies, portable reads, roles and exact money remain intact.
 
 **This is still the SQLite diagnostic implementation.** PostgreSQL/React,
 live Shopify/model qualification and the actual served-browser journey remain
 open. An actual local-model probe found no installed service. Protocol fixtures
 and arithmetic evaluations are labeled synthetic; they do not qualify a model.
 
-[Implementation and commands](docs/CASE-EXECUTION.md) ·
-[Current review](docs/CASE-EXECUTION-REVIEW.md) ·
-[Delegated authority](docs/decisions/0017-case-pins-gateway-and-inbox.md) ·
+[Implementation and commands](docs/OPERATION-RELIABILITY.md) ·
+[Current review](docs/OPERATION-RELIABILITY-REVIEW.md) ·
+[Delegated authority](docs/decisions/0018-durable-operation-reliability.md) ·
 [Earlier model and policy foundations](docs/MODEL-POLICY-FOUNDATIONS.md).
 Full goal acceptance remains separate from approved local integration.
 
@@ -181,3 +180,17 @@ Run the existing commerce diagnostic and open `/configuration` to edit/simulate 
 draft without a model. Publication review is a request, not automatic activation.
 `node --experimental-strip-types tools/demo-customization.mts` demonstrates the
 policy lifecycle, undo and a vetted instruction bundle in memory.
+
+## Durable operation reliability
+
+M02-G13 through M02-G17 add diagnostic event deduplication, durable outgoing work,
+stable operation identities, source-bound reconciliation and minimized receipts.
+See [the implementation guide](docs/OPERATION-RELIABILITY.md) and
+[the review](docs/OPERATION-RELIABILITY-REVIEW.md).
+
+```sh
+node --experimental-strip-types tools/demo-reliability.mts
+```
+
+The demo makes no network/model/payment call. PostgreSQL/React and live-provider
+qualification remain open; unknown outcomes never authorize speculative retries.

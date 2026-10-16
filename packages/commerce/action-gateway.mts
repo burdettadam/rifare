@@ -1,3 +1,4 @@
+import { recordCaseExecution } from './operation-store.mts';
 import { CommerceKernel,exact,id,integer,token } from './kernel.mts';
 import type { Scope,Row } from './kernel.mts';
 import { canonical,contentDigest,jsonValue,returnDecision } from './configuration-values.mts';
@@ -105,6 +106,7 @@ export class ActionGateway {
         authority_revision:permissionDecision(k.db,s,'action.execute',q.resource_id).authority_revision,effect:'local_case_plan_only',
         resolution:q.arguments.resolution,amount:q.amount,effect_revision:q.effect_version+1,financial_effect:false,approval_consumed:true,completed_at:k.clock()};
       k.db.prepare('INSERT INTO commerce_action_receipts VALUES(?,?,?,?,?,?,?)').run(s.tenant_id,s.store_id,receipt.id,q.case_id,r.id,canonical(receipt),contentDigest(receipt));
+      recordCaseExecution(k,s,receipt,q);
       return receipt;
     });
   }
