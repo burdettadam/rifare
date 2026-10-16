@@ -1,0 +1,1 @@
+{"type":"object","properties":{"returns.window_days":{"type":"integer","minimum":0,"maximum":365}},"additionalProperties":false}

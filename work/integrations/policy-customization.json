@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "kind": "delegated_local_integration_not_product_acceptance",
+  "prior_main": "ddfcbb60a09a6792cc053792fea3f20c684af731",
+  "authority_commit": "214db94",
+  "decision_ref": "docs/decisions/0016-policy-customization-and-installation.md",
+  "review_ref": "docs/POLICY-CUSTOMIZATION-REVIEW.md",
+  "exception_id": "DELEGATED-LOCAL-07",
+  "target_branch": "main",
+  "reviewer": "rifare-delegated-maintainer",
+  "independent_review_sessions": 0,
+  "contributions": [
+    {
+      "goal_id": "M02-G03",
+      "branch": "goal/policy-customization-batch",
+      "source_disposition": "reviewed_for_local_nonrelease_integration_after_passing_checks",
+      "full_goal_accepted": false
+    },
+    {
+      "goal_id": "M02-G04",
+      "branch": "goal/policy-customization-batch",
+      "source_disposition": "reviewed_for_local_nonrelease_integration_after_passing_checks",
+      "full_goal_accepted": false
+    },
+    {
+      "goal_id": "M02-G05",
+      "branch": "goal/policy-customization-batch",
+      "source_disposition": "reviewed_for_local_nonrelease_integration_after_passing_checks",
+      "full_goal_accepted": false
+    },
+    {
+      "goal_id": "M02-G06",
+      "branch": "goal/policy-customization-batch",
+      "source_disposition": "reviewed_for_local_nonrelease_integration_after_passing_checks",
+      "full_goal_accepted": false
+    },
+    {
+      "goal_id": "M02-G07",
+      "branch": "goal/policy-customization-batch",
+      "source_disposition": "reviewed_for_local_nonrelease_integration_after_passing_checks",
+      "full_goal_accepted": false
+    }
+  ],
+  "retained_test_count": 945,
+  "new_test_count": 114,
+  "expected_total_tests": 1059,
+  "target_stack_qualified": false,
+  "milestone_accepted": false,
+  "release_authorized": false,
+  "reviewed_candidate": "d75f1183c40c461e89c6829d6790ac2a63fa2323",
+  "reviewed_candidate_test_result": {
+    "executed": 1059,
+    "passed": 1059,
+    "failed": 0,
+    "skipped": 0
+  },
+  "protected_change_review": {
+    "path": "tools/test_runtime.py",
+    "change": "suite limit 120 to 240 seconds, matching existing controller",
+    "prior_baseline_block_observed": true
+  }
+}
