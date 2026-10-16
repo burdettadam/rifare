@@ -1,6 +1,6 @@
 {
-  "source_file_count": 477,
-  "source_count_reason": "Explicit additive portable read workflow source and test registration; prior paths preserved.",
+  "source_file_count": 485,
+  "source_count_reason": "Add enumerated portable read workflow modules, skill and fixtures, tests, OpenAPI/client, and decision/work documentation; preserve all earlier paths.",
   "component_ids": [
     "git-agent-adaptations",
     "rifare-developer-helpers",

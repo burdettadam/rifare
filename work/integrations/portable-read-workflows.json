@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "kind": "local_diagnostic_integration_not_full_goal_acceptance",
+  "authority": "docs/decisions/0013-portable-read-workflows.md",
+  "authority_commit": "86f42fb1331e6cd4c181d7bb9e00b18946a6b1fd",
+  "base_commit": "5a1724844cc6b3f126e37bda47e60e3aa672cfd2",
+  "goal_commits": {
+    "M01-G06": "553a93e3f0273c94aa1fcc88951e866920cbdbfc",
+    "M01-G07": "42ce87a4cc9d4c2e5b171a8c3710342c57d52a99",
+    "M01-G08": "49efeeb290436cdbaf25ee4e213d37847a2bff23",
+    "M01-G09": "689ab8724ece09339a7949808e90cf59c9697db8",
+    "M01-G10": "dbd359dfc7b871dbb2801552c62794fcdfbab299"
+  },
+  "decision": "approve_local_merge_after_passing_retained_controller",
+  "review": "docs/PORTABLE-READ-REVIEW.md",
+  "independent_reviews": [],
+  "review_basis": "delegated_maintainer_self_review_explicit_exception",
+  "test_inventory": {
+    "retained": 683,
+    "added": 74,
+    "total": 757
+  },
+  "mutation_trials": 5,
+  "mutations_caught": 5,
+  "formal_goal_acceptance_changed": false,
+  "product_qualified": false,
+  "release_authorized": false,
+  "verification_record": "external delivery report binds candidate, merge and actual executed checks",
+  "remaining": [
+    "PostgreSQL/React target and served browser",
+    "live Shopify test-store comparison and installation",
+    "customer Shopify ownership qualification",
+    "production secret management and independent production review"
+  ]
+}

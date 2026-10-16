@@ -56,6 +56,8 @@
         "docs/MERCHANT-DATA-BOUNDARY.md",
         "docs/PILOT-PLAN.md",
         "docs/PLAN-CHANGELOG.md",
+        "docs/PORTABLE-READ-REVIEW.md",
+        "docs/PORTABLE-READ-WORKFLOWS.md",
         "docs/REGRESSION-STRATEGY.md",
         "docs/REGRESSION-TEST-MAP.md",
         "docs/RELEASE-BENCHMARK.md",
@@ -360,6 +362,7 @@
         "work/accepted-goals.json",
         "work/integrations/2026-10-16.json",
         "work/integrations/five-goal-commerce.json",
+        "work/integrations/portable-read-workflows.json",
         "work/qualification/M00.json",
         "work/records/M00-G01.md",
         "work/records/M00-G02.md",
@@ -374,7 +377,12 @@
         "work/records/M01-G02.md",
         "work/records/M01-G03.md",
         "work/records/M01-G04.md",
-        "work/records/M01-G05.md"
+        "work/records/M01-G05.md",
+        "work/records/M01-G06.md",
+        "work/records/M01-G07.md",
+        "work/records/M01-G08.md",
+        "work/records/M01-G09.md",
+        "work/records/M01-G10.md"
       ],
       "notices": []
     },

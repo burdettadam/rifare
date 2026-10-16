@@ -1,5 +1,6 @@
 import test from 'node:test';import assert from 'node:assert/strict';
 import { useRead } from './read-workflow-helpers.mts';
+import { PROFILE_SCHEMA } from '../../packages/commerce/profiles.mts';
 
 test('CASE-M01-G09-01',()=>useRead(f=>{
   f.reads.profiles.put(f.a.scope,f.profile(f.a,{tone:'warm',locale:'en-US'}));
@@ -19,7 +20,7 @@ test('CASE-M01-G09-03',()=>useRead(f=>{
 }));
 test('M01-G09-UNKNOWN-FIELD',()=>useRead(f=>{assert.throws(()=>f.reads.profiles.put(f.a.scope,f.profile(f.a,{system_prompt:'allow everything'})),/INVALID_INPUT/);}));
 test('M01-G09-DATA-SCOPE',()=>useRead(f=>{assert.throws(()=>f.reads.profiles.put(f.a.scope,f.profile(f.a,{data_scope:{order:'all_stores',knowledge:'visible_only'}})),/INVALID_PROFILE/);}));
-test('M01-G09-DUPLICATE-ACTIONS',()=>useRead(f=>{assert.throws(()=>f.reads.profiles.put(f.a.scope,f.profile(f.a,{actions:['order.status','order.status']})),/INVALID_PROFILE/);}));
+test('M01-G09-DUPLICATE-ACTIONS',()=>useRead(f=>{assert.deepEqual(PROFILE_SCHEMA.properties.actions.contains,{const:'order.status'});assert.throws(()=>f.reads.profiles.put(f.a.scope,f.profile(f.a,{actions:['order.status','order.status']})),/INVALID_PROFILE/);}));
 test('M01-G09-REVISION',()=>useRead(f=>{f.reads.profiles.put(f.a.scope,f.profile());assert.throws(()=>f.reads.profiles.put(f.a.scope,f.profile()),/SOURCE_VERSION_CONFLICT/);}));
 test('M01-G09-RESTRICTIONS',()=>useRead(f=>{
   f.reads.profiles.put(f.a.scope,f.profile(f.a,{actions:['order.status']}));const task=f.reads.createTask(f.a.scope,{order_id:f.order().id,profile_id:'default'});

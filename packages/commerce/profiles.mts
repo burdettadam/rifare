@@ -9,7 +9,7 @@ export const PROFILE_SCHEMA = Object.freeze({
   properties:{id:{type:'string',pattern:'^[A-Za-z0-9_-]{1,96}$'},revision:{type:'integer',minimum:1},
     tenant_id:{type:'string'},store_id:{type:'string'},skill_id:{type:'string'},skill_digest:{type:'string',pattern:'^[a-f0-9]{64}$'},
     tone:{enum:['neutral','warm','formal']},locale:{enum:['en-US','en-GB','fr-CA']},
-    actions:{type:'array',minItems:1,maxItems:4,uniqueItems:true,items:{enum:PROFILE_ACTIONS}},
+    actions:{type:'array',minItems:1,maxItems:4,uniqueItems:true,items:{enum:PROFILE_ACTIONS},contains:{const:'order.status'}},
     data_scope:{type:'object',additionalProperties:false,required:['order','knowledge'],properties:{order:{const:'session_or_store'},knowledge:{const:'visible_only'}}}},
 });
 export class Profiles {

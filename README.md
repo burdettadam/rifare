@@ -3,21 +3,22 @@
 Merchant-owned commerce operations with tailorable skills and independently
 replaceable platforms, agents and models.
 
-**Current checkpoint: the first five commerce modules are implemented for local
-integration on the reviewed M00 foundation.** M01-G01 through M01-G05 add scoped
-resources, customer proofs, encrypted secret handles, current read capabilities
-and a deterministic store simulator. All earlier branches and tests are retained.
+**Current checkpoint: ten commerce modules have local diagnostic implementations.**
+M01-G06 through M01-G10 add a version-pinned Shopify reader, source-traceable
+knowledge, portable skill content, merchant profiles and an agent-neutral REST
+task contract to the existing tenant, verification, secret and simulator services.
+All earlier branches and tests are retained.
 
 **This is still a SQLite diagnostic implementation, not the completed
-PostgreSQL/React application.** There are no live commerce/model integrations or
-real payment effects. The original smoke profile still works; the new diagnostic
-HTTP server presents synthetic commerce data through the shared domain services.
-Default target startup continues to fail explicitly while target qualification
-is absent, rather than silently substituting the diagnostic.
+PostgreSQL/React application.** Shopify transport is fixture-tested, not live-store
+qualified. No model, payment or messaging service was called. The original smoke
+profile and diagnostic commerce server remain available; default target startup
+fails explicitly rather than silently substituting a different stack.
 
-[Commerce foundation and commands](docs/COMMERCE-FOUNDATION.md) ·
-[Five-goal review](docs/COMMERCE-REVIEW.md) ·
-[Prior delegated authority](docs/decisions/0012-five-goal-local-implementation.md).
+[Portable read workflows and commands](docs/PORTABLE-READ-WORKFLOWS.md) ·
+[Current review](docs/PORTABLE-READ-REVIEW.md) ·
+[Delegated authority](docs/decisions/0013-portable-read-workflows.md) ·
+[Earlier foundation](docs/COMMERCE-FOUNDATION.md).
 Full goal acceptance remains separate from approved local code integration.
 
 ## Start
@@ -92,15 +93,13 @@ custom Git command protocol or mandatory agent provider has been added.
 
 ## Verified development boundary
 
-The reviewed base had 582 registered checks. The five-goal implementation adds
-101, for 683: 502 Python/helper checks, 153 native runtime checks, 15 unit harness
-checks, 7 database harness checks and 6 retained browser-component checks.
-All passed on the documented Linux diagnostic host, with no failures or skips.
-The new real-HTTP and linked-worktree tests cover tenant isolation, private sessions,
-proof replay, secret handles, revoked capabilities and persistent simulated state.
-The new page's interactive browser behavior and the React/PostgreSQL target are
-not established by those results. Exact final-source and restoration evidence is
-retained separately; test count is not a replacement for behavioral assertions.
+The previous integrated checkpoint had 683 registered checks. This five-goal batch
+adds 74, for 757: 502 Python/helper, 227 native runtime, 15 unit harness,
+7 database harness and 6 retained browser-component checks. Source-bound execution
+and restoration results are retained in the separate delivery verification report.
+The independent Python client uses actual loopback HTTP and imports no server code.
+Fixture Shopify observations, synthetic profiles and component tests are not
+live-store, AI-quality or served React/PostgreSQL qualification.
 
 Controllers remain read-only and do not authenticate people, sandbox native code,
 merge branches or authorize releases. Models and external agents remain replaceable
@@ -111,7 +110,7 @@ by design; none has been falsely counted as an independently qualified integrati
 The project ZIP contains a standalone `.git` history. The bundle can be cloned:
 
 ```sh
-git clone -b main /path/to/Rifare-five-goals.bundle Rifare
+git clone -b main /path/to/Rifare-next-five-goals.bundle Rifare
 cd Rifare
 git remote remove origin
 python3 tools/verify.py
@@ -141,8 +140,8 @@ native regression controller, records source/configuration/artifact identity and
 checks external review facts without granting acceptance. See
 [the evidence guide](docs/EVIDENCE-GATE.md) and
 [the current work record](work/records/M00-G08.md).
-The current registry has 683 executable checks: all 582 checks from the reviewed
-base plus 101 commerce-foundation regressions. Delegated local integration review
+The current registry has 757 executable checks: all 683 prior checks plus
+74 portable-read workflow regressions. Delegated local integration review
 is complete; full target-stack qualification remains open.
 All 676 commerce scenarios remain planning specifications.
 
@@ -155,12 +154,12 @@ prerequisites; a green diagnostic run is not milestone acceptance. See
 [qualification and repair order](docs/M00-QUALIFICATION.md) and
 [the exact existing-goal repair checklist](work/qualification/M00.json).
 Target-stack repair resumes M00-G05 on the accumulated source. M01-G01 through
-M01-G05 are implemented for local diagnostic integration, not full qualification.
+M01-G10 are implemented for local diagnostic integration, not full qualification.
 
 ## Immediate engineering priority
 
 Resume **M00-G05** from this `main`: implement and install the target React/PostgreSQL
 stack, then extend M00-G06 to the actually served application. Preserve the existing
-683 diagnostic and commerce-foundation tests. Do not add more governance machinery merely to postpone
+757 diagnostic and commerce tests. Do not add more governance machinery merely to postpone
 this implementation. The [qualification guide](docs/M00-QUALIFICATION.md) separates
 these engineering gaps from the completed local integration review.
