@@ -64,3 +64,17 @@ python3 -m unittest discover -s tests -p test_support_envelope.py -v
 These commands check proposed scope and meaningful regression cases, not native
 commerce effects or human approval. Full `verify.py` includes this contract and
 all retained helper tests. See [support-envelope checks](docs/SUPPORT-ENVELOPE.md).
+
+## M00-G02 benchmark contracts
+
+```sh
+python3 tools/check_release_benchmark.py --root .
+python3 -m unittest discover -s tests -p test_release_benchmark.py -v
+```
+
+Full verification includes this proposal check and every retained helper test.
+The [benchmark guide](docs/RELEASE-BENCHMARK.md) documents frozen enrollment,
+source/configuration separation, exact denominators and trusted-baseline limits.
+[Fixture commands](tests/fixtures/release-benchmark/COMMANDS.md) run the entirely
+synthetic arithmetic example without a provider or application. Product gates,
+consent, source attestations and independent acceptance remain unperformed.

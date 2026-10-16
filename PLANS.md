@@ -2,8 +2,10 @@
 
 ## State at this checkpoint
 
-M00-G01 is assigned to the current implementing assistant and prepared for review;
-see [its work record](work/records/M00-G01.md). No product goal is accepted. `planning/goal-state.json` is an initial unstarted snapshot, not an automatically maintained task database. The first proposed goal is [M00-G01](goals/M00/M00-G01.md).
+M00-G01 is prepared for review; see [its work record](work/records/M00-G01.md).
+The continuation request authorizes preparatory M00-G02 proposal/check work on that
+unaccepted base; see [the M00-G02 record](work/records/M00-G02.md). Neither goal is accepted,
+and no dependency or reviewer requirement is waived. No product goal is accepted. `planning/goal-state.json` is an initial unstarted snapshot, not an automatically maintained task database. The first proposed goal is [M00-G01](goals/M00/M00-G01.md).
 
 ## Sources of truth
 
@@ -21,6 +23,7 @@ Dependencies are necessary but not sufficient: scope, permissions, credentials, 
 
 ## Next sequence
 
-Draft M00-G01 and obtain the owner's actual support-envelope decision. M00-G02 through M00-G04 can then proceed where their concrete ownership does not conflict. Repository scaffolding here does not preaccept the workflow-adoption, environment or test-harness product goals.
+Obtain the owner's actual M00-G01 support-envelope decision and required independent reviews.
+Review the prepared M00-G02 benchmark/pilot proposal only against the accepted scope. M00-G02 through M00-G04 can then proceed where their concrete ownership does not conflict. Repository scaffolding here does not preaccept the workflow-adoption, environment or test-harness product goals.
 
 Use [FIRST-DISPATCH.md](docs/FIRST-DISPATCH.md), [the worker contract](docs/WORKER-CONTRACT.md) and [dispatch rules](docs/DISPATCH-AND-PARALLELISM.md). No autonomous dispatcher is included.

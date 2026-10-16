@@ -1,0 +1,174 @@
+{
+  "schema_version": "1.0",
+  "project": "Rifare",
+  "benchmark_id": "rifare-v1-benchmark",
+  "benchmark_revision": 1,
+  "benchmark_sha256": "4b53de08f4af8b915eead29394fa0467d257beb30047347f8fd793648fd9d5ed",
+  "cohort_id": "rifare-hand-calculated-cohort-v1",
+  "purpose": "synthetic_example",
+  "enrollment_frozen_at": "2026-10-01T00:00:00Z",
+  "observation_cutoff": "2026-10-15T00:00:00Z",
+  "sources": [
+    {
+      "id": "SOURCE-SYNTHETIC",
+      "kind": "synthetic",
+      "provenance_ref": "tests/fixtures/release-benchmark/HAND-CALCULATION.md"
+    }
+  ],
+  "strata": [
+    {
+      "id": "STRATUM-A",
+      "platform": "shopify",
+      "profile": "synthetic-apparel-v1",
+      "skill": "order-status-v1",
+      "policy": "policy-proposal-v1",
+      "runtime": "independent-runtime-a",
+      "model": "example-provider-a",
+      "mode": "bounded_autonomy"
+    },
+    {
+      "id": "STRATUM-B",
+      "platform": "woocommerce",
+      "profile": "synthetic-fragile-v1",
+      "skill": "order-status-v1",
+      "policy": "policy-proposal-v1",
+      "runtime": "independent-runtime-b",
+      "model": "example-provider-b",
+      "mode": "bounded_autonomy"
+    }
+  ],
+  "cases": [
+    {
+      "id": "CASE-001",
+      "source_id": "SOURCE-SYNTHETIC",
+      "stratum_id": "STRATUM-A",
+      "scope_id": "SCOPE-001",
+      "in_scope": true,
+      "scope_reason": "Included synthetic service case under the pinned proposed scope.",
+      "expected": "resolve",
+      "enrolled_at": "2026-09-30T12:00:00Z",
+      "currency": "USD"
+    },
+    {
+      "id": "CASE-002",
+      "source_id": "SOURCE-SYNTHETIC",
+      "stratum_id": "STRATUM-A",
+      "scope_id": "SCOPE-001",
+      "in_scope": true,
+      "scope_reason": "Included synthetic service case under the pinned proposed scope.",
+      "expected": "resolve",
+      "enrolled_at": "2026-09-30T12:00:00Z",
+      "currency": "USD"
+    },
+    {
+      "id": "CASE-003",
+      "source_id": "SOURCE-SYNTHETIC",
+      "stratum_id": "STRATUM-A",
+      "scope_id": "SCOPE-017",
+      "in_scope": true,
+      "scope_reason": "Included synthetic service case under the pinned proposed scope.",
+      "expected": "handoff",
+      "enrolled_at": "2026-09-30T12:00:00Z",
+      "currency": "USD"
+    },
+    {
+      "id": "CASE-004",
+      "source_id": "SOURCE-SYNTHETIC",
+      "stratum_id": "STRATUM-A",
+      "scope_id": "SCOPE-001",
+      "in_scope": true,
+      "scope_reason": "Included synthetic service case under the pinned proposed scope.",
+      "expected": "resolve",
+      "enrolled_at": "2026-09-30T12:00:00Z",
+      "currency": "USD"
+    },
+    {
+      "id": "CASE-005",
+      "source_id": "SOURCE-SYNTHETIC",
+      "stratum_id": "STRATUM-A",
+      "scope_id": "SCOPE-001",
+      "in_scope": true,
+      "scope_reason": "Included synthetic service case under the pinned proposed scope.",
+      "expected": "resolve",
+      "enrolled_at": "2026-09-30T12:00:00Z",
+      "currency": "USD"
+    },
+    {
+      "id": "CASE-006",
+      "source_id": "SOURCE-SYNTHETIC",
+      "stratum_id": "STRATUM-A",
+      "scope_id": "SCOPE-030",
+      "in_scope": false,
+      "scope_reason": "Excluded manual-refund configuration; correct behavior is refusal.",
+      "expected": "reject",
+      "enrolled_at": "2026-09-30T12:00:00Z",
+      "currency": "USD"
+    },
+    {
+      "id": "CASE-007",
+      "source_id": "SOURCE-SYNTHETIC",
+      "stratum_id": "STRATUM-B",
+      "scope_id": "SCOPE-033",
+      "in_scope": true,
+      "scope_reason": "Included synthetic service case under the pinned proposed scope.",
+      "expected": "resolve",
+      "enrolled_at": "2026-09-30T12:00:00Z",
+      "currency": "USD"
+    },
+    {
+      "id": "CASE-008",
+      "source_id": "SOURCE-SYNTHETIC",
+      "stratum_id": "STRATUM-B",
+      "scope_id": "SCOPE-033",
+      "in_scope": true,
+      "scope_reason": "Included synthetic service case under the pinned proposed scope.",
+      "expected": "handoff",
+      "enrolled_at": "2026-09-30T12:00:00Z",
+      "currency": "USD"
+    },
+    {
+      "id": "CASE-009",
+      "source_id": "SOURCE-SYNTHETIC",
+      "stratum_id": "STRATUM-B",
+      "scope_id": "SCOPE-033",
+      "in_scope": true,
+      "scope_reason": "Included synthetic service case under the pinned proposed scope.",
+      "expected": "resolve",
+      "enrolled_at": "2026-09-30T12:00:00Z",
+      "currency": "USD"
+    },
+    {
+      "id": "CASE-010",
+      "source_id": "SOURCE-SYNTHETIC",
+      "stratum_id": "STRATUM-B",
+      "scope_id": "SCOPE-033",
+      "in_scope": true,
+      "scope_reason": "Included synthetic service case under the pinned proposed scope.",
+      "expected": "resolve",
+      "enrolled_at": "2026-09-30T12:00:00Z",
+      "currency": "USD"
+    },
+    {
+      "id": "CASE-011",
+      "source_id": "SOURCE-SYNTHETIC",
+      "stratum_id": "STRATUM-B",
+      "scope_id": "SCOPE-037",
+      "in_scope": false,
+      "scope_reason": "Excluded manual-refund configuration; correct behavior is refusal.",
+      "expected": "reject",
+      "enrolled_at": "2026-09-30T12:00:00Z",
+      "currency": "USD"
+    },
+    {
+      "id": "CASE-012",
+      "source_id": "SOURCE-SYNTHETIC",
+      "stratum_id": "STRATUM-B",
+      "scope_id": "SCOPE-033",
+      "in_scope": true,
+      "scope_reason": "Included synthetic service case under the pinned proposed scope.",
+      "expected": "resolve",
+      "enrolled_at": "2026-09-30T12:00:00Z",
+      "currency": "USD"
+    }
+  ]
+}

@@ -16,6 +16,7 @@ def main() -> int:
         [sys.executable, 'tools/check_generated.py', '--root', '.'],
         [sys.executable, 'tools/check_support_envelope.py', '--root', '.',
          '--scenarios', 'tests/fixtures/support-envelope/scenarios.json'],
+        [sys.executable, 'tools/check_release_benchmark.py', '--root', '.'],
         [sys.executable, 'tools/run_tests.py'],
     ]
     for command in commands:
