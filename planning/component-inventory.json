@@ -59,6 +59,7 @@
         "docs/decisions/0004-delegated-development-authority.md",
         "docs/decisions/0005-workflow-adoption.md",
         "docs/decisions/0006-local-environment-qualification.md",
+        "docs/decisions/0007-deterministic-test-harness.md",
         "docs/decisions/README.md",
         "goals/M00/M00-G01.md",
         "goals/M00/M00-G02.md",
@@ -312,7 +313,8 @@
         "work/records/M00-G02.md",
         "work/records/M00-G03.md",
         "work/records/M00-G04.md",
-        "work/records/M00-G05.md"
+        "work/records/M00-G05.md",
+        "work/records/M00-G06.md"
       ],
       "notices": []
     },
