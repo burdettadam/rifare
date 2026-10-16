@@ -1,0 +1,908 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Rifare portable read API",
+    "version": "1.0.0",
+    "description": "Local diagnostic contract. No model runtime, financial writes, public deployment, or production qualification. A task is read context, not an agent queue or execution lease."
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/v1/orders/{order_id}/status": {
+      "get": {
+        "operationId": "readOrderStatus",
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9_-]{1,96}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful read or local read-task creation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderStatus"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input or unavailable context",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authentication or authorization denied",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No permitted resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Provider unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/read-tasks": {
+      "post": {
+        "operationId": "createReadTask",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Successful read or local read-task creation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Task"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input or unavailable context",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authentication or authorization denied",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No permitted resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Provider unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTask"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/read-tasks/{task_id}": {
+      "get": {
+        "operationId": "readTask",
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9_-]{1,96}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful read or local read-task creation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Task"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input or unavailable context",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authentication or authorization denied",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No permitted resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Provider unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/read-tasks/{task_id}/actions": {
+      "post": {
+        "operationId": "runTaskRead",
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9_-]{1,96}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful read or local read-task creation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "description": "Typed result selected by action: OrderStatus, KnowledgeResult, SkillContent, or a cited knowledge source."
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input or unavailable context",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authentication or authorization denied",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No permitted resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Provider unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Action"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/knowledge/search": {
+      "get": {
+        "operationId": "searchKnowledge",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful read or local read-task creation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KnowledgeResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input or unavailable context",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authentication or authorization denied",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No permitted resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Provider unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/knowledge/{source_id}/revisions/{revision}": {
+      "get": {
+        "operationId": "readKnowledgeRevision",
+        "parameters": [
+          {
+            "name": "source_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9_-]{1,96}$"
+            }
+          },
+          {
+            "name": "revision",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful read or local read-task creation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "revision",
+                    "content",
+                    "source",
+                    "access",
+                    "authority"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9_-]{1,96}$"
+                    },
+                    "revision": {
+                      "type": "integer"
+                    },
+                    "content": {
+                      "type": "string"
+                    },
+                    "source": {
+                      "type": "object"
+                    },
+                    "access": {
+                      "type": "object"
+                    },
+                    "authority": {
+                      "const": "reference_only"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input or unavailable context",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authentication or authorization denied",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No permitted resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Provider unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/skill-content": {
+      "get": {
+        "operationId": "readSkillResource",
+        "parameters": [
+          {
+            "name": "skill_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "resource",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "bundle_digest",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful read or local read-task creation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SkillContent"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input or unavailable context",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authentication or authorization denied",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No permitted resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Provider unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/profiles/{profile_id}": {
+      "get": {
+        "operationId": "readProfile",
+        "parameters": [
+          {
+            "name": "profile_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9_-]{1,96}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful read or local read-task creation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "profile",
+                    "sha256",
+                    "authority"
+                  ],
+                  "properties": {
+                    "profile": {
+                      "type": "object"
+                    },
+                    "sha256": {
+                      "type": "string"
+                    },
+                    "authority": {
+                      "const": "restrictions_and_presentation_only"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input or unavailable context",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authentication or authorization denied",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No permitted resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Provider unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/read-contract": {
+      "get": {
+        "operationId": "readContract",
+        "responses": {
+          "200": {
+            "description": "This authenticated OpenAPI document",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Existing tenant/store or verified order-only session. Provider thread IDs are not credentials."
+      }
+    },
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "required": [
+          "error"
+        ],
+        "properties": {
+          "error": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      },
+      "Source": {
+        "type": "object",
+        "required": [
+          "system",
+          "native_id",
+          "revision",
+          "observed_at",
+          "source_updated_at",
+          "evidence_kind"
+        ],
+        "properties": {
+          "system": {
+            "type": "string"
+          },
+          "native_id": {
+            "type": "string"
+          },
+          "revision": {
+            "type": "integer"
+          },
+          "observed_at": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "source_updated_at": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "evidence_kind": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      },
+      "OrderStatus": {
+        "type": "object",
+        "required": [
+          "contract_version",
+          "resource_id",
+          "status",
+          "order",
+          "source",
+          "production_qualified"
+        ],
+        "properties": {
+          "contract_version": {
+            "const": "1.0.0"
+          },
+          "resource_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_-]{1,96}$"
+          },
+          "status": {
+            "type": "string"
+          },
+          "order": {
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "source": {
+            "$ref": "#/components/schemas/Source"
+          },
+          "production_qualified": {
+            "const": false
+          }
+        },
+        "additionalProperties": true
+      },
+      "CreateTask": {
+        "type": "object",
+        "required": [
+          "order_id",
+          "profile_id"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "order_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_-]{1,96}$"
+          },
+          "profile_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_-]{1,96}$"
+          }
+        }
+      },
+      "Task": {
+        "type": "object",
+        "required": [
+          "contract_version",
+          "id",
+          "type",
+          "state",
+          "created_at",
+          "expires_at",
+          "order_id",
+          "profile",
+          "skill",
+          "facts",
+          "financial_actions_available",
+          "agent_runtime_required"
+        ],
+        "properties": {
+          "contract_version": {
+            "const": "1.0.0"
+          },
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_-]{1,96}$"
+          },
+          "type": {
+            "const": "order-status-read"
+          },
+          "state": {
+            "const": "read_context"
+          },
+          "created_at": {
+            "type": "integer"
+          },
+          "expires_at": {
+            "type": "integer"
+          },
+          "order_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_-]{1,96}$"
+          },
+          "profile": {
+            "type": "object"
+          },
+          "skill": {
+            "type": "object"
+          },
+          "facts": {
+            "$ref": "#/components/schemas/OrderStatus"
+          },
+          "financial_actions_available": {
+            "const": false
+          },
+          "agent_runtime_required": {
+            "const": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "Action": {
+        "type": "object",
+        "required": [
+          "action",
+          "arguments"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "action": {
+            "enum": [
+              "order.status",
+              "knowledge.search",
+              "knowledge.get",
+              "skill.read"
+            ]
+          },
+          "arguments": {
+            "type": "object"
+          }
+        }
+      },
+      "KnowledgeResult": {
+        "type": "object",
+        "required": [
+          "status",
+          "authority",
+          "sources"
+        ],
+        "properties": {
+          "status": {
+            "enum": [
+              "found",
+              "no_permitted_information"
+            ]
+          },
+          "authority": {
+            "const": "reference_only"
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "SkillContent": {
+        "type": "object",
+        "required": [
+          "skill_id",
+          "bundle_digest",
+          "path",
+          "content",
+          "sha256",
+          "authority"
+        ],
+        "properties": {
+          "skill_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_-]{1,96}$"
+          },
+          "bundle_digest": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "path": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "authority": {
+            "const": "guidance_only"
+          }
+        }
+      }
+    }
+  }
+}
