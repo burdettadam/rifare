@@ -3,22 +3,22 @@
 Merchant-owned commerce operations with tailorable skills and independently
 replaceable platforms, agents and models.
 
-**Current checkpoint: reviewed diagnostic code integrated into `main`.** All
-M00-G01 through M00-G08 source contributions and the M00-G99 assessment are retained,
-along with their original branches. The latest integration fixes source-identity
-and expired-worker-lease defects and adds 17 permanent regression tests.
+**Current checkpoint: the first five commerce modules are implemented for local
+integration on the reviewed M00 foundation.** M01-G01 through M01-G05 add scoped
+resources, customer proofs, encrypted secret handles, current read capabilities
+and a deterministic store simulator. All earlier branches and tests are retained.
 
-**This is not the completed PostgreSQL/React application.** The runnable profile
-is `smoke-sqlite`: separate local API, worker, HTML/JavaScript UI, SQLite migrations,
-queues and attachments. There are no live commerce integrations. Default target
-startup still fails explicitly rather than substituting this diagnostic.
+**This is still a SQLite diagnostic implementation, not the completed
+PostgreSQL/React application.** There are no live commerce/model integrations or
+real payment effects. The original smoke profile still works; the new diagnostic
+HTTP server presents synthetic commerce data through the shared domain services.
+Default target startup continues to fail explicitly while target qualification
+is absent, rather than silently substituting the diagnostic.
 
-[The integration review](docs/INTEGRATION-REVIEW.md) records the findings and decision.
-[ADR-0011](docs/decisions/0011-delegated-review-and-integration.md) records delegated
-local merge authority. [The integration ledger](work/integrations/2026-10-16.json)
-is separate from [full goal acceptance](work/accepted-goals.json). M00-G05 through
-M00-G08 remain target-incomplete; their partial status no longer blocks retaining
-and developing the reviewed source on `main`.
+[Commerce foundation and commands](docs/COMMERCE-FOUNDATION.md) ·
+[Five-goal review](docs/COMMERCE-REVIEW.md) ·
+[Prior delegated authority](docs/decisions/0012-five-goal-local-implementation.md).
+Full goal acceptance remains separate from approved local code integration.
 
 ## Start
 
@@ -49,6 +49,16 @@ npm run dev:smoke
 # In a second terminal in the same worktree:
 npm run stop:smoke
 ```
+
+For the new commerce diagnostic (Ctrl-C to stop its own instance):
+
+```sh
+node --experimental-strip-types tools/dev-commerce.mts
+```
+
+Its output identifies the loopback URL and private local session file. Credentials
+are not printed or embedded in the UI. Use that session to inspect the two
+synthetic stores. See the foundation guide for the optional external wrapping key.
 
 `npm run dev` exits 2 until the target React/PostgreSQL setup is qualified.
 The smoke profile does not silently replace that target.
@@ -82,21 +92,19 @@ custom Git command protocol or mandatory agent provider has been added.
 
 ## Verified development boundary
 
-The accepted `main` baseline has 289 Python planning/helper/workflow tests. The
-M00-G05 branch adds 8 manifest-intake tests and 44 native Node diagnostic tests.
-That M00-G05 verification ran 297 Python tests plus 44 Node tests, without skips.
-Runtime cases exercise two linked worktrees, separate SQLite databases and queues,
-local attachments, migrations, instance-bound stopping, restart persistence,
-external-request denial and a clean offline install from the zero-package lock.
-They do not establish PostgreSQL behavior, React rendering, OS-wide egress
-containment, commerce qualification or independent review. Interactive Chromium
-navigation was blocked by the execution host's browser policy; no visual pass is
-claimed. Exact logs and fault demonstrations remain in ignored review evidence.
+The reviewed base had 582 registered checks. The five-goal implementation adds
+101, for 683: 502 Python/helper checks, 153 native runtime checks, 15 unit harness
+checks, 7 database harness checks and 6 retained browser-component checks.
+All passed on the documented Linux diagnostic host, with no failures or skips.
+The new real-HTTP and linked-worktree tests cover tenant isolation, private sessions,
+proof replay, secret handles, revoked capabilities and persistent simulated state.
+The new page's interactive browser behavior and the React/PostgreSQL target are
+not established by those results. Exact final-source and restoration evidence is
+retained separately; test count is not a replacement for behavioral assertions.
 
-The workflow checker is read-only. It does not authenticate identities, grant
-permissions, lock OS writers, merge branches or create releases. The global
-initializer and a specific agent client were not executed. Actual client/host
-qualification and target-stack startup remain separate work.
+Controllers remain read-only and do not authenticate people, sandbox native code,
+merge branches or authorize releases. Models and external agents remain replaceable
+by design; none has been falsely counted as an independently qualified integration.
 
 ## Source retention and publication
 
