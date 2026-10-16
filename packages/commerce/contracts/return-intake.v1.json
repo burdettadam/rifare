@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "qualification": "sqlite_diagnostic_fixture_only",
+  "financial_effect": false,
+  "quote": {
+    "endpoint": "POST /v1/returns/quote",
+    "required": [
+      "case_id",
+      "lines",
+      "outcome",
+      "reason",
+      "note",
+      "evidence_ids"
+    ],
+    "line": {
+      "required": [
+        "line_id",
+        "quantity"
+      ],
+      "quantity": "positive integer; server checks fulfilled less returned and reserved"
+    },
+    "response": "immutable quote identity/digest, per-line allow/deny/review, policy/settings/source pins, exact minor-unit estimate"
+  },
+  "prepare": {
+    "endpoint": "POST /v1/returns/prepare",
+    "required": [
+      "quote_id",
+      "quote_digest",
+      "request_key",
+      "override_id"
+    ],
+    "effect": "awaiting-review local request only"
+  },
+  "revise": {
+    "endpoint": "POST /v1/returns/revise",
+    "required": [
+      "quote_id",
+      "quote_digest",
+      "expected_preview_id",
+      "override_id"
+    ],
+    "effect": "same request; old approval revoked; no native change"
+  },
+  "form": {
+    "endpoint": "POST /v1/returns/form",
+    "required": [
+      "case_id"
+    ]
+  },
+  "status": {
+    "endpoint": "POST /v1/returns/status",
+    "required": [
+      "case_id"
+    ]
+  },
+  "reviewer_endpoints": [
+    "POST /v1/returns/review/evidence",
+    "POST /v1/returns/review/resolve-evidence",
+    "POST /v1/returns/review/override",
+    "POST /v1/returns/review/revoke"
+  ],
+  "evidence": {
+    "prefix": "POST /v1/return-evidence/",
+    "operations": [
+      "upload",
+      "status",
+      "scan",
+      "sign",
+      "content",
+      "erase"
+    ],
+    "maximum_bytes": 262144,
+    "maximum_per_case": 8,
+    "format": "restricted PNG",
+    "default_state": "quarantined",
+    "default_scanner": null,
+    "signed_grant_ms": 60000,
+    "model_access": false
+  },
+  "authorization": "Existing session, exact case, current permissions, pinned policy/configuration and separate preview approval; no caller tenant or monetary authority.",
+  "native_create_endpoint": null,
+  "retention": "Owner-only server-local purgeExpired plus existing customer erasure; logical not forensic."
+}

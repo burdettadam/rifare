@@ -3,19 +3,19 @@
 Merchant-owned commerce operations with tailorable skills and independently
 replaceable platforms, agents and models.
 
-**Current checkpoint: forty-five commerce goals have local diagnostic implementations.**
-The latest five add action-readiness gates, a scoped privacy lifecycle, private
-snapshots with quarantined restore, a second-platform read adapter and a portable
-return-draft workflow. Skills, profiles, approvals and operations remain shared
-across callers; the available write is only a local synthetic case-plan change.
+**Current checkpoint: fifty commerce goals have local diagnostic implementations.**
+The latest five add item-level return eligibility, quarantined evidence, a branded
+customer portal, bounded reviewer overrides, and native-return fixture records.
+Requests share current server authority and exact-preview approval; estimates do
+not issue refunds. Unknown native outcomes cannot be blindly retried.
 
 **This is still the SQLite diagnostic implementation.** PostgreSQL/React, live
-platform/model behavior and actual served-browser qualification remain open.
-The WooCommerce transport is fixture-only; no live refund or payment is enabled.
+platform/model, qualified malware scanning and actual served-browser qualification
+remain open. No live refund, payment, shipment or shop mutation is enabled.
 
-[Implementation and commands](docs/READINESS-PRIVACY-RECOVERY.md) ·
-[Current review](docs/READINESS-PRIVACY-REVIEW.md) ·
-[Delegated authority](docs/decisions/0020-readiness-privacy-recovery.md).
+[Implementation and commands](docs/RETURN-INTAKE.md) ·
+[Current review](docs/RETURN-INTAKE-REVIEW.md) ·
+[Delegated authority](docs/decisions/0021-item-return-intake.md).
 Local integration does not imply full goal or milestone qualification.
 
 ## Start

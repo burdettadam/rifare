@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "schema_digest": "919586efbc5ec268729033edd7c69e8facbd41c2dfb84cf9df478e5484831a8c",
+  "schema_digest": "f27e9913aa654076356c7f367215c1b3df68885188c01af4dc12be906cf60cfc",
   "tables": [
     {
       "name": "commerce_action_approvals",
@@ -390,6 +390,23 @@
       "handling": "configuration_or_minimized_audit"
     },
     {
+      "name": "commerce_native_return_operations",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "request_id",
+        "source_identity",
+        "state",
+        "request_digest",
+        "native_id",
+        "native_body",
+        "native_digest",
+        "observed_at"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
       "name": "commerce_operation_controls",
       "columns": [
         "tenant_id",
@@ -691,6 +708,102 @@
         "request_key",
         "request_digest",
         "preview_id"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_return_evidence",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "case_id",
+        "resource_id",
+        "actor_id",
+        "state",
+        "bytes",
+        "sha256",
+        "mime",
+        "note",
+        "scanner",
+        "created_at",
+        "expires_at"
+      ],
+      "handling": "subject_linked_blob_erase_and_expire"
+    },
+    {
+      "name": "commerce_return_overrides",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "quote_id",
+        "quote_digest",
+        "actor_id",
+        "authority_revision",
+        "reason",
+        "expires_at",
+        "revoked"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_return_quotes",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "case_id",
+        "resource_id",
+        "actor_id",
+        "body",
+        "digest",
+        "expires_at"
+      ],
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_return_requests",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "case_id",
+        "resource_id",
+        "actor_id",
+        "request_key",
+        "quote_id",
+        "preview_id",
+        "state",
+        "body",
+        "digest",
+        "receipt_id",
+        "created_at"
+      ],
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_return_review_events",
+      "columns": [
+        "seq",
+        "tenant_id",
+        "store_id",
+        "case_id",
+        "actor_id",
+        "event",
+        "reason",
+        "observed_at"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_return_settings",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "revision",
+        "body",
+        "digest"
       ],
       "handling": "configuration_or_minimized_audit"
     },

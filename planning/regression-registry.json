@@ -434,6 +434,46 @@
       "contract_files": [
         "goals/M02/M02-G27.md"
       ]
+    },
+    {
+      "id": "FEATURE-M03-G01",
+      "enabled": true,
+      "qualification": "retained_diagnostic_not_accepted",
+      "contract_files": [
+        "goals/M03/M03-G01.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M03-G02",
+      "enabled": true,
+      "qualification": "retained_diagnostic_not_accepted",
+      "contract_files": [
+        "goals/M03/M03-G02.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M03-G03",
+      "enabled": true,
+      "qualification": "retained_diagnostic_not_accepted",
+      "contract_files": [
+        "goals/M03/M03-G03.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M03-G04",
+      "enabled": true,
+      "qualification": "retained_diagnostic_not_accepted",
+      "contract_files": [
+        "goals/M03/M03-G04.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M03-G05",
+      "enabled": true,
+      "qualification": "retained_diagnostic_not_accepted",
+      "contract_files": [
+        "goals/M03/M03-G05.md"
+      ]
     }
   ],
   "tests": [
@@ -10621,6 +10661,643 @@
       "runner_case_id": "M02-G27-BROWSER-POLICY-DENIED-CLEARS",
       "source": "tests/development/return-draft-browser.test.mts",
       "capability_id": "FEATURE-M02-G27"
+    },
+    {
+      "id": "runtime:CASE-M03-G01-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G01-01",
+      "source": "tests/development/return-eligibility.test.mts",
+      "capability_id": "FEATURE-M03-G01"
+    },
+    {
+      "id": "runtime:CASE-M03-G01-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G01-02",
+      "source": "tests/development/return-eligibility.test.mts",
+      "capability_id": "FEATURE-M03-G01"
+    },
+    {
+      "id": "runtime:CASE-M03-G01-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G01-03",
+      "source": "tests/development/return-eligibility.test.mts",
+      "capability_id": "FEATURE-M03-G01"
+    },
+    {
+      "id": "runtime:M03-G01-HOST-TIMEZONE-INDEPENDENT",
+      "suite": "runtime",
+      "runner_case_id": "M03-G01-HOST-TIMEZONE-INDEPENDENT",
+      "source": "tests/development/return-eligibility.test.mts",
+      "capability_id": "FEATURE-M03-G01"
+    },
+    {
+      "id": "runtime:M03-G01-FEES-EXACT-MINOR-UNITS",
+      "suite": "runtime",
+      "runner_case_id": "M03-G01-FEES-EXACT-MINOR-UNITS",
+      "source": "tests/development/return-eligibility.test.mts",
+      "capability_id": "FEATURE-M03-G01"
+    },
+    {
+      "id": "runtime:M03-G01-FEES-EXCEED-VALUE-DENIED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G01-FEES-EXCEED-VALUE-DENIED",
+      "source": "tests/development/return-eligibility.test.mts",
+      "capability_id": "FEATURE-M03-G01"
+    },
+    {
+      "id": "runtime:M03-G01-DUPLICATE-SELECTION-DENIED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G01-DUPLICATE-SELECTION-DENIED",
+      "source": "tests/development/return-eligibility.test.mts",
+      "capability_id": "FEATURE-M03-G01"
+    },
+    {
+      "id": "runtime:M03-G01-UNKNOWN-LINE-DENIED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G01-UNKNOWN-LINE-DENIED",
+      "source": "tests/development/return-eligibility.test.mts",
+      "capability_id": "FEATURE-M03-G01"
+    },
+    {
+      "id": "runtime:M03-G01-CURRENCY-MISMATCH-DENIED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G01-CURRENCY-MISMATCH-DENIED",
+      "source": "tests/development/return-eligibility.test.mts",
+      "capability_id": "FEATURE-M03-G01"
+    },
+    {
+      "id": "runtime:M03-G01-EVIDENCE-REQUIRES-CLEAN",
+      "suite": "runtime",
+      "runner_case_id": "M03-G01-EVIDENCE-REQUIRES-CLEAN",
+      "source": "tests/development/return-eligibility.test.mts",
+      "capability_id": "FEATURE-M03-G01"
+    },
+    {
+      "id": "runtime:M03-G01-INVALID-TIMEZONE-DENIED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G01-INVALID-TIMEZONE-DENIED",
+      "source": "tests/development/return-eligibility.test.mts",
+      "capability_id": "FEATURE-M03-G01"
+    },
+    {
+      "id": "runtime:M03-G01-INVALID-SOURCE-COUNTS-DENIED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G01-INVALID-SOURCE-COUNTS-DENIED",
+      "source": "tests/development/return-eligibility.test.mts",
+      "capability_id": "FEATURE-M03-G01"
+    },
+    {
+      "id": "runtime:M03-G01-SUBMITTED-QUANTITY-RESERVED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G01-SUBMITTED-QUANTITY-RESERVED",
+      "source": "tests/development/return-eligibility.test.mts",
+      "capability_id": "FEATURE-M03-G01"
+    },
+    {
+      "id": "runtime:M03-G01-TWO-PREVIEWS-CANNOT-OVER-RETURN",
+      "suite": "runtime",
+      "runner_case_id": "M03-G01-TWO-PREVIEWS-CANNOT-OVER-RETURN",
+      "source": "tests/development/return-eligibility.test.mts",
+      "capability_id": "FEATURE-M03-G01"
+    },
+    {
+      "id": "runtime:M03-G01-RESTART-RETAINS-RESERVATION",
+      "suite": "runtime",
+      "runner_case_id": "M03-G01-RESTART-RETAINS-RESERVATION",
+      "source": "tests/development/return-eligibility.test.mts",
+      "capability_id": "FEATURE-M03-G01"
+    },
+    {
+      "id": "runtime:M03-G01-NO-EXPLICIT-AUTHORITY-IN-SELECTION",
+      "suite": "runtime",
+      "runner_case_id": "M03-G01-NO-EXPLICIT-AUTHORITY-IN-SELECTION",
+      "source": "tests/development/return-eligibility.test.mts",
+      "capability_id": "FEATURE-M03-G01"
+    },
+    {
+      "id": "runtime:CASE-M03-G02-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G02-01",
+      "source": "tests/development/return-evidence.test.mts",
+      "capability_id": "FEATURE-M03-G02"
+    },
+    {
+      "id": "runtime:CASE-M03-G02-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G02-02",
+      "source": "tests/development/return-evidence.test.mts",
+      "capability_id": "FEATURE-M03-G02"
+    },
+    {
+      "id": "runtime:CASE-M03-G02-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G02-03",
+      "source": "tests/development/return-evidence.test.mts",
+      "capability_id": "FEATURE-M03-G02"
+    },
+    {
+      "id": "runtime:M03-G02-MISSING-SCANNER-REMAINS-QUARANTINED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G02-MISSING-SCANNER-REMAINS-QUARANTINED",
+      "source": "tests/development/return-evidence.test.mts",
+      "capability_id": "FEATURE-M03-G02"
+    },
+    {
+      "id": "runtime:M03-G02-SCANNER-REJECTION-NOT-DOWNLOADABLE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G02-SCANNER-REJECTION-NOT-DOWNLOADABLE",
+      "source": "tests/development/return-evidence.test.mts",
+      "capability_id": "FEATURE-M03-G02"
+    },
+    {
+      "id": "runtime:M03-G02-CUSTOMER-CANNOT-APPROVE-SCAN",
+      "suite": "runtime",
+      "runner_case_id": "M03-G02-CUSTOMER-CANNOT-APPROVE-SCAN",
+      "source": "tests/development/return-evidence.test.mts",
+      "capability_id": "FEATURE-M03-G02"
+    },
+    {
+      "id": "runtime:M03-G02-SESSION-SCOPED-DOWNLOAD",
+      "suite": "runtime",
+      "runner_case_id": "M03-G02-SESSION-SCOPED-DOWNLOAD",
+      "source": "tests/development/return-evidence.test.mts",
+      "capability_id": "FEATURE-M03-G02"
+    },
+    {
+      "id": "runtime:M03-G02-EXPIRED-SIGNED-GRANT",
+      "suite": "runtime",
+      "runner_case_id": "M03-G02-EXPIRED-SIGNED-GRANT",
+      "source": "tests/development/return-evidence.test.mts",
+      "capability_id": "FEATURE-M03-G02"
+    },
+    {
+      "id": "runtime:M03-G02-BLOB-HASH-RECHECKED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G02-BLOB-HASH-RECHECKED",
+      "source": "tests/development/return-evidence.test.mts",
+      "capability_id": "FEATURE-M03-G02"
+    },
+    {
+      "id": "runtime:M03-G02-SCAN-RACE-ERASURE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G02-SCAN-RACE-ERASURE",
+      "source": "tests/development/return-evidence.test.mts",
+      "capability_id": "FEATURE-M03-G02"
+    },
+    {
+      "id": "runtime:M03-G02-PRIVACY-ERASES-PHOTO-AND-NOTE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G02-PRIVACY-ERASES-PHOTO-AND-NOTE",
+      "source": "tests/development/return-evidence.test.mts",
+      "capability_id": "FEATURE-M03-G02"
+    },
+    {
+      "id": "runtime:M03-G02-LIMIT-EIGHT-PHOTOS",
+      "suite": "runtime",
+      "runner_case_id": "M03-G02-LIMIT-EIGHT-PHOTOS",
+      "source": "tests/development/return-evidence.test.mts",
+      "capability_id": "FEATURE-M03-G02"
+    },
+    {
+      "id": "runtime:M03-G02-BASE64-NONCANONICAL-DENIED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G02-BASE64-NONCANONICAL-DENIED",
+      "source": "tests/development/return-evidence.test.mts",
+      "capability_id": "FEATURE-M03-G02"
+    },
+    {
+      "id": "runtime:M03-G02-CONTENT-TYPE-SPOOF-DENIED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G02-CONTENT-TYPE-SPOOF-DENIED",
+      "source": "tests/development/return-evidence.test.mts",
+      "capability_id": "FEATURE-M03-G02"
+    },
+    {
+      "id": "runtime:M03-G02-BAD-PNG-CHECKSUM-DENIED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G02-BAD-PNG-CHECKSUM-DENIED",
+      "source": "tests/development/return-evidence.test.mts",
+      "capability_id": "FEATURE-M03-G02"
+    },
+    {
+      "id": "runtime:M03-G02-NOTE-DOES-NOT-GRANT-AUTHORITY",
+      "suite": "runtime",
+      "runner_case_id": "M03-G02-NOTE-DOES-NOT-GRANT-AUTHORITY",
+      "source": "tests/development/return-evidence.test.mts",
+      "capability_id": "FEATURE-M03-G02"
+    },
+    {
+      "id": "runtime:M03-G02-TRAILING-COMPRESSED-CONTENT-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G02-TRAILING-COMPRESSED-CONTENT-REJECTED",
+      "source": "tests/development/return-evidence.test.mts",
+      "capability_id": "FEATURE-M03-G02"
+    },
+    {
+      "id": "runtime:M03-G02-SCANNER-DEADLINE-LEAVES-QUARANTINE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G02-SCANNER-DEADLINE-LEAVES-QUARANTINE",
+      "source": "tests/development/return-evidence.test.mts",
+      "capability_id": "FEATURE-M03-G02"
+    },
+    {
+      "id": "runtime:M03-G02-RETENTION-PURGE-REMOVES-CONTENT",
+      "suite": "runtime",
+      "runner_case_id": "M03-G02-RETENTION-PURGE-REMOVES-CONTENT",
+      "source": "tests/development/return-evidence.test.mts",
+      "capability_id": "FEATURE-M03-G02"
+    },
+    {
+      "id": "runtime:M03-G02-CUSTOMER-CANNOT-PURGE-STORE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G02-CUSTOMER-CANNOT-PURGE-STORE",
+      "source": "tests/development/return-evidence.test.mts",
+      "capability_id": "FEATURE-M03-G02"
+    },
+    {
+      "id": "runtime:CASE-M03-G03-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G03-02",
+      "source": "tests/development/return-portal.test.mts",
+      "capability_id": "FEATURE-M03-G03"
+    },
+    {
+      "id": "runtime:CASE-M03-G03-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G03-03",
+      "source": "tests/development/return-portal.test.mts",
+      "capability_id": "FEATURE-M03-G03"
+    },
+    {
+      "id": "runtime:M03-G03-UNAUTHENTICATED-PORTAL-FACTS-DENIED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G03-UNAUTHENTICATED-PORTAL-FACTS-DENIED",
+      "source": "tests/development/return-portal.test.mts",
+      "capability_id": "FEATURE-M03-G03"
+    },
+    {
+      "id": "runtime:M03-G03-CROSS-STORE-PORTAL-DENIED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G03-CROSS-STORE-PORTAL-DENIED",
+      "source": "tests/development/return-portal.test.mts",
+      "capability_id": "FEATURE-M03-G03"
+    },
+    {
+      "id": "runtime:M03-G03-STALE-FEES-REQUIRE-NEW-QUOTE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G03-STALE-FEES-REQUIRE-NEW-QUOTE",
+      "source": "tests/development/return-portal.test.mts",
+      "capability_id": "FEATURE-M03-G03"
+    },
+    {
+      "id": "runtime:M03-G03-NO-CUSTOMER-EXECUTION-AUTHORITY",
+      "suite": "runtime",
+      "runner_case_id": "M03-G03-NO-CUSTOMER-EXECUTION-AUTHORITY",
+      "source": "tests/development/return-portal.test.mts",
+      "capability_id": "FEATURE-M03-G03"
+    },
+    {
+      "id": "runtime:M03-G03-EXPIRED-QUOTE-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G03-EXPIRED-QUOTE-REJECTED",
+      "source": "tests/development/return-portal.test.mts",
+      "capability_id": "FEATURE-M03-G03"
+    },
+    {
+      "id": "runtime:M03-G03-PRIVACY-REDACTS-DRAFT-NOTE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G03-PRIVACY-REDACTS-DRAFT-NOTE",
+      "source": "tests/development/return-portal.test.mts",
+      "capability_id": "FEATURE-M03-G03"
+    },
+    {
+      "id": "runtime:M03-G03-PRIVATE-FIELDS-NOT-CLIENT-STORAGE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G03-PRIVATE-FIELDS-NOT-CLIENT-STORAGE",
+      "source": "tests/development/return-portal.test.mts",
+      "capability_id": "FEATURE-M03-G03"
+    },
+    {
+      "id": "runtime:M03-G03-CONTENT-SECURITY-HEADERS",
+      "suite": "runtime",
+      "runner_case_id": "M03-G03-CONTENT-SECURITY-HEADERS",
+      "source": "tests/development/return-portal.test.mts",
+      "capability_id": "FEATURE-M03-G03"
+    },
+    {
+      "id": "runtime:M03-G03-ORIGIN-DENIED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G03-ORIGIN-DENIED",
+      "source": "tests/development/return-portal.test.mts",
+      "capability_id": "FEATURE-M03-G03"
+    },
+    {
+      "id": "runtime:M03-G03-EVIDENCE-QUARANTINE-VISIBLE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G03-EVIDENCE-QUARANTINE-VISIBLE",
+      "source": "tests/development/return-portal.test.mts",
+      "capability_id": "FEATURE-M03-G03"
+    },
+    {
+      "id": "runtime:CASE-M03-G03-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G03-01",
+      "source": "tests/development/return-portal-browser.test.mts",
+      "capability_id": "FEATURE-M03-G03"
+    },
+    {
+      "id": "runtime:M03-G03-BROWSER-RESUME-PRESERVES-REQUEST",
+      "suite": "runtime",
+      "runner_case_id": "M03-G03-BROWSER-RESUME-PRESERVES-REQUEST",
+      "source": "tests/development/return-portal-browser.test.mts",
+      "capability_id": "FEATURE-M03-G03"
+    },
+    {
+      "id": "runtime:M03-G03-BROWSER-CURRENCY-EXPONENT",
+      "suite": "runtime",
+      "runner_case_id": "M03-G03-BROWSER-CURRENCY-EXPONENT",
+      "source": "tests/development/return-portal-browser.test.mts",
+      "capability_id": "FEATURE-M03-G03"
+    },
+    {
+      "id": "runtime:M03-G03-BROWSER-STALE-QUOTE-CANNOT-REPAINT",
+      "suite": "runtime",
+      "runner_case_id": "M03-G03-BROWSER-STALE-QUOTE-CANNOT-REPAINT",
+      "source": "tests/development/return-portal-browser.test.mts",
+      "capability_id": "FEATURE-M03-G03"
+    },
+    {
+      "id": "runtime:CASE-M03-G04-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G04-01",
+      "source": "tests/development/return-review.test.mts",
+      "capability_id": "FEATURE-M03-G04"
+    },
+    {
+      "id": "runtime:CASE-M03-G04-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G04-02",
+      "source": "tests/development/return-review.test.mts",
+      "capability_id": "FEATURE-M03-G04"
+    },
+    {
+      "id": "runtime:CASE-M03-G04-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G04-03",
+      "source": "tests/development/return-review.test.mts",
+      "capability_id": "FEATURE-M03-G04"
+    },
+    {
+      "id": "runtime:M03-G04-FREE-TEXT-NOT-OVERRIDE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G04-FREE-TEXT-NOT-OVERRIDE",
+      "source": "tests/development/return-review.test.mts",
+      "capability_id": "FEATURE-M03-G04"
+    },
+    {
+      "id": "runtime:M03-G04-EXPLICIT-OVERRIDE-REVOCATION",
+      "suite": "runtime",
+      "runner_case_id": "M03-G04-EXPLICIT-OVERRIDE-REVOCATION",
+      "source": "tests/development/return-review.test.mts",
+      "capability_id": "FEATURE-M03-G04"
+    },
+    {
+      "id": "runtime:M03-G04-EXPIRED-OVERRIDE-DENIED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G04-EXPIRED-OVERRIDE-DENIED",
+      "source": "tests/development/return-review.test.mts",
+      "capability_id": "FEATURE-M03-G04"
+    },
+    {
+      "id": "runtime:M03-G04-SELF-REVIEW-DENIED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G04-SELF-REVIEW-DENIED",
+      "source": "tests/development/return-review.test.mts",
+      "capability_id": "FEATURE-M03-G04"
+    },
+    {
+      "id": "runtime:M03-G04-OVERRIDE-CANNOT-MOVE-QUOTES",
+      "suite": "runtime",
+      "runner_case_id": "M03-G04-OVERRIDE-CANNOT-MOVE-QUOTES",
+      "source": "tests/development/return-review.test.mts",
+      "capability_id": "FEATURE-M03-G04"
+    },
+    {
+      "id": "runtime:M03-G04-BOUNDED-EXTENSION-ONLY",
+      "suite": "runtime",
+      "runner_case_id": "M03-G04-BOUNDED-EXTENSION-ONLY",
+      "source": "tests/development/return-review.test.mts",
+      "capability_id": "FEATURE-M03-G04"
+    },
+    {
+      "id": "runtime:M03-G04-REQUEST-MORE-EVIDENCE-STATUS",
+      "suite": "runtime",
+      "runner_case_id": "M03-G04-REQUEST-MORE-EVIDENCE-STATUS",
+      "source": "tests/development/return-review.test.mts",
+      "capability_id": "FEATURE-M03-G04"
+    },
+    {
+      "id": "runtime:M03-G04-CUSTOMER-CANNOT-REQUEST-OWN-REVIEW",
+      "suite": "runtime",
+      "runner_case_id": "M03-G04-CUSTOMER-CANNOT-REQUEST-OWN-REVIEW",
+      "source": "tests/development/return-review.test.mts",
+      "capability_id": "FEATURE-M03-G04"
+    },
+    {
+      "id": "runtime:M03-G04-CROSS-TENANT-REVIEW-DENIED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G04-CROSS-TENANT-REVIEW-DENIED",
+      "source": "tests/development/return-review.test.mts",
+      "capability_id": "FEATURE-M03-G04"
+    },
+    {
+      "id": "runtime:M03-G04-STALE-CONFIG-OVERRIDE-DENIED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G04-STALE-CONFIG-OVERRIDE-DENIED",
+      "source": "tests/development/return-review.test.mts",
+      "capability_id": "FEATURE-M03-G04"
+    },
+    {
+      "id": "runtime:M03-G04-EXTRA-QUANTITY-NOT-OVERRIDABLE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G04-EXTRA-QUANTITY-NOT-OVERRIDABLE",
+      "source": "tests/development/return-review.test.mts",
+      "capability_id": "FEATURE-M03-G04"
+    },
+    {
+      "id": "runtime:M03-G04-MORE-EVIDENCE-BLOCKS-OLD-APPROVAL",
+      "suite": "runtime",
+      "runner_case_id": "M03-G04-MORE-EVIDENCE-BLOCKS-OLD-APPROVAL",
+      "source": "tests/development/return-review.test.mts",
+      "capability_id": "FEATURE-M03-G04"
+    },
+    {
+      "id": "runtime:M03-G04-EVIDENCE-REVIEW-REQUIRES-FRESH-QUOTE-AND-APPROVAL",
+      "suite": "runtime",
+      "runner_case_id": "M03-G04-EVIDENCE-REVIEW-REQUIRES-FRESH-QUOTE-AND-APPROVAL",
+      "source": "tests/development/return-review.test.mts",
+      "capability_id": "FEATURE-M03-G04"
+    },
+    {
+      "id": "runtime:CASE-M03-G05-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G05-01",
+      "source": "tests/development/native-returns.test.mts",
+      "capability_id": "FEATURE-M03-G05"
+    },
+    {
+      "id": "runtime:CASE-M03-G05-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G05-02",
+      "source": "tests/development/native-returns.test.mts",
+      "capability_id": "FEATURE-M03-G05"
+    },
+    {
+      "id": "runtime:CASE-M03-G05-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G05-03",
+      "source": "tests/development/native-returns.test.mts",
+      "capability_id": "FEATURE-M03-G05"
+    },
+    {
+      "id": "runtime:M03-G05-NO-APPROVAL-NO-CALL",
+      "suite": "runtime",
+      "runner_case_id": "M03-G05-NO-APPROVAL-NO-CALL",
+      "source": "tests/development/native-returns.test.mts",
+      "capability_id": "FEATURE-M03-G05"
+    },
+    {
+      "id": "runtime:M03-G05-CUSTOMER-CANNOT-CREATE-NATIVE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G05-CUSTOMER-CANNOT-CREATE-NATIVE",
+      "source": "tests/development/native-returns.test.mts",
+      "capability_id": "FEATURE-M03-G05"
+    },
+    {
+      "id": "runtime:M03-G05-SOURCE-TENANT-ISOLATED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G05-SOURCE-TENANT-ISOLATED",
+      "source": "tests/development/native-returns.test.mts",
+      "capability_id": "FEATURE-M03-G05"
+    },
+    {
+      "id": "runtime:M03-G05-RESTART-UNKNOWN-NOT-RESENT",
+      "suite": "runtime",
+      "runner_case_id": "M03-G05-RESTART-UNKNOWN-NOT-RESENT",
+      "source": "tests/development/native-returns.test.mts",
+      "capability_id": "FEATURE-M03-G05"
+    },
+    {
+      "id": "runtime:M03-G05-PARTIAL-NATIVE-LINES-UNKNOWN",
+      "suite": "runtime",
+      "runner_case_id": "M03-G05-PARTIAL-NATIVE-LINES-UNKNOWN",
+      "source": "tests/development/native-returns.test.mts",
+      "capability_id": "FEATURE-M03-G05"
+    },
+    {
+      "id": "runtime:M03-G05-MISMATCHED-QUANTITY-UNKNOWN",
+      "suite": "runtime",
+      "runner_case_id": "M03-G05-MISMATCHED-QUANTITY-UNKNOWN",
+      "source": "tests/development/native-returns.test.mts",
+      "capability_id": "FEATURE-M03-G05"
+    },
+    {
+      "id": "runtime:M03-G05-PAGINATION-UNKNOWN",
+      "suite": "runtime",
+      "runner_case_id": "M03-G05-PAGINATION-UNKNOWN",
+      "source": "tests/development/native-returns.test.mts",
+      "capability_id": "FEATURE-M03-G05"
+    },
+    {
+      "id": "runtime:M03-G05-WRONG-API-VERSION-UNKNOWN",
+      "suite": "runtime",
+      "runner_case_id": "M03-G05-WRONG-API-VERSION-UNKNOWN",
+      "source": "tests/development/native-returns.test.mts",
+      "capability_id": "FEATURE-M03-G05"
+    },
+    {
+      "id": "runtime:M03-G05-REJECTION-NOT-RETRIED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G05-REJECTION-NOT-RETRIED",
+      "source": "tests/development/native-returns.test.mts",
+      "capability_id": "FEATURE-M03-G05"
+    },
+    {
+      "id": "runtime:M03-G05-MISMATCHED-SOURCE-NOTE-NOT-LINKED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G05-MISMATCHED-SOURCE-NOTE-NOT-LINKED",
+      "source": "tests/development/native-returns.test.mts",
+      "capability_id": "FEATURE-M03-G05"
+    },
+    {
+      "id": "runtime:M03-G05-STOP-BLOCKS-CREATE-NOT-LOOKUP",
+      "suite": "runtime",
+      "runner_case_id": "M03-G05-STOP-BLOCKS-CREATE-NOT-LOOKUP",
+      "source": "tests/development/native-returns.test.mts",
+      "capability_id": "FEATURE-M03-G05"
+    },
+    {
+      "id": "runtime:M03-G05-STOP-BEFORE-CREATE-NO-EFFECT",
+      "suite": "runtime",
+      "runner_case_id": "M03-G05-STOP-BEFORE-CREATE-NO-EFFECT",
+      "source": "tests/development/native-returns.test.mts",
+      "capability_id": "FEATURE-M03-G05"
+    },
+    {
+      "id": "runtime:M03-G05-UNKNOWN-LOOKUP-NOT-RESEND",
+      "suite": "runtime",
+      "runner_case_id": "M03-G05-UNKNOWN-LOOKUP-NOT-RESEND",
+      "source": "tests/development/native-returns.test.mts",
+      "capability_id": "FEATURE-M03-G05"
+    },
+    {
+      "id": "runtime:M03-G05-OMITS-INVENTED-IDEMPOTENCY-INPUT",
+      "suite": "runtime",
+      "runner_case_id": "M03-G05-OMITS-INVENTED-IDEMPOTENCY-INPUT",
+      "source": "tests/development/native-returns.test.mts",
+      "capability_id": "FEATURE-M03-G05"
+    },
+    {
+      "id": "runtime:M03-G05-LIVE-MODE-UNAVAILABLE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G05-LIVE-MODE-UNAVAILABLE",
+      "source": "tests/development/native-returns.test.mts",
+      "capability_id": "FEATURE-M03-G05"
+    },
+    {
+      "id": "runtime:M03-G05-NO-DEFAULT-NETWORK-TRANSPORT",
+      "suite": "runtime",
+      "runner_case_id": "M03-G05-NO-DEFAULT-NETWORK-TRANSPORT",
+      "source": "tests/development/native-returns.test.mts",
+      "capability_id": "FEATURE-M03-G05"
+    },
+    {
+      "id": "runtime:M03-G05-OPERATION-ID-NOT-CALLER-CONTROLLED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G05-OPERATION-ID-NOT-CALLER-CONTROLLED",
+      "source": "tests/development/native-returns.test.mts",
+      "capability_id": "FEATURE-M03-G05"
+    },
+    {
+      "id": "runtime:M03-G05-SOURCE-CHANGED-AFTER-APPROVAL-NO-CREATE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G05-SOURCE-CHANGED-AFTER-APPROVAL-NO-CREATE",
+      "source": "tests/development/native-returns.test.mts",
+      "capability_id": "FEATURE-M03-G05"
+    },
+    {
+      "id": "runtime:M03-G05-UNKNOWN-RECONCILES-AFTER-CUSTOMER-EXPIRY",
+      "suite": "runtime",
+      "runner_case_id": "M03-G05-UNKNOWN-RECONCILES-AFTER-CUSTOMER-EXPIRY",
+      "source": "tests/development/native-returns.test.mts",
+      "capability_id": "FEATURE-M03-G05"
+    },
+    {
+      "id": "runtime:M03-G05-NEW-EVIDENCE-REVIEW-BLOCKS-NATIVE-SEND",
+      "suite": "runtime",
+      "runner_case_id": "M03-G05-NEW-EVIDENCE-REVIEW-BLOCKS-NATIVE-SEND",
+      "source": "tests/development/native-returns.test.mts",
+      "capability_id": "FEATURE-M03-G05"
     }
   ],
   "protected_files": [
@@ -10844,6 +11521,7 @@
     "packages/commerce/contracts/commerce-manifest.v2.schema.json",
     "packages/commerce/contracts/execution-api.openapi.json",
     "packages/commerce/contracts/read-api.openapi.json",
+    "packages/commerce/contracts/return-intake.v1.json",
     "packages/commerce/contracts/worker-api.v1.json",
     "planning/capability-targets.json",
     "planning/goals.json",
@@ -10860,6 +11538,7 @@
     "tests/browser/execution_component.py",
     "tests/browser/manual_component.py",
     "tests/browser/manual_status.py",
+    "tests/browser/returns_component.py",
     "tests/development/action-approvals.test.mts",
     "tests/development/action-gateway.test.mts",
     "tests/development/agent-external.test.mts",
@@ -10885,12 +11564,19 @@
     "tests/development/helpers.mts",
     "tests/development/integration.test.mts",
     "tests/development/local-model-helpers.mts",
+    "tests/development/native-returns.test.mts",
     "tests/development/operation-receipts.test.mts",
     "tests/development/read-workflow-helpers.mts",
     "tests/development/reconciliation.test.mts",
     "tests/development/reliability-helpers.mts",
     "tests/development/reliability-integration.test.mts",
     "tests/development/reliability-review.test.mts",
+    "tests/development/return-eligibility.test.mts",
+    "tests/development/return-evidence.test.mts",
+    "tests/development/return-intake-helpers.mts",
+    "tests/development/return-portal-browser.test.mts",
+    "tests/development/return-portal.test.mts",
+    "tests/development/return-review.test.mts",
     "tests/development/skill-releases.test.mts",
     "tests/development/store.test.mts",
     "tests/development/webhook-inbox.test.mts",
@@ -10920,6 +11606,7 @@
     "tests/fixtures/release-benchmark/expected-benchmark.v1.json",
     "tests/fixtures/release-benchmark/expected-cohort.v1.json",
     "tests/fixtures/reliability/process.mts",
+    "tests/fixtures/return-intake/photo.v1.json",
     "tests/fixtures/support-envelope/README.md",
     "tests/fixtures/support-envelope/baseline.SYNTHETIC.json",
     "tests/fixtures/support-envelope/expected-proposal.v1.json",
