@@ -58,6 +58,9 @@ undeclared resources and duplicate query parameters are rejected.
 | `GET /v1/read-tasks/{task_id}` | Portable context with current order facts |
 | `POST /v1/read-tasks/{task_id}/actions` | Execute a permitted read with `{action, arguments}` |
 
+The canonical schema is `packages/commerce/contracts/read-api.openapi.json`; it is
+served by the runtime, not loaded from a test or developer-only directory.
+
 The permitted action names are `order.status`, `knowledge.search`, `knowledge.get`
 and `skill.read`. Their argument keys are respectively `{order_id}`, `{query}`,
 `{source_id, revision}`, and `{skill_id, resource, bundle_digest}`. Within a task,

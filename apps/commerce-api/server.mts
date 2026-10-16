@@ -40,7 +40,7 @@ export async function startCommerceServer(options:{kernel:CommerceKernel;caps:Ca
       if(typeof auth!=='string'||!auth.startsWith('Bearer '))throw new Error('ACCESS_DENIED');
       const scope=kernel.authenticate(auth.slice(7));
       if(req.method==='GET'&&url.pathname==='/v1/read-contract') {
-        send(res,200,JSON.parse(readFileSync(new URL('../../contracts/read-api.openapi.json',import.meta.url),'utf8')));
+        send(res,200,JSON.parse(readFileSync(new URL('../../packages/commerce/contracts/read-api.openapi.json',import.meta.url),'utf8')));
       } else if(req.method==='GET'&&/^\/v1\/orders\/[A-Za-z0-9_-]+\/status$/.test(url.pathname)) {
         send(res,200,reads.orderStatus(scope,id(url.pathname.split('/')[3])));
       } else if(req.method==='GET'&&url.pathname==='/v1/knowledge/search') {

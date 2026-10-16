@@ -37,7 +37,10 @@ runtime requirement that an order-status profile include the order.status action
    The canonical skill now lives within packages/commerce/skill-bundles, and default
    presentations are explicit startup configuration rather than imported test data.
    A new actual subprocess regression starts a package without a tests directory,
-   creates a read task and verifies the installed skill/profile and current order.
+   serves the packaged OpenAPI contract, creates a read task and verifies the installed
+   skill/profile and current order. An additional witnessed packaging failure returned
+   HTTP 500 for the public contract; its canonical file now also lives in the runtime
+   package. There are no duplicated skill or API-contract sources.
    The original failing test and all its assertions remain unchanged.
 
 ## Goal-specific deliberate faults

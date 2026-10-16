@@ -83,7 +83,7 @@ test('M01-G10-JSON-CONTRACT',()=>use(async f=>{
   for(const key of spec.components.schemas.Task.required)assert.ok(Object.hasOwn(task,key),key);
   for(const key of spec.components.schemas.OrderStatus.required)assert.ok(Object.hasOwn(task.facts,key),key);
   assert.equal(spec.security[0].bearerAuth.length,0);assert.equal(spec.components.schemas.Action.properties.action.enum.includes('order.refund'),false);
-  assert.deepEqual(spec,JSON.parse(readFileSync(new URL('../../contracts/read-api.openapi.json',import.meta.url),'utf8')));
+  assert.deepEqual(spec,JSON.parse(readFileSync(new URL('../../packages/commerce/contracts/read-api.openapi.json',import.meta.url),'utf8')));
 }));
 test('M01-G10-NO-SECRET-IN-RESPONSES',()=>use(async f=>{
   for(const path of ['/v1/read-contract','/v1/orders/'+f.order().id+'/status','/v1/profiles/default']) {
@@ -117,6 +117,8 @@ test('M01-G10-PACKAGED-BOOTSTRAP',async()=>{
     }
     assert.equal(ready,true,'minimal package must start without test fixtures');
     const run=JSON.parse(readFileSync(runFile,'utf8')),headers={authorization:'Bearer '+run.operators[0].bearer};
+    const contractResponse=await fetch(run.url+'/v1/read-contract',{headers,signal:AbortSignal.timeout(3000)});
+    assert.equal(contractResponse.status,200,'packaged runtime must serve its public contract');assert.equal((await contractResponse.json()).openapi,'3.1.0');
     const order=await(await fetch(run.url+'/v1/lookup?kind=order&external_id=ORD-1001',{headers,signal:AbortSignal.timeout(3000)})).json();
     const response=await fetch(run.url+'/v1/read-tasks',{method:'POST',headers:{...headers,'content-type':'application/json'},body:JSON.stringify({order_id:order.id,profile_id:'default'}),signal:AbortSignal.timeout(3000)});
     assert.equal(response.status,201);const task=await response.json();

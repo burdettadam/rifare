@@ -38,7 +38,7 @@
         "apps/commerce-api/server.mts",
         "apps/commerce-api/style.css",
         "clients/read_task.py",
-        "contracts/read-api.openapi.json",
+        "packages/commerce/contracts/read-api.openapi.json",
         "docs/BOOTSTRAP.md",
         "docs/CHARTER.md",
         "docs/COMMERCE-FOUNDATION.md",

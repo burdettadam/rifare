@@ -5738,7 +5738,7 @@
     "tools/test_runtime.py",
     "tools/verify.py",
     "work/accepted-goals.json",
-    "contracts/read-api.openapi.json",
+    "packages/commerce/contracts/read-api.openapi.json",
     "tests/fixtures/read-workflows/shopify-order.json",
     "tests/fixtures/read-workflows/presentations.json",
     "tests/development/read-workflow-helpers.mts"
