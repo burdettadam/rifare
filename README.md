@@ -3,20 +3,20 @@
 Merchant-owned commerce operations with tailorable skills and independently
 replaceable platforms, agents and models.
 
-**Current checkpoint: twenty-five commerce goals have local diagnostic implementations.**
-The latest five add structured policy lifecycles, validated skill manifests,
-deterministic layered settings, a manual configuration editor with simulation,
-and approved instruction/resource bundle installation. Existing portable reads,
-REST/MCP interfaces, provider adapters, permissions and exact money remain intact.
+**Current checkpoint: thirty commerce goals have local diagnostic implementations.**
+The latest five add immutable case configuration, controlled skill release and
+revocation, a shared reversible action gateway, exact-preview approvals, and
+raw-byte authenticated webhook persistence. Previous policies, settings, portable
+reads, provider adapters, roles and exact money remain intact.
 
 **This is still the SQLite diagnostic implementation.** PostgreSQL/React,
 live Shopify/model qualification and the actual served-browser journey remain
 open. An actual local-model probe found no installed service. Protocol fixtures
 and arithmetic evaluations are labeled synthetic; they do not qualify a model.
 
-[Implementation and commands](docs/POLICY-CUSTOMIZATION.md) ·
-[Current review](docs/POLICY-CUSTOMIZATION-REVIEW.md) ·
-[Delegated authority](docs/decisions/0016-policy-customization-and-installation.md) ·
+[Implementation and commands](docs/CASE-EXECUTION.md) ·
+[Current review](docs/CASE-EXECUTION-REVIEW.md) ·
+[Delegated authority](docs/decisions/0017-case-pins-gateway-and-inbox.md) ·
 [Earlier model and policy foundations](docs/MODEL-POLICY-FOUNDATIONS.md).
 Full goal acceptance remains separate from approved local integration.
 
@@ -63,6 +63,16 @@ Its output identifies the loopback URL and private local session file. Credentia
 are not printed or embedded in the UI. Use that session to inspect the two
 synthetic stores. See the foundation guide for the optional external wrapping key.
 
+For an isolated in-memory case/approval demonstration:
+
+```sh
+node --experimental-strip-types tools/demo-execution.mts
+node --experimental-strip-types tools/demo-execution.mts --serve
+```
+
+The second command prints the `/execution` URL and private temporary credential
+file. Only a synthetic local case-plan marker can change; no money is moved.
+
 `npm run dev` exits 2 until the target React/PostgreSQL setup is qualified.
 The smoke profile does not silently replace that target.
 
@@ -95,11 +105,11 @@ custom Git command protocol or mandatory agent provider has been added.
 
 ## Verified development boundary
 
-The previous checkpoint had 945 checks. This batch adds 114, for 1059 registered
-checks: 506 Python/helper, 525 native runtime, 15 unit harness, 7 database harness
+The previous checkpoint had 1059 checks. This batch adds 108, for 1167 registered
+checks: 506 Python/helper, 633 native runtime, 15 unit harness, 7 database harness
 and 6 retained browser-component checks. Final source-bound execution and
 restoration results are recorded in the separate delivery report. The actual
-served-browser and installed-model qualifications remain separate and open.
+served-browser, target-stack and installed-model qualifications remain open.
 
 Controllers remain read-only and do not authenticate people, sandbox native code,
 merge branches or authorize releases. Models and external agents remain replaceable
@@ -110,7 +120,7 @@ by design; none has been falsely counted as an independently qualified integrati
 The project ZIP contains a standalone `.git` history. The bundle can be cloned:
 
 ```sh
-git clone -b main /path/to/Rifare-customization.bundle Rifare
+git clone -b main /path/to/Rifare-execution-controls.bundle Rifare
 cd Rifare
 git remote remove origin
 python3 tools/verify.py

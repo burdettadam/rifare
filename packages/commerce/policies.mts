@@ -40,6 +40,14 @@ export class Policies {
   }
   get(scope:Scope,policyId:string,version:number){const s=this.#k.authorize(scope,'policy.read');const r=this.#row(s,policyId,version);
     return {policy_id:r.policy_id,version:r.version,digest:r.digest,state:r.state,body:JSON.parse(r.body),author:r.author,reviewer:r.reviewer,effective_at:r.effective_at,execution_authorized:false};}
+  published(scope:Scope,policyId:string,version?:number){
+    const s=this.#k.require(scope);
+    // A verified customer may receive only published rules through a scoped case.
+    if(s.role!=='customer')this.#k.authorize(scope,'policy.read');
+    const r=version===undefined?this.#current(s,policyId):this.#row(s,policyId,version);
+    if(r.state!=='published'||r.effective_at>this.#k.clock())throw new Error('POLICY_REVOKED');
+    return {policy_id:r.policy_id,version:r.version,digest:r.digest,body:JSON.parse(r.body),effective_at:r.effective_at};
+  }
   test(scope:Scope,policyId:string,version:number,expectedDigest:string){
     const k=this.#k,s=k.authorize(scope,'policy.test');
     return k.transaction(()=>{

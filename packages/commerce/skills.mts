@@ -63,7 +63,11 @@ export class Skills {
     const previous=this.#kernel.db.prepare('SELECT 1 FROM commerce_skill_installations WHERE tenant_id=? AND store_id=? AND skill_id=?').get(s.tenant_id,s.store_id,checked.id);
     if(!v2&&previous)throw new Error('SKILL_DOWNGRADE_DENIED');
     if(v2){this.#kernel.authorize(scope,'skill.install');if(!approvalId)throw new Error('SKILL_APPROVAL_REQUIRED');this.#approval(s,checked,approvalId);}
+    this.#notRevoked(s,checked);
     this.#kernel.transaction(()=>{
+    this.#kernel.authorize(scope,'skill.write');this.#notRevoked(s,checked);
+    if(v2){this.#kernel.authorize(scope,'skill.install');this.#approval(s,checked,approvalId!);}
+    this.#kernel.db.prepare('INSERT OR IGNORE INTO commerce_skill_archive VALUES(?,?,?,?,?,?)').run(s.tenant_id,s.store_id,checked.id,checked.digest,JSON.stringify(checked),v2?approvalId!:null);
     this.#kernel.db.prepare(`INSERT INTO commerce_skills VALUES(?,?,?,?,?) ON CONFLICT(tenant_id,store_id,id)
       DO UPDATE SET bundle_digest=excluded.bundle_digest,bundle=excluded.bundle`)
       .run(s.tenant_id,s.store_id,checked.id,checked.digest,JSON.stringify(checked));
@@ -78,12 +82,27 @@ export class Skills {
     const member=this.#kernel.db.prepare('SELECT * FROM commerce_members WHERE tenant_id=? AND store_id=? AND actor_id=? AND active=1').get(s.tenant_id,s.store_id,a.approver) as Row;
     if(!member||!permissionDecision(this.#kernel.db,member,'skill.approve').allowed)throw new Error('SKILL_APPROVAL_REQUIRED');
   }
+  snapshot(scope:Scope,skillId:string,expectedDigest:string):SkillBundle {
+    const k=this.#kernel,s=k.authorize(scope,'skill.read');id(skillId);
+    if(typeof expectedDigest!=='string'||!(/^[a-f0-9]{64}$/).test(expectedDigest))throw new Error('INVALID_SKILL');
+    const row=k.db.prepare('SELECT * FROM commerce_skill_archive WHERE tenant_id=? AND store_id=? AND skill_id=? AND bundle_digest=?').get(s.tenant_id,s.store_id,skillId,expectedDigest) as Row;
+    if(!row)throw new Error('SKILL_PIN_MISSING');
+    const saved=JSON.parse(row.bundle),b=checkedBundle(saved.files);
+    if(b.id!==skillId||b.digest!==expectedDigest||saved.digest!==b.digest)throw new Error('INVALID_SKILL');
+    this.#notRevoked(s,b);
+    if(JSON.parse(b.files['commerce-manifest.json']).schema_version===2)this.#approval(s,b,row.approval_id);
+    return b;
+  }
+  #notRevoked(s:Row,b:SkillBundle) {
+    if(this.#kernel.db.prepare('SELECT 1 FROM commerce_skill_revocations WHERE tenant_id=? AND store_id=? AND skill_id=? AND bundle_digest=?').get(s.tenant_id,s.store_id,b.id,b.digest))throw new Error('SKILL_REVOKED');
+  }
   #bundle(scope:Scope,skillId:string):SkillBundle {
     const s=this.#kernel.require(scope); id(skillId);
     const row=this.#kernel.db.prepare('SELECT * FROM commerce_skills WHERE tenant_id=? AND store_id=? AND id=?').get(s.tenant_id,s.store_id,skillId) as Row;
     if(!row)throw new Error('NOT_FOUND');
     const saved=JSON.parse(row.bundle),checked=checkedBundle(saved.files);
     if(checked.id!==skillId||checked.digest!==row.bundle_digest||saved.digest!==checked.digest)throw new Error('INVALID_SKILL');
+    this.#notRevoked(s,checked);
     if(JSON.parse(checked.files['commerce-manifest.json']).schema_version===2){
       const installation=this.#kernel.db.prepare('SELECT * FROM commerce_skill_installations WHERE tenant_id=? AND store_id=? AND skill_id=?').get(s.tenant_id,s.store_id,skillId) as Row;
       if(!installation||installation.bundle_digest!==checked.digest)throw new Error('SKILL_APPROVAL_REQUIRED');this.#approval(s,checked,installation.approval_id);

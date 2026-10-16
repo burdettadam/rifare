@@ -1,6 +1,6 @@
 {
-  "source_file_count": 581,
-  "source_count_reason": "Add structured policy, manifest, profile composition/editor, safe installation and bound regression checks; retain every earlier path and behavioral contract.",
+  "source_file_count": 609,
+  "source_count_reason": "Add immutable cases, controlled skill release, one-use approved synthetic actions, durable signed inbox, and bound regressions; retain every earlier path and behavioral obligation.",
   "component_ids": [
     "git-agent-adaptations",
     "rifare-developer-helpers",

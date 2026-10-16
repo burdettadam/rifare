@@ -274,6 +274,46 @@
       "contract_files": [
         "goals/M02/M02-G07.md"
       ]
+    },
+    {
+      "id": "FEATURE-M02-G08",
+      "enabled": true,
+      "qualification": "retained_diagnostic_not_accepted",
+      "contract_files": [
+        "goals/M02/M02-G08.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M02-G09",
+      "enabled": true,
+      "qualification": "retained_diagnostic_not_accepted",
+      "contract_files": [
+        "goals/M02/M02-G09.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M02-G10",
+      "enabled": true,
+      "qualification": "retained_diagnostic_not_accepted",
+      "contract_files": [
+        "goals/M02/M02-G10.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M02-G11",
+      "enabled": true,
+      "qualification": "retained_diagnostic_not_accepted",
+      "contract_files": [
+        "goals/M02/M02-G11.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M02-G12",
+      "enabled": true,
+      "qualification": "retained_diagnostic_not_accepted",
+      "contract_files": [
+        "goals/M02/M02-G12.md"
+      ]
     }
   ],
   "tests": [
@@ -7689,6 +7729,762 @@
       "runner_case_id": "M02-G07-DECLARED-RESOURCE-SYMLINK-BLOCKED",
       "source": "tests/development/skill-installer.test.mts",
       "capability_id": "FEATURE-M02-G07"
+    },
+    {
+      "id": "runtime:CASE-M02-G08-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M02-G08-01",
+      "source": "tests/development/case-configurations.test.mts",
+      "capability_id": "FEATURE-M02-G08"
+    },
+    {
+      "id": "runtime:CASE-M02-G08-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M02-G08-02",
+      "source": "tests/development/case-configurations.test.mts",
+      "capability_id": "FEATURE-M02-G08"
+    },
+    {
+      "id": "runtime:CASE-M02-G08-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M02-G08-03",
+      "source": "tests/development/case-configurations.test.mts",
+      "capability_id": "FEATURE-M02-G08"
+    },
+    {
+      "id": "runtime:M02-G08-ARCHIVED-SKILL-NOT-LATEST",
+      "suite": "runtime",
+      "runner_case_id": "M02-G08-ARCHIVED-SKILL-NOT-LATEST",
+      "source": "tests/development/case-configurations.test.mts",
+      "capability_id": "FEATURE-M02-G08"
+    },
+    {
+      "id": "runtime:M02-G08-MISSING-SKILL-PIN",
+      "suite": "runtime",
+      "runner_case_id": "M02-G08-MISSING-SKILL-PIN",
+      "source": "tests/development/case-configurations.test.mts",
+      "capability_id": "FEATURE-M02-G08"
+    },
+    {
+      "id": "runtime:M02-G08-REVOKED-SKILL-STOPS",
+      "suite": "runtime",
+      "runner_case_id": "M02-G08-REVOKED-SKILL-STOPS",
+      "source": "tests/development/case-configurations.test.mts",
+      "capability_id": "FEATURE-M02-G08"
+    },
+    {
+      "id": "runtime:M02-G08-REVOKED-POLICY-STOPS",
+      "suite": "runtime",
+      "runner_case_id": "M02-G08-REVOKED-POLICY-STOPS",
+      "source": "tests/development/case-configurations.test.mts",
+      "capability_id": "FEATURE-M02-G08"
+    },
+    {
+      "id": "runtime:M02-G08-CURRENT-SEMANTICS-NEED-MIGRATION",
+      "suite": "runtime",
+      "runner_case_id": "M02-G08-CURRENT-SEMANTICS-NEED-MIGRATION",
+      "source": "tests/development/case-configurations.test.mts",
+      "capability_id": "FEATURE-M02-G08"
+    },
+    {
+      "id": "runtime:M02-G08-MIGRATION-EXPLICIT-REVISION",
+      "suite": "runtime",
+      "runner_case_id": "M02-G08-MIGRATION-EXPLICIT-REVISION",
+      "source": "tests/development/case-configurations.test.mts",
+      "capability_id": "FEATURE-M02-G08"
+    },
+    {
+      "id": "runtime:M02-G08-MIGRATION-CAS",
+      "suite": "runtime",
+      "runner_case_id": "M02-G08-MIGRATION-CAS",
+      "source": "tests/development/case-configurations.test.mts",
+      "capability_id": "FEATURE-M02-G08"
+    },
+    {
+      "id": "runtime:M02-G08-AGENT-CANNOT-MIGRATE",
+      "suite": "runtime",
+      "runner_case_id": "M02-G08-AGENT-CANNOT-MIGRATE",
+      "source": "tests/development/case-configurations.test.mts",
+      "capability_id": "FEATURE-M02-G08"
+    },
+    {
+      "id": "runtime:M02-G08-CROSS-TENANT-NONDISCLOSURE",
+      "suite": "runtime",
+      "runner_case_id": "M02-G08-CROSS-TENANT-NONDISCLOSURE",
+      "source": "tests/development/case-configurations.test.mts",
+      "capability_id": "FEATURE-M02-G08"
+    },
+    {
+      "id": "runtime:M02-G08-CUSTOMER-REASSIGNMENT",
+      "suite": "runtime",
+      "runner_case_id": "M02-G08-CUSTOMER-REASSIGNMENT",
+      "source": "tests/development/case-configurations.test.mts",
+      "capability_id": "FEATURE-M02-G08"
+    },
+    {
+      "id": "runtime:M02-G08-CONNECTION-CHANGE-REPREVIEW",
+      "suite": "runtime",
+      "runner_case_id": "M02-G08-CONNECTION-CHANGE-REPREVIEW",
+      "source": "tests/development/case-configurations.test.mts",
+      "capability_id": "FEATURE-M02-G08"
+    },
+    {
+      "id": "runtime:M02-G08-VERIFICATION-REVOCATION",
+      "suite": "runtime",
+      "runner_case_id": "M02-G08-VERIFICATION-REVOCATION",
+      "source": "tests/development/case-configurations.test.mts",
+      "capability_id": "FEATURE-M02-G08"
+    },
+    {
+      "id": "runtime:M02-G08-STAFF-CASE-NOT-CUSTOMER-PROOF",
+      "suite": "runtime",
+      "runner_case_id": "M02-G08-STAFF-CASE-NOT-CUSTOMER-PROOF",
+      "source": "tests/development/case-configurations.test.mts",
+      "capability_id": "FEATURE-M02-G08"
+    },
+    {
+      "id": "runtime:M02-G08-SNAPSHOT-CANNOT-GRANT-SCOPE",
+      "suite": "runtime",
+      "runner_case_id": "M02-G08-SNAPSHOT-CANNOT-GRANT-SCOPE",
+      "source": "tests/development/case-configurations.test.mts",
+      "capability_id": "FEATURE-M02-G08"
+    },
+    {
+      "id": "runtime:M02-G08-REPEATED-ID-NO-OVERWRITE",
+      "suite": "runtime",
+      "runner_case_id": "M02-G08-REPEATED-ID-NO-OVERWRITE",
+      "source": "tests/development/case-configurations.test.mts",
+      "capability_id": "FEATURE-M02-G08"
+    },
+    {
+      "id": "runtime:CASE-M02-G09-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M02-G09-01",
+      "source": "tests/development/skill-releases.test.mts",
+      "capability_id": "FEATURE-M02-G09"
+    },
+    {
+      "id": "runtime:CASE-M02-G09-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M02-G09-02",
+      "source": "tests/development/skill-releases.test.mts",
+      "capability_id": "FEATURE-M02-G09"
+    },
+    {
+      "id": "runtime:CASE-M02-G09-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M02-G09-03",
+      "source": "tests/development/skill-releases.test.mts",
+      "capability_id": "FEATURE-M02-G09"
+    },
+    {
+      "id": "runtime:M02-G09-NO-SELF-REVIEW",
+      "suite": "runtime",
+      "runner_case_id": "M02-G09-NO-SELF-REVIEW",
+      "source": "tests/development/skill-releases.test.mts",
+      "capability_id": "FEATURE-M02-G09"
+    },
+    {
+      "id": "runtime:M02-G09-REVIEW-REQUIRED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G09-REVIEW-REQUIRED",
+      "source": "tests/development/skill-releases.test.mts",
+      "capability_id": "FEATURE-M02-G09"
+    },
+    {
+      "id": "runtime:M02-G09-EVALUATION-REQUIRED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G09-EVALUATION-REQUIRED",
+      "source": "tests/development/skill-releases.test.mts",
+      "capability_id": "FEATURE-M02-G09"
+    },
+    {
+      "id": "runtime:M02-G09-REVOKED-REVIEWER-BLOCKS",
+      "suite": "runtime",
+      "runner_case_id": "M02-G09-REVOKED-REVIEWER-BLOCKS",
+      "source": "tests/development/skill-releases.test.mts",
+      "capability_id": "FEATURE-M02-G09"
+    },
+    {
+      "id": "runtime:M02-G09-CANARY-NEEDS-SAFE-FALLBACK",
+      "suite": "runtime",
+      "runner_case_id": "M02-G09-CANARY-NEEDS-SAFE-FALLBACK",
+      "source": "tests/development/skill-releases.test.mts",
+      "capability_id": "FEATURE-M02-G09"
+    },
+    {
+      "id": "runtime:M02-G09-CANARY-DETERMINISTIC",
+      "suite": "runtime",
+      "runner_case_id": "M02-G09-CANARY-DETERMINISTIC",
+      "source": "tests/development/skill-releases.test.mts",
+      "capability_id": "FEATURE-M02-G09"
+    },
+    {
+      "id": "runtime:M02-G09-ACTIVATION-CAS",
+      "suite": "runtime",
+      "runner_case_id": "M02-G09-ACTIVATION-CAS",
+      "source": "tests/development/skill-releases.test.mts",
+      "capability_id": "FEATURE-M02-G09"
+    },
+    {
+      "id": "runtime:M02-G09-CROSS-STORE-RELEASE",
+      "suite": "runtime",
+      "runner_case_id": "M02-G09-CROSS-STORE-RELEASE",
+      "source": "tests/development/skill-releases.test.mts",
+      "capability_id": "FEATURE-M02-G09"
+    },
+    {
+      "id": "runtime:M02-G09-PINNED-SKILL-READ-REVOKED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G09-PINNED-SKILL-READ-REVOKED",
+      "source": "tests/development/skill-releases.test.mts",
+      "capability_id": "FEATURE-M02-G09"
+    },
+    {
+      "id": "runtime:M02-G09-REVOKED-ROLLBACK-TARGET",
+      "suite": "runtime",
+      "runner_case_id": "M02-G09-REVOKED-ROLLBACK-TARGET",
+      "source": "tests/development/skill-releases.test.mts",
+      "capability_id": "FEATURE-M02-G09"
+    },
+    {
+      "id": "runtime:M02-G09-ROLLBACK-AUDITED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G09-ROLLBACK-AUDITED",
+      "source": "tests/development/skill-releases.test.mts",
+      "capability_id": "FEATURE-M02-G09"
+    },
+    {
+      "id": "runtime:CASE-M02-G10-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M02-G10-01",
+      "source": "tests/development/action-gateway.test.mts",
+      "capability_id": "FEATURE-M02-G10"
+    },
+    {
+      "id": "runtime:CASE-M02-G10-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M02-G10-02",
+      "source": "tests/development/action-gateway.test.mts",
+      "capability_id": "FEATURE-M02-G10"
+    },
+    {
+      "id": "runtime:CASE-M02-G10-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M02-G10-03",
+      "source": "tests/development/action-gateway.test.mts",
+      "capability_id": "FEATURE-M02-G10"
+    },
+    {
+      "id": "runtime:M02-G10-CUSTOMER-CANNOT-EXECUTE-WITH-READ-PROOF",
+      "suite": "runtime",
+      "runner_case_id": "M02-G10-CUSTOMER-CANNOT-EXECUTE-WITH-READ-PROOF",
+      "source": "tests/development/action-gateway.test.mts",
+      "capability_id": "FEATURE-M02-G10"
+    },
+    {
+      "id": "runtime:M02-G10-UNVERIFIED-CASE-DENIED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G10-UNVERIFIED-CASE-DENIED",
+      "source": "tests/development/action-gateway.test.mts",
+      "capability_id": "FEATURE-M02-G10"
+    },
+    {
+      "id": "runtime:M02-G10-REVOKED-CUSTOMER-PROOF",
+      "suite": "runtime",
+      "runner_case_id": "M02-G10-REVOKED-CUSTOMER-PROOF",
+      "source": "tests/development/action-gateway.test.mts",
+      "capability_id": "FEATURE-M02-G10"
+    },
+    {
+      "id": "runtime:M02-G10-POLICY-EXCLUSION",
+      "suite": "runtime",
+      "runner_case_id": "M02-G10-POLICY-EXCLUSION",
+      "source": "tests/development/action-gateway.test.mts",
+      "capability_id": "FEATURE-M02-G10"
+    },
+    {
+      "id": "runtime:M02-G10-DISABLED-CAPABILITY",
+      "suite": "runtime",
+      "runner_case_id": "M02-G10-DISABLED-CAPABILITY",
+      "source": "tests/development/action-gateway.test.mts",
+      "capability_id": "FEATURE-M02-G10"
+    },
+    {
+      "id": "runtime:M02-G10-REVOKED-EXECUTION-PERMISSION",
+      "suite": "runtime",
+      "runner_case_id": "M02-G10-REVOKED-EXECUTION-PERMISSION",
+      "source": "tests/development/action-gateway.test.mts",
+      "capability_id": "FEATURE-M02-G10"
+    },
+    {
+      "id": "runtime:M02-G10-RESTRICTED-RESOURCE",
+      "suite": "runtime",
+      "runner_case_id": "M02-G10-RESTRICTED-RESOURCE",
+      "source": "tests/development/action-gateway.test.mts",
+      "capability_id": "FEATURE-M02-G10"
+    },
+    {
+      "id": "runtime:M02-G10-MCP-WRITE-MISMATCH",
+      "suite": "runtime",
+      "runner_case_id": "M02-G10-MCP-WRITE-MISMATCH",
+      "source": "tests/development/action-gateway.test.mts",
+      "capability_id": "FEATURE-M02-G10"
+    },
+    {
+      "id": "runtime:M02-G10-MCP-NO-APPROVAL-TOOL",
+      "suite": "runtime",
+      "runner_case_id": "M02-G10-MCP-NO-APPROVAL-TOOL",
+      "source": "tests/development/action-gateway.test.mts",
+      "capability_id": "FEATURE-M02-G10"
+    },
+    {
+      "id": "runtime:M02-G10-MCP-GRANT-CASE-BOUND",
+      "suite": "runtime",
+      "runner_case_id": "M02-G10-MCP-GRANT-CASE-BOUND",
+      "source": "tests/development/action-gateway.test.mts",
+      "capability_id": "FEATURE-M02-G10"
+    },
+    {
+      "id": "runtime:M02-G10-MCP-PREVIEW-CASE-BOUND",
+      "suite": "runtime",
+      "runner_case_id": "M02-G10-MCP-PREVIEW-CASE-BOUND",
+      "source": "tests/development/action-gateway.test.mts",
+      "capability_id": "FEATURE-M02-G10"
+    },
+    {
+      "id": "runtime:M02-G10-MCP-AUDIENCE-BOUND",
+      "suite": "runtime",
+      "runner_case_id": "M02-G10-MCP-AUDIENCE-BOUND",
+      "source": "tests/development/action-gateway.test.mts",
+      "capability_id": "FEATURE-M02-G10"
+    },
+    {
+      "id": "runtime:M02-G10-MCP-REVOKED-PARENT",
+      "suite": "runtime",
+      "runner_case_id": "M02-G10-MCP-REVOKED-PARENT",
+      "source": "tests/development/action-gateway.test.mts",
+      "capability_id": "FEATURE-M02-G10"
+    },
+    {
+      "id": "runtime:M02-G10-MCP-EXPIRED-GRANT",
+      "suite": "runtime",
+      "runner_case_id": "M02-G10-MCP-EXPIRED-GRANT",
+      "source": "tests/development/action-gateway.test.mts",
+      "capability_id": "FEATURE-M02-G10"
+    },
+    {
+      "id": "runtime:M02-G10-MCP-NO-GRANT-EXPANSION",
+      "suite": "runtime",
+      "runner_case_id": "M02-G10-MCP-NO-GRANT-EXPANSION",
+      "source": "tests/development/action-gateway.test.mts",
+      "capability_id": "FEATURE-M02-G10"
+    },
+    {
+      "id": "runtime:M02-G10-REVERSIBLE-MARKER-NO-ORDER-MUTATION",
+      "suite": "runtime",
+      "runner_case_id": "M02-G10-REVERSIBLE-MARKER-NO-ORDER-MUTATION",
+      "source": "tests/development/action-gateway.test.mts",
+      "capability_id": "FEATURE-M02-G10"
+    },
+    {
+      "id": "runtime:M02-G10-HTTP-APPROVE-AND-EXECUTE",
+      "suite": "runtime",
+      "runner_case_id": "M02-G10-HTTP-APPROVE-AND-EXECUTE",
+      "source": "tests/development/action-gateway.test.mts",
+      "capability_id": "FEATURE-M02-G10"
+    },
+    {
+      "id": "runtime:M02-G10-MCP-HTTP-SYNTHETIC-EXECUTION",
+      "suite": "runtime",
+      "runner_case_id": "M02-G10-MCP-HTTP-SYNTHETIC-EXECUTION",
+      "source": "tests/development/action-gateway.test.mts",
+      "capability_id": "FEATURE-M02-G10"
+    },
+    {
+      "id": "runtime:CASE-M02-G11-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M02-G11-01",
+      "source": "tests/development/action-approvals.test.mts",
+      "capability_id": "FEATURE-M02-G11"
+    },
+    {
+      "id": "runtime:CASE-M02-G11-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M02-G11-02",
+      "source": "tests/development/action-approvals.test.mts",
+      "capability_id": "FEATURE-M02-G11"
+    },
+    {
+      "id": "runtime:CASE-M02-G11-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M02-G11-03",
+      "source": "tests/development/action-approvals.test.mts",
+      "capability_id": "FEATURE-M02-G11"
+    },
+    {
+      "id": "runtime:M02-G11-AGENT-FAKE-APPROVAL",
+      "suite": "runtime",
+      "runner_case_id": "M02-G11-AGENT-FAKE-APPROVAL",
+      "source": "tests/development/action-approvals.test.mts",
+      "capability_id": "FEATURE-M02-G11"
+    },
+    {
+      "id": "runtime:M02-G11-SELF-APPROVAL-BLOCKED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G11-SELF-APPROVAL-BLOCKED",
+      "source": "tests/development/action-approvals.test.mts",
+      "capability_id": "FEATURE-M02-G11"
+    },
+    {
+      "id": "runtime:M02-G11-CROSS-TENANT-PREVIEW",
+      "suite": "runtime",
+      "runner_case_id": "M02-G11-CROSS-TENANT-PREVIEW",
+      "source": "tests/development/action-approvals.test.mts",
+      "capability_id": "FEATURE-M02-G11"
+    },
+    {
+      "id": "runtime:M02-G11-CURRENCY-CHANGE",
+      "suite": "runtime",
+      "runner_case_id": "M02-G11-CURRENCY-CHANGE",
+      "source": "tests/development/action-approvals.test.mts",
+      "capability_id": "FEATURE-M02-G11"
+    },
+    {
+      "id": "runtime:M02-G11-CONFIGURATION-MIGRATION",
+      "suite": "runtime",
+      "runner_case_id": "M02-G11-CONFIGURATION-MIGRATION",
+      "source": "tests/development/action-approvals.test.mts",
+      "capability_id": "FEATURE-M02-G11"
+    },
+    {
+      "id": "runtime:M02-G11-EXPIRED-PREVIEW",
+      "suite": "runtime",
+      "runner_case_id": "M02-G11-EXPIRED-PREVIEW",
+      "source": "tests/development/action-approvals.test.mts",
+      "capability_id": "FEATURE-M02-G11"
+    },
+    {
+      "id": "runtime:M02-G11-APPROVER-DEMOTED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G11-APPROVER-DEMOTED",
+      "source": "tests/development/action-approvals.test.mts",
+      "capability_id": "FEATURE-M02-G11"
+    },
+    {
+      "id": "runtime:M02-G11-APPROVAL-REVOKED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G11-APPROVAL-REVOKED",
+      "source": "tests/development/action-approvals.test.mts",
+      "capability_id": "FEATURE-M02-G11"
+    },
+    {
+      "id": "runtime:M02-G11-EXACT-DIGEST-REQUIRED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G11-EXACT-DIGEST-REQUIRED",
+      "source": "tests/development/action-approvals.test.mts",
+      "capability_id": "FEATURE-M02-G11"
+    },
+    {
+      "id": "runtime:M02-G11-DB-FAILURE-ROLLS-BACK-CONSUMPTION",
+      "suite": "runtime",
+      "runner_case_id": "M02-G11-DB-FAILURE-ROLLS-BACK-CONSUMPTION",
+      "source": "tests/development/action-approvals.test.mts",
+      "capability_id": "FEATURE-M02-G11"
+    },
+    {
+      "id": "runtime:M02-G11-EFFECT-VERSION-INVALIDATES-OTHER-PREVIEW",
+      "suite": "runtime",
+      "runner_case_id": "M02-G11-EFFECT-VERSION-INVALIDATES-OTHER-PREVIEW",
+      "source": "tests/development/action-approvals.test.mts",
+      "capability_id": "FEATURE-M02-G11"
+    },
+    {
+      "id": "runtime:M02-G11-REPEAT-CALL-NEVER-DOUBLE-EFFECT",
+      "suite": "runtime",
+      "runner_case_id": "M02-G11-REPEAT-CALL-NEVER-DOUBLE-EFFECT",
+      "source": "tests/development/action-approvals.test.mts",
+      "capability_id": "FEATURE-M02-G11"
+    },
+    {
+      "id": "runtime:M02-G11-NO-MODEL-SELECTED-MONEY",
+      "suite": "runtime",
+      "runner_case_id": "M02-G11-NO-MODEL-SELECTED-MONEY",
+      "source": "tests/development/action-approvals.test.mts",
+      "capability_id": "FEATURE-M02-G11"
+    },
+    {
+      "id": "runtime:M02-G11-APPROVAL-BOUND-TO-ONE-PREVIEW",
+      "suite": "runtime",
+      "runner_case_id": "M02-G11-APPROVAL-BOUND-TO-ONE-PREVIEW",
+      "source": "tests/development/action-approvals.test.mts",
+      "capability_id": "FEATURE-M02-G11"
+    },
+    {
+      "id": "runtime:M02-G11-RECEIPT-TAMPER",
+      "suite": "runtime",
+      "runner_case_id": "M02-G11-RECEIPT-TAMPER",
+      "source": "tests/development/action-approvals.test.mts",
+      "capability_id": "FEATURE-M02-G11"
+    },
+    {
+      "id": "runtime:CASE-M02-G12-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M02-G12-01",
+      "source": "tests/development/webhook-inbox.test.mts",
+      "capability_id": "FEATURE-M02-G12"
+    },
+    {
+      "id": "runtime:CASE-M02-G12-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M02-G12-02",
+      "source": "tests/development/webhook-inbox.test.mts",
+      "capability_id": "FEATURE-M02-G12"
+    },
+    {
+      "id": "runtime:CASE-M02-G12-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M02-G12-03",
+      "source": "tests/development/webhook-inbox.test.mts",
+      "capability_id": "FEATURE-M02-G12"
+    },
+    {
+      "id": "runtime:M02-G12-EXACT-RAW-BYTES-PRESERVED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G12-EXACT-RAW-BYTES-PRESERVED",
+      "source": "tests/development/webhook-inbox.test.mts",
+      "capability_id": "FEATURE-M02-G12"
+    },
+    {
+      "id": "runtime:M02-G12-DUPLICATE-DELIVERY",
+      "suite": "runtime",
+      "runner_case_id": "M02-G12-DUPLICATE-DELIVERY",
+      "source": "tests/development/webhook-inbox.test.mts",
+      "capability_id": "FEATURE-M02-G12"
+    },
+    {
+      "id": "runtime:M02-G12-SAME-ID-DIFFERENT-BODY",
+      "suite": "runtime",
+      "runner_case_id": "M02-G12-SAME-ID-DIFFERENT-BODY",
+      "source": "tests/development/webhook-inbox.test.mts",
+      "capability_id": "FEATURE-M02-G12"
+    },
+    {
+      "id": "runtime:M02-G12-SYNTHETIC-ROUTE-BOUND-SIGNATURE",
+      "suite": "runtime",
+      "runner_case_id": "M02-G12-SYNTHETIC-ROUTE-BOUND-SIGNATURE",
+      "source": "tests/development/webhook-inbox.test.mts",
+      "capability_id": "FEATURE-M02-G12"
+    },
+    {
+      "id": "runtime:M02-G12-HEADER-TENANT-CANNOT-ROUTE",
+      "suite": "runtime",
+      "runner_case_id": "M02-G12-HEADER-TENANT-CANNOT-ROUTE",
+      "source": "tests/development/webhook-inbox.test.mts",
+      "capability_id": "FEATURE-M02-G12"
+    },
+    {
+      "id": "runtime:M02-G12-DUPLICATE-HEADER-CASE",
+      "suite": "runtime",
+      "runner_case_id": "M02-G12-DUPLICATE-HEADER-CASE",
+      "source": "tests/development/webhook-inbox.test.mts",
+      "capability_id": "FEATURE-M02-G12"
+    },
+    {
+      "id": "runtime:M02-G12-INVALID-BASE64",
+      "suite": "runtime",
+      "runner_case_id": "M02-G12-INVALID-BASE64",
+      "source": "tests/development/webhook-inbox.test.mts",
+      "capability_id": "FEATURE-M02-G12"
+    },
+    {
+      "id": "runtime:M02-G12-EXPIRED-SIGNED-TIMESTAMP",
+      "suite": "runtime",
+      "runner_case_id": "M02-G12-EXPIRED-SIGNED-TIMESTAMP",
+      "source": "tests/development/webhook-inbox.test.mts",
+      "capability_id": "FEATURE-M02-G12"
+    },
+    {
+      "id": "runtime:M02-G12-PAYLOAD-SIZE-BOUND",
+      "suite": "runtime",
+      "runner_case_id": "M02-G12-PAYLOAD-SIZE-BOUND",
+      "source": "tests/development/webhook-inbox.test.mts",
+      "capability_id": "FEATURE-M02-G12"
+    },
+    {
+      "id": "runtime:M02-G12-BAD-JSON-VERIFIED-THEN-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G12-BAD-JSON-VERIFIED-THEN-REJECTED",
+      "source": "tests/development/webhook-inbox.test.mts",
+      "capability_id": "FEATURE-M02-G12"
+    },
+    {
+      "id": "runtime:M02-G12-COMPRESSED-BODY-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G12-COMPRESSED-BODY-REJECTED",
+      "source": "tests/development/webhook-inbox.test.mts",
+      "capability_id": "FEATURE-M02-G12"
+    },
+    {
+      "id": "runtime:M02-G12-DISABLED-ROUTE",
+      "suite": "runtime",
+      "runner_case_id": "M02-G12-DISABLED-ROUTE",
+      "source": "tests/development/webhook-inbox.test.mts",
+      "capability_id": "FEATURE-M02-G12"
+    },
+    {
+      "id": "runtime:M02-G12-MISSING-KEY",
+      "suite": "runtime",
+      "runner_case_id": "M02-G12-MISSING-KEY",
+      "source": "tests/development/webhook-inbox.test.mts",
+      "capability_id": "FEATURE-M02-G12"
+    },
+    {
+      "id": "runtime:M02-G12-KEY-REFERENCE-SUBSTITUTION",
+      "suite": "runtime",
+      "runner_case_id": "M02-G12-KEY-REFERENCE-SUBSTITUTION",
+      "source": "tests/development/webhook-inbox.test.mts",
+      "capability_id": "FEATURE-M02-G12"
+    },
+    {
+      "id": "runtime:M02-G12-SHARED-KEY-STORE-CONFLICT",
+      "suite": "runtime",
+      "runner_case_id": "M02-G12-SHARED-KEY-STORE-CONFLICT",
+      "source": "tests/development/webhook-inbox.test.mts",
+      "capability_id": "FEATURE-M02-G12"
+    },
+    {
+      "id": "runtime:M02-G12-SHOPIFY-UNSIGNED-TENANCY-QUARANTINED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G12-SHOPIFY-UNSIGNED-TENANCY-QUARANTINED",
+      "source": "tests/development/webhook-inbox.test.mts",
+      "capability_id": "FEATURE-M02-G12"
+    },
+    {
+      "id": "runtime:M02-G12-SHOPIFY-DOMAIN-MISMATCH",
+      "suite": "runtime",
+      "runner_case_id": "M02-G12-SHOPIFY-DOMAIN-MISMATCH",
+      "source": "tests/development/webhook-inbox.test.mts",
+      "capability_id": "FEATURE-M02-G12"
+    },
+    {
+      "id": "runtime:M02-G12-INBOX-TAMPER",
+      "suite": "runtime",
+      "runner_case_id": "M02-G12-INBOX-TAMPER",
+      "source": "tests/development/webhook-inbox.test.mts",
+      "capability_id": "FEATURE-M02-G12"
+    },
+    {
+      "id": "runtime:M02-G12-HTTP-DOES-NOT-ACK-PERSISTENCE-FAILURE",
+      "suite": "runtime",
+      "runner_case_id": "M02-G12-HTTP-DOES-NOT-ACK-PERSISTENCE-FAILURE",
+      "source": "tests/development/webhook-inbox.test.mts",
+      "capability_id": "FEATURE-M02-G12"
+    },
+    {
+      "id": "runtime:M02-G09-REVIEWED-CANARY-PLAN-INTEGRITY",
+      "suite": "runtime",
+      "runner_case_id": "M02-G09-REVIEWED-CANARY-PLAN-INTEGRITY",
+      "source": "tests/development/execution-review.test.mts",
+      "capability_id": "FEATURE-M02-G09"
+    },
+    {
+      "id": "runtime:M02-G09-REVOKED-INSTALL-CANNOT-REPLACE-VALID-CURRENT",
+      "suite": "runtime",
+      "runner_case_id": "M02-G09-REVOKED-INSTALL-CANNOT-REPLACE-VALID-CURRENT",
+      "source": "tests/development/execution-review.test.mts",
+      "capability_id": "FEATURE-M02-G09"
+    },
+    {
+      "id": "runtime:M02-G10-PERMISSION-RECHECK-AFTER-TRANSACTION-LOCK",
+      "suite": "runtime",
+      "runner_case_id": "M02-G10-PERMISSION-RECHECK-AFTER-TRANSACTION-LOCK",
+      "source": "tests/development/execution-review.test.mts",
+      "capability_id": "FEATURE-M02-G10"
+    },
+    {
+      "id": "runtime:M02-G10-SETTINGS-RECHECK-AFTER-TRANSACTION-LOCK",
+      "suite": "runtime",
+      "runner_case_id": "M02-G10-SETTINGS-RECHECK-AFTER-TRANSACTION-LOCK",
+      "source": "tests/development/execution-review.test.mts",
+      "capability_id": "FEATURE-M02-G10"
+    },
+    {
+      "id": "runtime:M02-G08-MIGRATE-RECHECK-AFTER-TRANSACTION-LOCK",
+      "suite": "runtime",
+      "runner_case_id": "M02-G08-MIGRATE-RECHECK-AFTER-TRANSACTION-LOCK",
+      "source": "tests/development/execution-review.test.mts",
+      "capability_id": "FEATURE-M02-G08"
+    },
+    {
+      "id": "runtime:M02-G10-SERVER-POLICY-SELECTION-BOUND",
+      "suite": "runtime",
+      "runner_case_id": "M02-G10-SERVER-POLICY-SELECTION-BOUND",
+      "source": "tests/development/execution-review.test.mts",
+      "capability_id": "FEATURE-M02-G10"
+    },
+    {
+      "id": "runtime:M02-G11-COMPETING-PROCESSES-ONE-CONSUMPTION",
+      "suite": "runtime",
+      "runner_case_id": "M02-G11-COMPETING-PROCESSES-ONE-CONSUMPTION",
+      "source": "tests/development/execution-review.test.mts",
+      "capability_id": "FEATURE-M02-G11"
+    },
+    {
+      "id": "runtime:M02-G11-CUSTOMER-CANNOT-APPROVE-OWN-REQUEST",
+      "suite": "runtime",
+      "runner_case_id": "M02-G11-CUSTOMER-CANNOT-APPROVE-OWN-REQUEST",
+      "source": "tests/development/execution-review.test.mts",
+      "capability_id": "FEATURE-M02-G11"
+    },
+    {
+      "id": "runtime:M02-G11-PROCESS-RESTART-RECEIPT-RECONCILIATION",
+      "suite": "runtime",
+      "runner_case_id": "M02-G11-PROCESS-RESTART-RECEIPT-RECONCILIATION",
+      "source": "tests/development/execution-review.test.mts",
+      "capability_id": "FEATURE-M02-G11"
+    },
+    {
+      "id": "runtime:M02-G10-MANUAL-COMPONENT-PREVIEW-APPROVE-EXECUTE",
+      "suite": "runtime",
+      "runner_case_id": "M02-G10-MANUAL-COMPONENT-PREVIEW-APPROVE-EXECUTE",
+      "source": "tests/development/execution-browser.test.mts",
+      "capability_id": "FEATURE-M02-G10"
+    },
+    {
+      "id": "runtime:M02-G10-MANUAL-COMPONENT-STALE-CLEARS",
+      "suite": "runtime",
+      "runner_case_id": "M02-G10-MANUAL-COMPONENT-STALE-CLEARS",
+      "source": "tests/development/execution-browser.test.mts",
+      "capability_id": "FEATURE-M02-G10"
+    },
+    {
+      "id": "runtime:M02-G10-MANUAL-COMPONENT-TEXT-NOT-HTML",
+      "suite": "runtime",
+      "runner_case_id": "M02-G10-MANUAL-COMPONENT-TEXT-NOT-HTML",
+      "source": "tests/development/execution-browser.test.mts",
+      "capability_id": "FEATURE-M02-G10"
+    },
+    {
+      "id": "runtime:M02-G10-MANUAL-COMPONENT-MOBILE",
+      "suite": "runtime",
+      "runner_case_id": "M02-G10-MANUAL-COMPONENT-MOBILE",
+      "source": "tests/development/execution-browser.test.mts",
+      "capability_id": "FEATURE-M02-G10"
+    },
+    {
+      "id": "runtime:M02-G12-STORE-DISABLED-AFTER-VERIFY-NO-ACK",
+      "suite": "runtime",
+      "runner_case_id": "M02-G12-STORE-DISABLED-AFTER-VERIFY-NO-ACK",
+      "source": "tests/development/webhook-inbox.test.mts",
+      "capability_id": "FEATURE-M02-G12"
+    },
+    {
+      "id": "runtime:M02-G12-ACK-THEN-PROCESS-EXIT-AND-REOPEN",
+      "suite": "runtime",
+      "runner_case_id": "M02-G12-ACK-THEN-PROCESS-EXIT-AND-REOPEN",
+      "source": "tests/development/webhook-inbox.test.mts",
+      "capability_id": "FEATURE-M02-G12"
     }
   ],
   "protected_files": [
@@ -7909,6 +8705,7 @@
     "goals/M12/M12-G09.md",
     "goals/M12/M12-G99.md",
     "packages/commerce/contracts/commerce-manifest.v2.schema.json",
+    "packages/commerce/contracts/execution-api.openapi.json",
     "packages/commerce/contracts/read-api.openapi.json",
     "planning/capability-targets.json",
     "planning/goals.json",
@@ -7921,8 +8718,11 @@
     "templates/evidence-bundle.v1.schema.json",
     "tests/browser/component.py",
     "tests/browser/configuration_component.py",
+    "tests/browser/execution_component.py",
     "tests/browser/manual_component.py",
     "tests/browser/manual_status.py",
+    "tests/development/action-approvals.test.mts",
+    "tests/development/action-gateway.test.mts",
     "tests/development/agent-external.test.mts",
     "tests/development/agent-helpers.mts",
     "tests/development/agent-manual.test.mts",
@@ -7930,13 +8730,19 @@
     "tests/development/agent-provider-helpers.mts",
     "tests/development/agent-runner.test.mts",
     "tests/development/agent-second-provider.test.mts",
+    "tests/development/case-configurations.test.mts",
     "tests/development/config.test.mts",
     "tests/development/customization-helpers.mts",
+    "tests/development/execution-browser.test.mts",
+    "tests/development/execution-helpers.mts",
+    "tests/development/execution-review.test.mts",
     "tests/development/helpers.mts",
     "tests/development/integration.test.mts",
     "tests/development/local-model-helpers.mts",
     "tests/development/read-workflow-helpers.mts",
+    "tests/development/skill-releases.test.mts",
     "tests/development/store.test.mts",
+    "tests/development/webhook-inbox.test.mts",
     "tests/fixtures/development/command-manifests.v1.json",
     "tests/fixtures/harness/expected.v1.json",
     "tests/fixtures/harness/seed.v1.json",

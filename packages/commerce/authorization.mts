@@ -1,17 +1,17 @@
 import type { CommerceKernel,Scope,Row,Role } from './kernel.mts';
 import type { DatabaseSync } from 'node:sqlite';
 
-const READ=['resource.read','attachment.read','knowledge.read','skill.read','profile.read','task.read','model.run','capability.read','policy.read'];
-const OPERATOR=[...READ,'resource.ingest','job.enqueue','attachment.write','knowledge.write','skill.write','profile.write','secret.manage','secret.invoke','connection.manage','simulator.manage','audit.read','policy.draft','policy.test','skill.install'];
+const READ=['resource.read','attachment.read','knowledge.read','skill.read','profile.read','task.read','model.run','capability.read','policy.read','case.read','case.create'];
+const OPERATOR=[...READ,'resource.ingest','job.enqueue','attachment.write','knowledge.write','skill.write','profile.write','secret.manage','secret.invoke','connection.manage','simulator.manage','audit.read','policy.draft','policy.test','skill.install','skill.stage','skill.evaluate','case.migrate','action.propose','action.execute','webhook.read'];
 export const ROLE_ACTIONS:Readonly<Record<Role,readonly string[]>>=Object.freeze({
-  owner:Object.freeze([...OPERATOR,'authority.manage','job.run','policy.review','policy.publish','policy.revoke','skill.approve']),operator:Object.freeze(OPERATOR),
-  reviewer:Object.freeze([...READ.filter(a=>a!=='model.run'),'audit.read','policy.test','policy.review']),
+  owner:Object.freeze([...OPERATOR,'authority.manage','job.run','policy.review','policy.publish','policy.revoke','skill.approve','skill.review','skill.publish','skill.revoke','action.configure','action.approve','webhook.manage']),operator:Object.freeze(OPERATOR),
+  reviewer:Object.freeze([...READ.filter(a=>a!=='model.run'),'audit.read','policy.test','policy.review','skill.evaluate','skill.review','action.approve']),
   integration:Object.freeze([...READ.filter(a=>a!=='model.run'),'resource.ingest','job.run','attachment.write','secret.invoke']),
-  agent:Object.freeze([...READ,'secret.invoke','policy.draft']),
+  agent:Object.freeze([...READ,'secret.invoke','policy.draft','action.propose','action.execute']),
   worker:Object.freeze([...READ,'resource.ingest','job.run','attachment.write','secret.invoke']),
-  customer:Object.freeze(['resource.read','attachment.read','knowledge.read','skill.read','profile.read','task.read','capability.read']),
+  customer:Object.freeze(['case.create','case.read','resource.read','attachment.read','knowledge.read','skill.read','profile.read','task.read','capability.read']),
 });
-const RESOURCE_ACTIONS=new Set(['resource.read','resource.ingest','attachment.read','attachment.write','job.enqueue','job.run']);
+const RESOURCE_ACTIONS=new Set(['resource.read','resource.ingest','attachment.read','attachment.write','job.enqueue','job.run','case.create','case.read','case.migrate','action.propose','action.execute','action.approve']);
 export function permissionDecision(db:DatabaseSync,s:Row,action:string,resourceId:string|null=null) {
   const p=db.prepare('SELECT * FROM commerce_permissions WHERE tenant_id=? AND store_id=? AND actor_id=?')
     .get(s.tenant_id,s.store_id,s.actor_id) as Row|undefined;
