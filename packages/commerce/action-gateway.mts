@@ -1,3 +1,5 @@
+import { assertCaseWorkerScope } from './work-leases.mts';
+import { assertExecution } from './execution-stops.mts';
 import { recordCaseExecution } from './operation-store.mts';
 import { CommerceKernel,exact,id,integer,token } from './kernel.mts';
 import type { Scope,Row } from './kernel.mts';
@@ -29,6 +31,7 @@ export class ActionGateway {
     const a=exact(p.arguments,['resolution']);if(!['none','refund','exchange'].includes(a.resolution))throw new Error('INVALID_INPUT');return p;}
   #quote(scope:Scope,p:Row,quotedAt:number){
     const k=this.#k,c=this.cases.resume(scope,p.case_id),s=k.require(scope),verified=this.cases.verified(scope,p.case_id),effect=this.state(scope,p.case_id);
+    const control=assertExecution(k,s,p.action);
     const settings=k.db.prepare('SELECT * FROM commerce_execution_settings WHERE tenant_id=? AND store_id=?').get(s.tenant_id,s.store_id) as Row;
     if(!settings?.enabled)throw new Error('CAPABILITY_UNAVAILABLE');
     if(c.pins.profile.id!==settings.profile_id||c.pins.policy.policy_id!==settings.policy_id)throw new Error('CONFIGURATION_NOT_APPROVED');
@@ -47,7 +50,7 @@ export class ActionGateway {
     return {schema_version:1,tenant_id:s.tenant_id,store_id:s.store_id,case_id:c.id,case_revision:c.revision,configuration_digest:c.configuration_digest,
       resource_id:order.id,resource_version:order.source_version,source_digest:contentDigest({payload:body,customer_id:order.customer_id,observed_at:order.observed_at}),
       customer_id:verified.customer_id,action:p.action,arguments:p.arguments,amount,amount_ceiling:amount,
-      capability_revision:settings.revision,adapter_contract_digest:WRITE_CONTRACT_DIGEST,policy_digest:c.pins.policy.digest,decision,
+      control_stamp:control.stamp,capability_revision:settings.revision,adapter_contract_digest:WRITE_CONTRACT_DIGEST,policy_digest:c.pins.policy.digest,decision,
       effect_version:effect.revision,quoted_at:quotedAt,expires_at:Math.min(quotedAt+300000,verified.expires_at),max_uses:1,financial_effect:false};
   }
   #preview(scope:Scope,previewId:string){const s=this.#k.require(scope);id(previewId);
@@ -63,7 +66,7 @@ export class ActionGateway {
   prepare(scope:Scope,input:unknown){
     const k=this.#k,p=this.#proposal(input),c=this.cases.inspect(scope,p.case_id),s=k.authorize(scope,'action.propose',c.resource_id);
     return k.transaction(()=>{
-      k.authorize(scope,'action.propose',c.resource_id);
+      k.authorize(scope,'action.propose',c.resource_id);assertCaseWorkerScope(k,scope,c.id);
       const preview=this.#quote(scope,p,k.clock()),ref='preview_'+token().slice(0,32),hash=contentDigest(preview);
       k.db.prepare('INSERT INTO commerce_action_previews VALUES(?,?,?,?,?,?,?)').run(s.tenant_id,s.store_id,ref,p.case_id,canonical(preview),hash,s.actor_id);
       return {id:ref,digest:hash,preview,approval_required:true,execution_authorized:false};
@@ -89,6 +92,7 @@ export class ActionGateway {
     const k=this.#k,p=exact(jsonValue(input),['preview_id','preview_digest','approval_id']);id(p.approval_id);
     return k.transaction(()=>{
       const r=this.#preview(scope,p.preview_id),s=k.authorize(scope,'action.execute',r.preview.resource_id);
+      assertCaseWorkerScope(k,scope,r.case_id);
       if(r.digest!==p.preview_digest)throw new Error('PREVIEW_STALE');
       const a=k.db.prepare('SELECT * FROM commerce_action_approvals WHERE tenant_id=? AND store_id=? AND id=?').get(s.tenant_id,s.store_id,p.approval_id) as Row;
       if(!a||a.revoked||a.expires_at<=k.clock()||a.preview_id!==r.id||a.preview_digest!==r.digest||a.max_uses!==1||a.uses!==0)throw new Error('APPROVAL_UNAVAILABLE');

@@ -1,0 +1,4 @@
+/* Operation identities must remain readable without widening narrow screens. */
+article, article p, article pre { min-width: 0; overflow-wrap: anywhere; white-space: pre-wrap; }
+.buttons { display: flex; flex-wrap: wrap; gap: .5rem; }
+button, input { max-width: 100%; box-sizing: border-box; }

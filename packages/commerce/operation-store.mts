@@ -1,3 +1,4 @@
+import { controlState } from './execution-stops.mts';
 import { CommerceKernel,exact,id,integer } from './kernel.mts';
 import type { Scope,Row } from './kernel.mts';
 import { canonical,contentDigest,jsonValue } from './configuration-values.mts';
@@ -15,6 +16,7 @@ export function queueOperation(k:CommerceKernel,s:Row,resourceId:string,kind:'ca
   const now=k.clock();k.db.prepare(`INSERT INTO commerce_operations VALUES(?,?,?,?,?,?,?,?, 'queued',1,NULL,?,?)`)
     .run(s.tenant_id,s.store_id,ref,resourceId,kind,sourceId,input,hash,now,now);
   k.db.prepare("INSERT INTO commerce_operation_work VALUES(?,?,?,'pending',0,?,NULL,NULL,NULL,NULL)").run(s.tenant_id,s.store_id,ref,now);
+  k.db.prepare('INSERT INTO commerce_operation_controls VALUES(?,?,?,?,1)').run(s.tenant_id,s.store_id,ref,controlState(k,s,command.action).stamp);
   const op=operationRow(k,s,ref);appendReceipt(k,s,op,{...receiptFields('queued',sourceId),...refs});return op;
 }
 export function recordCaseExecution(k:CommerceKernel,s:Row,receipt:Row,preview:Row) {

@@ -3,19 +3,20 @@
 Merchant-owned commerce operations with tailorable skills and independently
 replaceable platforms, agents and models.
 
-**Current checkpoint: thirty-five commerce goals have local diagnostic implementations.**
-The latest five add ordered event processing, atomic outgoing work, stable operation
-identities, source-bound reconciliation, and minimized immutable receipts. Existing
-case pins, approvals, policies, portable reads, roles and exact money remain intact.
+**Current checkpoint: forty commerce goals have local diagnostic implementations.**
+The latest five add finite worker leases, portable task/proposal APIs, encrypted
+credential cutover, execution stop controls and an actionable operator exception
+queue. Existing operation identity, reconciliation, approvals, policy and skill
+pins remain authoritative.
 
 **This is still the SQLite diagnostic implementation.** PostgreSQL/React,
 live Shopify/model qualification and the actual served-browser journey remain
 open. An actual local-model probe found no installed service. Protocol fixtures
 and arithmetic evaluations are labeled synthetic; they do not qualify a model.
 
-[Implementation and commands](docs/OPERATION-RELIABILITY.md) ·
-[Current review](docs/OPERATION-RELIABILITY-REVIEW.md) ·
-[Delegated authority](docs/decisions/0018-durable-operation-reliability.md) ·
+[Implementation and commands](docs/WORKER-CONTROLS.md) ·
+[Current review](docs/WORKER-CONTROLS-REVIEW.md) ·
+[Delegated authority](docs/decisions/0019-worker-leases-credential-cutover-and-stops.md) ·
 [Earlier model and policy foundations](docs/MODEL-POLICY-FOUNDATIONS.md).
 Full goal acceptance remains separate from approved local integration.
 
@@ -194,3 +195,16 @@ node --experimental-strip-types tools/demo-reliability.mts
 
 The demo makes no network/model/payment call. PostgreSQL/React and live-provider
 qualification remain open; unknown outcomes never authorize speculative retries.
+
+## Worker control and recovery diagnostic
+
+```sh
+node --experimental-strip-types tools/demo-worker-controls.mts
+node --experimental-strip-types tools/demo-worker-controls.mts --serve
+```
+
+The serving variant prints the `/exceptions` URL and a private temporary session
+file. Unknown outcomes can be reconciled without resending. No live credential,
+provider, message or payment effect is configured. Ctrl-C removes the temporary
+session file and stops only that instance. The browser checks are component/API
+bridge tests, not direct served-browser or React qualification.

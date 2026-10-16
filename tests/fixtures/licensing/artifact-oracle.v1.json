@@ -1,6 +1,6 @@
 {
-  "source_file_count": 634,
-  "source_count_reason": "Retains every previous source path and adds explicitly inventoried M02-G13 through M02-G17 reliability modules, migration, tests, demo and records.",
+  "source_file_count": 663,
+  "source_count_reason": "Retains all prior paths and adds enumerated M02-G18 through M02-G22 worker controls, queue, contract/client, migration, tests, demo and work records.",
   "component_ids": [
     "git-agent-adaptations",
     "rifare-developer-helpers",
