@@ -1,3 +1,4 @@
+import { assertRecoveryAction,assertRecoveredOperation } from './data-guards.mts';
 import type { CommerceKernel,Scope,Row } from './kernel.mts';
 import { exact,id,integer } from './kernel.mts';
 import { contentDigest } from './configuration-values.mts';
@@ -12,7 +13,7 @@ export function controlState(k:CommerceKernel,s:Row,action:string){
   return {action,stamp:rows.map(r=>r?.revision??0).join(':'),stopped:rows.some(r=>r?.stopped===1),reasons:rows.filter(r=>r?.stopped).map(r=>r!.reason)};
 }
 export function assertExecution(k:CommerceKernel,s:Row,action:string,stamp?:string){
-  const state=controlState(k,s,action);
+  assertRecoveryAction(k,action);const state=controlState(k,s,action);
   if(state.stopped)throw new Error('EXECUTION_STOPPED');
   if(stamp!==undefined&&state.stamp!==stamp)throw new Error('EXECUTION_REAUTHORIZATION_REQUIRED');
   return state;
@@ -22,6 +23,7 @@ export function controlEvent(k:CommerceKernel,s:Row,code:string,subject:string,g
     .run(s.tenant_id??null,s.store_id??null,code,s.actor_id,id(subject),generation,k.clock());
 }
 export function assertOperationExecution(k:CommerceKernel,s:Row,op:Row){
+  assertRecoveredOperation(k,s,op.id);
   const p=k.db.prepare('SELECT stamp FROM commerce_operation_controls WHERE tenant_id=? AND store_id=? AND operation_id=?').get(s.tenant_id,s.store_id,op.id) as Row;
   if(!p)throw new Error('EXECUTION_REAUTHORIZATION_REQUIRED');
   return assertExecution(k,s,JSON.parse(op.command).action,p.stamp);

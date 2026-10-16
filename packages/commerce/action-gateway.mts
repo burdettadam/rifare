@@ -1,3 +1,4 @@
+import { qualifyLocalDraft,assertReady } from './integration-readiness.mts';
 import { assertCaseWorkerScope } from './work-leases.mts';
 import { assertExecution } from './execution-stops.mts';
 import { recordCaseExecution } from './operation-store.mts';
@@ -20,6 +21,7 @@ export class ActionGateway {
       if((r?.revision??0)!==p.expected_revision)throw new Error('CAPABILITY_CHANGED');
       k.db.prepare(`INSERT INTO commerce_execution_settings VALUES(?,?,?,?,?,?) ON CONFLICT(tenant_id,store_id) DO UPDATE SET enabled=excluded.enabled,revision=excluded.revision,profile_id=excluded.profile_id,policy_id=excluded.policy_id`)
         .run(s.tenant_id,s.store_id,p.enabled?1:0,p.expected_revision+1,p.profile_id,p.policy_id);
+      if(p.enabled)qualifyLocalDraft(k,s,p.expected_revision+1);
       return {enabled:p.enabled,revision:p.expected_revision+1,contract:WRITE_CONTRACT};
     });
   }
@@ -34,6 +36,7 @@ export class ActionGateway {
     const control=assertExecution(k,s,p.action);
     const settings=k.db.prepare('SELECT * FROM commerce_execution_settings WHERE tenant_id=? AND store_id=?').get(s.tenant_id,s.store_id) as Row;
     if(!settings?.enabled)throw new Error('CAPABILITY_UNAVAILABLE');
+    const integration=assertReady(k,s,p.action);
     if(c.pins.profile.id!==settings.profile_id||c.pins.policy.policy_id!==settings.policy_id)throw new Error('CONFIGURATION_NOT_APPROVED');
     const order=c.order,body=order.payload,values=c.pins.composition.effective;
     if(order.source_system!=='synthetic'||order.kind!=='order')throw new Error('CAPABILITY_UNAVAILABLE');
@@ -50,7 +53,7 @@ export class ActionGateway {
     return {schema_version:1,tenant_id:s.tenant_id,store_id:s.store_id,case_id:c.id,case_revision:c.revision,configuration_digest:c.configuration_digest,
       resource_id:order.id,resource_version:order.source_version,source_digest:contentDigest({payload:body,customer_id:order.customer_id,observed_at:order.observed_at}),
       customer_id:verified.customer_id,action:p.action,arguments:p.arguments,amount,amount_ceiling:amount,
-      control_stamp:control.stamp,capability_revision:settings.revision,adapter_contract_digest:WRITE_CONTRACT_DIGEST,policy_digest:c.pins.policy.digest,decision,
+      readiness_digest:integration.evidence_digest,control_stamp:control.stamp,capability_revision:settings.revision,adapter_contract_digest:WRITE_CONTRACT_DIGEST,policy_digest:c.pins.policy.digest,decision,
       effect_version:effect.revision,quoted_at:quotedAt,expires_at:Math.min(quotedAt+300000,verified.expires_at),max_uses:1,financial_effect:false};
   }
   #preview(scope:Scope,previewId:string){const s=this.#k.require(scope);id(previewId);

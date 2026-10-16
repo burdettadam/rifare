@@ -1,0 +1,7 @@
+{
+ "id": 17, "number":"W-17", "status":"completed", "currency":"USD", "total":"45.67",
+ "version":"fixture-1", "date_modified_gmt":"2026-01-10T00:00:00", "date_paid_gmt":"2026-01-09T00:00:00", "customer_id":7,
+ "line_items":[{"id":101,"name":"Synthetic item","quantity":1}],
+ "refunds":[{"id":19,"total":"-12.50"}],
+ "billing":{"email":"synthetic-private@example.invalid"}, "meta_data":[{"key":"private","value":"must-not-enter-read-context"}]
+}

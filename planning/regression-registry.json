@@ -394,6 +394,46 @@
       "contract_files": [
         "goals/M02/M02-G22.md"
       ]
+    },
+    {
+      "id": "FEATURE-M02-G23",
+      "enabled": true,
+      "qualification": "retained_diagnostic_not_accepted",
+      "contract_files": [
+        "goals/M02/M02-G23.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M02-G24",
+      "enabled": true,
+      "qualification": "retained_diagnostic_not_accepted",
+      "contract_files": [
+        "goals/M02/M02-G24.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M02-G25",
+      "enabled": true,
+      "qualification": "retained_diagnostic_not_accepted",
+      "contract_files": [
+        "goals/M02/M02-G25.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M02-G26",
+      "enabled": true,
+      "qualification": "retained_diagnostic_not_accepted",
+      "contract_files": [
+        "goals/M02/M02-G26.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M02-G27",
+      "enabled": true,
+      "qualification": "retained_diagnostic_not_accepted",
+      "contract_files": [
+        "goals/M02/M02-G27.md"
+      ]
     }
   ],
   "tests": [
@@ -9993,6 +10033,594 @@
       "runner_case_id": "M02-G18-REVIEW-HEADLESS-DEMO-SAME-OPERATION-ONE-EFFECT",
       "source": "tests/development/worker-controls-review.test.mts",
       "capability_id": "FEATURE-M02-G18"
+    },
+    {
+      "id": "runtime:CASE-M02-G23-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M02-G23-01",
+      "source": "tests/development/integration-readiness.test.mts",
+      "capability_id": "FEATURE-M02-G23"
+    },
+    {
+      "id": "runtime:CASE-M02-G23-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M02-G23-02",
+      "source": "tests/development/integration-readiness.test.mts",
+      "capability_id": "FEATURE-M02-G23"
+    },
+    {
+      "id": "runtime:CASE-M02-G23-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M02-G23-03",
+      "source": "tests/development/integration-readiness.test.mts",
+      "capability_id": "FEATURE-M02-G23"
+    },
+    {
+      "id": "runtime:M02-G23-SCOPE-REMOVAL",
+      "suite": "runtime",
+      "runner_case_id": "M02-G23-SCOPE-REMOVAL",
+      "source": "tests/development/integration-readiness.test.mts",
+      "capability_id": "FEATURE-M02-G23"
+    },
+    {
+      "id": "runtime:M02-G23-PROOF-REVOCATION",
+      "suite": "runtime",
+      "runner_case_id": "M02-G23-PROOF-REVOCATION",
+      "source": "tests/development/integration-readiness.test.mts",
+      "capability_id": "FEATURE-M02-G23"
+    },
+    {
+      "id": "runtime:M02-G23-NO-PROFILE-FLAG",
+      "suite": "runtime",
+      "runner_case_id": "M02-G23-NO-PROFILE-FLAG",
+      "source": "tests/development/integration-readiness.test.mts",
+      "capability_id": "FEATURE-M02-G23"
+    },
+    {
+      "id": "runtime:M02-G23-PROOF-DIGEST",
+      "suite": "runtime",
+      "runner_case_id": "M02-G23-PROOF-DIGEST",
+      "source": "tests/development/integration-readiness.test.mts",
+      "capability_id": "FEATURE-M02-G23"
+    },
+    {
+      "id": "runtime:M02-G23-ACCOUNT-REVISION",
+      "suite": "runtime",
+      "runner_case_id": "M02-G23-ACCOUNT-REVISION",
+      "source": "tests/development/integration-readiness.test.mts",
+      "capability_id": "FEATURE-M02-G23"
+    },
+    {
+      "id": "runtime:M02-G23-AGENT-CANNOT-QUALIFY",
+      "suite": "runtime",
+      "runner_case_id": "M02-G23-AGENT-CANNOT-QUALIFY",
+      "source": "tests/development/integration-readiness.test.mts",
+      "capability_id": "FEATURE-M02-G23"
+    },
+    {
+      "id": "runtime:M02-G23-CROSS-STORE-PROOF",
+      "suite": "runtime",
+      "runner_case_id": "M02-G23-CROSS-STORE-PROOF",
+      "source": "tests/development/integration-readiness.test.mts",
+      "capability_id": "FEATURE-M02-G23"
+    },
+    {
+      "id": "runtime:M02-G23-SCOPE-LIMIT-CURRENT",
+      "suite": "runtime",
+      "runner_case_id": "M02-G23-SCOPE-LIMIT-CURRENT",
+      "source": "tests/development/integration-readiness.test.mts",
+      "capability_id": "FEATURE-M02-G23"
+    },
+    {
+      "id": "runtime:M02-G23-HTTP-READINESS-DENIAL",
+      "suite": "runtime",
+      "runner_case_id": "M02-G23-HTTP-READINESS-DENIAL",
+      "source": "tests/development/integration-readiness.test.mts",
+      "capability_id": "FEATURE-M02-G23"
+    },
+    {
+      "id": "runtime:M02-G23-READINESS-RECHECKED-BEFORE-QUEUED-DISPATCH",
+      "suite": "runtime",
+      "runner_case_id": "M02-G23-READINESS-RECHECKED-BEFORE-QUEUED-DISPATCH",
+      "source": "tests/development/integration-readiness.test.mts",
+      "capability_id": "FEATURE-M02-G23"
+    },
+    {
+      "id": "runtime:CASE-M02-G24-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M02-G24-01",
+      "source": "tests/development/privacy-lifecycle.test.mts",
+      "capability_id": "FEATURE-M02-G24"
+    },
+    {
+      "id": "runtime:CASE-M02-G24-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M02-G24-02",
+      "source": "tests/development/privacy-lifecycle.test.mts",
+      "capability_id": "FEATURE-M02-G24"
+    },
+    {
+      "id": "runtime:CASE-M02-G24-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M02-G24-03",
+      "source": "tests/development/privacy-lifecycle.test.mts",
+      "capability_id": "FEATURE-M02-G24"
+    },
+    {
+      "id": "runtime:M02-G24-NEW-RESOURCE-SAME-SUBJECT-DENIED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G24-NEW-RESOURCE-SAME-SUBJECT-DENIED",
+      "source": "tests/development/privacy-lifecycle.test.mts",
+      "capability_id": "FEATURE-M02-G24"
+    },
+    {
+      "id": "runtime:M02-G24-OTHER-STORE-PRESERVED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G24-OTHER-STORE-PRESERVED",
+      "source": "tests/development/privacy-lifecycle.test.mts",
+      "capability_id": "FEATURE-M02-G24"
+    },
+    {
+      "id": "runtime:M02-G24-CUSTOMER-SESSION-INVALIDATED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G24-CUSTOMER-SESSION-INVALIDATED",
+      "source": "tests/development/privacy-lifecycle.test.mts",
+      "capability_id": "FEATURE-M02-G24"
+    },
+    {
+      "id": "runtime:M02-G24-CASE-AND-APPROVAL-DISABLED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G24-CASE-AND-APPROVAL-DISABLED",
+      "source": "tests/development/privacy-lifecycle.test.mts",
+      "capability_id": "FEATURE-M02-G24"
+    },
+    {
+      "id": "runtime:M02-G24-HOLD-RELEASE-REQUIRES-REFERENCE",
+      "suite": "runtime",
+      "runner_case_id": "M02-G24-HOLD-RELEASE-REQUIRES-REFERENCE",
+      "source": "tests/development/privacy-lifecycle.test.mts",
+      "capability_id": "FEATURE-M02-G24"
+    },
+    {
+      "id": "runtime:M02-G24-HOLD-EXPIRY",
+      "suite": "runtime",
+      "runner_case_id": "M02-G24-HOLD-EXPIRY",
+      "source": "tests/development/privacy-lifecycle.test.mts",
+      "capability_id": "FEATURE-M02-G24"
+    },
+    {
+      "id": "runtime:M02-G24-IDEMPOTENT-ERASURE",
+      "suite": "runtime",
+      "runner_case_id": "M02-G24-IDEMPOTENT-ERASURE",
+      "source": "tests/development/privacy-lifecycle.test.mts",
+      "capability_id": "FEATURE-M02-G24"
+    },
+    {
+      "id": "runtime:M02-G24-NEW-TABLE-FAILS-INVENTORY",
+      "suite": "runtime",
+      "runner_case_id": "M02-G24-NEW-TABLE-FAILS-INVENTORY",
+      "source": "tests/development/privacy-lifecycle.test.mts",
+      "capability_id": "FEATURE-M02-G24"
+    },
+    {
+      "id": "runtime:M02-G24-NEW-COLUMN-FAILS-INVENTORY",
+      "suite": "runtime",
+      "runner_case_id": "M02-G24-NEW-COLUMN-FAILS-INVENTORY",
+      "source": "tests/development/privacy-lifecycle.test.mts",
+      "capability_id": "FEATURE-M02-G24"
+    },
+    {
+      "id": "runtime:M02-G24-DATABASE-REIMPORT-GUARD",
+      "suite": "runtime",
+      "runner_case_id": "M02-G24-DATABASE-REIMPORT-GUARD",
+      "source": "tests/development/privacy-lifecycle.test.mts",
+      "capability_id": "FEATURE-M02-G24"
+    },
+    {
+      "id": "runtime:M02-G24-UNATTRIBUTED-KNOWLEDGE-CONSERVATIVE-PURGE",
+      "suite": "runtime",
+      "runner_case_id": "M02-G24-UNATTRIBUTED-KNOWLEDGE-CONSERVATIVE-PURGE",
+      "source": "tests/development/privacy-lifecycle.test.mts",
+      "capability_id": "FEATURE-M02-G24"
+    },
+    {
+      "id": "runtime:M02-G24-RECEIPT-NOTES-ERASED-AUDIT-RETAINED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G24-RECEIPT-NOTES-ERASED-AUDIT-RETAINED",
+      "source": "tests/development/privacy-lifecycle.test.mts",
+      "capability_id": "FEATURE-M02-G24"
+    },
+    {
+      "id": "runtime:M02-G24-UNINSTALL-STOPS-STORE",
+      "suite": "runtime",
+      "runner_case_id": "M02-G24-UNINSTALL-STOPS-STORE",
+      "source": "tests/development/privacy-lifecycle.test.mts",
+      "capability_id": "FEATURE-M02-G24"
+    },
+    {
+      "id": "runtime:M02-G24-EXPORT-LINKED-OPERATION-HISTORY",
+      "suite": "runtime",
+      "runner_case_id": "M02-G24-EXPORT-LINKED-OPERATION-HISTORY",
+      "source": "tests/development/privacy-lifecycle.test.mts",
+      "capability_id": "FEATURE-M02-G24"
+    },
+    {
+      "id": "runtime:CASE-M02-G25-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M02-G25-01",
+      "source": "tests/development/safe-recovery.test.mts",
+      "capability_id": "FEATURE-M02-G25"
+    },
+    {
+      "id": "runtime:CASE-M02-G25-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M02-G25-02",
+      "source": "tests/development/safe-recovery.test.mts",
+      "capability_id": "FEATURE-M02-G25"
+    },
+    {
+      "id": "runtime:CASE-M02-G25-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M02-G25-03",
+      "source": "tests/development/safe-recovery.test.mts",
+      "capability_id": "FEATURE-M02-G25"
+    },
+    {
+      "id": "runtime:M02-G25-COPIED-SESSIONS-INVALID",
+      "suite": "runtime",
+      "runner_case_id": "M02-G25-COPIED-SESSIONS-INVALID",
+      "source": "tests/development/safe-recovery.test.mts",
+      "capability_id": "FEATURE-M02-G25"
+    },
+    {
+      "id": "runtime:M02-G25-MANIFEST-PIN-REQUIRED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G25-MANIFEST-PIN-REQUIRED",
+      "source": "tests/development/safe-recovery.test.mts",
+      "capability_id": "FEATURE-M02-G25"
+    },
+    {
+      "id": "runtime:M02-G25-DATABASE-TAMPER",
+      "suite": "runtime",
+      "runner_case_id": "M02-G25-DATABASE-TAMPER",
+      "source": "tests/development/safe-recovery.test.mts",
+      "capability_id": "FEATURE-M02-G25"
+    },
+    {
+      "id": "runtime:M02-G25-NO-OVERWRITE",
+      "suite": "runtime",
+      "runner_case_id": "M02-G25-NO-OVERWRITE",
+      "source": "tests/development/safe-recovery.test.mts",
+      "capability_id": "FEATURE-M02-G25"
+    },
+    {
+      "id": "runtime:M02-G25-EXTRA-FILE-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G25-EXTRA-FILE-REJECTED",
+      "source": "tests/development/safe-recovery.test.mts",
+      "capability_id": "FEATURE-M02-G25"
+    },
+    {
+      "id": "runtime:M02-G25-PRIVATE-FILE-MODE",
+      "suite": "runtime",
+      "runner_case_id": "M02-G25-PRIVATE-FILE-MODE",
+      "source": "tests/development/safe-recovery.test.mts",
+      "capability_id": "FEATURE-M02-G25"
+    },
+    {
+      "id": "runtime:M02-G25-NEWER-ERASURES-REPLAYED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G25-NEWER-ERASURES-REPLAYED",
+      "source": "tests/development/safe-recovery.test.mts",
+      "capability_id": "FEATURE-M02-G25"
+    },
+    {
+      "id": "runtime:M02-G25-STALE-SUPPRESSION-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G25-STALE-SUPPRESSION-REJECTED",
+      "source": "tests/development/safe-recovery.test.mts",
+      "capability_id": "FEATURE-M02-G25"
+    },
+    {
+      "id": "runtime:M02-G25-NO-EGRESS-AFTER-DIAGNOSTIC-ACTIVATION",
+      "suite": "runtime",
+      "runner_case_id": "M02-G25-NO-EGRESS-AFTER-DIAGNOSTIC-ACTIVATION",
+      "source": "tests/development/safe-recovery.test.mts",
+      "capability_id": "FEATURE-M02-G25"
+    },
+    {
+      "id": "runtime:M02-G25-UNKNOWN-RESULT-BLOCKS-ACTIVATION",
+      "suite": "runtime",
+      "runner_case_id": "M02-G25-UNKNOWN-RESULT-BLOCKS-ACTIVATION",
+      "source": "tests/development/safe-recovery.test.mts",
+      "capability_id": "FEATURE-M02-G25"
+    },
+    {
+      "id": "runtime:M02-G25-OLD-QUEUE-NEVER-AUTO-REPLAY",
+      "suite": "runtime",
+      "runner_case_id": "M02-G25-OLD-QUEUE-NEVER-AUTO-REPLAY",
+      "source": "tests/development/safe-recovery.test.mts",
+      "capability_id": "FEATURE-M02-G25"
+    },
+    {
+      "id": "runtime:CASE-M02-G26-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M02-G26-01",
+      "source": "tests/development/read-woocommerce.test.mts",
+      "capability_id": "FEATURE-M02-G26"
+    },
+    {
+      "id": "runtime:CASE-M02-G26-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M02-G26-02",
+      "source": "tests/development/read-woocommerce.test.mts",
+      "capability_id": "FEATURE-M02-G26"
+    },
+    {
+      "id": "runtime:CASE-M02-G26-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M02-G26-03",
+      "source": "tests/development/read-woocommerce.test.mts",
+      "capability_id": "FEATURE-M02-G26"
+    },
+    {
+      "id": "runtime:M02-G26-API-REFUND-NOT-SETTLEMENT",
+      "suite": "runtime",
+      "runner_case_id": "M02-G26-API-REFUND-NOT-SETTLEMENT",
+      "source": "tests/development/read-woocommerce.test.mts",
+      "capability_id": "FEATURE-M02-G26"
+    },
+    {
+      "id": "runtime:M02-G26-COMPLETED-NOT-DELIVERED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G26-COMPLETED-NOT-DELIVERED",
+      "source": "tests/development/read-woocommerce.test.mts",
+      "capability_id": "FEATURE-M02-G26"
+    },
+    {
+      "id": "runtime:M02-G26-PERSONAL-EXTRANEOUS-FIELDS-OMITTED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G26-PERSONAL-EXTRANEOUS-FIELDS-OMITTED",
+      "source": "tests/development/read-woocommerce.test.mts",
+      "capability_id": "FEATURE-M02-G26"
+    },
+    {
+      "id": "runtime:M02-G26-MISSING-REFUND-DENIES-SNAPSHOT",
+      "suite": "runtime",
+      "runner_case_id": "M02-G26-MISSING-REFUND-DENIES-SNAPSHOT",
+      "source": "tests/development/read-woocommerce.test.mts",
+      "capability_id": "FEATURE-M02-G26"
+    },
+    {
+      "id": "runtime:M02-G26-REFUND-PAGINATION-NOT-TRUNCATED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G26-REFUND-PAGINATION-NOT-TRUNCATED",
+      "source": "tests/development/read-woocommerce.test.mts",
+      "capability_id": "FEATURE-M02-G26"
+    },
+    {
+      "id": "runtime:M02-G26-NO-LIVE-MODE",
+      "suite": "runtime",
+      "runner_case_id": "M02-G26-NO-LIVE-MODE",
+      "source": "tests/development/read-woocommerce.test.mts",
+      "capability_id": "FEATURE-M02-G26"
+    },
+    {
+      "id": "runtime:M02-G26-REDIRECT-DENIED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G26-REDIRECT-DENIED",
+      "source": "tests/development/read-woocommerce.test.mts",
+      "capability_id": "FEATURE-M02-G26"
+    },
+    {
+      "id": "runtime:M02-G26-FRESHNESS-EXPIRES",
+      "suite": "runtime",
+      "runner_case_id": "M02-G26-FRESHNESS-EXPIRES",
+      "source": "tests/development/read-woocommerce.test.mts",
+      "capability_id": "FEATURE-M02-G26"
+    },
+    {
+      "id": "runtime:M02-G26-SECRET-REVOCATION",
+      "suite": "runtime",
+      "runner_case_id": "M02-G26-SECRET-REVOCATION",
+      "source": "tests/development/read-woocommerce.test.mts",
+      "capability_id": "FEATURE-M02-G26"
+    },
+    {
+      "id": "runtime:M02-G26-OTHER-STORE-CANNOT-READ",
+      "suite": "runtime",
+      "runner_case_id": "M02-G26-OTHER-STORE-CANNOT-READ",
+      "source": "tests/development/read-woocommerce.test.mts",
+      "capability_id": "FEATURE-M02-G26"
+    },
+    {
+      "id": "runtime:M02-G26-NO-BINARY-MONEY",
+      "suite": "runtime",
+      "runner_case_id": "M02-G26-NO-BINARY-MONEY",
+      "source": "tests/development/read-woocommerce.test.mts",
+      "capability_id": "FEATURE-M02-G26"
+    },
+    {
+      "id": "runtime:M02-G26-INVALID-PRECISION-DENIED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G26-INVALID-PRECISION-DENIED",
+      "source": "tests/development/read-woocommerce.test.mts",
+      "capability_id": "FEATURE-M02-G26"
+    },
+    {
+      "id": "runtime:M02-G26-DUPLICATE-REFUND-DENIED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G26-DUPLICATE-REFUND-DENIED",
+      "source": "tests/development/read-woocommerce.test.mts",
+      "capability_id": "FEATURE-M02-G26"
+    },
+    {
+      "id": "runtime:M02-G26-CONNECTION-CHANGE-DENIES-CACHE",
+      "suite": "runtime",
+      "runner_case_id": "M02-G26-CONNECTION-CHANGE-DENIES-CACHE",
+      "source": "tests/development/read-woocommerce.test.mts",
+      "capability_id": "FEATURE-M02-G26"
+    },
+    {
+      "id": "runtime:M02-G26-REFUND-AMOUNT-SUMMARY-CONFLICT",
+      "suite": "runtime",
+      "runner_case_id": "M02-G26-REFUND-AMOUNT-SUMMARY-CONFLICT",
+      "source": "tests/development/read-woocommerce.test.mts",
+      "capability_id": "FEATURE-M02-G26"
+    },
+    {
+      "id": "runtime:M02-G26-INVALID-CALENDAR-DATE",
+      "suite": "runtime",
+      "runner_case_id": "M02-G26-INVALID-CALENDAR-DATE",
+      "source": "tests/development/read-woocommerce.test.mts",
+      "capability_id": "FEATURE-M02-G26"
+    },
+    {
+      "id": "runtime:M02-G26-PAYMENT-TIMESTAMP-NOT-TRUTHY-TEXT",
+      "suite": "runtime",
+      "runner_case_id": "M02-G26-PAYMENT-TIMESTAMP-NOT-TRUTHY-TEXT",
+      "source": "tests/development/read-woocommerce.test.mts",
+      "capability_id": "FEATURE-M02-G26"
+    },
+    {
+      "id": "runtime:CASE-M02-G27-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M02-G27-01",
+      "source": "tests/development/return-drafts.test.mts",
+      "capability_id": "FEATURE-M02-G27"
+    },
+    {
+      "id": "runtime:CASE-M02-G27-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M02-G27-02",
+      "source": "tests/development/return-drafts.test.mts",
+      "capability_id": "FEATURE-M02-G27"
+    },
+    {
+      "id": "runtime:CASE-M02-G27-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M02-G27-03",
+      "source": "tests/development/return-drafts.test.mts",
+      "capability_id": "FEATURE-M02-G27"
+    },
+    {
+      "id": "runtime:M02-G27-ONE-GATEWAY-APPROVAL-PATH",
+      "suite": "runtime",
+      "runner_case_id": "M02-G27-ONE-GATEWAY-APPROVAL-PATH",
+      "source": "tests/development/return-drafts.test.mts",
+      "capability_id": "FEATURE-M02-G27"
+    },
+    {
+      "id": "runtime:M02-G27-RESOLUTION-CONFLICT",
+      "suite": "runtime",
+      "runner_case_id": "M02-G27-RESOLUTION-CONFLICT",
+      "source": "tests/development/return-drafts.test.mts",
+      "capability_id": "FEATURE-M02-G27"
+    },
+    {
+      "id": "runtime:M02-G27-KEY-CANNOT-MOVE-CASE",
+      "suite": "runtime",
+      "runner_case_id": "M02-G27-KEY-CANNOT-MOVE-CASE",
+      "source": "tests/development/return-drafts.test.mts",
+      "capability_id": "FEATURE-M02-G27"
+    },
+    {
+      "id": "runtime:M02-G27-CROSS-TENANT-CASE-HIDDEN",
+      "suite": "runtime",
+      "runner_case_id": "M02-G27-CROSS-TENANT-CASE-HIDDEN",
+      "source": "tests/development/return-drafts.test.mts",
+      "capability_id": "FEATURE-M02-G27"
+    },
+    {
+      "id": "runtime:M02-G27-FAKE-APPROVAL-REFUSED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G27-FAKE-APPROVAL-REFUSED",
+      "source": "tests/development/return-drafts.test.mts",
+      "capability_id": "FEATURE-M02-G27"
+    },
+    {
+      "id": "runtime:M02-G27-READINESS-REVOKED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G27-READINESS-REVOKED",
+      "source": "tests/development/return-drafts.test.mts",
+      "capability_id": "FEATURE-M02-G27"
+    },
+    {
+      "id": "runtime:M02-G27-DECLARED-SKILL-VALIDATES",
+      "suite": "runtime",
+      "runner_case_id": "M02-G27-DECLARED-SKILL-VALIDATES",
+      "source": "tests/development/return-drafts.test.mts",
+      "capability_id": "FEATURE-M02-G27"
+    },
+    {
+      "id": "runtime:M02-G27-PORTABLE-RUNNER-NO-STORAGE-IMPORT",
+      "suite": "runtime",
+      "runner_case_id": "M02-G27-PORTABLE-RUNNER-NO-STORAGE-IMPORT",
+      "source": "tests/development/return-drafts.test.mts",
+      "capability_id": "FEATURE-M02-G27"
+    },
+    {
+      "id": "runtime:M02-G27-SKILL-INTENT-PRICE-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G27-SKILL-INTENT-PRICE-REJECTED",
+      "source": "tests/development/return-drafts.test.mts",
+      "capability_id": "FEATURE-M02-G27"
+    },
+    {
+      "id": "runtime:M02-G27-STANDARD-LIBRARY-CLIENT-RESUMES",
+      "suite": "runtime",
+      "runner_case_id": "M02-G27-STANDARD-LIBRARY-CLIENT-RESUMES",
+      "source": "tests/development/return-drafts.test.mts",
+      "capability_id": "FEATURE-M02-G27"
+    },
+    {
+      "id": "runtime:M02-G27-MANUAL-PAGE-AND-CONTRACT",
+      "suite": "runtime",
+      "runner_case_id": "M02-G27-MANUAL-PAGE-AND-CONTRACT",
+      "source": "tests/development/return-drafts.test.mts",
+      "capability_id": "FEATURE-M02-G27"
+    },
+    {
+      "id": "runtime:M02-G27-EXACT-PREVIEW-RECHECK",
+      "suite": "runtime",
+      "runner_case_id": "M02-G27-EXACT-PREVIEW-RECHECK",
+      "source": "tests/development/return-drafts.test.mts",
+      "capability_id": "FEATURE-M02-G27"
+    },
+    {
+      "id": "runtime:M02-G27-REVIEW-TWO-MERCHANT-DEMO-SAME-SKILL",
+      "suite": "runtime",
+      "runner_case_id": "M02-G27-REVIEW-TWO-MERCHANT-DEMO-SAME-SKILL",
+      "source": "tests/development/assurance-review.test.mts",
+      "capability_id": "FEATURE-M02-G27"
+    },
+    {
+      "id": "runtime:M02-G24-REVIEW-ERASURE-SURVIVES-REOPEN",
+      "suite": "runtime",
+      "runner_case_id": "M02-G24-REVIEW-ERASURE-SURVIVES-REOPEN",
+      "source": "tests/development/assurance-review.test.mts",
+      "capability_id": "FEATURE-M02-G24"
+    },
+    {
+      "id": "runtime:M02-G24-REVIEW-HTTP-OWNER-BOUNDARY",
+      "suite": "runtime",
+      "runner_case_id": "M02-G24-REVIEW-HTTP-OWNER-BOUNDARY",
+      "source": "tests/development/assurance-review.test.mts",
+      "capability_id": "FEATURE-M02-G24"
+    },
+    {
+      "id": "runtime:M02-G27-BROWSER-RESUME-APPROVE-EXACT-DRAFT",
+      "suite": "runtime",
+      "runner_case_id": "M02-G27-BROWSER-RESUME-APPROVE-EXACT-DRAFT",
+      "source": "tests/development/return-draft-browser.test.mts",
+      "capability_id": "FEATURE-M02-G27"
+    },
+    {
+      "id": "runtime:M02-G27-BROWSER-POLICY-DENIED-CLEARS",
+      "suite": "runtime",
+      "runner_case_id": "M02-G27-BROWSER-POLICY-DENIED-CLEARS",
+      "source": "tests/development/return-draft-browser.test.mts",
+      "capability_id": "FEATURE-M02-G27"
     }
   ],
   "protected_files": [

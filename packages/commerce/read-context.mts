@@ -11,18 +11,18 @@ export interface SourceReference {
   evidence_kind:string;
 }
 export class ReadContext {
-  #kernel:CommerceKernel;#caps:Capabilities;#shopify?:ShopifyOrders;
+  #kernel:CommerceKernel;#caps:Capabilities;#readers:Record<string,{cached:(scope:Scope,id:string)=>any}>;
   readonly knowledge:Knowledge;readonly skills:Skills;readonly profiles:Profiles;
-  constructor(kernel:CommerceKernel,caps:Capabilities,options:{shopify?:ShopifyOrders}={}) {
-    this.#kernel=kernel;this.#caps=caps;this.#shopify=options.shopify;
+  constructor(kernel:CommerceKernel,caps:Capabilities,options:{shopify?:ShopifyOrders;readers?:Record<string,{cached:(scope:Scope,id:string)=>any}>}={}) {
+    this.#kernel=kernel;this.#caps=caps;this.#readers={...(options.shopify?{shopify:options.shopify}:{}),...options.readers};
     this.knowledge=new Knowledge(kernel);this.skills=new Skills(kernel);this.profiles=new Profiles(kernel,this.skills);
   }
   orderStatus(scope:Scope,resourceId:string) {
     const k=this.#kernel,s=k.require(scope),resource=k.get(scope,id(resourceId));
     if(resource.kind!=='order')throw new Error('INVALID_INPUT');
-    if(resource.source_system==='shopify') {
-      if(!this.#shopify)throw new Error('ADAPTER_UNAVAILABLE');
-      return {contract_version:'1.0.0',...this.#shopify.cached(scope,resourceId)};
+    if(resource.source_system!=='synthetic') {
+      const reader=this.#readers[resource.source_system];if(!reader)throw new Error('ADAPTER_UNAVAILABLE');
+      return {contract_version:'1.0.0',...reader.cached(scope,resourceId)};
     }
     const order=this.#caps.read(scope,'order.read',resourceId);
     const c=k.db.prepare('SELECT granted_scopes FROM commerce_connections WHERE tenant_id=? AND store_id=?').get(s.tenant_id,s.store_id) as Row;

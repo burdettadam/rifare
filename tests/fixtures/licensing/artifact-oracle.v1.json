@@ -1,6 +1,6 @@
 {
-  "source_file_count": 663,
-  "source_count_reason": "Retains all prior paths and adds enumerated M02-G18 through M02-G22 worker controls, queue, contract/client, migration, tests, demo and work records.",
+  "source_file_count": 697,
+  "source_count_reason": "Retains all prior paths and adds enumerated M02-G23 through M02-G27 readiness, privacy, restore, WooCommerce fixture reads, portable return draft, migration, docs, tests and work records.",
   "component_ids": [
     "git-agent-adaptations",
     "rifare-developer-helpers",

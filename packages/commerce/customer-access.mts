@@ -1,3 +1,4 @@
+import { assertRecoveryEgress } from './data-guards.mts';
 import { timingSafeEqual } from 'node:crypto';
 import { CommerceKernel, digest, exact, id, token } from './kernel.mts';
 import type { Row } from './kernel.mts';
@@ -36,6 +37,7 @@ export class CustomerAccess {
     return row.count>=max;
   }
   request(input:unknown, clientAddress:string) {
+    assertRecoveryEgress(this.#kernel);
     const r=exact(input,['store_id','order_number','email']);id(r.store_id);id(r.order_number);
     const address=email(r.email); if (typeof clientAddress!=='string'||!clientAddress||clientAddress.length>128) throw new Error('INVALID_INPUT');
     const k=this.#kernel, db=k.db, now=k.clock();const challenge='chal_'+token(), proof=token();
