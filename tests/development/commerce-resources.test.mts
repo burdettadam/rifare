@@ -1,0 +1,24 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { commerceFixture } from './commerce-helpers.mts';
+import { CommerceKernel } from '../../packages/commerce/kernel.mts';
+
+const use=(fn:(f:ReturnType<typeof commerceFixture>)=>unknown)=>{const f=commerceFixture();try{return fn(f);}finally{f.cleanup();}};
+test('M01-G01-01',()=>use(f=>{const a=f.seed(f.a.scope),b=f.seed(f.b.scope,'beta');assert.notEqual(a.id,b.id);assert.equal(f.kernel.lookup(f.a.scope,'order','synthetic','ORD-1001').payload.total_minor,12500);assert.equal(f.kernel.lookup(f.b.scope,'order','synthetic','ORD-1001').payload.total_minor,6400);assert.equal(a.source_version,1);assert.equal(a.freshness.observed_at,f.now());}));
+test('M01-G01-02',()=>use(f=>{const a=f.seed(f.a.scope),b=f.seed(f.b.scope,'beta');assert.throws(()=>f.kernel.get(f.a.scope,b.id),/^Error: NOT_FOUND$/);assert.throws(()=>f.kernel.get(f.a.scope,'res_missing'),/^Error: NOT_FOUND$/);assert.deepEqual(f.kernel.list(f.a.scope,'order').map(r=>r.id),[a.id]);}));
+test('M01-G01-03',()=>use(f=>{f.seed(f.a.scope);assert.throws(()=>f.kernel.list({tenant_id:'tenant-a',store_id:'store-a'},'order'),/ACCESS_DENIED/);assert.throws(()=>f.kernel.runRead(undefined as any,'job_1'),/ACCESS_DENIED/);}));
+test('M01-G01-04',()=>use(f=>{const a=f.seed(f.a.scope),c=f.seed(f.c.scope,'gamma');assert.notEqual(a.id,c.id);assert.throws(()=>f.kernel.get(f.a.scope,c.id),/NOT_FOUND/);}));
+test('M01-G01-05',()=>use(f=>{const a=f.seed(f.a.scope);f.kernel.revoke(f.a.scope);assert.throws(()=>f.kernel.get(f.a.scope,a.id),/ACCESS_DENIED/);assert.throws(()=>f.kernel.authenticate(f.a.bearer),/ACCESS_DENIED/);}));
+test('M01-G01-06',()=>use(f=>{const a=f.seed(f.a.scope);f.db.prepare("UPDATE commerce_members SET active=0 WHERE tenant_id='tenant-a' AND store_id='store-a' AND actor_id='operator'").run();assert.throws(()=>f.kernel.get(f.a.scope,a.id),/ACCESS_DENIED/);}));
+test('M01-G01-07',()=>use(f=>{f.advance(900000);assert.throws(()=>f.kernel.list(f.a.scope,'order'),/ACCESS_DENIED/);}));
+test('M01-G01-08',()=>use(f=>{const short=f.kernel.issueSession(f.a.tenant,f.a.store,'operator',1000);f.advance(1000);assert.throws(()=>f.kernel.authenticate(short),/ACCESS_DENIED/);}));
+test('M01-G01-09',()=>use(f=>{const a=f.seed(f.a.scope);const j=f.kernel.enqueueRead(f.a.scope,a.id);assert.throws(()=>f.kernel.runRead(f.b.worker,j.id),/NOT_FOUND/);assert.throws(()=>f.kernel.runRead(f.a.scope,j.id),/ACCESS_DENIED/);assert.equal(f.kernel.runRead(f.a.worker,j.id).id,a.id);assert.equal(f.kernel.runRead(f.a.worker,j.id).id,a.id);}));
+test('M01-G01-10',()=>use(f=>{const a=f.seed(f.a.scope);const ref=f.kernel.attach(f.a.scope,a.id,{fixture:'alpha-only'});assert.deepEqual(f.kernel.attachment(f.a.scope,ref),{fixture:'alpha-only'});assert.throws(()=>f.kernel.attachment(f.b.scope,ref),/NOT_FOUND/);assert.throws(()=>f.kernel.attachment(f.a.scope,'../private'),/INVALID_INPUT/);}));
+test('M01-G01-11',()=>use(f=>{f.kernel.audit(f.a.scope,'resource_read','allowed');f.kernel.audit(f.b.scope,'resource_read','denied');assert.equal(f.kernel.auditRows(f.a.scope).length,1);assert.equal(f.kernel.auditRows(f.a.scope)[0].decision,'allowed');assert.doesNotMatch(JSON.stringify(f.kernel.auditRows(f.a.scope)),/tenant-b|token_hash|Bearer/);}));
+test('M01-G01-12',()=>use(f=>{const a=f.seed(f.a.scope);assert.equal(f.seed(f.a.scope).id,a.id);assert.throws(()=>f.seed(f.a.scope,'changed'),/SOURCE_VERSION_CONFLICT/);assert.equal(f.kernel.get(f.a.scope,a.id).payload.label,'alpha');}));
+test('M01-G01-13',()=>use(f=>{assert.throws(()=>f.kernel.provisionMember('tenant-b','store-a','intruder'),/FOREIGN KEY/);assert.throws(()=>f.kernel.provisionStore('tenant-b','store-a'),/UNIQUE/);}));
+test('M01-G01-14',()=>use(f=>{f.seed(f.a.scope);assert.throws(()=>f.kernel.lookup(f.a.scope,'order','synthetic',"x' OR 1=1 --"),/INVALID_INPUT/);assert.throws(()=>f.kernel.list(f.a.scope,'order',1000),/INVALID_INPUT/);}));
+test('M01-G01-15',()=>use(f=>{assert.equal(f.db.prepare('SELECT count(*) n FROM commerce_migrations WHERE version=?').get('001-foundation.sql').n,1);new CommerceKernel(f.db,f.now);assert.equal(f.db.prepare('SELECT count(*) n FROM commerce_migrations WHERE version=?').get('001-foundation.sql').n,1);f.db.prepare("UPDATE commerce_migrations SET sha256='changed'").run();assert.throws(()=>new CommerceKernel(f.db,f.now),/MIGRATION_CHECKSUM_MISMATCH/);}));
+test('M01-G01-16',()=>use(f=>{assert.doesNotMatch(readFileSync(f.filename).toString('utf8'),new RegExp(f.a.bearer));assert.throws(()=>f.kernel.authenticate('guess'),/ACCESS_DENIED/);assert.throws(()=>f.kernel.authenticate('a'.repeat(43)),/ACCESS_DENIED/);}));
+test('M01-G01-17',()=>use(f=>{const a=f.seed(f.a.scope);const snapshot=f.kernel.get(f.a.scope,a.id);snapshot.payload.label='corrupted';assert.equal(f.kernel.get(f.a.scope,a.id).payload.label,'alpha');}));

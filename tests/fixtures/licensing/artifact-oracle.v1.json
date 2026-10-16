@@ -1,6 +1,6 @@
 {
-  "source_file_count": 424,
-  "source_count_reason": "All 419 previous source paths retained. Added prior delegated authority, review report, integration record, Python integrity regression cases and native lease regression cases. No other oracle fields change.",
+  "source_file_count": 457,
+  "source_count_reason": "All prior source paths retained. Added the five-goal commerce diagnostic implementation, tests and decision records; no other oracle fields change.",
   "component_ids": [
     "git-agent-adaptations",
     "rifare-developer-helpers",

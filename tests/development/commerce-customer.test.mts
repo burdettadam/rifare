@@ -1,0 +1,32 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { commerceFixture } from './commerce-helpers.mts';
+import { CustomerAccess } from '../../packages/commerce/customer-access.mts';
+import type { ProofDelivery } from '../../packages/commerce/customer-access.mts';
+
+function setup(){const f=commerceFixture();const outbox:ProofDelivery[]=[];const auth=new CustomerAccess(f.kernel,p=>{outbox.push(p);});
+ const a=f.seed(f.a.scope),b=f.seed(f.b.scope,'beta');
+ for(const s of [f.a,f.b]) f.kernel.ingest(s.scope,{kind:'customer',source_system:'synthetic',external_id:'C-1001',source_version:1,source_updated_at:f.now(),customer_id:null,payload:{email:s.store+'@example.invalid'}});
+ const request=(store='store-a',order='ORD-1001',address=store+'@example.invalid')=>auth.request({store_id:store,order_number:order,email:address},'127.0.0.1');
+ const complete=(p=outbox.at(-1)!)=>auth.complete({store_id:p.store_id,challenge_id:p.challenge_id,proof:p.proof});
+ return {...f,outbox,auth,aOrder:a,bOrder:b,request,complete};}
+const use=(fn:(f:ReturnType<typeof setup>)=>unknown)=>{const f=setup();try{return fn(f);}finally{f.cleanup();}};
+test('M01-G02-01',()=>use(f=>{const r=f.request();assert.equal(r.accepted,true);assert.equal('proof' in r,false);const session=f.complete();const scope=f.kernel.authenticate(session.token);assert.equal(f.kernel.get(scope,session.resource_id).payload.total_minor,12500);assert.deepEqual(session.operations,['order.read']);}));
+test('M01-G02-02',()=>use(f=>{f.request();const s=f.complete();const scope=f.kernel.authenticate(s.token);assert.throws(()=>f.kernel.get(scope,f.bOrder.id),/NOT_FOUND/);const second=f.seed(f.a.scope,'second','ORD-1002');assert.throws(()=>f.kernel.get(scope,second.id),/NOT_FOUND/);assert.throws(()=>f.kernel.list(scope,'order'),/ACCESS_DENIED/);}));
+test('M01-G02-03',()=>use(f=>{f.request();const session=f.complete();f.kernel.revoke(f.kernel.authenticate(session.token));assert.throws(()=>f.complete(),/VERIFICATION_FAILED/);assert.throws(()=>f.kernel.authenticate(session.token),/ACCESS_DENIED/);}));
+test('M01-G02-04',()=>use(f=>{f.request();const p=f.outbox[0];assert.throws(()=>f.auth.complete({...p,store_id:'store-b',destination:undefined}),/VERIFICATION_FAILED/);assert.throws(()=>f.auth.complete({challenge_id:p.challenge_id,proof:p.proof,store_id:'store-b'}),/VERIFICATION_FAILED/);}));
+test('M01-G02-05',()=>use(f=>{f.request();f.advance(300000);assert.throws(()=>f.complete(),/VERIFICATION_FAILED/);}));
+test('M01-G02-06',()=>use(f=>{f.request();const p=f.outbox[0];for(let i=0;i<5;i++)assert.throws(()=>f.auth.complete({store_id:p.store_id,challenge_id:p.challenge_id,proof:'wrong'}),/VERIFICATION_FAILED/);assert.equal(f.db.prepare('SELECT attempts FROM commerce_challenges WHERE id=?').get(p.challenge_id).attempts,5);assert.throws(()=>f.complete(),/VERIFICATION_FAILED/);}));
+test('M01-G02-07',()=>use(f=>{const unknown=f.request('store-a','ORD-missing');assert.equal(f.outbox.length,0);const valid=f.request();assert.deepEqual(Object.keys(valid).sort(),Object.keys(unknown).sort());assert.equal(unknown.expires_in,valid.expires_in);assert.throws(()=>f.auth.complete({store_id:'store-a',challenge_id:unknown.challenge_id,proof:'guess'}),/VERIFICATION_FAILED/);}));
+test('M01-G02-08',()=>use(f=>{f.request('store-a','ORD-1001','wrong@example.invalid');assert.equal(f.outbox.length,0);}));
+test('M01-G02-09',()=>use(f=>{f.request();const first=f.outbox[0];f.request();const second=f.outbox[1];assert.throws(()=>f.auth.complete({store_id:'store-a',challenge_id:first.challenge_id,proof:second.proof}),/VERIFICATION_FAILED/);assert.equal(f.complete(first).resource_id,f.aOrder.id);}));
+test('M01-G02-10',()=>use(f=>{f.request();const s=f.complete();f.advance(900000);assert.throws(()=>f.kernel.authenticate(s.token),/ACCESS_DENIED/);}));
+test('M01-G02-11',()=>use(f=>{f.request();f.kernel.ingest(f.a.scope,{kind:'customer',source_system:'synthetic',external_id:'C-1001',source_version:2,source_updated_at:f.now(),customer_id:null,payload:{email:'new@example.invalid'}});assert.throws(()=>f.complete(),/VERIFICATION_FAILED/);}));
+test('M01-G02-12',()=>use(f=>{for(let i=0;i<5;i++)f.request();assert.equal(f.outbox.length,3);assert.equal(f.db.prepare('SELECT count(*) n FROM commerce_challenges').get().n,3);}));
+test('M01-G02-13',()=>use(f=>{const p=f.request();const raw=readFileSync(f.filename).toString('utf8');assert.equal(raw.includes(f.outbox[0].proof),false);assert.equal('token' in p,false);assert.throws(()=>f.kernel.authenticate(f.outbox[0].proof),/ACCESS_DENIED/);}));
+test('M01-G02-14',()=>use(f=>{const auth=new CustomerAccess(f.kernel,()=>{throw new Error('synthetic delivery unavailable');});const r=auth.request({store_id:'store-a',order_number:'ORD-1001',email:'store-a@example.invalid'},'client');assert.equal(r.accepted,true);assert.equal(f.db.prepare('SELECT consumed FROM commerce_challenges WHERE id=?').get(r.challenge_id).consumed,1);}));
+test('M01-G02-15',()=>use(f=>{f.request();const s=f.complete();const scope=f.kernel.authenticate(s.token);assert.throws(()=>f.kernel.enqueueRead(scope,s.resource_id),/ACCESS_DENIED/);assert.throws(()=>f.kernel.auditRows(scope),/ACCESS_DENIED/);assert.throws(()=>f.kernel.lookup(scope,'customer','synthetic','C-1001'),/ACCESS_DENIED/);}));
+test('M01-G02-16',()=>use(f=>{f.request();const good=f.kernel.attach(f.a.scope,f.aOrder.id,{file:'owned'}),bad=f.kernel.attach(f.b.scope,f.bOrder.id,{file:'other'});const s=f.complete(),scope=f.kernel.authenticate(s.token);assert.deepEqual(f.kernel.attachment(scope,good),{file:'owned'});assert.throws(()=>f.kernel.attachment(scope,bad),/NOT_FOUND/);}));
+test('M01-G02-17',()=>use(f=>{f.request();f.complete();assert.equal(f.db.prepare("SELECT count(*) n FROM commerce_sessions WHERE role='customer'").get().n,1);assert.throws(()=>f.complete(),/VERIFICATION_FAILED/);assert.equal(f.db.prepare("SELECT count(*) n FROM commerce_sessions WHERE role='customer'").get().n,1);}));
+test('M01-G02-18',()=>use(f=>{for(let i=0;i<21;i++)f.request('store-a','ORD-'+i);assert.equal(f.db.prepare('SELECT count(*) n FROM commerce_challenges').get().n,20);f.request();assert.equal(f.outbox.length,0);}));
