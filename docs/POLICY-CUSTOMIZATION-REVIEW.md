@@ -62,3 +62,19 @@ limit. Per-case assertions, zero/skip/failure checks and product latency targets
 not change. New helper tests explicitly check the bound and rejection of misleading
 results. The old baseline must report this protected-path change before a reviewed
 baseline is adopted; no candidate flag may bypass that response.
+
+## Reviewed candidate outcome
+
+Candidate d75f1183c40c461e89c6829d6790ac2a63fa2323 passed all 1059 registered
+checks through the external controller: 945 retained and 114 new. The earlier
+baseline correctly blocked the single protected timeout change before the reviewed
+baseline was exported. Six faulted implementations failed behavioral assertions.
+No previous executable test source or registration was changed.
+
+Final presentation review added concise, text-only change/scenario summaries and
+bounded, collapsible technical output. An initially closed disclosure hid results
+from the existing browser assertions; the failed run is retained. The disclosures
+now start open, and all seven unchanged browser checks pass. No test was weakened.
+README commands and counts now describe this batch. The merged candidate and
+restored source must receive a fresh external-controller run; earlier candidate
+results do not by themselves cover those final presentation changes.

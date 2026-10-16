@@ -46,5 +46,17 @@
   "expected_total_tests": 1059,
   "target_stack_qualified": false,
   "milestone_accepted": false,
-  "release_authorized": false
+  "release_authorized": false,
+  "reviewed_candidate": "d75f1183c40c461e89c6829d6790ac2a63fa2323",
+  "reviewed_candidate_test_result": {
+    "executed": 1059,
+    "passed": 1059,
+    "failed": 0,
+    "skipped": 0
+  },
+  "protected_change_review": {
+    "path": "tools/test_runtime.py",
+    "change": "suite limit 120 to 240 seconds, matching existing controller",
+    "prior_baseline_block_observed": true
+  }
 }
