@@ -277,6 +277,7 @@
         "goals/M12/M12-G99.md",
         "migrations/commerce/001-foundation.sql",
         "migrations/commerce/002-customer-access.sql",
+        "migrations/commerce/003-secret-handles.sql",
         "milestones/M00.md",
         "milestones/M01.md",
         "milestones/M02.md",
@@ -294,6 +295,7 @@
         "package.json",
         "packages/commerce/customer-access.mts",
         "packages/commerce/kernel.mts",
+        "packages/commerce/secrets.mts",
         "planning/acceptance-tests.json",
         "planning/accepted-regression-baseline.EMPTY.json",
         "planning/backlog.json",
@@ -338,7 +340,8 @@
         "work/records/M00-G08.md",
         "work/records/M00-G99.md",
         "work/records/M01-G01.md",
-        "work/records/M01-G02.md"
+        "work/records/M01-G02.md",
+        "work/records/M01-G03.md"
       ],
       "notices": []
     },
@@ -378,6 +381,7 @@
         "tests/development/commerce-customer.test.mts",
         "tests/development/commerce-helpers.mts",
         "tests/development/commerce-resources.test.mts",
+        "tests/development/commerce-secrets.test.mts",
         "tests/development/config.test.mts",
         "tests/development/helpers.mts",
         "tests/development/integration.test.mts",
