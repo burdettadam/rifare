@@ -2,23 +2,21 @@
 
 ## Current integrated development
 
-M02-G23 through M02-G27 add readiness, scoped privacy, quarantined restore,
-fixture-only WooCommerce reads and a portable safe return draft. See
-[the guide](docs/READINESS-PRIVACY-RECOVERY.md) and
-[review](docs/READINESS-PRIVACY-REVIEW.md). Prior source, tests, skill/model neutrality
-and benchmark contracts remain intact. No new dependency or scheduler is required.
+M03-G01 through M03-G05 add item/quantity eligibility, scoped evidence, a verified
+customer portal, reviewer overrides and fixture-qualified native return records.
+See [the guide](docs/RETURN-INTAKE.md) and [review](docs/RETURN-INTAKE-REVIEW.md).
+Prior source, tests, model neutrality and benchmark contracts remain intact.
 
-## Remaining qualifications
+## Remaining qualification and next work
 
-M02-G99 is the next milestone assessment. PostgreSQL/React, real platform/model,
-production privacy/recovery and actual served-browser qualification remain open.
-Readiness can qualify only the reversible local diagnostic case plan; it does not
-certify financial integrations or warehouse holds. Continue from accumulated main,
-not older goal branches. No independent reviews or external observations are invented.
+M02-G99 is assessed but blocked; target PostgreSQL/React, live providers, production
+privacy and actual served-browser qualification remain open. Local integration is
+not milestone acceptance. Start M03-G06 from the accumulated source; preserve all
+unknown native operations and reservations. Real refunds/payments/shipping and
+connected Shopify creation require later implementation and qualification.
 
 ## Source of truth
 
-`planning/goals.json`, test specifications, milestone coverage and benchmark
-contracts retain their original meaning. Generate cards with the existing renderer;
-use work records for assignment and progress. Native Git, ordinary commands and
-existing skills remain the workflow. No scheduler or mandatory model was added.
+Original planning JSON and test specifications retain their meaning. Keep work
+records separate from planning assertions. Use ordinary Git, existing commands and
+skills; no mandatory model or scheduler is added.

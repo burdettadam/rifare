@@ -52,6 +52,9 @@ export function eraseSelected(k:CommerceKernel,s:Row,ids:string[],hash:string,at
     const cases=all(k,'commerce_cases',t,st).filter(r=>ids.includes(r.resource_id)).map(r=>r.id);
     if(cases.length) {
       const cargs=[t,st,...cases],cm=where(cases);
+      k.db.prepare(`UPDATE commerce_return_evidence SET state='erased',bytes=NULL,note='',scanner=NULL WHERE tenant_id=? AND store_id=? AND case_id IN (${cm})`).run(...cargs);
+      scrubRecord(k,'commerce_return_quotes',t,st,cases,'case_id');scrubRecord(k,'commerce_return_requests',t,st,cases,'case_id');
+      k.db.prepare(`UPDATE commerce_return_overrides SET revoked=1 WHERE tenant_id=? AND store_id=? AND quote_id IN (SELECT id FROM commerce_return_quotes WHERE tenant_id=? AND store_id=? AND case_id IN (${cm}))`).run(t,st,...cargs);
       k.db.prepare(`UPDATE commerce_worker_grants SET revoked=1 WHERE tenant_id=? AND store_id=? AND case_id IN (${cm})`).run(...cargs);
       k.db.prepare(`UPDATE commerce_case_work SET state='revoked',expires_at=0 WHERE tenant_id=? AND store_id=? AND case_id IN (${cm})`).run(...cargs);
       k.db.prepare(`UPDATE commerce_action_approvals SET revoked=1 WHERE tenant_id=? AND store_id=? AND preview_id IN (SELECT id FROM commerce_action_previews WHERE tenant_id=? AND store_id=? AND case_id IN (${cm}))`).run(t,st,...cargs);
@@ -95,6 +98,9 @@ export class PrivacyLifecycle {
         resources:rs.map(r=>k.project(r)),attachments:all(k,'commerce_attachments',s.tenant_id,s.store_id).filter(r=>ids.includes(r.resource_id)).map(r=>({id:r.id,resource_id:r.resource_id,content:JSON.parse(r.content)})),
         knowledge:all(k,'commerce_knowledge',s.tenant_id,s.store_id).filter(r=>ids.includes(r.resource_id)),
         tasks,assistance:all(k,'commerce_assistance_receipts',s.tenant_id,s.store_id).filter(r=>tasks.some(t=>t.id===r.task_id)),
+        return_evidence:all(k,'commerce_return_evidence',s.tenant_id,s.store_id).filter(r=>ids.includes(r.resource_id)).map(r=>({...r,bytes:r.bytes?Buffer.from(r.bytes).toString('base64'):null})),
+        return_requests:all(k,'commerce_return_requests',s.tenant_id,s.store_id).filter(r=>ids.includes(r.resource_id)),
+        return_quotes:all(k,'commerce_return_quotes',s.tenant_id,s.store_id).filter(r=>ids.includes(r.resource_id)),
         cases,configurations:all(k,'commerce_case_configurations',s.tenant_id,s.store_id).filter(r=>caseIds.includes(r.case_id)),
         previews:all(k,'commerce_action_previews',s.tenant_id,s.store_id).filter(r=>caseIds.includes(r.case_id)),operations,audit_receipts:receipts,
         customer_notes:all(k,'commerce_receipt_payloads',s.tenant_id,s.store_id).filter(r=>receipts.some(a=>a.id===r.receipt_id)),
