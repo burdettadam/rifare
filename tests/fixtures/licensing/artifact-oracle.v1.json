@@ -1,5 +1,5 @@
 {
-  "source_file_count": 438,
+  "source_file_count": 442,
   "source_count_reason": "All prior source paths retained. Added the five-goal commerce diagnostic implementation, tests and decision records; no other oracle fields change.",
   "component_ids": [
     "git-agent-adaptations",

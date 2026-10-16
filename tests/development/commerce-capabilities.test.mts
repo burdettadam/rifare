@@ -1,0 +1,24 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { commerceFixture } from './commerce-helpers.mts';
+import { Capabilities,CONTRACT_VERSION,CONTRACT_HASH,READS } from '../../packages/commerce/capabilities.mts';
+
+function setup(){const f=commerceFixture(),caps=new Capabilities(f.kernel);const a=f.seed(f.a.scope),b=f.seed(f.b.scope,'beta');
+ const config=(scope=f.a.scope,scopes=Object.values(READS).map(r=>r.scope),qualification='synthetic')=>caps.configure(scope,{adapter:'simulator',contract_version:CONTRACT_VERSION,granted_scopes:scopes,qualification});
+ return {...f,caps,aOrder:a,bOrder:b,config};}
+const use=(fn:(f:ReturnType<typeof setup>)=>unknown)=>{const f=setup();try{return fn(f);}finally{f.cleanup();}};
+test('M01-G04-01',()=>use(f=>{f.config();const cap=f.caps.evaluate(f.a.scope,'order.read',f.aOrder.id);assert.equal(cap.available,true);assert.equal(cap.contract_version,CONTRACT_VERSION);assert.equal(cap.evidence.sha256,CONTRACT_HASH);assert.equal(cap.production_qualified,false);assert.equal(f.caps.read(f.a.scope,'order.read',f.aOrder.id).payload.total_minor,12500);}));
+test('M01-G04-02',()=>use(f=>{f.config();assert.equal(f.caps.evaluate(f.a.scope,'order.refund').reason,'READ_ONLY_PHASE');assert.equal(f.caps.evaluate(f.a.scope,'history.read').reason,'MESSAGE_HISTORY_UNAVAILABLE');assert.throws(()=>f.caps.read(f.a.scope,'order.refund',f.aOrder.id),/CAPABILITY_UNAVAILABLE/);}));
+test('M01-G04-03',()=>use(f=>{f.config();const stale=f.caps.evaluate(f.a.scope,'order.read');assert.equal(stale.available,true);f.config(f.a.scope,[]);assert.equal(f.caps.evaluate(f.a.scope,'order.read').available,false);assert.throws(()=>f.caps.read(f.a.scope,'order.read',f.aOrder.id),/CAPABILITY_UNAVAILABLE/);assert.equal(stale.available,true);}));
+test('M01-G04-04',()=>use(f=>{f.config();f.config(f.a.scope,['read_orders'],'unverified');assert.equal(f.caps.evaluate(f.a.scope,'order.read').status,'unverified');assert.throws(()=>f.caps.read(f.a.scope,'order.read',f.aOrder.id),/CAPABILITY_UNAVAILABLE/);}));
+test('M01-G04-05',()=>use(f=>{f.caps.configure(f.a.scope,{adapter:'shopify',contract_version:'candidate-v1',granted_scopes:['read_orders'],qualification:'unverified'});assert.equal(f.caps.evaluate(f.a.scope,'order.read').reason,'ADAPTER_UNQUALIFIED');assert.equal(f.caps.evaluate(f.a.scope,'order.read').production_qualified,false);}));
+test('M01-G04-06',()=>use(f=>{f.config();assert.equal(f.caps.evaluate(f.b.scope,'order.read').available,false);assert.throws(()=>f.caps.read(f.a.scope,'order.read',f.bOrder.id),/NOT_FOUND/);}));
+test('M01-G04-07',()=>use(f=>{f.config();f.db.prepare("UPDATE commerce_stores SET market='CA' WHERE store_id='store-a'").run();assert.equal(f.caps.evaluate(f.a.scope,'order.read').reason,'MARKET_UNQUALIFIED');}));
+test('M01-G04-08',()=>use(f=>{f.config();f.db.prepare("UPDATE commerce_resources SET payload=? WHERE id=?").run(JSON.stringify({status:'unknown'}),f.aOrder.id);assert.equal(f.caps.evaluate(f.a.scope,'order.read',f.aOrder.id).reason,'RESOURCE_STATE_UNQUALIFIED');assert.deepEqual(f.caps.listResources(f.a.scope,'order'),[]);}));
+test('M01-G04-09',()=>use(f=>{f.config();f.db.prepare("UPDATE commerce_connections SET evidence_hash='forged' WHERE store_id='store-a'").run();assert.equal(f.caps.evaluate(f.a.scope,'order.read').reason,'CONTRACT_EVIDENCE_MISMATCH');}));
+test('M01-G04-10',()=>use(f=>{assert.throws(()=>f.caps.configure(f.a.scope,{adapter:'simulator',contract_version:CONTRACT_VERSION,granted_scopes:['read_orders'],qualification:'synthetic',url:'https://example.invalid'}),/INVALID_INPUT/);assert.throws(()=>f.caps.configure(f.a.scope,{adapter:'shopify',contract_version:CONTRACT_VERSION,granted_scopes:['read_orders'],qualification:'synthetic'}),/INVALID_INPUT/);}));
+test('M01-G04-11',()=>use(f=>{f.config();const snapshot=f.caps.list(f.a.scope);snapshot[0].available=false;assert.equal(f.caps.evaluate(f.a.scope,'order.read').available,true);assert.equal(f.caps.evaluate(f.a.scope,'support.handoff').status,'manual');}));
+test('M01-G04-12',()=>use(f=>{f.config();assert.throws(()=>f.caps.read(f.a.scope,'shipment.read',f.aOrder.id),/CAPABILITY_UNAVAILABLE/);assert.equal(f.caps.evaluate(f.a.scope,'http.fetch').reason,'UNKNOWN_ACTION');}));
+test('M01-G04-13',()=>use(f=>{f.config();f.db.prepare("UPDATE commerce_stores SET active=0 WHERE store_id='store-a'").run();assert.throws(()=>f.caps.evaluate(f.a.scope,'order.read'),/ACCESS_DENIED/);}));
+test('M01-G04-14',()=>use(f=>{assert.throws(()=>f.config(f.a.worker),/ACCESS_DENIED/);assert.throws(()=>f.caps.list({}),/ACCESS_DENIED/);}));
+test('M01-G04-15',()=>use(f=>{f.config();const before=f.caps.evaluate(f.a.scope,'order.read').connection_revision;f.config(f.a.scope,['read_catalog']);assert.ok(f.caps.evaluate(f.a.scope,'order.read').connection_revision>before);assert.deepEqual(f.caps.listResources(f.a.scope,'catalog'),[]);}));

@@ -278,6 +278,7 @@
         "migrations/commerce/001-foundation.sql",
         "migrations/commerce/002-customer-access.sql",
         "migrations/commerce/003-secret-handles.sql",
+        "migrations/commerce/004-capabilities.sql",
         "milestones/M00.md",
         "milestones/M01.md",
         "milestones/M02.md",
@@ -293,6 +294,7 @@
         "milestones/M12.md",
         "package-lock.json",
         "package.json",
+        "packages/commerce/capabilities.mts",
         "packages/commerce/customer-access.mts",
         "packages/commerce/kernel.mts",
         "packages/commerce/secrets.mts",
@@ -341,7 +343,8 @@
         "work/records/M00-G99.md",
         "work/records/M01-G01.md",
         "work/records/M01-G02.md",
-        "work/records/M01-G03.md"
+        "work/records/M01-G03.md",
+        "work/records/M01-G04.md"
       ],
       "notices": []
     },
@@ -378,6 +381,7 @@
         "templates/evidence-manifest.DRAFT.json",
         "templates/evidence-manifest.schema.json",
         "tests/browser/component.py",
+        "tests/development/commerce-capabilities.test.mts",
         "tests/development/commerce-customer.test.mts",
         "tests/development/commerce-helpers.mts",
         "tests/development/commerce-resources.test.mts",
