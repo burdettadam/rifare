@@ -11298,6 +11298,34 @@
       "runner_case_id": "M03-G05-NEW-EVIDENCE-REVIEW-BLOCKS-NATIVE-SEND",
       "source": "tests/development/native-returns.test.mts",
       "capability_id": "FEATURE-M03-G05"
+    },
+    {
+      "id": "runtime:M03-G02-REVIEW-HELD-EVIDENCE-NOT-ERASED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G02-REVIEW-HELD-EVIDENCE-NOT-ERASED",
+      "source": "tests/development/return-retention-review.test.mts",
+      "capability_id": "FEATURE-M03-G02"
+    },
+    {
+      "id": "runtime:M03-G02-REVIEW-HELD-EXPIRY-NOT-PURGED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G02-REVIEW-HELD-EXPIRY-NOT-PURGED",
+      "source": "tests/development/return-retention-review.test.mts",
+      "capability_id": "FEATURE-M03-G02"
+    },
+    {
+      "id": "runtime:M03-G02-REVIEW-RELEASED-HOLD-PURGE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G02-REVIEW-RELEASED-HOLD-PURGE",
+      "source": "tests/development/return-retention-review.test.mts",
+      "capability_id": "FEATURE-M03-G02"
+    },
+    {
+      "id": "runtime:M03-G02-REVIEW-EXPIRED-HOLD-PURGE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G02-REVIEW-EXPIRED-HOLD-PURGE",
+      "source": "tests/development/return-retention-review.test.mts",
+      "capability_id": "FEATURE-M03-G02"
     }
   ],
   "protected_files": [
@@ -11576,6 +11604,7 @@
     "tests/development/return-intake-helpers.mts",
     "tests/development/return-portal-browser.test.mts",
     "tests/development/return-portal.test.mts",
+    "tests/development/return-retention-review.test.mts",
     "tests/development/return-review.test.mts",
     "tests/development/skill-releases.test.mts",
     "tests/development/store.test.mts",
