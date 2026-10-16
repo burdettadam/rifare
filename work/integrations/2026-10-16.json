@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "kind": "delegated_local_integration_not_product_acceptance",
+  "authority_commit": "ae8e613de96fa6aba2e501dce370f3ec63712f67",
+  "decision_ref": "docs/decisions/0011-delegated-review-and-integration.md",
+  "review_ref": "docs/INTEGRATION-REVIEW.md",
+  "prior_main": "4dc8041ca81e75a2557cd5cd40b52e24d43b812f",
+  "review_base": "8de9a432671b5a96df948096070cb7128e9e2584",
+  "target_branch": "main",
+  "exception_id": "DELEGATED-LOCAL-02",
+  "reviewer": "rifare-delegated-maintainer",
+  "review_method": "same_assistant_explicit_security_correctness_regression_operability_review",
+  "independent_review_sessions": 0,
+  "contributions": [
+    {
+      "goal_id": "M00-G05",
+      "branch": "goal/M00-G05",
+      "source_commit": "2883cd41fdc7630527034cf35605d920218c0c64",
+      "source_disposition": "reviewed_for_local_nonrelease_integration",
+      "full_goal_accepted": false
+    },
+    {
+      "goal_id": "M00-G06",
+      "branch": "goal/M00-G06",
+      "source_commit": "4a88504e0c0d8b2282f054292318f91d06736901",
+      "source_disposition": "reviewed_for_local_nonrelease_integration",
+      "full_goal_accepted": false
+    },
+    {
+      "goal_id": "M00-G07",
+      "branch": "goal/M00-G07",
+      "source_commit": "c625daf540fc3edb68d006761cea2430d2b0a3db",
+      "source_disposition": "reviewed_for_local_nonrelease_integration",
+      "full_goal_accepted": false
+    },
+    {
+      "goal_id": "M00-G08",
+      "branch": "goal/M00-G08",
+      "source_commit": "6acc338ac7a3b368d367202918dfbcb6d423669c",
+      "source_disposition": "reviewed_for_local_nonrelease_integration",
+      "full_goal_accepted": false
+    },
+    {
+      "goal_id": "M00-G99",
+      "branch": "goal/M00-G99",
+      "source_commit": "8de9a432671b5a96df948096070cb7128e9e2584",
+      "source_disposition": "reviewed_for_local_nonrelease_integration",
+      "full_goal_accepted": false
+    }
+  ],
+  "findings": [
+    {
+      "id": "RF-REVIEW-01",
+      "severity": "high_within_local_evidence_trust_model",
+      "state": "fixed",
+      "summary": "Source and ancestry inspection must ignore Git replacement objects and ambient routing."
+    },
+    {
+      "id": "RF-REVIEW-02",
+      "severity": "medium_diagnostic_reliability",
+      "state": "fixed",
+      "summary": "Failure transitions must be owned by a running, unexpired worker lease."
+    },
+    {
+      "id": "RF-REVIEW-03",
+      "severity": "low_operability",
+      "state": "fixed",
+      "summary": "README, plan and work records must identify current main rather than an old goal branch."
+    }
+  ],
+  "retained_test_count": 565,
+  "new_test_count": 17,
+  "expected_total_tests": 582,
+  "target_stack_qualified": false,
+  "milestone_accepted": false,
+  "release_authorized": false,
+  "next_engineering_goal": "resume M00-G05 target stack on current main"
+}

@@ -1,6 +1,15 @@
 # M00 qualification and next implementation work
 
-## Current disposition
+## Current local integration decision
+
+The owner renewed delegation and authorized review and merging. The review in
+[INTEGRATION-REVIEW.md](INTEGRATION-REVIEW.md) authorizes the accumulated diagnostic
+source on `main`; separate independent review sessions were not claimed. This
+removes the prior local-merge barrier, not the technical PostgreSQL/React or served
+browser gaps. The sections below preserve the assessment at its earlier checkpoint.
+Current integration state is in [the ledger](../work/integrations/2026-10-16.json).
+
+## Historical assessment disposition
 
 **M00-G99 is blocked.** This checkpoint assesses the combined M00 source; it does
 not add an application feature or another acceptance framework. The governing

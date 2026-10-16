@@ -1,21 +1,24 @@
 # Rifare
 
-**Current work: M00-G05 is partial, not accepted.** A real, explicit synthetic smoke environment is available. PostgreSQL/React target setup remains blocked. [Start the local diagnostic](docs/LOCAL-ENVIRONMENT.md).
-
 Merchant-owned commerce operations with tailorable skills and independently
 replaceable platforms, agents and models.
 
-**Current checkpoint:** M00-G01 through M00-G04 are accepted for local development
-and merged into `main`. Their branches and original commits are retained.
-**No commerce application is implemented.** M00-G05 has a separately tested
-`smoke-sqlite` diagnostic slice on `goal/M00-G05`; the full goal is not accepted.
+**Current checkpoint: reviewed diagnostic code integrated into `main`.** All
+M00-G01 through M00-G08 source contributions and the M00-G99 assessment are retained,
+along with their original branches. The latest integration fixes source-identity
+and expired-worker-lease defects and adds 17 permanent regression tests.
 
-The owner delegated project decisions. [ADR-0004](docs/decisions/0004-delegated-development-authority.md)
-records the adopted scope, benchmark, licensing direction and narrow bootstrap
-review exception. [The acceptance ledger](work/accepted-goals.json) is current.
-Original pending proposal fields and initial planning snapshots remain historical
-records, not the live task state. No independent review or product qualification
-is claimed from the bootstrap exception.
+**This is not the completed PostgreSQL/React application.** The runnable profile
+is `smoke-sqlite`: separate local API, worker, HTML/JavaScript UI, SQLite migrations,
+queues and attachments. There are no live commerce integrations. Default target
+startup still fails explicitly rather than substituting this diagnostic.
+
+[The integration review](docs/INTEGRATION-REVIEW.md) records the findings and decision.
+[ADR-0011](docs/decisions/0011-delegated-review-and-integration.md) records delegated
+local merge authority. [The integration ledger](work/integrations/2026-10-16.json)
+is separate from [full goal acceptance](work/accepted-goals.json). M00-G05 through
+M00-G08 remain target-incomplete; their partial status no longer blocks retaining
+and developing the reviewed source on `main`.
 
 ## Start
 
@@ -33,15 +36,15 @@ for these diagnostic commands. Windows users can use `py -3`; cross-platform
 qualification has not been performed by this checkpoint's Linux checks.
 
 Read [AGENTS.md](AGENTS.md), [GOVERNANCE.md](GOVERNANCE.md), [PLANS.md](PLANS.md)
-and [DEVELOPMENT.md](DEVELOPMENT.md). The delivered checkout is already on
-`goal/M00-G05`; resume that branch rather than creating it again from `main`.
+and [DEVELOPMENT.md](DEVELOPMENT.md). The delivered checkout is on `main`.
+Resume target-stack repair from this accumulated source, not an older goal branch.
 Check `git worktree list` before claiming a writer or starting another instance.
 
 For the explicit diagnostic runtime:
 
 ```sh
 npm ci --offline --ignore-scripts
-python3 tools/verify.py --runtime
+python3 tools/verify.py --runtime --harness
 npm run dev:smoke
 # In a second terminal in the same worktree:
 npm run stop:smoke
@@ -142,3 +145,11 @@ prerequisites; a green diagnostic run is not milestone acceptance. See
 [qualification and repair order](docs/M00-QUALIFICATION.md) and
 [the exact existing-goal repair checklist](work/qualification/M00.json).
 The next implementation work resumes M00-G05 on the accumulated source; M01 is not started.
+
+## Immediate engineering priority
+
+Resume **M00-G05** from this `main`: implement and install the target React/PostgreSQL
+stack, then extend M00-G06 to the actually served application. Preserve the existing
+582 diagnostic/helper tests. Do not add more governance machinery merely to postpone
+this implementation. The [qualification guide](docs/M00-QUALIFICATION.md) separates
+these engineering gaps from the completed local integration review.

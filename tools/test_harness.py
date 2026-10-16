@@ -85,10 +85,22 @@ def load_manifest(root: Path):
     return data
 
 
+def git_environment(source=None):
+    """Bind reads to the explicit checkout, not ambient routing or replacement refs."""
+    source = os.environ if source is None else source
+    env = {k: v for k, v in source.items()
+           if k in ('PATH', 'SystemRoot', 'WINDIR', 'COMSPEC')}
+    env.update({'GIT_CONFIG_GLOBAL': os.devnull, 'GIT_CONFIG_NOSYSTEM': '1',
+                'GIT_TERMINAL_PROMPT': '0', 'GIT_NO_REPLACE_OBJECTS': '1',
+                'LC_ALL': 'C'})
+    return env
+
+
 def source_identity(root: Path):
     def git(*args):
-        return subprocess.check_output(['git','--no-optional-locks','-c','core.fsmonitor=false',
-                                        '-C',str(root),*args])
+        return subprocess.check_output(['git','--no-replace-objects','--no-optional-locks',
+                                        '-c','core.fsmonitor=false','-C',str(root),*args],
+                                       env=git_environment(), timeout=30)
     commit=git('rev-parse','HEAD').decode().strip()
     object_format=git('rev-parse','--show-object-format').decode().strip()
     if object_format not in ('sha1','sha256'): raise ValueError('unsupported Git object format')

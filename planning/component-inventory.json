@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "id": "rifare-source-inventory",
-  "revision": 1,
+  "revision": 2,
   "status": "proposed",
   "components": [
     {
@@ -41,6 +41,7 @@
         "docs/EVIDENCE-CONTRACT.md",
         "docs/EVIDENCE-GATE.md",
         "docs/FIRST-DISPATCH.md",
+        "docs/INTEGRATION-REVIEW.md",
         "docs/LICENSING.md",
         "docs/LOCAL-ENVIRONMENT.md",
         "docs/M00-QUALIFICATION.md",
@@ -68,6 +69,7 @@
         "docs/decisions/0008-trusted-regression-controller.md",
         "docs/decisions/0009-candidate-bound-evidence.md",
         "docs/decisions/0010-integrated-milestone-qualification.md",
+        "docs/decisions/0011-delegated-review-and-integration.md",
         "docs/decisions/README.md",
         "goals/M00/M00-G01.md",
         "goals/M00/M00-G02.md",
@@ -319,6 +321,7 @@
         "templates/evidence-bundle.v1.schema.json",
         "work/README.md",
         "work/accepted-goals.json",
+        "work/integrations/2026-10-16.json",
         "work/qualification/M00.json",
         "work/records/M00-G01.md",
         "work/records/M00-G02.md",
@@ -368,6 +371,7 @@
         "tests/development/config.test.mts",
         "tests/development/helpers.mts",
         "tests/development/integration.test.mts",
+        "tests/development/review.test.mts",
         "tests/development/store.test.mts",
         "tests/fixtures/development/command-manifests.v1.json",
         "tests/fixtures/harness/expected.v1.json",
@@ -404,6 +408,7 @@
         "tests/test_regression_gate.py",
         "tests/test_release_benchmark.py",
         "tests/test_repository.py",
+        "tests/test_review_integrity.py",
         "tests/test_runtime_intake.py",
         "tests/test_support_envelope.py",
         "tests/test_workflow.py",

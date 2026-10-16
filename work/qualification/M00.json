@@ -278,7 +278,7 @@
     "goal_id": "M00-G05",
     "mode": "resume_existing_goal_on_accumulated_source",
     "suggested_branch": "repair/M00-G05-target-stack",
-    "base_rule": "Use the delivered integrated source tip including G06-G08; never reset to an older goal branch and lose their code/tests.",
+    "base_rule": "Use the current reviewed main containing G05-G08 and integration fixes; never reset to an older goal branch.",
     "required_host": [
       "Git/Python and pinned Node/npm",
       "Permitted dependency artifact access or verified approved cache",
@@ -290,5 +290,12 @@
   "acceptance_written": false,
   "milestone_accepted": false,
   "independent_reviews_performed": false,
-  "release_authorized": false
+  "release_authorized": false,
+  "local_integration": {
+    "state": "reviewed_diagnostic_integration",
+    "decision_ref": "docs/decisions/0011-delegated-review-and-integration.md",
+    "record": "work/integrations/2026-10-16.json",
+    "target_qualification_complete": false,
+    "independent_sessions_claimed": false
+  }
 }

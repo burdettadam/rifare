@@ -12,7 +12,7 @@
     "dev:smoke": "node --experimental-strip-types tools/dev-smoke.mts",
     "stop:smoke": "node --experimental-strip-types tools/dev-stop.mts",
     "db:migrate:smoke": "node --experimental-strip-types tools/dev-migrate.mts",
-    "test:runtime": "node --experimental-strip-types --test --test-concurrency=1 tests/development/config.test.mts tests/development/store.test.mts tests/development/integration.test.mts",
+    "test:runtime": "node --experimental-strip-types --test --test-concurrency=1 tests/development/config.test.mts tests/development/store.test.mts tests/development/integration.test.mts tests/development/review.test.mts",
     "verify": "python3 tools/verify.py"
   }
 }

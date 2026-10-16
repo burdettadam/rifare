@@ -105,8 +105,10 @@ export class SmokeStore {
       this.db.prepare("UPDATE dev_jobs SET state='completed',completed_at=?,lease_owner=NULL,lease_until=0 WHERE id=?").run(now, current.id);
     });
   }
-  fail(job: Record<string, any>) {
-    this.db.prepare("UPDATE dev_jobs SET state='failed',failure_code='LOCAL_EFFECT_FAILED',lease_owner=NULL,lease_until=0 WHERE id=? AND lease_owner=?").run(job.id, job.lease_owner);
+  fail(job: Record<string, any>, now = Date.now()): boolean {
+    // An expired worker no longer owns the transition, even before reclamation.
+    const result = this.db.prepare("UPDATE dev_jobs SET state='failed',failure_code='LOCAL_EFFECT_FAILED',lease_owner=NULL,lease_until=0 WHERE id=? AND state='running' AND lease_owner=? AND lease_until>=?").run(job.id, job.lease_owner, now);
+    return result.changes === 1;
   }
   attachmentPath(id: string) {
     if (!VALID_ID.test(id)) throw new Error('INVALID_MARKER');

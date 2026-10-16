@@ -4031,6 +4031,125 @@
       "runner_case_id": "test_evidence_gate.AdditionalBoundaryTests.test_missing_dependency_lock_pin_rejected",
       "source": "tests/test_evidence_gate.py",
       "capability_id": "FEATURE-M00-G08"
+    },
+    {
+      "id": "python:test_review_integrity.SourceIdentityReviewTests.test_clean_checkout_still_has_original_identity",
+      "suite": "python",
+      "runner_case_id": "test_review_integrity.SourceIdentityReviewTests.test_clean_checkout_still_has_original_identity",
+      "source": "tests/test_review_integrity.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_review_integrity.SourceIdentityReviewTests.test_commit_replacement_cannot_disguise_changed_source",
+      "suite": "python",
+      "runner_case_id": "test_review_integrity.SourceIdentityReviewTests.test_commit_replacement_cannot_disguise_changed_source",
+      "source": "tests/test_review_integrity.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_review_integrity.SourceIdentityReviewTests.test_controller_rejects_replaced_commit_before_execution",
+      "suite": "python",
+      "runner_case_id": "test_review_integrity.SourceIdentityReviewTests.test_controller_rejects_replaced_commit_before_execution",
+      "source": "tests/test_review_integrity.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_review_integrity.SourceIdentityReviewTests.test_ambient_git_directory_does_not_redirect_source_identity",
+      "suite": "python",
+      "runner_case_id": "test_review_integrity.SourceIdentityReviewTests.test_ambient_git_directory_does_not_redirect_source_identity",
+      "source": "tests/test_review_integrity.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_review_integrity.SourceIdentityReviewTests.test_ambient_index_does_not_change_tracked_membership",
+      "suite": "python",
+      "runner_case_id": "test_review_integrity.SourceIdentityReviewTests.test_ambient_index_does_not_change_tracked_membership",
+      "source": "tests/test_review_integrity.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_review_integrity.SourceIdentityReviewTests.test_replacement_opt_in_cannot_override_inspection",
+      "suite": "python",
+      "runner_case_id": "test_review_integrity.SourceIdentityReviewTests.test_replacement_opt_in_cannot_override_inspection",
+      "source": "tests/test_review_integrity.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_review_integrity.SourceIdentityReviewTests.test_real_modified_source_is_not_hidden_by_environment_sanitization",
+      "suite": "python",
+      "runner_case_id": "test_review_integrity.SourceIdentityReviewTests.test_real_modified_source_is_not_hidden_by_environment_sanitization",
+      "source": "tests/test_review_integrity.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_review_integrity.ControllerIdentityReviewTests.test_replaced_green_test_cannot_run_under_original_commit",
+      "suite": "python",
+      "runner_case_id": "test_review_integrity.ControllerIdentityReviewTests.test_replaced_green_test_cannot_run_under_original_commit",
+      "source": "tests/test_review_integrity.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_review_integrity.ControllerIdentityReviewTests.test_controller_ancestry_ignores_foreign_git_environment",
+      "suite": "python",
+      "runner_case_id": "test_review_integrity.ControllerIdentityReviewTests.test_controller_ancestry_ignores_foreign_git_environment",
+      "source": "tests/test_review_integrity.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "runtime:REVIEW-LEASE-01",
+      "suite": "runtime",
+      "runner_case_id": "REVIEW-LEASE-01",
+      "source": "tests/development/review.test.mts",
+      "capability_id": "FEATURE-M00-G05"
+    },
+    {
+      "id": "runtime:REVIEW-LEASE-02",
+      "suite": "runtime",
+      "runner_case_id": "REVIEW-LEASE-02",
+      "source": "tests/development/review.test.mts",
+      "capability_id": "FEATURE-M00-G05"
+    },
+    {
+      "id": "runtime:REVIEW-LEASE-03",
+      "suite": "runtime",
+      "runner_case_id": "REVIEW-LEASE-03",
+      "source": "tests/development/review.test.mts",
+      "capability_id": "FEATURE-M00-G05"
+    },
+    {
+      "id": "runtime:REVIEW-LEASE-04",
+      "suite": "runtime",
+      "runner_case_id": "REVIEW-LEASE-04",
+      "source": "tests/development/review.test.mts",
+      "capability_id": "FEATURE-M00-G05"
+    },
+    {
+      "id": "runtime:REVIEW-LEASE-05",
+      "suite": "runtime",
+      "runner_case_id": "REVIEW-LEASE-05",
+      "source": "tests/development/review.test.mts",
+      "capability_id": "FEATURE-M00-G05"
+    },
+    {
+      "id": "runtime:REVIEW-LEASE-06",
+      "suite": "runtime",
+      "runner_case_id": "REVIEW-LEASE-06",
+      "source": "tests/development/review.test.mts",
+      "capability_id": "FEATURE-M00-G05"
+    },
+    {
+      "id": "runtime:REVIEW-LEASE-07",
+      "suite": "runtime",
+      "runner_case_id": "REVIEW-LEASE-07",
+      "source": "tests/development/review.test.mts",
+      "capability_id": "FEATURE-M00-G05"
+    },
+    {
+      "id": "runtime:REVIEW-LEASE-08",
+      "suite": "runtime",
+      "runner_case_id": "REVIEW-LEASE-08",
+      "source": "tests/development/review.test.mts",
+      "capability_id": "FEATURE-M00-G05"
     }
   ],
   "protected_files": [

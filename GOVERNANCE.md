@@ -10,6 +10,17 @@ implementation details, makes development acceptance decisions and integrates
 verified local changes. Do not repeatedly request approval for delegated decisions.
 No file or agent identity can manufacture external rights, consent or observations.
 
+## Current delegated integration review
+
+[ADR-0011](docs/decisions/0011-delegated-review-and-integration.md) records the
+owner's renewed delegation and the prior authority checkpoint for merging the
+accumulated M00 diagnostic code. DELEGATED-LOCAL-02 authorizes this one local
+nonrelease integration using the documented maintainer review. It is not a claim
+of two independent reviewer sessions or of target-stack completion. The review
+and specific control refresh are recorded in [the integration review](docs/INTEGRATION-REVIEW.md).
+This supersedes the earlier prohibition on integrating these branches, not any
+product acceptance threshold, native assertion or release safeguard.
+
 ## Review policy
 
 [The workflow policy](planning/workflow-policy.json) retains two independent review

@@ -75,9 +75,7 @@ def commit_id(value: str):
 
 
 def git(root: Path, *args) -> bytes:
-    env = {k:v for k,v in os.environ.items() if k in ('PATH','SystemRoot','WINDIR','COMSPEC')}
-    env.update({'GIT_CONFIG_GLOBAL':os.devnull, 'GIT_CONFIG_NOSYSTEM':'1',
-                'GIT_TERMINAL_PROMPT':'0', 'GIT_NO_REPLACE_OBJECTS':'1', 'LC_ALL':'C'})
+    env = native.git_environment()
     return subprocess.check_output(['git','--no-optional-locks','-c','core.fsmonitor=false',
                                     '-C',str(root),*args], env=env, stderr=subprocess.PIPE, timeout=30)
 
@@ -264,8 +262,10 @@ def run_gate(root, commit, baseline_path, baseline_sha, controller, control_sha,
     if controller_digest(controller)!=control_sha: raise ValueError('trusted controller SHA-256 mismatch')
     baseline=load_baseline(baseline_path,baseline_sha,root)
     before=inspect_checkout(root,commit)
-    if subprocess.run(['git','-C',str(root),'merge-base','--is-ancestor',baseline['commit'],commit],capture_output=True).returncode:
-        raise ValueError('candidate does not descend from trusted baseline')
+    try:
+        git(root, 'merge-base', '--is-ancestor', baseline['commit'], commit)
+    except subprocess.CalledProcessError as exc:
+        raise ValueError('candidate does not descend from trusted baseline') from exc
     current=snapshot(root,commit); validate_membership(root,current)
     delta=compare(baseline,current)
     output.mkdir(parents=True,exist_ok=False)
