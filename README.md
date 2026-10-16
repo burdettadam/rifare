@@ -3,23 +3,22 @@
 Merchant-owned commerce operations with tailorable skills and independently
 replaceable platforms, agents and models.
 
-**Current checkpoint: ten commerce modules have local diagnostic implementations.**
-M01-G06 through M01-G10 add a version-pinned Shopify reader, source-traceable
-knowledge, portable skill content, merchant profiles and an agent-neutral REST
-task contract to the existing tenant, verification, secret and simulator services.
-All earlier branches and tests are retained.
+**Current checkpoint: fifteen commerce goals have local diagnostic implementations.**
+The latest five add task-bound MCP reads, a no-model manual status page, a provider-neutral
+read runner, two synthetic-tested provider wire adapters and a separately written
+Python orchestrator. Existing tenant isolation, verification, vault, platform reads,
+skills, profiles and portable tasks remain intact.
 
-**This is still a SQLite diagnostic implementation, not the completed
-PostgreSQL/React application.** Shopify transport is fixture-tested, not live-store
-qualified. No model, payment or messaging service was called. The original smoke
-profile and diagnostic commerce server remain available; default target startup
-fails explicitly rather than silently substituting a different stack.
+**This is still the SQLite diagnostic implementation.** PostgreSQL/React,
+live Shopify/model qualification and the actual served-browser journey remain open.
+No model, payment or messaging service was called. Component tests and provider wire
+fixtures are labeled explicitly and do not qualify external services.
 
-[Portable read workflows and commands](docs/PORTABLE-READ-WORKFLOWS.md) ·
-[Current review](docs/PORTABLE-READ-REVIEW.md) ·
-[Delegated authority](docs/decisions/0013-portable-read-workflows.md) ·
-[Earlier foundation](docs/COMMERCE-FOUNDATION.md).
-Full goal acceptance remains separate from approved local code integration.
+[Agent access and commands](docs/AGENT-ACCESS.md) ·
+[Current review](docs/AGENT-ACCESS-REVIEW.md) ·
+[Delegated authority](docs/decisions/0014-agent-access-and-runners.md) ·
+[Earlier portable reads](docs/PORTABLE-READ-WORKFLOWS.md).
+Full goal acceptance remains separate from approved local integration.
 
 ## Start
 
@@ -57,6 +56,8 @@ For the new commerce diagnostic (Ctrl-C to stop its own instance):
 node --experimental-strip-types tools/dev-commerce.mts
 ```
 
+Visit `/status` for the no-model manual page.
+
 Its output identifies the loopback URL and private local session file. Credentials
 are not printed or embedded in the UI. Use that session to inspect the two
 synthetic stores. See the foundation guide for the optional external wrapping key.
@@ -93,13 +94,13 @@ custom Git command protocol or mandatory agent provider has been added.
 
 ## Verified development boundary
 
-The previous integrated checkpoint had 683 registered checks. This five-goal batch
-adds 75, for 758: 502 Python/helper, 228 native runtime, 15 unit harness,
-7 database harness and 6 retained browser-component checks. Source-bound execution
-and restoration results are retained in the separate delivery verification report.
-The independent Python client uses actual loopback HTTP and imports no server code.
-Fixture Shopify observations, synthetic profiles and component tests are not
-live-store, AI-quality or served React/PostgreSQL qualification.
+The previous checkpoint had 758 checks. This batch adds 72, for 830 registered
+checks: 502 Python/helper, 300 native runtime, 15 unit harness, 7 database harness
+and 6 retained browser-component checks. The 300 runtime cases include seven new
+manual-screen component cases. Final source-bound execution and restoration results
+are recorded in the separate delivery report. The live served-screen qualification
+is a separate command and remains blocked by the host policy. No test is relabeled
+as a live model evaluation.
 
 Controllers remain read-only and do not authenticate people, sandbox native code,
 merge branches or authorize releases. Models and external agents remain replaceable
@@ -110,7 +111,7 @@ by design; none has been falsely counted as an independently qualified integrati
 The project ZIP contains a standalone `.git` history. The bundle can be cloned:
 
 ```sh
-git clone -b main /path/to/Rifare-next-five-goals.bundle Rifare
+git clone -b main /path/to/Rifare-agent-access.bundle Rifare
 cd Rifare
 git remote remove origin
 python3 tools/verify.py
@@ -140,8 +141,8 @@ native regression controller, records source/configuration/artifact identity and
 checks external review facts without granting acceptance. See
 [the evidence guide](docs/EVIDENCE-GATE.md) and
 [the current work record](work/records/M00-G08.md).
-The current registry has 758 executable checks: all 683 prior checks plus
-75 portable-read workflow regressions. Delegated local integration review
+The current registry has 830 executable checks: all 758 prior checks plus
+72 agent-access/read-runner regressions. Delegated local integration review
 is complete; full target-stack qualification remains open.
 All 676 commerce scenarios remain planning specifications.
 
@@ -154,12 +155,12 @@ prerequisites; a green diagnostic run is not milestone acceptance. See
 [qualification and repair order](docs/M00-QUALIFICATION.md) and
 [the exact existing-goal repair checklist](work/qualification/M00.json).
 Target-stack repair resumes M00-G05 on the accumulated source. M01-G01 through
-M01-G10 are implemented for local diagnostic integration, not full qualification.
+M01-G15 are implemented for local diagnostic integration, not full qualification.
 
 ## Immediate engineering priority
 
 Resume **M00-G05** from this `main`: implement and install the target React/PostgreSQL
 stack, then extend M00-G06 to the actually served application. Preserve the existing
-758 diagnostic and commerce tests. Do not add more governance machinery merely to postpone
+830 diagnostic and commerce tests. Do not add more governance machinery merely to postpone
 this implementation. The [qualification guide](docs/M00-QUALIFICATION.md) separates
 these engineering gaps from the completed local integration review.

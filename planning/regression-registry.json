@@ -154,6 +154,46 @@
       "contract_files": [
         "goals/M01/M01-G10.md"
       ]
+    },
+    {
+      "id": "FEATURE-M01-G11",
+      "enabled": true,
+      "qualification": "retained_diagnostic_not_accepted",
+      "contract_files": [
+        "goals/M01/M01-G11.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M01-G12",
+      "enabled": true,
+      "qualification": "retained_diagnostic_not_accepted",
+      "contract_files": [
+        "goals/M01/M01-G12.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M01-G13",
+      "enabled": true,
+      "qualification": "retained_diagnostic_not_accepted",
+      "contract_files": [
+        "goals/M01/M01-G13.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M01-G14",
+      "enabled": true,
+      "qualification": "retained_diagnostic_not_accepted",
+      "contract_files": [
+        "goals/M01/M01-G14.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M01-G15",
+      "enabled": true,
+      "qualification": "retained_diagnostic_not_accepted",
+      "contract_files": [
+        "goals/M01/M01-G15.md"
+      ]
     }
   ],
   "tests": [
@@ -5462,6 +5502,510 @@
       "runner_case_id": "M01-G10-PACKAGED-BOOTSTRAP",
       "source": "tests/development/read-api.test.mts",
       "capability_id": "FEATURE-M01-G10"
+    },
+    {
+      "id": "runtime:CASE-M01-G11-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M01-G11-01",
+      "source": "tests/development/agent-mcp.test.mts",
+      "capability_id": "FEATURE-M01-G11"
+    },
+    {
+      "id": "runtime:CASE-M01-G11-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M01-G11-02",
+      "source": "tests/development/agent-mcp.test.mts",
+      "capability_id": "FEATURE-M01-G11"
+    },
+    {
+      "id": "runtime:CASE-M01-G11-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M01-G11-03",
+      "source": "tests/development/agent-mcp.test.mts",
+      "capability_id": "FEATURE-M01-G11"
+    },
+    {
+      "id": "runtime:M01-G11-TASK-BOUND",
+      "suite": "runtime",
+      "runner_case_id": "M01-G11-TASK-BOUND",
+      "source": "tests/development/agent-mcp.test.mts",
+      "capability_id": "FEATURE-M01-G11"
+    },
+    {
+      "id": "runtime:M01-G11-REVOKED-PARENT",
+      "suite": "runtime",
+      "runner_case_id": "M01-G11-REVOKED-PARENT",
+      "source": "tests/development/agent-mcp.test.mts",
+      "capability_id": "FEATURE-M01-G11"
+    },
+    {
+      "id": "runtime:M01-G11-EXPIRY",
+      "suite": "runtime",
+      "runner_case_id": "M01-G11-EXPIRY",
+      "source": "tests/development/agent-mcp.test.mts",
+      "capability_id": "FEATURE-M01-G11"
+    },
+    {
+      "id": "runtime:M01-G11-EXACT-INPUT",
+      "suite": "runtime",
+      "runner_case_id": "M01-G11-EXACT-INPUT",
+      "source": "tests/development/agent-mcp.test.mts",
+      "capability_id": "FEATURE-M01-G11"
+    },
+    {
+      "id": "runtime:M01-G11-SCOPED-CATALOG",
+      "suite": "runtime",
+      "runner_case_id": "M01-G11-SCOPED-CATALOG",
+      "source": "tests/development/agent-mcp.test.mts",
+      "capability_id": "FEATURE-M01-G11"
+    },
+    {
+      "id": "runtime:M01-G11-PROFILE-RECHECK",
+      "suite": "runtime",
+      "runner_case_id": "M01-G11-PROFILE-RECHECK",
+      "source": "tests/development/agent-mcp.test.mts",
+      "capability_id": "FEATURE-M01-G11"
+    },
+    {
+      "id": "runtime:M01-G11-SKILL-PARITY",
+      "suite": "runtime",
+      "runner_case_id": "M01-G11-SKILL-PARITY",
+      "source": "tests/development/agent-mcp.test.mts",
+      "capability_id": "FEATURE-M01-G11"
+    },
+    {
+      "id": "runtime:M01-G11-KNOWLEDGE-READ",
+      "suite": "runtime",
+      "runner_case_id": "M01-G11-KNOWLEDGE-READ",
+      "source": "tests/development/agent-mcp.test.mts",
+      "capability_id": "FEATURE-M01-G11"
+    },
+    {
+      "id": "runtime:M01-G11-NOTIFICATIONS",
+      "suite": "runtime",
+      "runner_case_id": "M01-G11-NOTIFICATIONS",
+      "source": "tests/development/agent-mcp.test.mts",
+      "capability_id": "FEATURE-M01-G11"
+    },
+    {
+      "id": "runtime:M01-G11-HTTP-BOUNDARY",
+      "suite": "runtime",
+      "runner_case_id": "M01-G11-HTTP-BOUNDARY",
+      "source": "tests/development/agent-mcp.test.mts",
+      "capability_id": "FEATURE-M01-G11"
+    },
+    {
+      "id": "runtime:M01-G11-NO-TOKEN-FORWARDING",
+      "suite": "runtime",
+      "runner_case_id": "M01-G11-NO-TOKEN-FORWARDING",
+      "source": "tests/development/agent-mcp.test.mts",
+      "capability_id": "FEATURE-M01-G11"
+    },
+    {
+      "id": "runtime:M01-G11-INVALID-TYPED-ARGUMENTS",
+      "suite": "runtime",
+      "runner_case_id": "M01-G11-INVALID-TYPED-ARGUMENTS",
+      "source": "tests/development/agent-mcp.test.mts",
+      "capability_id": "FEATURE-M01-G11"
+    },
+    {
+      "id": "runtime:CASE-M01-G12-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M01-G12-01",
+      "source": "tests/development/agent-manual.test.mts",
+      "capability_id": "FEATURE-M01-G12"
+    },
+    {
+      "id": "runtime:CASE-M01-G12-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M01-G12-02",
+      "source": "tests/development/agent-manual.test.mts",
+      "capability_id": "FEATURE-M01-G12"
+    },
+    {
+      "id": "runtime:CASE-M01-G12-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M01-G12-03",
+      "source": "tests/development/agent-manual.test.mts",
+      "capability_id": "FEATURE-M01-G12"
+    },
+    {
+      "id": "runtime:M01-G12-LOGOUT",
+      "suite": "runtime",
+      "runner_case_id": "M01-G12-LOGOUT",
+      "source": "tests/development/agent-manual.test.mts",
+      "capability_id": "FEATURE-M01-G12"
+    },
+    {
+      "id": "runtime:M01-G12-UNAVAILABLE",
+      "suite": "runtime",
+      "runner_case_id": "M01-G12-UNAVAILABLE",
+      "source": "tests/development/agent-manual.test.mts",
+      "capability_id": "FEATURE-M01-G12"
+    },
+    {
+      "id": "runtime:M01-G12-TEXT-NOT-HTML",
+      "suite": "runtime",
+      "runner_case_id": "M01-G12-TEXT-NOT-HTML",
+      "source": "tests/development/agent-manual.test.mts",
+      "capability_id": "FEATURE-M01-G12"
+    },
+    {
+      "id": "runtime:M01-G12-NO-PRIVATE-STORAGE",
+      "suite": "runtime",
+      "runner_case_id": "M01-G12-NO-PRIVATE-STORAGE",
+      "source": "tests/development/agent-manual.test.mts",
+      "capability_id": "FEATURE-M01-G12"
+    },
+    {
+      "id": "runtime:CASE-M01-G13-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M01-G13-01",
+      "source": "tests/development/agent-runner.test.mts",
+      "capability_id": "FEATURE-M01-G13"
+    },
+    {
+      "id": "runtime:CASE-M01-G13-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M01-G13-02",
+      "source": "tests/development/agent-runner.test.mts",
+      "capability_id": "FEATURE-M01-G13"
+    },
+    {
+      "id": "runtime:CASE-M01-G13-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M01-G13-03",
+      "source": "tests/development/agent-runner.test.mts",
+      "capability_id": "FEATURE-M01-G13"
+    },
+    {
+      "id": "runtime:M01-G13-MALFORMED-ARGUMENTS",
+      "suite": "runtime",
+      "runner_case_id": "M01-G13-MALFORMED-ARGUMENTS",
+      "source": "tests/development/agent-runner.test.mts",
+      "capability_id": "FEATURE-M01-G13"
+    },
+    {
+      "id": "runtime:M01-G13-NO-WRITE-TOOLS",
+      "suite": "runtime",
+      "runner_case_id": "M01-G13-NO-WRITE-TOOLS",
+      "source": "tests/development/agent-runner.test.mts",
+      "capability_id": "FEATURE-M01-G13"
+    },
+    {
+      "id": "runtime:M01-G13-READ-BEFORE-ANSWER",
+      "suite": "runtime",
+      "runner_case_id": "M01-G13-READ-BEFORE-ANSWER",
+      "source": "tests/development/agent-runner.test.mts",
+      "capability_id": "FEATURE-M01-G13"
+    },
+    {
+      "id": "runtime:M01-G13-EXACT-READ-ARGS",
+      "suite": "runtime",
+      "runner_case_id": "M01-G13-EXACT-READ-ARGS",
+      "source": "tests/development/agent-runner.test.mts",
+      "capability_id": "FEATURE-M01-G13"
+    },
+    {
+      "id": "runtime:M01-G13-SOURCE-RECHECK",
+      "suite": "runtime",
+      "runner_case_id": "M01-G13-SOURCE-RECHECK",
+      "source": "tests/development/agent-runner.test.mts",
+      "capability_id": "FEATURE-M01-G13"
+    },
+    {
+      "id": "runtime:M01-G13-REVOKED-SESSION",
+      "suite": "runtime",
+      "runner_case_id": "M01-G13-REVOKED-SESSION",
+      "source": "tests/development/agent-runner.test.mts",
+      "capability_id": "FEATURE-M01-G13"
+    },
+    {
+      "id": "runtime:M01-G13-REVOKED-KEY",
+      "suite": "runtime",
+      "runner_case_id": "M01-G13-REVOKED-KEY",
+      "source": "tests/development/agent-runner.test.mts",
+      "capability_id": "FEATURE-M01-G13"
+    },
+    {
+      "id": "runtime:M01-G13-BOUNDED-LOOP",
+      "suite": "runtime",
+      "runner_case_id": "M01-G13-BOUNDED-LOOP",
+      "source": "tests/development/agent-runner.test.mts",
+      "capability_id": "FEATURE-M01-G13"
+    },
+    {
+      "id": "runtime:M01-G13-NO-SECRET-CONTEXT",
+      "suite": "runtime",
+      "runner_case_id": "M01-G13-NO-SECRET-CONTEXT",
+      "source": "tests/development/agent-runner.test.mts",
+      "capability_id": "FEATURE-M01-G13"
+    },
+    {
+      "id": "runtime:M01-G13-CROSS-TENANT-CONFIG",
+      "suite": "runtime",
+      "runner_case_id": "M01-G13-CROSS-TENANT-CONFIG",
+      "source": "tests/development/agent-runner.test.mts",
+      "capability_id": "FEATURE-M01-G13"
+    },
+    {
+      "id": "runtime:M01-G13-RECEIPT-ACCESS",
+      "suite": "runtime",
+      "runner_case_id": "M01-G13-RECEIPT-ACCESS",
+      "source": "tests/development/agent-runner.test.mts",
+      "capability_id": "FEATURE-M01-G13"
+    },
+    {
+      "id": "runtime:M01-G13-NO-UNAPPROVED-EGRESS",
+      "suite": "runtime",
+      "runner_case_id": "M01-G13-NO-UNAPPROVED-EGRESS",
+      "source": "tests/development/agent-runner.test.mts",
+      "capability_id": "FEATURE-M01-G13"
+    },
+    {
+      "id": "runtime:M01-G13-REFUSAL",
+      "suite": "runtime",
+      "runner_case_id": "M01-G13-REFUSAL",
+      "source": "tests/development/agent-runner.test.mts",
+      "capability_id": "FEATURE-M01-G13"
+    },
+    {
+      "id": "runtime:M01-G13-PROFILE-RECHECK",
+      "suite": "runtime",
+      "runner_case_id": "M01-G13-PROFILE-RECHECK",
+      "source": "tests/development/agent-runner.test.mts",
+      "capability_id": "FEATURE-M01-G13"
+    },
+    {
+      "id": "runtime:M01-G13-MISSING-CAPABILITY",
+      "suite": "runtime",
+      "runner_case_id": "M01-G13-MISSING-CAPABILITY",
+      "source": "tests/development/agent-runner.test.mts",
+      "capability_id": "FEATURE-M01-G13"
+    },
+    {
+      "id": "runtime:M01-G13-SOURCE-DIGEST-ONLY",
+      "suite": "runtime",
+      "runner_case_id": "M01-G13-SOURCE-DIGEST-ONLY",
+      "source": "tests/development/agent-runner.test.mts",
+      "capability_id": "FEATURE-M01-G13"
+    },
+    {
+      "id": "runtime:M01-G13-REQUIRED-CLAIMS",
+      "suite": "runtime",
+      "runner_case_id": "M01-G13-REQUIRED-CLAIMS",
+      "source": "tests/development/agent-runner.test.mts",
+      "capability_id": "FEATURE-M01-G13"
+    },
+    {
+      "id": "runtime:M01-G13-CONCURRENT-RUN-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M01-G13-CONCURRENT-RUN-REJECTED",
+      "source": "tests/development/agent-runner.test.mts",
+      "capability_id": "FEATURE-M01-G13"
+    },
+    {
+      "id": "runtime:M01-G13-SKILL-REFERENCE-CONTENT",
+      "suite": "runtime",
+      "runner_case_id": "M01-G13-SKILL-REFERENCE-CONTENT",
+      "source": "tests/development/agent-runner.test.mts",
+      "capability_id": "FEATURE-M01-G13"
+    },
+    {
+      "id": "runtime:CASE-M01-G14-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M01-G14-01",
+      "source": "tests/development/agent-second-provider.test.mts",
+      "capability_id": "FEATURE-M01-G14"
+    },
+    {
+      "id": "runtime:CASE-M01-G14-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M01-G14-02",
+      "source": "tests/development/agent-second-provider.test.mts",
+      "capability_id": "FEATURE-M01-G14"
+    },
+    {
+      "id": "runtime:CASE-M01-G14-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M01-G14-03",
+      "source": "tests/development/agent-second-provider.test.mts",
+      "capability_id": "FEATURE-M01-G14"
+    },
+    {
+      "id": "runtime:M01-G14-DISTINCT-WIRE-FORMATS",
+      "suite": "runtime",
+      "runner_case_id": "M01-G14-DISTINCT-WIRE-FORMATS",
+      "source": "tests/development/agent-second-provider.test.mts",
+      "capability_id": "FEATURE-M01-G14"
+    },
+    {
+      "id": "runtime:M01-G14-STATELESS-TRANSCRIPT",
+      "suite": "runtime",
+      "runner_case_id": "M01-G14-STATELESS-TRANSCRIPT",
+      "source": "tests/development/agent-second-provider.test.mts",
+      "capability_id": "FEATURE-M01-G14"
+    },
+    {
+      "id": "runtime:M01-G14-UNSUPPORTED-MODEL",
+      "suite": "runtime",
+      "runner_case_id": "M01-G14-UNSUPPORTED-MODEL",
+      "source": "tests/development/agent-second-provider.test.mts",
+      "capability_id": "FEATURE-M01-G14"
+    },
+    {
+      "id": "runtime:M01-G14-HALLUCINATED-B",
+      "suite": "runtime",
+      "runner_case_id": "M01-G14-HALLUCINATED-B",
+      "source": "tests/development/agent-second-provider.test.mts",
+      "capability_id": "FEATURE-M01-G14"
+    },
+    {
+      "id": "runtime:M01-G14-TRUNCATED-B",
+      "suite": "runtime",
+      "runner_case_id": "M01-G14-TRUNCATED-B",
+      "source": "tests/development/agent-second-provider.test.mts",
+      "capability_id": "FEATURE-M01-G14"
+    },
+    {
+      "id": "runtime:M01-G14-STRICT-APP-CONTRACT",
+      "suite": "runtime",
+      "runner_case_id": "M01-G14-STRICT-APP-CONTRACT",
+      "source": "tests/development/agent-second-provider.test.mts",
+      "capability_id": "FEATURE-M01-G14"
+    },
+    {
+      "id": "runtime:M01-G14-NO-FREE-TEXT",
+      "suite": "runtime",
+      "runner_case_id": "M01-G14-NO-FREE-TEXT",
+      "source": "tests/development/agent-second-provider.test.mts",
+      "capability_id": "FEATURE-M01-G14"
+    },
+    {
+      "id": "runtime:M01-G14-SETTINGS-PINS",
+      "suite": "runtime",
+      "runner_case_id": "M01-G14-SETTINGS-PINS",
+      "source": "tests/development/agent-second-provider.test.mts",
+      "capability_id": "FEATURE-M01-G14"
+    },
+    {
+      "id": "runtime:M01-G14-UNKNOWN-PROVIDER",
+      "suite": "runtime",
+      "runner_case_id": "M01-G14-UNKNOWN-PROVIDER",
+      "source": "tests/development/agent-second-provider.test.mts",
+      "capability_id": "FEATURE-M01-G14"
+    },
+    {
+      "id": "runtime:M01-G14-HTTP-FAILURE-NO-FALLBACK",
+      "suite": "runtime",
+      "runner_case_id": "M01-G14-HTTP-FAILURE-NO-FALLBACK",
+      "source": "tests/development/agent-second-provider.test.mts",
+      "capability_id": "FEATURE-M01-G14"
+    },
+    {
+      "id": "runtime:M01-G14-BOUNDED-WIRE-OUTPUT",
+      "suite": "runtime",
+      "runner_case_id": "M01-G14-BOUNDED-WIRE-OUTPUT",
+      "source": "tests/development/agent-second-provider.test.mts",
+      "capability_id": "FEATURE-M01-G14"
+    },
+    {
+      "id": "runtime:M01-G14-REDIRECTS-DENIED",
+      "suite": "runtime",
+      "runner_case_id": "M01-G14-REDIRECTS-DENIED",
+      "source": "tests/development/agent-second-provider.test.mts",
+      "capability_id": "FEATURE-M01-G14"
+    },
+    {
+      "id": "runtime:M01-G14-CONFIGURATION-IS-SNAPSHOTTED",
+      "suite": "runtime",
+      "runner_case_id": "M01-G14-CONFIGURATION-IS-SNAPSHOTTED",
+      "source": "tests/development/agent-second-provider.test.mts",
+      "capability_id": "FEATURE-M01-G14"
+    },
+    {
+      "id": "runtime:CASE-M01-G15-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M01-G15-01",
+      "source": "tests/development/agent-external.test.mts",
+      "capability_id": "FEATURE-M01-G15"
+    },
+    {
+      "id": "runtime:CASE-M01-G15-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M01-G15-02",
+      "source": "tests/development/agent-external.test.mts",
+      "capability_id": "FEATURE-M01-G15"
+    },
+    {
+      "id": "runtime:CASE-M01-G15-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M01-G15-03",
+      "source": "tests/development/agent-external.test.mts",
+      "capability_id": "FEATURE-M01-G15"
+    },
+    {
+      "id": "runtime:M01-G15-REST-MCP-PARITY",
+      "suite": "runtime",
+      "runner_case_id": "M01-G15-REST-MCP-PARITY",
+      "source": "tests/development/agent-external.test.mts",
+      "capability_id": "FEATURE-M01-G15"
+    },
+    {
+      "id": "runtime:M01-G15-REVOKED",
+      "suite": "runtime",
+      "runner_case_id": "M01-G15-REVOKED",
+      "source": "tests/development/agent-external.test.mts",
+      "capability_id": "FEATURE-M01-G15"
+    },
+    {
+      "id": "runtime:M01-G15-CROSS-TENANT",
+      "suite": "runtime",
+      "runner_case_id": "M01-G15-CROSS-TENANT",
+      "source": "tests/development/agent-external.test.mts",
+      "capability_id": "FEATURE-M01-G15"
+    },
+    {
+      "id": "runtime:M01-G15-CHANGED-RESOURCE",
+      "suite": "runtime",
+      "runner_case_id": "M01-G15-CHANGED-RESOURCE",
+      "source": "tests/development/agent-external.test.mts",
+      "capability_id": "FEATURE-M01-G15"
+    },
+    {
+      "id": "runtime:M01-G15-CHANGED-PROFILE",
+      "suite": "runtime",
+      "runner_case_id": "M01-G15-CHANGED-PROFILE",
+      "source": "tests/development/agent-external.test.mts",
+      "capability_id": "FEATURE-M01-G15"
+    },
+    {
+      "id": "runtime:M01-G15-PROXY-NOT-USED",
+      "suite": "runtime",
+      "runner_case_id": "M01-G15-PROXY-NOT-USED",
+      "source": "tests/development/agent-external.test.mts",
+      "capability_id": "FEATURE-M01-G15"
+    },
+    {
+      "id": "runtime:M01-G15-NO-PRIVATE-RUNTIME-PERSISTENCE",
+      "suite": "runtime",
+      "runner_case_id": "M01-G15-NO-PRIVATE-RUNTIME-PERSISTENCE",
+      "source": "tests/development/agent-external.test.mts",
+      "capability_id": "FEATURE-M01-G15"
+    },
+    {
+      "id": "runtime:M01-G15-PHYSICALLY-ABSENT-BUILTIN",
+      "suite": "runtime",
+      "runner_case_id": "M01-G15-PHYSICALLY-ABSENT-BUILTIN",
+      "source": "tests/development/agent-external.test.mts",
+      "capability_id": "FEATURE-M01-G15"
+    },
+    {
+      "id": "runtime:M01-G15-PROVIDER-DISABLED-HTTP",
+      "suite": "runtime",
+      "runner_case_id": "M01-G15-PROVIDER-DISABLED-HTTP",
+      "source": "tests/development/agent-external.test.mts",
+      "capability_id": "FEATURE-M01-G15"
     }
   ],
   "protected_files": [
@@ -5741,7 +6285,17 @@
     "packages/commerce/contracts/read-api.openapi.json",
     "tests/fixtures/read-workflows/shopify-order.json",
     "tests/fixtures/read-workflows/presentations.json",
-    "tests/development/read-workflow-helpers.mts"
+    "tests/development/read-workflow-helpers.mts",
+    "tests/development/agent-mcp.test.mts",
+    "tests/development/agent-manual.test.mts",
+    "tests/development/agent-runner.test.mts",
+    "tests/development/agent-second-provider.test.mts",
+    "tests/development/agent-external.test.mts",
+    "tests/development/agent-helpers.mts",
+    "tests/development/agent-provider-helpers.mts",
+    "tests/browser/manual_component.py",
+    "tests/browser/manual_status.py",
+    "tests/qualification/manual-served.mts"
   ],
   "source_count_fixture": "tests/fixtures/licensing/artifact-oracle.v1.json",
   "source_inventory": "planning/component-inventory.json"

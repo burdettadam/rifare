@@ -2,17 +2,11 @@
 
 ## Current integrated development
 
-The reviewed M00 foundation and M01-G01 through M01-G05 remain intact.
-Under [ADR-0013](docs/decisions/0013-portable-read-workflows.md), M01-G06 through
-M01-G10 add fixture-tested Shopify reads, current knowledge provenance, portable
-skill resources, typed merchant profiles and canonical read/task HTTP interfaces.
-Read [the implementation guide](docs/PORTABLE-READ-WORKFLOWS.md),
-[review](docs/PORTABLE-READ-REVIEW.md), and
-[integration record](work/integrations/portable-read-workflows.json).
-
-The five modules require no model framework or additional npm dependency. Do not
-restart the implementations merely because initial planning says not_started;
-work records distinguish useful integrated code from full goal acceptance.
+M01-G01 through M01-G10 and all earlier M00 work remain intact. Under ADR-0014,
+M01-G11 through M01-G15 add task-bound MCP reads, a manual no-model status page,
+provider-neutral read assistance, two separately encoded provider wire contracts,
+and independent deterministic Python orchestration. Read [the guide](docs/AGENT-ACCESS.md)
+and [review](docs/AGENT-ACCESS-REVIEW.md). No new framework or npm dependency is required.
 
 ## Remaining qualifications
 
@@ -25,7 +19,7 @@ No independent review, external account or target evidence has been invented.
 Continue target-stack repair from the accumulated main, retaining the new domain
 contracts and all tests. Qualify the PostgreSQL repository and served React journey
 rather than relabeling SQLite and static HTML. The next product packets begin at
-M01-G11 (the next original packet); missing provider access must remain
+M01-G16 (the next original packet); missing provider access must remain
 explicit. Do not build another acceptance framework instead of the target or
 product implementation. No later goal is automatically assigned by these notes.
 
