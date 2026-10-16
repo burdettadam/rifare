@@ -12,6 +12,7 @@ def main() -> int:
         return 2
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--runtime', action='store_true', help='also run native synthetic runtime cases; not target-stack qualification')
+    parser.add_argument('--harness', action='store_true', help='also run diagnostic unit/SQLite/browser-component tests; requires host browser tooling')
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
     commands = [
@@ -27,6 +28,8 @@ def main() -> int:
     ]
     if args.runtime:
         commands.append([sys.executable, 'tools/test_runtime.py'])
+    if args.harness:
+        commands.append([sys.executable, 'tools/test_harness.py', '--layer', 'all'])
     for command in commands:
         print('\nRUN ' + ' '.join(command), flush=True)
         try:

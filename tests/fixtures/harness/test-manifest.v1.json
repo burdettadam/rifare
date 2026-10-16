@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "id": "rifare-diagnostic-test-manifest-v1",
+  "status": "proposed_not_accepted",
+  "fixture_sha256": {
+    "tests/fixtures/harness/seed.v1.json": "9778a57c1c4f4d3c766c35ebc93e0507a0c46bed4d569521ad3f4d9e363faeb6",
+    "tests/fixtures/harness/expected.v1.json": "05e9da9ff9fa28fa26f10f5bb9f467a9634acebe4acf0958b0d45522ca72de7d"
+  },
+  "layers": {
+    "unit": {
+      "file": "tests/harness/unit.test.mts",
+      "case_ids": [
+        "CASE-M00-G06-01/unit",
+        "SEED-01",
+        "SEED-02",
+        "SEED-03",
+        "SEED-04",
+        "SEED-05",
+        "CLOCK-01",
+        "PROVIDER-01",
+        "PROVIDER-02",
+        "PROVIDER-03",
+        "PROVIDER-04",
+        "PROVIDER-05",
+        "PROVIDER-06",
+        "PROVIDER-07",
+        "ENV-01"
+      ]
+    },
+    "database": {
+      "file": "tests/harness/database.test.mts",
+      "case_ids": [
+        "CASE-M00-G06-01/database",
+        "DB-01",
+        "CASE-M00-G06-03/database",
+        "DB-02",
+        "DB-03",
+        "DB-04",
+        "DB-05"
+      ]
+    },
+    "browser": {
+      "file": "tests/browser/component.py",
+      "case_ids": [
+        "CASE-M00-G06-01/browser",
+        "BROWSER-01",
+        "BROWSER-02",
+        "BROWSER-03",
+        "BROWSER-04",
+        "CASE-M00-G06-03/browser"
+      ]
+    }
+  },
+  "qualification": "diagnostic_smoke_sqlite_and_in_memory_browser_component_only"
+}

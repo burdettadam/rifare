@@ -1,6 +1,6 @@
 {
-  "source_file_count": 386,
-  "source_count_reason": "All 355 accepted M00-G04 paths retained; 31 bounded M00-G05 diagnostic, qualification and test files added. No source paths removed; target stack remains unqualified.",
+  "source_file_count": 401,
+  "source_count_reason": "All 386 M00-G05 source paths retained; 15 bounded M00-G06 authority, fixture, test-runner and documentation paths added. No source paths removed. This count is source inventory, not product qualification.",
   "component_ids": [
     "git-agent-adaptations",
     "rifare-developer-helpers",

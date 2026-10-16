@@ -113,3 +113,12 @@ Existing MIT-derived notices are retained. Exact license application and a
 candidate-specific distribution review remain necessary before public release;
 [LICENSE-STATUS.md](LICENSE-STATUS.md) is not itself a software license grant.
 Private merchant material and raw review evidence do not belong in source.
+
+## Deterministic diagnostic tests
+
+M00-G06 adds frozen synthetic fixtures, native unit/SQLite tests and in-memory
+Chromium component checks. Run `python3 tools/verify.py --runtime --harness` on a
+host meeting the [test-harness requirements](docs/TEST-HARNESS.md). Unit/database
+layers need no added npm dependencies; browser tests require the separately
+installed Playwright/Chromium tooling. These results do not close target-stack
+qualification or grant goal acceptance. See [the current work record](work/records/M00-G06.md).

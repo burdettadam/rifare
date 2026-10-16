@@ -132,3 +132,20 @@ The process launcher is a local product start/stop script, not an agent schedule
 No paid services, model keys or production accounts are used. Root npm metadata
 contains no dependency packages. PostgreSQL, React and OS-level outbound network
 isolation remain unqualified; `npm run dev` exits 2 rather than substituting smoke.
+
+## M00-G06 native test harness
+
+```sh
+python3 tools/test_harness.py --layer unit
+python3 tools/test_harness.py --layer database
+python3 tools/test_harness.py --layer browser
+python3 tools/test_harness.py --layer all --reverse
+python3 tools/verify.py --runtime --harness
+```
+
+The [test-harness guide](docs/TEST-HARNESS.md) specifies the host browser requirement,
+diagnostic-only scope, frozen fixtures, deny-by-default network boundary, exact
+native test-ID checks, and source-bound reports. Node's existing package/lock
+remain unchanged. The browser suite runs Chromium against in-memory source and a
+fake response boundary; it does not qualify a served React/PostgreSQL application.
+M00-G05/M00-G06 remain unaccepted pending their full prerequisites and reviews.

@@ -1,0 +1,23 @@
+{
+  "fixture_id": "rifare-diagnostic-fixture-v1",
+  "epoch_ms": 1767225600000,
+  "seed7_u32": [
+    1025555898,
+    3923423697,
+    2630631676,
+    3981355051,
+    211918734
+  ],
+  "merchant_ids": [
+    "merchant-alpha",
+    "merchant-beta"
+  ],
+  "marker_values": [
+    "ALPHA",
+    "BETA"
+  ],
+  "shared_marker_id": "shared-order",
+  "shared_job_id": "shared-job",
+  "initial_markers_per_merchant": 1,
+  "initial_jobs_per_merchant": 1
+}
