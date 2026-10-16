@@ -133,9 +133,9 @@ Ctrl-C stops the served demo and deletes its temporary session file. Do not arch
 that directory. The source archive contains no runtime database or credential.
 
 Tests use Node 22.16.0, Python 3.13.5 and Linux. Browser checks in the retained suite
-still require the documented host Playwright/Chromium. New page assets and real
-HTTP endpoints were checked; this batch does not claim interactive served-browser
-or React qualification. No new dependency or custom scheduler is required.
+still require the documented host Playwright/Chromium. Two new rendered-component tests exercise the real local API through an explicit
+bridge, including resume/approval/execution and a policy denial. Browser network
+is blocked by the test and this is not direct served-browser or React qualification. No new dependency or custom scheduler is required.
 
 ## Primary technical references (checked 2026-10-16)
 

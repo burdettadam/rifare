@@ -10607,6 +10607,20 @@
       "runner_case_id": "M02-G24-REVIEW-HTTP-OWNER-BOUNDARY",
       "source": "tests/development/assurance-review.test.mts",
       "capability_id": "FEATURE-M02-G24"
+    },
+    {
+      "id": "runtime:M02-G27-BROWSER-RESUME-APPROVE-EXACT-DRAFT",
+      "suite": "runtime",
+      "runner_case_id": "M02-G27-BROWSER-RESUME-APPROVE-EXACT-DRAFT",
+      "source": "tests/development/return-draft-browser.test.mts",
+      "capability_id": "FEATURE-M02-G27"
+    },
+    {
+      "id": "runtime:M02-G27-BROWSER-POLICY-DENIED-CLEARS",
+      "suite": "runtime",
+      "runner_case_id": "M02-G27-BROWSER-POLICY-DENIED-CLEARS",
+      "source": "tests/development/return-draft-browser.test.mts",
+      "capability_id": "FEATURE-M02-G27"
     }
   ],
   "protected_files": [

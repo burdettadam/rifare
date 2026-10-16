@@ -22,7 +22,12 @@ is fabricated. All original executable tests and registration entries are retain
    round-trip exactly and recorded payment time must be valid and no later than
    the order's modification time.
 
-The four red assertions and corrected green run are retained outside Git. During
+4. Resuming a draft kept the cleared token input marked required, preventing the
+   browser from submitting another preview despite a valid in-memory session.
+   The rendered component test failed at that usability assertion. Resume now
+   updates the form requirement without persisting the token.
+
+The five red assertions and corrected green runs are retained outside Git. During
 implementation an import-cycle correction was needed for the readiness hook; its
 module-initialization failure is retained but is NOT behavioral-regression proof.
 Two initial new-test setup mistakes (pre-existing fixture record count and equal
@@ -52,11 +57,10 @@ executable assertion. Added review checks cover two merchant profiles sharing on
 skill, restart-persistent erasure and the HTTP owner boundary. No disabled or
 renamed old test is accepted as a new denominator.
 
-The planned fault trials remove readiness rejection, leave private attachments,
-restore copied valid sessions, mislabel manual refunds as settled, and allow
-unknown draft authority fields. Only actual assertion failures are counted; syntax
-or import failures do not count. Consult the final evidence report for executed
-trials and actual counts rather than treating this plan as a passing result.
+The five executed fault trials removed readiness rejection, left private attachments,
+restored copied valid sessions, mislabeled manual refunds as settled, and allowed
+unknown draft authority fields. Each produced an actual behavioral assertion failure, not a syntax/import error.
+The exact patches and native outcomes are retained in the final evidence package.
 
 ## Integration decision
 
