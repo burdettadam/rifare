@@ -1,3 +1,7 @@
+import { WorkerApi } from '../../packages/commerce/worker-api.mts';
+import { ExceptionQueue } from '../../packages/commerce/exception-queue.mts';
+import type { JournalResolver } from '../../packages/commerce/exception-queue.mts';
+import { ExecutionStops } from '../../packages/commerce/execution-stops.mts';
 import { BusinessOperations } from '../../packages/commerce/operation-store.mts';
 import { OperationReceipts } from '../../packages/commerce/operation-receipts.mts';
 import { ActionGateway } from '../../packages/commerce/action-gateway.mts';
@@ -23,12 +27,13 @@ import type { StoreSimulator } from '../../packages/commerce/simulator.mts';
 import { ReadMcp,MCP_VERSION } from '../../packages/agent/mcp.mts';
 import { ReadContext } from '../../packages/commerce/read-context.mts';
 
-const SAFE_CODES=new Set(['CASE_CHANGED','CASE_EXISTS','CASE_PIN_INTEGRITY','CASE_CUSTOMER_CHANGED','CASE_CONTEXT_UNSUPPORTED','SKILL_PIN_MISSING','SKILL_REVOKED','CONFIGURATION_REPREVIEW_REQUIRED','CONFIGURATION_NOT_APPROVED','CUSTOMER_VERIFICATION_REQUIRED','CAPABILITY_CHANGED','CAPABILITY_UNAVAILABLE','UNSUPPORTED_ACTION','SOURCE_STALE','SOURCE_FACTS_MISSING','POLICY_DENIED','PREVIEW_INTEGRITY','PREVIEW_STALE','PREVIEW_EXPIRED','SELF_APPROVAL_DENIED','APPROVAL_EXISTS','APPROVAL_UNAVAILABLE','APPROVAL_AUTHORITY_CHANGED','RECEIPT_INTEGRITY','RELEASE_TRANSITION','RELEASE_INTEGRITY','ACTIVATION_CHANGED','CANARY_FALLBACK_REQUIRED','ROLLBACK_TARGET_INVALID','WEBHOOK_BODY_LIMIT','WEBHOOK_HEADERS_INVALID','WEBHOOK_SIGNATURE_INVALID','WEBHOOK_ROUTE_MISMATCH','WEBHOOK_EXPIRED','WEBHOOK_CONTENT_TYPE','WEBHOOK_ROUTE_UNAVAILABLE','WEBHOOK_KEY_UNAVAILABLE','WEBHOOK_PAYLOAD_INVALID','WEBHOOK_DELIVERY_CONFLICT','WEBHOOK_PERSISTENCE_FAILED','PROFILE_EXISTS','PROFILE_CHANGED','PROFILE_NOT_READY','SIMULATION_REQUIRED','SIMULATION_STALE','DRAFT_HISTORY_LIMIT','POLICY_CHANGED','POLICY_INTEGRITY','POLICY_UNAVAILABLE','POLICY_REVOKED','POLICY_TRANSITION','SELF_REVIEW_DENIED','POLICY_TEST_FAILED','REVIEW_AUTHORITY_CHANGED','ACTIVATION_CONFLICT','ACTIVATION_ORDER','SKILL_APPROVAL_REQUIRED','SKILL_DOWNGRADE_DENIED','ACCESS_DENIED','NOT_FOUND','INVALID_INPUT','JSON_REQUIRED','BODY_TOO_LARGE','INVALID_JSON',
+const SAFE_CODES=new Set(['WORK_ACCESS_DENIED','WORK_SCOPE_DENIED','WORK_FENCE_REJECTED','WORK_CONTEXT_CHANGED','WORK_LEASE_HELD','WORK_LIMIT','WORK_RESULT_INVALID','WORK_RESULT_INTEGRITY','WORK_ENVELOPE_REJECTED','WORK_IDEMPOTENCY_CONFLICT','EXECUTION_STOPPED','EXECUTION_REAUTHORIZATION_REQUIRED','CONTROL_CHANGED','CONTROL_UNCHANGED','RECONCILIATION_REQUIRED','SOURCE_UNAVAILABLE','OPERATION_CHANGED','CASE_CHANGED','CASE_EXISTS','CASE_PIN_INTEGRITY','CASE_CUSTOMER_CHANGED','CASE_CONTEXT_UNSUPPORTED','SKILL_PIN_MISSING','SKILL_REVOKED','CONFIGURATION_REPREVIEW_REQUIRED','CONFIGURATION_NOT_APPROVED','CUSTOMER_VERIFICATION_REQUIRED','CAPABILITY_CHANGED','CAPABILITY_UNAVAILABLE','UNSUPPORTED_ACTION','SOURCE_STALE','SOURCE_FACTS_MISSING','POLICY_DENIED','PREVIEW_INTEGRITY','PREVIEW_STALE','PREVIEW_EXPIRED','SELF_APPROVAL_DENIED','APPROVAL_EXISTS','APPROVAL_UNAVAILABLE','APPROVAL_AUTHORITY_CHANGED','RECEIPT_INTEGRITY','RELEASE_TRANSITION','RELEASE_INTEGRITY','ACTIVATION_CHANGED','CANARY_FALLBACK_REQUIRED','ROLLBACK_TARGET_INVALID','WEBHOOK_BODY_LIMIT','WEBHOOK_HEADERS_INVALID','WEBHOOK_SIGNATURE_INVALID','WEBHOOK_ROUTE_MISMATCH','WEBHOOK_EXPIRED','WEBHOOK_CONTENT_TYPE','WEBHOOK_ROUTE_UNAVAILABLE','WEBHOOK_KEY_UNAVAILABLE','WEBHOOK_PAYLOAD_INVALID','WEBHOOK_DELIVERY_CONFLICT','WEBHOOK_PERSISTENCE_FAILED','PROFILE_EXISTS','PROFILE_CHANGED','PROFILE_NOT_READY','SIMULATION_REQUIRED','SIMULATION_STALE','DRAFT_HISTORY_LIMIT','POLICY_CHANGED','POLICY_INTEGRITY','POLICY_UNAVAILABLE','POLICY_REVOKED','POLICY_TRANSITION','SELF_REVIEW_DENIED','POLICY_TEST_FAILED','REVIEW_AUTHORITY_CHANGED','ACTIVATION_CONFLICT','ACTIVATION_ORDER','SKILL_APPROVAL_REQUIRED','SKILL_DOWNGRADE_DENIED','ACCESS_DENIED','NOT_FOUND','INVALID_INPUT','JSON_REQUIRED','BODY_TOO_LARGE','INVALID_JSON',
   'INVALID_PERMISSION','AUTHORITY_CHANGED','LAST_OWNER','RESOURCE_DENIED','INVALID_SKILL','SKILL_CHANGED','PROFILE_STALE','PROFILE_ACTION_DENIED','INVALID_PROFILE',
   'NO_CONFIGURATION','RUN_IN_PROGRESS','TASK_CONTEXT_CHANGED','UNKNOWN_READ_ACTION','CURRENT_FACTS_UNAVAILABLE','TASK_LIMIT','HOST_DENIED','ORIGIN_DENIED','VERIFICATION_FAILED','SECRET_UNAVAILABLE','ADAPTER_UNAVAILABLE','PROVIDER_REJECTED','PROVIDER_UNAVAILABLE','OUTCOME_UNKNOWN']);
 export async function startCommerceServer(options:{kernel:CommerceKernel;caps:Capabilities;customers:CustomerAccess;
-  simulator:StoreSimulator;vault?:SecretVault;inbox?:WebhookInbox;reads?:ReadContext;runner?:{run:(scope:object,taskId:string,configurationId:string,untrustedInput?:unknown)=>Promise<unknown>;receipt:(scope:object,taskId:string,receiptId:string)=>unknown};port?:number;log?:(entry:unknown)=>void}) {
+  simulator:StoreSimulator;reconciliationJournals?:JournalResolver;vault?:SecretVault;inbox?:WebhookInbox;reads?:ReadContext;runner?:{run:(scope:object,taskId:string,configurationId:string,untrustedInput?:unknown)=>Promise<unknown>;receipt:(scope:object,taskId:string,receiptId:string)=>unknown};port?:number;log?:(entry:unknown)=>void}) {
   const {kernel,caps,customers,simulator,vault}=options;const reads=options.reads??new ReadContext(kernel,caps);const mcp=new ReadMcp(kernel,reads);const editor=new ProfileEditor(kernel,caps),policies=new Policies(kernel);let port=0;const gateway=new ActionGateway(kernel),actionMcp=new ActionMcp(kernel,gateway),releases=new SkillReleases(kernel);
+  const workerApi=new WorkerApi(kernel),exceptions=new ExceptionQueue(kernel,options.reconciliationJournals);
   const log=(status:number,code:string)=>{try{options.log?.({event:'http_result',status,code});}catch{/* logging cannot grant access */}};
   const server=createServer(async(req,res)=>{
     try {
@@ -36,7 +41,8 @@ export async function startCommerceServer(options:{kernel:CommerceKernel;caps:Ca
       const url=new URL(req.url??'/',`http://127.0.0.1:${port}`);
       if(url.origin!==`http://127.0.0.1:${port}`)throw new Error('HOST_DENIED');
       if(url.pathname==='/health'&&req.method==='GET'){send(res,200,{ready:true,profile:'commerce-sqlite-diagnostic',production_qualified:false});return;}
-      const assets:Record<string,[string,string]>={'/execution':['execution.html','text/html'],'/execution-client.js':['execution-client.js','text/javascript'],'/configuration':['configuration.html','text/html'],'/configuration-client.js':['configuration-client.js','text/javascript'],'/configuration.css':['configuration.css','text/css'],'/':['index.html','text/html'],'/client.js':['client.js','text/javascript'],'/style.css':['style.css','text/css'],'/status':['status.html','text/html'],'/status-client.js':['status-client.js','text/javascript'],'/status.css':['status.css','text/css']};
+      const assets:Record<string,[string,string]>={'/exceptions':['exceptions.html','text/html'],'/exceptions.css':['exceptions.css','text/css'],
+    '/exceptions-client.js':['exceptions-client.js','text/javascript'],'/execution':['execution.html','text/html'],'/execution-client.js':['execution-client.js','text/javascript'],'/configuration':['configuration.html','text/html'],'/configuration-client.js':['configuration-client.js','text/javascript'],'/configuration.css':['configuration.css','text/css'],'/':['index.html','text/html'],'/client.js':['client.js','text/javascript'],'/style.css':['style.css','text/css'],'/status':['status.html','text/html'],'/status-client.js':['status-client.js','text/javascript'],'/status.css':['status.css','text/css']};
       if(req.method==='GET'&&assets[url.pathname]&&!url.search){
         const [file,mime]=assets[url.pathname];res.writeHead(200,{'content-type':mime+'; charset=utf-8','cache-control':'no-store',
           'content-security-policy':"default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'",
@@ -80,7 +86,32 @@ export async function startCommerceServer(options:{kernel:CommerceKernel;caps:Ca
       }
       const auth=req.headers.authorization;
       if(typeof auth!=='string'||!auth.startsWith('Bearer '))throw new Error('ACCESS_DENIED');
+      if(url.pathname.startsWith('/v1/worker/')){
+        const value=auth.slice(7),audience=`http://127.0.0.1:${port}/v1/worker`;workerApi.leases.authenticate(value,audience);
+        const operation=url.pathname.slice('/v1/worker/'.length);
+        if(req.method==='GET'&&/^results\/[A-Za-z0-9_-]+$/.test(operation)){send(res,200,workerApi.result(value,audience,operation.split('/')[1]));return;}
+        if(req.method!=='POST'){send(res,405,{error:'METHOD_NOT_ALLOWED'});return;}
+        const p=await body(req);
+        if(operation==='claim')send(res,200,workerApi.leases.claim(value,audience,exact(p,['lease_ms']).lease_ms));
+        else if(operation==='context')send(res,200,workerApi.context(value,audience,exact(p,['generation']).generation));
+        else if(operation==='renew'){const r=exact(p,['generation','lease_ms']);send(res,200,workerApi.leases.renew(value,audience,r.generation,r.lease_ms));}
+        else if(operation==='proposals')send(res,200,workerApi.submit(value,audience,p));
+        else if(operation==='execute')send(res,200,workerApi.execute(value,audience,p));
+        else if(operation==='complete')send(res,200,workerApi.leases.complete(value,audience,p));
+        else send(res,404,{error:'NOT_FOUND'});return;
+      }
       const scope=kernel.authenticate(auth.slice(7));
+      if(req.method==='POST'&&url.pathname==='/v1/work-grants'){send(res,201,workerApi.leases.issue(scope,await body(req),`http://127.0.0.1:${port}/v1/worker`));return;}
+      if(req.method==='POST'&&url.pathname==='/v1/work-release'){send(res,200,workerApi.leases.release(scope,exact(await body(req),['case_id']).case_id));return;}
+      if(req.method==='GET'&&url.pathname==='/v1/worker-contract'){send(res,200,JSON.parse(readFileSync(new URL('../../packages/commerce/contracts/worker-api.v1.json',import.meta.url),'utf8')));return;}
+      if(req.method==='POST'&&url.pathname==='/v1/execution-stops'){send(res,200,new ExecutionStops(kernel).set(scope,await body(req)));return;}
+      if(req.method==='GET'&&url.pathname==='/v1/exceptions'){send(res,200,exceptions.list(scope));return;}
+      if(req.method==='POST'&&/^\/v1\/exceptions\/[A-Za-z0-9_-]+\/(reconcile|reauthorize)$/.test(url.pathname)){
+        const [, , ,ref,action]=url.pathname.split('/'),p=await body(req);
+        if(action==='reconcile'){exact(p,[]);send(res,200,await exceptions.reconcile(scope,ref));}
+        else send(res,200,exceptions.reauthorize(scope,ref,exact(p,['expected_revision']).expected_revision));return;
+      }
+
       if(req.method==='GET'&&/^\/v1\/operations\/[A-Za-z0-9_-]+$/.test(url.pathname)){send(res,200,new BusinessOperations(kernel).read(scope,url.pathname.split('/')[3]));return;}
       if(req.method==='GET'&&/^\/v1\/operations\/[A-Za-z0-9_-]+\/receipts$/.test(url.pathname)){send(res,200,new OperationReceipts(kernel).list(scope,url.pathname.split('/')[3]));return;}
       if(req.method==='GET'&&/^\/v1\/resources\/[A-Za-z0-9_-]+\/operations$/.test(url.pathname)){send(res,200,new BusinessOperations(kernel).list(scope,url.pathname.split('/')[3]));return;}
@@ -191,7 +222,7 @@ export async function startCommerceServer(options:{kernel:CommerceKernel;caps:Ca
       if(error instanceof ConfigurationError){send(res,400,{error:error.message,issues:error.issues});log(400,error.message);return;}
       if(error instanceof CapabilityLimitation){send(res,403,{error:'CAPABILITY_UNAVAILABLE',reason:error.reason});log(403,'CAPABILITY_UNAVAILABLE');return;}
       const code=error instanceof Error&&SAFE_CODES.has(error.message)?error.message:'INTERNAL_ERROR';
-      const status=code==='WEBHOOK_PERSISTENCE_FAILED'?503:code==='WEBHOOK_BODY_LIMIT'?413:code==='WEBHOOK_SIGNATURE_INVALID'?401:['ACCESS_DENIED','HOST_DENIED','ORIGIN_DENIED','VERIFICATION_FAILED'].includes(code)?403:code==='NOT_FOUND'?404:code==='INTERNAL_ERROR'?500:
+      const status=code==='WORK_ACCESS_DENIED'?401:code==='WEBHOOK_PERSISTENCE_FAILED'?503:code==='WEBHOOK_BODY_LIMIT'?413:code==='WEBHOOK_SIGNATURE_INVALID'?401:['ACCESS_DENIED','HOST_DENIED','ORIGIN_DENIED','VERIFICATION_FAILED'].includes(code)?403:code==='NOT_FOUND'?404:code==='INTERNAL_ERROR'?500:
         ['SECRET_UNAVAILABLE','ADAPTER_UNAVAILABLE','PROVIDER_UNAVAILABLE','OUTCOME_UNKNOWN'].includes(code)?503:400;
       send(res,status,{error:code});log(status,code);
     }

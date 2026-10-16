@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "title": "Rifare portable case worker contract",
+  "authorization": "local_opaque_work_grant_not_oauth",
+  "audience": "exact origin + /v1/worker",
+  "credential_transport": "Authorization Bearer header; no upstream token forwarding",
+  "identity_owner": "server",
+  "envelope_fields": [
+    "tenant_id",
+    "store_id",
+    "case_id",
+    "resource_id",
+    "audience",
+    "generation",
+    "configuration_digest",
+    "control_stamp"
+  ],
+  "endpoints": [
+    {
+      "method": "POST",
+      "path": "/v1/work-grants",
+      "credential": "parent session",
+      "required": [
+        "case_id",
+        "lifetime_ms"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/worker/claim",
+      "credential": "work grant",
+      "required": [
+        "lease_ms"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/worker/context",
+      "credential": "work grant",
+      "required": [
+        "generation"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/worker/renew",
+      "credential": "work grant",
+      "required": [
+        "generation",
+        "lease_ms"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/worker/proposals",
+      "credential": "work grant",
+      "required": [
+        "generation",
+        "envelope",
+        "request_key",
+        "proposal"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/worker/results/{submission_id}",
+      "credential": "work grant",
+      "required": []
+    },
+    {
+      "method": "POST",
+      "path": "/v1/worker/execute",
+      "credential": "work grant",
+      "required": [
+        "generation",
+        "envelope",
+        "submission_id",
+        "approval_id"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/worker/complete",
+      "credential": "work grant",
+      "required": [
+        "generation",
+        "request_key",
+        "outcome",
+        "submission_id"
+      ]
+    }
+  ],
+  "proposal": {
+    "action": "diagnostic.resolution.set",
+    "arguments": {
+      "resolution": [
+        "none",
+        "refund",
+        "exchange"
+      ]
+    },
+    "effect": "reversible local case plan only"
+  },
+  "completion_outcomes": [
+    "handoff",
+    "proposed"
+  ],
+  "unknown_fields": "rejected",
+  "limits": {
+    "lease_ms": 30000,
+    "assignment_deadline_ms": 60000,
+    "grant_lifetime_ms": 300000
+  },
+  "production_qualified": false
+}

@@ -1,0 +1,6 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Rifare · Operator exceptions</title><link rel="stylesheet" href="/configuration.css"><link rel="stylesheet" href="/exceptions.css"><script src="/exceptions-client.js" defer></script></head><body><main>
+<h1>Operator exceptions</h1><p>Local diagnostic operations only. An unknown outcome is not a failed operation. Reconciliation does not resend commands.</p>
+<form id="access"><label for="token">Session token</label><input id="token" type="password" autocomplete="off" required><button type="submit">Load exceptions</button></form>
+<div class="buttons"><button id="refresh" disabled>Refresh</button><button id="logout" disabled>Sign out and clear</button></div>
+<p id="notice" role="status" aria-live="polite"></p><section id="queue" aria-label="Exception queue"></section>
+</main></body></html>

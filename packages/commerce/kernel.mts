@@ -1,3 +1,4 @@
+import { assertExecution } from './execution-stops.mts';
 import { ROLE_ACTIONS,permissionDecision,recordSecurity } from './authorization.mts';
 import { createHash, randomBytes } from 'node:crypto';
 import { readFileSync, readdirSync } from 'node:fs';
@@ -35,6 +36,8 @@ export class CommerceKernel {
   readonly db: DatabaseSync;
   readonly clock: () => number;
   #scopes = new WeakMap<object, string>();
+  #limits = new WeakMap<object, {resource:string;actions:readonly string[];guard:()=>void;identity:Row}>();
+  #depth = 0;
   constructor(db: DatabaseSync, clock: () => number = Date.now) {
     this.db = db; this.clock = clock;
     db.exec('PRAGMA foreign_keys=ON; PRAGMA busy_timeout=3000;');
@@ -53,9 +56,12 @@ export class CommerceKernel {
     });
   }
   transaction<T>(fn: () => T): T {
-    this.db.exec('BEGIN IMMEDIATE');
-    try { const value = fn(); this.db.exec('COMMIT'); return value; }
-    catch (error) { this.db.exec('ROLLBACK'); throw error; }
+    const depth=this.#depth, savepoint='rifare_nested_'+depth;
+    this.db.exec(depth===0?'BEGIN IMMEDIATE':'SAVEPOINT '+savepoint);this.#depth++;
+    try {const value=fn();if(value instanceof Promise)throw new Error('ASYNC_TRANSACTION_DENIED');
+      this.db.exec(depth===0?'COMMIT':'RELEASE '+savepoint);return value;}
+    catch(error){this.db.exec(depth===0?'ROLLBACK':'ROLLBACK TO '+savepoint);if(depth>0)this.db.exec('RELEASE '+savepoint);throw error;}
+    finally{this.#depth--;}
   }
   // Provisioning is server-local administration, never part of the public action surface.
   provisionStore(tenant: string, store: string, market = 'US') {
@@ -85,6 +91,7 @@ export class CommerceKernel {
   require(scope: Scope, roles: Role[] = ['owner','operator','reviewer','integration','agent','worker','customer']): Row {
     const hash = scope && typeof scope==='object' ? this.#scopes.get(scope) : undefined;
     if (!hash) throw new Error('ACCESS_DENIED');
+    this.#limits.get(scope)?.guard();
     const now=this.clock();
     const row=this.db.prepare(`SELECT ss.* FROM commerce_sessions ss JOIN commerce_stores s USING(tenant_id,store_id)
       WHERE ss.token_hash=? AND ss.revoked=0 AND s.active=1 AND ss.expires_at>? AND ss.last_seen>?`)
@@ -104,10 +111,20 @@ export class CommerceKernel {
     return row;
   }
   authorize(scope:Scope,action:string,resource:string|null=null):Row {
-    const s=this.require(scope);if(resource!==null)id(resource);const decision=permissionDecision(this.db,s,action,resource);
+    const s=this.require(scope);if(resource!==null)id(resource);
+    const limits=this.#limits.get(scope);
+    if(limits&&(!limits.actions.includes(action)||(resource!==null&&resource!==limits.resource)))throw new Error('WORK_SCOPE_DENIED');
+    if(action==='model.run')assertExecution(this,s,'model.run');
+    const decision=permissionDecision(this.db,s,action,resource);
     if(!decision.allowed){recordSecurity(this.db,s,decision.action,'denied',this.clock(),decision.authority_revision);throw new Error('ACCESS_DENIED');}
     return s;
   }
+  // Trusted in-process adapters only: a hash is not a public authentication interface.
+  restrictedSession(sessionHash:string,resource:string,actions:readonly string[],guard:()=>void,identity:Row):Scope {
+    const scope=Object.freeze({});this.#scopes.set(scope,sessionHash);
+    this.#limits.set(scope,{resource,actions:[...actions],guard,identity:Object.freeze({...identity})});this.require(scope);return scope;
+  }
+  workerIdentity(scope:Scope){this.require(scope);return this.#limits.get(scope)?.identity??null;}
   revoke(scope: Scope) {
     const s=this.require(scope); this.db.prepare('UPDATE commerce_sessions SET revoked=1 WHERE token_hash=?').run(s.token_hash);
   }
