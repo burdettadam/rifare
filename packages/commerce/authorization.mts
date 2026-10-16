@@ -1,13 +1,13 @@
 import type { CommerceKernel,Scope,Row,Role } from './kernel.mts';
 import type { DatabaseSync } from 'node:sqlite';
 
-const READ=['resource.read','attachment.read','knowledge.read','skill.read','profile.read','task.read','model.run','capability.read'];
-const OPERATOR=[...READ,'resource.ingest','job.enqueue','attachment.write','knowledge.write','skill.write','profile.write','secret.manage','secret.invoke','connection.manage','simulator.manage','audit.read'];
+const READ=['resource.read','attachment.read','knowledge.read','skill.read','profile.read','task.read','model.run','capability.read','policy.read'];
+const OPERATOR=[...READ,'resource.ingest','job.enqueue','attachment.write','knowledge.write','skill.write','profile.write','secret.manage','secret.invoke','connection.manage','simulator.manage','audit.read','policy.draft','policy.test','skill.install'];
 export const ROLE_ACTIONS:Readonly<Record<Role,readonly string[]>>=Object.freeze({
-  owner:Object.freeze([...OPERATOR,'authority.manage','job.run']),operator:Object.freeze(OPERATOR),
-  reviewer:Object.freeze([...READ.filter(a=>a!=='model.run'),'audit.read']),
+  owner:Object.freeze([...OPERATOR,'authority.manage','job.run','policy.review','policy.publish','policy.revoke','skill.approve']),operator:Object.freeze(OPERATOR),
+  reviewer:Object.freeze([...READ.filter(a=>a!=='model.run'),'audit.read','policy.test','policy.review']),
   integration:Object.freeze([...READ.filter(a=>a!=='model.run'),'resource.ingest','job.run','attachment.write','secret.invoke']),
-  agent:Object.freeze([...READ,'secret.invoke']),
+  agent:Object.freeze([...READ,'secret.invoke','policy.draft']),
   worker:Object.freeze([...READ,'resource.ingest','job.run','attachment.write','secret.invoke']),
   customer:Object.freeze(['resource.read','attachment.read','knowledge.read','skill.read','profile.read','task.read','capability.read']),
 });

@@ -234,6 +234,46 @@
       "contract_files": [
         "goals/M02/M02-G02.md"
       ]
+    },
+    {
+      "id": "FEATURE-M02-G03",
+      "enabled": true,
+      "qualification": "retained_diagnostic_not_accepted",
+      "contract_files": [
+        "goals/M02/M02-G03.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M02-G04",
+      "enabled": true,
+      "qualification": "retained_diagnostic_not_accepted",
+      "contract_files": [
+        "goals/M02/M02-G04.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M02-G05",
+      "enabled": true,
+      "qualification": "retained_diagnostic_not_accepted",
+      "contract_files": [
+        "goals/M02/M02-G05.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M02-G06",
+      "enabled": true,
+      "qualification": "retained_diagnostic_not_accepted",
+      "contract_files": [
+        "goals/M02/M02-G06.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M02-G07",
+      "enabled": true,
+      "qualification": "retained_diagnostic_not_accepted",
+      "contract_files": [
+        "goals/M02/M02-G07.md"
+      ]
     }
   ],
   "tests": [
@@ -6851,6 +6891,804 @@
       "runner_case_id": "REVIEW-POLICY-CAPABILITY-DISCOVERY-RECHECK",
       "source": "tests/development/model-policy-review.test.mts",
       "capability_id": "FEATURE-M02-G01"
+    },
+    {
+      "id": "runtime:CASE-M02-G03-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M02-G03-01",
+      "source": "tests/development/policies.test.mts",
+      "capability_id": "FEATURE-M02-G03"
+    },
+    {
+      "id": "runtime:CASE-M02-G03-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M02-G03-02",
+      "source": "tests/development/policies.test.mts",
+      "capability_id": "FEATURE-M02-G03"
+    },
+    {
+      "id": "runtime:CASE-M02-G03-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M02-G03-03",
+      "source": "tests/development/policies.test.mts",
+      "capability_id": "FEATURE-M02-G03"
+    },
+    {
+      "id": "runtime:M02-G03-CURRENT-QUOTE-RULE",
+      "suite": "runtime",
+      "runner_case_id": "M02-G03-CURRENT-QUOTE-RULE",
+      "source": "tests/development/policies.test.mts",
+      "capability_id": "FEATURE-M02-G03"
+    },
+    {
+      "id": "runtime:M02-G03-DRAFT-CANNOT-CONTROL",
+      "suite": "runtime",
+      "runner_case_id": "M02-G03-DRAFT-CANNOT-CONTROL",
+      "source": "tests/development/policies.test.mts",
+      "capability_id": "FEATURE-M02-G03"
+    },
+    {
+      "id": "runtime:M02-G03-PROSE-IS-NOT-RULE",
+      "suite": "runtime",
+      "runner_case_id": "M02-G03-PROSE-IS-NOT-RULE",
+      "source": "tests/development/policies.test.mts",
+      "capability_id": "FEATURE-M02-G03"
+    },
+    {
+      "id": "runtime:M02-G03-SELF-REVIEW-DENIED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G03-SELF-REVIEW-DENIED",
+      "source": "tests/development/policies.test.mts",
+      "capability_id": "FEATURE-M02-G03"
+    },
+    {
+      "id": "runtime:M02-G03-NO-PUBLISH-WITHOUT-TEST-REVIEW",
+      "suite": "runtime",
+      "runner_case_id": "M02-G03-NO-PUBLISH-WITHOUT-TEST-REVIEW",
+      "source": "tests/development/policies.test.mts",
+      "capability_id": "FEATURE-M02-G03"
+    },
+    {
+      "id": "runtime:M02-G03-OPERATOR-CANNOT-PUBLISH",
+      "suite": "runtime",
+      "runner_case_id": "M02-G03-OPERATOR-CANNOT-PUBLISH",
+      "source": "tests/development/policies.test.mts",
+      "capability_id": "FEATURE-M02-G03"
+    },
+    {
+      "id": "runtime:M02-G03-REVOKED-REVIEW-AUTHORITY",
+      "suite": "runtime",
+      "runner_case_id": "M02-G03-REVOKED-REVIEW-AUTHORITY",
+      "source": "tests/development/policies.test.mts",
+      "capability_id": "FEATURE-M02-G03"
+    },
+    {
+      "id": "runtime:M02-G03-REVOKED-PIN-CANNOT-GRANDFATHER",
+      "suite": "runtime",
+      "runner_case_id": "M02-G03-REVOKED-PIN-CANNOT-GRANDFATHER",
+      "source": "tests/development/policies.test.mts",
+      "capability_id": "FEATURE-M02-G03"
+    },
+    {
+      "id": "runtime:M02-G03-OLD-PIN-REVOCATION-WITH-NEW-CURRENT",
+      "suite": "runtime",
+      "runner_case_id": "M02-G03-OLD-PIN-REVOCATION-WITH-NEW-CURRENT",
+      "source": "tests/development/policies.test.mts",
+      "capability_id": "FEATURE-M02-G03"
+    },
+    {
+      "id": "runtime:M02-G03-SCHEDULED-NOT-EARLY",
+      "suite": "runtime",
+      "runner_case_id": "M02-G03-SCHEDULED-NOT-EARLY",
+      "source": "tests/development/policies.test.mts",
+      "capability_id": "FEATURE-M02-G03"
+    },
+    {
+      "id": "runtime:M02-G03-CROSS-STORE-NO-POLICY",
+      "suite": "runtime",
+      "runner_case_id": "M02-G03-CROSS-STORE-NO-POLICY",
+      "source": "tests/development/policies.test.mts",
+      "capability_id": "FEATURE-M02-G03"
+    },
+    {
+      "id": "runtime:M02-G03-PIN-BOUND-TO-ACTOR",
+      "suite": "runtime",
+      "runner_case_id": "M02-G03-PIN-BOUND-TO-ACTOR",
+      "source": "tests/development/policies.test.mts",
+      "capability_id": "FEATURE-M02-G03"
+    },
+    {
+      "id": "runtime:M02-G03-DIGEST-TAMPER-BLOCKED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G03-DIGEST-TAMPER-BLOCKED",
+      "source": "tests/development/policies.test.mts",
+      "capability_id": "FEATURE-M02-G03"
+    },
+    {
+      "id": "runtime:M02-G03-DRAFT-CAS",
+      "suite": "runtime",
+      "runner_case_id": "M02-G03-DRAFT-CAS",
+      "source": "tests/development/policies.test.mts",
+      "capability_id": "FEATURE-M02-G03"
+    },
+    {
+      "id": "runtime:M02-G03-SOURCE-SECRET-URL-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G03-SOURCE-SECRET-URL-REJECTED",
+      "source": "tests/development/policies.test.mts",
+      "capability_id": "FEATURE-M02-G03"
+    },
+    {
+      "id": "runtime:M02-G03-EXCLUDED-AND-EVIDENCE",
+      "suite": "runtime",
+      "runner_case_id": "M02-G03-EXCLUDED-AND-EVIDENCE",
+      "source": "tests/development/policies.test.mts",
+      "capability_id": "FEATURE-M02-G03"
+    },
+    {
+      "id": "runtime:M02-G03-PIN-FACTS-CANNOT-BE-REPLACED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G03-PIN-FACTS-CANNOT-BE-REPLACED",
+      "source": "tests/development/policies.test.mts",
+      "capability_id": "FEATURE-M02-G03"
+    },
+    {
+      "id": "runtime:CASE-M02-G04-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M02-G04-01",
+      "source": "tests/development/skill-contract.test.mts",
+      "capability_id": "FEATURE-M02-G04"
+    },
+    {
+      "id": "runtime:CASE-M02-G04-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M02-G04-02",
+      "source": "tests/development/skill-contract.test.mts",
+      "capability_id": "FEATURE-M02-G04"
+    },
+    {
+      "id": "runtime:CASE-M02-G04-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M02-G04-03",
+      "source": "tests/development/skill-contract.test.mts",
+      "capability_id": "FEATURE-M02-G04"
+    },
+    {
+      "id": "runtime:M02-G04-VERSION-CONSTRAINT-NOT-IGNORED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G04-VERSION-CONSTRAINT-NOT-IGNORED",
+      "source": "tests/development/skill-contract.test.mts",
+      "capability_id": "FEATURE-M02-G04"
+    },
+    {
+      "id": "runtime:M02-G04-ENGINE-VERSION-BOUNDARY",
+      "suite": "runtime",
+      "runner_case_id": "M02-G04-ENGINE-VERSION-BOUNDARY",
+      "source": "tests/development/skill-contract.test.mts",
+      "capability_id": "FEATURE-M02-G04"
+    },
+    {
+      "id": "runtime:M02-G04-EMPTY-VERSION-RANGE",
+      "suite": "runtime",
+      "runner_case_id": "M02-G04-EMPTY-VERSION-RANGE",
+      "source": "tests/development/skill-contract.test.mts",
+      "capability_id": "FEATURE-M02-G04"
+    },
+    {
+      "id": "runtime:M02-G04-VERSION-NUMERIC-NOT-LEXICAL",
+      "suite": "runtime",
+      "runner_case_id": "M02-G04-VERSION-NUMERIC-NOT-LEXICAL",
+      "source": "tests/development/skill-contract.test.mts",
+      "capability_id": "FEATURE-M02-G04"
+    },
+    {
+      "id": "runtime:M02-G04-UNDECLARED-IO-RESOURCE",
+      "suite": "runtime",
+      "runner_case_id": "M02-G04-UNDECLARED-IO-RESOURCE",
+      "source": "tests/development/skill-contract.test.mts",
+      "capability_id": "FEATURE-M02-G04"
+    },
+    {
+      "id": "runtime:M02-G04-RESOURCE-DIGEST-REQUIRED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G04-RESOURCE-DIGEST-REQUIRED",
+      "source": "tests/development/skill-contract.test.mts",
+      "capability_id": "FEATURE-M02-G04"
+    },
+    {
+      "id": "runtime:M02-G04-EXTRA-RESOURCE-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G04-EXTRA-RESOURCE-REJECTED",
+      "source": "tests/development/skill-contract.test.mts",
+      "capability_id": "FEATURE-M02-G04"
+    },
+    {
+      "id": "runtime:M02-G04-SCRIPT-DECLARATION-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G04-SCRIPT-DECLARATION-REJECTED",
+      "source": "tests/development/skill-contract.test.mts",
+      "capability_id": "FEATURE-M02-G04"
+    },
+    {
+      "id": "runtime:M02-G04-NETWORK-DECLARATION-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G04-NETWORK-DECLARATION-REJECTED",
+      "source": "tests/development/skill-contract.test.mts",
+      "capability_id": "FEATURE-M02-G04"
+    },
+    {
+      "id": "runtime:M02-G04-DUPLICATE-ACTION-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G04-DUPLICATE-ACTION-REJECTED",
+      "source": "tests/development/skill-contract.test.mts",
+      "capability_id": "FEATURE-M02-G04"
+    },
+    {
+      "id": "runtime:M02-G04-RESOURCE-TRAVERSAL-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G04-RESOURCE-TRAVERSAL-REJECTED",
+      "source": "tests/development/skill-contract.test.mts",
+      "capability_id": "FEATURE-M02-G04"
+    },
+    {
+      "id": "runtime:M02-G04-LEGACY-BUNDLE-REMAINS-READABLE",
+      "suite": "runtime",
+      "runner_case_id": "M02-G04-LEGACY-BUNDLE-REMAINS-READABLE",
+      "source": "tests/development/skill-contract.test.mts",
+      "capability_id": "FEATURE-M02-G04"
+    },
+    {
+      "id": "runtime:M02-G04-SCHEMA-COPY-CANNOT-MUTATE-VALIDATOR",
+      "suite": "runtime",
+      "runner_case_id": "M02-G04-SCHEMA-COPY-CANNOT-MUTATE-VALIDATOR",
+      "source": "tests/development/skill-contract.test.mts",
+      "capability_id": "FEATURE-M02-G04"
+    },
+    {
+      "id": "runtime:M02-G04-EXTERNAL-SCHEMA-REF-NOT-FETCHED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G04-EXTERNAL-SCHEMA-REF-NOT-FETCHED",
+      "source": "tests/development/skill-contract.test.mts",
+      "capability_id": "FEATURE-M02-G04"
+    },
+    {
+      "id": "runtime:M02-G04-NO-PROTO-POLLUTION",
+      "suite": "runtime",
+      "runner_case_id": "M02-G04-NO-PROTO-POLLUTION",
+      "source": "tests/development/skill-contract.test.mts",
+      "capability_id": "FEATURE-M02-G04"
+    },
+    {
+      "id": "runtime:M02-G04-NO-SILENT-NUMERIC-NORMALIZATION",
+      "suite": "runtime",
+      "runner_case_id": "M02-G04-NO-SILENT-NUMERIC-NORMALIZATION",
+      "source": "tests/development/skill-contract.test.mts",
+      "capability_id": "FEATURE-M02-G04"
+    },
+    {
+      "id": "runtime:M02-G04-EXTENSION-KEEPS-SKILL-METADATA",
+      "suite": "runtime",
+      "runner_case_id": "M02-G04-EXTENSION-KEEPS-SKILL-METADATA",
+      "source": "tests/development/skill-contract.test.mts",
+      "capability_id": "FEATURE-M02-G04"
+    },
+    {
+      "id": "runtime:CASE-M02-G05-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M02-G05-01",
+      "source": "tests/development/profile-layers.test.mts",
+      "capability_id": "FEATURE-M02-G05"
+    },
+    {
+      "id": "runtime:CASE-M02-G05-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M02-G05-02",
+      "source": "tests/development/profile-layers.test.mts",
+      "capability_id": "FEATURE-M02-G05"
+    },
+    {
+      "id": "runtime:CASE-M02-G05-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M02-G05-03",
+      "source": "tests/development/profile-layers.test.mts",
+      "capability_id": "FEATURE-M02-G05"
+    },
+    {
+      "id": "runtime:M02-G05-ALL-LAYER-PRECEDENCE",
+      "suite": "runtime",
+      "runner_case_id": "M02-G05-ALL-LAYER-PRECEDENCE",
+      "source": "tests/development/profile-layers.test.mts",
+      "capability_id": "FEATURE-M02-G05"
+    },
+    {
+      "id": "runtime:M02-G05-PROTECTED-AUTHORITY-FIELD",
+      "suite": "runtime",
+      "runner_case_id": "M02-G05-PROTECTED-AUTHORITY-FIELD",
+      "source": "tests/development/profile-layers.test.mts",
+      "capability_id": "FEATURE-M02-G05"
+    },
+    {
+      "id": "runtime:M02-G05-PLATFORM-CANNOT-CLAIM-CAPABILITY",
+      "suite": "runtime",
+      "runner_case_id": "M02-G05-PLATFORM-CANNOT-CLAIM-CAPABILITY",
+      "source": "tests/development/profile-layers.test.mts",
+      "capability_id": "FEATURE-M02-G05"
+    },
+    {
+      "id": "runtime:M02-G05-LOCALE-CANNOT-EDIT-RETURNS",
+      "suite": "runtime",
+      "runner_case_id": "M02-G05-LOCALE-CANNOT-EDIT-RETURNS",
+      "source": "tests/development/profile-layers.test.mts",
+      "capability_id": "FEATURE-M02-G05"
+    },
+    {
+      "id": "runtime:M02-G05-CROSS-STORE-LAYER",
+      "suite": "runtime",
+      "runner_case_id": "M02-G05-CROSS-STORE-LAYER",
+      "source": "tests/development/profile-layers.test.mts",
+      "capability_id": "FEATURE-M02-G05"
+    },
+    {
+      "id": "runtime:M02-G05-MANDATORY-BASE",
+      "suite": "runtime",
+      "runner_case_id": "M02-G05-MANDATORY-BASE",
+      "source": "tests/development/profile-layers.test.mts",
+      "capability_id": "FEATURE-M02-G05"
+    },
+    {
+      "id": "runtime:M02-G05-DUPLICATE-LAYER-ID",
+      "suite": "runtime",
+      "runner_case_id": "M02-G05-DUPLICATE-LAYER-ID",
+      "source": "tests/development/profile-layers.test.mts",
+      "capability_id": "FEATURE-M02-G05"
+    },
+    {
+      "id": "runtime:M02-G05-UNKNOWN-KIND",
+      "suite": "runtime",
+      "runner_case_id": "M02-G05-UNKNOWN-KIND",
+      "source": "tests/development/profile-layers.test.mts",
+      "capability_id": "FEATURE-M02-G05"
+    },
+    {
+      "id": "runtime:M02-G05-STRING-NOT-BOOLEAN",
+      "suite": "runtime",
+      "runner_case_id": "M02-G05-STRING-NOT-BOOLEAN",
+      "source": "tests/development/profile-layers.test.mts",
+      "capability_id": "FEATURE-M02-G05"
+    },
+    {
+      "id": "runtime:M02-G05-RETURN-RANGE",
+      "suite": "runtime",
+      "runner_case_id": "M02-G05-RETURN-RANGE",
+      "source": "tests/development/profile-layers.test.mts",
+      "capability_id": "FEATURE-M02-G05"
+    },
+    {
+      "id": "runtime:M02-G05-EXCLUSIONS-CANONICAL",
+      "suite": "runtime",
+      "runner_case_id": "M02-G05-EXCLUSIONS-CANONICAL",
+      "source": "tests/development/profile-layers.test.mts",
+      "capability_id": "FEATURE-M02-G05"
+    },
+    {
+      "id": "runtime:M02-G05-SERVER-APPROVAL-PROVENANCE",
+      "suite": "runtime",
+      "runner_case_id": "M02-G05-SERVER-APPROVAL-PROVENANCE",
+      "source": "tests/development/profile-layers.test.mts",
+      "capability_id": "FEATURE-M02-G05"
+    },
+    {
+      "id": "runtime:M02-G05-STALE-APPROVAL-NOT-PROPAGATED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G05-STALE-APPROVAL-NOT-PROPAGATED",
+      "source": "tests/development/profile-layers.test.mts",
+      "capability_id": "FEATURE-M02-G05"
+    },
+    {
+      "id": "runtime:M02-G05-SELF-DECLARED-APPROVER-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G05-SELF-DECLARED-APPROVER-REJECTED",
+      "source": "tests/development/profile-layers.test.mts",
+      "capability_id": "FEATURE-M02-G05"
+    },
+    {
+      "id": "runtime:M02-G05-INPUT-MUTATION-NO-OUTPUT-MUTATION",
+      "suite": "runtime",
+      "runner_case_id": "M02-G05-INPUT-MUTATION-NO-OUTPUT-MUTATION",
+      "source": "tests/development/profile-layers.test.mts",
+      "capability_id": "FEATURE-M02-G05"
+    },
+    {
+      "id": "runtime:CASE-M02-G06-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M02-G06-01",
+      "source": "tests/development/profile-editor.test.mts",
+      "capability_id": "FEATURE-M02-G06"
+    },
+    {
+      "id": "runtime:CASE-M02-G06-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M02-G06-02",
+      "source": "tests/development/profile-editor.test.mts",
+      "capability_id": "FEATURE-M02-G06"
+    },
+    {
+      "id": "runtime:CASE-M02-G06-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M02-G06-03",
+      "source": "tests/development/profile-editor.test.mts",
+      "capability_id": "FEATURE-M02-G06"
+    },
+    {
+      "id": "runtime:M02-G06-REQUEST-IS-NOT-PUBLICATION",
+      "suite": "runtime",
+      "runner_case_id": "M02-G06-REQUEST-IS-NOT-PUBLICATION",
+      "source": "tests/development/profile-editor.test.mts",
+      "capability_id": "FEATURE-M02-G06"
+    },
+    {
+      "id": "runtime:M02-G06-NO-SIMULATION-NO-REQUEST",
+      "suite": "runtime",
+      "runner_case_id": "M02-G06-NO-SIMULATION-NO-REQUEST",
+      "source": "tests/development/profile-editor.test.mts",
+      "capability_id": "FEATURE-M02-G06"
+    },
+    {
+      "id": "runtime:M02-G06-CAS-REJECTS-STALE-EDIT",
+      "suite": "runtime",
+      "runner_case_id": "M02-G06-CAS-REJECTS-STALE-EDIT",
+      "source": "tests/development/profile-editor.test.mts",
+      "capability_id": "FEATURE-M02-G06"
+    },
+    {
+      "id": "runtime:M02-G06-EDIT-INVALIDATES-SIMULATION",
+      "suite": "runtime",
+      "runner_case_id": "M02-G06-EDIT-INVALIDATES-SIMULATION",
+      "source": "tests/development/profile-editor.test.mts",
+      "capability_id": "FEATURE-M02-G06"
+    },
+    {
+      "id": "runtime:M02-G06-CONNECTION-CHANGE-INVALIDATES-SIMULATION",
+      "suite": "runtime",
+      "runner_case_id": "M02-G06-CONNECTION-CHANGE-INVALIDATES-SIMULATION",
+      "source": "tests/development/profile-editor.test.mts",
+      "capability_id": "FEATURE-M02-G06"
+    },
+    {
+      "id": "runtime:M02-G06-CROSS-TENANT-DRAFT-READ",
+      "suite": "runtime",
+      "runner_case_id": "M02-G06-CROSS-TENANT-DRAFT-READ",
+      "source": "tests/development/profile-editor.test.mts",
+      "capability_id": "FEATURE-M02-G06"
+    },
+    {
+      "id": "runtime:M02-G06-AGENT-CANNOT-EDIT",
+      "suite": "runtime",
+      "runner_case_id": "M02-G06-AGENT-CANNOT-EDIT",
+      "source": "tests/development/profile-editor.test.mts",
+      "capability_id": "FEATURE-M02-G06"
+    },
+    {
+      "id": "runtime:M02-G06-REVIEWER-CANNOT-EDIT",
+      "suite": "runtime",
+      "runner_case_id": "M02-G06-REVIEWER-CANNOT-EDIT",
+      "source": "tests/development/profile-editor.test.mts",
+      "capability_id": "FEATURE-M02-G06"
+    },
+    {
+      "id": "runtime:M02-G06-REVOKED-PERMISSIONS-APPLY-NOW",
+      "suite": "runtime",
+      "runner_case_id": "M02-G06-REVOKED-PERMISSIONS-APPLY-NOW",
+      "source": "tests/development/profile-editor.test.mts",
+      "capability_id": "FEATURE-M02-G06"
+    },
+    {
+      "id": "runtime:M02-G06-UNDO-RETains-HISTORY",
+      "suite": "runtime",
+      "runner_case_id": "M02-G06-UNDO-RETains-HISTORY",
+      "source": "tests/development/profile-editor.test.mts",
+      "capability_id": "FEATURE-M02-G06"
+    },
+    {
+      "id": "runtime:M02-G06-LIVE-PROFILE-UNCHANGED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G06-LIVE-PROFILE-UNCHANGED",
+      "source": "tests/development/profile-editor.test.mts",
+      "capability_id": "FEATURE-M02-G06"
+    },
+    {
+      "id": "runtime:M02-G06-HTTP-HIDDEN-FIELD-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G06-HTTP-HIDDEN-FIELD-REJECTED",
+      "source": "tests/development/profile-editor.test.mts",
+      "capability_id": "FEATURE-M02-G06"
+    },
+    {
+      "id": "runtime:M02-G06-HTTP-COMPLETE-DRAFT-JOURNEY",
+      "suite": "runtime",
+      "runner_case_id": "M02-G06-HTTP-COMPLETE-DRAFT-JOURNEY",
+      "source": "tests/development/profile-editor.test.mts",
+      "capability_id": "FEATURE-M02-G06"
+    },
+    {
+      "id": "runtime:M02-G06-HTTP-OTHER-STORE-ISOLATED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G06-HTTP-OTHER-STORE-ISOLATED",
+      "source": "tests/development/profile-editor.test.mts",
+      "capability_id": "FEATURE-M02-G06"
+    },
+    {
+      "id": "runtime:M02-G06-HTTP-POLICY-PUBLICATION-DENIED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G06-HTTP-POLICY-PUBLICATION-DENIED",
+      "source": "tests/development/profile-editor.test.mts",
+      "capability_id": "FEATURE-M02-G06"
+    },
+    {
+      "id": "runtime:M02-G06-HTTP-EDITOR-CSP",
+      "suite": "runtime",
+      "runner_case_id": "M02-G06-HTTP-EDITOR-CSP",
+      "source": "tests/development/profile-editor.test.mts",
+      "capability_id": "FEATURE-M02-G06"
+    },
+    {
+      "id": "runtime:M02-G06-BROWSER-KEYBOARD-EDIT-SIMULATE",
+      "suite": "runtime",
+      "runner_case_id": "M02-G06-BROWSER-KEYBOARD-EDIT-SIMULATE",
+      "source": "tests/development/configuration-browser.test.mts",
+      "capability_id": "FEATURE-M02-G06"
+    },
+    {
+      "id": "runtime:M02-G06-BROWSER-UNDO-DIGEST",
+      "suite": "runtime",
+      "runner_case_id": "M02-G06-BROWSER-UNDO-DIGEST",
+      "source": "tests/development/configuration-browser.test.mts",
+      "capability_id": "FEATURE-M02-G06"
+    },
+    {
+      "id": "runtime:M02-G06-BROWSER-REVIEW-NOT-PUBLISH",
+      "suite": "runtime",
+      "runner_case_id": "M02-G06-BROWSER-REVIEW-NOT-PUBLISH",
+      "source": "tests/development/configuration-browser.test.mts",
+      "capability_id": "FEATURE-M02-G06"
+    },
+    {
+      "id": "runtime:M02-G06-BROWSER-LOGOUT-CLEARS",
+      "suite": "runtime",
+      "runner_case_id": "M02-G06-BROWSER-LOGOUT-CLEARS",
+      "source": "tests/development/configuration-browser.test.mts",
+      "capability_id": "FEATURE-M02-G06"
+    },
+    {
+      "id": "runtime:M02-G06-BROWSER-DENIED-CLEARS",
+      "suite": "runtime",
+      "runner_case_id": "M02-G06-BROWSER-DENIED-CLEARS",
+      "source": "tests/development/configuration-browser.test.mts",
+      "capability_id": "FEATURE-M02-G06"
+    },
+    {
+      "id": "runtime:M02-G06-BROWSER-TEXT-NOT-HTML",
+      "suite": "runtime",
+      "runner_case_id": "M02-G06-BROWSER-TEXT-NOT-HTML",
+      "source": "tests/development/configuration-browser.test.mts",
+      "capability_id": "FEATURE-M02-G06"
+    },
+    {
+      "id": "runtime:M02-G06-BROWSER-MOBILE-NO-OVERFLOW",
+      "suite": "runtime",
+      "runner_case_id": "M02-G06-BROWSER-MOBILE-NO-OVERFLOW",
+      "source": "tests/development/configuration-browser.test.mts",
+      "capability_id": "FEATURE-M02-G06"
+    },
+    {
+      "id": "runtime:CASE-M02-G07-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M02-G07-01",
+      "source": "tests/development/skill-installer.test.mts",
+      "capability_id": "FEATURE-M02-G07"
+    },
+    {
+      "id": "runtime:CASE-M02-G07-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M02-G07-02",
+      "source": "tests/development/skill-installer.test.mts",
+      "capability_id": "FEATURE-M02-G07"
+    },
+    {
+      "id": "runtime:CASE-M02-G07-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M02-G07-03",
+      "source": "tests/development/skill-installer.test.mts",
+      "capability_id": "FEATURE-M02-G07"
+    },
+    {
+      "id": "runtime:M02-G07-UNAPPROVED-V2-BLOCKED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G07-UNAPPROVED-V2-BLOCKED",
+      "source": "tests/development/skill-installer.test.mts",
+      "capability_id": "FEATURE-M02-G07"
+    },
+    {
+      "id": "runtime:M02-G07-ORIGIN-REQUIRES-EXACT-APPROVAL",
+      "suite": "runtime",
+      "runner_case_id": "M02-G07-ORIGIN-REQUIRES-EXACT-APPROVAL",
+      "source": "tests/development/skill-installer.test.mts",
+      "capability_id": "FEATURE-M02-G07"
+    },
+    {
+      "id": "runtime:M02-G07-EXPIRED-APPROVAL",
+      "suite": "runtime",
+      "runner_case_id": "M02-G07-EXPIRED-APPROVAL",
+      "source": "tests/development/skill-installer.test.mts",
+      "capability_id": "FEATURE-M02-G07"
+    },
+    {
+      "id": "runtime:M02-G07-REVOKED-INSTALLED-CONTENT-BLOCKED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G07-REVOKED-INSTALLED-CONTENT-BLOCKED",
+      "source": "tests/development/skill-installer.test.mts",
+      "capability_id": "FEATURE-M02-G07"
+    },
+    {
+      "id": "runtime:M02-G07-AGENT-CANNOT-APPROVE",
+      "suite": "runtime",
+      "runner_case_id": "M02-G07-AGENT-CANNOT-APPROVE",
+      "source": "tests/development/skill-installer.test.mts",
+      "capability_id": "FEATURE-M02-G07"
+    },
+    {
+      "id": "runtime:M02-G07-OPERATOR-CANNOT-SELF-APPROVE",
+      "suite": "runtime",
+      "runner_case_id": "M02-G07-OPERATOR-CANNOT-SELF-APPROVE",
+      "source": "tests/development/skill-installer.test.mts",
+      "capability_id": "FEATURE-M02-G07"
+    },
+    {
+      "id": "runtime:M02-G07-CROSS-TENANT-APPROVAL",
+      "suite": "runtime",
+      "runner_case_id": "M02-G07-CROSS-TENANT-APPROVAL",
+      "source": "tests/development/skill-installer.test.mts",
+      "capability_id": "FEATURE-M02-G07"
+    },
+    {
+      "id": "runtime:M02-G07-GZIP-JSON-ROUNDTRIP",
+      "suite": "runtime",
+      "runner_case_id": "M02-G07-GZIP-JSON-ROUNDTRIP",
+      "source": "tests/development/skill-installer.test.mts",
+      "capability_id": "FEATURE-M02-G07"
+    },
+    {
+      "id": "runtime:M02-G07-EXPANSION-LIMIT",
+      "suite": "runtime",
+      "runner_case_id": "M02-G07-EXPANSION-LIMIT",
+      "source": "tests/development/skill-installer.test.mts",
+      "capability_id": "FEATURE-M02-G07"
+    },
+    {
+      "id": "runtime:M02-G07-NO-TAR-OR-ZIP-EXTRACTOR",
+      "suite": "runtime",
+      "runner_case_id": "M02-G07-NO-TAR-OR-ZIP-EXTRACTOR",
+      "source": "tests/development/skill-installer.test.mts",
+      "capability_id": "FEATURE-M02-G07"
+    },
+    {
+      "id": "runtime:M02-G07-PACKAGE-TRAVERSAL-NOT-WRITTEN",
+      "suite": "runtime",
+      "runner_case_id": "M02-G07-PACKAGE-TRAVERSAL-NOT-WRITTEN",
+      "source": "tests/development/skill-installer.test.mts",
+      "capability_id": "FEATURE-M02-G07"
+    },
+    {
+      "id": "runtime:M02-G07-PACKAGE-SCRIPT-NOT-EXECUTED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G07-PACKAGE-SCRIPT-NOT-EXECUTED",
+      "source": "tests/development/skill-installer.test.mts",
+      "capability_id": "FEATURE-M02-G07"
+    },
+    {
+      "id": "runtime:M02-G07-DIRECTORY-SNAPSHOT-DIGEST",
+      "suite": "runtime",
+      "runner_case_id": "M02-G07-DIRECTORY-SNAPSHOT-DIGEST",
+      "source": "tests/development/skill-installer.test.mts",
+      "capability_id": "FEATURE-M02-G07"
+    },
+    {
+      "id": "runtime:M02-G07-DIRECTORY-EXTRA-FILE",
+      "suite": "runtime",
+      "runner_case_id": "M02-G07-DIRECTORY-EXTRA-FILE",
+      "source": "tests/development/skill-installer.test.mts",
+      "capability_id": "FEATURE-M02-G07"
+    },
+    {
+      "id": "runtime:M02-G07-HARDLINK-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G07-HARDLINK-REJECTED",
+      "source": "tests/development/skill-installer.test.mts",
+      "capability_id": "FEATURE-M02-G07"
+    },
+    {
+      "id": "runtime:M02-G07-EXECUTABLE-RESOURCE-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G07-EXECUTABLE-RESOURCE-REJECTED",
+      "source": "tests/development/skill-installer.test.mts",
+      "capability_id": "FEATURE-M02-G07"
+    },
+    {
+      "id": "runtime:M02-G07-SYMLINKED-DIRECTORY-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G07-SYMLINKED-DIRECTORY-REJECTED",
+      "source": "tests/development/skill-installer.test.mts",
+      "capability_id": "FEATURE-M02-G07"
+    },
+    {
+      "id": "runtime:M02-G07-NO-ACCESSOR-PACKAGE",
+      "suite": "runtime",
+      "runner_case_id": "M02-G07-NO-ACCESSOR-PACKAGE",
+      "source": "tests/development/skill-installer.test.mts",
+      "capability_id": "FEATURE-M02-G07"
+    },
+    {
+      "id": "runtime:M02-G03-SCHEDULE-CANNOT-REACTIVATE-OLDER-RULES",
+      "suite": "runtime",
+      "runner_case_id": "M02-G03-SCHEDULE-CANNOT-REACTIVATE-OLDER-RULES",
+      "source": "tests/development/customization-review.test.mts",
+      "capability_id": "FEATURE-M02-G03"
+    },
+    {
+      "id": "runtime:M02-G07-NO-LEGACY-DOWNGRADE-AFTER-TRUSTED-INSTALL",
+      "suite": "runtime",
+      "runner_case_id": "M02-G07-NO-LEGACY-DOWNGRADE-AFTER-TRUSTED-INSTALL",
+      "source": "tests/development/customization-review.test.mts",
+      "capability_id": "FEATURE-M02-G07"
+    },
+    {
+      "id": "runtime:M02-G07-CURRENT-APPROVER-AUTHORITY",
+      "suite": "runtime",
+      "runner_case_id": "M02-G07-CURRENT-APPROVER-AUTHORITY",
+      "source": "tests/development/customization-review.test.mts",
+      "capability_id": "FEATURE-M02-G07"
+    },
+    {
+      "id": "runtime:M02-G06-WORKER-CANNOT-READ-UNPUBLISHED-DRAFT",
+      "suite": "runtime",
+      "runner_case_id": "M02-G06-WORKER-CANNOT-READ-UNPUBLISHED-DRAFT",
+      "source": "tests/development/customization-review.test.mts",
+      "capability_id": "FEATURE-M02-G06"
+    },
+    {
+      "id": "python:test_customization_tools.RuntimeSuiteBudgetTests.test_matches_existing_external_controller_bound",
+      "suite": "python",
+      "runner_case_id": "test_customization_tools.RuntimeSuiteBudgetTests.test_matches_existing_external_controller_bound",
+      "source": "tests/test_customization_tools.py",
+      "capability_id": "FEATURE-M02-G06"
+    },
+    {
+      "id": "python:test_customization_tools.RuntimeSuiteBudgetTests.test_skips_still_rejected",
+      "suite": "python",
+      "runner_case_id": "test_customization_tools.RuntimeSuiteBudgetTests.test_skips_still_rejected",
+      "source": "tests/test_customization_tools.py",
+      "capability_id": "FEATURE-M02-G06"
+    },
+    {
+      "id": "python:test_customization_tools.RuntimeSuiteBudgetTests.test_zero_inventory_still_rejected",
+      "suite": "python",
+      "runner_case_id": "test_customization_tools.RuntimeSuiteBudgetTests.test_zero_inventory_still_rejected",
+      "source": "tests/test_customization_tools.py",
+      "capability_id": "FEATURE-M02-G06"
+    },
+    {
+      "id": "python:test_customization_tools.RuntimeSuiteBudgetTests.test_nonzero_exit_still_rejected",
+      "suite": "python",
+      "runner_case_id": "test_customization_tools.RuntimeSuiteBudgetTests.test_nonzero_exit_still_rejected",
+      "source": "tests/test_customization_tools.py",
+      "capability_id": "FEATURE-M02-G06"
+    },
+    {
+      "id": "runtime:M02-G07-DECLARED-RESOURCE-SYMLINK-BLOCKED",
+      "suite": "runtime",
+      "runner_case_id": "M02-G07-DECLARED-RESOURCE-SYMLINK-BLOCKED",
+      "source": "tests/development/skill-installer.test.mts",
+      "capability_id": "FEATURE-M02-G07"
     }
   ],
   "protected_files": [
@@ -7070,6 +7908,7 @@
     "goals/M12/M12-G08.md",
     "goals/M12/M12-G09.md",
     "goals/M12/M12-G99.md",
+    "packages/commerce/contracts/commerce-manifest.v2.schema.json",
     "packages/commerce/contracts/read-api.openapi.json",
     "planning/capability-targets.json",
     "planning/goals.json",
@@ -7081,6 +7920,7 @@
     "planning/workflow-policy.json",
     "templates/evidence-bundle.v1.schema.json",
     "tests/browser/component.py",
+    "tests/browser/configuration_component.py",
     "tests/browser/manual_component.py",
     "tests/browser/manual_status.py",
     "tests/development/agent-external.test.mts",
@@ -7091,6 +7931,7 @@
     "tests/development/agent-runner.test.mts",
     "tests/development/agent-second-provider.test.mts",
     "tests/development/config.test.mts",
+    "tests/development/customization-helpers.mts",
     "tests/development/helpers.mts",
     "tests/development/integration.test.mts",
     "tests/development/local-model-helpers.mts",

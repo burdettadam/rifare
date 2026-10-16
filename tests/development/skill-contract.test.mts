@@ -1,0 +1,26 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import { manifestFiles,hash } from './customization-helpers.mts';
+import { validateManifest,manifestSchema,withinVersion } from '../../packages/commerce/skill-contract.mts';
+import { checkedBundle,loadSkillDirectory } from '../../packages/commerce/skills.mts';
+import { fileURLToPath } from 'node:url';
+
+test('CASE-M02-G04-01',()=>{const f=manifestFiles(),c=validateManifest(f.manifest,f.files);assert.deepEqual(c.required_capabilities,['order.status']);assert.equal(c.authority,'requirements_not_permissions');});
+test('CASE-M02-G04-02',()=>{const f=manifestFiles();assert.throws(()=>validateManifest({...f.manifest,permissions:['owner']}),(e:any)=>e.issues[0].path==='manifest.permissions'&&e.issues[0].code==='UNKNOWN_FIELD');});
+test('CASE-M02-G04-03',()=>{const f=manifestFiles();assert.throws(()=>validateManifest(f.manifest,f.files,{'order.status':'2.0.0'}),/CONFIGURATION_INVALID/);assert.ok(validateManifest(f.manifest,f.files,{'order.status':'1.9.0'}));});
+test('M02-G04-VERSION-CONSTRAINT-NOT-IGNORED',()=>{const f=manifestFiles();f.manifest.required_actions[0].versions.min='1.1.0';assert.throws(()=>validateManifest(f.manifest),/CONFIGURATION_INVALID/);});
+test('M02-G04-ENGINE-VERSION-BOUNDARY',()=>{const f=manifestFiles();f.manifest.engine={min:'2.0.0',max_exclusive:'3.0.0'};assert.throws(()=>validateManifest(f.manifest));});
+test('M02-G04-EMPTY-VERSION-RANGE',()=>{assert.throws(()=>withinVersion('1.0.0',{min:'2.0.0',max_exclusive:'1.0.0'}));});
+test('M02-G04-VERSION-NUMERIC-NOT-LEXICAL',()=>{assert.equal(withinVersion('1.10.0',{min:'1.9.0',max_exclusive:'2.0.0'}),true);});
+test('M02-G04-UNDECLARED-IO-RESOURCE',()=>{const f=manifestFiles();f.manifest.input_schema='references/absent.json';assert.throws(()=>validateManifest(f.manifest));});
+test('M02-G04-RESOURCE-DIGEST-REQUIRED',()=>{const f=manifestFiles();f.files['references/guide.md']='changed';assert.throws(()=>validateManifest(f.manifest,f.files),(e:any)=>e.issues[0].code==='DIGEST');});
+test('M02-G04-EXTRA-RESOURCE-REJECTED',()=>{const f=manifestFiles();f.files['assets/unlisted.txt']='text';assert.throws(()=>validateManifest(f.manifest,f.files));});
+test('M02-G04-SCRIPT-DECLARATION-REJECTED',()=>{const f=manifestFiles();assert.throws(()=>validateManifest({...f.manifest,scripts:['scripts/run.js']}));});
+test('M02-G04-NETWORK-DECLARATION-REJECTED',()=>{const f=manifestFiles();assert.throws(()=>validateManifest({...f.manifest,egress:['https://remote.invalid']}));});
+test('M02-G04-DUPLICATE-ACTION-REJECTED',()=>{const f=manifestFiles();f.manifest.required_actions.push(f.manifest.required_actions[0]);assert.throws(()=>validateManifest(f.manifest));});
+test('M02-G04-RESOURCE-TRAVERSAL-REJECTED',()=>{const f=manifestFiles();f.manifest.resources[0].path='references/../outside.json';assert.throws(()=>validateManifest(f.manifest));});
+test('M02-G04-LEGACY-BUNDLE-REMAINS-READABLE',()=>{const b=loadSkillDirectory(fileURLToPath(new URL('../../packages/commerce/skill-bundles/order-status',import.meta.url)));assert.equal(b.id,'order-status');assert.equal(JSON.parse(b.files['commerce-manifest.json']).schema_version,1);});
+test('M02-G04-SCHEMA-COPY-CANNOT-MUTATE-VALIDATOR',()=>{const s=manifestSchema();s.additionalProperties=true;const f=manifestFiles();assert.throws(()=>validateManifest({...f.manifest,unsafe:true}));});
+test('M02-G04-EXTERNAL-SCHEMA-REF-NOT-FETCHED',()=>{const f=manifestFiles();f.files['references/input.json']=JSON.stringify({type:'object',$ref:'https://remote.invalid/schema'});f.manifest.resources.find(r=>r.path==='references/input.json')!.sha256=hash(f.files['references/input.json']);assert.throws(()=>validateManifest(f.manifest,f.files),(e:any)=>e.issues[0].code==='EXTERNAL_REFERENCE');});
+test('M02-G04-NO-PROTO-POLLUTION',()=>{const f=manifestFiles();const m=JSON.parse(JSON.stringify(f.manifest).replace('"schema_version":2','"schema_version":2,"__proto__":{"admin":true}'));assert.throws(()=>validateManifest(m));assert.equal(({} as any).admin,undefined);});
+test('M02-G04-NO-SILENT-NUMERIC-NORMALIZATION',()=>{const f=manifestFiles();assert.throws(()=>validateManifest({...f.manifest,schema_version:NaN}));});
+test('M02-G04-EXTENSION-KEEPS-SKILL-METADATA',()=>{const f=manifestFiles();const b=checkedBundle(f.files);assert.equal(b.id,'return-guide');assert.equal(b.files['SKILL.md'],f.files['SKILL.md']);assert.equal(manifestSchema().$schema,'https://json-schema.org/draft/2020-12/schema');});

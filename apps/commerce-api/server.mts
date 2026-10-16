@@ -1,3 +1,7 @@
+import { ProfileEditor } from '../../packages/commerce/profile-editor.mts';
+import { Policies } from '../../packages/commerce/policies.mts';
+import { ConfigurationError } from '../../packages/commerce/configuration-values.mts';
+import { manifestSchema,validateManifest } from '../../packages/commerce/skill-contract.mts';
 import { Permissions } from '../../packages/commerce/authorization.mts';
 import { createServer } from 'node:http';
 import { readFileSync } from 'node:fs';
@@ -12,12 +16,12 @@ import type { StoreSimulator } from '../../packages/commerce/simulator.mts';
 import { ReadMcp,MCP_VERSION } from '../../packages/agent/mcp.mts';
 import { ReadContext } from '../../packages/commerce/read-context.mts';
 
-const SAFE_CODES=new Set(['ACCESS_DENIED','NOT_FOUND','INVALID_INPUT','JSON_REQUIRED','BODY_TOO_LARGE','INVALID_JSON',
+const SAFE_CODES=new Set(['PROFILE_EXISTS','PROFILE_CHANGED','PROFILE_NOT_READY','SIMULATION_REQUIRED','SIMULATION_STALE','DRAFT_HISTORY_LIMIT','POLICY_CHANGED','POLICY_INTEGRITY','POLICY_UNAVAILABLE','POLICY_REVOKED','POLICY_TRANSITION','SELF_REVIEW_DENIED','POLICY_TEST_FAILED','REVIEW_AUTHORITY_CHANGED','ACTIVATION_CONFLICT','ACTIVATION_ORDER','SKILL_APPROVAL_REQUIRED','SKILL_DOWNGRADE_DENIED','ACCESS_DENIED','NOT_FOUND','INVALID_INPUT','JSON_REQUIRED','BODY_TOO_LARGE','INVALID_JSON',
   'INVALID_PERMISSION','AUTHORITY_CHANGED','LAST_OWNER','RESOURCE_DENIED','INVALID_SKILL','SKILL_CHANGED','PROFILE_STALE','PROFILE_ACTION_DENIED','INVALID_PROFILE',
   'NO_CONFIGURATION','RUN_IN_PROGRESS','TASK_CONTEXT_CHANGED','UNKNOWN_READ_ACTION','CURRENT_FACTS_UNAVAILABLE','TASK_LIMIT','HOST_DENIED','ORIGIN_DENIED','VERIFICATION_FAILED','SECRET_UNAVAILABLE','ADAPTER_UNAVAILABLE','PROVIDER_REJECTED','PROVIDER_UNAVAILABLE','OUTCOME_UNKNOWN']);
 export async function startCommerceServer(options:{kernel:CommerceKernel;caps:Capabilities;customers:CustomerAccess;
   simulator:StoreSimulator;vault?:SecretVault;reads?:ReadContext;runner?:{run:(scope:object,taskId:string,configurationId:string,untrustedInput?:unknown)=>Promise<unknown>;receipt:(scope:object,taskId:string,receiptId:string)=>unknown};port?:number;log?:(entry:unknown)=>void}) {
-  const {kernel,caps,customers,simulator,vault}=options;const reads=options.reads??new ReadContext(kernel,caps);const mcp=new ReadMcp(kernel,reads);let port=0;
+  const {kernel,caps,customers,simulator,vault}=options;const reads=options.reads??new ReadContext(kernel,caps);const mcp=new ReadMcp(kernel,reads);const editor=new ProfileEditor(kernel,caps),policies=new Policies(kernel);let port=0;
   const log=(status:number,code:string)=>{try{options.log?.({event:'http_result',status,code});}catch{/* logging cannot grant access */}};
   const server=createServer(async(req,res)=>{
     try {
@@ -25,7 +29,7 @@ export async function startCommerceServer(options:{kernel:CommerceKernel;caps:Ca
       const url=new URL(req.url??'/',`http://127.0.0.1:${port}`);
       if(url.origin!==`http://127.0.0.1:${port}`)throw new Error('HOST_DENIED');
       if(url.pathname==='/health'&&req.method==='GET'){send(res,200,{ready:true,profile:'commerce-sqlite-diagnostic',production_qualified:false});return;}
-      const assets:Record<string,[string,string]>={'/':['index.html','text/html'],'/client.js':['client.js','text/javascript'],'/style.css':['style.css','text/css'],'/status':['status.html','text/html'],'/status-client.js':['status-client.js','text/javascript'],'/status.css':['status.css','text/css']};
+      const assets:Record<string,[string,string]>={'/configuration':['configuration.html','text/html'],'/configuration-client.js':['configuration-client.js','text/javascript'],'/configuration.css':['configuration.css','text/css'],'/':['index.html','text/html'],'/client.js':['client.js','text/javascript'],'/style.css':['style.css','text/css'],'/status':['status.html','text/html'],'/status-client.js':['status-client.js','text/javascript'],'/status.css':['status.css','text/css']};
       if(req.method==='GET'&&assets[url.pathname]&&!url.search){
         const [file,mime]=assets[url.pathname];res.writeHead(200,{'content-type':mime+'; charset=utf-8','cache-control':'no-store',
           'content-security-policy':"default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'",
@@ -54,7 +58,31 @@ export async function startCommerceServer(options:{kernel:CommerceKernel;caps:Ca
       const auth=req.headers.authorization;
       if(typeof auth!=='string'||!auth.startsWith('Bearer '))throw new Error('ACCESS_DENIED');
       const scope=kernel.authenticate(auth.slice(7));
-      if(req.method==='GET'&&url.pathname==='/v1/permissions'){
+      if(req.method==='GET'&&url.pathname==='/v1/skill-manifest-schema'){
+        kernel.authorize(scope,'skill.read');send(res,200,manifestSchema());
+      } else if(req.method==='POST'&&url.pathname==='/v1/skill-manifest/validate'){
+        kernel.authorize(scope,'skill.read');send(res,200,validateManifest(await body(req)));
+      } else if(req.method==='POST'&&url.pathname==='/v1/configuration/start'){
+        const p=exact(await body(req),['id']);send(res,201,editor.start(scope,id(p.id)));
+      } else if(req.method==='GET'&&/^\/v1\/configuration\/[A-Za-z0-9_-]+$/.test(url.pathname)){
+        send(res,200,editor.get(scope,id(url.pathname.split('/')[3])));
+      } else if(req.method==='POST'&&/^\/v1\/configuration\/[A-Za-z0-9_-]+\/(edit|restore|simulate|request)$/.test(url.pathname)){
+        const profileId=id(url.pathname.split('/')[3]),operation=url.pathname.split('/')[4],p=await body(req);
+        if(operation==='edit')send(res,200,editor.edit(scope,profileId,p));
+        else if(operation==='restore')send(res,200,editor.restore(scope,profileId,p));
+        else if(operation==='simulate')send(res,200,editor.simulate(scope,profileId,exact(p,['expected_revision']).expected_revision));
+        else send(res,200,editor.requestReview(scope,profileId,p));
+      } else if(req.method==='POST'&&url.pathname==='/v1/policies/draft'){
+        send(res,201,policies.create(scope,await body(req)));
+      } else if(req.method==='GET'&&/^\/v1\/policies\/[A-Za-z0-9_-]+\/[0-9]+$/.test(url.pathname)){
+        send(res,200,policies.get(scope,id(url.pathname.split('/')[3]),Number(url.pathname.split('/')[4])));
+      } else if(req.method==='POST'&&/^\/v1\/policies\/(test|review|publish|revoke|pin|evaluate)$/.test(url.pathname)){
+        const action=url.pathname.split('/')[3],input=await body(req);
+        if(action==='publish')send(res,200,policies.publish(scope,input));
+        else if(action==='pin'){const p=exact(input,['policy_id','facts']);send(res,201,policies.pin(scope,id(p.policy_id),p.facts));}
+        else if(action==='evaluate'){const p=exact(input,['pin_id']);send(res,200,policies.evaluatePin(scope,id(p.pin_id)));}
+        else {const p=exact(input,['policy_id','version','digest']);send(res,200,policies[action as 'test'|'review'|'revoke'](scope,id(p.policy_id),p.version,p.digest));}
+      } else if(req.method==='GET'&&url.pathname==='/v1/permissions'){
         const p=new Permissions(kernel);send(res,200,{decisions:['resource.read','model.run','authority.manage','audit.read'].map(a=>p.preview(scope,a)),execution_authorized:false});
       } else if(req.method==='POST'&&url.pathname==='/v1/permissions/change'){
         send(res,200,new Permissions(kernel).change(scope,await body(req)));
@@ -115,6 +143,7 @@ export async function startCommerceServer(options:{kernel:CommerceKernel;caps:Ca
       } else {send(res,404,{error:'NOT_FOUND'});log(404,'NOT_FOUND');return;}
       log(200,'READ_OR_SESSION_OPERATION');
     } catch(error) {
+      if(error instanceof ConfigurationError){send(res,400,{error:error.message,issues:error.issues});log(400,error.message);return;}
       if(error instanceof CapabilityLimitation){send(res,403,{error:'CAPABILITY_UNAVAILABLE',reason:error.reason});log(403,'CAPABILITY_UNAVAILABLE');return;}
       const code=error instanceof Error&&SAFE_CODES.has(error.message)?error.message:'INTERNAL_ERROR';
       const status=['ACCESS_DENIED','HOST_DENIED','ORIGIN_DENIED','VERIFICATION_FAILED'].includes(code)?403:code==='NOT_FOUND'?404:code==='INTERNAL_ERROR'?500:

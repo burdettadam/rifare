@@ -2,26 +2,20 @@
 
 ## Current integrated development
 
-M01-G01 through M01-G10 and all earlier M00 work remain intact. Under ADR-0014,
-M01-G11 through M01-G15 add task-bound MCP reads, a manual no-model status page,
-provider-neutral read assistance, two separately encoded provider wire contracts,
-and independent deterministic Python orchestration. Read [the guide](docs/AGENT-ACCESS.md)
-and [review](docs/AGENT-ACCESS-REVIEW.md). No new framework or npm dependency is required.
+The accumulated M00/M01 source and M02-G01/G02 remain intact. ADR-0016 assigns
+M02-G03 through M02-G07: structured policy authority, the v2 commerce manifest,
+deterministic merchant layers, a manual draft editor/simulator and approved
+instruction bundles. Read [the guide](docs/POLICY-CUSTOMIZATION.md) and
+[review](docs/POLICY-CUSTOMIZATION-REVIEW.md). Skills and agents remain replaceable.
+No new model provider, package dependency or scheduler is required.
 
 ## Remaining qualifications
 
-M00's target PostgreSQL/React stack is still unfinished. The owner-authorized
-ordering exception permits early diagnostic implementations, not full acceptance
-of M00-G99 or its dependent product goals. The unchanged acceptance ledger records
-full accepted goals; the integration ledger records useful merged contributions.
-No independent review, external account or target evidence has been invented.
-
-Continue target-stack repair from the accumulated main, retaining the new domain
-contracts and all tests. Qualify the PostgreSQL repository and served React journey
-rather than relabeling SQLite and static HTML. The next product packets begin at
-M01-G16 (the next original packet); missing provider access must remain
-explicit. Do not build another acceptance framework instead of the target or
-product implementation. No later goal is automatically assigned by these notes.
+PostgreSQL/React, real platform/model and actual served-browser qualification remain
+open. Local delegated integration does not satisfy the original milestone gates.
+The next product packet is M02-G08, pinning run inputs; it is not automatically
+assigned by this document. Continue target-stack repair from accumulated main,
+not an earlier branch. No independent reviews or external observations are invented.
 
 ## Source of truth
 

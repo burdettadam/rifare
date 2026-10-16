@@ -1,0 +1,165 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rifare.invalid/schemas/commerce-manifest.v2.schema.json",
+  "title": "Rifare commerce extension, not the Agent Skills standard",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "version",
+    "engine",
+    "required_actions",
+    "resources",
+    "input_schema",
+    "output_schema",
+    "configuration",
+    "scripts",
+    "egress"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 2
+    },
+    "id": {
+      "type": "string",
+      "maxLength": 64,
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]{0,5})\\.(0|[1-9][0-9]{0,5})\\.(0|[1-9][0-9]{0,5})$"
+    },
+    "engine": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "min",
+        "max_exclusive"
+      ],
+      "properties": {
+        "min": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]{0,5})\\.(0|[1-9][0-9]{0,5})\\.(0|[1-9][0-9]{0,5})$"
+        },
+        "max_exclusive": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]{0,5})\\.(0|[1-9][0-9]{0,5})\\.(0|[1-9][0-9]{0,5})$"
+        }
+      }
+    },
+    "required_actions": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "versions"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^[a-z][a-z.]{1,60}$"
+          },
+          "versions": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "min",
+              "max_exclusive"
+            ],
+            "properties": {
+              "min": {
+                "type": "string",
+                "pattern": "^(0|[1-9][0-9]{0,5})\\.(0|[1-9][0-9]{0,5})\\.(0|[1-9][0-9]{0,5})$"
+              },
+              "max_exclusive": {
+                "type": "string",
+                "pattern": "^(0|[1-9][0-9]{0,5})\\.(0|[1-9][0-9]{0,5})\\.(0|[1-9][0-9]{0,5})$"
+              }
+            }
+          }
+        }
+      }
+    },
+    "resources": {
+      "type": "array",
+      "maxItems": 16,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "path",
+          "sha256"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160,
+            "pattern": "^(references|assets)/[A-Za-z0-9_./-]+\\.(md|txt|json)$"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        }
+      }
+    },
+    "input_schema": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160,
+      "pattern": "^(references|assets)/[A-Za-z0-9_./-]+\\.(md|txt|json)$"
+    },
+    "output_schema": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160,
+      "pattern": "^(references|assets)/[A-Za-z0-9_./-]+\\.(md|txt|json)$"
+    },
+    "configuration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_resource",
+        "fields"
+      ],
+      "properties": {
+        "schema_resource": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160,
+          "pattern": "^(references|assets)/[A-Za-z0-9_./-]+\\.(md|txt|json)$"
+        },
+        "fields": {
+          "type": "array",
+          "maxItems": 7,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "returns.window_days",
+              "returns.require_evidence",
+              "returns.excluded_tags",
+              "returns.outcomes",
+              "presentation.tone",
+              "presentation.locale",
+              "data.max_age_seconds"
+            ]
+          }
+        }
+      }
+    },
+    "scripts": {
+      "type": "array",
+      "maxItems": 0
+    },
+    "egress": {
+      "type": "array",
+      "maxItems": 0
+    }
+  }
+}

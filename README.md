@@ -162,3 +162,11 @@ stack, then extend M00-G06 to the actually served application. Preserve the exis
 830 diagnostic and commerce tests. Do not add more governance machinery merely to postpone
 this implementation. The [qualification guide](docs/M00-QUALIFICATION.md) separates
 these engineering gaps from the completed local integration review.
+
+## Policy and skill customization
+
+See [the current guide](docs/POLICY-CUSTOMIZATION.md) for M02-G03 through M02-G07.
+Run the existing commerce diagnostic and open `/configuration` to edit/simulate a
+draft without a model. Publication review is a request, not automatic activation.
+`node --experimental-strip-types tools/demo-customization.mts` demonstrates the
+policy lifecycle, undo and a vetted instruction bundle in memory.
