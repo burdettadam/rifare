@@ -179,3 +179,12 @@ python3 -m unittest discover -s tests -p test_evidence_gate.py -v
 Full verification discovers these tests automatically. For candidate evidence,
 use the separately exported controller and independently retained pins described
 in the guide; candidate-authored checks alone are not an external trust anchor.
+
+## Portable order-status reads
+
+The [read-workflow guide](docs/PORTABLE-READ-WORKFLOWS.md) documents the installed
+skill, profiles, authenticated OpenAPI surface and independent Python HTTP client.
+Run the same diagnostic server; it provisions no live Shopify connection. The
+new tests use the existing native runner and add no dependency or agent service.
+Full verification includes their registered IDs. Qualification and local merge
+remain different states; see the current integration record.

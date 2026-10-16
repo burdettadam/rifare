@@ -8,6 +8,8 @@ import { CustomerAccess } from '../packages/commerce/customer-access.mts';
 import { SecretVault,readWrappingKey } from '../packages/commerce/secrets.mts';
 import { Capabilities } from '../packages/commerce/capabilities.mts';
 import { StoreSimulator,FIXTURE_CLOCK } from '../packages/commerce/simulator.mts';
+import { ReadContext } from '../packages/commerce/read-context.mts';
+import { loadSkillDirectory } from '../packages/commerce/skills.mts';
 import { startCommerceServer } from '../apps/commerce-api/server.mts';
 
 const args=process.argv.slice(2);let port=0,keyPath:string|undefined,keyId='local-wrap-v1';
@@ -27,6 +29,8 @@ try {
   writeFileSync(runFile,JSON.stringify({state:'starting',pid:process.pid,owner}),{flag:'wx',mode:0o600});owned=true;
   key=keyPath?readWrappingKey(resolve(keyPath),root):undefined;
   const kernel=new CommerceKernel(smoke.db),caps=new Capabilities(kernel),simulator=new StoreSimulator(kernel,caps);
+  const reads=new ReadContext(kernel,caps);
+  const skill=loadSkillDirectory(join(root,'packages/commerce/skill-bundles/order-status'));
   const operators=[];
   for(const profile of ['apparel','fragile']){
     const tenant='demo-'+profile,store='store-'+profile;
@@ -35,13 +39,23 @@ try {
     }
     const bearer=kernel.issueSession(tenant,store,'local-operator');sessions.push(bearer);const scope=kernel.authenticate(bearer);
     if(!smoke.db.prepare('SELECT 1 FROM commerce_simulator WHERE tenant_id=? AND store_id=?').get(tenant,store))simulator.reset(scope,{profile,clock:FIXTURE_CLOCK});
+    reads.skills.install(scope,skill);
+    if(!smoke.db.prepare('SELECT 1 FROM commerce_profiles WHERE tenant_id=? AND store_id=? AND id=?').get(tenant,store,'default')) {
+      const presentation=profile==='apparel'?{tone:'warm',locale:'en-US'}:{tone:'formal',locale:'en-GB'};
+      reads.profiles.put(scope,{id:'default',revision:1,tenant_id:tenant,store_id:store,skill_id:skill.id,skill_digest:skill.digest,
+        ...presentation,actions:['order.status','knowledge.search','knowledge.get','skill.read'],data_scope:{order:'session_or_store',knowledge:'visible_only'}});
+      reads.knowledge.put(scope,{id:'shipping-policy',revision:1,kind:'support',title:'Shipping support',
+        content:'Synthetic reference: inspect each shipment separately. Contact the merchant when current facts are unavailable.',
+        source_uri:'urn:rifare:fixture:shipping',source_updated_at:kernel.clock(),expires_at:kernel.clock()+86400000,
+        visibility:'store',resource_id:null});
+    }
     operators.push({tenant,store,bearer,expires_in_seconds:3600});
   }
   const customers=new CustomerAccess(kernel,message=>{
     validateRuntimeFile(outbox);appendFileSync(outbox,JSON.stringify(message)+'\n',{mode:0o600});
   });
   const vault=key?new SecretVault(kernel,{activeId:keyId,get:requested=>requested===keyId?key:undefined},{'local-probe':credential=>credential.length>0}):undefined;
-  server=await startCommerceServer({kernel,caps,customers,simulator,vault,port});
+  server=await startCommerceServer({kernel,caps,customers,simulator,vault,reads,port});
   writeFileSync(runFile,JSON.stringify({state:'ready',owner,pid:process.pid,url:server.url,instance_id:config.instanceId,profile:'commerce-sqlite-diagnostic',operators},null,2)+'\n',{mode:0o600});
   console.log(JSON.stringify({event:'commerce_ready',url:server.url,private_run_file:runFile,private_proof_outbox:outbox,key_loaded:!!key,production_qualified:false}));
   const stop=async()=>{

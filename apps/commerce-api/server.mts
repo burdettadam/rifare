@@ -8,11 +8,14 @@ import type { CustomerAccess } from '../../packages/commerce/customer-access.mts
 import type { SecretVault } from '../../packages/commerce/secrets.mts';
 import type { StoreSimulator } from '../../packages/commerce/simulator.mts';
 
+import { ReadContext } from '../../packages/commerce/read-context.mts';
+
 const SAFE_CODES=new Set(['ACCESS_DENIED','NOT_FOUND','INVALID_INPUT','JSON_REQUIRED','BODY_TOO_LARGE','INVALID_JSON',
-  'HOST_DENIED','ORIGIN_DENIED','VERIFICATION_FAILED','SECRET_UNAVAILABLE','ADAPTER_UNAVAILABLE','PROVIDER_REJECTED','PROVIDER_UNAVAILABLE','OUTCOME_UNKNOWN']);
+  'RESOURCE_DENIED','INVALID_SKILL','SKILL_CHANGED','PROFILE_STALE','PROFILE_ACTION_DENIED','INVALID_PROFILE',
+  'TASK_CONTEXT_CHANGED','UNKNOWN_READ_ACTION','CURRENT_FACTS_UNAVAILABLE','TASK_LIMIT','HOST_DENIED','ORIGIN_DENIED','VERIFICATION_FAILED','SECRET_UNAVAILABLE','ADAPTER_UNAVAILABLE','PROVIDER_REJECTED','PROVIDER_UNAVAILABLE','OUTCOME_UNKNOWN']);
 export async function startCommerceServer(options:{kernel:CommerceKernel;caps:Capabilities;customers:CustomerAccess;
-  simulator:StoreSimulator;vault?:SecretVault;port?:number;log?:(entry:unknown)=>void}) {
-  const {kernel,caps,customers,simulator,vault}=options;let port=0;
+  simulator:StoreSimulator;vault?:SecretVault;reads?:ReadContext;port?:number;log?:(entry:unknown)=>void}) {
+  const {kernel,caps,customers,simulator,vault}=options;const reads=options.reads??new ReadContext(kernel,caps);let port=0;
   const log=(status:number,code:string)=>{try{options.log?.({event:'http_result',status,code});}catch{/* logging cannot grant access */}};
   const server=createServer(async(req,res)=>{
     try {
@@ -26,7 +29,7 @@ export async function startCommerceServer(options:{kernel:CommerceKernel;caps:Ca
           'content-security-policy':"default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'",
           'x-content-type-options':'nosniff','referrer-policy':'no-referrer'});res.end(readFileSync(new URL(file,import.meta.url)));return;
       }
-      if(url.search&&url.pathname!=='/v1/lookup'&&url.pathname!=='/v1/resources')throw new Error('INVALID_INPUT');
+      if(url.search&&!['/v1/lookup','/v1/resources','/v1/knowledge/search','/v1/skill-content'].includes(url.pathname))throw new Error('INVALID_INPUT');
       if(req.method==='POST'&&url.pathname==='/v1/customer/challenges'){
         const result=customers.request(await body(req),req.socket.remoteAddress??'unknown-local');send(res,202,result);log(202,'CHALLENGE_REQUESTED');return;
       }
@@ -36,7 +39,28 @@ export async function startCommerceServer(options:{kernel:CommerceKernel;caps:Ca
       const auth=req.headers.authorization;
       if(typeof auth!=='string'||!auth.startsWith('Bearer '))throw new Error('ACCESS_DENIED');
       const scope=kernel.authenticate(auth.slice(7));
-      if(req.method==='GET'&&url.pathname==='/v1/capabilities')send(res,200,{capabilities:caps.list(scope)});
+      if(req.method==='GET'&&url.pathname==='/v1/read-contract') {
+        send(res,200,JSON.parse(readFileSync(new URL('../../packages/commerce/contracts/read-api.openapi.json',import.meta.url),'utf8')));
+      } else if(req.method==='GET'&&/^\/v1\/orders\/[A-Za-z0-9_-]+\/status$/.test(url.pathname)) {
+        send(res,200,reads.orderStatus(scope,id(url.pathname.split('/')[3])));
+      } else if(req.method==='GET'&&url.pathname==='/v1/knowledge/search') {
+        if([...url.searchParams.keys()].join(',')!=='query')throw new Error('INVALID_INPUT');
+        send(res,200,reads.knowledge.search(scope,url.searchParams.get('query')!));
+      } else if(req.method==='GET'&&/^\/v1\/knowledge\/[A-Za-z0-9_-]+\/revisions\/[0-9]+$/.test(url.pathname)) {
+        send(res,200,reads.knowledge.get(scope,url.pathname.split('/')[3],Number(url.pathname.split('/')[5])));
+      } else if(req.method==='GET'&&url.pathname==='/v1/skill-content') {
+        if([...url.searchParams.keys()].sort().join(',')!=='bundle_digest,resource,skill_id')throw new Error('INVALID_INPUT');
+        send(res,200,reads.skills.read(scope,id(url.searchParams.get('skill_id')),url.searchParams.get('resource')!,url.searchParams.get('bundle_digest')!));
+      } else if(req.method==='GET'&&/^\/v1\/profiles\/[A-Za-z0-9_-]+$/.test(url.pathname)) {
+        send(res,200,reads.profiles.get(scope,id(url.pathname.split('/')[3])));
+      } else if(req.method==='POST'&&url.pathname==='/v1/read-tasks') {
+        send(res,201,reads.createTask(scope,await body(req)));
+      } else if(req.method==='GET'&&/^\/v1\/read-tasks\/[A-Za-z0-9_-]+$/.test(url.pathname)) {
+        send(res,200,reads.task(scope,id(url.pathname.split('/')[3])));
+      } else if(req.method==='POST'&&/^\/v1\/read-tasks\/[A-Za-z0-9_-]+\/actions$/.test(url.pathname)) {
+        const r=exact(await body(req),['action','arguments']);if(typeof r.action!=='string'||r.action.length>64)throw new Error('INVALID_INPUT');
+        send(res,200,reads.taskAction(scope,id(url.pathname.split('/')[3]),r.action,r.arguments));
+      } else if(req.method==='GET'&&url.pathname==='/v1/capabilities')send(res,200,{capabilities:caps.list(scope)});
       else if(req.method==='GET'&&url.pathname==='/v1/resources'){
         if([...url.searchParams.keys()].join(',')!=='kind')throw new Error('INVALID_INPUT');
         send(res,200,{resources:caps.listResources(scope,url.searchParams.get('kind')!)});

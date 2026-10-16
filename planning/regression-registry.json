@@ -114,6 +114,46 @@
       "contract_files": [
         "goals/M01/M01-G05.md"
       ]
+    },
+    {
+      "id": "FEATURE-M01-G06",
+      "enabled": true,
+      "qualification": "retained_diagnostic_not_accepted",
+      "contract_files": [
+        "goals/M01/M01-G06.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M01-G07",
+      "enabled": true,
+      "qualification": "retained_diagnostic_not_accepted",
+      "contract_files": [
+        "goals/M01/M01-G07.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M01-G08",
+      "enabled": true,
+      "qualification": "retained_diagnostic_not_accepted",
+      "contract_files": [
+        "goals/M01/M01-G08.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M01-G09",
+      "enabled": true,
+      "qualification": "retained_diagnostic_not_accepted",
+      "contract_files": [
+        "goals/M01/M01-G09.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M01-G10",
+      "enabled": true,
+      "qualification": "retained_diagnostic_not_accepted",
+      "contract_files": [
+        "goals/M01/M01-G10.md"
+      ]
     }
   ],
   "tests": [
@@ -4897,6 +4937,531 @@
       "runner_case_id": "M01-G05-16",
       "source": "tests/development/commerce-simulator.test.mts",
       "capability_id": "FEATURE-M01-G05"
+    },
+    {
+      "id": "runtime:CASE-M01-G10-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M01-G10-01",
+      "source": "tests/development/read-api.test.mts",
+      "capability_id": "FEATURE-M01-G10"
+    },
+    {
+      "id": "runtime:CASE-M01-G10-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M01-G10-02",
+      "source": "tests/development/read-api.test.mts",
+      "capability_id": "FEATURE-M01-G10"
+    },
+    {
+      "id": "runtime:CASE-M01-G10-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M01-G10-03",
+      "source": "tests/development/read-api.test.mts",
+      "capability_id": "FEATURE-M01-G10"
+    },
+    {
+      "id": "runtime:M01-G10-CONTENT-ONLY-CLIENT",
+      "suite": "runtime",
+      "runner_case_id": "M01-G10-CONTENT-ONLY-CLIENT",
+      "source": "tests/development/read-api.test.mts",
+      "capability_id": "FEATURE-M01-G10"
+    },
+    {
+      "id": "runtime:M01-G10-CUSTOMER-ORDER-LIMIT",
+      "suite": "runtime",
+      "runner_case_id": "M01-G10-CUSTOMER-ORDER-LIMIT",
+      "source": "tests/development/read-api.test.mts",
+      "capability_id": "FEATURE-M01-G10"
+    },
+    {
+      "id": "runtime:M01-G10-REVOKED-SESSION",
+      "suite": "runtime",
+      "runner_case_id": "M01-G10-REVOKED-SESSION",
+      "source": "tests/development/read-api.test.mts",
+      "capability_id": "FEATURE-M01-G10"
+    },
+    {
+      "id": "runtime:M01-G10-PROFILE-REVISION",
+      "suite": "runtime",
+      "runner_case_id": "M01-G10-PROFILE-REVISION",
+      "source": "tests/development/read-api.test.mts",
+      "capability_id": "FEATURE-M01-G10"
+    },
+    {
+      "id": "runtime:M01-G10-CURRENT-FACTS",
+      "suite": "runtime",
+      "runner_case_id": "M01-G10-CURRENT-FACTS",
+      "source": "tests/development/read-api.test.mts",
+      "capability_id": "FEATURE-M01-G10"
+    },
+    {
+      "id": "runtime:M01-G10-KNOWLEDGE-ROUTES",
+      "suite": "runtime",
+      "runner_case_id": "M01-G10-KNOWLEDGE-ROUTES",
+      "source": "tests/development/read-api.test.mts",
+      "capability_id": "FEATURE-M01-G10"
+    },
+    {
+      "id": "runtime:M01-G10-RESOURCE-TRAVERSAL",
+      "suite": "runtime",
+      "runner_case_id": "M01-G10-RESOURCE-TRAVERSAL",
+      "source": "tests/development/read-api.test.mts",
+      "capability_id": "FEATURE-M01-G10"
+    },
+    {
+      "id": "runtime:M01-G10-JSON-CONTRACT",
+      "suite": "runtime",
+      "runner_case_id": "M01-G10-JSON-CONTRACT",
+      "source": "tests/development/read-api.test.mts",
+      "capability_id": "FEATURE-M01-G10"
+    },
+    {
+      "id": "runtime:M01-G10-NO-SECRET-IN-RESPONSES",
+      "suite": "runtime",
+      "runner_case_id": "M01-G10-NO-SECRET-IN-RESPONSES",
+      "source": "tests/development/read-api.test.mts",
+      "capability_id": "FEATURE-M01-G10"
+    },
+    {
+      "id": "runtime:M01-G10-TASK-ORDER-CANNOT-CHANGE",
+      "suite": "runtime",
+      "runner_case_id": "M01-G10-TASK-ORDER-CANNOT-CHANGE",
+      "source": "tests/development/read-api.test.mts",
+      "capability_id": "FEATURE-M01-G10"
+    },
+    {
+      "id": "runtime:M01-G10-SHIPMENT-SCOPE",
+      "suite": "runtime",
+      "runner_case_id": "M01-G10-SHIPMENT-SCOPE",
+      "source": "tests/development/read-api.test.mts",
+      "capability_id": "FEATURE-M01-G10"
+    },
+    {
+      "id": "runtime:CASE-M01-G07-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M01-G07-01",
+      "source": "tests/development/read-knowledge.test.mts",
+      "capability_id": "FEATURE-M01-G07"
+    },
+    {
+      "id": "runtime:CASE-M01-G07-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M01-G07-02",
+      "source": "tests/development/read-knowledge.test.mts",
+      "capability_id": "FEATURE-M01-G07"
+    },
+    {
+      "id": "runtime:CASE-M01-G07-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M01-G07-03",
+      "source": "tests/development/read-knowledge.test.mts",
+      "capability_id": "FEATURE-M01-G07"
+    },
+    {
+      "id": "runtime:M01-G07-PRIVATE",
+      "suite": "runtime",
+      "runner_case_id": "M01-G07-PRIVATE",
+      "source": "tests/development/read-knowledge.test.mts",
+      "capability_id": "FEATURE-M01-G07"
+    },
+    {
+      "id": "runtime:M01-G07-CUSTOMER",
+      "suite": "runtime",
+      "runner_case_id": "M01-G07-CUSTOMER",
+      "source": "tests/development/read-knowledge.test.mts",
+      "capability_id": "FEATURE-M01-G07"
+    },
+    {
+      "id": "runtime:M01-G07-REVOKED",
+      "suite": "runtime",
+      "runner_case_id": "M01-G07-REVOKED",
+      "source": "tests/development/read-knowledge.test.mts",
+      "capability_id": "FEATURE-M01-G07"
+    },
+    {
+      "id": "runtime:M01-G07-SOURCE-VALIDATION",
+      "suite": "runtime",
+      "runner_case_id": "M01-G07-SOURCE-VALIDATION",
+      "source": "tests/development/read-knowledge.test.mts",
+      "capability_id": "FEATURE-M01-G07"
+    },
+    {
+      "id": "runtime:M01-G07-REVISION",
+      "suite": "runtime",
+      "runner_case_id": "M01-G07-REVISION",
+      "source": "tests/development/read-knowledge.test.mts",
+      "capability_id": "FEATURE-M01-G07"
+    },
+    {
+      "id": "runtime:M01-G07-QUERY-IS-DATA",
+      "suite": "runtime",
+      "runner_case_id": "M01-G07-QUERY-IS-DATA",
+      "source": "tests/development/read-knowledge.test.mts",
+      "capability_id": "FEATURE-M01-G07"
+    },
+    {
+      "id": "runtime:M01-G07-INJECTION-IS-REFERENCE",
+      "suite": "runtime",
+      "runner_case_id": "M01-G07-INJECTION-IS-REFERENCE",
+      "source": "tests/development/read-knowledge.test.mts",
+      "capability_id": "FEATURE-M01-G07"
+    },
+    {
+      "id": "runtime:M01-G07-SESSION-REVOKED",
+      "suite": "runtime",
+      "runner_case_id": "M01-G07-SESSION-REVOKED",
+      "source": "tests/development/read-knowledge.test.mts",
+      "capability_id": "FEATURE-M01-G07"
+    },
+    {
+      "id": "runtime:CASE-M01-G09-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M01-G09-01",
+      "source": "tests/development/read-profiles.test.mts",
+      "capability_id": "FEATURE-M01-G09"
+    },
+    {
+      "id": "runtime:CASE-M01-G09-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M01-G09-02",
+      "source": "tests/development/read-profiles.test.mts",
+      "capability_id": "FEATURE-M01-G09"
+    },
+    {
+      "id": "runtime:CASE-M01-G09-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M01-G09-03",
+      "source": "tests/development/read-profiles.test.mts",
+      "capability_id": "FEATURE-M01-G09"
+    },
+    {
+      "id": "runtime:M01-G09-UNKNOWN-FIELD",
+      "suite": "runtime",
+      "runner_case_id": "M01-G09-UNKNOWN-FIELD",
+      "source": "tests/development/read-profiles.test.mts",
+      "capability_id": "FEATURE-M01-G09"
+    },
+    {
+      "id": "runtime:M01-G09-DATA-SCOPE",
+      "suite": "runtime",
+      "runner_case_id": "M01-G09-DATA-SCOPE",
+      "source": "tests/development/read-profiles.test.mts",
+      "capability_id": "FEATURE-M01-G09"
+    },
+    {
+      "id": "runtime:M01-G09-DUPLICATE-ACTIONS",
+      "suite": "runtime",
+      "runner_case_id": "M01-G09-DUPLICATE-ACTIONS",
+      "source": "tests/development/read-profiles.test.mts",
+      "capability_id": "FEATURE-M01-G09"
+    },
+    {
+      "id": "runtime:M01-G09-REVISION",
+      "suite": "runtime",
+      "runner_case_id": "M01-G09-REVISION",
+      "source": "tests/development/read-profiles.test.mts",
+      "capability_id": "FEATURE-M01-G09"
+    },
+    {
+      "id": "runtime:M01-G09-RESTRICTIONS",
+      "suite": "runtime",
+      "runner_case_id": "M01-G09-RESTRICTIONS",
+      "source": "tests/development/read-profiles.test.mts",
+      "capability_id": "FEATURE-M01-G09"
+    },
+    {
+      "id": "runtime:M01-G09-STALE-TASK",
+      "suite": "runtime",
+      "runner_case_id": "M01-G09-STALE-TASK",
+      "source": "tests/development/read-profiles.test.mts",
+      "capability_id": "FEATURE-M01-G09"
+    },
+    {
+      "id": "runtime:M01-G09-CAPABILITY-STILL-ENFORCED",
+      "suite": "runtime",
+      "runner_case_id": "M01-G09-CAPABILITY-STILL-ENFORCED",
+      "source": "tests/development/read-profiles.test.mts",
+      "capability_id": "FEATURE-M01-G09"
+    },
+    {
+      "id": "runtime:M01-G09-CROSS-STORE-PROFILE",
+      "suite": "runtime",
+      "runner_case_id": "M01-G09-CROSS-STORE-PROFILE",
+      "source": "tests/development/read-profiles.test.mts",
+      "capability_id": "FEATURE-M01-G09"
+    },
+    {
+      "id": "runtime:M01-G09-REVIEW-TASK-KNOWLEDGE-SCOPE",
+      "suite": "runtime",
+      "runner_case_id": "M01-G09-REVIEW-TASK-KNOWLEDGE-SCOPE",
+      "source": "tests/development/read-profiles.test.mts",
+      "capability_id": "FEATURE-M01-G09"
+    },
+    {
+      "id": "runtime:CASE-M01-G06-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M01-G06-01",
+      "source": "tests/development/read-shopify.test.mts",
+      "capability_id": "FEATURE-M01-G06"
+    },
+    {
+      "id": "runtime:CASE-M01-G06-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M01-G06-02",
+      "source": "tests/development/read-shopify.test.mts",
+      "capability_id": "FEATURE-M01-G06"
+    },
+    {
+      "id": "runtime:CASE-M01-G06-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M01-G06-03",
+      "source": "tests/development/read-shopify.test.mts",
+      "capability_id": "FEATURE-M01-G06"
+    },
+    {
+      "id": "runtime:M01-G06-PINNED-READ-ONLY",
+      "suite": "runtime",
+      "runner_case_id": "M01-G06-PINNED-READ-ONLY",
+      "source": "tests/development/read-shopify.test.mts",
+      "capability_id": "FEATURE-M01-G06"
+    },
+    {
+      "id": "runtime:M01-G06-SCOPE-MISSING-NO-EGRESS",
+      "suite": "runtime",
+      "runner_case_id": "M01-G06-SCOPE-MISSING-NO-EGRESS",
+      "source": "tests/development/read-shopify.test.mts",
+      "capability_id": "FEATURE-M01-G06"
+    },
+    {
+      "id": "runtime:M01-G06-UNSAFE-ENDPOINT",
+      "suite": "runtime",
+      "runner_case_id": "M01-G06-UNSAFE-ENDPOINT",
+      "source": "tests/development/read-shopify.test.mts",
+      "capability_id": "FEATURE-M01-G06"
+    },
+    {
+      "id": "runtime:M01-G06-STORE-REBIND",
+      "suite": "runtime",
+      "runner_case_id": "M01-G06-STORE-REBIND",
+      "source": "tests/development/read-shopify.test.mts",
+      "capability_id": "FEATURE-M01-G06"
+    },
+    {
+      "id": "runtime:M01-G06-WRONG-STORE-SECRET",
+      "suite": "runtime",
+      "runner_case_id": "M01-G06-WRONG-STORE-SECRET",
+      "source": "tests/development/read-shopify.test.mts",
+      "capability_id": "FEATURE-M01-G06"
+    },
+    {
+      "id": "runtime:M01-G06-WRITE-SCOPES",
+      "suite": "runtime",
+      "runner_case_id": "M01-G06-WRITE-SCOPES",
+      "source": "tests/development/read-shopify.test.mts",
+      "capability_id": "FEATURE-M01-G06"
+    },
+    {
+      "id": "runtime:M01-G06-API-VERSION-MISMATCH",
+      "suite": "runtime",
+      "runner_case_id": "M01-G06-API-VERSION-MISMATCH",
+      "source": "tests/development/read-shopify.test.mts",
+      "capability_id": "FEATURE-M01-G06"
+    },
+    {
+      "id": "runtime:M01-G06-STALE-NO-FACTS",
+      "suite": "runtime",
+      "runner_case_id": "M01-G06-STALE-NO-FACTS",
+      "source": "tests/development/read-shopify.test.mts",
+      "capability_id": "FEATURE-M01-G06"
+    },
+    {
+      "id": "runtime:M01-G06-TRUNCATED-ORDER",
+      "suite": "runtime",
+      "runner_case_id": "M01-G06-TRUNCATED-ORDER",
+      "source": "tests/development/read-shopify.test.mts",
+      "capability_id": "FEATURE-M01-G06"
+    },
+    {
+      "id": "runtime:M01-G06-TRUNCATED-SHIPMENTS",
+      "suite": "runtime",
+      "runner_case_id": "M01-G06-TRUNCATED-SHIPMENTS",
+      "source": "tests/development/read-shopify.test.mts",
+      "capability_id": "FEATURE-M01-G06"
+    },
+    {
+      "id": "runtime:M01-G06-TRUNCATED-SHIPMENT-LINES",
+      "suite": "runtime",
+      "runner_case_id": "M01-G06-TRUNCATED-SHIPMENT-LINES",
+      "source": "tests/development/read-shopify.test.mts",
+      "capability_id": "FEATURE-M01-G06"
+    },
+    {
+      "id": "runtime:M01-G06-CURRENCY-DECIMALS",
+      "suite": "runtime",
+      "runner_case_id": "M01-G06-CURRENCY-DECIMALS",
+      "source": "tests/development/read-shopify.test.mts",
+      "capability_id": "FEATURE-M01-G06"
+    },
+    {
+      "id": "runtime:M01-G06-INVALID-SOURCE-ID",
+      "suite": "runtime",
+      "runner_case_id": "M01-G06-INVALID-SOURCE-ID",
+      "source": "tests/development/read-shopify.test.mts",
+      "capability_id": "FEATURE-M01-G06"
+    },
+    {
+      "id": "runtime:M01-G06-UNSAFE-TRACKING",
+      "suite": "runtime",
+      "runner_case_id": "M01-G06-UNSAFE-TRACKING",
+      "source": "tests/development/read-shopify.test.mts",
+      "capability_id": "FEATURE-M01-G06"
+    },
+    {
+      "id": "runtime:M01-G06-REVOKED-SECRET-CACHED",
+      "suite": "runtime",
+      "runner_case_id": "M01-G06-REVOKED-SECRET-CACHED",
+      "source": "tests/development/read-shopify.test.mts",
+      "capability_id": "FEATURE-M01-G06"
+    },
+    {
+      "id": "runtime:M01-G06-REVOKED-DURING-READ",
+      "suite": "runtime",
+      "runner_case_id": "M01-G06-REVOKED-DURING-READ",
+      "source": "tests/development/read-shopify.test.mts",
+      "capability_id": "FEATURE-M01-G06"
+    },
+    {
+      "id": "runtime:M01-G06-CONNECTION-CHANGED",
+      "suite": "runtime",
+      "runner_case_id": "M01-G06-CONNECTION-CHANGED",
+      "source": "tests/development/read-shopify.test.mts",
+      "capability_id": "FEATURE-M01-G06"
+    },
+    {
+      "id": "runtime:M01-G06-DEFAULT-LIVE-DENIED",
+      "suite": "runtime",
+      "runner_case_id": "M01-G06-DEFAULT-LIVE-DENIED",
+      "source": "tests/development/read-shopify.test.mts",
+      "capability_id": "FEATURE-M01-G06"
+    },
+    {
+      "id": "runtime:M01-G06-READER-IDENTITY",
+      "suite": "runtime",
+      "runner_case_id": "M01-G06-READER-IDENTITY",
+      "source": "tests/development/read-shopify.test.mts",
+      "capability_id": "FEATURE-M01-G06"
+    },
+    {
+      "id": "runtime:M01-G06-UNCHANGED-REFRESH",
+      "suite": "runtime",
+      "runner_case_id": "M01-G06-UNCHANGED-REFRESH",
+      "source": "tests/development/read-shopify.test.mts",
+      "capability_id": "FEATURE-M01-G06"
+    },
+    {
+      "id": "runtime:M01-G06-SOURCE-REGRESSION",
+      "suite": "runtime",
+      "runner_case_id": "M01-G06-SOURCE-REGRESSION",
+      "source": "tests/development/read-shopify.test.mts",
+      "capability_id": "FEATURE-M01-G06"
+    },
+    {
+      "id": "runtime:M01-G06-REVIEW-CONCURRENT-REFRESH",
+      "suite": "runtime",
+      "runner_case_id": "M01-G06-REVIEW-CONCURRENT-REFRESH",
+      "source": "tests/development/read-shopify.test.mts",
+      "capability_id": "FEATURE-M01-G06"
+    },
+    {
+      "id": "runtime:M01-G06-REVIEW-TORN-SNAPSHOT",
+      "suite": "runtime",
+      "runner_case_id": "M01-G06-REVIEW-TORN-SNAPSHOT",
+      "source": "tests/development/read-shopify.test.mts",
+      "capability_id": "FEATURE-M01-G06"
+    },
+    {
+      "id": "runtime:CASE-M01-G08-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M01-G08-01",
+      "source": "tests/development/read-skills.test.mts",
+      "capability_id": "FEATURE-M01-G08"
+    },
+    {
+      "id": "runtime:CASE-M01-G08-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M01-G08-02",
+      "source": "tests/development/read-skills.test.mts",
+      "capability_id": "FEATURE-M01-G08"
+    },
+    {
+      "id": "runtime:CASE-M01-G08-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M01-G08-03",
+      "source": "tests/development/read-skills.test.mts",
+      "capability_id": "FEATURE-M01-G08"
+    },
+    {
+      "id": "runtime:M01-G08-SYMLINK",
+      "suite": "runtime",
+      "runner_case_id": "M01-G08-SYMLINK",
+      "source": "tests/development/read-skills.test.mts",
+      "capability_id": "FEATURE-M01-G08"
+    },
+    {
+      "id": "runtime:M01-G08-METADATA",
+      "suite": "runtime",
+      "runner_case_id": "M01-G08-METADATA",
+      "source": "tests/development/read-skills.test.mts",
+      "capability_id": "FEATURE-M01-G08"
+    },
+    {
+      "id": "runtime:M01-G08-UNSUPPORTED-YAML",
+      "suite": "runtime",
+      "runner_case_id": "M01-G08-UNSUPPORTED-YAML",
+      "source": "tests/development/read-skills.test.mts",
+      "capability_id": "FEATURE-M01-G08"
+    },
+    {
+      "id": "runtime:M01-G08-DUPLICATE-RESOURCE",
+      "suite": "runtime",
+      "runner_case_id": "M01-G08-DUPLICATE-RESOURCE",
+      "source": "tests/development/read-skills.test.mts",
+      "capability_id": "FEATURE-M01-G08"
+    },
+    {
+      "id": "runtime:M01-G08-PIN",
+      "suite": "runtime",
+      "runner_case_id": "M01-G08-PIN",
+      "source": "tests/development/read-skills.test.mts",
+      "capability_id": "FEATURE-M01-G08"
+    },
+    {
+      "id": "runtime:M01-G08-INSTALL-DIGEST",
+      "suite": "runtime",
+      "runner_case_id": "M01-G08-INSTALL-DIGEST",
+      "source": "tests/development/read-skills.test.mts",
+      "capability_id": "FEATURE-M01-G08"
+    },
+    {
+      "id": "runtime:M01-G08-INSTALL-REQUIRES-OPERATOR",
+      "suite": "runtime",
+      "runner_case_id": "M01-G08-INSTALL-REQUIRES-OPERATOR",
+      "source": "tests/development/read-skills.test.mts",
+      "capability_id": "FEATURE-M01-G08"
+    },
+    {
+      "id": "runtime:M01-G08-REMOVED",
+      "suite": "runtime",
+      "runner_case_id": "M01-G08-REMOVED",
+      "source": "tests/development/read-skills.test.mts",
+      "capability_id": "FEATURE-M01-G08"
+    },
+    {
+      "id": "runtime:M01-G10-PACKAGED-BOOTSTRAP",
+      "suite": "runtime",
+      "runner_case_id": "M01-G10-PACKAGED-BOOTSTRAP",
+      "source": "tests/development/read-api.test.mts",
+      "capability_id": "FEATURE-M01-G10"
     }
   ],
   "protected_files": [
@@ -5172,7 +5737,11 @@
     "tools/test_harness.py",
     "tools/test_runtime.py",
     "tools/verify.py",
-    "work/accepted-goals.json"
+    "work/accepted-goals.json",
+    "packages/commerce/contracts/read-api.openapi.json",
+    "tests/fixtures/read-workflows/shopify-order.json",
+    "tests/fixtures/read-workflows/presentations.json",
+    "tests/development/read-workflow-helpers.mts"
   ],
   "source_count_fixture": "tests/fixtures/licensing/artifact-oracle.v1.json",
   "source_inventory": "planning/component-inventory.json"

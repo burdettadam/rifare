@@ -2,19 +2,17 @@
 
 ## Current integrated development
 
-The reviewed M00 diagnostic foundation remains intact. Under the owner's
-five-goal instruction and prior [ADR-0012](docs/decisions/0012-five-goal-local-implementation.md),
-M01-G01 through M01-G05 now have native local implementations and regression tests.
-Read [the foundation guide](docs/COMMERCE-FOUNDATION.md) and
-[the review](docs/COMMERCE-REVIEW.md). The integration ledger is
-[work/integrations/five-goal-commerce.json](work/integrations/five-goal-commerce.json).
+The reviewed M00 foundation and M01-G01 through M01-G05 remain intact.
+Under [ADR-0013](docs/decisions/0013-portable-read-workflows.md), M01-G06 through
+M01-G10 add fixture-tested Shopify reads, current knowledge provenance, portable
+skill resources, typed merchant profiles and canonical read/task HTTP interfaces.
+Read [the implementation guide](docs/PORTABLE-READ-WORKFLOWS.md),
+[review](docs/PORTABLE-READ-REVIEW.md), and
+[integration record](work/integrations/portable-read-workflows.json).
 
-The five modules are tenant-scoped resources, verified customer access, encrypted
-opaque secret handles, current read capability discovery, and a deterministic
-store simulator. They operate without an AI provider or external commerce account.
-The test registry adds their obligations without deleting prior ones. Do not
-restart these implementations merely because the original planning snapshot
-still says not_started; live decisions are recorded under work/.
+The five modules require no model framework or additional npm dependency. Do not
+restart the implementations merely because initial planning says not_started;
+work records distinguish useful integrated code from full goal acceptance.
 
 ## Remaining qualifications
 
@@ -27,7 +25,7 @@ No independent review, external account or target evidence has been invented.
 Continue target-stack repair from the accumulated main, retaining the new domain
 contracts and all tests. Qualify the PostgreSQL repository and served React journey
 rather than relabeling SQLite and static HTML. The next product packets begin at
-M01-G06 (native read-only store integration); missing provider access must remain
+M01-G11 (the next original packet); missing provider access must remain
 explicit. Do not build another acceptance framework instead of the target or
 product implementation. No later goal is automatically assigned by these notes.
 
