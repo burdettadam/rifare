@@ -77,3 +77,12 @@ cohort membership and independent hand-calculated synthetic outcomes. It neither
 implements a commerce feature nor authenticates live evidence. See
 [the current work record](work/records/M00-G02.md) for the exact prerequisite and
 review boundaries. M00-G01 remains awaiting acceptance; no pilot is authorized.
+
+## M00-G03 licensing and source review
+
+The [licensing proposal](docs/LICENSING.md), [component inventory](planning/component-inventory.json),
+[merchant data boundary](docs/MERCHANT-DATA-BOUNDARY.md) and
+[distribution checks](docs/DISTRIBUTION-REVIEW.md) are prepared on the goal branch.
+No license or public release is approved. `python3 tools/check_distribution.py --root .`
+checks local source completeness; adding `--public-release` deliberately blocks.
+See [the M00-G03 work record](work/records/M00-G03.md) for actual candidate evidence.

@@ -1,0 +1,134 @@
+{
+  "schema_version": "1.0",
+  "id": "rifare-licensing-policy",
+  "revision": 1,
+  "status": "proposed",
+  "authority": {
+    "owner_decision": null,
+    "rights_holder": null,
+    "independent_reviews": [],
+    "publication_authorized": false,
+    "contribution_intake_enabled": false
+  },
+  "proposed_licenses": {
+    "application": "AGPL-3.0-only",
+    "separable_sdk_and_protocol_schemas": "Apache-2.0",
+    "public_product_skills_and_synthetic_templates": "Apache-2.0",
+    "original_development_tooling_and_documentation": "Apache-2.0",
+    "upstream_derived_portions": "Retain original licenses and notices; no blanket relicensing",
+    "merchant_material": "No distribution license inferred; exclude private inputs",
+    "alternative": "Apache-2.0 for all original public surfaces if owner prefers permissive distribution"
+  },
+  "release_requirements": [
+    "accepted_M00_G01_scope",
+    "explicit_owner_license_and_rights_holder_decision",
+    "installed_applicable_license_texts_and_file_attribution",
+    "resolved_dependency_and_asset_obligations",
+    "exact_artifact_and_corresponding_source_review",
+    "private_data_and_full_history_review",
+    "approved_contributor_intake_terms",
+    "independent_authority_and_regression_reviews",
+    "separate_authorized_publication_target_and_candidate"
+  ],
+  "contribution_proposal": {
+    "terms": "inbound_matches_outbound_for_the_affected_component",
+    "provenance": "DCO-1.1 after explicit adoption; no fabricated or retroactive signoffs",
+    "assignment": "No copyright assignment or commercial relicensing authority assumed",
+    "ai_assistance": "Human contributor verifies provenance, rights and license obligations",
+    "intake": "Do not solicit outside contributions while license approval is pending"
+  },
+  "data_boundary": {
+    "exclude": [
+      "merchant configurations",
+      "customer records",
+      "credentials",
+      "conversation histories",
+      "provider logs",
+      "attachments",
+      "database backups",
+      "private evidence"
+    ],
+    "synthetic_examples": "Only exact reviewed example bytes; naming a directory examples is not sanitization",
+    "derived_work": "Do not claim a universal copyleft exception for plugins or configuration code; assess actual integration",
+    "source_obligations": "Provide required source without exporting secrets or customer data; review architecture and license duties together"
+  },
+  "public_examples": [
+    {
+      "path": ".env.example",
+      "sha256": "2c127c9cc6abe7ebc71f1e359a7aeda98173ce8e195ad1f454d8af22eb19ff22",
+      "classification": "synthetic_example"
+    },
+    {
+      "path": "examples/evaluations/merchant-policy-cases.json",
+      "sha256": "96f2a1efe363fa007de6866b00ff26ccd04d50ce743f5454770a814de6445d8f",
+      "classification": "synthetic_example"
+    },
+    {
+      "path": "examples/platforms/shopify.json",
+      "sha256": "b5e86dde93a8ec65f2158246107a631a8e6fa907a7920014af4a537ac9964266",
+      "classification": "synthetic_example"
+    },
+    {
+      "path": "examples/platforms/woocommerce.json",
+      "sha256": "121607432b7be48c2379e7ec42cd6c4fbb4f8d2e3a04fd5e60cc0dce4531f74e",
+      "classification": "synthetic_example"
+    },
+    {
+      "path": "examples/profile.schema.json",
+      "sha256": "024602abb06d2fc598d62051e8240bd22a71725293abfb305d280d9e3bfa5803",
+      "classification": "synthetic_example"
+    },
+    {
+      "path": "examples/profiles/apparel-example.json",
+      "sha256": "0f4fdefd6967e9eaa8805436d84e60cbdd8a347320e86a5380da9f70b443e0a5",
+      "classification": "synthetic_example"
+    },
+    {
+      "path": "examples/profiles/clearance-example.json",
+      "sha256": "c1151d707ad6074ab68b17ed155a3837cf1ec1893e20053f578db49167991878",
+      "classification": "synthetic_example"
+    },
+    {
+      "path": "examples/profiles/fragile-goods-example.json",
+      "sha256": "0b086094223068a29d3e54347a9b205e9e506fc5aa304ba2df49d1b52195aad3",
+      "classification": "synthetic_example"
+    }
+  ],
+  "sources": [
+    {
+      "id": "AGPL-TEXT",
+      "url": "https://www.gnu.org/licenses/agpl-3.0.pt-br.html",
+      "scope": "Official page contains the English AGPLv3 license text; sections 1, 5 and 13. English endpoint retrieval timed out during this review."
+    },
+    {
+      "id": "APACHE-TEXT",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "scope": "Sections 2-5, attribution, modified files, NOTICE when present, and submissions."
+    },
+    {
+      "id": "DCO-TEXT",
+      "url": "https://developercertificate.org/",
+      "scope": "Version 1.1 provenance certification; no automatic copyright assignment."
+    },
+    {
+      "id": "SPDX-FIELDS",
+      "url": "https://spdx.github.io/spdx-spec/v2.3.1/package-information/",
+      "scope": "Declared versus concluded license and NOASSERTION. This inventory is not claimed to be an SPDX SBOM."
+    },
+    {
+      "id": "REUSE-LIMITS",
+      "url": "https://reuse.software/faq/",
+      "scope": "License metadata does not establish compatibility, correctness or legal clearance."
+    },
+    {
+      "id": "WORKFLOW-LICENSE",
+      "url": "https://github.com/ElevenID/git-agent/blob/2ead37bfe9bf28489816bfdd4deeea137e23fa37/LICENSE",
+      "scope": "Pinned MIT notice; Git blob 0d946bbce07d4dcca4856dd9d60be2a835cf94df."
+    },
+    {
+      "id": "CHECKOUT-LICENSE",
+      "url": "https://github.com/actions/checkout/blob/11bd71901bbe5b1630ceea73d27597364c9af683/LICENSE",
+      "scope": "Referenced, unbundled MIT action; Git blob a67dca8b4f65d6bd351f6b1e333ce2cd84d843a5."
+    }
+  ]
+}

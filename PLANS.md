@@ -4,7 +4,8 @@
 
 M00-G01 is prepared for review; see [its work record](work/records/M00-G01.md).
 The continuation request authorizes preparatory M00-G02 proposal/check work on that
-unaccepted base; see [the M00-G02 record](work/records/M00-G02.md). Neither goal is accepted,
+unaccepted base; see [the M00-G02 record](work/records/M00-G02.md). M00-G03 now has preparatory license/inventory and source-review work; see
+[its work record](work/records/M00-G03.md). None of these goals is accepted,
 and no dependency or reviewer requirement is waived. No product goal is accepted. `planning/goal-state.json` is an initial unstarted snapshot, not an automatically maintained task database. The first proposed goal is [M00-G01](goals/M00/M00-G01.md).
 
 ## Sources of truth

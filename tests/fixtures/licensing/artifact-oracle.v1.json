@@ -1,0 +1,29 @@
+{
+  "source_file_count": 344,
+  "source_count_reason": "331 files retained from M00-G02 plus 13 explicitly scoped new sources; no removed files.",
+  "component_ids": [
+    "git-agent-adaptations",
+    "rifare-developer-helpers",
+    "rifare-development-rubrics",
+    "rifare-product-skill-example",
+    "rifare-project-material",
+    "rifare-synthetic-configurations"
+  ],
+  "release_blockers": [
+    "accepted_M00_G01_scope",
+    "explicit_owner_license_and_rights_holder_decision",
+    "installed_applicable_license_texts_and_file_attribution",
+    "resolved_dependency_and_asset_obligations",
+    "exact_artifact_and_corresponding_source_review",
+    "private_data_and_full_history_review",
+    "approved_contributor_intake_terms",
+    "independent_authority_and_regression_reviews",
+    "separate_authorized_publication_target_and_candidate"
+  ],
+  "test_bindings": {
+    "CASE-M00-G03-01": "test_CASE_M00_G03_01_exact_source_membership_and_dispositions",
+    "CASE-M00-G03-02": "test_CASE_M00_G03_02_unknown_license_and_private_profile_rejected",
+    "CASE-M00-G03-03": "test_CASE_M00_G03_03_missing_notice_and_inventory_diff_block"
+  },
+  "data_classification": "synthetic fixture contract only; no license or privacy certification"
+}

@@ -1,7 +1,19 @@
 # Rifare license status
 
-Rifare is being prepared for open-source distribution. The project owner has not yet approved the application, SDK or contribution license. That decision and publication review belong to M00-G03.
+No application, SDK, original skill, contribution or public distribution license
+has been approved. M00-G03 now supplies a [component proposal](docs/LICENSING.md),
+[explicit inventory](planning/component-inventory.json) and
+[distribution checks](docs/DISTRIBUTION-REVIEW.md), not a license grant.
+The rights holder, accepted terms and publication destination remain unset.
 
-This starter does not substitute a proposed license recommendation for the owner's decision and does not claim to be an already licensed public release. Do not publish or solicit third-party contributions until that decision is recorded and the appropriate license files are installed.
+Do not publish, install a root license grant or solicit third-party contributions
+until an authorized owner decision and applicable reviews establish the terms.
+The proposed application license is AGPL-3.0-only; Apache-2.0 is proposed for
+separable integration/skill material and original developer/documentation content.
+These names are alternatives for decision, not applied file licenses.
 
-The adapted upstream development workflow retains its separate MIT notice in `THIRD-PARTY-NOTICES.md`. That notice applies to those upstream-derived portions, not to unrelated project material.
+The separate MIT notice in `THIRD-PARTY-NOTICES.md` covers the identified
+upstream-derived workflow portions. It does not license unrelated Rifare material
+or establish rights over local changes. `NOASSERTION` in the inventory is an
+unresolved conclusion, not permission to redistribute. Local review can pass;
+public-release preflight remains blocked and never reports legal clearance.

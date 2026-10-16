@@ -78,3 +78,23 @@ source/configuration separation, exact denominators and trusted-baseline limits.
 [Fixture commands](tests/fixtures/release-benchmark/COMMANDS.md) run the entirely
 synthetic arithmetic example without a provider or application. Product gates,
 consent, source attestations and independent acceptance remain unperformed.
+
+## M00-G03 inventory and distribution review
+
+```sh
+python3 tools/check_distribution.py --root .
+python3 tools/check_distribution.py --root . --public-release
+python3 -m unittest discover -s tests -p test_distribution.py -v
+```
+
+Public-release preflight intentionally exits 1 until real decisions and qualification
+exist. It is not included as a required passing check in `verify.py`. No network or
+package installation is needed. The test suite uses temporary Git repositories and
+filesystem link-rejection cases; rerun on the target host rather than inferring
+cross-platform qualification. The current observed host is Linux.
+
+[Distribution review](docs/DISTRIBUTION-REVIEW.md) gives exact clean-candidate staging
+commands and independently retained manifest/baseline hash requirements. Add every
+new source path to its reviewed inventory component. Private local files stay outside
+source; force-added ignored paths still fail. License and profile changes require
+independent review; do not edit fixtures to bypass a failing obligation.

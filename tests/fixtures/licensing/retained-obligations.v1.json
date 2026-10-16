@@ -1,0 +1,123 @@
+{
+  "schema_version": "1.0",
+  "kind": "proposed_regression_oracle_not_approval",
+  "components": {
+    "rifare-project-material": {
+      "id": "rifare-project-material",
+      "origin": "first_party_pending",
+      "license_declared": "NOASSERTION",
+      "license_status": "pending_owner_decision",
+      "disposition": "internal_review_only",
+      "copyright": "NOASSERTION",
+      "provenance": "Rifare project-created material; rights holder and owner grant not determined.",
+      "classification": "project_source",
+      "notices": []
+    },
+    "rifare-developer-helpers": {
+      "id": "rifare-developer-helpers",
+      "origin": "first_party_pending",
+      "license_declared": "NOASSERTION",
+      "license_status": "pending_owner_decision",
+      "disposition": "internal_review_only",
+      "copyright": "NOASSERTION",
+      "provenance": "Rifare project-created material; rights holder and owner grant not determined.",
+      "classification": "project_source",
+      "notices": []
+    },
+    "rifare-development-rubrics": {
+      "id": "rifare-development-rubrics",
+      "origin": "first_party_pending",
+      "license_declared": "NOASSERTION",
+      "license_status": "pending_owner_decision",
+      "disposition": "internal_review_only",
+      "copyright": "NOASSERTION",
+      "provenance": "Rifare project-created material; rights holder and owner grant not determined.",
+      "classification": "project_source",
+      "notices": []
+    },
+    "rifare-product-skill-example": {
+      "id": "rifare-product-skill-example",
+      "origin": "first_party_pending",
+      "license_declared": "NOASSERTION",
+      "license_status": "pending_owner_decision",
+      "disposition": "internal_review_only",
+      "copyright": "NOASSERTION",
+      "provenance": "Rifare project-created material; rights holder and owner grant not determined.",
+      "classification": "project_source",
+      "notices": []
+    },
+    "rifare-synthetic-configurations": {
+      "id": "rifare-synthetic-configurations",
+      "origin": "first_party_pending",
+      "license_declared": "NOASSERTION",
+      "license_status": "pending_owner_decision",
+      "disposition": "internal_review_only",
+      "copyright": "NOASSERTION",
+      "provenance": "Rifare project-created material; rights holder and owner grant not determined.",
+      "classification": "synthetic_example",
+      "notices": []
+    },
+    "git-agent-adaptations": {
+      "id": "git-agent-adaptations",
+      "origin": "adapted_third_party",
+      "license_declared": "MIT",
+      "license_status": "upstream_identified_local_changes_pending",
+      "disposition": "retain_notice_internal_review_only",
+      "copyright": "Copyright (c) 2026 ElevenID; local modification rights unresolved",
+      "provenance": "ElevenID/git-agent 0.2.1, commit 2ead37bfe9bf28489816bfdd4deeea137e23fa37; two adapted instruction templates, not the initializer executable.",
+      "classification": "project_source",
+      "notices": [
+        "THIRD-PARTY-NOTICES.md"
+      ]
+    }
+  },
+  "required_notice_sha256": {
+    "THIRD-PARTY-NOTICES.md": "985e079a38a492f31f57f94ffe354aec56dc948cafaf02d9c115de664387684d"
+  },
+  "upstream_files": [
+    ".agents/skills/work-goal/SKILL.md",
+    ".agents/skills/worktree-flow/SKILL.md"
+  ],
+  "upstream_license_git_blob": "0d946bbce07d4dcca4856dd9d60be2a835cf94df",
+  "planned_surfaces": [
+    {
+      "surface": "application",
+      "status": "not_implemented",
+      "license_proposed": "AGPL-3.0-only",
+      "files_present": false
+    },
+    {
+      "surface": "sdk",
+      "status": "not_implemented",
+      "license_proposed": "Apache-2.0",
+      "files_present": false
+    }
+  ],
+  "external_requirements": [
+    {
+      "id": "git-host",
+      "distribution": "not_bundled",
+      "requirement": "Git on host",
+      "license_scope": "Host installation is not redistributed; inspect actual bundled version and notices before any runtime/container packaging."
+    },
+    {
+      "id": "python-host",
+      "distribution": "not_bundled",
+      "requirement": "Python 3.10+ standard-library host environment",
+      "license_scope": "No Python binary or standard-library source is copied; actual packaged runtime license inventory remains future work."
+    },
+    {
+      "id": "checkout-action",
+      "distribution": "reference_only_not_bundled",
+      "requirement": "actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683",
+      "license_scope": "Pinned root MIT license inspected; bundled/transitive action dependencies are not copied or independently qualified.",
+      "source": "https://github.com/actions/checkout/blob/11bd71901bbe5b1630ceea73d27597364c9af683/LICENSE"
+    }
+  ],
+  "workflow_references": [
+    {
+      "path": ".github/workflows/verify.yml",
+      "reference": "actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683"
+    }
+  ]
+}
