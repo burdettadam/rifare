@@ -2,7 +2,8 @@
 
 ## State at this checkpoint
 
-Repository setup only. No product goal is accepted, assigned or in progress. `planning/goal-state.json` is an initial unstarted snapshot, not an automatically maintained task database. The first proposed goal is [M00-G01](goals/M00/M00-G01.md).
+M00-G01 is assigned to the current implementing assistant and prepared for review;
+see [its work record](work/records/M00-G01.md). No product goal is accepted. `planning/goal-state.json` is an initial unstarted snapshot, not an automatically maintained task database. The first proposed goal is [M00-G01](goals/M00/M00-G01.md).
 
 ## Sources of truth
 

@@ -54,6 +54,15 @@ Do not run initialization again just to begin work. The recorded workflow is alr
 
 AI proposes actions; Rifare must enforce identity, permissions, policy, money, inventory and approvals. All supported operations must eventually work without AI. A portable skill is not an authority grant. Two models inside one runner are not proof of independent agent support.
 
-Current checks validate the plan and helper behavior only. They do not execute the 676 product specifications. The empty accepted-product baseline intentionally cannot pass a product-release inventory check.
+Current checks validate planning, document contracts and helper behavior. Three M00-G01 specification IDs are now bound to executable document tests; no commerce runtime qualification is executed. The empty accepted-product baseline intentionally cannot pass a product-release inventory check.
 
 The intended distribution is open source, but the project's license/publication decision remains M00-G03. [LICENSE-STATUS.md](LICENSE-STATUS.md) is not a software license grant. The retained upstream workflow notice is in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
+
+## First goal implementation
+
+M00-G01 now has a [charter](docs/CHARTER.md), a [versioned support envelope](planning/support-envelope.json),
+an [executable contract guide](docs/SUPPORT-ENVELOPE.md), and permanent
+document-contract tests. See [the work record](work/records/M00-G01.md) for live
+state and review blockers. Original planning views and initial-state snapshots
+remain unchanged; they do not represent completion. Human approval and independent
+review are still required. No commerce runtime or product release is implemented.

@@ -1,0 +1,598 @@
+{
+  "schema_version": "1.0",
+  "project": "Rifare",
+  "goal_id": "M00-G01",
+  "envelope_id": "rifare-post-purchase-v1",
+  "revision": 1,
+  "review_status": "proposed",
+  "approval_ref": null,
+  "target_customer": {
+    "id": "MERCHANT-US-APPAREL-01",
+    "name": "Technically supported US direct-to-consumer apparel merchant",
+    "recruitment_status": "not_recruited",
+    "profile": "An apparel merchant or its implementation agency selling one-time physical goods, with a verified customer portal and authority over payment and fulfillment integrations. This is a named target profile, not a claimed customer.",
+    "first_platform": "shopify",
+    "second_platform": "woocommerce",
+    "initial_market": "US",
+    "initial_currency": "USD",
+    "accountable_owner": "project-owner"
+  },
+  "release": {
+    "id": "rifare-v1",
+    "milestone": "M07",
+    "meaning": "planned_support_not_runtime_authority",
+    "current_product_qualified": false,
+    "public_claims_enabled": false,
+    "unknown_combination": "scope_decision_required"
+  },
+  "owners": [
+    {
+      "id": "project-owner",
+      "role": "Rifare project owner",
+      "assignment": "project_owner_in_this_conversation",
+      "responsibility": "Approve or decline scope and appoint implementation/review owners. No human approval is recorded by the worker."
+    }
+  ],
+  "conditions": [
+    {
+      "id": "VERIFIED_CUSTOMER",
+      "description": "Verify tenant/store/customer ownership; no order enumeration."
+    },
+    {
+      "id": "CURRENT_POLICY",
+      "description": "Use published versioned policy and current item/order facts."
+    },
+    {
+      "id": "SOURCE_RECONCILIATION",
+      "description": "Retain native references, stable operation identity and unknown-outcome reconciliation."
+    },
+    {
+      "id": "GATEWAY_QUALIFIED",
+      "description": "Qualify the exact payment gateway, API version, account and currency before money-moving use."
+    },
+    {
+      "id": "FULFILLMENT_QUALIFIED",
+      "description": "Prove every connected fulfillment writer honors holds and final edits before permitting an edit."
+    },
+    {
+      "id": "PAID_BALANCE",
+      "description": "Do not release the owned fulfillment hold until required payment and native order state reconcile."
+    },
+    {
+      "id": "INVENTORY_QUALIFIED",
+      "description": "Qualify reservation, source stock and replacement lineage without overselling."
+    },
+    {
+      "id": "CREDIT_QUALIFIED",
+      "description": "Qualify the actual credit instrument; a local balance is not issued credit."
+    },
+    {
+      "id": "CARRIER_QUALIFIED",
+      "description": "Qualify the configured carrier/service/account and native label effects."
+    },
+    {
+      "id": "RECEIPT_EVIDENCE",
+      "description": "Record actual receipt, inspection and disposition separately from carrier delivery."
+    },
+    {
+      "id": "HUMAN_APPROVAL",
+      "description": "Require the policy-bound human authorization at the declared action boundary."
+    },
+    {
+      "id": "MANDATE_QUALIFIED",
+      "description": "Qualify mandate, authorization expiry and limited capture; otherwise instant exchange is disabled."
+    },
+    {
+      "id": "CHANNEL_QUALIFIED",
+      "description": "Qualify channel identity, takeover, consent and queued-send suppression."
+    },
+    {
+      "id": "PLATFORM_SEMANTICS",
+      "description": "Publish native/composed/manual differences and verify the connected platform version."
+    },
+    {
+      "id": "CURRENCY_QUALIFIED",
+      "description": "Qualify original allocations, estimates/final fees and currency-specific rounding."
+    }
+  ],
+  "contexts": [
+    {
+      "id": "SHOPIFY-NATIVE",
+      "platform": "shopify",
+      "payment": "qualified_gateway",
+      "fulfillment": "native_hold",
+      "market": "US",
+      "currency": "USD",
+      "order_kind": "one_time_physical"
+    },
+    {
+      "id": "SHOPIFY-WMS",
+      "platform": "shopify",
+      "payment": "qualified_gateway",
+      "fulfillment": "qualified_warehouse_hold",
+      "market": "US",
+      "currency": "USD",
+      "order_kind": "one_time_physical"
+    },
+    {
+      "id": "SHOPIFY-UNVERIFIED-WMS",
+      "platform": "shopify",
+      "payment": "qualified_gateway",
+      "fulfillment": "unverified_warehouse",
+      "market": "US",
+      "currency": "USD",
+      "order_kind": "one_time_physical"
+    },
+    {
+      "id": "SHOPIFY-MANUAL",
+      "platform": "shopify",
+      "payment": "manual_record",
+      "fulfillment": "native_hold",
+      "market": "US",
+      "currency": "USD",
+      "order_kind": "one_time_physical"
+    },
+    {
+      "id": "SHOPIFY-SUBSCRIPTION",
+      "platform": "shopify",
+      "payment": "qualified_gateway",
+      "fulfillment": "native_hold",
+      "market": "US",
+      "currency": "USD",
+      "order_kind": "subscription"
+    },
+    {
+      "id": "SHOPIFY-INTERNATIONAL",
+      "platform": "shopify",
+      "payment": "qualified_gateway",
+      "fulfillment": "native_hold",
+      "market": "cross_border",
+      "currency": "EUR",
+      "order_kind": "one_time_physical"
+    },
+    {
+      "id": "WOOCOMMERCE-GATEWAY",
+      "platform": "woocommerce",
+      "payment": "qualified_gateway",
+      "fulfillment": "qualified_connector",
+      "market": "US",
+      "currency": "USD",
+      "order_kind": "one_time_physical"
+    },
+    {
+      "id": "WOOCOMMERCE-MANUAL",
+      "platform": "woocommerce",
+      "payment": "manual_record",
+      "fulfillment": "unverified_warehouse",
+      "market": "US",
+      "currency": "USD",
+      "order_kind": "one_time_physical"
+    }
+  ],
+  "invariant_ids": [
+    "INV-01",
+    "INV-02",
+    "INV-03",
+    "INV-04",
+    "INV-05",
+    "INV-06",
+    "INV-07",
+    "INV-08",
+    "INV-09",
+    "INV-10",
+    "INV-11",
+    "INV-12",
+    "INV-13",
+    "INV-14"
+  ],
+  "capability_disposition": [
+    {
+      "target_id": "CAP-001",
+      "disposition": "v1_target",
+      "owning_milestone": "M03",
+      "reason": "Required v1 domain target; scenario-level qualification remains separate."
+    },
+    {
+      "target_id": "CAP-002",
+      "disposition": "v1_target",
+      "owning_milestone": "M03",
+      "reason": "Required v1 domain target; scenario-level qualification remains separate."
+    },
+    {
+      "target_id": "CAP-003",
+      "disposition": "conditional_v1",
+      "owning_milestone": "M06",
+      "reason": "Conditional on specific account/platform qualification; disabled when unavailable."
+    },
+    {
+      "target_id": "CAP-004",
+      "disposition": "v1_target",
+      "owning_milestone": "M05",
+      "reason": "Required v1 domain target; scenario-level qualification remains separate."
+    },
+    {
+      "target_id": "CAP-005",
+      "disposition": "v1_target",
+      "owning_milestone": "M06",
+      "reason": "Required v1 domain target; scenario-level qualification remains separate."
+    },
+    {
+      "target_id": "CAP-006",
+      "disposition": "post_v1",
+      "owning_milestone": "M10",
+      "reason": "Retained later expansion work; not a first-release claim."
+    },
+    {
+      "target_id": "CAP-007",
+      "disposition": "v1_target",
+      "owning_milestone": "M05",
+      "reason": "Required v1 domain target; scenario-level qualification remains separate."
+    },
+    {
+      "target_id": "CAP-008",
+      "disposition": "v1_target",
+      "owning_milestone": "M06",
+      "reason": "Required v1 domain target; scenario-level qualification remains separate."
+    },
+    {
+      "target_id": "CAP-009",
+      "disposition": "v1_target",
+      "owning_milestone": "M04",
+      "reason": "Required v1 domain target; scenario-level qualification remains separate."
+    },
+    {
+      "target_id": "CAP-010",
+      "disposition": "v1_target",
+      "owning_milestone": "M04",
+      "reason": "Required v1 domain target; scenario-level qualification remains separate."
+    },
+    {
+      "target_id": "CAP-011",
+      "disposition": "v1_target",
+      "owning_milestone": "M04",
+      "reason": "Required v1 domain target; scenario-level qualification remains separate."
+    },
+    {
+      "target_id": "CAP-012",
+      "disposition": "v1_target",
+      "owning_milestone": "M05",
+      "reason": "Required v1 domain target; scenario-level qualification remains separate."
+    },
+    {
+      "target_id": "CAP-013",
+      "disposition": "v1_target",
+      "owning_milestone": "M05",
+      "reason": "Required v1 domain target; scenario-level qualification remains separate."
+    },
+    {
+      "target_id": "CAP-014",
+      "disposition": "not_required",
+      "owning_milestone": null,
+      "reason": "Pricing mechanics are not required product parity."
+    },
+    {
+      "target_id": "CAP-015",
+      "disposition": "post_v1",
+      "owning_milestone": "M09",
+      "reason": "Retained later expansion work; not a first-release claim."
+    },
+    {
+      "target_id": "CAP-016",
+      "disposition": "v1_target",
+      "owning_milestone": "M05",
+      "reason": "Required v1 domain target; scenario-level qualification remains separate."
+    },
+    {
+      "target_id": "CAP-017",
+      "disposition": "v1_target",
+      "owning_milestone": "M06",
+      "reason": "Required v1 domain target; scenario-level qualification remains separate."
+    },
+    {
+      "target_id": "CAP-018",
+      "disposition": "post_v1",
+      "owning_milestone": "M09",
+      "reason": "Retained later expansion work; not a first-release claim."
+    },
+    {
+      "target_id": "CAP-019",
+      "disposition": "post_v1",
+      "owning_milestone": "M09",
+      "reason": "Retained later expansion work; not a first-release claim."
+    },
+    {
+      "target_id": "CAP-020",
+      "disposition": "post_v1",
+      "owning_milestone": "M09",
+      "reason": "Retained later expansion work; not a first-release claim."
+    },
+    {
+      "target_id": "CAP-021",
+      "disposition": "post_v1",
+      "owning_milestone": "M09",
+      "reason": "Retained later expansion work; not a first-release claim."
+    },
+    {
+      "target_id": "CAP-022",
+      "disposition": "v1_target",
+      "owning_milestone": "M05",
+      "reason": "Required v1 domain target; scenario-level qualification remains separate."
+    },
+    {
+      "target_id": "CAP-023",
+      "disposition": "post_v1",
+      "owning_milestone": "M09",
+      "reason": "Retained later expansion work; not a first-release claim."
+    },
+    {
+      "target_id": "CAP-024",
+      "disposition": "post_v1",
+      "owning_milestone": "M09",
+      "reason": "Retained later expansion work; not a first-release claim."
+    },
+    {
+      "target_id": "CAP-025",
+      "disposition": "post_v1",
+      "owning_milestone": "M09",
+      "reason": "Retained later expansion work; not a first-release claim."
+    },
+    {
+      "target_id": "CAP-026",
+      "disposition": "post_v1",
+      "owning_milestone": "M09",
+      "reason": "Retained later expansion work; not a first-release claim."
+    },
+    {
+      "target_id": "CAP-027",
+      "disposition": "post_v1",
+      "owning_milestone": "M08",
+      "reason": "Retained later expansion work; not a first-release claim."
+    },
+    {
+      "target_id": "CAP-028",
+      "disposition": "v1_target",
+      "owning_milestone": "M03",
+      "reason": "Required v1 domain target; scenario-level qualification remains separate."
+    },
+    {
+      "target_id": "CAP-029",
+      "disposition": "post_v1",
+      "owning_milestone": "M11",
+      "reason": "Retained later expansion work; not a first-release claim."
+    },
+    {
+      "target_id": "CAP-030",
+      "disposition": "post_v1",
+      "owning_milestone": "M11",
+      "reason": "Retained later expansion work; not a first-release claim."
+    },
+    {
+      "target_id": "CAP-031",
+      "disposition": "post_v1",
+      "owning_milestone": "M11",
+      "reason": "Retained later expansion work; not a first-release claim."
+    },
+    {
+      "target_id": "CAP-032",
+      "disposition": "post_v1",
+      "owning_milestone": "M10",
+      "reason": "Retained later expansion work; not a first-release claim."
+    },
+    {
+      "target_id": "CAP-033",
+      "disposition": "post_v1",
+      "owning_milestone": "M10",
+      "reason": "Retained later expansion work; not a first-release claim."
+    },
+    {
+      "target_id": "CAP-034",
+      "disposition": "v1_target",
+      "owning_milestone": "M03",
+      "reason": "Required v1 domain target; scenario-level qualification remains separate."
+    },
+    {
+      "target_id": "CAP-035",
+      "disposition": "post_v1",
+      "owning_milestone": "M10",
+      "reason": "Retained later expansion work; not a first-release claim."
+    },
+    {
+      "target_id": "CAP-036",
+      "disposition": "post_v1",
+      "owning_milestone": "M10",
+      "reason": "Retained later expansion work; not a first-release claim."
+    },
+    {
+      "target_id": "CAP-037",
+      "disposition": "post_v1",
+      "owning_milestone": "M10",
+      "reason": "Retained later expansion work; not a first-release claim."
+    },
+    {
+      "target_id": "CAP-038",
+      "disposition": "not_required",
+      "owning_milestone": null,
+      "reason": "Pricing mechanics are not required product parity."
+    },
+    {
+      "target_id": "CAP-039",
+      "disposition": "post_v1",
+      "owning_milestone": "M10",
+      "reason": "Retained later expansion work; not a first-release claim."
+    },
+    {
+      "target_id": "CAP-040",
+      "disposition": "post_v1",
+      "owning_milestone": "M10",
+      "reason": "Retained later expansion work; not a first-release claim."
+    },
+    {
+      "target_id": "CAP-041",
+      "disposition": "v1_target",
+      "owning_milestone": "M01",
+      "reason": "Required v1 domain target; scenario-level qualification remains separate."
+    },
+    {
+      "target_id": "CAP-042",
+      "disposition": "post_v1",
+      "owning_milestone": "M12",
+      "reason": "Retained later expansion work; not a first-release claim."
+    },
+    {
+      "target_id": "CAP-043",
+      "disposition": "post_v1",
+      "owning_milestone": "M09",
+      "reason": "Retained later expansion work; not a first-release claim."
+    },
+    {
+      "target_id": "CAP-044",
+      "disposition": "v1_target",
+      "owning_milestone": "M07",
+      "reason": "Required v1 domain target; scenario-level qualification remains separate."
+    }
+  ],
+  "boundaries": [
+    {
+      "id": "BOUNDARY-MODELS",
+      "rule": "Models and independently implemented runtimes are replaceable clients. No provider thread owns business state; no mandatory model provider.",
+      "owner": "project-owner",
+      "goals": [
+        "M01-G14",
+        "M01-G15",
+        "M07-G04",
+        "M07-G06"
+      ]
+    },
+    {
+      "id": "BOUNDARY-SKILLS",
+      "rule": "One base skill plus validated platform and merchant profiles. Profiles cannot grant permission or certify unavailable capabilities.",
+      "owner": "project-owner",
+      "goals": [
+        "M02-G05",
+        "M06-G14"
+      ]
+    },
+    {
+      "id": "BOUNDARY-NO-AI",
+      "rule": "Every released deterministic action has an operator path when model services are disabled.",
+      "owner": "project-owner",
+      "goals": [
+        "M01-G12",
+        "M07-G10"
+      ]
+    },
+    {
+      "id": "BOUNDARY-QUALIFICATION",
+      "rule": "Scope labels describe intended support only. Actual product, provider, privacy, installation and pilot qualification are required before release.",
+      "owner": "project-owner",
+      "goals": [
+        "M07-G06",
+        "M07-G10",
+        "M07-G13",
+        "M07-G14",
+        "M07-G18"
+      ]
+    },
+    {
+      "id": "BOUNDARY-NO-IMPLICIT-PARTNERS",
+      "rule": "No warehouses, insurance/coverage, customs guarantees, identity network, health-payment eligibility or paid service is supplied by a skill.",
+      "owner": "project-owner",
+      "goals": [
+        "M10-G01"
+      ]
+    },
+    {
+      "id": "BOUNDARY-LICENSE",
+      "rule": "No public distribution or release approval follows from this charter; licensing remains its own decision.",
+      "owner": "project-owner",
+      "goals": [
+        "M00-G03"
+      ]
+    }
+  ],
+  "capabilities": [
+    {
+      "id": "SCOPE-001",
+      "action": "orders.status",
+      "context_id": "SHOPIFY-NATIVE",
+      "support": "supported",
+      "reason": "First read-only journey; return source-backed order and shipment facts.",
+      "accountable_owner": "project-owner",
+      "delivery": "composed",
+      "implementation_goal": "M01-G06",
+      "conditions": [
+        "VERIFIED_CUSTOMER",
+        "PLATFORM_SEMANTICS"
+      ],
+      "target_refs": [
+        "CAP-041"
+      ],
+      "qualification": "not_qualified"
+    },
+    {
+      "id": "SCOPE-002",
+      "action": "returns.request",
+      "context_id": "SHOPIFY-NATIVE",
+      "support": "supported",
+      "reason": "First return workflow includes item eligibility, quantities, evidence and native linkage.",
+      "accountable_owner": "project-owner",
+      "delivery": "composed",
+      "implementation_goal": "M03-G05",
+      "conditions": [
+        "VERIFIED_CUSTOMER",
+        "CURRENT_POLICY",
+        "PLATFORM_SEMANTICS"
+      ],
+      "target_refs": [
+        "CAP-001"
+      ],
+      "qualification": "not_qualified"
+    },
+    {
+      "id": "SCOPE-003",
+      "action": "returns.refund",
+      "context_id": "SHOPIFY-NATIVE",
+      "support": "conditional",
+      "reason": "Only captured refundable value on the specifically qualified gateway; never infer settlement from a record.",
+      "accountable_owner": "project-owner",
+      "delivery": "composed",
+      "implementation_goal": "M03-G08",
+      "conditions": [
+        "VERIFIED_CUSTOMER",
+        "CURRENT_POLICY",
+        "GATEWAY_QUALIFIED",
+        "SOURCE_RECONCILIATION",
+        "HUMAN_APPROVAL"
+      ],
+      "target_refs": [
+        "CAP-001"
+      ],
+      "qualification": "not_qualified"
+    },
+    {
+      "id": "SCOPE-028",
+      "action": "orders.edit_address",
+      "context_id": "SHOPIFY-UNVERIFIED-WMS",
+      "support": "excluded",
+      "reason": "No verified downstream hold behavior; storing a tag is insufficient.",
+      "accountable_owner": "project-owner",
+      "delivery": "unsupported",
+      "implementation_goal": "M04-G02",
+      "conditions": [],
+      "target_refs": [
+        "CAP-011"
+      ],
+      "qualification": "not_qualified"
+    }
+  ],
+  "release_claims": [
+    {
+      "id": "CLAIM-FIXTURE",
+      "text": "Synthetic prior claim: order status and return requests.",
+      "capability_ids": [
+        "SCOPE-001",
+        "SCOPE-002"
+      ]
+    }
+  ]
+}

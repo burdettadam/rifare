@@ -1,0 +1,11 @@
+{
+  "action": "orders.edit_address",
+  "context": {
+    "platform": "shopify",
+    "payment": "qualified_gateway",
+    "fulfillment": "unverified_warehouse",
+    "market": "US",
+    "currency": "USD",
+    "order_kind": "one_time_physical"
+  }
+}

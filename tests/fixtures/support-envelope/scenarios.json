@@ -1,0 +1,125 @@
+{
+  "fixture_role": "predeclared_synthetic_oracle_not_acceptance",
+  "cases": [
+    {
+      "id": "FIX-M00-G01-01-order",
+      "action": "orders.status",
+      "context": {
+        "platform": "shopify",
+        "payment": "qualified_gateway",
+        "fulfillment": "native_hold",
+        "market": "US",
+        "currency": "USD",
+        "order_kind": "one_time_physical"
+      },
+      "expected_support": "supported",
+      "expected_capability_id": "SCOPE-001",
+      "meaning": "Verified status baseline."
+    },
+    {
+      "id": "FIX-M00-G01-01-return",
+      "action": "returns.request",
+      "context": {
+        "platform": "shopify",
+        "payment": "qualified_gateway",
+        "fulfillment": "native_hold",
+        "market": "US",
+        "currency": "USD",
+        "order_kind": "one_time_physical"
+      },
+      "expected_support": "supported",
+      "expected_capability_id": "SCOPE-002",
+      "meaning": "Supported request is not a promise of automatic money movement."
+    },
+    {
+      "id": "FIX-M00-G01-01-refund",
+      "action": "returns.refund",
+      "context": {
+        "platform": "shopify",
+        "payment": "qualified_gateway",
+        "fulfillment": "native_hold",
+        "market": "US",
+        "currency": "USD",
+        "order_kind": "one_time_physical"
+      },
+      "expected_support": "conditional",
+      "expected_capability_id": "SCOPE-003",
+      "meaning": "Gateway proof required."
+    },
+    {
+      "id": "FIX-M00-G01-01-excluded",
+      "action": "orders.edit_address",
+      "context": {
+        "platform": "shopify",
+        "payment": "qualified_gateway",
+        "fulfillment": "unverified_warehouse",
+        "market": "US",
+        "currency": "USD",
+        "order_kind": "one_time_physical"
+      },
+      "expected_support": "excluded",
+      "expected_capability_id": "SCOPE-028",
+      "meaning": "Unknown warehouse behavior must not inherit support."
+    },
+    {
+      "id": "FIX-M00-G01-01-second",
+      "action": "returns.refund",
+      "context": {
+        "platform": "woocommerce",
+        "payment": "qualified_gateway",
+        "fulfillment": "qualified_connector",
+        "market": "US",
+        "currency": "USD",
+        "order_kind": "one_time_physical"
+      },
+      "expected_support": "conditional",
+      "expected_capability_id": "SCOPE-035",
+      "meaning": "Second-platform payment proof."
+    },
+    {
+      "id": "FIX-M00-G01-01-manual",
+      "action": "returns.refund",
+      "context": {
+        "platform": "woocommerce",
+        "payment": "manual_record",
+        "fulfillment": "unverified_warehouse",
+        "market": "US",
+        "currency": "USD",
+        "order_kind": "one_time_physical"
+      },
+      "expected_support": "excluded",
+      "expected_capability_id": "SCOPE-037",
+      "meaning": "Manual record never proves settlement."
+    },
+    {
+      "id": "FIX-M00-G01-01-foreign",
+      "action": "returns.refund",
+      "context": {
+        "platform": "shopify",
+        "payment": "qualified_gateway",
+        "fulfillment": "native_hold",
+        "market": "cross_border",
+        "currency": "EUR",
+        "order_kind": "one_time_physical"
+      },
+      "expected_support": "excluded",
+      "expected_capability_id": "SCOPE-032",
+      "meaning": "Initial USD/domestic boundary."
+    },
+    {
+      "id": "FIX-M00-G01-02",
+      "action": "returns.refund",
+      "context": {
+        "platform": "shopify",
+        "payment": "unlisted_payment_route",
+        "fulfillment": "native_hold",
+        "market": "US",
+        "currency": "USD",
+        "order_kind": "one_time_physical"
+      },
+      "expected_support": "scope_decision_required",
+      "expected_capability_id": null,
+      "meaning": "An unlisted payment combination must not become supported."
+    }
+  ]
+}

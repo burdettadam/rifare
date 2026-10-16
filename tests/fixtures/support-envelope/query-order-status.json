@@ -1,0 +1,11 @@
+{
+  "action": "orders.status",
+  "context": {
+    "platform": "shopify",
+    "payment": "qualified_gateway",
+    "fulfillment": "native_hold",
+    "market": "US",
+    "currency": "USD",
+    "order_kind": "one_time_physical"
+  }
+}

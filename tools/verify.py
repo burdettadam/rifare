@@ -14,6 +14,8 @@ def main() -> int:
         [sys.executable, 'tools/validate_plan.py', '--root', '.'],
         [sys.executable, 'tools/check_repository.py', '--root', '.'],
         [sys.executable, 'tools/check_generated.py', '--root', '.'],
+        [sys.executable, 'tools/check_support_envelope.py', '--root', '.',
+         '--scenarios', 'tests/fixtures/support-envelope/scenarios.json'],
         [sys.executable, 'tools/run_tests.py'],
     ]
     for command in commands:
@@ -25,7 +27,7 @@ def main() -> int:
             return 1
         if result.returncode:
             return result.returncode
-    print('\nPASS: starter structure, rendered views and helper self-tests. Product tests executed: 0.')
+    print('\nPASS: planning structure, document contracts, rendered views and helper self-tests. Commerce runtime qualification: not executed.')
     return 0
 
 
