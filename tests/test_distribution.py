@@ -32,7 +32,7 @@ class DistributionTests(unittest.TestCase):
         cls.home = Path(cls.tmp.name)
         cls.repo = cls.home / 'source'
         shutil.copytree(ROOT, cls.repo, ignore=shutil.ignore_patterns(
-            '.git', '__pycache__', 'evidence', 'artifacts', '.venv', 'node_modules'))
+            '.git', '__pycache__', 'evidence', 'artifacts', '.venv', 'node_modules', 'runtime'))
         def g(*args):
             return subprocess.run(['git', '-C', str(cls.repo), *args], capture_output=True,
                                   text=True, check=True, timeout=30)
@@ -243,7 +243,7 @@ class DistributionTests(unittest.TestCase):
         self.bad('private or unresolved classification')
 
     def test_lockfile_cannot_be_reclassified_as_first_party(self):
-        path = 'package-lock.json'
+        path = 'unreviewed/package-lock.json'
         self.component('rifare-project-material')['files'].append(path)
         self.paths.append(path)
         self.bad('dependency intake required')

@@ -2,7 +2,7 @@
 
 ## Requirements and actual commands
 
-The starter requires Git and Python 3.10+ (standard library only). Git Bash is recommended for shell examples on Windows. No application dependency manager or container runtime is configured yet.
+The starter requires Git and Python 3.10+ (standard library only). Git Bash is recommended for shell examples on Windows. The explicit smoke profile additionally requires Node with its bundled npm; see the M00-G05 section below. No target-stack container runtime is qualified.
 
 ```sh
 python3 tools/verify.py                         # starter and document-contract checks
@@ -20,7 +20,7 @@ On Windows with the Python launcher, substitute `py -3` for `python3`. `make ver
 
 ## What is not configured
 
-There is no running API, web application, database, worker queue, commerce adapter, model integration or deployment. Product build/start/test/migration commands and source module layout are M00-G05/M00-G06 work. Do not claim that a documentation directory is an implementation or invent successful startup commands.
+M00-G05 adds a real local API/worker/browser diagnostic using SQLite. It is not the target PostgreSQL/React stack and contains no commerce adapter, model integration or deployment. Its full goal remains unaccepted. Use only the explicit smoke commands below; default target startup fails closed.
 
 ## Worktrees and evidence
 
@@ -115,3 +115,67 @@ These are read-only checks, not a new worker command protocol. Native Git create
 worktrees. The checker never merges, locks, schedules or releases. Evidence must
 be separately pinned to the accepted policy base; see `docs/WORKFLOW-CHECKS.md`.
 No global initializer or named model/client is required for these commands.
+
+## M00-G05 synthetic runtime slice
+
+Read [local environment instructions](docs/LOCAL-ENVIRONMENT.md) and the
+[test/evidence mapping](docs/RUNTIME-TESTS.md) before starting.
+
+```sh
+npm ci --offline --ignore-scripts
+npm run dev:smoke                  # foreground; prints actual loopback URLs
+npm run stop:smoke                 # separate terminal in the same worktree
+python3 tools/verify.py --runtime  # planning + Python helpers + Node smoke tests
+```
+
+The process launcher is a local product start/stop script, not an agent scheduler.
+No paid services, model keys or production accounts are used. Root npm metadata
+contains no dependency packages. PostgreSQL, React and OS-level outbound network
+isolation remain unqualified; `npm run dev` exits 2 rather than substituting smoke.
+
+## M00-G06 native test harness
+
+```sh
+python3 tools/test_harness.py --layer unit
+python3 tools/test_harness.py --layer database
+python3 tools/test_harness.py --layer browser
+python3 tools/test_harness.py --layer all --reverse
+python3 tools/verify.py --runtime --harness
+```
+
+The [test-harness guide](docs/TEST-HARNESS.md) specifies the host browser requirement,
+diagnostic-only scope, frozen fixtures, deny-by-default network boundary, exact
+native test-ID checks, and source-bound reports. Node's existing package/lock
+remain unchanged. The browser suite runs Chromium against in-memory source and a
+fake response boundary; it does not qualify a served React/PostgreSQL application.
+M00-G05/M00-G06 remain unaccepted pending their full prerequisites and reviews.
+
+## M00-G07 trusted regression controller
+
+Run the new controller self-tests locally:
+
+```sh
+python3 -m unittest discover -s tests -p test_regression_gate.py -v
+```
+
+For full retained-obligation enforcement, use the [external-controller guide](docs/TRUSTED-REGRESSION-GATE.md)
+and [test map](docs/REGRESSION-TEST-MAP.md). It executes the native suites using
+separately pinned verifier/baseline bytes. Do not treat candidate-owned verification
+scripts or copied pass reports as a trusted baseline. M00-G05/M00-G06 target-stack
+qualification and independent reviews remain open; this preparatory goal does not
+change their acceptance or authorize a release.
+
+## M00-G08 commit-bound evidence
+
+The [evidence gate](docs/EVIDENCE-GATE.md) captures a fresh pinned native run and
+verifies source/configuration/artifact identity against an external request and
+receipt. Acceptance checks reuse the governing workflow and require separately
+trusted review inputs. No automatic acceptance, merge, release or new dependency.
+
+```sh
+python3 -m unittest discover -s tests -p test_evidence_gate.py -v
+```
+
+Full verification discovers these tests automatically. For candidate evidence,
+use the separately exported controller and independently retained pins described
+in the guide; candidate-authored checks alone are not an external trust anchor.

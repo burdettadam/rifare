@@ -20,7 +20,7 @@ class RepositoryTests(unittest.TestCase):
         cls.temporary = tempfile.TemporaryDirectory(prefix='rifare-repository-test-')
         cls.copy = Path(cls.temporary.name) / 'Rifare'
         shutil.copytree(ROOT, cls.copy, ignore=shutil.ignore_patterns(
-            '.git', '__pycache__', 'evidence', 'artifacts', '.venv', 'node_modules'))
+            '.git', '__pycache__', 'evidence', 'artifacts', '.venv', 'node_modules', 'runtime'))
 
     @classmethod
     def tearDownClass(cls) -> None:

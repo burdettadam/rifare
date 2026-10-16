@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "id": "rifare-diagnostic-fixture-v1",
+  "classification": "synthetic_test_only",
+  "frozen_epoch_ms": 1767225600000,
+  "seed": 7,
+  "merchants": [
+    {
+      "id": "merchant-alpha",
+      "name": "Alpha synthetic merchant",
+      "markers": [
+        {
+          "id": "shared-order",
+          "value": "ALPHA"
+        }
+      ],
+      "jobs": [
+        {
+          "id": "shared-job",
+          "value": "ALPHA"
+        }
+      ]
+    },
+    {
+      "id": "merchant-beta",
+      "name": "Beta synthetic merchant",
+      "markers": [
+        {
+          "id": "shared-order",
+          "value": "BETA"
+        }
+      ],
+      "jobs": [
+        {
+          "id": "shared-job",
+          "value": "BETA"
+        }
+      ]
+    }
+  ]
+}

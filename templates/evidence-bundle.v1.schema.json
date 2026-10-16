@@ -1,0 +1,452 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Rifare local diagnostic evidence bundle v1",
+  "description": "Structural schema only. Executable verification additionally requires a pinned external receipt, actual Git bytes, native reports, configuration pins, time windows and separately trusted review inputs. No compiler, product qualification or identity authentication is implied.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "kind",
+    "status",
+    "qualification",
+    "goal_id",
+    "candidate_sha",
+    "base_sha",
+    "source_tree_sha256",
+    "git_tree",
+    "build",
+    "configuration_digest",
+    "pins",
+    "environment",
+    "started_at",
+    "finished_at",
+    "request_sha256",
+    "test_run",
+    "artifacts",
+    "supporting_files",
+    "retention",
+    "independent_review_references"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "kind": {
+      "const": "rifare-evidence-bundle-v1"
+    },
+    "status": {
+      "const": "captured_not_accepted"
+    },
+    "qualification": {
+      "const": "local_diagnostic_evidence_not_target_stack_or_product"
+    },
+    "goal_id": {
+      "type": "string",
+      "pattern": "^M[0-9]{2}-G[0-9]{2}$"
+    },
+    "candidate_sha": {
+      "type": "string",
+      "pattern": "^(?:[0-9a-f]{40}|[0-9a-f]{64})$"
+    },
+    "base_sha": {
+      "type": "string",
+      "pattern": "^(?:[0-9a-f]{40}|[0-9a-f]{64})$"
+    },
+    "source_tree_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "git_tree": {
+      "type": "string",
+      "pattern": "^(?:[0-9a-f]{40}|[0-9a-f]{64})$"
+    },
+    "build": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "sha256"
+      ],
+      "properties": {
+        "kind": {
+          "const": "interpreted_source_not_compiled_artifact"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "configuration_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "pins": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "skills",
+        "profiles",
+        "policies",
+        "adapters",
+        "models",
+        "runtimes"
+      ],
+      "properties": {
+        "skills": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "files",
+            "settings",
+            "not_applicable_reason"
+          ],
+          "properties": {
+            "files": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            },
+            "settings": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "not_applicable_reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        "profiles": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "files",
+            "settings",
+            "not_applicable_reason"
+          ],
+          "properties": {
+            "files": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            },
+            "settings": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "not_applicable_reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        "policies": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "files",
+            "settings",
+            "not_applicable_reason"
+          ],
+          "properties": {
+            "files": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            },
+            "settings": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "not_applicable_reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        "adapters": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "files",
+            "settings",
+            "not_applicable_reason"
+          ],
+          "properties": {
+            "files": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            },
+            "settings": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "not_applicable_reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        "models": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "files",
+            "settings",
+            "not_applicable_reason"
+          ],
+          "properties": {
+            "files": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            },
+            "settings": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "not_applicable_reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        "runtimes": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "files",
+            "settings",
+            "not_applicable_reason"
+          ],
+          "properties": {
+            "files": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            },
+            "settings": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "not_applicable_reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "class",
+        "python",
+        "system",
+        "machine",
+        "captured_worktree"
+      ],
+      "properties": {
+        "class": {
+          "const": "local_diagnostic"
+        },
+        "python": {
+          "type": "string",
+          "minLength": 1
+        },
+        "system": {
+          "type": "string",
+          "minLength": 1
+        },
+        "machine": {
+          "type": "string",
+          "minLength": 1
+        },
+        "captured_worktree": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "finished_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "request_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "test_run": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "sha256",
+        "runner_scope",
+        "discovered_test_ids",
+        "executed_test_ids",
+        "commands",
+        "exit_codes"
+      ],
+      "properties": {
+        "path": {
+          "const": "run/results.json"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "runner_scope": {
+          "const": "M00-G07"
+        },
+        "discovered_test_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "executed_test_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "commands": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "exit_codes": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "type": "integer",
+            "const": 0
+          }
+        }
+      }
+    },
+    "artifacts": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "sha256",
+          "bytes"
+        ],
+        "properties": {
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "bytes": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      }
+    },
+    "supporting_files": {
+      "type": "object",
+      "required": [
+        "red-green.md",
+        "demo.md",
+        "handoff.md"
+      ],
+      "additionalProperties": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$"
+      }
+    },
+    "retention": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "owner",
+        "retain_until",
+        "cleanup"
+      ],
+      "properties": {
+        "owner": {
+          "type": "string",
+          "minLength": 1
+        },
+        "retain_until": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "cleanup": {
+          "const": "manual_after_decision_and_retained_references"
+        }
+      }
+    },
+    "independent_review_references": {
+      "type": "array",
+      "maxItems": 0
+    }
+  }
+}

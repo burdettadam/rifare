@@ -216,6 +216,32 @@ def validate_policy(policy: dict, frozen: dict) -> None:
     }, 'a candidate cannot grant license or publication authority')
 
 
+
+def validate_smoke_command_manifests(root: Path) -> set[str]:
+    """Permit only the explicitly pinned dependency-free diagnostic command surface."""
+    retained = read_json(root / 'tests/fixtures/development/command-manifests.v1.json')
+    shape(retained, {'schema_version': int, 'kind': str, 'profile': str,
+                     'third_party_packages': list, 'sha256': dict}, 'smoke command intake')
+    require(retained['schema_version'] == 1 and retained['kind'] == 'rifare-zero-dependency-smoke-commands'
+            and retained['profile'] == 'smoke-sqlite' and retained['third_party_packages'] == [],
+            'dependency intake required: unknown command profile')
+    expected = {'package.json', 'package-lock.json', '.npmrc', '.node-version'}
+    require(set(retained['sha256']) == expected, 'dependency intake required: unknown command manifest')
+    for path, digest in retained['sha256'].items():
+        require(type(digest) is str and bool(HEX64.fullmatch(digest))
+                and sha256(read_regular(root, path)) == digest,
+                f'dependency intake required: changed command manifest: {path}')
+    package = read_json(root / 'package.json')
+    require(set(package) == {'name','version','private','type','description','engines','scripts'}
+            and package['name'] == 'rifare' and package['version'] == '0.0.0'
+            and package['private'] is True and package['type'] == 'module',
+            'dependency graph intake not implemented: new package scope')
+    lock = read_json(root / 'package-lock.json')
+    require(lock == {'name': 'rifare', 'version': '0.0.0', 'lockfileVersion': 3, 'requires': True,
+                     'packages': {'': {'name': 'rifare', 'version': '0.0.0', 'engines': package['engines']}}},
+            'dependency graph intake not implemented: nonempty or inconsistent lock')
+    return {'package.json', 'package-lock.json'}
+
 def validate_inventory(inventory: dict, paths: list[str], root: Path, policy: dict,
                        obligations: dict) -> dict[str, dict]:
     shape(inventory, {'schema_version': str, 'id': str, 'revision': int, 'status': str,
@@ -226,6 +252,7 @@ def validate_inventory(inventory: dict, paths: list[str], root: Path, policy: di
     require(type(inventory['revision']) is int and inventory['revision'] >= 1, 'invalid inventory revision')
     require(inventory['status'] == 'proposed', 'inventory is not an acceptance decision')
     require(inventory['dependency_inputs'] == [], 'dependency graph intake not implemented at this checkpoint')
+    reviewed_commands = validate_smoke_command_manifests(root)
     require(inventory['planned_surfaces'] == obligations['planned_surfaces'], 'planned surface coverage changed')
     require(inventory['external_requirements'] == obligations['external_requirements'],
             'review_required:external_requirements_changed')
@@ -258,7 +285,7 @@ def validate_inventory(inventory: dict, paths: list[str], root: Path, policy: di
             safe_path(path)
             require(path not in members, f'duplicate file ownership: {path}')
             require(not private_path(path), f'private or runtime path rejected: {path}')
-            require(not dependency_path(path), f'dependency intake required: {path}')
+            require(not dependency_path(path) or path in reviewed_commands, f'dependency intake required: {path}')
             members[path] = comp
         for notice in comp['notices']:
             safe_path(notice)
@@ -317,6 +344,8 @@ def review_checkout(root: Path) -> dict[str, Any]:
         'check': 'licensing_inventory_only', 'result': 'pass',
         'files_reviewed': len(members), 'components_reviewed': len(inventory['components']),
         'observed_dependency_inputs': [], 'application_dependencies_present': False,
+        'reviewed_zero_dependency_command_manifests': ['package.json', 'package-lock.json'],
+        'target_stack_qualified': False,
         'license_dispositions': dict(Counter(c['disposition'] for c in inventory['components'])),
         'inventory_sha256': sha256(read_regular(root, INVENTORY_PATH)),
         'policy_sha256': sha256(read_regular(root, POLICY_PATH)),
