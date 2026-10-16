@@ -111,7 +111,7 @@ by design; none has been falsely counted as an independently qualified integrati
 The project ZIP contains a standalone `.git` history. The bundle can be cloned:
 
 ```sh
-git clone -b main /path/to/Rifare-reviewed-main.bundle Rifare
+git clone -b main /path/to/Rifare-five-goals.bundle Rifare
 cd Rifare
 git remote remove origin
 python3 tools/verify.py
@@ -141,9 +141,9 @@ native regression controller, records source/configuration/artifact identity and
 checks external review facts without granting acceptance. See
 [the evidence guide](docs/EVIDENCE-GATE.md) and
 [the current work record](work/records/M00-G08.md).
-The current registry has 582 executable diagnostic/helper checks: 565 retained
-and 17 added by the integration review. The delegated local review is complete;
-full target-stack qualification remains open.
+The current registry has 683 executable checks: all 582 checks from the reviewed
+base plus 101 commerce-foundation regressions. Delegated local integration review
+is complete; full target-stack qualification remains open.
 All 676 commerce scenarios remain planning specifications.
 
 ## Integrated M00 qualification
@@ -154,12 +154,13 @@ The milestone remains blocked by target-stack qualification and unaccepted
 prerequisites; a green diagnostic run is not milestone acceptance. See
 [qualification and repair order](docs/M00-QUALIFICATION.md) and
 [the exact existing-goal repair checklist](work/qualification/M00.json).
-The next implementation work resumes M00-G05 on the accumulated source; M01 is not started.
+Target-stack repair resumes M00-G05 on the accumulated source. M01-G01 through
+M01-G05 are implemented for local diagnostic integration, not full qualification.
 
 ## Immediate engineering priority
 
 Resume **M00-G05** from this `main`: implement and install the target React/PostgreSQL
 stack, then extend M00-G06 to the actually served application. Preserve the existing
-582 diagnostic/helper tests. Do not add more governance machinery merely to postpone
+683 diagnostic and commerce-foundation tests. Do not add more governance machinery merely to postpone
 this implementation. The [qualification guide](docs/M00-QUALIFICATION.md) separates
 these engineering gaps from the completed local integration review.
