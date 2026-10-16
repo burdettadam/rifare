@@ -1,0 +1,6 @@
+{
+  "schema_version": 1,
+  "id": "order-status",
+  "version": "1.0.0",
+  "resources": ["references/read-contract.md"]
+}
