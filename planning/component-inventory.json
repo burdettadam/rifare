@@ -521,6 +521,7 @@
         "tests/development/return-intake-helpers.mts",
         "tests/development/return-portal-browser.test.mts",
         "tests/development/return-portal.test.mts",
+        "tests/development/return-retention-review.test.mts",
         "tests/development/return-review.test.mts",
         "tests/development/roles.test.mts",
         "tests/development/safe-recovery.test.mts",

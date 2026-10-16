@@ -1,5 +1,5 @@
 {
-  "source_file_count": 727,
+  "source_file_count": 728,
   "source_count_reason": "Retains every earlier path and enumerates M03-G01 through M03-G05 item eligibility, evidence, portal, review and native-return fixture source, tests, contracts, migration, guides, work records and prior authority assessment.",
   "component_ids": [
     "git-agent-adaptations",

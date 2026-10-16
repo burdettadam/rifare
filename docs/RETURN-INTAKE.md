@@ -69,8 +69,11 @@ per case and byte/decompression limits bound storage input.
 
 Retention is owner-configured from one to 90 days. Expiry immediately denies reads.
 `ReturnEvidence.purgeExpired(ownerScope)` deletes expired BLOBs and notes in batches
-of at most 100; invoke it from the deployment's existing maintenance process until
-it returns zero. It adds no scheduler. The existing customer-erasure operation also
+of at most 100, respecting active customer retention holds. Follow `next_cursor`
+with `purgeExpired(ownerScope, next_cursor)` when returned; `held` counts retained
+objects, not deletions. A zero deletion count is not proof that held records were
+erased. Direct deletion also reports held without deleting bytes. Resume a fresh
+scan after authorized hold release or expiry. It adds no scheduler. The existing customer-erasure operation also
 scrubs linked quotes, requests and evidence. These are logical deletions, not
 forensic erasure of journals, exports or backups. Storage inventory includes every
 new table before privacy and restore operations are permitted.

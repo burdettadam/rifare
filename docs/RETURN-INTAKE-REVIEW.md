@@ -25,6 +25,13 @@ M02-G99 remains a blocked qualification assessment, not an excuse to lose prior 
    valid IDAT chunk. A CRC-correct negative fixture reached a missing-exception
    assertion. Validation now requires complete compressed-stream consumption.
 
+7. The final retention audit found that direct evidence deletion and expiry purge
+   could bypass existing customer retention holds. A new, separate regression file
+   exposed three failures. Both paths now respect current holds; bounded purge
+   exposes a cursor so held items cannot block later pages. Release/expiry and
+   ownership checks remain server-enforced. This review fix is integrated after
+   the initial candidate and all final evidence is refreshed.
+
 These corrections have actual failing-before/passing-after assertions retained
 outside Git. Other initial failures due to test setup/import paths are not counted
 as feature evidence. No previous test file was edited to make implementation pass.
