@@ -33,6 +33,24 @@
       "independent_reviews": [],
       "author_audit_only": true,
       "product_qualified": false
+    },
+    {
+      "goal_id": "M00-G04",
+      "source_commit": "314f9ca8bf8c7281f5e961f23f1ee87542a9eb51",
+      "state": "accepted",
+      "basis": "explicit_owner_delegation_with_bootstrap_review_exception",
+      "exception_id": "BOOTSTRAP-LOCAL-01",
+      "independent_reviews": [],
+      "author_audit_only": true,
+      "product_qualified": false,
+      "verification": {
+        "retained_tests": 239,
+        "new_tests": 50,
+        "total_tests": 289,
+        "skipped": 0,
+        "targeted_faults_caught": 6,
+        "qualification": "native_git_and_synthetic_offline_workflow_only"
+      }
     }
   ]
 }

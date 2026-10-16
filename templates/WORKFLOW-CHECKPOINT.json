@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "goal_id": "M00-G04",
+  "candidate_sha": "REPLACE_WITH_EXACT_COMMIT",
+  "base_sha": "REPLACE_WITH_ACCEPTED_BASE",
+  "configuration_sha256": "REPLACE_WITH_CONFIG_DIGEST",
+  "branch": "goal/M00-G04",
+  "writer_id": "rifare-development-assistant",
+  "writer_session_id": "synthetic-author-session",
+  "review_round": 1,
+  "intent": "local_merge",
+  "tag": null,
+  "blockers": [
+    "Template only: bind actual identity, commands, results and approvals."
+  ],
+  "external_effects": [],
+  "checks": {
+    "candidate_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "base_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "configuration_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "status": "not_run",
+    "commands": [
+      "python3 tools/verify.py"
+    ],
+    "discovered": 0,
+    "executed": 0,
+    "failures": 0,
+    "skipped": 0,
+    "report_sha256": "REPLACE_WITH_ACTUAL_REPORT_SHA256"
+  },
+  "review_refs": [],
+  "exception_id": null
+}

@@ -98,3 +98,20 @@ commands and independently retained manifest/baseline hash requirements. Add eve
 new source path to its reviewed inventory component. Private local files stay outside
 source; force-added ignored paths still fail. License and profile changes require
 independent review; do not edit fixtures to bypass a failing obligation.
+
+## Adopted workflow and completion checks
+
+M00-G01 through M00-G03 have current delegated decisions in ADR-0004; their
+proposal-only helper reports remain historical artifact checks, not live task state.
+Use `work/accepted-goals.json` for current development acceptance. The pinned
+workflow contract and current adoption status are in `docs/WORKFLOW-ADOPTION.md`.
+
+```sh
+python3 tools/check_workflow.py --root .
+python3 -m unittest discover -s tests -p test_workflow.py -v
+```
+
+These are read-only checks, not a new worker command protocol. Native Git creates
+worktrees. The checker never merges, locks, schedules or releases. Evidence must
+be separately pinned to the accepted policy base; see `docs/WORKFLOW-CHECKS.md`.
+No global initializer or named model/client is required for these commands.

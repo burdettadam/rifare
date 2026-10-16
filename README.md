@@ -1,90 +1,93 @@
-> Current checkpoint: M00-G01 through M00-G03 merged and accepted for local development under [delegated authority](docs/decisions/0004-delegated-development-authority.md). M00-G04 is next. Historical pending proposal fields are not current task state. No product runtime is implemented.
-
 # Rifare
 
-Merchant-owned commerce operations with tailorable skills and independently replaceable platforms, agents and model providers.
+Merchant-owned commerce operations with tailorable skills and independently
+replaceable platforms, agents and models.
 
-**Status: Git-tracked planning starter. No commerce application is implemented.** This checkpoint supplies the contracts, goals, skills, examples and checks needed to begin bounded development. It does not accept any product milestone, qualify an integration or authorize a release.
+**Current checkpoint:** M00-G01 through M00-G04 are accepted for local development
+and merged into `main`. Their branches and original commits are retained.
+**No commerce application is implemented.** M00-G05 is next; it has not started.
+
+The owner delegated project decisions. [ADR-0004](docs/decisions/0004-delegated-development-authority.md)
+records the adopted scope, benchmark, licensing direction and narrow bootstrap
+review exception. [The acceptance ledger](work/accepted-goals.json) is current.
+Original pending proposal fields and initial planning snapshots remain historical
+records, not the live task state. No independent review or product qualification
+is claimed from the bootstrap exception.
 
 ## Start
 
-1. Read [AGENTS.md](AGENTS.md), [PLANS.md](PLANS.md) and [DEVELOPMENT.md](DEVELOPMENT.md).
-2. Run `python3 tools/verify.py`. These are offline planning/helper checks, not application tests.
-3. Open [the goal catalogue](WORKER-GOALS.html) or [its Markdown index](WORKER-GOALS.md).
-4. Begin with [M00-G01](goals/M00/M00-G01.md), following [the first dispatch](docs/FIRST-DISPATCH.md).
+```sh
+git status
+git log --graph --oneline --all -12
+python3 tools/verify.py
+python3 tools/check_workflow.py --root .
+```
 
-Use Python 3.10 or newer. On Windows, use Git Bash for Git/shell examples; `py -3 tools/verify.py` also runs the Python checks from PowerShell. No package installation, API keys, containers or model subscription are needed for this starter.
+Use Git and Python 3.10+ with the standard library. No API keys, paid model,
+application package manager, container runtime or global initializer is required
+for the current commands. Windows users can use `py -3`; cross-platform
+qualification has not been performed by this checkpoint's Linux checks.
 
-## Development steering
+Read [AGENTS.md](AGENTS.md), [GOVERNANCE.md](GOVERNANCE.md), [PLANS.md](PLANS.md)
+and [DEVELOPMENT.md](DEVELOPMENT.md). When the next goal is assigned:
+
+```sh
+git worktree add ../Rifare-M00-G05 -b goal/M00-G05 main
+```
+
+Set your own repository-local Git identity before authoring your own commits.
+Do not restart accepted goals or infer assignments from the initial ready queue.
+
+## Development material
 
 | Material | Purpose |
 |---|---|
-| [ROADMAP.md](ROADMAP.md) | Thirteen outcome-based milestones; M07 is the first qualified post-purchase v1. |
-| [planning/goals.json](planning/goals.json), [goals/](goals/) | 190 worker goals plus 13 integrated acceptance gates. |
-| [planning/test-specifications.json](planning/test-specifications.json) | 676 designed acceptance/regression specifications; all product results remain `not_run`. |
-| [planning/backlog.json](planning/backlog.json) | 151 requirements with stable IDs and retained acceptance criteria. |
-| [planning/requirement-coverage.json](planning/requirement-coverage.json) | Every requirement mapped to contributing goals and its acceptance gate. |
-| [planning/capability-targets.json](planning/capability-targets.json) | 44 proposed capabilities, delivery modes and scope boundaries. |
-| [docs/SKILL-ARCHITECTURE.md](docs/SKILL-ARCHITECTURE.md), [examples/](examples/) | Merchant/platform tailoring examples; not executable commerce behavior. |
-| [.agents/skills/](.agents/skills/) | Two model-neutral development workflow skills, adapted from the pinned git-agent workflow. |
-| [skills/](skills/) | Optional execution/review rubrics used within that workflow, not a second scheduler. |
-| [docs/EVIDENCE-CONTRACT.md](docs/EVIDENCE-CONTRACT.md) | Exact-candidate proof and independent acceptance. |
-| [docs/REGRESSION-STRATEGY.md](docs/REGRESSION-STRATEGY.md) | Cumulative behavior protection and meaningful failure proof. |
-| [work/](work/) | Tracked source/progress decisions; raw reports and recordings stay ignored. |
+| [Roadmap](ROADMAP.md) | 13 milestones, including the later qualified product release. |
+| [Goal catalogue](WORKER-GOALS.html) / [Markdown](WORKER-GOALS.md) | 190 worker goals and 13 acceptance gates. |
+| [Canonical goals](planning/goals.json) | Stable contracts and dependencies, not live task status. |
+| [Test specifications](planning/test-specifications.json) | 676 planned scenarios; commerce results remain not-run. |
+| [Requirement coverage](planning/requirement-coverage.json) | All 151 original requirements remain represented. |
+| [Charter](docs/CHARTER.md) | Adopted first-release support envelope. |
+| [Benchmark](docs/RELEASE-BENCHMARK.md) | Cohorts, denominators, numerical gates and pilot requirements. |
+| [Licensing](docs/LICENSING.md) | Selected component-scoped direction and publication boundary. |
+| [Workflow adoption](docs/WORKFLOW-ADOPTION.md) | Actual instruction versions, native commands and tested limits. |
+| [Workflow checks](docs/WORKFLOW-CHECKS.md) | Candidate-bound tests/reviews, writer ownership and release scope. |
+| [Skill architecture](docs/SKILL-ARCHITECTURE.md) | Merchant/platform-tailorable product skills, separate from development skills. |
+| [Regression strategy](docs/REGRESSION-STRATEGY.md) | Retained behavior and meaningful fault proof. |
+| [M00-G04 work record](work/records/M00-G04.md) | Implemented outcome, evidence and delegated acceptance. |
 
-The JSON planning contracts are canonical. Cards/catalogue are generated. Live progress belongs in tracked work records, not by rewriting an unexecuted specification into a passing result. Regenerate views with `python3 tools/render_plan.py --root .` after an approved planning change, then rerun verification.
+The goal cards/catalogue are generated from planning JSON. Live decisions belong
+under `work/`. Raw evidence stays ignored. No task database, worker scheduler,
+custom Git command protocol or mandatory agent provider has been added.
 
-## Git and recovery
+## Verified development boundary
 
-The distributed working-tree archive contains `.git`, a `main` branch and an initial commit. The accompanying Git bundle can be cloned into a clean checkout. There is no configured remote and no publication or hosted branch protection is claimed.
+The integrated suite has 289 executable planning/helper/workflow tests: 239
+retained tests and 50 M00-G04 tests. Six deliberately broken workflow changes
+were caught by behavioral assertions. Native Git worktrees and two separate
+loopback fixture servers were exercised; this is not product database/queue or
+provider isolation. Tests use explicitly synthetic reviewers where needed.
+
+The workflow checker is read-only. It does not authenticate identities, grant
+permissions, lock OS writers, merge branches or create releases. The global
+initializer and a specific agent client were not executed. Actual client/host
+qualification and product startup remain separate work.
+
+## Source retention and publication
+
+The project ZIP contains a standalone `.git` history. The bundle can be cloned:
 
 ```sh
-git status
-git log -1 --oneline
-
-# Set your own repository-scoped identity before your first commit.
-git config user.name "Your Name"
-git config user.email "your-address@example.com"
-
-# Create the first worktree only when the goal is assigned.
-git worktree add ../Rifare-M00-G01 -b goal/M00-G01 main
+git clone -b main /path/to/Rifare-M00-G04.bundle Rifare
+cd Rifare
+git remote remove origin
+python3 tools/verify.py
 ```
 
-Do not run initialization again just to begin work. The recorded workflow is already readable in the checkout. [Workflow adoption](docs/WORKFLOW-ADOPTION.md) identifies its source and remaining client verification.
-
-## Boundaries
-
-AI proposes actions; Rifare must enforce identity, permissions, policy, money, inventory and approvals. All supported operations must eventually work without AI. A portable skill is not an authority grant. Two models inside one runner are not proof of independent agent support.
-
-Current checks validate planning, document contracts and helper behavior. Three M00-G01 specification IDs are now bound to executable document tests; no commerce runtime qualification is executed. The empty accepted-product baseline intentionally cannot pass a product-release inventory check.
-
-The intended distribution is open source, but the project's license/publication decision remains M00-G03. [LICENSE-STATUS.md](LICENSE-STATUS.md) is not a software license grant. The retained upstream workflow notice is in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
-
-## First goal implementation
-
-M00-G01 now has a [charter](docs/CHARTER.md), a [versioned support envelope](planning/support-envelope.json),
-an [executable contract guide](docs/SUPPORT-ENVELOPE.md), and permanent
-document-contract tests. See [the work record](work/records/M00-G01.md) for live
-state and review blockers. Original planning views and initial-state snapshots
-remain unchanged; they do not represent completion. Human approval and independent
-review are still required. No commerce runtime or product release is implemented.
-
-## Next goal implementation
-
-M00-G02 adds a [versioned benchmark](planning/release-benchmark.json),
-[scenario inventory](planning/benchmark-scenarios.json),
-[scoring and regression guide](docs/RELEASE-BENCHMARK.md), and
-[bounded pilot proposal](docs/PILOT-PLAN.md). Its offline scorer checks frozen
-cohort membership and independent hand-calculated synthetic outcomes. It neither
-implements a commerce feature nor authenticates live evidence. See
-[the current work record](work/records/M00-G02.md) for the exact prerequisite and
-review boundaries. M00-G01 remains awaiting acceptance; no pilot is authorized.
-
-## M00-G03 licensing and source review
-
-The [licensing proposal](docs/LICENSING.md), [component inventory](planning/component-inventory.json),
-[merchant data boundary](docs/MERCHANT-DATA-BOUNDARY.md) and
-[distribution checks](docs/DISTRIBUTION-REVIEW.md) are prepared on the goal branch.
-No license or public release is approved. `python3 tools/check_distribution.py --root .`
-checks local source completeness; adding `--public-release` deliberately blocks.
-See [the M00-G03 work record](work/records/M00-G03.md) for actual candidate evidence.
+There is no hosted remote, release tag or public publication. The selected
+licensing direction is AGPL-3.0-only for the future application and Apache-2.0
+for separable SDKs, public skills/templates and original developer documentation.
+Existing MIT-derived notices are retained. Exact license application and a
+candidate-specific distribution review remain necessary before public release;
+[LICENSE-STATUS.md](LICENSE-STATUS.md) is not itself a software license grant.
+Private merchant material and raw review evidence do not belong in source.
