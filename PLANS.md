@@ -30,3 +30,12 @@ Continue target-stack qualification on M00-G05 and preparatory harness work only
 within ADR-0007 and regression-controller preparation within ADR-0008 and evidence preparation within ADR-0009. Keep future application,
 runtime isolation and test-harness work in M00-G05/M00-G06. Acceptance means the
 particular documented development outcome, not live product feature completion.
+
+## M00-G99 assessment checkpoint
+
+ADR-0010 authorizes bounded integrated qualification without accepting the missing
+prerequisites. No additional test/evidence framework is introduced. The assessment
+branch retains G05-G08; main and the accepted ledger remain unchanged. Current
+blockers and the M00-G05-first repair sequence are in
+[the qualification guide](docs/M00-QUALIFICATION.md) and
+[repair record](work/qualification/M00.json).

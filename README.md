@@ -133,3 +133,12 @@ checks external review facts without granting acceptance. See
 The current registry has 565 executable diagnostic/helper checks: 466 retained
 and 99 new. Full target-stack qualification and independent review remain open.
 All 676 commerce scenarios remain planning specifications.
+
+## Integrated M00 qualification
+
+The M00-G99 assessment reuses the existing 565-check suite and evidence controllers.
+The milestone remains blocked by target-stack qualification and unaccepted
+prerequisites; a green diagnostic run is not milestone acceptance. See
+[qualification and repair order](docs/M00-QUALIFICATION.md) and
+[the exact existing-goal repair checklist](work/qualification/M00.json).
+The next implementation work resumes M00-G05 on the accumulated source; M01 is not started.

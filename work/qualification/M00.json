@@ -1,0 +1,294 @@
+{
+  "schema_version": 1,
+  "kind": "qualification_work_record_not_acceptance_or_scheduler",
+  "milestone": "M00",
+  "goal_id": "M00-G99",
+  "state": "blocked",
+  "decision_ref": "docs/decisions/0010-integrated-milestone-qualification.md",
+  "assessment_base": "6acc338ac7a3b368d367202918dfbcb6d423669c",
+  "authority_checkpoint": "83667dfa7b76d21e4247e911b490bbc106bf6154",
+  "accepted_prerequisites": [
+    "M00-G01",
+    "M00-G02",
+    "M00-G03",
+    "M00-G04"
+  ],
+  "unaccepted_prerequisites": [
+    "M00-G05",
+    "M00-G06",
+    "M00-G07",
+    "M00-G08"
+  ],
+  "retained_test_count": 565,
+  "new_tests_added": 0,
+  "product_tests_claimed": 0,
+  "source_components": [
+    {
+      "goal_id": "M00-G01",
+      "commit": "82c00a54d2d219ca59aa9663989fdebae734a90b",
+      "accepted": true
+    },
+    {
+      "goal_id": "M00-G02",
+      "commit": "1994c44ca7868bb5dc5145c1654b6b6ac9702fb8",
+      "accepted": true
+    },
+    {
+      "goal_id": "M00-G03",
+      "commit": "5543540c812b45f8bb4237f8d23c275bf52da8ee",
+      "accepted": true
+    },
+    {
+      "goal_id": "M00-G04",
+      "commit": "314f9ca8bf8c7281f5e961f23f1ee87542a9eb51",
+      "accepted": true
+    },
+    {
+      "goal_id": "M00-G05",
+      "commit": "2883cd41fdc7630527034cf35605d920218c0c64",
+      "accepted": false
+    },
+    {
+      "goal_id": "M00-G06",
+      "commit": "4a88504e0c0d8b2282f054292318f91d06736901",
+      "accepted": false
+    },
+    {
+      "goal_id": "M00-G07",
+      "commit": "c625daf540fc3edb68d006761cea2430d2b0a3db",
+      "accepted": false
+    },
+    {
+      "goal_id": "M00-G08",
+      "commit": "6acc338ac7a3b368d367202918dfbcb6d423669c",
+      "accepted": false
+    }
+  ],
+  "original_exit_criteria": [
+    {
+      "id": "M00-EXIT-01",
+      "state": "partial_only",
+      "scope": "An isolated synthetic smoke environment can start without production credentials. Target stack and full served-browser/contributor journey are not qualified."
+    },
+    {
+      "id": "M00-EXIT-02",
+      "state": "adopted_under_prior_owner_delegation",
+      "decision_ref": "docs/decisions/0004-delegated-development-authority.md",
+      "scope": "Scope, invariants, benchmark and license direction. No public distribution grant, outside rights or new independent review inferred."
+    },
+    {
+      "id": "M00-EXIT-03",
+      "state": "records_present",
+      "scope": "First ten worker packets retain dependencies, evidence and criteria, with recorded prior authors or explicit unassigned ownership. This is not new dispatch authority."
+    }
+  ],
+  "case_dispositions": {
+    "CASE-M00-G99-01": "blocked_full_positive_qualification",
+    "CASE-M00-G99-02": "run_existing_dependency_and_evidence_rejection",
+    "CASE-M00-G99-03": "run_retained_baseline_and_behavioral_fault_checks"
+  },
+  "first_ten_workers": [
+    {
+      "goal_id": "M00-G01",
+      "packet": "goals/M00/M00-G01.md",
+      "dependencies": [],
+      "owner": "rifare-development-assistant",
+      "assignment": "recorded_prior_work",
+      "record": "work/records/M00-G01.md",
+      "initial_snapshot_owner": null
+    },
+    {
+      "goal_id": "M00-G02",
+      "packet": "goals/M00/M00-G02.md",
+      "dependencies": [
+        "M00-G01"
+      ],
+      "owner": "rifare-development-assistant",
+      "assignment": "recorded_prior_work",
+      "record": "work/records/M00-G02.md",
+      "initial_snapshot_owner": null
+    },
+    {
+      "goal_id": "M00-G03",
+      "packet": "goals/M00/M00-G03.md",
+      "dependencies": [
+        "M00-G01"
+      ],
+      "owner": "rifare-development-assistant",
+      "assignment": "recorded_prior_work",
+      "record": "work/records/M00-G03.md",
+      "initial_snapshot_owner": null
+    },
+    {
+      "goal_id": "M00-G04",
+      "packet": "goals/M00/M00-G04.md",
+      "dependencies": [
+        "M00-G01"
+      ],
+      "owner": "rifare-development-assistant",
+      "assignment": "recorded_prior_work",
+      "record": "work/records/M00-G04.md",
+      "initial_snapshot_owner": null
+    },
+    {
+      "goal_id": "M00-G05",
+      "packet": "goals/M00/M00-G05.md",
+      "dependencies": [
+        "M00-G04"
+      ],
+      "owner": "rifare-development-assistant",
+      "assignment": "recorded_prior_work",
+      "record": "work/records/M00-G05.md",
+      "initial_snapshot_owner": null
+    },
+    {
+      "goal_id": "M00-G06",
+      "packet": "goals/M00/M00-G06.md",
+      "dependencies": [
+        "M00-G05",
+        "M00-G02"
+      ],
+      "owner": "rifare-development-assistant",
+      "assignment": "recorded_prior_work",
+      "record": "work/records/M00-G06.md",
+      "initial_snapshot_owner": null
+    },
+    {
+      "goal_id": "M00-G07",
+      "packet": "goals/M00/M00-G07.md",
+      "dependencies": [
+        "M00-G06"
+      ],
+      "owner": "rifare-development-assistant",
+      "assignment": "recorded_prior_work",
+      "record": "work/records/M00-G07.md",
+      "initial_snapshot_owner": null
+    },
+    {
+      "goal_id": "M00-G08",
+      "packet": "goals/M00/M00-G08.md",
+      "dependencies": [
+        "M00-G06",
+        "M00-G07"
+      ],
+      "owner": "rifare-development-assistant",
+      "assignment": "recorded_prior_work",
+      "record": "work/records/M00-G08.md",
+      "initial_snapshot_owner": null
+    },
+    {
+      "goal_id": "M01-G01",
+      "packet": "goals/M01/M01-G01.md",
+      "dependencies": [
+        "M00-G99"
+      ],
+      "owner": null,
+      "assignment": "explicitly_unassigned",
+      "record": null,
+      "initial_snapshot_owner": null
+    },
+    {
+      "goal_id": "M01-G02",
+      "packet": "goals/M01/M01-G02.md",
+      "dependencies": [
+        "M01-G01",
+        "M00-G99"
+      ],
+      "owner": null,
+      "assignment": "explicitly_unassigned",
+      "record": null,
+      "initial_snapshot_owner": null
+    }
+  ],
+  "repairs": [
+    {
+      "id": "M00-Q01",
+      "owning_goal": "M00-G05",
+      "kind": "implementation_and_qualification",
+      "state": "open",
+      "problem": "The default startup intentionally exits 2; PostgreSQL/React dependencies and target build are not implemented/qualified.",
+      "required_evidence": [
+        "Pinned supported target dependencies and real lockfile",
+        "Clean install, migrations, API/worker/React startup",
+        "Two real target-stack worktrees with isolated database/queue/storage/ports",
+        "Scoped shutdown/restart and external-effect denial under the qualified execution boundary"
+      ],
+      "not_equivalent": [
+        "SQLite smoke success",
+        "A future architecture document",
+        "Package metadata without installed artifacts"
+      ]
+    },
+    {
+      "id": "M00-Q02",
+      "owning_goal": "M00-G06",
+      "kind": "connected_and_browser_qualification",
+      "state": "open",
+      "problem": "Existing database/browser tests qualify SQLite and in-memory components, not the target served React/PostgreSQL application.",
+      "required_evidence": [
+        "Run the retained and target native suites on the same repaired candidate",
+        "Use a host that permits actual loopback browser navigation",
+        "Serve the app, submit real UI interactions, inspect API/database/worker/attachment results",
+        "Do not skip a blocked browser or substitute mocked fetch results"
+      ],
+      "not_equivalent": [
+        "A static screenshot",
+        "page.set_content with mocked fetch",
+        "Changing browser administrator policy to evade a restriction"
+      ]
+    },
+    {
+      "id": "M00-Q03",
+      "owning_goal": "M00-G07",
+      "kind": "retained_regression_and_review",
+      "state": "open",
+      "problem": "Target repair must preserve the retained registry and obtain current independent regression/authority review.",
+      "required_evidence": [
+        "Export controller and baseline from independently retained reviewed commits",
+        "Keep all 565 existing registered IDs and their assertions unless a separately authorized reviewed replacement is required",
+        "Register target additions and run the combined candidate",
+        "Retest representative regression faults and obtain real independent reviews"
+      ],
+      "not_equivalent": [
+        "Author-written reviewer identities",
+        "A candidate-selected weakened baseline",
+        "Passing a new feature while removing an old test"
+      ]
+    },
+    {
+      "id": "M00-Q04",
+      "owning_goal": "M00-G08",
+      "kind": "evidence_and_acceptance",
+      "state": "open",
+      "problem": "Fresh source-bound evidence and actual accepted dependencies/review records are required before milestone acceptance.",
+      "required_evidence": [
+        "Capture and verify the repaired candidate with external pins and receipt",
+        "Obtain real separate authority/security and regression review for required goals",
+        "Record goal acceptance in dependency order using delegated maintainer authority",
+        "Rerun M00-G99 on one integrated candidate"
+      ],
+      "not_equivalent": [
+        "Copying an older green report",
+        "Treating evidence integrity as goal acceptance",
+        "Extending the earlier bootstrap exception without a prior explicit decision"
+      ]
+    }
+  ],
+  "next_implementation": {
+    "goal_id": "M00-G05",
+    "mode": "resume_existing_goal_on_accumulated_source",
+    "suggested_branch": "repair/M00-G05-target-stack",
+    "base_rule": "Use the delivered integrated source tip including G06-G08; never reset to an older goal branch and lose their code/tests.",
+    "required_host": [
+      "Git/Python and pinned Node/npm",
+      "Permitted dependency artifact access or verified approved cache",
+      "PostgreSQL and the selected local isolation facility",
+      "Playwright/Chromium with permitted local application navigation"
+    ],
+    "dispatch_state": "planned_not_started"
+  },
+  "acceptance_written": false,
+  "milestone_accepted": false,
+  "independent_reviews_performed": false,
+  "release_authorized": false
+}

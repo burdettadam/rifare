@@ -1,6 +1,6 @@
 {
-  "source_file_count": 417,
-  "source_count_reason": "All 415 prior source paths retained; M00-G99 authority and assignment records added. No other oracle fields or behavioral assertions changed.",
+  "source_file_count": 419,
+  "source_count_reason": "All 415 M00-G08 source paths retained; four M00-G99 authority, work, qualification guide and repair-record paths added. All other oracle fields and all behavioral assertions remain unchanged.",
   "component_ids": [
     "git-agent-adaptations",
     "rifare-developer-helpers",
