@@ -188,3 +188,18 @@ Run the same diagnostic server; it provisions no live Shopify connection. The
 new tests use the existing native runner and add no dependency or agent service.
 Full verification includes their registered IDs. Qualification and local merge
 remain different states; see the current integration record.
+
+## Agent access and grounded status assistance
+
+Read [the current guide](docs/AGENT-ACCESS.md). The diagnostic server additionally
+serves `/status` and `/mcp`. Provider adapters are disabled unless explicitly installed
+by server-local configuration; the manual/REST/MCP path needs no model.
+
+```sh
+node --experimental-strip-types tools/demo-assistance.mts openai
+node --experimental-strip-types tools/demo-assistance.mts anthropic
+```
+
+Both demonstrations use only synthetic wire fixtures and an in-memory database.
+Actual served-browser qualification is a separate command documented in the guide;
+a host-policy failure is not a skip or passing component result.

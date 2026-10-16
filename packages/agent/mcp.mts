@@ -72,6 +72,11 @@ export class ReadMcp {
       const p=exact(r.params,['name','arguments']);tool=TOOLS.find(t=>t.name===p.name)!;
       if(!tool||!g.tools.includes(tool.name))return error(-32602,'Tool unavailable');
       args=exact(p.arguments,Object.keys(tool.inputSchema.properties));
+      for(const [field,schema] of Object.entries(tool.inputSchema.properties) as [string,any][]) {
+        const value=args[field];
+        if(schema.type==='string'&&(typeof value!=='string'||value.length<schema.minLength||value.length>schema.maxLength))throw new Error();
+        if(schema.type==='integer'&&(!Number.isSafeInteger(value)||value<schema.minimum))throw new Error();
+      }
       if(args.task_id!==g.taskId)throw new Error();
     }catch{return error(-32602,'Invalid tool arguments');}
     try {

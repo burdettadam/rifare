@@ -57,13 +57,13 @@ export function decodeResponse(provider:Provider,value:any):ModelStep {
 }
 export function providerReader(provider:Provider,options:{fixtureTransport?:typeof fetch;allowLiveTest?:boolean;approvedModels?:string[]}={}):CredentialReader {
   if(!Object.hasOwn(ENDPOINTS,provider))throw new Error('INVALID_PROVIDER');
-  const allowed=new Set(options.approvedModels??[]);
+  const allowed=new Set(options.approvedModels??[]),fixtureTransport=options.fixtureTransport,liveEnabled=options.allowLiveTest===true;
   return {provider,execute:async(credential,input)=>{
     const r=validRequest(input);
     if(!allowed.has(r.model))throw new Error('MODEL_NOT_APPROVED');
-    if(!options.fixtureTransport&&!options.allowLiveTest)throw new Error('EXTERNAL_EFFECT_DENIED');
+    if(!fixtureTransport&&!liveEnabled)throw new Error('EXTERNAL_EFFECT_DENIED');
     const secret=credential.toString('utf8');if(!/^[\x21-\x7e]{1,4096}$/.test(secret))throw new Error('SECRET_UNAVAILABLE');
-    const transport=options.fixtureTransport??fetch;
+    const transport=fixtureTransport??fetch;
     const response=await transport(ENDPOINTS[provider],{method:'POST',redirect:'error',signal:AbortSignal.timeout(10000),
       headers:{'content-type':'application/json',...(provider==='openai'?{authorization:'Bearer '+secret}:{'x-api-key':secret,'anthropic-version':'2023-06-01'})},
       body:JSON.stringify(encodeRequest(provider,r))});

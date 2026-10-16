@@ -52,3 +52,7 @@ test('M01-G11-NO-TOKEN-FORWARDING',()=>useAgent(async f=>{const c=await client(f
  f.reads.taskAction=(...args:any[])=>{observed=args;return original(...args as Parameters<typeof original>);};
  await c.call('tools/call',{name:'order_status',arguments:{task_id:f.task.id,order_id:f.order().id}});
  assert.equal(observed.length,4);assert.equal(JSON.stringify(observed).includes(c.grant.token),false);assert.equal(JSON.stringify(observed).includes(f.a.bearer),false);}));
+test('M01-G11-INVALID-TYPED-ARGUMENTS',()=>useAgent(async f=>{const c=await client(f);
+ const bad=await c.call('tools/call',{name:'knowledge_search',arguments:{task_id:f.task.id,query:7}});assert.equal(bad.data.error?.code,-32602);
+ const long=await c.call('tools/call',{name:'knowledge_search',arguments:{task_id:f.task.id,query:'x'.repeat(201)}});assert.equal(long.data.error?.code,-32602);
+}));

@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "kind": "local_diagnostic_integration_not_full_goal_acceptance",
+  "authority": "docs/decisions/0014-agent-access-and-runners.md",
+  "authority_commit": "eb2b3912cf98fa94fd34bb8804719fab137aa1e8",
+  "base_commit": "9e93d46a8fd41b3759d123a5c3a5c50e182c5a29",
+  "goals": [
+    "M01-G11",
+    "M01-G12",
+    "M01-G13",
+    "M01-G14",
+    "M01-G15"
+  ],
+  "decision": "approve_local_merge_only_after_complete_pinned_regression_pass",
+  "review": "docs/AGENT-ACCESS-REVIEW.md",
+  "review_basis": "delegated_maintainer_self_review_explicit_exception",
+  "independent_reviews": [],
+  "formal_goal_acceptance_changed": false,
+  "product_qualified": false,
+  "release_authorized": false,
+  "test_inventory": {
+    "retained": 758,
+    "added": 72,
+    "total": 830
+  },
+  "qualification_failures": [
+    "served manual browser blocked by host administration policy",
+    "no live model accounts or paid egress exercised",
+    "PostgreSQL/React target unfinished"
+  ],
+  "verification_record": "Separate delivery report binds actual final candidate, merge, controller and native output hashes."
+}

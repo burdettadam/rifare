@@ -28,3 +28,32 @@ test('M01-G15-CHANGED-PROFILE',()=>useAgent(async f=>{f.reads.profiles.put(f.a.s
 test('M01-G15-PROXY-NOT-USED',()=>useAgent(async f=>{assert.equal((await run(f,'mcp',{HTTP_PROXY:'http://127.0.0.1:1',HTTPS_PROXY:'http://127.0.0.1:1'})).status,'grounded_read');}));
 test('M01-G15-NO-PRIVATE-RUNTIME-PERSISTENCE',()=>useAgent(async f=>{const before=f.db.prepare('SELECT count(*) AS n FROM commerce_assistance_receipts').get().n;
  await run(f,'mcp');assert.equal(f.db.prepare('SELECT count(*) AS n FROM commerce_assistance_receipts').get().n,before);assert.equal(f.reads.task(f.a.scope,f.task.id).id,f.task.id);}));
+test('M01-G15-PHYSICALLY-ABSENT-BUILTIN',()=>useAgent(async f=>{
+ const root=join(f.directory,'isolated-server');mkdirSync(root);
+ for(const dir of ['packages','apps','migrations'])cpSync(fileURLToPath(new URL('../../'+dir,import.meta.url)),join(root,dir),{recursive:true});
+ for(const file of ['runner.mts','providers.mts','facts.mts'])rmSync(join(root,'packages','agent',file));
+ cpSync(source,join(root,'status_agent.py'));
+ writeFileSync(join(root,'start.mts'),`import {DatabaseSync} from 'node:sqlite';
+ import {CommerceKernel} from './packages/commerce/kernel.mts';import {Capabilities} from './packages/commerce/capabilities.mts';
+ import {StoreSimulator} from './packages/commerce/simulator.mts';import {CustomerAccess} from './packages/commerce/customer-access.mts';
+ import {ReadContext} from './packages/commerce/read-context.mts';import {loadSkillDirectory} from './packages/commerce/skills.mts';
+ import {startCommerceServer} from './apps/commerce-api/server.mts';
+ const db=new DatabaseSync(':memory:'),k=new CommerceKernel(db),caps=new Capabilities(k),sim=new StoreSimulator(k,caps),reads=new ReadContext(k,caps);
+ k.provisionStore('t','s');k.provisionMember('t','s','a');const bearer=k.issueSession('t','s','a'),scope=k.authenticate(bearer);sim.reset(scope);
+ const skill=loadSkillDirectory(process.cwd()+'/packages/commerce/skill-bundles/order-status');reads.skills.install(scope,skill);
+ reads.profiles.put(scope,{id:'default',revision:1,tenant_id:'t',store_id:'s',skill_id:skill.id,skill_digest:skill.digest,tone:'neutral',locale:'en-US',actions:['order.status','skill.read'],data_scope:{order:'session_or_store',knowledge:'visible_only'}});
+ const task=reads.createTask(scope,{order_id:k.lookup(scope,'order','synthetic','ORD-1001').id,profile_id:'default'});
+ const server=await startCommerceServer({kernel:k,caps,simulator:sim,customers:new CustomerAccess(k,()=>{}),reads});
+ console.log(JSON.stringify({url:server.url,bearer,task:task.id}));process.on('SIGTERM',async()=>{await server.close();db.close();});`);
+ const {spawn}=await import('node:child_process');const processChild=spawn(process.execPath,['--experimental-strip-types','start.mts'],{cwd:root,stdio:['ignore','pipe','pipe']});
+ let text='',errors='';processChild.stderr.on('data',b=>errors+=b.toString());
+ try {
+   const details=await new Promise<any>((resolve,reject)=>{const timer=setTimeout(()=>reject(new Error('isolated startup timeout')),8000);
+     processChild.stdout.on('data',b=>{text+=b.toString();if(text.includes('\n')){clearTimeout(timer);resolve(JSON.parse(text.split('\n')[0]));}});
+     processChild.on('exit',code=>{clearTimeout(timer);reject(new Error('isolated startup failed: '+code+' '+errors));});});
+   const result=await execute('python3',[join(root,'status_agent.py'),'--base-url',details.url,'--task-id',details.task],{cwd:root,env:{PATH:process.env.PATH,RIFARE_BEARER:details.bearer},timeout:15000});
+   assert.equal(JSON.parse(result.stdout).status,'grounded_read');assert.equal(JSON.parse(result.stdout).claims[0].value,'ORD-1001');
+ } finally {processChild.kill('SIGTERM');await new Promise<void>(resolve=>processChild.once('exit',()=>resolve()));}
+}));
+test('M01-G15-PROVIDER-DISABLED-HTTP',()=>useAgent(async f=>{assert.equal((await f.request('/v1/read-tasks/'+f.task.id+'/assist',{configuration_id:'invented'})).status,503);
+ const facts=await(await f.request('/v1/orders/'+f.order().id+'/status')).json();assert.equal(facts.order.number,'ORD-1001');}));

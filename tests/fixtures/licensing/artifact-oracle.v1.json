@@ -1,6 +1,6 @@
 {
-  "source_file_count": 505,
-  "source_count_reason": "Add assigned M01-G11 through M01-G15 source and tests; preserve every prior path and obligation.",
+  "source_file_count": 514,
+  "source_count_reason": "Add assigned agent-access implementations, tests, examples and review records; retain all earlier paths and contracts.",
   "component_ids": [
     "git-agent-adaptations",
     "rifare-developer-helpers",

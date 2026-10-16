@@ -30,3 +30,14 @@ test('M01-G13-NO-UNAPPROVED-EGRESS',async()=>{const reader=providerReader('opena
 test('M01-G13-REFUSAL',()=>useModel(async f=>{f.setMutate(r=>({...r,output:[{type:'message',content:[{type:'refusal',refusal:'No'}]}]}));assert.equal((await f.runner.run(f.a.scope,f.task.id,'openai')).reason,'MODEL_HANDOFF');}));
 test('M01-G13-PROFILE-RECHECK',()=>useModel(async f=>{f.setBefore(()=>f.reads.profiles.put(f.a.scope,f.profile(f.a,{revision:2,tone:'formal'})));await assert.rejects(()=>f.runner.run(f.a.scope,f.task.id,'openai'),/TASK_CONTEXT_CHANGED/);}));
 test('M01-G13-MISSING-CAPABILITY',()=>useModel(async f=>{const configs=structuredClone(f.configs);configs[0].capabilities=['stateless'];const r=await new ReadRunner(f.kernel,f.reads,f.vault,configs).run(f.a.scope,f.task.id,'openai');assert.equal(r.reason,'CAPABILITY_UNAVAILABLE');assert.equal(f.requests.length,0);}));
+test('M01-G13-SOURCE-DIGEST-ONLY',()=>useModel(async f=>{f.setMutate(r=>{if(r.output[0].name==='finish_status'){const input=JSON.parse(r.output[0].arguments);input.source_digest='0'.repeat(64);r.output[0].arguments=JSON.stringify(input);}return r;});
+ assert.equal((await f.runner.run(f.a.scope,f.task.id,'openai')).reason,'UNGROUNDED_OUTPUT');}));
+test('M01-G13-REQUIRED-CLAIMS',()=>useModel(async f=>{f.setMutate(r=>{if(r.output[0].name==='finish_status'){const input=JSON.parse(r.output[0].arguments);input.fact_ids=['order.number'];r.output[0].arguments=JSON.stringify(input);}return r;});
+ assert.equal((await f.runner.run(f.a.scope,f.task.id,'openai')).reason,'UNGROUNDED_OUTPUT');}));
+test('M01-G13-CONCURRENT-RUN-REJECTED',()=>useModel(async f=>{let release:()=>void=()=>{};let entered:()=>void=()=>{};
+ const signal=new Promise<void>(r=>entered=r),wait=new Promise<void>(r=>release=r);let first=true;
+ f.setBefore(async()=>{if(first){first=false;entered();await wait;}});
+ const running=f.runner.run(f.a.scope,f.task.id,'openai');await signal;
+ await assert.rejects(()=>f.runner.run(f.a.scope,f.task.id,'openai'),/RUN_IN_PROGRESS/);release();assert.equal((await running).status,'grounded_read');}));
+test('M01-G13-SKILL-REFERENCE-CONTENT',()=>useModel(async f=>{await f.runner.run(f.a.scope,f.task.id,'openai');
+ for(const [name,text] of Object.entries(f.bundle.files))if(name==='SKILL.md'||name.startsWith('references/'))assert.ok(f.requests[0].body.instructions.includes(text));}));

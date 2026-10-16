@@ -5602,6 +5602,13 @@
       "capability_id": "FEATURE-M01-G11"
     },
     {
+      "id": "runtime:M01-G11-INVALID-TYPED-ARGUMENTS",
+      "suite": "runtime",
+      "runner_case_id": "M01-G11-INVALID-TYPED-ARGUMENTS",
+      "source": "tests/development/agent-mcp.test.mts",
+      "capability_id": "FEATURE-M01-G11"
+    },
+    {
       "id": "runtime:CASE-M01-G12-01",
       "suite": "runtime",
       "runner_case_id": "CASE-M01-G12-01",
@@ -5777,6 +5784,34 @@
       "capability_id": "FEATURE-M01-G13"
     },
     {
+      "id": "runtime:M01-G13-SOURCE-DIGEST-ONLY",
+      "suite": "runtime",
+      "runner_case_id": "M01-G13-SOURCE-DIGEST-ONLY",
+      "source": "tests/development/agent-runner.test.mts",
+      "capability_id": "FEATURE-M01-G13"
+    },
+    {
+      "id": "runtime:M01-G13-REQUIRED-CLAIMS",
+      "suite": "runtime",
+      "runner_case_id": "M01-G13-REQUIRED-CLAIMS",
+      "source": "tests/development/agent-runner.test.mts",
+      "capability_id": "FEATURE-M01-G13"
+    },
+    {
+      "id": "runtime:M01-G13-CONCURRENT-RUN-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M01-G13-CONCURRENT-RUN-REJECTED",
+      "source": "tests/development/agent-runner.test.mts",
+      "capability_id": "FEATURE-M01-G13"
+    },
+    {
+      "id": "runtime:M01-G13-SKILL-REFERENCE-CONTENT",
+      "suite": "runtime",
+      "runner_case_id": "M01-G13-SKILL-REFERENCE-CONTENT",
+      "source": "tests/development/agent-runner.test.mts",
+      "capability_id": "FEATURE-M01-G13"
+    },
+    {
       "id": "runtime:CASE-M01-G14-01",
       "suite": "runtime",
       "runner_case_id": "CASE-M01-G14-01",
@@ -5861,6 +5896,34 @@
       "capability_id": "FEATURE-M01-G14"
     },
     {
+      "id": "runtime:M01-G14-HTTP-FAILURE-NO-FALLBACK",
+      "suite": "runtime",
+      "runner_case_id": "M01-G14-HTTP-FAILURE-NO-FALLBACK",
+      "source": "tests/development/agent-second-provider.test.mts",
+      "capability_id": "FEATURE-M01-G14"
+    },
+    {
+      "id": "runtime:M01-G14-BOUNDED-WIRE-OUTPUT",
+      "suite": "runtime",
+      "runner_case_id": "M01-G14-BOUNDED-WIRE-OUTPUT",
+      "source": "tests/development/agent-second-provider.test.mts",
+      "capability_id": "FEATURE-M01-G14"
+    },
+    {
+      "id": "runtime:M01-G14-REDIRECTS-DENIED",
+      "suite": "runtime",
+      "runner_case_id": "M01-G14-REDIRECTS-DENIED",
+      "source": "tests/development/agent-second-provider.test.mts",
+      "capability_id": "FEATURE-M01-G14"
+    },
+    {
+      "id": "runtime:M01-G14-CONFIGURATION-IS-SNAPSHOTTED",
+      "suite": "runtime",
+      "runner_case_id": "M01-G14-CONFIGURATION-IS-SNAPSHOTTED",
+      "source": "tests/development/agent-second-provider.test.mts",
+      "capability_id": "FEATURE-M01-G14"
+    },
+    {
       "id": "runtime:CASE-M01-G15-01",
       "suite": "runtime",
       "runner_case_id": "CASE-M01-G15-01",
@@ -5927,6 +5990,20 @@
       "id": "runtime:M01-G15-NO-PRIVATE-RUNTIME-PERSISTENCE",
       "suite": "runtime",
       "runner_case_id": "M01-G15-NO-PRIVATE-RUNTIME-PERSISTENCE",
+      "source": "tests/development/agent-external.test.mts",
+      "capability_id": "FEATURE-M01-G15"
+    },
+    {
+      "id": "runtime:M01-G15-PHYSICALLY-ABSENT-BUILTIN",
+      "suite": "runtime",
+      "runner_case_id": "M01-G15-PHYSICALLY-ABSENT-BUILTIN",
+      "source": "tests/development/agent-external.test.mts",
+      "capability_id": "FEATURE-M01-G15"
+    },
+    {
+      "id": "runtime:M01-G15-PROVIDER-DISABLED-HTTP",
+      "suite": "runtime",
+      "runner_case_id": "M01-G15-PROVIDER-DISABLED-HTTP",
       "source": "tests/development/agent-external.test.mts",
       "capability_id": "FEATURE-M01-G15"
     }

@@ -23,3 +23,14 @@ test('M01-G14-STRICT-APP-CONTRACT',()=>useModel(async f=>{f.setMutate((r,p)=>{if
 test('M01-G14-NO-FREE-TEXT',()=>useModel(async f=>{f.setMutate((r,p)=>{if(p==='anthropic')r.content.push({type:'text',text:'Delivered tomorrow'});return r;});assert.equal((await f.runner.run(f.a.scope,f.task.id,'anthropic')).reason,'MODEL_HANDOFF');}));
 test('M01-G14-SETTINGS-PINS',()=>useModel(async f=>{await f.runner.run(f.a.scope,f.task.id,'anthropic');assert.ok(f.requests.every(x=>x.body.max_tokens===512&&x.body.model==='fixture-b'));assert.ok(f.requests.every(x=>x.body.tool_choice.disable_parallel_tool_use));}));
 test('M01-G14-UNKNOWN-PROVIDER',()=>{assert.throws(()=>providerReader('unconfigured' as any),/INVALID_PROVIDER/);});
+test('M01-G14-HTTP-FAILURE-NO-FALLBACK',async()=>{for(const provider of ['openai','anthropic'] as const){let count=0;
+ const r=providerReader(provider,{approvedModels:['fixture'],fixtureTransport:async()=>{count++;return new Response('{"secret":"do not echo"}',{status:429});}});
+ await assert.rejects(()=>r.execute(Buffer.from('synthetic'),{model:'fixture',max_output_tokens:512,instruction:'read',context:{},turns:[]}),/MODEL_UNAVAILABLE/);assert.equal(count,1);}});
+test('M01-G14-BOUNDED-WIRE-OUTPUT',async()=>{const r=providerReader('anthropic',{approvedModels:['fixture'],fixtureTransport:async()=>new Response('x'.repeat(129*1024))});
+ await assert.rejects(()=>r.execute(Buffer.from('synthetic'),{model:'fixture',max_output_tokens:512,instruction:'read',context:{},turns:[]}),/MODEL_OUTPUT_TOO_LARGE/);});
+test('M01-G14-REDIRECTS-DENIED',async()=>{for(const provider of ['openai','anthropic'] as const){const r=providerReader(provider,{approvedModels:['fixture'],fixtureTransport:async(_url,options)=>{
+ assert.equal(options?.redirect,'error');return new Response('',{status:302,headers:{location:'https://untrusted.invalid'}});}});
+ await assert.rejects(()=>r.execute(Buffer.from('synthetic'),{model:'fixture',max_output_tokens:512,instruction:'read',context:{},turns:[]}),/MODEL_UNAVAILABLE/);}});
+test('M01-G14-CONFIGURATION-IS-SNAPSHOTTED',async()=>{let count=0;const options:any={approvedModels:['fixture'],allowLiveTest:false};const reader=providerReader('openai',options);
+ options.allowLiveTest=true;options.fixtureTransport=async()=>{count++;return new Response('{}');};
+ await assert.rejects(()=>reader.execute(Buffer.from('synthetic'),{model:'fixture',max_output_tokens:512,instruction:'read',context:{},turns:[]}),/EXTERNAL_EFFECT_DENIED/);assert.equal(count,0);});

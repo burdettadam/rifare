@@ -16,7 +16,10 @@ with sync_playwright() as p:
     page.set_content(html)
     page.add_style_tag(content=(assets / 'status.css').read_text())
     page.evaluate('''cfg => {
-      window.fixture=cfg;window.calls=[];
+      window.fixture=cfg;window.calls=[];window.storageCalls=[];
+      for(const name of ['localStorage','sessionStorage'])Object.defineProperty(window,name,{get:()=>{
+        window.storageCalls.push(name);return {length:0,setItem:()=>window.storageCalls.push('write'),getItem:()=>null};
+      }});
       window.fetch=async (url,options)=>{
         window.calls.push({url,method:options.method});
         if (url==='/v1/session/logout')return {ok:true,json:async()=>({revoked:true})};
@@ -38,7 +41,7 @@ with sync_playwright() as p:
         page.get_by_role('heading', name='Order ORD-1001', exact=True).wait_for()
         assert 'in_transit' in page.locator('#result').inner_text()
         assert 'Synthetic fixture snapshot' in page.locator('#result').inner_text()
-        result.update(order='ORD-1001', input_cleared=page.locator('#token').input_value() == '', stored_token=False)
+        result.update(order='ORD-1001', input_cleared=page.locator('#token').input_value() == '', stored_token=page.evaluate('window.storageCalls.length > 0'))
         assert result['input_cleared']
         if cfg['scenario'] == 'denied':
             page.get_by_label('Order resource ID', exact=True).fill(cfg['other'])
