@@ -42,8 +42,9 @@ export class CustomerAccess {
     let delivery: ProofDelivery | undefined;
     k.transaction(()=>{
       const clientLimited=this.#limited(digest('client:'+clientAddress),20);
+      if(clientLimited) return;
       const targetLimited=this.#limited(digest(JSON.stringify(['target',r.store_id,r.order_number,address])),3);
-      if (clientLimited||targetLimited) return;
+      if (targetLimited) return;
       const rows=db.prepare(`SELECT r.* FROM commerce_resources r JOIN commerce_stores s USING(tenant_id,store_id)
         WHERE r.store_id=? AND r.kind='order' AND r.external_id=? AND s.active=1 LIMIT 2`).all(r.store_id,r.order_number) as Row[];
       const owner=rows.length===1?this.#owner(rows[0].tenant_id,r.store_id,rows[0].id):null;

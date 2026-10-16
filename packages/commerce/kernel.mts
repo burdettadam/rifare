@@ -21,6 +21,9 @@ export function integer(value: unknown, min = 0): number {
   if (!Number.isSafeInteger(value) || Number(value) < min) throw new Error('INVALID_INPUT');
   return value as number;
 }
+export function resourceKey(tenant:string,store:string,kind:string,source:string,external:string) {
+  return 'res_'+digest(JSON.stringify([tenant,store,kind,source,external])).slice(0,40);
+}
 export function boundedJSON(value: unknown): string {
   const s = JSON.stringify(value);
   if (!s || Buffer.byteLength(s) > 16384) throw new Error('INVALID_INPUT');
@@ -119,7 +122,7 @@ export class CommerceKernel {
     if (r.customer_id !== null) id(r.customer_id);
     const encoded=boundedJSON(r.payload); const now=this.clock();
     if (r.source_updated_at>now) throw new Error('INVALID_INPUT');
-    const canonical='res_'+digest(JSON.stringify([s.tenant_id,s.store_id,r.kind,r.source_system,r.external_id])).slice(0,40);
+    const canonical=resourceKey(s.tenant_id,s.store_id,r.kind,r.source_system,r.external_id);
     this.transaction(() => {
       const prev=this.db.prepare('SELECT * FROM commerce_resources WHERE tenant_id=? AND store_id=? AND id=?').get(s.tenant_id,s.store_id,canonical) as Row;
       if (prev && r.source_version<=prev.source_version) {
