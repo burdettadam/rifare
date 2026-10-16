@@ -61,6 +61,7 @@
         "docs/decisions/0005-workflow-adoption.md",
         "docs/decisions/0006-local-environment-qualification.md",
         "docs/decisions/0007-deterministic-test-harness.md",
+        "docs/decisions/0008-trusted-regression-controller.md",
         "docs/decisions/README.md",
         "goals/M00/M00-G01.md",
         "goals/M00/M00-G02.md",
@@ -293,6 +294,7 @@
         "planning/invariants.json",
         "planning/licensing-policy.json",
         "planning/milestones.json",
+        "planning/regression-registry.json",
         "planning/release-benchmark.json",
         "planning/requirement-coverage.json",
         "planning/roadmap-sources.json",
@@ -315,7 +317,8 @@
         "work/records/M00-G03.md",
         "work/records/M00-G04.md",
         "work/records/M00-G05.md",
-        "work/records/M00-G06.md"
+        "work/records/M00-G06.md",
+        "work/records/M00-G07.md"
       ],
       "notices": []
     },
