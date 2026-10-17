@@ -14,7 +14,6 @@ function reset(name,message='Inputs changed. Request a fresh result for this sec
  $(name+'-result').hidden=true;$(name+'-summary').replaceChildren();$(name+'-raw').textContent='';$(name+'-details').open=false;
  if(name==='instant')$('instant-next').hidden=true;say(name,message);
 }
-const label=path=>path.split('.').map(part=>part.replaceAll('_',' ')).join(' / ');
 function formatMoney(currency,value){
  const scale={USD:2,EUR:2,GBP:2,CAD:2,JPY:0,KWD:3,BHD:3}[currency];
  if(scale===undefined||typeof value!=='string'||! /^-?(0|[1-9][0-9]{0,63})$/.test(value))return String(currency)+' '+String(value)+' minor units';
@@ -22,22 +21,40 @@ function formatMoney(currency,value){
  return String(currency)+' '+(negative?'-':'')+String(absolute/unit)+(scale?'.'+String(absolute%unit).padStart(scale,'0'):'')+' ('+value+' minor units)';
 }
 function summarize(name,result){
- const list=$(name+'-summary'),rows=[],fields=new Set(['id','operation_id','node_id','obligation_id','allocation_id','state','stage','status','action','qualification','unresolved','unresolved_count','requires_new_approval','next_action','execution_authorized','authorization_settled','payment_settled','retry_allowed']);
- function visit(value,path,currency=null,pair={},depth=0){
-  if(!value||typeof value!=='object'||depth>12||rows.length>=60)return;
-  if(Array.isArray(value)){value.forEach((item,index)=>visit(item,path+'.'+String(index+1),currency,pair,depth+1));return;}
-  const code=typeof value.currency==='string'?value.currency:currency,sides={...pair,...(value.shop_currency?{shop:value.shop_currency}:{}),...(value.presentment_currency?{presentment:value.presentment_currency}:{})};
-  if(typeof value.minor==='string'&&code)rows.push([label(path||'Amount'),formatMoney(code,value.minor)]);
-  const entries=Object.entries(value);
-  for(const [key,item] of entries)if(fields.has(key)&&item!==null&&['string','boolean','number'].includes(typeof item))rows.push([label(path?path+'.'+key:key),String(item)]);
-  for(const [key,item] of entries){
-   const next=path?path+'.'+key:key;
-   if(key.endsWith('_minor')&&typeof item==='string'&&code)rows.push([label(next),formatMoney(code,item)]);
-   else if(item&&typeof item==='object')visit(item,next,sides[key]??code,sides,depth+1);
-   if(rows.length>=60)break;
-  }
+ const list=$(name+'-summary'),rows=[];
+ const add=(title,value)=>{if(value!==null&&value!==undefined)rows.push([title,String(value)]);};
+ const amount=(title,currency,value)=>{if(currency&&value!==null&&value!==undefined)add(title,formatMoney(currency,value));};
+ const date=(title,value)=>{if(value!==null&&value!==undefined){const time=new Date(value);add(title,Number.isNaN(time.getTime())?String(value):time.toISOString().replace('T',' ').replace('Z',' UTC'));}};
+ const pair=(shopCurrency,presentmentCurrency,shop,presentment)=>[shop!==null&&shop!==undefined&&shopCurrency?formatMoney(shopCurrency,shop):null,presentment!==null&&presentment!==undefined&&presentmentCurrency?formatMoney(presentmentCurrency,presentment):null].filter(Boolean).join(' · ');
+ const feeTotal=value=>{const parts=['restocking_minor','return_shipping_minor','tax_minor'].map(key=>value?.[key]);return parts.every(part=>typeof part==='string'&&/^(0|[1-9][0-9]*)$/.test(part))?parts.reduce((sum,part)=>sum+BigInt(part),0n).toString():null;};
+ if(name==='lineage'){
+  const node=result.node??{},currency=node.currency;add('Lineage state',result.state);add('Exchange generation',node.generation);
+  amount('Carried value',currency,node.carried_minor);amount('Original parent paid',currency,node.parent_paid_minor);amount('Additional paid',currency,node.additional_paid_minor);
+  amount(node.terminal_outflow_kind==='refund'?'Refund outflow':node.terminal_outflow_kind==='store_credit'?'Store credit outflow':'Refund / credit outflow',currency,node.terminal_outflow_minor);
+  amount('Retained fees',currency,node.fees_minor);amount('Retail reference',currency,node.replacement_retail_minor);
+  const instruments=new Set();for(const funding of node.funding??[]){if(instruments.has(funding.instrument_id))continue;instruments.add(funding.instrument_id);amount('Funding · '+funding.instrument_id,currency,funding.amount_minor);}
+  add('Node ID',node.id);if(result.requires_original_operation_lookup)add('Next step','Look up the original replacement operation.');
+ }else if(name==='money'){
+  const binding=result.binding??{},shop=binding.components?.shop,presentment=binding.components?.presentment;
+  amount('Shop original paid',binding.shop_currency,shop?.paid_minor);amount('Presentment original paid',binding.presentment_currency,presentment?.paid_minor);
+  const duties=pair(binding.shop_currency,binding.presentment_currency,shop?.duties_minor,presentment?.duties_minor);if(duties)add('Original duty allocation',duties);
+  add('Original conversion reference',binding.rate_provenance?.id);date('Issuance qualification expires',binding.qualification?.expires_at);
+ }else if(name==='fees'){
+  const estimate=result.estimate,final=result.final,shop=estimate?.shop_currency,presentment=estimate?.presentment_currency;
+  add('Fee state',result.state);if(estimate)add('Estimated fees',pair(shop,presentment,feeTotal(estimate.shop),feeTotal(estimate.presentment)));
+  add('Final fees',final?pair(final.shop_currency,final.presentment_currency,feeTotal(final.shop),feeTotal(final.presentment)):'Awaiting final amount');
+  const delta=result.delta_from_authorized??result.delta_from_estimate;if(delta)add(result.delta_from_authorized?'Difference from approved fees':'Difference from estimate',pair(shop,presentment,delta.shop,delta.presentment));
+  add('Next step',result.unresolved?'Reconcile the original operation; the difference is unresolved.':result.requires_new_approval?'Prepare a new exact quote and approval.':result.next_action==='none'?'No new financial effect is authorized.':result.next_action);
+  add('Operation ID',result.operation_id);
+ }else{
+  const quote=result.quote,value=quote??result,plan=quote?.plan??result.source??{},currency=value.currency??plan.currency;
+  add('Operation stage',result.state);add('Quote action',quote?.kind);
+  if(value.amount_minor===plan.maximum_minor)amount('Amount / ceiling',currency,value.amount_minor);else{amount('Amount',currency,value.amount_minor);amount('Ceiling',currency,plan.maximum_minor);}
+  if(!quote&&result.source){amount('Captured',currency,result.source.captured_minor);amount('Unreturned value',currency,result.source.remaining_minor);if(result.source.compensation_required_minor!=='0')amount('Compensation requiring review',currency,result.source.compensation_required_minor);}
+  date('Trial deadline',plan.trial_deadline_at);date('Mandate expires',plan.expires_at);if(quote)date('Quote expires',quote.expires_at);
+  add('Next step',quote?'Approval is required before dispatch.':result.state==='unknown'?'Reconcile this original operation.':result.source?.compensation_required_minor&&result.source.compensation_required_minor!=='0'?'Review the unresolved compensation on this obligation.':result.state==='authorized'?'Dispatch the already approved operation.':'Review the returned source stage before preparing another quote.');
+  if(quote){add('Quote ID',result.id);add('Quote digest',result.digest);}add('Obligation ID',value.obligation_id);
  }
- visit(result,'');
  if(!rows.length)rows.push(['Response','Source details contain the complete returned record.']);
  for(const [title,value] of rows){const dt=document.createElement('dt'),dd=document.createElement('dd');dt.textContent=title;dd.textContent=value;list.append(dt,dd);}
  $(name+'-raw').textContent=JSON.stringify(result,null,2);$(name+'-result').hidden=false;

@@ -91,6 +91,21 @@ with sync_playwright() as playwright:
         assert '(' + str(expected['minor']) + ' minor units)' in summary
     for value in expected.get('contains', []):
         assert value in summary or value in status
+    labels = page.locator('#' + section + '-summary dt').all_text_contents()
+    assert not page.locator('#' + section + '-details').evaluate('(element)=>element.open'), 'complete source details should be collapsed initially'
+    if section == 'lineage':
+        for label in ('Lineage state', 'Exchange generation', 'Carried value', 'Original parent paid', 'Additional paid', 'Retained fees', 'Retail reference'):
+            assert label in labels
+        funding = displayed.get('node', {}).get('funding', [])
+        assert len([label for label in labels if label.startswith('Funding · ')]) == len({item['instrument_id'] for item in funding})
+        assert len(labels) <= 10 + len(funding), 'lineage summary must not recursively duplicate amounts'
+    elif section == 'money':
+        for label in ('Shop original paid', 'Presentment original paid', 'Original conversion reference'):
+            assert label in labels
+        assert len(labels) <= 6, 'original money summary must stay concise'
+    else:
+        assert 'Next step' in labels and 'Trial deadline' in labels and 'Mandate expires' in labels
+        assert len(labels) <= 14, 'instant quote summary must not dump internal paths'
     if cfg['scenario'] == 'instant':
         assert page.locator('#instant-next').is_visible()
         assert page.locator('#instant-next a').get_attribute('href') == '/execution'
