@@ -3,19 +3,18 @@
 Merchant-owned commerce operations with tailorable skills and independently
 replaceable platforms, agents and models.
 
-**Current checkpoint: fifty-five commerce goals have local diagnostic implementations.**
-The latest five add mixed outcome allocations, original-value refund quotes,
-source-bound refund recovery, native-instrument credit fixtures and stock-aware
-variant quotations. Refund acceptance is not settlement. Exchange quotations do
-not reserve stock. Unknown effects cannot be blindly retried.
+**Current checkpoint: sixty commerce goals have local diagnostic implementations.**
+The latest five add concurrent replacement reservations, approved replacement
+orders, separate label rating and purchase, independent void/reimbursement states,
+and carrier tracking that never manufactures warehouse receipt.
 
-**This is still the SQLite diagnostic implementation.** PostgreSQL/React, live
-platform/model and actual served-browser qualification remain open. No live
-refund, payment, credit, shipment or shop mutation is enabled.
+**This remains the SQLite diagnostic implementation.** Separate synthetic inventory
+and carrier ledgers cannot establish live stock ownership, a real label, a refund,
+or physical delivery. PostgreSQL/React and connected qualification remain open.
 
-[Implementation and commands](docs/RETURN-RESOLUTION.md) ·
-[Current review](docs/RETURN-RESOLUTION-REVIEW.md) ·
-[Delegated authority](docs/decisions/0022-mixed-return-resolution.md).
+[Implementation and commands](docs/RETURN-FULFILLMENT.md) ·
+[Current review](docs/RETURN-FULFILLMENT-REVIEW.md) ·
+[Delegated authority](docs/decisions/0023-return-fulfillment-and-carrier-lifecycle.md).
 Local integration does not imply full goal or milestone qualification.
 
 ## Start
@@ -217,3 +216,9 @@ The headless demo uses two isolated in-memory databases, original paid amounts,
 one-use approvals and source-bound reconciliation. No model or external call is
 needed. See [the guide](docs/RETURN-RESOLUTION.md) for the authenticated endpoints
 and explicitly unsupported financial and inventory operations.
+
+For the new headless, in-memory inventory/carrier demonstration:
+
+```sh
+node --experimental-strip-types tools/demo-return-fulfillment.mts
+```

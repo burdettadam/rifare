@@ -1,3 +1,4 @@
+import { FULFILLMENT_ACTIONS,fulfillmentGatewayQuote,commitFulfillment } from './return-fulfillment-core.mts';
 import { RESOLVE_ACTION } from './resolution-ledger.mts';
 import { resolutionGatewayQuote,commitResolution } from './refund-quotes.mts';
 import { INTAKE_ACTION } from './return-eligibility.mts';
@@ -33,11 +34,13 @@ export class ActionGateway {
     const r=this.#k.db.prepare('SELECT revision,resolution,amount_minor,currency FROM commerce_case_effects WHERE tenant_id=? AND store_id=? AND case_id=?').get(s.tenant_id,s.store_id,c.id) as Row;
     return {case_id:c.id,...(r??{revision:0,resolution:'none',amount_minor:'0',currency:null}),effect:'local_case_plan_only',financial_effect:false};}
   #proposal(input:unknown){const p=exact(jsonValue(input),['case_id','action','arguments']);id(p.case_id);
+    if(Object.values(FULFILLMENT_ACTIONS).includes(p.action)){const a=exact(p.arguments,['quote_id','quote_digest']);id(a.quote_id);if(typeof a.quote_digest!=='string'||!/^[a-f0-9]{64}$/.test(a.quote_digest))throw new Error('INVALID_INPUT');return p;}
     if(p.action===RESOLVE_ACTION){const a=exact(p.arguments,['quote_id','quote_digest']);id(a.quote_id);if(typeof a.quote_digest!=='string'||!/^[a-f0-9]{64}$/.test(a.quote_digest))throw new Error('INVALID_INPUT');return p;}
     if(p.action===INTAKE_ACTION){const a=exact(p.arguments,['quote_id','quote_digest','override_id']);id(a.quote_id);if(typeof a.quote_digest!=='string'||!/^[a-f0-9]{64}$/.test(a.quote_digest))throw new Error('INVALID_INPUT');if(a.override_id!==null)id(a.override_id);return p;}
     if(p.action!=='diagnostic.resolution.set')throw new Error('UNSUPPORTED_ACTION');
     const a=exact(p.arguments,['resolution']);if(!['none','refund','exchange'].includes(a.resolution))throw new Error('INVALID_INPUT');return p;}
   #quote(scope:Scope,p:Row,quotedAt:number){
+    if(Object.values(FULFILLMENT_ACTIONS).includes(p.action))return fulfillmentGatewayQuote(this.#k,scope,p,quotedAt);
     if(p.action===RESOLVE_ACTION)return resolutionGatewayQuote(this.#k,scope,p,quotedAt);
     if(p.action===INTAKE_ACTION)return returnGatewayQuote(this.#k,scope,p,quotedAt);
     const k=this.#k,c=this.cases.resume(scope,p.case_id),s=k.require(scope),verified=this.cases.verified(scope,p.case_id),effect=this.state(scope,p.case_id);
@@ -116,15 +119,16 @@ export class ActionGateway {
       const receiptId='receipt_'+token().slice(0,32);
       const returnId=q.action===INTAKE_ACTION?commitReturnRequest(k,s,{...q,preview_id:r.id},receiptId):null;
       const resolutionId=q.action===RESOLVE_ACTION?commitResolution(k,s,q,receiptId):null;
-      if(q.action!==INTAKE_ACTION&&q.action!==RESOLVE_ACTION)k.db.prepare(`INSERT INTO commerce_case_effects VALUES(?,?,?,?,?,?,?) ON CONFLICT(tenant_id,store_id,case_id)
+      const fulfillmentId=Object.values(FULFILLMENT_ACTIONS).includes(q.action)?commitFulfillment(k,s,q,receiptId):null;
+      if(q.action!==INTAKE_ACTION&&q.action!==RESOLVE_ACTION&&!fulfillmentId)k.db.prepare(`INSERT INTO commerce_case_effects VALUES(?,?,?,?,?,?,?) ON CONFLICT(tenant_id,store_id,case_id)
         DO UPDATE SET revision=excluded.revision,resolution=excluded.resolution,amount_minor=excluded.amount_minor,currency=excluded.currency`)
         .run(s.tenant_id,s.store_id,q.case_id,q.effect_version+1,q.arguments.resolution,q.amount.minor,q.amount.currency);
       const receipt={id:receiptId,case_id:q.case_id,preview_id:r.id,preview_digest:r.digest,approval_id:a.id,
         configuration_digest:q.configuration_digest,case_revision:q.case_revision,resource_version:q.resource_version,actor_id:s.actor_id,
-        authority_revision:permissionDecision(k.db,s,'action.execute',q.resource_id).authority_revision,effect:returnId?'local_return_request_only':resolutionId?'synthetic_resolution_authorized':'local_case_plan_only',
-        ...(returnId?{return_request_id:returnId}:{}),...(resolutionId?{resolution_operation_id:resolutionId}:{}),resolution:returnId?'return_requested':resolutionId?'resolution_authorized':q.arguments.resolution,amount:q.amount,effect_revision:q.effect_version+1,financial_effect:false,approval_consumed:true,completed_at:k.clock()};
+        authority_revision:permissionDecision(k.db,s,'action.execute',q.resource_id).authority_revision,effect:returnId?'local_return_request_only':resolutionId?'synthetic_resolution_authorized':fulfillmentId?'synthetic_fulfillment_authorized':'local_case_plan_only',
+        ...(returnId?{return_request_id:returnId}:{}),...(resolutionId?{resolution_operation_id:resolutionId}:{}),...(fulfillmentId?{fulfillment_operation_id:fulfillmentId}:{}),resolution:returnId?'return_requested':resolutionId?'resolution_authorized':fulfillmentId?'fulfillment_authorized':q.arguments.resolution,amount:q.amount,effect_revision:q.effect_version+1,financial_effect:false,approval_consumed:true,completed_at:k.clock()};
       k.db.prepare('INSERT INTO commerce_action_receipts VALUES(?,?,?,?,?,?,?)').run(s.tenant_id,s.store_id,receipt.id,q.case_id,r.id,canonical(receipt),contentDigest(receipt));
-      if(!returnId&&!resolutionId)recordCaseExecution(k,s,receipt,q);
+      if(!returnId&&!resolutionId&&!fulfillmentId)recordCaseExecution(k,s,receipt,q);
       return receipt;
     });
   }

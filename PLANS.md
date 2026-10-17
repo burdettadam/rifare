@@ -2,22 +2,21 @@
 
 ## Current integrated development
 
-M03-G06 through M03-G10 add mixed outcome allocation, original paid-value refund
-quotations, synthetic refund execution/reconciliation, native-credit fixtures and
-variant exchange quotes. Read [the guide](docs/RETURN-RESOLUTION.md) and
-[review](docs/RETURN-RESOLUTION-REVIEW.md). All earlier source, tests, model-neutral
+M03-G11 through M03-G15 add replacement reservations, approved replacement orders,
+rate previews/purchase, independent label lifecycle/reimbursement, and carrier
+tracking. Read [the guide](docs/RETURN-FULFILLMENT.md) and
+[review](docs/RETURN-FULFILLMENT-REVIEW.md). Existing source, tests, provider-neutral
 interfaces and benchmark contracts remain in place.
 
 ## Remaining qualification and next work
 
-M02-G99 and target-stack qualification remain blocked. SQLite and separate native
-source fixtures do not establish live financial authority, PostgreSQL/React behavior
-or production security/privacy. The next goal is M03-G11, inventory reservation
-under concurrency. Preserve existing unknown effects and conservative unit claims;
-no changed key, model or repeated request authorizes another effect.
+M02-G99 and target-stack qualification remain blocked. Separate SQLite fixture
+ledgers are not live inventory/carrier/warehouse or settlement evidence. The next
+goal is M03-G16, warehouse receiving. Preserve unknown outcomes and original IDs;
+no changed key, model, agent or repeated request authorizes another effect.
 
 ## Source of truth
 
 Original planning JSON and test specifications retain their meaning. Work records
-are separate from acceptance assertions. Use ordinary Git and the existing project
+are separate from acceptance assertions. Use ordinary Git and existing project
 commands and skills; no mandatory model or scheduler is introduced.

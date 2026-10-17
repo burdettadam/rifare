@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "schema_digest": "afeff2cb22c68ccbbe30c1fa91981090766dc1e978e16c3acea05711129c66b9",
+  "schema_digest": "9fba61408a17f59e2e59926e467e5af071dae58e968bd1f1f79526a427e8d25a",
   "tables": [
     {
       "name": "commerce_action_approvals",
@@ -94,6 +94,20 @@
         "operation",
         "decision",
         "observed_at"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_carrier_events",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "event_id",
+        "label_id",
+        "source_version",
+        "body",
+        "digest",
+        "received_at"
       ],
       "handling": "configuration_or_minimized_audit"
     },
@@ -362,6 +376,81 @@
         "changed_at"
       ],
       "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_fulfillment_observations",
+      "columns": [
+        "seq",
+        "tenant_id",
+        "store_id",
+        "operation_id",
+        "stage",
+        "body",
+        "digest",
+        "observed_at"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_fulfillment_operations",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "case_id",
+        "resource_id",
+        "kind",
+        "obligation",
+        "quote_id",
+        "receipt_id",
+        "state",
+        "command",
+        "digest",
+        "native_id"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_fulfillment_quotes",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "case_id",
+        "resource_id",
+        "kind",
+        "obligation",
+        "body",
+        "digest"
+      ],
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_fulfillment_settings",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "revision",
+        "body",
+        "digest"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_inventory_reservations",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "allocation_id",
+        "case_id",
+        "resource_id",
+        "generation",
+        "state",
+        "body",
+        "digest"
+      ],
+      "handling": "subject_linked_pseudonymize_and_disable"
     },
     {
       "name": "commerce_knowledge",
@@ -688,6 +777,20 @@
       "handling": "suppression_or_restore_control"
     },
     {
+      "name": "commerce_replacement_orders",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "operation_id",
+        "allocation_id",
+        "native_id",
+        "source_version",
+        "body",
+        "digest"
+      ],
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
       "name": "commerce_resolution_allocations",
       "columns": [
         "tenant_id",
@@ -852,6 +955,25 @@
       "handling": "subject_linked_blob_erase_and_expire"
     },
     {
+      "name": "commerce_return_labels",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "operation_id",
+        "request_id",
+        "case_id",
+        "resource_id",
+        "generation",
+        "replaces",
+        "replaced_by",
+        "source_version",
+        "body",
+        "digest"
+      ],
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
       "name": "commerce_return_overrides",
       "columns": [
         "tenant_id",
@@ -866,6 +988,20 @@
         "revoked"
       ],
       "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_return_parcels",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "request_id",
+        "case_id",
+        "resource_id",
+        "revision",
+        "body",
+        "digest"
+      ],
+      "handling": "subject_linked_pseudonymize_and_disable"
     },
     {
       "name": "commerce_return_quotes",
@@ -924,6 +1060,17 @@
         "revision",
         "body",
         "digest"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_return_shipments",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "request_id",
+        "generation",
+        "current_label_id"
       ],
       "handling": "configuration_or_minimized_audit"
     },
