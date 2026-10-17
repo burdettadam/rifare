@@ -8,6 +8,7 @@ import { CaseConfigurations } from './case-configurations.mts';
 import { assertExecution } from './execution-stops.mts';
 import { evidenceReviewState } from './return-intake-core.mts';
 import { assertGiftOutcome } from './gift-proof.mts';
+import { assertExchangeMoneySupported } from './exchange-currency.mts';
 
 /** Additional payment and residual value use the existing approval/operation ledger. */
 export function exchangeFinanceQuote(k:CommerceKernel,scope:Scope,input:unknown,quotedAt:number,exclude:string|null=null){
@@ -15,6 +16,7 @@ export function exchangeFinanceQuote(k:CommerceKernel,scope:Scope,input:unknown,
  if(!['additional_payment','refund','store_credit'].includes(p.outcome))throw new Error('EXCHANGE_FINANCE_OUTCOME_UNSUPPORTED');
  const q=new VariantExchanges(k).validateForFinance(scope,{quote_id:p.exchange_quote_id,quote_digest:p.exchange_quote_digest},exclude??undefined),{s,a,b,c,plan}=allocationContext(k,scope,q.allocation_id),f=financialFacts(k,c),settings=resolutionSettings(k,s),proof=new CaseConfigurations(k).verified(scope,c.id);
  const gift=assertGiftOutcome(k,scope,c.id,p.outcome,[b]);
+ assertExchangeMoneySupported(k,s,a.id);
  assertAllocationSource(f,b);
  if(f.bundle_allocations&&settings.bundle_policy!=='preserve_original_paid')throw new Error('BUNDLE_POLICY_UNAPPROVED');
  const delta=BigInt(q.balance_minor),amount=delta<0n?-delta:delta,original=minor(q.available_exchange_value_minor);

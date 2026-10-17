@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "qualification": "hand_calculated_synthetic_oracle_not_connected_evidence",
+  "rule": "preserve_original_native_component_allocations",
+  "currencies": {"shop": "USD", "presentment": "EUR"},
+  "original_rate": {"numerator": "9", "denominator": "10", "reference": "original-rate-2026"},
+  "later_rate": {"numerator": "11", "denominator": "10", "reference": "later-rate-2026"},
+  "order": {
+    "shop_original_minor": "8740", "shop_prior_minor": "1940",
+    "presentment_original_minor": "7866", "presentment_prior_minor": "1746",
+    "shop_available_minor": "6800", "presentment_available_minor": "6120"
+  },
+  "unit_components": {
+    "alpha": {
+      "shop": {"gross_minor": "2000", "discount_minor": "200", "tax_minor": "100", "shipping_minor": "30", "duties_minor": "10", "paid_minor": "1940"},
+      "presentment": {"gross_minor": "1800", "discount_minor": "180", "tax_minor": "90", "shipping_minor": "27", "duties_minor": "9", "paid_minor": "1746"}
+    },
+    "beta": {
+      "shop": {"gross_minor": "1000", "discount_minor": "100", "tax_minor": "50", "shipping_minor": "10", "duties_minor": "0", "paid_minor": "960"},
+      "presentment": {"gross_minor": "900", "discount_minor": "90", "tax_minor": "45", "shipping_minor": "9", "duties_minor": "0", "paid_minor": "864"}
+    },
+    "gamma": {
+      "shop": {"gross_minor": "1000", "discount_minor": "0", "tax_minor": "0", "shipping_minor": "0", "duties_minor": "0", "paid_minor": "1000"},
+      "presentment": {"gross_minor": "900", "discount_minor": "0", "tax_minor": "0", "shipping_minor": "0", "duties_minor": "0", "paid_minor": "900"}
+    }
+  },
+  "partial_return": {
+    "line_id": "alpha", "units": [2],
+    "shop_refund_minor": "1940", "presentment_refund_minor": "1746",
+    "wrong_current_conversion_minor": "2134",
+    "shop_duties_minor": "10", "presentment_duties_minor": "9"
+  },
+  "fees": {
+    "estimate": {
+      "shop": {"restocking_minor": "180", "return_shipping_minor": "34", "tax_minor": "3"},
+      "presentment": {"restocking_minor": "162", "return_shipping_minor": "31", "tax_minor": "3"},
+      "shop_refund_minor": "1723", "presentment_refund_minor": "1550"
+    },
+    "final": {
+      "shop": {"restocking_minor": "180", "return_shipping_minor": "34", "tax_minor": "4"},
+      "presentment": {"restocking_minor": "162", "return_shipping_minor": "31", "tax_minor": "4"},
+      "shop_refund_minor": "1722", "presentment_refund_minor": "1549"
+    },
+    "delta_minor": {"shop": "1", "presentment": "1"},
+    "arithmetic": "USD: 1940 - 180 - 34 - 3 = 1723; final tax 4 gives 1722. EUR: 1746 - 162 - 31 - 3 = 1550; final tax 4 gives 1549. All native fee/tax pairs are independently specified; no current FX conversion derives them."
+  }
+}

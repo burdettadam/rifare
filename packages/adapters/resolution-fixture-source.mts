@@ -4,11 +4,13 @@ import type { Row } from '../commerce/kernel.mts';
 import { canonical,contentDigest,jsonValue } from '../commerce/configuration-values.mts';
 import { minor } from '../commerce/resolution-ledger.mts';
 import { money,allocateMoney } from '../commerce/money.mts';
+import { ExchangeMoneyFixtureSource } from './exchange-money-fixture-source.mts';
+import { assertLineageResolution } from './exchange-lineage-source-guards.mts';
 
 /** A separately persisted synthetic authority, not a live payment connector. */
 export class ResolutionFixtureSource {
  readonly db:DatabaseSync;readonly identity:string;readonly tenant:string;readonly store:string;readonly qualification='synthetic_only';
- readonly clock:()=>number;
+ readonly clock:()=>number;readonly money:ExchangeMoneyFixtureSource;
  constructor(db:DatabaseSync,options:{mode:'fixture';identity:string;tenant:string;store:string},clock=Date.now){
   exact(options,['mode','identity','tenant','store']);if(options.mode!=='fixture')throw new Error('LIVE_RESOLUTION_DISABLED');
   this.db=db;this.clock=clock;const label=id(options.identity);if(label.length>48)throw new Error('INVALID_INPUT');this.tenant=id(options.tenant);this.store=id(options.store);db.exec('PRAGMA busy_timeout=3000');
@@ -25,6 +27,7 @@ export class ResolutionFixtureSource {
   if(old&&(old.label!==label||old.tenant!==this.tenant||old.store!==this.store))throw new Error('RESOLUTION_SOURCE_MISMATCH');
   this.identity=old?.identity??'source_'+contentDigest([label,token()]).slice(0,40);
   if(!old)db.prepare('INSERT INTO fixture_resolution_identity VALUES(1,?,?,?,?)').run(label,this.identity,this.tenant,this.store);
+  this.money=new ExchangeMoneyFixtureSource(db,{identity:this.identity,tenant:this.tenant,store:this.store},this.clock);
  }
  seed(input:unknown){const p=exact(jsonValue(input),['resource_id','customer_id','payment_id','currency','available_minor']);id(p.resource_id);id(p.customer_id);id(p.payment_id);money(p.currency,p.available_minor);
   this.db.prepare('INSERT INTO fixture_resolution_accounts VALUES(?,?,?,?,?)').run(p.resource_id,p.customer_id,p.payment_id,p.currency,p.available_minor);}
@@ -90,7 +93,7 @@ export class ResolutionFixtureSource {
    if(spent+minor(route.amount_minor)>minor(i.original_paid_minor))throw new Error('INSTRUMENT_BALANCE_EXCEEDED');
   }
  }
- async issue(value:unknown){const raw=jsonValue(value),optional=['exchange_quote_id','exchange_quote_digest','original_value_minor','replacement_variant','replacement_minor','quantity','routes','value_routes','payment_expires_at','credit_beneficiary_id','gift_source_digest','line_id','units'].filter(key=>Object.hasOwn(raw,key));
+ async issue(value:unknown){const raw=jsonValue(value),optional=['exchange_quote_id','exchange_quote_digest','original_value_minor','replacement_variant','replacement_minor','quantity','routes','value_routes','payment_expires_at','credit_beneficiary_id','gift_source_digest','line_id','units','money_terms'].filter(key=>Object.hasOwn(raw,key));
   const p=exact(raw,['operation_id','tenant_id','store_id','resource_id','customer_id','allocation_id','kind','currency','amount_minor','payment_id','native_return_id','source_identity','credit_instrument',...optional]);
   for(const k of ['operation_id','tenant_id','store_id','resource_id','customer_id','allocation_id','payment_id','source_identity'])id(p[k]);
   if(p.tenant_id!==this.tenant||p.store_id!==this.store||p.source_identity!==this.identity||!['refund','store_credit','additional_payment'].includes(p.kind)||minor(p.amount_minor)<=0n)throw new Error('RESOLUTION_SOURCE_MISMATCH');
@@ -102,6 +105,7 @@ export class ResolutionFixtureSource {
   if(p.kind==='additional_payment'){if(!p.exchange_quote_id)throw new Error('EXCHANGE_FINANCE_MISMATCH');integer(p.payment_expires_at);}
   else if(Object.hasOwn(p,'payment_expires_at'))throw new Error('EXCHANGE_FINANCE_MISMATCH');
   this.db.exec('BEGIN IMMEDIATE');try{
+   assertLineageResolution(this.db,p);this.money.assertCommand(p);
    const beneficiary=this.#beneficiary(p);
    const old=this.db.prepare('SELECT * FROM fixture_resolution_effects WHERE operation_id=?').get(p.operation_id) as Row;
    if(old){if(old.digest!==contentDigest(p))throw new Error('SOURCE_IDEMPOTENCY_CONFLICT');this.db.exec('COMMIT');return JSON.parse(old.body);}
