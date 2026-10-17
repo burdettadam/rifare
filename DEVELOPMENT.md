@@ -203,3 +203,11 @@ node --experimental-strip-types tools/demo-assistance.mts anthropic
 Both demonstrations use only synthetic wire fixtures and an in-memory database.
 Actual served-browser qualification is a separate command documented in the guide;
 a host-policy failure is not a skip or passing component result.
+
+## Return resolution diagnostics
+
+Use the existing native runtime and full verification commands. The new module
+contract, golden original-payment fixtures, same-source recovery, bounded calls and
+headless demo are described in [RETURN-RESOLUTION.md](docs/RETURN-RESOLUTION.md).
+The financial source is a separate synthetic database, never a real account. No
+additional package installation or model provider is required.

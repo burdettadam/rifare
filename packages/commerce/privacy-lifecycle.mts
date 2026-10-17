@@ -53,6 +53,7 @@ export function eraseSelected(k:CommerceKernel,s:Row,ids:string[],hash:string,at
     if(cases.length) {
       const cargs=[t,st,...cases],cm=where(cases);
       k.db.prepare(`UPDATE commerce_return_evidence SET state='erased',bytes=NULL,note='',scanner=NULL WHERE tenant_id=? AND store_id=? AND case_id IN (${cm})`).run(...cargs);
+      for(const table of ['commerce_resolution_plans','commerce_resolution_allocations','commerce_resolution_quotes','commerce_exchange_quotes'])scrubRecord(k,table,t,st,cases,'case_id');
       scrubRecord(k,'commerce_return_quotes',t,st,cases,'case_id');scrubRecord(k,'commerce_return_requests',t,st,cases,'case_id');
       k.db.prepare(`UPDATE commerce_return_overrides SET revoked=1 WHERE tenant_id=? AND store_id=? AND quote_id IN (SELECT id FROM commerce_return_quotes WHERE tenant_id=? AND store_id=? AND case_id IN (${cm}))`).run(t,st,...cargs);
       k.db.prepare(`UPDATE commerce_worker_grants SET revoked=1 WHERE tenant_id=? AND store_id=? AND case_id IN (${cm})`).run(...cargs);
@@ -100,6 +101,7 @@ export class PrivacyLifecycle {
         tasks,assistance:all(k,'commerce_assistance_receipts',s.tenant_id,s.store_id).filter(r=>tasks.some(t=>t.id===r.task_id)),
         return_evidence:all(k,'commerce_return_evidence',s.tenant_id,s.store_id).filter(r=>ids.includes(r.resource_id)).map(r=>({...r,bytes:r.bytes?Buffer.from(r.bytes).toString('base64'):null})),
         return_requests:all(k,'commerce_return_requests',s.tenant_id,s.store_id).filter(r=>ids.includes(r.resource_id)),
+        resolution_records:Object.fromEntries(['commerce_resolution_plans','commerce_resolution_allocations','commerce_resolution_quotes','commerce_resolution_operations','commerce_resolution_observations','commerce_exchange_quotes'].map(table=>[table,all(k,table,s.tenant_id,s.store_id).filter(r=>ids.includes(r.resource_id))])),
         return_quotes:all(k,'commerce_return_quotes',s.tenant_id,s.store_id).filter(r=>ids.includes(r.resource_id)),
         cases,configurations:all(k,'commerce_case_configurations',s.tenant_id,s.store_id).filter(r=>caseIds.includes(r.case_id)),
         previews:all(k,'commerce_action_previews',s.tenant_id,s.store_id).filter(r=>caseIds.includes(r.case_id)),operations,audit_receipts:receipts,

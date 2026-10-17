@@ -3,19 +3,19 @@
 Merchant-owned commerce operations with tailorable skills and independently
 replaceable platforms, agents and models.
 
-**Current checkpoint: fifty commerce goals have local diagnostic implementations.**
-The latest five add item-level return eligibility, quarantined evidence, a branded
-customer portal, bounded reviewer overrides, and native-return fixture records.
-Requests share current server authority and exact-preview approval; estimates do
-not issue refunds. Unknown native outcomes cannot be blindly retried.
+**Current checkpoint: fifty-five commerce goals have local diagnostic implementations.**
+The latest five add mixed outcome allocations, original-value refund quotes,
+source-bound refund recovery, native-instrument credit fixtures and stock-aware
+variant quotations. Refund acceptance is not settlement. Exchange quotations do
+not reserve stock. Unknown effects cannot be blindly retried.
 
 **This is still the SQLite diagnostic implementation.** PostgreSQL/React, live
-platform/model, qualified malware scanning and actual served-browser qualification
-remain open. No live refund, payment, shipment or shop mutation is enabled.
+platform/model and actual served-browser qualification remain open. No live
+refund, payment, credit, shipment or shop mutation is enabled.
 
-[Implementation and commands](docs/RETURN-INTAKE.md) ·
-[Current review](docs/RETURN-INTAKE-REVIEW.md) ·
-[Delegated authority](docs/decisions/0021-item-return-intake.md).
+[Implementation and commands](docs/RETURN-RESOLUTION.md) ·
+[Current review](docs/RETURN-RESOLUTION-REVIEW.md) ·
+[Delegated authority](docs/decisions/0022-mixed-return-resolution.md).
 Local integration does not imply full goal or milestone qualification.
 
 ## Start
@@ -167,8 +167,8 @@ M01-G15 are implemented for local diagnostic integration, not full qualification
 ## Immediate engineering priority
 
 Resume **M00-G05** from this `main`: implement and install the target React/PostgreSQL
-stack, then extend M00-G06 to the actually served application. Preserve the existing
-830 diagnostic and commerce tests. Do not add more governance machinery merely to postpone
+stack, then extend M00-G06 to the actually served application. Preserve the entire registered
+diagnostic and commerce regression inventory. Do not add more governance machinery merely to postpone
 this implementation. The [qualification guide](docs/M00-QUALIFICATION.md) separates
 these engineering gaps from the completed local integration review.
 
@@ -206,3 +206,14 @@ file. Unknown outcomes can be reconciled without resending. No live credential,
 provider, message or payment effect is configured. Ctrl-C removes the temporary
 session file and stops only that instance. The browser checks are component/API
 bridge tests, not direct served-browser or React qualification.
+
+## Mixed refund, credit and exchange diagnostic
+
+```sh
+node --experimental-strip-types tools/demo-return-resolution.mts
+```
+
+The headless demo uses two isolated in-memory databases, original paid amounts,
+one-use approvals and source-bound reconciliation. No model or external call is
+needed. See [the guide](docs/RETURN-RESOLUTION.md) for the authenticated endpoints
+and explicitly unsupported financial and inventory operations.
