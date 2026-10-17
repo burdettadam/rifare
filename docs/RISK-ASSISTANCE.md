@@ -14,6 +14,12 @@ conflict between an order evidence flag and a scanner result, a changed order,
 an unavailable selected quantity, or missing evidence under the pinned policy.
 These observations do not establish intent or a fraud probability.
 
+The quote's policy and complete configuration digest must match the current case
+pins. Migrating either the policy or profile requires a fresh return quote before
+another assessment; an old quote produces `RISK_CONFIGURATION_CHANGED` without
+writing an assessment. Existing assessments remain readable with their original
+policy, decision and configuration provenance after migration.
+
 The reviewer can request evidence, dismiss an unsupported indicator, or invoke
 the existing bounded return-window override. Evidence requests and window
 overrides delegate to `ReturnReview` with its normal permissions, separate

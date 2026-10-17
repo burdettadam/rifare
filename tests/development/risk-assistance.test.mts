@@ -139,3 +139,44 @@ test('M06-RISK-14 assistance never creates a business receipt or unsupported den
   assert.equal(f.db.prepare('SELECT count(*) n FROM commerce_order_edits').get().n, 0);
   assert.equal(contentDigest(x.report.assessment.policy.rules), contentDigest(f.cases.inspect(f.a.scope, 'case_one').pins.policy.body.rules));
 }));
+test('M06-RISK-15 a migrated policy cannot relabel an old decision and historical provenance remains intact', () => usingReturns(f => {
+  const service = new RiskAssistance(f.kernel), oldQuote = f.quote();
+  const historical = service.assess(f.a.scope, { case_id: 'case_one', quote_id: oldQuote.id, model: null });
+  assert.equal(oldQuote.quote.decision.decision, 'allow');
+  assert.deepEqual(historical.assessment.policy.rules.outcomes, ['exchange', 'refund']);
+  f.advance(1);
+  const replacement = f.publish({ expected_version: 1, rules: { window_days: 1, require_evidence: true,
+    excluded_tags: ['final-sale'], outcomes: ['store_credit'] } });
+  const migrated = f.cases.migrate(f.owner.scope, 'case_one', { expected_revision: 1, profile_id: 'default',
+    policy_id: 'returns', reason: 'approved_update' });
+  assert.notEqual(replacement.digest, oldQuote.quote.policy_digest);
+  assert.notEqual(migrated.configuration_digest, oldQuote.quote.configuration_digest);
+  assert.throws(() => service.assess(f.a.scope, { case_id: 'case_one', quote_id: oldQuote.id, model: null }), /RISK_CONFIGURATION_CHANGED/);
+  assert.equal(f.db.prepare('SELECT count(*) n FROM commerce_risk_assessments').get().n, 1);
+  const retained = service.read(f.a.scope, { case_id: 'case_one', assessment_id: historical.assessment_id });
+  assert.equal(retained.digest, historical.digest);
+  assert.deepEqual(retained.assessment, historical.assessment);
+  assert.equal(retained.current_policy_digest, replacement.digest);
+  const fresh = f.quote({ outcome: 'store_credit' });
+  const assessed = service.assess(f.a.scope, { case_id: 'case_one', quote_id: fresh.id, model: null });
+  assert.equal(assessed.assessment.configuration_digest, fresh.quote.configuration_digest);
+  assert.equal(assessed.assessment.policy.digest, fresh.quote.policy_digest);
+  assert.deepEqual(assessed.assessment.policy.rules.outcomes, ['store_credit']);
+  assert.deepEqual(assessed.assessment.policy.decision_at_quote, fresh.quote.decision);
+  assert.equal(f.db.prepare('SELECT count(*) n FROM commerce_action_receipts').get().n, 0);
+}));
+test('M06-RISK-16 profile-only case migration also requires a current quote without rewriting history', () => usingReturns(f => {
+  const service = new RiskAssistance(f.kernel), oldQuote = f.quote();
+  const historical = service.assess(f.a.scope, { case_id: 'case_one', quote_id: oldQuote.id, model: null });
+  f.reads.profiles.put(f.a.scope, f.profile(f.a, { revision: 2, tone: 'warm' }));
+  const migrated = f.cases.migrate(f.a.scope, 'case_one', { expected_revision: 1, profile_id: 'default',
+    policy_id: 'returns', reason: 'approved_update' });
+  assert.equal(migrated.pins.policy.digest, oldQuote.quote.policy_digest);
+  assert.notEqual(migrated.configuration_digest, oldQuote.quote.configuration_digest);
+  assert.throws(() => service.assess(f.a.scope, { case_id: 'case_one', quote_id: oldQuote.id, model: null }), /RISK_CONFIGURATION_CHANGED/);
+  assert.equal(f.db.prepare('SELECT count(*) n FROM commerce_risk_assessments').get().n, 1);
+  assert.deepEqual(service.read(f.a.scope, { case_id: 'case_one', assessment_id: historical.assessment_id }).assessment, historical.assessment);
+  const fresh = f.quote(), current = service.assess(f.a.scope, { case_id: 'case_one', quote_id: fresh.id, model: null });
+  assert.equal(current.assessment.configuration_digest, migrated.configuration_digest);
+  assert.deepEqual(current.assessment.policy.decision_at_quote, historical.assessment.policy.decision_at_quote);
+}));

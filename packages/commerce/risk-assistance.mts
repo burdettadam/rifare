@@ -49,6 +49,9 @@ export class RiskAssistance {
       assertCaseWorkerScope(k, scope, c.id);
       const q = quoteRow(k, scope, id(p.quote_id));
       if (q.case_id !== c.id || q.resource_id !== c.resource_id) throw new Error('RISK_SOURCE_MISMATCH');
+      // A historical quote decision must not be represented as a decision under newer case pins.
+      if (q.quote.configuration_digest !== c.configuration_digest || q.quote.policy_digest !== c.pins.policy.digest)
+        throw new Error('RISK_CONFIGURATION_CHANGED');
       const selected = q.quote.selection, uploads = evidenceRows(k, s, c.id, selected.evidence_ids);
       const lines = sourceReturnLines(c.order), indicators: Row[] = [];
       const source = {
