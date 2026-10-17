@@ -1,4 +1,5 @@
 import { assertExchangeMoneySupported } from './exchange-currency.mts';
+import { qualifiedDestinationPin } from './qualified-return-destinations.mts';
 import { instantSettlement } from './instant-exchanges.mts';
 import { exchangeLineagePin } from './exchange-lineage.mts';
 import { assertReturnWritable } from './return-lifecycle-core.mts';
@@ -84,8 +85,10 @@ export function fulfillmentValue(k:CommerceKernel,scope:Scope,kind:string,intent
   const settings=fulfillmentSettings(k,ctx.s);if(rate.account_id!==settings.account_id||rate.source_identity!==settings.source_identity||rate.tenant_id!==ctx.s.tenant_id||rate.store_id!==ctx.s.store_id)throw new Error('RATE_CHANGED');
   const {rate_id,...rateBody}=rate;if(rate_id!=='rate_'+contentDigest(rateBody).slice(0,40))throw new Error('RATE_CHANGED');
   minor(rate.amount_minor);money(rate.currency,rate.amount_minor);
-  details={parcel_digest:p.digest,parcel_revision:p.revision,service:p.parcel.service,address_revision:p.parcel.address_revision,package:p.parcel.package,from_address_ref:p.parcel.from_address_ref,to_address_ref:p.parcel.to_address_ref,rate,generation,replaces:intent.replaces};
-  amount=rate.amount_minor;currency=rate.currency;obligation=p.request_id+'_label_'+generation;expiry=Math.min(expiry,rate.expires_at);
+  const route=qualifiedDestinationPin(k,scope,ctx,p,rate);
+  details={parcel_digest:p.digest,parcel_revision:p.revision,service:p.parcel.service,address_revision:p.parcel.address_revision,package:p.parcel.package,from_address_ref:p.parcel.from_address_ref,to_address_ref:p.parcel.to_address_ref,rate,generation,replaces:intent.replaces,
+   ...(route?{return_destination:route,route_cost_estimate:{carrier_charge_minor:rate.amount_minor,handling_fee_estimate_minor:route.handling_fee_estimate_minor,total_minor:(minor(rate.amount_minor)+minor(route.handling_fee_estimate_minor)).toString(),currency:rate.currency,handling_charged:false}}: {})};
+  amount=rate.amount_minor;currency=rate.currency;obligation=p.request_id+'_label_'+generation;expiry=Math.min(expiry,rate.expires_at,route?.expires_at??Number.MAX_SAFE_INTEGER);
  }else{
   exact(intent,['label_id']);const l=labelRow(k,scope,intent.label_id);ctx=fulfillmentContext(k,scope,l.case_id,l.request_id,true,true);
   if(l.label.tracking_state!=='label_created'||l.label.void_state!=='not_requested'||l.replaced_by)throw new Error('VOID_UNAVAILABLE');
