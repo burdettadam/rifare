@@ -1,0 +1,147 @@
+{
+  "version": 1,
+  "base_schema_digest": "db2020a0acfbfafff826368c53fd8d0f3f4dee597b5547fae01d0bbaf0414f8a",
+  "schema_digest": "41e92a1cf3d51f8ba30be6cff31c5e8f382b5b5d624bcf546a3734f9d43fc3e1",
+  "tables": [
+    {
+      "name": "commerce_exchange_currency_bindings",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "allocation_id",
+        "case_id",
+        "resource_id",
+        "request_id",
+        "revision",
+        "source_identity",
+        "body",
+        "digest",
+        "observed_at"
+      ],
+      "handling": "retained_minimized_business_audit"
+    },
+    {
+      "name": "commerce_exchange_fee_observations",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "allocation_id",
+        "case_id",
+        "resource_id",
+        "request_id",
+        "event_id",
+        "phase",
+        "revision",
+        "source_identity",
+        "body",
+        "digest",
+        "observed_at"
+      ],
+      "handling": "retained_minimized_business_audit"
+    },
+    {
+      "name": "commerce_exchange_lineage_imports",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "operation_id",
+        "case_id",
+        "resource_id",
+        "state",
+        "node_id"
+      ],
+      "handling": "retained_minimized_business_audit"
+    },
+    {
+      "name": "commerce_exchange_lineage_nodes",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "resource_id",
+        "parent_resource_id",
+        "operation_id",
+        "native_order_id",
+        "customer_id",
+        "body",
+        "digest"
+      ],
+      "handling": "retained_minimized_business_audit"
+    },
+    {
+      "name": "commerce_instant_obligations",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "allocation_id",
+        "case_id",
+        "resource_id",
+        "body",
+        "digest"
+      ],
+      "handling": "retained_minimized_business_audit"
+    },
+    {
+      "name": "commerce_instant_observations",
+      "columns": [
+        "seq",
+        "tenant_id",
+        "store_id",
+        "operation_id",
+        "stage",
+        "body",
+        "digest",
+        "observed_at"
+      ],
+      "handling": "retained_minimized_business_audit"
+    },
+    {
+      "name": "commerce_instant_operations",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "obligation_id",
+        "case_id",
+        "resource_id",
+        "kind",
+        "generation",
+        "quote_id",
+        "receipt_id",
+        "state",
+        "command",
+        "digest",
+        "native_id",
+        "observed_at"
+      ],
+      "handling": "retained_minimized_business_audit"
+    },
+    {
+      "name": "commerce_instant_quotes",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "case_id",
+        "resource_id",
+        "kind",
+        "obligation_id",
+        "body",
+        "digest"
+      ],
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_instant_settings",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "revision",
+        "body",
+        "digest"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    }
+  ]
+}

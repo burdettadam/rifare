@@ -1,3 +1,6 @@
+import { lineageHistory } from './exchange-lineage.mts';
+import { feeHistory } from './exchange-fees.mts';
+import { instantHistory } from './instant-exchanges.mts';
 import { exact,id,digest } from './kernel.mts';
 import type { CommerceKernel,Scope,Row } from './kernel.mts';
 import { canonical,contentDigest,jsonValue } from './configuration-values.mts';
@@ -27,8 +30,11 @@ export class ReturnWorkflows {
   const receipt=receiptSummary(k,s,r.id),nativeReceipts=(k.db.prepare('SELECT * FROM commerce_native_receipts WHERE tenant_id=? AND store_id=? AND request_id=? ORDER BY native_id').all(s.tenant_id,s.store_id,r.id) as Row[]).map(lifecycleBody);
   const disposition=k.db.prepare('SELECT id,state,native_id FROM commerce_disposition_operations WHERE tenant_id=? AND store_id=? AND request_id=? ORDER BY id').all(s.tenant_id,s.store_id,r.id);
   const ext=k.db.prepare('SELECT * FROM commerce_native_change_snapshots WHERE tenant_id=? AND store_id=? AND request_id=?').get(s.tenant_id,s.store_id,r.id) as Row,external=ext?lifecycleBody(ext):null;
+  const lineage=lineageHistory(k,s,c.id);if(lineage.unresolved_count&&!block)block='LINEAGE_TRANSFER_UNRESOLVED';
+  const fees=feeHistory(k,s,c.id);if(fees.unresolved_count&&!block)block='FEE_DIFFERENCE_UNRESOLVED';
+  const instant=instantHistory(k,s,c.id);if(instant.unresolved_count&&!block)block='INSTANT_OBLIGATIONS_UNRESOLVED';
   if(receipt.requires_review&&!block)block='RECEIVING_REVIEW_REQUIRED';
-  const stages={authorization:r.state,native_return:nativeRecord?{id:nativeRecord.id,status:nativeRecord.status}:null,receiving:{state:receipt.state,inspection:receipt.inspection,expected_received:receipt.expected_received,total_actual:receipt.total_actual,lines:receipt.lines,requires_review:receipt.requires_review,revision:receipt.revision},native_receipts:nativeReceipts,disposition,resolutions,replacements,labels,closure:closureState(k,s,r.id),external};
+  const stages={...(lineage.imports.length?{lineage}:{}),...(instant.obligations.length?{instant}:{}),...(fees.obligations.length?{fees}:{}),authorization:r.state,native_return:nativeRecord?{id:nativeRecord.id,status:nativeRecord.status}:null,receiving:{state:receipt.state,inspection:receipt.inspection,expected_received:receipt.expected_received,total_actual:receipt.total_actual,lines:receipt.lines,requires_review:receipt.requires_review,revision:receipt.revision},native_receipts:nativeReceipts,disposition,resolutions,replacements,labels,closure:closureState(k,s,r.id),external};
   const source={request_id:r.id,case_id:c.id,case_revision:c.revision,configuration_digest:c.configuration_digest,source_version:c.order.source_version,stages},sourceDigest=contentDigest(source);
   return {...source,workflow:p.workflow,pin,source_digest:sourceDigest,skill:{id:bundle.id,version:bundle.version,digest:bundle.digest,resources:Object.entries(bundle.files).sort(([a],[b])=>a.localeCompare(b)).map(([path,content])=>({path,sha256:digest(content),content,authority:'guidance_only'}))},
    merchant:{tone:c.pins.composition.effective['presentation.tone'],locale:c.pins.composition.effective['presentation.locale'],policy:c.pins.policy.body.rules},allocations:allocations.sort((a,b)=>a.line_id.localeCompare(b.line_id)||a.id.localeCompare(b.id)).map(a=>({id:a.id,line_id:a.line_id,outcome:a.outcome,units:lifecycleBody(a).units})),

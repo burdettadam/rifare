@@ -1,3 +1,4 @@
+import { FulfillmentFixtureSource } from './fulfillment-fixture-source.mts';
 import { randomUUID } from 'node:crypto';
 import type { DatabaseSync } from 'node:sqlite';
 import { exact,id,integer } from '../commerce/kernel.mts';
@@ -25,6 +26,7 @@ function nativeBinding(value:unknown){
 
 /** Separate synthetic native authority. There is no network, card input or live provider mode. */
 export class InstantExchangeFixtureSource {
+ #fulfillments=new Map<string,FulfillmentFixtureSource>();
  readonly db:DatabaseSync;readonly tenant:string;readonly store:string;readonly identity:string;readonly clock:()=>number;
  readonly qualification='synthetic_only';readonly mode='fixture_native';
  fault:'none'|'before'|'after'|'hang'|'malformed'='none';calls={issue:0,lookup:0};
@@ -178,6 +180,11 @@ export class InstantExchangeFixtureSource {
  async lookup(operationId:string){this.calls.lookup++;const r=this.db.prepare('SELECT * FROM fixture_instant_operations WHERE id=?').get(id(operationId)) as Row;return r?this.#read(r):null;}
  verifyResult(command:Row,result:Row){const row=this.db.prepare('SELECT * FROM fixture_instant_operations WHERE id=?').get(id(command.operation_id)) as Row,native=this.#read(row);
   if(native.command_digest!==contentDigest(command)||canonical(native)!==canonical(result))throw new Error('INSTANT_RESULT_MISMATCH');return true;}
+ bindFulfillmentSource(source:FulfillmentFixtureSource){
+  const path=(db:any)=>db.prepare('PRAGMA database_list').all().find((r:Row)=>r.name==='main')?.file;
+  if(!(source instanceof FulfillmentFixtureSource)||source.instantSource!==this||source.db===this.db||path(source.db)&&path(source.db)===path(this.db)||source.tenant!==this.tenant||source.store!==this.store)throw new Error('INSTANT_STOCK_SOURCE_UNQUALIFIED');
+  const old=this.#fulfillments.get(source.identity);if(old&&old!==source&&path(old.db)!==path(source.db))throw new Error('INSTANT_STOCK_SOURCE_UNQUALIFIED');this.#fulfillments.set(source.identity,source);
+ }
  assertReplacement(command:Row,proof:unknown){
   const row=this.db.prepare('SELECT * FROM fixture_instant_obligations WHERE allocation_id=?').get(id(command.allocation_id)) as Row;
   if(!row){if(proof!==null&&proof!==undefined)throw new Error('INSTANT_SOURCE_NOT_FOUND');return null;}
@@ -189,7 +196,7 @@ export class InstantExchangeFixtureSource {
   return expected;
  }
  reserveReplacement(command:Row,proof:unknown){return this.tx(()=>{
-  const binding=this.assertReplacement(command,proof);if(!binding)return null;const o=this.#obligation(binding.obligation_id),old=this.db.prepare('SELECT * FROM fixture_instant_releases WHERE obligation_id=?').get(o.obligation_id) as Row;
+  const binding=this.assertReplacement(command,proof);if(!binding)return null;if(!this.#fulfillments.has(command.source_identity))throw new Error('INSTANT_STOCK_SOURCE_UNQUALIFIED');const o=this.#obligation(binding.obligation_id),old=this.db.prepare('SELECT * FROM fixture_instant_releases WHERE obligation_id=?').get(o.obligation_id) as Row;
   const body={obligation_id:o.obligation_id,operation_id:id(command.operation_id),reservation_id:id(command.reservation_id),command_digest:contentDigest(command),binding_digest:contentDigest(binding)};
   if(old){const b=this.#read(old);if(canonical(b)!==canonical(body))throw new Error('INSTANT_RELEASE_CONFLICT');return {...b,state:old.state};}
   if(this.clock()>=o.trial_deadline_at)throw new Error('INSTANT_TRIAL_ENDED');
@@ -200,6 +207,8 @@ export class InstantExchangeFixtureSource {
   const row=this.db.prepare('SELECT * FROM fixture_instant_obligations WHERE allocation_id=?').get(id(command.allocation_id)) as Row;if(!row){if(proof)throw new Error('INSTANT_SOURCE_NOT_FOUND');return null;}
   const o=this.#read(row),release=this.db.prepare('SELECT * FROM fixture_instant_releases WHERE obligation_id=?').get(o.obligation_id) as Row,b=this.#read(release,'INSTANT_RELEASE_UNCONFIRMED');
   if(canonical(proof)!==canonical(this.#publicBinding(o))||b.operation_id!==command.operation_id||b.reservation_id!==command.reservation_id||b.command_digest!==contentDigest(command)||b.binding_digest!==contentDigest(proof))throw new Error('INSTANT_RELEASE_CONFLICT');
+  const stock=this.#fulfillments.get(command.source_identity),durable=stock?.replacement(command.operation_id),hold=stock?.reservation(command.reservation_id);
+  if(!stock||!durable||!hold||hold.state!=='committed'||canonical(durable)!==canonical(nativeResult))throw new Error('INSTANT_RELEASE_UNCONFIRMED');
   if(nativeResult.state!=='created'||nativeResult.fulfillable!==true||nativeResult.inventory_committed!==true||nativeResult.operation_id!==command.operation_id)throw new Error('INSTANT_RELEASE_UNCONFIRMED');
   id(nativeResult.id);for(const key of Object.keys(command))if(canonical(nativeResult[key])!==canonical(command[key]))throw new Error('INSTANT_RELEASE_CONFLICT');
   this.db.prepare("UPDATE fixture_instant_releases SET state='confirmed' WHERE obligation_id=?").run(o.obligation_id);return {...b,state:'confirmed',native_id:nativeResult.id};

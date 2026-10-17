@@ -12,12 +12,14 @@ export function storageInventory(k:CommerceKernel) {
   const declared=JSON.parse(readFileSync(new URL('./contracts/storage-inventory.v1.json',import.meta.url),'utf8'));
   const extension=JSON.parse(readFileSync(new URL('./contracts/storage-exchange-extension.v1.json',import.meta.url),'utf8'));
   if(extension.base_schema_digest!==declared.schema_digest)throw new Error('STORAGE_INVENTORY_CHANGED');
-  const tables=[...declared.tables,...extension.tables].sort((a:Row,b:Row)=>a.name.localeCompare(b.name));
+  const history=JSON.parse(readFileSync(new URL('./contracts/storage-exchange-history-extension.v1.json',import.meta.url),'utf8'));
+  if(history.base_schema_digest!==extension.schema_digest)throw new Error('STORAGE_INVENTORY_CHANGED');
+  const tables=[...declared.tables,...extension.tables,...history.tables].sort((a:Row,b:Row)=>a.name.localeCompare(b.name));
   if(new Set(tables.map((r:Row)=>r.name)).size!==tables.length)throw new Error('STORAGE_INVENTORY_CHANGED');
   const actual=(k.db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name").all() as Row[])
     .map(r=>({name:r.name,columns:(k.db.prepare('PRAGMA table_info('+r.name+')').all() as Row[]).map(c=>c.name)}));
-  if(contentDigest(actual)!==extension.schema_digest||contentDigest(tables.map((r:Row)=>({name:r.name,columns:r.columns})))!==extension.schema_digest)throw new Error('STORAGE_INVENTORY_CHANGED');
-  return {...declared,tables,schema_digest:extension.schema_digest,base_schema_digest:declared.schema_digest};
+  if(contentDigest(actual)!==history.schema_digest||contentDigest(tables.map((r:Row)=>({name:r.name,columns:r.columns})))!==history.schema_digest)throw new Error('STORAGE_INVENTORY_CHANGED');
+  return {...declared,tables,schema_digest:history.schema_digest,base_schema_digest:declared.schema_digest};
 }
 function event(k:CommerceKernel,s:Row,hash:string,code:string,reason:string) {
   k.db.prepare('INSERT INTO commerce_privacy_events(tenant_id,store_id,subject_hash,event,reason,observed_at) VALUES(?,?,?,?,?,?)').run(s.tenant_id,s.store_id,hash,code,reason,k.clock());
@@ -54,6 +56,7 @@ function eraseCaseData(k:CommerceKernel,s:Row,cases:string[],hash:string) {
       k.db.prepare("UPDATE commerce_support_documents SET state='revoked' WHERE tenant_id=? AND store_id=? AND kind='insight_drafts'").run(t,st);
 
       k.db.prepare(`UPDATE commerce_return_evidence SET state='erased',bytes=NULL,note='',scanner=NULL WHERE tenant_id=? AND store_id=? AND case_id IN (${cm})`).run(...cargs);
+      scrubRecord(k,'commerce_instant_quotes',t,st,cases,'case_id');
       for(const table of ['commerce_inventory_reservations','commerce_return_parcels','commerce_fulfillment_quotes','commerce_return_labels','commerce_resolution_plans','commerce_resolution_allocations','commerce_resolution_quotes','commerce_exchange_quotes'])scrubRecord(k,table,t,st,cases,'case_id');
       const fulfillmentOps=all(k,'commerce_fulfillment_operations',t,st).filter(r=>cases.includes(r.case_id)).map(r=>r.id);
       scrubRecord(k,'commerce_replacement_orders',t,st,fulfillmentOps,'operation_id');
@@ -168,7 +171,9 @@ export class PrivacyLifecycle {
       const order_edit_records=Object.fromEntries(['commerce_edit_snapshots','commerce_edit_inputs','commerce_edit_quotes','commerce_order_edits','commerce_edit_steps','commerce_edit_events'].map(table=>[table,all(k,table,s.tenant_id,s.store_id).filter(r=>ids.includes(r.resource_id)||editIds.includes(r.edit_id))]));
       const support_links=all(k,'commerce_support_links',s.tenant_id,s.store_id).filter(r=>caseIds.includes(r.case_id)),supportLinkIds=support_links.map(r=>r.id);
       const support_records={links:support_links,contacts:all(k,'commerce_support_contacts',s.tenant_id,s.store_id).filter(r=>supportLinkIds.includes(r.link_id)),...Object.fromEntries(['commerce_support_messages','commerce_support_attempts','commerce_support_deliveries','commerce_support_completions','commerce_support_costs','commerce_support_rule_jobs'].map(table=>[table,all(k,table,s.tenant_id,s.store_id).filter(r=>caseIds.includes(r.case_id)).map(r=>{const copy={...r};delete copy.owner_session_hash;return copy;})]))};
-      const result={support_records,order_edit_records,gift_returns:gifts,schema_version:1,tenant_id:s.tenant_id,store_id:s.store_id,subject_ref:subjectHash(s.tenant_id,s.store_id,customer),
+      const instantOps=all(k,'commerce_instant_operations',s.tenant_id,s.store_id).filter(subjectRecord),instantIds=instantOps.map(r=>r.id);
+      const exchange_history_records={...Object.fromEntries(['commerce_exchange_lineage_nodes','commerce_exchange_lineage_imports','commerce_exchange_currency_bindings','commerce_exchange_fee_observations','commerce_instant_quotes','commerce_instant_obligations'].map(table=>[table,all(k,table,s.tenant_id,s.store_id).filter(subjectRecord)])),commerce_instant_operations:instantOps,commerce_instant_observations:all(k,'commerce_instant_observations',s.tenant_id,s.store_id).filter(r=>instantIds.includes(r.operation_id))};
+      const result={exchange_history_records,support_records,order_edit_records,gift_returns:gifts,schema_version:1,tenant_id:s.tenant_id,store_id:s.store_id,subject_ref:subjectHash(s.tenant_id,s.store_id,customer),
         resources:rs.map(r=>k.project(r)),attachments:all(k,'commerce_attachments',s.tenant_id,s.store_id).filter(subjectRecord).map(r=>({id:r.id,resource_id:r.resource_id,content:JSON.parse(r.content)})),
         knowledge:all(k,'commerce_knowledge',s.tenant_id,s.store_id).filter(subjectRecord),
         tasks,assistance:all(k,'commerce_assistance_receipts',s.tenant_id,s.store_id).filter(r=>tasks.some(t=>t.id===r.task_id)),

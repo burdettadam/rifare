@@ -22,8 +22,11 @@ export function availableValue(k:CommerceKernel,s:Row,resource:string,f:Row,excl
  // A zero-balance exchange uses the same original paid ceiling even though it
  // has no payment operation. A financed exchange is counted only once above.
  const replacements=k.db.prepare("SELECT * FROM commerce_fulfillment_operations WHERE tenant_id=? AND store_id=? AND resource_id=? AND kind='replacement' AND state!='rejected'").all(s.tenant_id,s.store_id,resource) as Row[];
- for(const r of replacements)if(!rows.some(op=>op.allocation_id===r.obligation)){
-  const command=JSON.parse(r.command);if(contentDigest(command)!==r.digest)throw new Error('FULFILLMENT_INTEGRITY');reserved+=minor(command.original_value_minor??command.exchange_value_minor);
+ for(const r of replacements){
+  const command=JSON.parse(r.command);if(contentDigest(command)!==r.digest)throw new Error('FULFILLMENT_INTEGRITY');
+  const financed=rows.some(op=>op.allocation_id===r.obligation),lineage=command.exchange_lineage;
+  if(!financed)reserved+=minor(lineage?.parent_paid_minor??command.original_value_minor??command.exchange_value_minor);
+  else if(lineage)reserved+=minor(lineage.parent_paid_minor)-minor(lineage.entitlement_minor);
  }
  const remaining=minor(f.original_paid_minor)-minor(f.prior_refunded_minor)-reserved;
  if(remaining<0n)throw new Error('REFUND_BALANCE_CONFLICT');return remaining;

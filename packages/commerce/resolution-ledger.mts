@@ -1,3 +1,4 @@
+import { assertLineageFacts } from './exchange-lineage-guards.mts';
 import { assertReturnWritable,assertResolutionReceipt } from './return-lifecycle-core.mts';
 import { exact,id,integer,token } from './kernel.mts';
 import type { CommerceKernel,Scope,Row } from './kernel.mts';
@@ -16,7 +17,7 @@ export const minor=(x:unknown)=>{if(typeof x!=='string'||!/^(0|[1-9][0-9]{0,23})
 const amounts=['gross_minor','discount_minor','tax_minor','shipping_minor','duties_minor'];
 export function checkedBody(row:Row|undefined,code='RESOLUTION_INTEGRITY') {if(!row)throw new Error('NOT_FOUND');const b=JSON.parse(row.body);if(contentDigest(b)!==row.digest)throw new Error(code);return b;}
 export function financialFacts(k:CommerceKernel,c:Row) {
- const input=jsonValue(c.order.payload.resolution_facts),extensions=['instrument_allocations','bundle_allocations'].filter(key=>input&&Object.hasOwn(input,key));
+ assertLineageFacts(k,c);const input=jsonValue(c.order.payload.resolution_facts),extensions=['instrument_allocations','bundle_allocations','lineage_digest'].filter(key=>input&&Object.hasOwn(input,key));
  const f=exact(input,['revision','observed_at','currency','payment_id','original_paid_minor','prior_refunded_minor','accounted_operations','paid_lines',...extensions]);
  integer(f.revision,1);integer(f.observed_at);id(f.payment_id);money(f.currency,'0');
  if(c.order.source_system!=='synthetic'||c.order.payload.currency!==f.currency)throw new Error('RESOLUTION_SOURCE_UNQUALIFIED');
@@ -72,8 +73,8 @@ function validateBundles(f:Row,returnLines:Row[]){
 }
 export function allocationSourcePin(f:Row,lineId:string){const group=f.bundle_allocations?.groups.find((g:Row)=>g.components.some((l:Row)=>l.line_id===lineId)),instruments=f.instrument_allocations;
  // Prior refunds are current balances, not original allocation identity.
- return {...(instruments?{instrument_allocation_digest:contentDigest({...instruments,instruments:instruments.instruments.map(({prior_refunded_minor,...i}:Row)=>i)})}:{}),...(group?{bundle_allocation_digest:contentDigest({treatment:f.bundle_allocations.treatment,promotion_rule:f.bundle_allocations.promotion_rule,group}),bundle_component:{bundle_id:group.id,promotion_id:group.promotion_id,promotion_rule:f.bundle_allocations.promotion_rule,...group.components.find((l:Row)=>l.line_id===lineId)}}: {})};}
-export function assertAllocationSource(f:Row,b:Row){const pin=allocationSourcePin(f,b.line_id);for(const key of ['instrument_allocation_digest','bundle_allocation_digest'])if((pin[key]??null)!==(b[key]??null))throw new Error('PAID_ALLOCATION_CHANGED');}
+ return {...(f.lineage_digest?{lineage_digest:f.lineage_digest}:{}),...(instruments?{instrument_allocation_digest:contentDigest({...instruments,instruments:instruments.instruments.map(({prior_refunded_minor,...i}:Row)=>i)})}:{}),...(group?{bundle_allocation_digest:contentDigest({treatment:f.bundle_allocations.treatment,promotion_rule:f.bundle_allocations.promotion_rule,group}),bundle_component:{bundle_id:group.id,promotion_id:group.promotion_id,promotion_rule:f.bundle_allocations.promotion_rule,...group.components.find((l:Row)=>l.line_id===lineId)}}: {})};}
+export function assertAllocationSource(f:Row,b:Row){const pin=allocationSourcePin(f,b.line_id);for(const key of ['instrument_allocation_digest','bundle_allocation_digest','lineage_digest'])if((pin[key]??null)!==(b[key]??null))throw new Error('PAID_ALLOCATION_CHANGED');}
 export function resolutionSettings(k:CommerceKernel,s:Row) {
  const row=k.db.prepare('SELECT * FROM commerce_resolution_settings WHERE tenant_id=? AND store_id=?').get(s.tenant_id,s.store_id) as Row;
  if(!row)throw new Error('RESOLUTION_NOT_CONFIGURED');const b=checkedBody(row);

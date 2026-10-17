@@ -14,3 +14,7 @@ CREATE TABLE commerce_exchange_lineage_imports (
  state TEXT NOT NULL CHECK(state IN ('unknown','imported')),
  node_id TEXT, PRIMARY KEY(tenant_id,store_id,operation_id)
 ) STRICT;
+CREATE TRIGGER exchange_lineage_nodes_no_update BEFORE UPDATE ON commerce_exchange_lineage_nodes
+ BEGIN SELECT RAISE(ABORT,'APPEND_ONLY_LINEAGE'); END;
+CREATE TRIGGER exchange_lineage_nodes_no_delete BEFORE DELETE ON commerce_exchange_lineage_nodes
+ BEGIN SELECT RAISE(ABORT,'APPEND_ONLY_LINEAGE'); END;

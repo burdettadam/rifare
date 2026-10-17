@@ -154,3 +154,14 @@ export class InstantExchanges {
   this.kernel.transaction(()=>{const current=this.#context(scope,operationId,'operation.reconcile');if(current.op.digest!==ctx.op.digest)throw new Error('INSTANT_INTEGRITY');this.#record(current,result);});return this.read(scope,operationId);
  }
 }
+
+/** Current source obligations participate in ordinary cancellation and workflow digests. */
+export function instantHistory(k:CommerceKernel,s:Row,caseId:string){
+ const rows=k.db.prepare('SELECT * FROM commerce_instant_obligations WHERE tenant_id=? AND store_id=? AND case_id=? ORDER BY id').all(s.tenant_id,s.store_id,caseId) as Row[],source=sources.get(k);
+ const obligations=rows.map(r=>{const b=checkedBody(r,'INSTANT_INTEGRITY'),ops=k.db.prepare('SELECT id,kind,state,native_id FROM commerce_instant_operations WHERE tenant_id=? AND store_id=? AND obligation_id=? ORDER BY id').all(s.tenant_id,s.store_id,r.id) as Row[];let native:Row|null=null;
+  try{if(!source||source.tenant!==s.tenant_id||source.store!==s.store_id||source.identity!==b.source_identity)throw new Error('INSTANT_SOURCE_UNAVAILABLE');native=source.obligation(r.id);}catch{/* Unavailable authority remains an explicit obligation. */}
+  const unknown=ops.some(o=>['authorized','unknown'].includes(o.state)),compensation=native?.compensation_required_minor??null;
+  const unresolved=!native||unknown||native.release.state==='reserved'||compensation!=='0'||native.state!=='canceled'&&native.captured_minor==='0';
+  return {obligation_id:r.id,allocation_id:r.allocation_id,operations:ops,state:native?.state??'source_unavailable',release_state:native?.release.state??'unknown',remaining_minor:native?.remaining_minor??null,captured_minor:native?.captured_minor??null,compensation_required_minor:compensation,currency:native?.currency??b.binding.currency,unresolved};
+ });return {obligations,unresolved_count:obligations.filter(o=>o.unresolved).length,digest:contentDigest(obligations)};
+}

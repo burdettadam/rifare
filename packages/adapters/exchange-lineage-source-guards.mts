@@ -10,7 +10,9 @@ export function lineageSourceTables(db:DatabaseSync){
 }
 function exists(db:DatabaseSync){return !!db.prepare("SELECT 1 FROM sqlite_master WHERE type='table' AND name='fixture_exchange_lineage_nodes'").get();}
 function checked(row:Row|undefined){if(!row)return null;const value=JSON.parse(row.body);if(contentDigest(value)!==row.digest)throw new Error('LINEAGE_SOURCE_INTEGRITY');return value;}
-function relevant(db:DatabaseSync,resource:string){return exists(db)&&!!db.prepare('SELECT 1 FROM fixture_exchange_lineage_nodes WHERE resource_id=? OR parent_resource_id=?').get(resource,resource);}
+function original(db:DatabaseSync,resource:string){return db.prepare("SELECT 1 FROM sqlite_master WHERE type='table' AND name='fixture_exchange_lineage_originals'").get()?checked(db.prepare('SELECT body,digest FROM fixture_exchange_lineage_originals WHERE resource_id=?').get(resource) as Row):null;}
+function relevant(db:DatabaseSync,resource:string){return exists(db)&&(!!db.prepare('SELECT 1 FROM fixture_exchange_lineage_nodes WHERE resource_id=? OR parent_resource_id=?').get(resource,resource)||!!original(db,resource));}
+function validateUnits(source:Row|null,command:Row,line:string,units:number[]){if(!source)return;const selected=units.map(n=>source.units.find((u:Row)=>u.line_id===line&&u.unit_index===n));if(selected.some(u=>!u||u.resolved)||command.payment_id!==source.payment_id||command.customer_id!==source.customer_id||command.currency!==source.currency)throw new Error('LINEAGE_SOURCE_MISMATCH');const paid=selected.reduce((sum:bigint,u:Row)=>sum+BigInt(u.paid_minor),0n);if(BigInt(command.original_value_minor??command.amount_minor)>paid)throw new Error('LINEAGE_PAID_VALUE_EXCEEDED');}
 function consumed(db:DatabaseSync,resource:string,line:string,units:number[]){return units.some(n=>db.prepare('SELECT 1 FROM fixture_exchange_lineage_units WHERE resource_id=? AND line_id=? AND unit_index=?').get(resource,line,n));}
 
 /** Server-local pretransport binding; not an API supplied assertion. */
@@ -25,6 +27,7 @@ export function bindLineageResolution(db:DatabaseSync,command:Row,input:unknown)
   if(cached){if(cached.digest!==body.command_digest)throw new Error('LINEAGE_COMMAND_CHANGED');db.exec('COMMIT');return;}
   if(consumed(db,body.resource_id,body.line_id,body.units))throw new Error('LINEAGE_PARENT_ALREADY_CONSUMED');
   const node=checked(db.prepare('SELECT body,digest FROM fixture_exchange_lineage_nodes WHERE resource_id=?').get(body.resource_id) as Row);
+  validateUnits(node??original(db,body.resource_id),command,body.line_id,body.units);
   if(node&&(body.line_id!==node.line_id||body.units.some((n:number)=>n>node.quantity)))throw new Error('LINEAGE_UNIT_INVALID');
   const prior=checked(db.prepare('SELECT body,digest FROM fixture_exchange_lineage_bindings WHERE operation_id=?').get(body.operation_id) as Row);
   if(prior&&canonical(prior)!==canonical(body))throw new Error('LINEAGE_COMMAND_CHANGED');
@@ -45,5 +48,6 @@ export function assertLineageResolution(db:DatabaseSync,command:Row){
  if(!b||b.command_digest!==contentDigest(command)||b.resource_id!==command.resource_id)throw new Error('LINEAGE_SOURCE_BINDING_REQUIRED');
  if(consumed(db,b.resource_id,b.line_id,b.units))throw new Error('LINEAGE_PARENT_ALREADY_CONSUMED');
  const node=checked(db.prepare('SELECT body,digest FROM fixture_exchange_lineage_nodes WHERE resource_id=?').get(command.resource_id) as Row);
+ validateUnits(node??original(db,command.resource_id),command,b.line_id,b.units);
  if(node&&(b.line_id!==node.line_id||b.units.some((n:number)=>n>node.quantity)||command.payment_id!==node.payment_id||command.customer_id!==node.customer_id||command.currency!==node.currency))throw new Error('LINEAGE_SOURCE_MISMATCH');
 }
