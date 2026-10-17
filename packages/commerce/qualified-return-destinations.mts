@@ -70,7 +70,10 @@ export class QualifiedReturnDestinations {
    if(p.source_identity!==this.source.identity||p.expires_at<=k.clock()||p.expires_at>k.clock()+3600000)throw new Error('DESTINATION_SOURCE_MISMATCH');
    const settings=fulfillmentSettings(k,s);if(settings.source_identity!==this.source.identity||settings.account_id!==p.account_id)throw new Error('DESTINATION_SOURCE_MISMATCH');
    const old=latest(k,'commerce_destination_policies',s);if((old?.revision??0)!==p.expected_revision)throw new Error('DESTINATION_POLICY_CHANGED');
-   const body={...p,tenant_id:s.tenant_id,store_id:s.store_id,revision:p.expected_revision+1};delete body.expected_revision;
+   // A native policy can commit while its local response is lost. Preserve it and
+   // advance from that verified head under the owner's current local CAS input.
+   const nativePolicy=this.source.destinations.latestPolicy(),revision=Math.max(p.expected_revision,nativePolicy?.revision??0)+1;
+   const body={...p,tenant_id:s.tenant_id,store_id:s.store_id,revision};delete body.expected_revision;
    this.source.destinations.syncPolicy(body);k.db.prepare('INSERT INTO commerce_destination_policies VALUES(?,?,?,?,?)').run(s.tenant_id,s.store_id,body.revision,canonical(body),contentDigest(body));
    return {revision:body.revision,digest:contentDigest(body),policy:body,qualification:'synthetic_only',native_destination_qualified:false};
   });
@@ -92,14 +95,18 @@ export class QualifiedReturnDestinations {
  }
  select(scope:Scope,input:unknown){const p=exact(jsonValue(input),['request_id','destination_id','expected_revision']);id(p.request_id);id(p.destination_id);integer(p.expected_revision);const k=this.kernel;
   return k.transaction(()=>{const ctx=context(k,scope,p.request_id);k.authorize(scope,'action.configure',ctx.c.resource_id);assertCaseWorkerScope(k,scope,ctx.c.id);assertExecution(k,ctx.s,FULFILLMENT_ACTIONS.label);
+   if(k.db.prepare("SELECT 1 FROM commerce_fulfillment_operations WHERE tenant_id=? AND store_id=? AND kind='label' AND state='unknown' AND json_extract(command,'$.request_id')=?").get(ctx.s.tenant_id,ctx.s.store_id,p.request_id))throw new Error('DESTINATION_RECONCILIATION_REQUIRED');
    const {source,policy}=sourceFor(k,scope,ctx),bound=binding(k,scope,ctx,source),old=selection(k,ctx.s,p.request_id);if((old?.row.revision??0)!==p.expected_revision)throw new Error('DESTINATION_SELECTION_CHANGED');
    const evaluation=source.destinations.evaluate(p.request_id),choice=evaluation.destinations.find(d=>d.destination_id===p.destination_id);if(!choice?.eligible)throw new Error('DESTINATION_INELIGIBLE');
    const parcel=parcelRow(k,scope,p.request_id),destination=source.destinations.destination(p.destination_id),body={...parcel.parcel,to_address_ref:destination.address_ref,address_revision:parcel.parcel.address_revision+(parcel.parcel.to_address_ref===destination.address_ref?0:1)};
-   const parcelDigest=contentDigest(body),parcelRevision=parcel.revision+1,route=source.destinations.select({request_id:p.request_id,destination_id:p.destination_id,revision:p.expected_revision+1,policy_digest:policy.digest,parcel_digest:parcelDigest,parcel_revision:parcelRevision});
+   // Selection reserves no capacity and purchases no label. A source-only prior
+   // selection can be superseded by a fresh qualified choice after a lost response.
+   const nativeSelection=source.destinations.latestSelection(p.request_id),revision=Math.max(p.expected_revision,nativeSelection?.selection_revision??0)+1;
+   const parcelDigest=contentDigest(body),parcelRevision=parcel.revision+1,route=source.destinations.select({request_id:p.request_id,destination_id:p.destination_id,revision,policy_digest:policy.digest,parcel_digest:parcelDigest,parcel_revision:parcelRevision});
    const selected={request_id:p.request_id,case_id:ctx.c.id,resource_id:ctx.c.resource_id,source_identity:source.identity,policy_digest:policy.digest,binding_digest:bound.row.digest,route};
    k.db.prepare('UPDATE commerce_return_parcels SET revision=?,body=?,digest=? WHERE tenant_id=? AND store_id=? AND request_id=?').run(parcelRevision,canonical(body),parcelDigest,ctx.s.tenant_id,ctx.s.store_id,p.request_id);
-   k.db.prepare('INSERT INTO commerce_destination_selections VALUES(?,?,?,?,?,?,?,?,?,?)').run(ctx.s.tenant_id,ctx.s.store_id,p.request_id,ctx.c.id,ctx.c.resource_id,p.expected_revision+1,source.identity,canonical(selected),contentDigest(selected),k.clock());
-   return {revision:p.expected_revision+1,route,parcel_revision:parcelRevision,requires_new_label_quote:true,execution_authorized:false,qualification:'synthetic_only'};
+   k.db.prepare('INSERT INTO commerce_destination_selections VALUES(?,?,?,?,?,?,?,?,?,?)').run(ctx.s.tenant_id,ctx.s.store_id,p.request_id,ctx.c.id,ctx.c.resource_id,revision,source.identity,canonical(selected),contentDigest(selected),k.clock());
+   return {revision,route,parcel_revision:parcelRevision,requires_new_label_quote:true,execution_authorized:false,qualification:'synthetic_only'};
   });
  }
  read(scope:Scope,input:unknown){const p=exact(jsonValue(input),['request_id']),ctx=context(this.kernel,scope,p.request_id,false),k=this.kernel;k.authorize(scope,'operation.read',ctx.c.resource_id);

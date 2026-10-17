@@ -78,9 +78,14 @@ export class ReturnDestinationFixtureSource {
  syncPolicy(input:unknown){const p=exact(jsonValue(input),['tenant_id','store_id','revision','enabled','source_identity','account_id','policy_version','allowed_destination_ids','expires_at']);
   for(const key of ['tenant_id','store_id','source_identity','account_id'])id(p[key]);integer(p.revision,1);integer(p.policy_version,1);integer(p.expires_at);p.allowed_destination_ids=ids(p.allowed_destination_ids);
   if(p.tenant_id!==this.tenant||p.store_id!==this.store||p.source_identity!==this.identity||typeof p.enabled!=='boolean')throw new Error('DESTINATION_SOURCE_MISMATCH');
-  return this.#tx(()=>{if(p.enabled)this.#qualification(p.account_id);return this.#append('fixture_destination_policies','account_id',p);});
+  return this.#tx(()=>{if(p.enabled)this.#qualification(p.account_id);const old=this.latestPolicy();
+   if(old?.revision===p.revision){if(canonical(old)!==canonical(p))throw new Error('DESTINATION_REVISION_CONFLICT');return old;}
+   if(p.revision!==(old?.revision??0)+1)throw new Error('DESTINATION_REVISION_CONFLICT');
+   this.db.prepare('INSERT INTO fixture_destination_policies VALUES(?,?,?,?)').run(p.account_id,p.revision,canonical(p),contentDigest(p));return p;
+  });
  }
- policy(account:string){const p=checked(this.#latest('fixture_destination_policies','account_id',account));if(!p.enabled||p.expires_at<=this.clock())throw new Error('DESTINATION_POLICY_UNAVAILABLE');return p;}
+ latestPolicy(){const row=this.db.prepare('SELECT body,digest FROM fixture_destination_policies ORDER BY revision DESC LIMIT 1').get() as Row|undefined;return row?checked(row):null;}
+ policy(account:string){const p=this.latestPolicy();if(!p||p.account_id!==id(account)||!p.enabled||p.expires_at<=this.clock())throw new Error('DESTINATION_POLICY_UNAVAILABLE');return p;}
  admissions(){return (this.db.prepare('SELECT body,digest FROM fixture_destination_admissions ORDER BY operation_id').all() as Row[]).map(checked);}
  capacity(destination:string){const d=this.destination(destination);let admitted=0;
   for(const a of this.admissions().filter(a=>a.destination_id===destination)){
@@ -115,6 +120,8 @@ export class ReturnDestinationFixtureSource {
   for(const key of ['policy_digest','parcel_digest'])if(typeof p[key]!=='string'||!/^[a-f0-9]{64}$/.test(p[key]))throw new Error('INVALID_INPUT');
   return this.#tx(()=>{const current=this.evaluate(p.request_id),d=current.destinations.find(d=>d.destination_id===p.destination_id);if(!d?.eligible)throw new Error('DESTINATION_INELIGIBLE');
    if(p.policy_digest!==current.policy_digest)throw new Error('DESTINATION_POLICY_CHANGED');
+   const admitted=this.admissions().filter(a=>a.request_id===p.request_id).sort((a,b)=>b.generation-a.generation)[0];
+   if(admitted){const label=checked(this.db.prepare('SELECT body,digest FROM fixture_labels WHERE id=?').get(admitted.label_id) as Row);if(!['confirmed','expired_unused'].includes(label.void_state))throw new Error('DESTINATION_LABEL_ALREADY_PURCHASED');}
    const old=this.#latest('fixture_destination_routes','request_id',p.request_id);
    if(old?.revision===p.revision){const route=checked(old);if(route.destination_id!==p.destination_id||route.policy_digest!==p.policy_digest||route.parcel_digest!==p.parcel_digest||route.parcel_revision!==p.parcel_revision)throw new Error('DESTINATION_REVISION_CONFLICT');this.assertSelection(route,{...current.request,parcel_digest:p.parcel_digest,parcel_revision:p.parcel_revision});return route;}
    if(p.revision!==(old?.revision??0)+1)throw new Error('DESTINATION_REVISION_CONFLICT');
@@ -127,7 +134,8 @@ export class ReturnDestinationFixtureSource {
    this.db.prepare('INSERT INTO fixture_destination_routes VALUES(?,?,?,?)').run(p.request_id,p.revision,canonical(route),contentDigest(route));return route;
   });
  }
- selection(requestId:string){return checked(this.#latest('fixture_destination_routes','request_id',requestId));}
+ latestSelection(requestId:string){const row=this.#latest('fixture_destination_routes','request_id',requestId);return row?checked(row):null;}
+ selection(requestId:string){const selected=this.latestSelection(requestId);if(!selected)throw new Error('DESTINATION_BINDING_REQUIRED');return selected;}
  assertSelection(route:Row,context:Row){
   if(!route||typeof route!=='object')throw new Error('DESTINATION_BINDING_REQUIRED');
   const r=this.request(context.request_id),q=this.#qualification(r.account_id),policy=this.policy(r.account_id),stored=this.selection(r.request_id);
