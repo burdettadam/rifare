@@ -43,6 +43,8 @@ export class FulfillmentFixtureSource {
   const financialFields=['exchange_balance_minor','original_exchange_value_minor','replacement_minor','finance_source_identity'],financialCount=financialFields.filter(key=>Object.hasOwn(cmd,key)).length;
   if(financialCount){if(financialCount!==financialFields.length||typeof cmd.exchange_balance_minor!=='string'||!/^(-?[1-9][0-9]{0,23})$/.test(cmd.exchange_balance_minor)||!this.financeSource||this.financeSource.identity!==cmd.finance_source_identity)throw new Error('EXCHANGE_FINANCE_SOURCE_REQUIRED');
    if(minor(cmd.original_exchange_value_minor)+BigInt(cmd.exchange_balance_minor)!==minor(cmd.replacement_minor))throw new Error('EXCHANGE_FINANCE_MISMATCH');}
+  const giftFields=['gift_recipient_customer_id','gift_source_digest','gift_source_identity','original_customer_id','original_native_order_id'],giftCount=giftFields.filter(key=>Object.hasOwn(cmd,key)).length;
+  if(giftCount){if(giftCount!==giftFields.length||!/^gid:\/\/shopify\/Order\/[1-9][0-9]*$/.test(cmd.original_native_order_id)||!this.financeSource||this.financeSource.identity!==cmd.gift_source_identity)throw new Error('GIFT_RECIPIENT_UNQUALIFIED');this.financeSource.assertGiftRecipient({resource_id:cmd.resource_id,customer_id:cmd.original_customer_id,recipient_customer_id:cmd.gift_recipient_customer_id,gift_source_digest:cmd.gift_source_digest});}
   return this.tx(()=>{const old=this.db.prepare('SELECT * FROM fixture_holds WHERE id=?').get(cmd.id) as Row;
    if(old){if(old.digest!==contentDigest(cmd))throw new Error('RESERVATION_CONFLICT');return this.#reservation(old);}
    if(cmd.expires_at<=this.clock()||cmd.expires_at>this.clock()+300000)throw new Error('RESERVATION_EXPIRED');
@@ -79,6 +81,10 @@ export class FulfillmentFixtureSource {
   const r=this.db.prepare('SELECT * FROM fixture_holds WHERE id=?').get(command.reservation_id) as Row,b=this.#read(r);
   if(!r||r.state!=='active'||b.generation!==command.generation||b.expires_at<=this.clock()||contentDigest(b)!==command.reservation_digest)throw new Error('RESERVATION_EXPIRED');
   if(b.allocation_id!==command.allocation_id||b.variant_id!==command.variant_id||b.quantity!==command.quantity||b.location_id!==command.location_id)throw new Error('RESERVATION_CHANGED');
+  if(Object.hasOwn(b,'gift_recipient_customer_id')){
+   if(!this.financeSource||this.financeSource.identity!==b.gift_source_identity||command.resource_id!==b.resource_id||command.original_order_id!==b.resource_id||command.native_original_order_id!==b.original_native_order_id||command.customer_id!==b.original_customer_id||command.gift_recipient_customer_id!==b.gift_recipient_customer_id||command.gift_source_digest!==b.gift_source_digest||command.gift_source_identity!==b.gift_source_identity)throw new Error('GIFT_RECIPIENT_MISMATCH');
+   this.financeSource.assertGiftRecipient({resource_id:b.resource_id,customer_id:command.customer_id,recipient_customer_id:command.gift_recipient_customer_id,gift_source_digest:command.gift_source_digest});
+  }else if(['gift_recipient_customer_id','gift_source_digest','gift_source_identity'].some(key=>Object.hasOwn(command,key)))throw new Error('GIFT_RECIPIENT_MISMATCH');
   if(Object.hasOwn(b,'exchange_balance_minor')){
    if(!command.exchange_finance||!this.financeSource||this.financeSource.identity!==b.finance_source_identity)throw new Error('EXCHANGE_PAYMENT_OUTSTANDING');
    if(command.exchange_quote_digest!==b.exchange_quote_digest||command.exchange_finance.exchange_quote_id!==b.exchange_quote_id||command.original_value_minor!==b.original_exchange_value_minor||command.exchange_value_minor!==b.replacement_minor)throw new Error('EXCHANGE_FINANCE_MISMATCH');

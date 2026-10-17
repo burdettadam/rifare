@@ -1,6 +1,6 @@
 {
-  "source_file_count": 969,
-  "source_count_reason": "M05 adds support conversations, scoped messages, consent and autonomy controls, fixture adapters, portable workflows, tests and assessment records. All prior paths and assertions are retained.",
+  "source_file_count": 1009,
+  "source_count_reason": "M06-G01 through M06-G05 add configured catalog exchanges, original-value payment and residual settlement, bundle allocation fixtures, gift-recipient proof and native beneficiary bindings, retention and fulfillment checks, HTTP/browser workflows, synthetic demos, contracts, tests, and work records. All original source paths, test registrations, capabilities, and protected contracts are retained.",
   "component_ids": [
     "git-agent-adaptations",
     "rifare-developer-helpers",

@@ -9,6 +9,7 @@ import { ReturnIntake } from './return-intake.mts';
 import { reservations } from './return-intake-core.mts';
 import { currentGiftSession,giftSource,verifiedGiftCase } from './gift-proof.mts';
 import { assertRecoveryEgress } from './data-guards.mts';
+import { resolutionSettings } from './resolution-ledger.mts';
 
 /** Bounded recipient views. Merchant operations require their own current Scope;
  * a gift token is never accepted as an ordinary customer or operator bearer. */
@@ -54,11 +55,16 @@ export class GiftReturns {
  }
  #session(input:unknown){const p=exact(jsonValue(input),['store_id','token']);id(p.store_id);if(typeof p.token!=='string'||!/^[A-Za-z0-9_-]{43}$/.test(p.token))throw new Error('GIFT_VERIFICATION_REQUIRED');return currentGiftSession(this.kernel,digest(p.token),p.store_id);}
  choices(input:unknown){const k=this.kernel;return k.transaction(()=>{const {session,order,gift,expires_at}=this.#session(input),reserved=reservations(k,session,order);
+  const execution=k.db.prepare('SELECT enabled,policy_id FROM commerce_execution_settings WHERE tenant_id=? AND store_id=?').get(session.tenant_id,session.store_id) as Row;
+  const policy=execution?.enabled?k.db.prepare('SELECT * FROM commerce_policy_versions WHERE tenant_id=? AND store_id=? AND policy_id=? AND effective_at<=? ORDER BY effective_at DESC LIMIT 1').get(session.tenant_id,session.store_id,execution.policy_id,k.clock()) as Row:null;
+  const rules=policy?JSON.parse(policy.body):null;if(policy&&contentDigest(rules)!==policy.digest)throw new Error('POLICY_INTEGRITY');
+  let credit=false;try{credit=resolutionSettings(k,session).credit_instrument==='native_store_credit';}catch{/* Missing current settings cannot qualify a credit offer. */}
+  const outcomes=policy?.state==='published'?gift.allowed_outcomes.filter((o:string)=>rules.rules.outcomes.includes(o)&&(o!=='store_credit'||credit)):[];
   const lines=gift.lines.map((l:Row)=>{const source=order.payload.return_lines.find((r:Row)=>r.id===l.line_id),paid=order.payload.resolution_facts?.paid_lines?.find((r:Row)=>r.id===l.line_id);
    const eligible=l.units.filter((n:number)=>!(paid?.resolved_units??[]).includes(n)&&!k.db.prepare('SELECT 1 FROM commerce_resolution_units WHERE tenant_id=? AND store_id=? AND resource_id=? AND line_id=? AND unit_index=?').get(session.tenant_id,session.store_id,order.id,l.line_id,n)).length;
    return {line_id:l.line_id,remaining:Math.max(0,Math.min(eligible,source.fulfilled-source.returned-(reserved.quantities[l.line_id]??0)))};
   });
-  return {gift_id:gift.gift_id,lines,outcomes:[...gift.allowed_outcomes],expires_at:Math.min(session.expires_at,expires_at),qualification:'synthetic_only',approval_required:true};
+  return {gift_id:gift.gift_id,lines,outcomes,expires_at:Math.min(session.expires_at,expires_at),qualification:'synthetic_only',approval_required:true};
  });}
  createCase(scope:Scope,input:unknown){const p=exact(jsonValue(input),['gift_token','case_id','profile_id','policy_id']);id(p.case_id);id(p.profile_id);id(p.policy_id);
   const k=this.kernel;return k.transaction(()=>{const s=k.require(scope),{session,order,gift,source_digest}=this.#session({store_id:s.store_id,token:p.gift_token});

@@ -18,6 +18,7 @@ export class ResolutionFixtureSource {
    CREATE TABLE IF NOT EXISTS fixture_credit_accounts(id TEXT PRIMARY KEY,customer_id TEXT NOT NULL,currency TEXT NOT NULL,balance_minor TEXT NOT NULL,UNIQUE(customer_id,currency));
    CREATE TABLE IF NOT EXISTS fixture_resolution_instruments(resource_id TEXT PRIMARY KEY,body TEXT NOT NULL,digest TEXT NOT NULL);
    CREATE TABLE IF NOT EXISTS fixture_gift_recipients(resource_id TEXT NOT NULL,recipient_customer_id TEXT NOT NULL,gift_source_digest TEXT NOT NULL,PRIMARY KEY(resource_id,recipient_customer_id));
+   CREATE TABLE IF NOT EXISTS fixture_gift_resolution_bindings(operation_id TEXT PRIMARY KEY,allocation_id TEXT NOT NULL UNIQUE,native_return_id TEXT NOT NULL,body TEXT NOT NULL,digest TEXT NOT NULL);
    CREATE TABLE IF NOT EXISTS fixture_payment_captures(operation_id TEXT PRIMARY KEY,resource_id TEXT NOT NULL,allocation_id TEXT NOT NULL,amount_minor TEXT NOT NULL,currency TEXT NOT NULL,UNIQUE(resource_id,allocation_id));
    CREATE UNIQUE INDEX IF NOT EXISTS fixture_resolution_one_allocation ON fixture_resolution_effects(resource_id,json_extract(command,'$.allocation_id'));`);
   const old=db.prepare('SELECT * FROM fixture_resolution_identity WHERE id=1').get() as Row;
@@ -38,7 +39,26 @@ export class ResolutionFixtureSource {
   if(!grant||grant.gift_source_digest!==p.gift_source_digest)throw new Error('GIFT_RECIPIENT_UNQUALIFIED');
   return {qualified:true,recipient_customer_id:p.recipient_customer_id,gift_source_digest:grant.gift_source_digest};
  }
- #beneficiary(p:Row){const fields=['credit_beneficiary_id','gift_source_digest'],count=fields.filter(key=>Object.hasOwn(p,key)).length;if(!count)return p.customer_id;
+ #giftBindings(p:Row){return (this.db.prepare('SELECT body,digest FROM fixture_gift_resolution_bindings WHERE operation_id=? OR allocation_id=? OR native_return_id=?').all(p.operation_id,p.allocation_id,p.native_return_id) as Row[]).map(row=>{const body=JSON.parse(row.body);if(contentDigest(body)!==row.digest)throw new Error('RESOLUTION_SOURCE_INTEGRITY');return body;});}
+ // Save the approved gift obligation before the replaceable issuance transport.
+ // The source can then recognize it even if both optional recipient fields vanish.
+ bindGiftResolution(value:unknown){const p=jsonValue(value);for(const key of ['operation_id','allocation_id','resource_id','customer_id','credit_beneficiary_id'])id(p[key]);
+  if(p.tenant_id!==this.tenant||p.store_id!==this.store||p.source_identity!==this.identity||p.kind!=='store_credit'||typeof p.native_return_id!=='string'||!/^gid:\/\/shopify\/Return\/[1-9][0-9]*$/.test(p.native_return_id))throw new Error('GIFT_RECIPIENT_MISMATCH');
+  this.assertGiftRecipient({resource_id:p.resource_id,customer_id:p.customer_id,recipient_customer_id:p.credit_beneficiary_id,gift_source_digest:p.gift_source_digest});
+  const body={operation_id:p.operation_id,allocation_id:p.allocation_id,native_return_id:p.native_return_id,resource_id:p.resource_id,customer_id:p.customer_id,credit_beneficiary_id:p.credit_beneficiary_id,gift_source_digest:p.gift_source_digest,command_digest:contentDigest(p)};
+  this.db.exec('BEGIN IMMEDIATE');try{
+   this.#assertGiftBinding(p);
+   const old=this.db.prepare('SELECT digest FROM fixture_gift_resolution_bindings WHERE operation_id=?').get(p.operation_id) as Row;
+   if(old){if(old.digest!==contentDigest(body))throw new Error('GIFT_RECIPIENT_MISMATCH');}
+   else this.db.prepare('INSERT INTO fixture_gift_resolution_bindings VALUES(?,?,?,?,?)').run(p.operation_id,p.allocation_id,p.native_return_id,canonical(body),contentDigest(body));
+   this.db.exec('COMMIT');return {bound:true,operation_id:p.operation_id,qualification:'synthetic_only'};
+  }catch(error){this.db.exec('ROLLBACK');throw error;}
+ }
+ #assertGiftBinding(p:Row){for(const bound of this.#giftBindings(p)){
+   if(p.kind!=='store_credit'||!Object.hasOwn(p,'credit_beneficiary_id')||!Object.hasOwn(p,'gift_source_digest')||p.resource_id!==bound.resource_id||p.customer_id!==bound.customer_id||p.credit_beneficiary_id!==bound.credit_beneficiary_id)throw new Error('GIFT_RECIPIENT_MISMATCH');
+   if((p.operation_id===bound.operation_id||p.allocation_id===bound.allocation_id)&&contentDigest(p)!==bound.command_digest)throw new Error('GIFT_RECIPIENT_MISMATCH');
+  }}
+ #beneficiary(p:Row){this.#assertGiftBinding(p);const fields=['credit_beneficiary_id','gift_source_digest'],count=fields.filter(key=>Object.hasOwn(p,key)).length;if(!count)return p.customer_id;
   if(count!==2||p.kind!=='store_credit')throw new Error('GIFT_RECIPIENT_MISMATCH');id(p.credit_beneficiary_id);
   this.assertGiftRecipient({resource_id:p.resource_id,customer_id:p.customer_id,recipient_customer_id:p.credit_beneficiary_id,gift_source_digest:p.gift_source_digest});return p.credit_beneficiary_id;
  }
@@ -81,8 +101,8 @@ export class ResolutionFixtureSource {
    if(minor(p.original_value_minor)+(p.kind==='additional_payment'?1n:-1n)*minor(p.amount_minor)!==minor(p.replacement_minor))throw new Error('EXCHANGE_FINANCE_MISMATCH');}
   if(p.kind==='additional_payment'){if(!p.exchange_quote_id)throw new Error('EXCHANGE_FINANCE_MISMATCH');integer(p.payment_expires_at);}
   else if(Object.hasOwn(p,'payment_expires_at'))throw new Error('EXCHANGE_FINANCE_MISMATCH');
-  const beneficiary=this.#beneficiary(p);
   this.db.exec('BEGIN IMMEDIATE');try{
+   const beneficiary=this.#beneficiary(p);
    const old=this.db.prepare('SELECT * FROM fixture_resolution_effects WHERE operation_id=?').get(p.operation_id) as Row;
    if(old){if(old.digest!==contentDigest(p))throw new Error('SOURCE_IDEMPOTENCY_CONFLICT');this.db.exec('COMMIT');return JSON.parse(old.body);}
    const account=this.db.prepare('SELECT * FROM fixture_resolution_accounts WHERE resource_id=?').get(p.resource_id) as Row;

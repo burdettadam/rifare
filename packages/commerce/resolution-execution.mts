@@ -83,7 +83,9 @@ export class ResolutionExecution {
   });
   if(!prepared)return this.read(scope,operationId);
   try{
-   const latest=this.#beforeSend(scope,operationId),response=await this.#bounded(()=>this.source.issue(latest.command));
+   const latest=this.#beforeSend(scope,operationId);
+   if(Object.hasOwn(latest.command,'gift_source_digest'))this.source.bindGiftResolution(latest.command);
+   const response=await this.#bounded(()=>this.source.issue(latest.command));
    k.transaction(()=>{const current=this.#context(scope,operationId,'operation.dispatch');assertCaseWorkerScope(k,scope,current.op.case_id);assertExecution(k,current.s,RESOLVE_ACTION);this.#record(current,response);});
   }catch{ /* A timeout or permission change never establishes that nothing happened. */ }
   return this.read(scope,operationId);

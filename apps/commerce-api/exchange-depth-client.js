@@ -1,7 +1,7 @@
 const $=id=>document.getElementById(id),status=(text,error=false)=>{$('status').textContent=text;$('status').dataset.error=String(error);};
 let generation=0;
 async function post(path,input,bearer){const r=await fetch(path,{method:'POST',headers:{'content-type':'application/json',...(bearer?{authorization:'Bearer '+bearer}:{})},body:JSON.stringify(input)}),b=await r.json();if(!r.ok)throw new Error(b.error??'REQUEST_FAILED');return b;}
-const money=(currency,minor)=>{const n=BigInt(minor),negative=n<0n,value=negative?-n:n;return (negative?'-':'')+currency+' '+(value/100n)+'.'+String(value%100n).padStart(2,'0');};
+const money=(currency,minor)=>{const scale={USD:2,EUR:2,GBP:2,CAD:2,JPY:0,KWD:3,BHD:3}[currency];if(scale===undefined)throw new Error('UNSUPPORTED_CURRENCY');const n=BigInt(minor),negative=n<0n,value=negative?-n:n,unit=10n**BigInt(scale);return (negative?'-':'')+currency+' '+(value/unit)+(scale?'.'+String(value%unit).padStart(scale,'0'):'');};
 function button(text,action){const b=document.createElement('button');b.type='button';b.textContent=text;b.addEventListener('click',action);return b;}
 function textElement(tag,text){const e=document.createElement(tag);e.textContent=text;return e;}
 if(document.body.dataset.view==='catalog'){

@@ -29,6 +29,7 @@ function resources(k:CommerceKernel,s:Row,customer:string):Row[] {
   return rows.filter(r=>direct.includes(r)||parents.some(p=>r.source_system===p.source_system&&['shipment','payment'].includes(r.kind)&&
     [p.id,p.external_id].some(v=>[JSON.parse(r.payload).order_id,JSON.parse(r.payload).order_number].includes(v))));
 }
+function recipientResources(k:CommerceKernel,s:Row,customer:string):Row[]{const caseResources=all(k,'commerce_gift_cases',s.tenant_id,s.store_id).filter(r=>JSON.parse(r.body).recipient_customer_id===customer).map(r=>r.resource_id);return all(k,'commerce_resources',s.tenant_id,s.store_id).filter(r=>r.kind==='order'&&(JSON.parse(r.payload).gift_facts?.recipient_customer_id===customer||caseResources.includes(r.id)));}
 function scrubRecord(k:CommerceKernel,table:string,t:string,s:string,keys:string[],column='id') {
   if(!keys.length)return;
   for(const row of all(k,table,t,s).filter(r=>keys.includes(r[column]))) {
@@ -87,7 +88,7 @@ function eraseGiftCaseData(k:CommerceKernel,s:Row,cases:string[],hash:string) {
  for(const table of ['commerce_return_parcels','commerce_fulfillment_quotes'])for(const row of all(k,table,t,st).filter(r=>cases.includes(r.case_id))){
   const body=JSON.parse(row.body),address=table==='commerce_fulfillment_quotes'?body.details:body;if(!address)continue;
   let changed=false;for(const key of ['from_address_ref','to_address_ref'])if(Object.hasOwn(address,key)){address[key]='erased';changed=true;}
-  if(changed)k.db.prepare(`UPDATE ${table} SET body=?,digest=? WHERE tenant_id=? AND store_id=? AND id=?`).run(canonical(body),contentDigest(body),t,st,row.id);
+  if(changed){const key=table==='commerce_return_parcels'?'request_id':'id';k.db.prepare(`UPDATE ${table} SET body=?,digest=? WHERE tenant_id=? AND store_id=? AND ${key}=?`).run(canonical(body),contentDigest(body),t,st,row[key]);}
  }
  k.db.prepare(`UPDATE commerce_return_overrides SET revoked=1 WHERE tenant_id=? AND store_id=? AND quote_id IN (SELECT id FROM commerce_return_quotes WHERE tenant_id=? AND store_id=? AND case_id IN (${cm}))`).run(t,st,...cargs);
  k.db.prepare(`UPDATE commerce_worker_grants SET revoked=1 WHERE tenant_id=? AND store_id=? AND case_id IN (${cm})`).run(...cargs);
@@ -186,7 +187,7 @@ export class PrivacyLifecycle {
   hold(scope:Scope,input:unknown) {
     const k=this.#k,p=exact(input,['customer_id','reason','authority_ref','expires_at']);id(p.customer_id);id(p.authority_ref);integer(p.expires_at,1);
     if(!['dispute','retention_obligation','investigation'].includes(p.reason)||p.expires_at<=k.clock()||p.expires_at>k.clock()+366*86400000)throw new Error('INVALID_INPUT');
-    return k.transaction(()=>{const s=k.authorize(scope,'privacy.manage');if(!resources(k,s,p.customer_id).length)throw new Error('NOT_FOUND');const hash=subjectHash(s.tenant_id,s.store_id,p.customer_id);
+    return k.transaction(()=>{const s=k.authorize(scope,'privacy.manage');if(!resources(k,s,p.customer_id).length&&!recipientResources(k,s,p.customer_id).length)throw new Error('NOT_FOUND');const hash=subjectHash(s.tenant_id,s.store_id,p.customer_id);
       k.db.prepare(`INSERT INTO commerce_privacy_holds VALUES(?,?,?,?,?,?,0) ON CONFLICT(tenant_id,store_id,subject_hash) DO UPDATE SET reason=excluded.reason,authority_ref=excluded.authority_ref,expires_at=excluded.expires_at,released=0`).run(s.tenant_id,s.store_id,hash,p.reason,p.authority_ref,p.expires_at);
       event(k,s,hash,'hold_created',p.reason);return {subject_hash:hash,expires_at:p.expires_at};});
   }
@@ -197,7 +198,8 @@ export class PrivacyLifecycle {
   }
   erase(scope:Scope,customer:string) {id(customer);const k=this.#k;
     return k.transaction(()=>{const s=k.authorize(scope,'privacy.manage');storageInventory(k);const hash=subjectHash(s.tenant_id,s.store_id,customer);
-      const hold=k.db.prepare('SELECT reason,authority_ref,expires_at FROM commerce_privacy_holds WHERE tenant_id=? AND store_id=? AND subject_hash=? AND released=0 AND expires_at>?').get(s.tenant_id,s.store_id,hash,k.clock());
+      const owned=resources(k,s,customer),related=new Set([customer,...recipientResources(k,s,customer).map(r=>r.customer_id),...owned.map(r=>JSON.parse(r.payload).gift_facts?.recipient_customer_id),...all(k,'commerce_gift_cases',s.tenant_id,s.store_id).filter(r=>owned.some(o=>o.id===r.resource_id)).map(r=>JSON.parse(r.body).recipient_customer_id)].filter(Boolean));
+      const hold=[...related].map(c=>k.db.prepare('SELECT reason,authority_ref,expires_at FROM commerce_privacy_holds WHERE tenant_id=? AND store_id=? AND subject_hash=? AND released=0 AND expires_at>?').get(s.tenant_id,s.store_id,subjectHash(s.tenant_id,s.store_id,c),k.clock())).find(Boolean);
       if(hold){event(k,s,hash,'erasure_held','configured_hold');return {status:'held',hold,erased:false};}
       if(k.db.prepare('SELECT 1 FROM commerce_privacy_subjects WHERE tenant_id=? AND store_id=? AND subject_hash=?').get(s.tenant_id,s.store_id,hash))return {status:'already_erased'};
       const rs=resources(k,s,customer),giftCount=all(k,'commerce_resources',s.tenant_id,s.store_id).filter(r=>r.kind==='order'&&JSON.parse(r.payload).gift_facts?.recipient_customer_id===customer).length+all(k,'commerce_gift_cases',s.tenant_id,s.store_id).filter(r=>JSON.parse(r.body).recipient_customer_id===customer).length;if(!rs.length&&!giftCount)throw new Error('NOT_FOUND');return eraseSelected(k,s,rs.map(r=>r.id),hash,k.clock());});

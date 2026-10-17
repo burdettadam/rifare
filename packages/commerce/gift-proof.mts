@@ -52,7 +52,7 @@ export function assertGiftOutcome(k:CommerceKernel,scope:Scope,caseId:string,out
 }
 export function assertGiftAction(k:CommerceKernel,scope:Scope,caseId:string,action:string){
  const gift=verifiedGiftCase(k,k.require(scope),caseId);if(!gift)return;
- if(!['diagnostic.return.submit','diagnostic.return.resolve','diagnostic.exchange.create','diagnostic.label.purchase','diagnostic.label.void'].includes(action))throw new Error('GIFT_ACTION_DENIED');
+ if(!['diagnostic.return.submit','diagnostic.return.resolve','diagnostic.exchange.create','diagnostic.label.purchase','diagnostic.label.void','diagnostic.warehouse.disposition','diagnostic.return.cancel'].includes(action))throw new Error('GIFT_ACTION_DENIED');
 }
 /** Privacy erasure keeps the purchaser order and monetary audit, but removes the
  * separate recipient grant. Caller holds the canonical privacy transaction. */

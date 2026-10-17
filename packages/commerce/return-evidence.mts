@@ -100,7 +100,9 @@ export class ReturnEvidence {
  }
  #held(s:Row,caseId:string){const k=this.#k,c=k.db.prepare('SELECT customer_id FROM commerce_cases WHERE tenant_id=? AND store_id=? AND id=?').get(s.tenant_id,s.store_id,caseId) as Row;
   if(!c)throw new Error('EVIDENCE_INTEGRITY');
-  return !!k.db.prepare('SELECT 1 FROM commerce_privacy_holds WHERE tenant_id=? AND store_id=? AND subject_hash=? AND released=0 AND expires_at>?').get(s.tenant_id,s.store_id,subjectHash(s.tenant_id,s.store_id,c.customer_id),k.clock());}
+  const gift=k.db.prepare('SELECT body,digest FROM commerce_gift_cases WHERE tenant_id=? AND store_id=? AND case_id=?').get(s.tenant_id,s.store_id,caseId) as Row;
+  const recipient=gift?JSON.parse(gift.body):null;if(gift&&contentDigest(recipient)!==gift.digest)throw new Error('EVIDENCE_INTEGRITY');
+  return [c.customer_id,recipient?.recipient_customer_id].filter(Boolean).some(customer=>!!k.db.prepare('SELECT 1 FROM commerce_privacy_holds WHERE tenant_id=? AND store_id=? AND subject_hash=? AND released=0 AND expires_at>?').get(s.tenant_id,s.store_id,subjectHash(s.tenant_id,s.store_id,customer),k.clock()));}
  purgeExpired(scope:Scope,after:string|null=null){const k=this.#k;if(after!==null)id(after);return k.transaction(()=>{const s=k.authorize(scope,'privacy.manage');
   const rows=k.db.prepare("SELECT id,case_id FROM commerce_return_evidence WHERE tenant_id=? AND store_id=? AND expires_at<=? AND state!='erased' AND id>? ORDER BY id LIMIT 100").all(s.tenant_id,s.store_id,k.clock(),after??'') as Row[];let erased=0,held=0;
   for(const row of rows){if(this.#held(s,row.case_id)){held++;continue;}k.db.prepare("UPDATE commerce_return_evidence SET state='erased',bytes=NULL,note='',scanner=NULL WHERE tenant_id=? AND store_id=? AND id=?").run(s.tenant_id,s.store_id,row.id);erased++;}
