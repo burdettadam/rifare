@@ -4,14 +4,14 @@ import {intakeSettings,evidenceReviewState} from './return-intake-core.mts';
 import { canonical,contentDigest,jsonValue } from './configuration-values.mts';
 import { allocationContext,resolutionSettings,checkedBody,financialFacts,minor } from './resolution-ledger.mts';
 
-function exchangeValue(k:CommerceKernel,scope:Scope,allocationId:string,catalogId:string,quotedAt:number){
+function exchangeValue(k:CommerceKernel,scope:Scope,allocationId:string,catalogId:string,quotedAt:number,authority='action.propose'){
  const ctx=allocationContext(k,scope,allocationId),{c,a,b,s}=ctx;const settings=resolutionSettings(k,s),facts=financialFacts(k,c);
  if(intakeSettings(k,s).digest!==b.fee_settings_digest)throw new Error('REFUND_FEES_CHANGED');
  if(evidenceReviewState(k,s,c.id)?.event==='evidence_requested')throw new Error('RETURN_REVIEW_REQUIRED');
  const paid=facts.paid_lines.find((l:Row)=>l.id===b.line_id);
  if(!paid||contentDigest({...paid,resolved_units:[]})!==b.paid_line_digest)throw new Error('PAID_ALLOCATION_CHANGED');
  if(b.units.some((n:number)=>paid.resolved_units.includes(n)))throw new Error('UNIT_ALREADY_RESOLVED');
- k.authorize(scope,'action.propose',c.resource_id);
+ k.authorize(scope,authority,c.resource_id);
  if(a.outcome!=='exchange'||!c.pins.policy.body.rules.outcomes.includes('exchange'))throw new Error('OUTCOME_UNSUPPORTED');
  const catalog=k.get(scope,id(catalogId));if(catalog.kind!=='catalog'||catalog.source_system!=='synthetic')throw new Error('EXCHANGE_SOURCE_UNQUALIFIED');
  const v=exact(jsonValue(catalog.payload),['variant_id','product_id','currency','unit_price_minor','tax_per_unit_minor','shipping_minor','duties_per_unit_minor','available','discount_eligible','promotion_expires_at','excluded']);
@@ -39,11 +39,13 @@ export class VariantExchanges {
  quote(scope:Scope,input:unknown){const p=exact(jsonValue(input),['allocation_id','catalog_id']),k=this.kernel;id(p.allocation_id);id(p.catalog_id);
   return k.transaction(()=>{const b=exchangeValue(k,scope,p.allocation_id,p.catalog_id,k.clock()),ctx=allocationContext(k,scope,p.allocation_id),ref='exchange_'+token().slice(0,32),hash=contentDigest(b);
    k.db.prepare('INSERT INTO commerce_exchange_quotes VALUES(?,?,?,?,?,?,?,?)').run(ctx.s.tenant_id,ctx.s.store_id,ref,p.allocation_id,ctx.c.id,ctx.c.resource_id,canonical(b),hash);return {id:ref,digest:hash,quote:b};});}
- assertCurrent(scope:Scope,input:unknown){const p=exact(jsonValue(input),['quote_id','quote_digest']),k=this.kernel;const s=k.require(scope);
+ assertCurrent(scope:Scope,input:unknown){return this.#current(scope,input,'action.propose');}
+ validateForReview(scope:Scope,input:unknown){return this.#current(scope,input,'return.read');}
+ #current(scope:Scope,input:unknown,authority:string){const p=exact(jsonValue(input),['quote_id','quote_digest']),k=this.kernel;const s=k.require(scope);
   const row=k.db.prepare('SELECT * FROM commerce_exchange_quotes WHERE tenant_id=? AND store_id=? AND id=?').get(s.tenant_id,s.store_id,id(p.quote_id)) as Row;
   const b=checkedBody(row);allocationContext(k,scope,row.allocation_id);
   if(row.digest!==p.quote_digest||b.expires_at<=k.clock())throw new Error('EXCHANGE_QUOTE_CHANGED');
-  const current=exchangeValue(k,scope,row.allocation_id,b.catalog_id,b.quoted_at);
+  const current=exchangeValue(k,scope,row.allocation_id,b.catalog_id,b.quoted_at,authority);
   if(contentDigest(current)!==row.digest)throw new Error('EXCHANGE_QUOTE_CHANGED');
   if(!current.allowed)throw new Error('EXCHANGE_UNAVAILABLE');return {...current,commit_authorized:false};
  }

@@ -1,0 +1,116 @@
+{
+  "id": "rifare-return-fulfillment-v1",
+  "version": 1,
+  "qualification": "synthetic_only",
+  "authentication": "existing scoped bearer session; current permissions rechecked on every request",
+  "authority": "all execution uses existing /v1/execution/preview, /approve and /execute; creating a quote is not approval",
+  "transport": "loopback diagnostic REST",
+  "effect_boundary": "separately configured synthetic inventory/carrier ledger, disabled by default",
+  "endpoints": {
+    "GET /v1/fulfillment/contract": {},
+    "POST /v1/fulfillment/reserve": {
+      "required_fields": [
+        "quote_id",
+        "quote_digest",
+        "location_id",
+        "ttl_ms"
+      ]
+    },
+    "POST /v1/fulfillment/reservation": {
+      "required_fields": [
+        "reservation_id"
+      ]
+    },
+    "POST /v1/fulfillment/reservation-reconcile": {
+      "required_fields": [
+        "reservation_id"
+      ]
+    },
+    "POST /v1/fulfillment/release": {
+      "required_fields": [
+        "reservation_id",
+        "generation"
+      ]
+    },
+    "POST /v1/fulfillment/replacement-quote": {
+      "required_fields": [
+        "reservation_id"
+      ]
+    },
+    "POST /v1/fulfillment/parcel": {
+      "required_fields": [
+        "case_id",
+        "request_id",
+        "expected_revision",
+        "from_address_ref",
+        "to_address_ref",
+        "address_revision",
+        "package",
+        "service"
+      ]
+    },
+    "POST /v1/fulfillment/label-quote": {
+      "required_fields": [
+        "request_id",
+        "replaces"
+      ]
+    },
+    "POST /v1/fulfillment/void-quote": {
+      "required_fields": [
+        "label_id"
+      ]
+    },
+    "POST /v1/fulfillment/operation": {
+      "required_fields": [
+        "operation_id"
+      ]
+    },
+    "POST /v1/fulfillment/dispatch": {
+      "required_fields": [
+        "operation_id"
+      ]
+    },
+    "POST /v1/fulfillment/reconcile": {
+      "required_fields": [
+        "operation_id"
+      ]
+    },
+    "POST /v1/fulfillment/label": {
+      "required_fields": [
+        "label_id"
+      ]
+    },
+    "POST /v1/fulfillment/tracking": {
+      "required_fields": [
+        "label_id"
+      ]
+    },
+    "POST /v1/fulfillment/refresh-tracking": {
+      "required_fields": [
+        "label_id"
+      ]
+    }
+  },
+  "disallowed_inputs": [
+    "provider credentials",
+    "client prices",
+    "fulfillment state",
+    "refund confirmation",
+    "arbitrary carrier events",
+    "source executor selection"
+  ],
+  "separate_states": [
+    "reserved",
+    "replacement_created",
+    "replacement_shipped",
+    "label_purchased",
+    "void_requested",
+    "void_confirmed",
+    "reimbursement_refunded",
+    "carrier_delivered",
+    "warehouse_received",
+    "warehouse_inspected"
+  ],
+  "warehouse_receipt_implemented": false,
+  "live_transport": false
+}

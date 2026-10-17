@@ -514,6 +514,46 @@
       "contract_files": [
         "goals/M03/M03-G10.md"
       ]
+    },
+    {
+      "id": "FEATURE-M03-G11",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M03/M03-G11.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M03-G12",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M03/M03-G12.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M03-G13",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M03/M03-G13.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M03-G14",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M03/M03-G14.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M03-G15",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M03/M03-G15.md"
+      ]
     }
   ],
   "tests": [
@@ -12157,6 +12197,727 @@
       "runner_case_id": "M03-G09-REVIEW-INSTRUMENT-IDENTITY-CANNOT-CHANGE",
       "source": "tests/development/resolution-review.test.mts",
       "capability_id": "FEATURE-M03-G09"
+    },
+    {
+      "id": "runtime:CASE-M03-G11-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G11-01",
+      "source": "tests/development/replacement-inventory.test.mts",
+      "capability_id": "FEATURE-M03-G11"
+    },
+    {
+      "id": "runtime:CASE-M03-G11-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G11-02",
+      "source": "tests/development/replacement-inventory.test.mts",
+      "capability_id": "FEATURE-M03-G11"
+    },
+    {
+      "id": "runtime:CASE-M03-G11-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G11-03",
+      "source": "tests/development/replacement-inventory.test.mts",
+      "capability_id": "FEATURE-M03-G11"
+    },
+    {
+      "id": "runtime:M03-G11-TEST-012-CONSERVATION",
+      "suite": "runtime",
+      "runner_case_id": "M03-G11-TEST-012-CONSERVATION",
+      "source": "tests/development/replacement-inventory.test.mts",
+      "capability_id": "FEATURE-M03-G11"
+    },
+    {
+      "id": "runtime:M03-G11-REPEAT-RESUMES-SAME-HOLD",
+      "suite": "runtime",
+      "runner_case_id": "M03-G11-REPEAT-RESUMES-SAME-HOLD",
+      "source": "tests/development/replacement-inventory.test.mts",
+      "capability_id": "FEATURE-M03-G11"
+    },
+    {
+      "id": "runtime:M03-G11-CROSS-STORE-READ-DENIED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G11-CROSS-STORE-READ-DENIED",
+      "source": "tests/development/replacement-inventory.test.mts",
+      "capability_id": "FEATURE-M03-G11"
+    },
+    {
+      "id": "runtime:M03-G11-CUSTOMER-CANNOT-RESERVE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G11-CUSTOMER-CANNOT-RESERVE",
+      "source": "tests/development/replacement-inventory.test.mts",
+      "capability_id": "FEATURE-M03-G11"
+    },
+    {
+      "id": "runtime:M03-G11-FORGED-LOCATION-CANNOT-RESERVE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G11-FORGED-LOCATION-CANNOT-RESERVE",
+      "source": "tests/development/replacement-inventory.test.mts",
+      "capability_id": "FEATURE-M03-G11"
+    },
+    {
+      "id": "runtime:M03-G11-RELEASE-REQUIRES-GENERATION",
+      "suite": "runtime",
+      "runner_case_id": "M03-G11-RELEASE-REQUIRES-GENERATION",
+      "source": "tests/development/replacement-inventory.test.mts",
+      "capability_id": "FEATURE-M03-G11"
+    },
+    {
+      "id": "runtime:M03-G11-RELEASE-ALLOWS-NEW-GENERATION",
+      "suite": "runtime",
+      "runner_case_id": "M03-G11-RELEASE-ALLOWS-NEW-GENERATION",
+      "source": "tests/development/replacement-inventory.test.mts",
+      "capability_id": "FEATURE-M03-G11"
+    },
+    {
+      "id": "runtime:M03-G11-UNKNOWN-RESERVATION-NOT-RESENT",
+      "suite": "runtime",
+      "runner_case_id": "M03-G11-UNKNOWN-RESERVATION-NOT-RESENT",
+      "source": "tests/development/replacement-inventory.test.mts",
+      "capability_id": "FEATURE-M03-G11"
+    },
+    {
+      "id": "runtime:M03-G11-UNKNOWN-REPLACEMENT-CANNOT-RELEASE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G11-UNKNOWN-REPLACEMENT-CANNOT-RELEASE",
+      "source": "tests/development/replacement-inventory.test.mts",
+      "capability_id": "FEATURE-M03-G11"
+    },
+    {
+      "id": "runtime:M03-G11-SOURCE-IDENTITY-CANNOT-SUBSTITUTE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G11-SOURCE-IDENTITY-CANNOT-SUBSTITUTE",
+      "source": "tests/development/replacement-inventory.test.mts",
+      "capability_id": "FEATURE-M03-G11"
+    },
+    {
+      "id": "runtime:M03-G11-SAME-DATABASE-DENIED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G11-SAME-DATABASE-DENIED",
+      "source": "tests/development/replacement-inventory.test.mts",
+      "capability_id": "FEATURE-M03-G11"
+    },
+    {
+      "id": "runtime:M03-G11-STOP-BEFORE-SOURCE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G11-STOP-BEFORE-SOURCE",
+      "source": "tests/development/replacement-inventory.test.mts",
+      "capability_id": "FEATURE-M03-G11"
+    },
+    {
+      "id": "runtime:M03-G11-STALE-CATALOG-BLOCKS",
+      "suite": "runtime",
+      "runner_case_id": "M03-G11-STALE-CATALOG-BLOCKS",
+      "source": "tests/development/replacement-inventory.test.mts",
+      "capability_id": "FEATURE-M03-G11"
+    },
+    {
+      "id": "runtime:M03-G11-EXPIRED-SETTINGS-BLOCK",
+      "suite": "runtime",
+      "runner_case_id": "M03-G11-EXPIRED-SETTINGS-BLOCK",
+      "source": "tests/development/replacement-inventory.test.mts",
+      "capability_id": "FEATURE-M03-G11"
+    },
+    {
+      "id": "runtime:M03-G11-RESTORED-DATABASE-RETAINS-HOLD",
+      "suite": "runtime",
+      "runner_case_id": "M03-G11-RESTORED-DATABASE-RETAINS-HOLD",
+      "source": "tests/development/replacement-inventory.test.mts",
+      "capability_id": "FEATURE-M03-G11"
+    },
+    {
+      "id": "runtime:CASE-M03-G12-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G12-01",
+      "source": "tests/development/replacement-orders.test.mts",
+      "capability_id": "FEATURE-M03-G12"
+    },
+    {
+      "id": "runtime:CASE-M03-G12-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G12-02",
+      "source": "tests/development/replacement-orders.test.mts",
+      "capability_id": "FEATURE-M03-G12"
+    },
+    {
+      "id": "runtime:CASE-M03-G12-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G12-03",
+      "source": "tests/development/replacement-orders.test.mts",
+      "capability_id": "FEATURE-M03-G12"
+    },
+    {
+      "id": "runtime:M03-G12-EXPIRED-HOLD-REJECTS-LATE-COMMIT",
+      "suite": "runtime",
+      "runner_case_id": "M03-G12-EXPIRED-HOLD-REJECTS-LATE-COMMIT",
+      "source": "tests/development/replacement-orders.test.mts",
+      "capability_id": "FEATURE-M03-G12"
+    },
+    {
+      "id": "runtime:M03-G12-REVIEWER-VALIDATES-WITHOUT-PROPOSE-POWER",
+      "suite": "runtime",
+      "runner_case_id": "M03-G12-REVIEWER-VALIDATES-WITHOUT-PROPOSE-POWER",
+      "source": "tests/development/replacement-orders.test.mts",
+      "capability_id": "FEATURE-M03-G12"
+    },
+    {
+      "id": "runtime:M03-G12-DUPLICATE-OBLIGATION-CANNOT-AUTHORIZE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G12-DUPLICATE-OBLIGATION-CANNOT-AUTHORIZE",
+      "source": "tests/development/replacement-orders.test.mts",
+      "capability_id": "FEATURE-M03-G12"
+    },
+    {
+      "id": "runtime:M03-G12-WRONG-RETURN-RESPONSE-UNKNOWN",
+      "suite": "runtime",
+      "runner_case_id": "M03-G12-WRONG-RETURN-RESPONSE-UNKNOWN",
+      "source": "tests/development/replacement-orders.test.mts",
+      "capability_id": "FEATURE-M03-G12"
+    },
+    {
+      "id": "runtime:M03-G12-WRONG-VARIANT-RESPONSE-UNKNOWN",
+      "suite": "runtime",
+      "runner_case_id": "M03-G12-WRONG-VARIANT-RESPONSE-UNKNOWN",
+      "source": "tests/development/replacement-orders.test.mts",
+      "capability_id": "FEATURE-M03-G12"
+    },
+    {
+      "id": "runtime:M03-G12-LOST-RESPONSE-RECONCILES-NO-SEND",
+      "suite": "runtime",
+      "runner_case_id": "M03-G12-LOST-RESPONSE-RECONCILES-NO-SEND",
+      "source": "tests/development/replacement-orders.test.mts",
+      "capability_id": "FEATURE-M03-G12"
+    },
+    {
+      "id": "runtime:M03-G12-REAL-PROCESS-CRASH-AFTER-COMMIT",
+      "suite": "runtime",
+      "runner_case_id": "M03-G12-REAL-PROCESS-CRASH-AFTER-COMMIT",
+      "source": "tests/development/replacement-orders.test.mts",
+      "capability_id": "FEATURE-M03-G12"
+    },
+    {
+      "id": "runtime:M03-G12-TWO-PROCESSES-ONE-REPLACEMENT",
+      "suite": "runtime",
+      "runner_case_id": "M03-G12-TWO-PROCESSES-ONE-REPLACEMENT",
+      "source": "tests/development/replacement-orders.test.mts",
+      "capability_id": "FEATURE-M03-G12"
+    },
+    {
+      "id": "runtime:M03-G12-HANG-IS-BOUNDED-UNKNOWN",
+      "suite": "runtime",
+      "runner_case_id": "M03-G12-HANG-IS-BOUNDED-UNKNOWN",
+      "source": "tests/development/replacement-orders.test.mts",
+      "capability_id": "FEATURE-M03-G12"
+    },
+    {
+      "id": "runtime:M03-G12-CROSS-TENANT-RESULT-DENIED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G12-CROSS-TENANT-RESULT-DENIED",
+      "source": "tests/development/replacement-orders.test.mts",
+      "capability_id": "FEATURE-M03-G12"
+    },
+    {
+      "id": "runtime:M03-G12-APPROVAL-REVOKED-BEFORE-DISPATCH",
+      "suite": "runtime",
+      "runner_case_id": "M03-G12-APPROVAL-REVOKED-BEFORE-DISPATCH",
+      "source": "tests/development/replacement-orders.test.mts",
+      "capability_id": "FEATURE-M03-G12"
+    },
+    {
+      "id": "runtime:M03-G12-STOP-PERMITS-READ-RECONCILIATION",
+      "suite": "runtime",
+      "runner_case_id": "M03-G12-STOP-PERMITS-READ-RECONCILIATION",
+      "source": "tests/development/replacement-orders.test.mts",
+      "capability_id": "FEATURE-M03-G12"
+    },
+    {
+      "id": "runtime:M03-G12-NO-SHIPMENT-FROM-CREATION",
+      "suite": "runtime",
+      "runner_case_id": "M03-G12-NO-SHIPMENT-FROM-CREATION",
+      "source": "tests/development/replacement-orders.test.mts",
+      "capability_id": "FEATURE-M03-G12"
+    },
+    {
+      "id": "runtime:M03-G12-FULFILLMENT-REGRESSION-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G12-FULFILLMENT-REGRESSION-REJECTED",
+      "source": "tests/development/replacement-orders.test.mts",
+      "capability_id": "FEATURE-M03-G12"
+    },
+    {
+      "id": "runtime:M03-G12-CONFIGURATION-CHANGE-NEEDS-APPROVAL",
+      "suite": "runtime",
+      "runner_case_id": "M03-G12-CONFIGURATION-CHANGE-NEEDS-APPROVAL",
+      "source": "tests/development/replacement-orders.test.mts",
+      "capability_id": "FEATURE-M03-G12"
+    },
+    {
+      "id": "runtime:CASE-M03-G13-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G13-01",
+      "source": "tests/development/return-labels.test.mts",
+      "capability_id": "FEATURE-M03-G13"
+    },
+    {
+      "id": "runtime:CASE-M03-G13-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G13-02",
+      "source": "tests/development/return-labels.test.mts",
+      "capability_id": "FEATURE-M03-G13"
+    },
+    {
+      "id": "runtime:CASE-M03-G13-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G13-03",
+      "source": "tests/development/return-labels.test.mts",
+      "capability_id": "FEATURE-M03-G13"
+    },
+    {
+      "id": "runtime:M03-G13-RATE-PREVIEW-HAS-NO-CHARGE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G13-RATE-PREVIEW-HAS-NO-CHARGE",
+      "source": "tests/development/return-labels.test.mts",
+      "capability_id": "FEATURE-M03-G13"
+    },
+    {
+      "id": "runtime:M03-G13-RATE-EXPIRY-BEFORE-PREPARATION",
+      "suite": "runtime",
+      "runner_case_id": "M03-G13-RATE-EXPIRY-BEFORE-PREPARATION",
+      "source": "tests/development/return-labels.test.mts",
+      "capability_id": "FEATURE-M03-G13"
+    },
+    {
+      "id": "runtime:M03-G13-PACKAGE-CHANGE-INVALIDATES-RATE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G13-PACKAGE-CHANGE-INVALIDATES-RATE",
+      "source": "tests/development/return-labels.test.mts",
+      "capability_id": "FEATURE-M03-G13"
+    },
+    {
+      "id": "runtime:M03-G13-SERVICE-CHANGE-INVALIDATES-RATE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G13-SERVICE-CHANGE-INVALIDATES-RATE",
+      "source": "tests/development/return-labels.test.mts",
+      "capability_id": "FEATURE-M03-G13"
+    },
+    {
+      "id": "runtime:M03-G13-CUSTOMER-CANNOT-SET-DESTINATION",
+      "suite": "runtime",
+      "runner_case_id": "M03-G13-CUSTOMER-CANNOT-SET-DESTINATION",
+      "source": "tests/development/return-labels.test.mts",
+      "capability_id": "FEATURE-M03-G13"
+    },
+    {
+      "id": "runtime:M03-G13-PRICE-IS-SERVER-DERIVED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G13-PRICE-IS-SERVER-DERIVED",
+      "source": "tests/development/return-labels.test.mts",
+      "capability_id": "FEATURE-M03-G13"
+    },
+    {
+      "id": "runtime:M03-G13-PREVIEW-AMOUNT-EXACT",
+      "suite": "runtime",
+      "runner_case_id": "M03-G13-PREVIEW-AMOUNT-EXACT",
+      "source": "tests/development/return-labels.test.mts",
+      "capability_id": "FEATURE-M03-G13"
+    },
+    {
+      "id": "runtime:M03-G13-DUPLICATE-APPROVAL-NO-SECOND-LABEL",
+      "suite": "runtime",
+      "runner_case_id": "M03-G13-DUPLICATE-APPROVAL-NO-SECOND-LABEL",
+      "source": "tests/development/return-labels.test.mts",
+      "capability_id": "FEATURE-M03-G13"
+    },
+    {
+      "id": "runtime:M03-G13-PURCHASE-RESPONSE-MUST-HAVE-CHARGE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G13-PURCHASE-RESPONSE-MUST-HAVE-CHARGE",
+      "source": "tests/development/return-labels.test.mts",
+      "capability_id": "FEATURE-M03-G13"
+    },
+    {
+      "id": "runtime:M03-G13-CHANGED-ACCOUNT-INVALIDATES-PREVIEW",
+      "suite": "runtime",
+      "runner_case_id": "M03-G13-CHANGED-ACCOUNT-INVALIDATES-PREVIEW",
+      "source": "tests/development/return-labels.test.mts",
+      "capability_id": "FEATURE-M03-G13"
+    },
+    {
+      "id": "runtime:M03-G13-CROSS-TENANT-QUOTE-DENIED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G13-CROSS-TENANT-QUOTE-DENIED",
+      "source": "tests/development/return-labels.test.mts",
+      "capability_id": "FEATURE-M03-G13"
+    },
+    {
+      "id": "runtime:M03-G13-LABEL-READ-RECHECKS-SESSION",
+      "suite": "runtime",
+      "runner_case_id": "M03-G13-LABEL-READ-RECHECKS-SESSION",
+      "source": "tests/development/return-labels.test.mts",
+      "capability_id": "FEATURE-M03-G13"
+    },
+    {
+      "id": "runtime:M03-G13-SOURCE-RATE-CHANGE-NO-UNAPPROVED-CHARGE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G13-SOURCE-RATE-CHANGE-NO-UNAPPROVED-CHARGE",
+      "source": "tests/development/return-labels.test.mts",
+      "capability_id": "FEATURE-M03-G13"
+    },
+    {
+      "id": "runtime:M03-G13-STOP-BEFORE-PURCHASE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G13-STOP-BEFORE-PURCHASE",
+      "source": "tests/development/return-labels.test.mts",
+      "capability_id": "FEATURE-M03-G13"
+    },
+    {
+      "id": "runtime:M03-G13-ZERO-DIMENSION-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G13-ZERO-DIMENSION-REJECTED",
+      "source": "tests/development/return-labels.test.mts",
+      "capability_id": "FEATURE-M03-G13"
+    },
+    {
+      "id": "runtime:CASE-M03-G14-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G14-01",
+      "source": "tests/development/label-lifecycle.test.mts",
+      "capability_id": "FEATURE-M03-G14"
+    },
+    {
+      "id": "runtime:CASE-M03-G14-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G14-02",
+      "source": "tests/development/label-lifecycle.test.mts",
+      "capability_id": "FEATURE-M03-G14"
+    },
+    {
+      "id": "runtime:CASE-M03-G14-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G14-03",
+      "source": "tests/development/label-lifecycle.test.mts",
+      "capability_id": "FEATURE-M03-G14"
+    },
+    {
+      "id": "runtime:M03-G14-VOID-REQUEST-IS-NOT-REIMBURSEMENT",
+      "suite": "runtime",
+      "runner_case_id": "M03-G14-VOID-REQUEST-IS-NOT-REIMBURSEMENT",
+      "source": "tests/development/label-lifecycle.test.mts",
+      "capability_id": "FEATURE-M03-G14"
+    },
+    {
+      "id": "runtime:M03-G14-UNKNOWN-VOID-CANNOT-REPLACE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G14-UNKNOWN-VOID-CANNOT-REPLACE",
+      "source": "tests/development/label-lifecycle.test.mts",
+      "capability_id": "FEATURE-M03-G14"
+    },
+    {
+      "id": "runtime:M03-G14-REJECTED-VOID-CANNOT-REPLACE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G14-REJECTED-VOID-CANNOT-REPLACE",
+      "source": "tests/development/label-lifecycle.test.mts",
+      "capability_id": "FEATURE-M03-G14"
+    },
+    {
+      "id": "runtime:M03-G14-REPLACEMENT-REQUIRES-SEPARATE-APPROVAL",
+      "suite": "runtime",
+      "runner_case_id": "M03-G14-REPLACEMENT-REQUIRES-SEPARATE-APPROVAL",
+      "source": "tests/development/label-lifecycle.test.mts",
+      "capability_id": "FEATURE-M03-G14"
+    },
+    {
+      "id": "runtime:M03-G14-WRONG-PREVIOUS-LABEL-DENIED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G14-WRONG-PREVIOUS-LABEL-DENIED",
+      "source": "tests/development/label-lifecycle.test.mts",
+      "capability_id": "FEATURE-M03-G14"
+    },
+    {
+      "id": "runtime:M03-G14-CURRENT-LABEL-REQUIRED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G14-CURRENT-LABEL-REQUIRED",
+      "source": "tests/development/label-lifecycle.test.mts",
+      "capability_id": "FEATURE-M03-G14"
+    },
+    {
+      "id": "runtime:M03-G14-EXPIRY-ALONE-DOES-NOT-REFUND",
+      "suite": "runtime",
+      "runner_case_id": "M03-G14-EXPIRY-ALONE-DOES-NOT-REFUND",
+      "source": "tests/development/label-lifecycle.test.mts",
+      "capability_id": "FEATURE-M03-G14"
+    },
+    {
+      "id": "runtime:M03-G14-CARRIER-VALIDITY-CANNOT-CHANGE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G14-CARRIER-VALIDITY-CANNOT-CHANGE",
+      "source": "tests/development/label-lifecycle.test.mts",
+      "capability_id": "FEATURE-M03-G14"
+    },
+    {
+      "id": "runtime:M03-G14-LATE-REFUND-IDENTITY-CANNOT-CHANGE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G14-LATE-REFUND-IDENTITY-CANNOT-CHANGE",
+      "source": "tests/development/label-lifecycle.test.mts",
+      "capability_id": "FEATURE-M03-G14"
+    },
+    {
+      "id": "runtime:M03-G14-WRONG-REFUND-AMOUNT-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G14-WRONG-REFUND-AMOUNT-REJECTED",
+      "source": "tests/development/label-lifecycle.test.mts",
+      "capability_id": "FEATURE-M03-G14"
+    },
+    {
+      "id": "runtime:M03-G14-VOID-SOURCE-RECHECKS-TRANSIT",
+      "suite": "runtime",
+      "runner_case_id": "M03-G14-VOID-SOURCE-RECHECKS-TRANSIT",
+      "source": "tests/development/label-lifecycle.test.mts",
+      "capability_id": "FEATURE-M03-G14"
+    },
+    {
+      "id": "runtime:M03-G14-VOID-RESPONSE-LOSS-ONE-REQUEST",
+      "suite": "runtime",
+      "runner_case_id": "M03-G14-VOID-RESPONSE-LOSS-ONE-REQUEST",
+      "source": "tests/development/label-lifecycle.test.mts",
+      "capability_id": "FEATURE-M03-G14"
+    },
+    {
+      "id": "runtime:M03-G14-REIMBURSEMENT-NO-DOUBLE-COUNT",
+      "suite": "runtime",
+      "runner_case_id": "M03-G14-REIMBURSEMENT-NO-DOUBLE-COUNT",
+      "source": "tests/development/label-lifecycle.test.mts",
+      "capability_id": "FEATURE-M03-G14"
+    },
+    {
+      "id": "runtime:M03-G14-CROSS-TENANT-VOID-DENIED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G14-CROSS-TENANT-VOID-DENIED",
+      "source": "tests/development/label-lifecycle.test.mts",
+      "capability_id": "FEATURE-M03-G14"
+    },
+    {
+      "id": "runtime:CASE-M03-G15-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G15-01",
+      "source": "tests/development/return-tracking.test.mts",
+      "capability_id": "FEATURE-M03-G15"
+    },
+    {
+      "id": "runtime:CASE-M03-G15-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G15-02",
+      "source": "tests/development/return-tracking.test.mts",
+      "capability_id": "FEATURE-M03-G15"
+    },
+    {
+      "id": "runtime:CASE-M03-G15-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G15-03",
+      "source": "tests/development/return-tracking.test.mts",
+      "capability_id": "FEATURE-M03-G15"
+    },
+    {
+      "id": "runtime:M03-G15-TEST-017-DELIVERY-NOT-INSPECTION",
+      "suite": "runtime",
+      "runner_case_id": "M03-G15-TEST-017-DELIVERY-NOT-INSPECTION",
+      "source": "tests/development/return-tracking.test.mts",
+      "capability_id": "FEATURE-M03-G15"
+    },
+    {
+      "id": "runtime:M03-G15-UNKNOWN-WAREHOUSE-TRIGGER-NOT-ELIGIBLE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G15-UNKNOWN-WAREHOUSE-TRIGGER-NOT-ELIGIBLE",
+      "source": "tests/development/return-tracking.test.mts",
+      "capability_id": "FEATURE-M03-G15"
+    },
+    {
+      "id": "runtime:M03-G15-TRANSIT-POLICY-EXPLICIT",
+      "suite": "runtime",
+      "runner_case_id": "M03-G15-TRANSIT-POLICY-EXPLICIT",
+      "source": "tests/development/return-tracking.test.mts",
+      "capability_id": "FEATURE-M03-G15"
+    },
+    {
+      "id": "runtime:M03-G15-WRONG-LABEL-RESULT-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G15-WRONG-LABEL-RESULT-REJECTED",
+      "source": "tests/development/return-tracking.test.mts",
+      "capability_id": "FEATURE-M03-G15"
+    },
+    {
+      "id": "runtime:M03-G15-WRONG-SOURCE-RESULT-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G15-WRONG-SOURCE-RESULT-REJECTED",
+      "source": "tests/development/return-tracking.test.mts",
+      "capability_id": "FEATURE-M03-G15"
+    },
+    {
+      "id": "runtime:M03-G15-SAME-VERSION-DIFFERENT-PAYLOAD-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G15-SAME-VERSION-DIFFERENT-PAYLOAD-REJECTED",
+      "source": "tests/development/return-tracking.test.mts",
+      "capability_id": "FEATURE-M03-G15"
+    },
+    {
+      "id": "runtime:M03-G15-OLD-SNAPSHOT-CANNOT-REGRESS",
+      "suite": "runtime",
+      "runner_case_id": "M03-G15-OLD-SNAPSHOT-CANNOT-REGRESS",
+      "source": "tests/development/return-tracking.test.mts",
+      "capability_id": "FEATURE-M03-G15"
+    },
+    {
+      "id": "runtime:M03-G15-EXCEPTION-PRESERVES-DELIVERY-HISTORY",
+      "suite": "runtime",
+      "runner_case_id": "M03-G15-EXCEPTION-PRESERVES-DELIVERY-HISTORY",
+      "source": "tests/development/return-tracking.test.mts",
+      "capability_id": "FEATURE-M03-G15"
+    },
+    {
+      "id": "runtime:M03-G15-EVENT-ID-CONFLICT-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G15-EVENT-ID-CONFLICT-REJECTED",
+      "source": "tests/development/return-tracking.test.mts",
+      "capability_id": "FEATURE-M03-G15"
+    },
+    {
+      "id": "runtime:M03-G15-NO-FINANCIAL-WRITE-FROM-EVENT",
+      "suite": "runtime",
+      "runner_case_id": "M03-G15-NO-FINANCIAL-WRITE-FROM-EVENT",
+      "source": "tests/development/return-tracking.test.mts",
+      "capability_id": "FEATURE-M03-G15"
+    },
+    {
+      "id": "runtime:M03-G15-FUTURE-TIMESTAMP-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G15-FUTURE-TIMESTAMP-REJECTED",
+      "source": "tests/development/return-tracking.test.mts",
+      "capability_id": "FEATURE-M03-G15"
+    },
+    {
+      "id": "runtime:M03-G15-CROSS-TENANT-TRACKING-DENIED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G15-CROSS-TENANT-TRACKING-DENIED",
+      "source": "tests/development/return-tracking.test.mts",
+      "capability_id": "FEATURE-M03-G15"
+    },
+    {
+      "id": "runtime:M03-G15-CUSTOMER-CANNOT-INJECT-EVENTS",
+      "suite": "runtime",
+      "runner_case_id": "M03-G15-CUSTOMER-CANNOT-INJECT-EVENTS",
+      "source": "tests/development/return-tracking.test.mts",
+      "capability_id": "FEATURE-M03-G15"
+    },
+    {
+      "id": "runtime:M03-G15-APPEND-ONLY-EVENTS",
+      "suite": "runtime",
+      "runner_case_id": "M03-G15-APPEND-ONLY-EVENTS",
+      "source": "tests/development/return-tracking.test.mts",
+      "capability_id": "FEATURE-M03-G15"
+    },
+    {
+      "id": "runtime:M03-G14-REVIEW-MISSED-VOID-ACK-CAN-RECONCILE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G14-REVIEW-MISSED-VOID-ACK-CAN-RECONCILE",
+      "source": "tests/development/fulfillment-review.test.mts",
+      "capability_id": "FEATURE-M03-G14"
+    },
+    {
+      "id": "runtime:M03-G15-REVIEW-POLICY-CHANGE-DOES-NOT-REINTERPRET",
+      "suite": "runtime",
+      "runner_case_id": "M03-G15-REVIEW-POLICY-CHANGE-DOES-NOT-REINTERPRET",
+      "source": "tests/development/fulfillment-review.test.mts",
+      "capability_id": "FEATURE-M03-G15"
+    },
+    {
+      "id": "runtime:M03-G14-REVIEW-REJECTED-VOID-IS-NOT-VOIDED-LABEL",
+      "suite": "runtime",
+      "runner_case_id": "M03-G14-REVIEW-REJECTED-VOID-IS-NOT-VOIDED-LABEL",
+      "source": "tests/development/fulfillment-review.test.mts",
+      "capability_id": "FEATURE-M03-G14"
+    },
+    {
+      "id": "runtime:M03-G13-REVIEW-ERASURE-SCRUBS-ADDRESS-CONTEXT",
+      "suite": "runtime",
+      "runner_case_id": "M03-G13-REVIEW-ERASURE-SCRUBS-ADDRESS-CONTEXT",
+      "source": "tests/development/fulfillment-review.test.mts",
+      "capability_id": "FEATURE-M03-G13"
+    },
+    {
+      "id": "runtime:M03-G12-HTTP-RESERVE-APPROVE-REPLACE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G12-HTTP-RESERVE-APPROVE-REPLACE",
+      "source": "tests/development/fulfillment-api.test.mts",
+      "capability_id": "FEATURE-M03-G12"
+    },
+    {
+      "id": "runtime:M03-G13-HTTP-LABEL-QUOTE-IS-NOT-PURCHASE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G13-HTTP-LABEL-QUOTE-IS-NOT-PURCHASE",
+      "source": "tests/development/fulfillment-api.test.mts",
+      "capability_id": "FEATURE-M03-G13"
+    },
+    {
+      "id": "runtime:M03-G13-HTTP-NO-DEFAULT-CARRIER",
+      "suite": "runtime",
+      "runner_case_id": "M03-G13-HTTP-NO-DEFAULT-CARRIER",
+      "source": "tests/development/fulfillment-api.test.mts",
+      "capability_id": "FEATURE-M03-G13"
+    },
+    {
+      "id": "runtime:M03-G13-HTTP-CLIENT-PRICE-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G13-HTTP-CLIENT-PRICE-REJECTED",
+      "source": "tests/development/fulfillment-api.test.mts",
+      "capability_id": "FEATURE-M03-G13"
+    },
+    {
+      "id": "runtime:M03-G11-HTTP-CUSTOMER-CANNOT-RESERVE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G11-HTTP-CUSTOMER-CANNOT-RESERVE",
+      "source": "tests/development/fulfillment-api.test.mts",
+      "capability_id": "FEATURE-M03-G11"
+    },
+    {
+      "id": "runtime:M03-G15-HTTP-CROSS-STORE-TRACKING-HIDDEN",
+      "suite": "runtime",
+      "runner_case_id": "M03-G15-HTTP-CROSS-STORE-TRACKING-HIDDEN",
+      "source": "tests/development/fulfillment-api.test.mts",
+      "capability_id": "FEATURE-M03-G15"
+    },
+    {
+      "id": "runtime:M03-G15-HTTP-NO-CLIENT-EVENT-INJECTION",
+      "suite": "runtime",
+      "runner_case_id": "M03-G15-HTTP-NO-CLIENT-EVENT-INJECTION",
+      "source": "tests/development/fulfillment-api.test.mts",
+      "capability_id": "FEATURE-M03-G15"
+    },
+    {
+      "id": "runtime:M03-G14-EXPIRED-UNUSED-LABEL-CAN-BE-REPLACED-WITHOUT-REFUND",
+      "suite": "runtime",
+      "runner_case_id": "M03-G14-EXPIRED-UNUSED-LABEL-CAN-BE-REPLACED-WITHOUT-REFUND",
+      "source": "tests/development/fulfillment-api.test.mts",
+      "capability_id": "FEATURE-M03-G14"
+    },
+    {
+      "id": "runtime:M03-G13-PRIVACY-EXPORT-INCLUDES-SCOPED-FULFILLMENT",
+      "suite": "runtime",
+      "runner_case_id": "M03-G13-PRIVACY-EXPORT-INCLUDES-SCOPED-FULFILLMENT",
+      "source": "tests/development/fulfillment-api.test.mts",
+      "capability_id": "FEATURE-M03-G13"
+    },
+    {
+      "id": "runtime:M03-G15-REVOKED-POLICY-DOES-NOT-TRIGGER-RESOLUTION",
+      "suite": "runtime",
+      "runner_case_id": "M03-G15-REVOKED-POLICY-DOES-NOT-TRIGGER-RESOLUTION",
+      "source": "tests/development/fulfillment-api.test.mts",
+      "capability_id": "FEATURE-M03-G15"
+    },
+    {
+      "id": "runtime:M03-G12-ZERO-VALUE-WITHOUT-FULFILLABILITY-REMAINS-UNKNOWN",
+      "suite": "runtime",
+      "runner_case_id": "M03-G12-ZERO-VALUE-WITHOUT-FULFILLABILITY-REMAINS-UNKNOWN",
+      "source": "tests/development/replacement-orders.test.mts",
+      "capability_id": "FEATURE-M03-G12"
     }
   ],
   "protected_files": [
@@ -12504,7 +13265,15 @@
     "tests/development/variant-exchanges.test.mts",
     "tests/development/resolution-review.test.mts",
     "tests/development/resolution-api.test.mts",
-    "tests/development/resolution-helpers.mts"
+    "tests/development/resolution-helpers.mts",
+    "tests/development/replacement-inventory.test.mts",
+    "tests/development/replacement-orders.test.mts",
+    "tests/development/return-labels.test.mts",
+    "tests/development/label-lifecycle.test.mts",
+    "tests/development/return-tracking.test.mts",
+    "tests/development/fulfillment-review.test.mts",
+    "tests/development/fulfillment-api.test.mts",
+    "tests/development/fulfillment-helpers.mts"
   ],
   "source_count_fixture": "tests/fixtures/licensing/artifact-oracle.v1.json",
   "source_inventory": "planning/component-inventory.json"
