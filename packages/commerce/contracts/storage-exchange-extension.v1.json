@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "base_schema_digest": "224caa84537311393f9e0117a7257e7921e05a7ce9550e4a5b0b1233ff3ae7f9",
+  "schema_digest": "db2020a0acfbfafff826368c53fd8d0f3f4dee597b5547fae01d0bbaf0414f8a",
+  "tables": [
+    {
+      "name": "commerce_exchange_settings",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "revision",
+        "body",
+        "digest"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_gift_cases",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "case_id",
+        "resource_id",
+        "token_hash",
+        "body",
+        "digest",
+        "revision"
+      ],
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_gift_challenges",
+      "columns": [
+        "id",
+        "proof_hash",
+        "tenant_id",
+        "store_id",
+        "resource_id",
+        "gift_digest",
+        "expires_at",
+        "attempts",
+        "consumed"
+      ],
+      "handling": "revocable_security_material"
+    },
+    {
+      "name": "commerce_gift_sessions",
+      "columns": [
+        "token_hash",
+        "tenant_id",
+        "store_id",
+        "resource_id",
+        "gift_id",
+        "gift_digest",
+        "recipient_customer_id",
+        "expires_at",
+        "revoked"
+      ],
+      "handling": "revocable_security_material"
+    }
+  ]
+}

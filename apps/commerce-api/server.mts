@@ -20,6 +20,8 @@ import { ResolutionLedger } from '../../packages/commerce/resolution-ledger.mts'
 import { RefundQuotes } from '../../packages/commerce/refund-quotes.mts';
 import { StoreCredit } from '../../packages/commerce/store-credit.mts';
 import { VariantExchanges } from '../../packages/commerce/variant-exchanges.mts';
+import { ExchangeFinance } from '../../packages/commerce/exchange-finance.mts';
+import type { GiftReturns } from '../../packages/commerce/gift-returns.mts';
 import { ResolutionExecution } from '../../packages/commerce/resolution-execution.mts';
 import type { ResolutionFixtureSource } from '../../packages/adapters/resolution-fixture-source.mts';
 import { ReturnIntake } from '../../packages/commerce/return-intake.mts';
@@ -62,10 +64,12 @@ const SAFE_CODES=new Set(['ADAPTER_UNAVAILABLE','APPROVAL_AUTHORITY_CHANGED','AP
   'INVALID_PERMISSION','AUTHORITY_CHANGED','LAST_OWNER','RESOURCE_DENIED','INVALID_SKILL','SKILL_CHANGED','PROFILE_STALE','PROFILE_ACTION_DENIED','INVALID_PROFILE',
   'NO_CONFIGURATION','RUN_IN_PROGRESS','TASK_CONTEXT_CHANGED','UNKNOWN_READ_ACTION','CURRENT_FACTS_UNAVAILABLE','TASK_LIMIT','HOST_DENIED','ORIGIN_DENIED','VERIFICATION_FAILED','SECRET_UNAVAILABLE','ADAPTER_UNAVAILABLE','PROVIDER_REJECTED','PROVIDER_UNAVAILABLE','OUTCOME_UNKNOWN']);
 for(const code of ["APPROVAL_AUTHORITY_CHANGED", "EDIT_ADDRESS_INVALID", "EDIT_ADDRESS_UNSUPPORTED", "EDIT_ALREADY_ACTIVE", "EDIT_APPROVAL_CHANGED", "EDIT_BALANCE_INVALID", "EDIT_CALCULATION_CHANGED", "EDIT_CONFIGURATION_CHANGED", "EDIT_CUSTOMER_CHANGED", "EDIT_DISCOUNT_UNSUPPORTED", "EDIT_FINAL_VERSION_CHANGED", "EDIT_FINANCE_UNCONFIRMED", "EDIT_FOREIGN_HOLD", "EDIT_HOLD_MISSING", "EDIT_HOLD_OWNERSHIP", "EDIT_HOLD_PROBE_FAILED", "EDIT_HOLD_REMAINS", "EDIT_HOLD_UNCONFIRMED", "EDIT_INTEGRATION_NOT_READY", "EDIT_INTEGRITY", "EDIT_LINE_IRREVERSIBLE", "EDIT_MONEY_INVALID", "EDIT_NATIVE_TOTAL_CHANGED", "EDIT_NO_CHANGE", "EDIT_OPERATION_CONFLICT", "EDIT_ORDER_EXISTS", "EDIT_PAYMENT_MISMATCH", "EDIT_PAYMENT_OUTSTANDING", "EDIT_PAYMENT_VERSION_CHANGED", "EDIT_QUOTE_CHANGED", "EDIT_QUOTE_EXPIRED", "EDIT_READINESS_CHANGED", "EDIT_RECONCILIATION_REQUIRED", "EDIT_REFUND_BALANCE", "EDIT_RESULT_MISMATCH", "EDIT_SESSION_MISSING", "EDIT_SETTINGS_CHANGED", "EDIT_SOURCE_CHANGED", "EDIT_SOURCE_INTEGRITY", "EDIT_SOURCE_MISMATCH", "EDIT_SOURCE_MISSING", "EDIT_SOURCE_REGRESSION", "EDIT_SOURCE_RESPONSE_LOST", "EDIT_SOURCE_STALE", "EDIT_SOURCE_TIMEOUT", "EDIT_SOURCE_UNAVAILABLE", "EDIT_SOURCE_UNQUALIFIED", "EDIT_STAGE_UNSUPPORTED", "EDIT_STOCK_UNAVAILABLE", "EDIT_TAX_ROUNDING_UNQUALIFIED", "EDIT_TAX_SHIPPING_UNQUALIFIED", "EDIT_TOTAL_MISMATCH", "EDIT_UNQUALIFIED_WAREHOUSE", "EDIT_UNSUPPORTED_ACTION", "EDIT_VARIANT_UNSUPPORTED", "EDIT_WAREHOUSE_CHANGED", "EDIT_WAREHOUSE_IRREVERSIBLE", "EDIT_WAREHOUSE_MISSING", "EDIT_WAREHOUSE_STALE", "EDIT_WAREHOUSE_UNAVAILABLE", "EDIT_WINDOW_CLOSED", "FIXTURE_ONLY", "INVALID_INPUT", "NOT_FOUND", "SEPARATE_FIXTURE_SOURCE_REQUIRED", "WORKFLOW_CONFIGURATION_CHANGED", "WORKFLOW_PIN_CHANGED"])SAFE_CODES.add(code);
-export async function startCommerceServer(options:{support?:SupportService;kernel:CommerceKernel;caps:Capabilities;customers:CustomerAccess;
+for(const code of ['GIFT_VERIFICATION_REQUIRED','GIFT_CHOICE_CONFLICT','GIFT_OUTCOME_DENIED','GIFT_ACTION_DENIED','GIFT_UNITS_DENIED','GIFT_PRIVATE_NOTE_REQUIRES_EVIDENCE','GIFT_RECIPIENT_UNQUALIFIED','GIFT_RECIPIENT_MISMATCH','EXCHANGE_PAYMENT_OUTSTANDING','EXCHANGE_FINANCE_MISMATCH','EXCHANGE_FINANCE_OUTCOME_UNSUPPORTED','CATALOG_CONFIGURATION_CHANGED','CATALOG_PAGE_REQUIRED','BUNDLE_POLICY_UNAPPROVED','BUNDLE_ALLOCATION_INVALID','BUNDLE_ALLOCATION_CHANGED','INSTRUMENT_ROUTING_UNSUPPORTED','INSTRUMENT_BALANCE_EXCEEDED','INSTRUMENT_HISTORY_UNVERIFIED','REFUND_ACCOUNTING_UNVERIFIED'])SAFE_CODES.add(code);
+export async function startCommerceServer(options:{support?:SupportService;gifts?:GiftReturns;kernel:CommerceKernel;caps:Capabilities;customers:CustomerAccess;
   simulator:StoreSimulator;orderEditSource?:OrderEditFixtureSource;warehouseSource?:WarehouseFixtureSource;nativeChangeSource?:NativeChangeFixtureSource;fulfillmentSource?:FulfillmentFixtureSource;resolutionSource?:ResolutionFixtureSource;evidenceScanner?:EvidenceScanner;reconciliationJournals?:JournalResolver;vault?:SecretVault;inbox?:WebhookInbox;reads?:ReadContext;runner?:{run:(scope:object,taskId:string,configurationId:string,untrustedInput?:unknown)=>Promise<unknown>;receipt:(scope:object,taskId:string,receiptId:string)=>unknown};port?:number;log?:(entry:unknown)=>void}) {
   const {kernel,caps,customers,simulator,vault}=options;const orderEdits=new OrderEdits(kernel,options.orderEditSource),editWorkflow=new OrderEditWorkflow(orderEdits);const reads=options.reads??new ReadContext(kernel,caps);const mcp=new ReadMcp(kernel,reads);const editor=new ProfileEditor(kernel,caps),policies=new Policies(kernel);let port=0;const gateway=new ActionGateway(kernel),actionMcp=new ActionMcp(kernel,gateway),releases=new SkillReleases(kernel);
-  const resolutionLedger=new ResolutionLedger(kernel),refundQuotes=new RefundQuotes(kernel),storeCredit=new StoreCredit(kernel),exchanges=new VariantExchanges(kernel),resolutionExecution=options.resolutionSource?new ResolutionExecution(kernel,options.resolutionSource):null;
+  if(options.gifts&&options.gifts.kernel!==kernel)throw new Error('GIFT_VERIFICATION_REQUIRED');
+  const resolutionLedger=new ResolutionLedger(kernel),refundQuotes=new RefundQuotes(kernel),storeCredit=new StoreCredit(kernel),exchanges=new VariantExchanges(kernel),exchangeFinance=new ExchangeFinance(kernel),resolutionExecution=options.resolutionSource?new ResolutionExecution(kernel,options.resolutionSource):null;
   const fulfillment=options.fulfillmentSource?new FulfillmentExecution(kernel,options.fulfillmentSource):null,inventory=options.fulfillmentSource?new ReplacementInventory(kernel,options.fulfillmentSource):null,labels=options.fulfillmentSource?new ReturnLabels(kernel,options.fulfillmentSource):null,replacements=new ReplacementOrders(kernel),tracking=fulfillment?new ReturnTracking(fulfillment):null;
   const receiving=new ReturnReceiving(kernel),disposition=new ReturnDisposition(kernel,options.warehouseSource??null),cancellation=new ReturnCancellation(kernel),returnWorkflows=new ReturnWorkflows(kernel),nativeChanges=options.nativeChangeSource?new NativeChangeReconciliation(kernel,options.nativeChangeSource):null;
   const intake=new ReturnIntake(kernel),returnReview=new ReturnReview(kernel),returnEvidence=new ReturnEvidence(kernel,options.evidenceScanner??null);
@@ -78,7 +82,7 @@ export async function startCommerceServer(options:{support?:SupportService;kerne
       const url=new URL(req.url??'/',`http://127.0.0.1:${port}`);
       if(url.origin!==`http://127.0.0.1:${port}`)throw new Error('HOST_DENIED');
       if(url.pathname==='/health'&&req.method==='GET'){send(res,200,{ready:true,profile:'commerce-sqlite-diagnostic',production_qualified:false});return;}
-      const assets:Record<string,[string,string]>={'/return-operations.html':['return-operations.html','text/html'],'/order-edits.html':['order-edits.html','text/html'],'/support-tracking.html':['support-tracking.html','text/html'],'/support':['support.html','text/html'],'/tracking':['support-tracking.html','text/html'],'/support-client.js':['support-client.js','text/javascript'],'/support.css':['support.css','text/css'],'/order-edits':['order-edits.html','text/html'],'/order-edits-client.js':['order-edits-client.js','text/javascript'],'/order-edits.css':['order-edits.css','text/css'],'/return-operations':['return-operations.html','text/html'],'/return-operations-client.js':['return-operations-client.js','text/javascript'],'/return-operations.css':['return-operations.css','text/css'],'/returns':['returns.html','text/html'],'/returns-client.js':['returns-client.js','text/javascript'],'/returns.css':['returns.css','text/css'],'/return-draft':['return-draft.html','text/html'],'/return-draft-client.js':['return-draft-client.js','text/javascript'],'/exceptions':['exceptions.html','text/html'],'/exceptions.css':['exceptions.css','text/css'],
+      const assets:Record<string,[string,string]>={'/exchanges':['exchanges.html','text/html'],'/gift-returns':['gift-returns.html','text/html'],'/exchange-depth-client.js':['exchange-depth-client.js','text/javascript'],'/exchange-depth.css':['exchange-depth.css','text/css'],'/return-operations.html':['return-operations.html','text/html'],'/order-edits.html':['order-edits.html','text/html'],'/support-tracking.html':['support-tracking.html','text/html'],'/support':['support.html','text/html'],'/tracking':['support-tracking.html','text/html'],'/support-client.js':['support-client.js','text/javascript'],'/support.css':['support.css','text/css'],'/order-edits':['order-edits.html','text/html'],'/order-edits-client.js':['order-edits-client.js','text/javascript'],'/order-edits.css':['order-edits.css','text/css'],'/return-operations':['return-operations.html','text/html'],'/return-operations-client.js':['return-operations-client.js','text/javascript'],'/return-operations.css':['return-operations.css','text/css'],'/returns':['returns.html','text/html'],'/returns-client.js':['returns-client.js','text/javascript'],'/returns.css':['returns.css','text/css'],'/return-draft':['return-draft.html','text/html'],'/return-draft-client.js':['return-draft-client.js','text/javascript'],'/exceptions':['exceptions.html','text/html'],'/exceptions.css':['exceptions.css','text/css'],
     '/exceptions-client.js':['exceptions-client.js','text/javascript'],'/execution':['execution.html','text/html'],'/execution-client.js':['execution-client.js','text/javascript'],'/configuration':['configuration.html','text/html'],'/configuration-client.js':['configuration-client.js','text/javascript'],'/configuration.css':['configuration.css','text/css'],'/':['index.html','text/html'],'/client.js':['client.js','text/javascript'],'/style.css':['style.css','text/css'],'/status':['status.html','text/html'],'/status-client.js':['status-client.js','text/javascript'],'/status.css':['status.css','text/css']};
       if(req.method==='GET'&&assets[url.pathname]&&!url.search){
         const [file,mime]=assets[url.pathname];res.writeHead(200,{'content-type':mime+'; charset=utf-8','cache-control':'no-store',
@@ -91,6 +95,11 @@ export async function startCommerceServer(options:{support?:SupportService;kerne
       }
       if(req.method==='POST'&&url.pathname==='/v1/customer/verify'){
         send(res,200,customers.complete(await body(req)));log(200,'CUSTOMER_VERIFIED');return;
+      }
+      if(req.method==='POST'&&['/v1/gifts/challenges','/v1/gifts/verify','/v1/gifts/choices','/v1/gifts/status','/v1/gifts/revoke'].includes(url.pathname)){
+        if(!options.gifts)throw new Error('ADAPTER_UNAVAILABLE');const p=await body(req),op=url.pathname.split('/')[3];
+        const result=op==='challenges'?options.gifts.request(p,req.socket.remoteAddress??'unknown-local'):op==='verify'?options.gifts.complete(p):op==='choices'?options.gifts.choices(p):op==='status'?options.gifts.status(p):options.gifts.revoke(p);
+        send(res,op==='challenges'?202:200,result);log(200,'GIFT_OPERATION');return;
       }
       if(url.pathname==='/mcp') {
         const auth=req.headers.authorization;
@@ -138,6 +147,10 @@ export async function startCommerceServer(options:{support?:SupportService;kerne
         else send(res,404,{error:'NOT_FOUND'});return;
       }
       const scope=kernel.authenticate(auth.slice(7));
+      if(req.method==='POST'&&['/v1/gifts/case','/v1/gifts/prepare','/v1/gifts/rebind'].includes(url.pathname)){
+        if(!options.gifts)throw new Error('ADAPTER_UNAVAILABLE');const p=await body(req),op=url.pathname.split('/')[3];
+        send(res,200,op==='case'?options.gifts.createCase(scope,p):op==='prepare'?options.gifts.prepare(scope,p):options.gifts.rebind(scope,p));return;
+      }
       if(req.method==='POST'&&/^\/v1\/support\/[a-z-]+$/.test(url.pathname)){if(!options.support)throw new Error('SUPPORT_NOT_CONFIGURED');send(res,200,await options.support.post(scope,url.pathname.split('/')[3],await body(req)));log(200,'SUPPORT_OPERATION');return;}
 
 
@@ -206,6 +219,9 @@ export async function startCommerceServer(options:{support?:SupportService;kerne
         else if(action==='quote')result=refundQuotes.quote(scope,p);
         else if(action==='credit-quote')result=storeCredit.quote(scope,exact(p,['allocation_id']).allocation_id);
         else if(action==='exchange-quote')result=exchanges.quote(scope,p);
+        else if(action==='exchange-configure')result=exchanges.configure(scope,p);
+        else if(action==='exchange-browse')result=exchanges.browse(scope,p);
+        else if(action==='exchange-finance-quote')result=exchangeFinance.quote(scope,p);
         else if(action==='exchange-current')result=exchanges.assertCurrent(scope,p);
         else if(['operation','dispatch','reconcile','instrument'].includes(action)){
           const ref=exact(p,['operation_id']).operation_id;

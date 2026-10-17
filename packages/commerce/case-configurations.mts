@@ -7,6 +7,7 @@ import { Skills } from './skills.mts';
 import { Policies } from './policies.mts';
 import { SkillReleases } from './skill-releases.mts';
 import { Capabilities } from './capabilities.mts';
+import { verifiedGiftCase } from './gift-proof.mts';
 
 export const WRITE_CONTRACT=Object.freeze({id:'rifare-synthetic-resolution',version:'1.0.0',actions:['diagnostic.resolution.set'],effect:'local_case_plan_only',external_effects:false});
 export const WRITE_CONTRACT_DIGEST=contentDigest(WRITE_CONTRACT);
@@ -16,6 +17,7 @@ export class CaseConfigurations {
   inspect(scope:Scope,caseId:string){
     const k=this.#k,s=k.require(scope);id(caseId);
     const c=k.db.prepare('SELECT * FROM commerce_cases WHERE tenant_id=? AND store_id=? AND id=?').get(s.tenant_id,s.store_id,caseId) as Row;
+    if(s.role==='customer'&&k.db.prepare('SELECT 1 FROM commerce_gift_cases WHERE tenant_id=? AND store_id=? AND case_id=?').get(s.tenant_id,s.store_id,caseId))throw new Error('NOT_FOUND');
     if(!c)throw new Error('NOT_FOUND');k.authorize(scope,'case.read',c.resource_id);const order=k.get(scope,c.resource_id);
     if(order.kind!=='order'||order.customer_id!==c.customer_id)throw new Error('CASE_CUSTOMER_CHANGED');
     const r=k.db.prepare('SELECT * FROM commerce_case_configurations WHERE tenant_id=? AND store_id=? AND case_id=? AND revision=?').get(s.tenant_id,s.store_id,c.id,c.revision) as Row;
@@ -79,6 +81,7 @@ export class CaseConfigurations {
   }
   verified(scope:Scope,caseId:string){
     const c=this.inspect(scope,caseId),s=this.#k.require(scope),k=this.#k;
+    const gift=verifiedGiftCase(k,s,caseId);if(gift)return gift;
     const r=k.db.prepare('SELECT ss.* FROM commerce_cases c JOIN commerce_sessions ss ON c.verification_hash=ss.token_hash WHERE c.tenant_id=? AND c.store_id=? AND c.id=?')
       .get(s.tenant_id,s.store_id,caseId) as Row;
     if(!r||r.role!=='customer'||r.revoked||r.expires_at<=k.clock()||r.last_seen<=k.clock()-900000||r.resource_id!==c.resource_id||r.customer_id!==c.customer_id||r.tenant_id!==s.tenant_id||r.store_id!==s.store_id)throw new Error('CUSTOMER_VERIFICATION_REQUIRED');

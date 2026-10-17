@@ -834,6 +834,61 @@
       "contract_files": [
         "goals/M05/M05-G99.md"
       ]
+    },
+    {
+      "id": "FEATURE-M06-G01",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M06/M06-G01.md",
+        "packages/commerce/variant-exchanges.mts",
+        "migrations/commerce/022_catalog_and_gift_returns.sql"
+      ]
+    },
+    {
+      "id": "FEATURE-M06-G02",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M06/M06-G02.md",
+        "packages/commerce/exchange-finance.mts",
+        "packages/adapters/resolution-fixture-source.mts",
+        "migrations/commerce/021_exchange_finance.sql",
+        "tests/fixtures/exchange-finance/independent-values.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M06-G03",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M06/M06-G03.md",
+        "packages/commerce/exchange-finance.mts",
+        "packages/commerce/refund-quotes.mts",
+        "tests/fixtures/exchange-finance/independent-values.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M06-G04",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M06/M06-G04.md",
+        "packages/commerce/resolution-ledger.mts",
+        "tests/fixtures/exchange-finance/independent-values.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M06-G05",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M06/M06-G05.md",
+        "packages/commerce/gift-proof.mts",
+        "packages/commerce/gift-returns.mts",
+        "migrations/commerce/023_gift_recipient_proofs.sql",
+        "packages/commerce/contracts/storage-exchange-extension.v1.json"
+      ]
     }
   ],
   "tests": [
@@ -15137,6 +15192,916 @@
       "runner_case_id": "M05-G12-05",
       "source": "tests/development/support-workflows.test.mts",
       "capability_id": "FEATURE-M05-G12"
+    },
+    {
+      "id": "runtime:CASE-M06-G04-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M06-G04-01",
+      "source": "tests/development/bundle-allocations.test.mts",
+      "capability_id": "FEATURE-M06-G04"
+    },
+    {
+      "id": "runtime:CASE-M06-G04-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M06-G04-02",
+      "source": "tests/development/bundle-allocations.test.mts",
+      "capability_id": "FEATURE-M06-G04"
+    },
+    {
+      "id": "runtime:CASE-M06-G04-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M06-G04-03",
+      "source": "tests/development/bundle-allocations.test.mts",
+      "capability_id": "FEATURE-M06-G04"
+    },
+    {
+      "id": "runtime:M06-TEST-013-BUNDLE-PAID-ALLOCATION",
+      "suite": "runtime",
+      "runner_case_id": "M06-TEST-013-BUNDLE-PAID-ALLOCATION",
+      "source": "tests/development/bundle-allocations.test.mts",
+      "capability_id": "FEATURE-M06-G04"
+    },
+    {
+      "id": "runtime:M06-G04-UNAPPROVED-BUNDLE-TREATMENT-BLOCKED",
+      "suite": "runtime",
+      "runner_case_id": "M06-G04-UNAPPROVED-BUNDLE-TREATMENT-BLOCKED",
+      "source": "tests/development/bundle-allocations.test.mts",
+      "capability_id": "FEATURE-M06-G04"
+    },
+    {
+      "id": "runtime:M06-G04-RETAIL-PRICE-CANNOT-REPLACE-PAID-SOURCE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G04-RETAIL-PRICE-CANNOT-REPLACE-PAID-SOURCE",
+      "source": "tests/development/bundle-allocations.test.mts",
+      "capability_id": "FEATURE-M06-G04"
+    },
+    {
+      "id": "runtime:M06-G04-ZERO-PROMOTION-LINEAGE-CANNOT-BE-INVENTED",
+      "suite": "runtime",
+      "runner_case_id": "M06-G04-ZERO-PROMOTION-LINEAGE-CANNOT-BE-INVENTED",
+      "source": "tests/development/bundle-allocations.test.mts",
+      "capability_id": "FEATURE-M06-G04"
+    },
+    {
+      "id": "runtime:M06-G04-BUNDLE-SOURCE-EDIT-INVALIDATES-ALLOCATION",
+      "suite": "runtime",
+      "runner_case_id": "M06-G04-BUNDLE-SOURCE-EDIT-INVALIDATES-ALLOCATION",
+      "source": "tests/development/bundle-allocations.test.mts",
+      "capability_id": "FEATURE-M06-G04"
+    },
+    {
+      "id": "runtime:M06-G04-FALSEY-BUNDLE-FACTS-FAIL-CLOSED",
+      "suite": "runtime",
+      "runner_case_id": "M06-G04-FALSEY-BUNDLE-FACTS-FAIL-CLOSED",
+      "source": "tests/development/bundle-allocations.test.mts",
+      "capability_id": "FEATURE-M06-G04"
+    },
+    {
+      "id": "runtime:M06-G04-COMPONENT-MEMBERSHIP-CANNOT-OVERLAP",
+      "suite": "runtime",
+      "runner_case_id": "M06-G04-COMPONENT-MEMBERSHIP-CANNOT-OVERLAP",
+      "source": "tests/development/bundle-allocations.test.mts",
+      "capability_id": "FEATURE-M06-G04"
+    },
+    {
+      "id": "runtime:CASE-M06-G01-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M06-G01-01",
+      "source": "tests/development/catalog-exchanges.test.mts",
+      "capability_id": "FEATURE-M06-G01"
+    },
+    {
+      "id": "runtime:CASE-M06-G01-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M06-G01-02",
+      "source": "tests/development/catalog-exchanges.test.mts",
+      "capability_id": "FEATURE-M06-G01"
+    },
+    {
+      "id": "runtime:CASE-M06-G01-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M06-G01-03",
+      "source": "tests/development/catalog-exchanges.test.mts",
+      "capability_id": "FEATURE-M06-G01"
+    },
+    {
+      "id": "runtime:M06-G01-UNKNOWN-MODEL-VARIANT-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M06-G01-UNKNOWN-MODEL-VARIANT-REJECTED",
+      "source": "tests/development/catalog-exchanges.test.mts",
+      "capability_id": "FEATURE-M06-G01"
+    },
+    {
+      "id": "runtime:M06-G01-MERCHANT-CONFIGURATION-REQUIRED",
+      "suite": "runtime",
+      "runner_case_id": "M06-G01-MERCHANT-CONFIGURATION-REQUIRED",
+      "source": "tests/development/catalog-exchanges.test.mts",
+      "capability_id": "FEATURE-M06-G01"
+    },
+    {
+      "id": "runtime:M06-G01-INCENTIVE-MARGIN-LIMIT",
+      "suite": "runtime",
+      "runner_case_id": "M06-G01-INCENTIVE-MARGIN-LIMIT",
+      "source": "tests/development/catalog-exchanges.test.mts",
+      "capability_id": "FEATURE-M06-G01"
+    },
+    {
+      "id": "runtime:M06-G01-INCENTIVE-CAP",
+      "suite": "runtime",
+      "runner_case_id": "M06-G01-INCENTIVE-CAP",
+      "source": "tests/development/catalog-exchanges.test.mts",
+      "capability_id": "FEATURE-M06-G01"
+    },
+    {
+      "id": "runtime:M06-G01-PROMOTION-EXPIRY-REQUIRES-REAPPROVAL",
+      "suite": "runtime",
+      "runner_case_id": "M06-G01-PROMOTION-EXPIRY-REQUIRES-REAPPROVAL",
+      "source": "tests/development/catalog-exchanges.test.mts",
+      "capability_id": "FEATURE-M06-G01"
+    },
+    {
+      "id": "runtime:M06-G01-CONFIGURATION-REVISION-INVALIDATES-QUOTE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G01-CONFIGURATION-REVISION-INVALIDATES-QUOTE",
+      "source": "tests/development/catalog-exchanges.test.mts",
+      "capability_id": "FEATURE-M06-G01"
+    },
+    {
+      "id": "runtime:M06-G01-CATALOG-PRODUCT-ALLOWLIST",
+      "suite": "runtime",
+      "runner_case_id": "M06-G01-CATALOG-PRODUCT-ALLOWLIST",
+      "source": "tests/development/catalog-exchanges.test.mts",
+      "capability_id": "FEATURE-M06-G01"
+    },
+    {
+      "id": "runtime:M06-G01-CATALOG-INACTIVE-VARIANT",
+      "suite": "runtime",
+      "runner_case_id": "M06-G01-CATALOG-INACTIVE-VARIANT",
+      "source": "tests/development/catalog-exchanges.test.mts",
+      "capability_id": "FEATURE-M06-G01"
+    },
+    {
+      "id": "runtime:M06-G01-BROWSE-ONLY-CURRENT-PERMITTED-OFFERS",
+      "suite": "runtime",
+      "runner_case_id": "M06-G01-BROWSE-ONLY-CURRENT-PERMITTED-OFFERS",
+      "source": "tests/development/catalog-exchanges.test.mts",
+      "capability_id": "FEATURE-M06-G01"
+    },
+    {
+      "id": "runtime:M06-G01-ZERO-PRICE-RETAINS-INVENTORY-BOUNDARY",
+      "suite": "runtime",
+      "runner_case_id": "M06-G01-ZERO-PRICE-RETAINS-INVENTORY-BOUNDARY",
+      "source": "tests/development/catalog-exchanges.test.mts",
+      "capability_id": "FEATURE-M06-G01"
+    },
+    {
+      "id": "runtime:M06-G01-CROSS-TENANT-CONFIGURATION-DENIED",
+      "suite": "runtime",
+      "runner_case_id": "M06-G01-CROSS-TENANT-CONFIGURATION-DENIED",
+      "source": "tests/development/catalog-exchanges.test.mts",
+      "capability_id": "FEATURE-M06-G01"
+    },
+    {
+      "id": "runtime:M06-G01-LEGACY-EXPLICIT-INACTIVE-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M06-G01-LEGACY-EXPLICIT-INACTIVE-REJECTED",
+      "source": "tests/development/catalog-exchanges.test.mts",
+      "capability_id": "FEATURE-M06-G01"
+    },
+    {
+      "id": "runtime:M06-G01-LEGACY-EXPLICIT-UNQUALIFIED-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M06-G01-LEGACY-EXPLICIT-UNQUALIFIED-REJECTED",
+      "source": "tests/development/catalog-exchanges.test.mts",
+      "capability_id": "FEATURE-M06-G01"
+    },
+    {
+      "id": "runtime:M06-G01-MISSING-CATEGORY-CANNOT-EVADE-EXCLUSIONS",
+      "suite": "runtime",
+      "runner_case_id": "M06-G01-MISSING-CATEGORY-CANNOT-EVADE-EXCLUSIONS",
+      "source": "tests/development/catalog-exchanges.test.mts",
+      "capability_id": "FEATURE-M06-G01"
+    },
+    {
+      "id": "runtime:M06-G05-HTTP-PROOF-IS-PRIVATE-AND-NOT-BEARER",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-HTTP-PROOF-IS-PRIVATE-AND-NOT-BEARER",
+      "source": "tests/development/exchange-depth-api.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-HTTP-SEPARATE-STAFF-SCOPE-REQUIRED",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-HTTP-SEPARATE-STAFF-SCOPE-REQUIRED",
+      "source": "tests/development/exchange-depth-api.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-HTTP-NO-DEFAULT-GIFT-DELIVERY",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-HTTP-NO-DEFAULT-GIFT-DELIVERY",
+      "source": "tests/development/exchange-depth-api.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G01-HTTP-CATALOG-AND-EXACT-FINANCE-QUOTE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G01-HTTP-CATALOG-AND-EXACT-FINANCE-QUOTE",
+      "source": "tests/development/exchange-depth-api.test.mts",
+      "capability_id": "FEATURE-M06-G01"
+    },
+    {
+      "id": "runtime:M06-G05-HTTP-LOGS-OMIT-PROOF-AND-RECIPIENT",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-HTTP-LOGS-OMIT-PROOF-AND-RECIPIENT",
+      "source": "tests/development/exchange-depth-api.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G01-BROWSER-CATALOG-SELECTION-AND-CURRENT-QUOTE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G01-BROWSER-CATALOG-SELECTION-AND-CURRENT-QUOTE",
+      "source": "tests/development/exchange-depth-browser.test.mts",
+      "capability_id": "FEATURE-M06-G01"
+    },
+    {
+      "id": "runtime:M06-G01-BROWSER-CHANGED-ALLOCATION-DISCARDS-LATE-QUOTE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G01-BROWSER-CHANGED-ALLOCATION-DISCARDS-LATE-QUOTE",
+      "source": "tests/development/exchange-depth-browser.test.mts",
+      "capability_id": "FEATURE-M06-G01"
+    },
+    {
+      "id": "runtime:M06-G05-BROWSER-VERIFIED-PRIVATE-GIFT-CHOICES",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-BROWSER-VERIFIED-PRIVATE-GIFT-CHOICES",
+      "source": "tests/development/exchange-depth-browser.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G02-FULFILLMENT-WAITS-FOR-EXACT-NATIVE-SETTLEMENT",
+      "suite": "runtime",
+      "runner_case_id": "M06-G02-FULFILLMENT-WAITS-FOR-EXACT-NATIVE-SETTLEMENT",
+      "source": "tests/development/exchange-fulfillment.test.mts",
+      "capability_id": "FEATURE-M06-G02"
+    },
+    {
+      "id": "runtime:M06-G02-FULFILLMENT-UNKNOWN-PAYMENT-CANNOT-RELEASE-STOCK",
+      "suite": "runtime",
+      "runner_case_id": "M06-G02-FULFILLMENT-UNKNOWN-PAYMENT-CANNOT-RELEASE-STOCK",
+      "source": "tests/development/exchange-fulfillment.test.mts",
+      "capability_id": "FEATURE-M06-G02"
+    },
+    {
+      "id": "runtime:M06-G02-NATIVE-HOLD-REJECTS-DROPPED-PAYMENT-BINDING",
+      "suite": "runtime",
+      "runner_case_id": "M06-G02-NATIVE-HOLD-REJECTS-DROPPED-PAYMENT-BINDING",
+      "source": "tests/development/exchange-fulfillment.test.mts",
+      "capability_id": "FEATURE-M06-G02"
+    },
+    {
+      "id": "runtime:M06-G02-NATIVE-REPLACEMENT-REJECTS-FORGED-SETTLED-LOCAL-RECEIPT",
+      "suite": "runtime",
+      "runner_case_id": "M06-G02-NATIVE-REPLACEMENT-REJECTS-FORGED-SETTLED-LOCAL-RECEIPT",
+      "source": "tests/development/exchange-fulfillment.test.mts",
+      "capability_id": "FEATURE-M06-G02"
+    },
+    {
+      "id": "runtime:M06-G02-NATIVE-REPLACEMENT-REJECTS-OTHER-ALLOCATION-AND-AMOUNT",
+      "suite": "runtime",
+      "runner_case_id": "M06-G02-NATIVE-REPLACEMENT-REJECTS-OTHER-ALLOCATION-AND-AMOUNT",
+      "source": "tests/development/exchange-fulfillment.test.mts",
+      "capability_id": "FEATURE-M06-G02"
+    },
+    {
+      "id": "runtime:M06-G02-RESERVATION-REQUIRES-INDEPENDENT-FINANCE-SOURCE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G02-RESERVATION-REQUIRES-INDEPENDENT-FINANCE-SOURCE",
+      "source": "tests/development/exchange-fulfillment.test.mts",
+      "capability_id": "FEATURE-M06-G02"
+    },
+    {
+      "id": "runtime:M06-G02-SETTLEMENT-DOES-NOT-OVERRIDE-CHANGED-STOCK",
+      "suite": "runtime",
+      "runner_case_id": "M06-G02-SETTLEMENT-DOES-NOT-OVERRIDE-CHANGED-STOCK",
+      "source": "tests/development/exchange-fulfillment.test.mts",
+      "capability_id": "FEATURE-M06-G02"
+    },
+    {
+      "id": "runtime:M06-G03-REFUND-RESIDUAL-SETTLES-BEFORE-REPLACEMENT",
+      "suite": "runtime",
+      "runner_case_id": "M06-G03-REFUND-RESIDUAL-SETTLES-BEFORE-REPLACEMENT",
+      "source": "tests/development/exchange-fulfillment.test.mts",
+      "capability_id": "FEATURE-M06-G03"
+    },
+    {
+      "id": "runtime:M06-G03-CREDIT-RESIDUAL-AND-REPLACEMENT-KEEP-ONE-VALUE-RESERVATION",
+      "suite": "runtime",
+      "runner_case_id": "M06-G03-CREDIT-RESIDUAL-AND-REPLACEMENT-KEEP-ONE-VALUE-RESERVATION",
+      "source": "tests/development/exchange-fulfillment.test.mts",
+      "capability_id": "FEATURE-M06-G03"
+    },
+    {
+      "id": "runtime:M06-G02-EQUAL-PRICE-REPLACEMENT-PRESERVES-LEGACY-COMMAND",
+      "suite": "runtime",
+      "runner_case_id": "M06-G02-EQUAL-PRICE-REPLACEMENT-PRESERVES-LEGACY-COMMAND",
+      "source": "tests/development/exchange-fulfillment.test.mts",
+      "capability_id": "FEATURE-M06-G02"
+    },
+    {
+      "id": "runtime:M06-G05-INDEPENDENT-GIFT-GRANT-BINDS-ORIGINAL-AND-RECIPIENT",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-INDEPENDENT-GIFT-GRANT-BINDS-ORIGINAL-AND-RECIPIENT",
+      "source": "tests/development/exchange-fulfillment.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G03-NATIVE-ORIGINAL-UNIT-CANNOT-REUSE-ANOTHER-ALLOCATION",
+      "suite": "runtime",
+      "runner_case_id": "M06-G03-NATIVE-ORIGINAL-UNIT-CANNOT-REUSE-ANOTHER-ALLOCATION",
+      "source": "tests/development/exchange-fulfillment.test.mts",
+      "capability_id": "FEATURE-M06-G03"
+    },
+    {
+      "id": "runtime:CASE-M06-G02-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M06-G02-01",
+      "source": "tests/development/exchange-payments.test.mts",
+      "capability_id": "FEATURE-M06-G02"
+    },
+    {
+      "id": "runtime:CASE-M06-G02-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M06-G02-02",
+      "source": "tests/development/exchange-payments.test.mts",
+      "capability_id": "FEATURE-M06-G02"
+    },
+    {
+      "id": "runtime:CASE-M06-G02-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M06-G02-03",
+      "source": "tests/development/exchange-payments.test.mts",
+      "capability_id": "FEATURE-M06-G02"
+    },
+    {
+      "id": "runtime:M06-G02-AGENT-CANNOT-CHOOSE-AMOUNT",
+      "suite": "runtime",
+      "runner_case_id": "M06-G02-AGENT-CANNOT-CHOOSE-AMOUNT",
+      "source": "tests/development/exchange-payments.test.mts",
+      "capability_id": "FEATURE-M06-G02"
+    },
+    {
+      "id": "runtime:M06-G02-REFUND-OUTCOME-CANNOT-PAY-UPGRADE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G02-REFUND-OUTCOME-CANNOT-PAY-UPGRADE",
+      "source": "tests/development/exchange-payments.test.mts",
+      "capability_id": "FEATURE-M06-G02"
+    },
+    {
+      "id": "runtime:M06-G02-REVOKED-APPROVAL-PREVENTS-INVOICE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G02-REVOKED-APPROVAL-PREVENTS-INVOICE",
+      "source": "tests/development/exchange-payments.test.mts",
+      "capability_id": "FEATURE-M06-G02"
+    },
+    {
+      "id": "runtime:M06-G02-WRONG-SOURCE-PAYMENT-DOES-NOT-SETTLE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G02-WRONG-SOURCE-PAYMENT-DOES-NOT-SETTLE",
+      "source": "tests/development/exchange-payments.test.mts",
+      "capability_id": "FEATURE-M06-G02"
+    },
+    {
+      "id": "runtime:M06-G02-ONE-OBLIGATION-PER-ALLOCATION",
+      "suite": "runtime",
+      "runner_case_id": "M06-G02-ONE-OBLIGATION-PER-ALLOCATION",
+      "source": "tests/development/exchange-payments.test.mts",
+      "capability_id": "FEATURE-M06-G02"
+    },
+    {
+      "id": "runtime:M06-G02-CROSS-TENANT-PAYMENT-HIDDEN",
+      "suite": "runtime",
+      "runner_case_id": "M06-G02-CROSS-TENANT-PAYMENT-HIDDEN",
+      "source": "tests/development/exchange-payments.test.mts",
+      "capability_id": "FEATURE-M06-G02"
+    },
+    {
+      "id": "runtime:M06-G02-FAILED-AND-EXPIRED-PAYMENT-REMAIN-HELD",
+      "suite": "runtime",
+      "runner_case_id": "M06-G02-FAILED-AND-EXPIRED-PAYMENT-REMAIN-HELD",
+      "source": "tests/development/exchange-payments.test.mts",
+      "capability_id": "FEATURE-M06-G02"
+    },
+    {
+      "id": "runtime:M06-G02-REOPEN-RECONCILES-SAME-OBLIGATION",
+      "suite": "runtime",
+      "runner_case_id": "M06-G02-REOPEN-RECONCILES-SAME-OBLIGATION",
+      "source": "tests/development/exchange-payments.test.mts",
+      "capability_id": "FEATURE-M06-G02"
+    },
+    {
+      "id": "runtime:M06-G02-FORGED-LOCAL-SETTLED-ROW-NO-NATIVE-CAPTURE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G02-FORGED-LOCAL-SETTLED-ROW-NO-NATIVE-CAPTURE",
+      "source": "tests/development/exchange-payments.test.mts",
+      "capability_id": "FEATURE-M06-G02"
+    },
+    {
+      "id": "runtime:CASE-M06-G03-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M06-G03-01",
+      "source": "tests/development/exchange-residuals.test.mts",
+      "capability_id": "FEATURE-M06-G03"
+    },
+    {
+      "id": "runtime:CASE-M06-G03-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M06-G03-02",
+      "source": "tests/development/exchange-residuals.test.mts",
+      "capability_id": "FEATURE-M06-G03"
+    },
+    {
+      "id": "runtime:CASE-M06-G03-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M06-G03-03",
+      "source": "tests/development/exchange-residuals.test.mts",
+      "capability_id": "FEATURE-M06-G03"
+    },
+    {
+      "id": "runtime:M06-TEST-014-MIXED-INSTRUMENT-RESIDUAL",
+      "suite": "runtime",
+      "runner_case_id": "M06-TEST-014-MIXED-INSTRUMENT-RESIDUAL",
+      "source": "tests/development/exchange-residuals.test.mts",
+      "capability_id": "FEATURE-M06-G03"
+    },
+    {
+      "id": "runtime:M06-G03-UNKNOWN-RESIDUAL-RESERVES-FULL-EXCHANGE-VALUE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G03-UNKNOWN-RESIDUAL-RESERVES-FULL-EXCHANGE-VALUE",
+      "source": "tests/development/exchange-residuals.test.mts",
+      "capability_id": "FEATURE-M06-G03"
+    },
+    {
+      "id": "runtime:M06-G03-DIRECT-REFUNDS-SHARE-RESIDUAL-CEILING",
+      "suite": "runtime",
+      "runner_case_id": "M06-G03-DIRECT-REFUNDS-SHARE-RESIDUAL-CEILING",
+      "source": "tests/development/exchange-residuals.test.mts",
+      "capability_id": "FEATURE-M06-G03"
+    },
+    {
+      "id": "runtime:M06-G03-FALSEY-ROUTING-EXTENSIONS-ARE-NOT-LEGACY",
+      "suite": "runtime",
+      "runner_case_id": "M06-G03-FALSEY-ROUTING-EXTENSIONS-ARE-NOT-LEGACY",
+      "source": "tests/development/exchange-residuals.test.mts",
+      "capability_id": "FEATURE-M06-G03"
+    },
+    {
+      "id": "runtime:M06-G03-MISSING-UNIT-ROUTING-FAILS-CLOSED",
+      "suite": "runtime",
+      "runner_case_id": "M06-G03-MISSING-UNIT-ROUTING-FAILS-CLOSED",
+      "source": "tests/development/exchange-residuals.test.mts",
+      "capability_id": "FEATURE-M06-G03"
+    },
+    {
+      "id": "runtime:M06-G03-REFUND-REFRESH-PRESERVES-OTHER-ORIGINAL-ALLOCATIONS",
+      "suite": "runtime",
+      "runner_case_id": "M06-G03-REFUND-REFRESH-PRESERVES-OTHER-ORIGINAL-ALLOCATIONS",
+      "source": "tests/development/exchange-residuals.test.mts",
+      "capability_id": "FEATURE-M06-G03"
+    },
+    {
+      "id": "runtime:M06-G03-NATIVE-INSTRUMENT-MISSING-CANNOT-REROUTE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G03-NATIVE-INSTRUMENT-MISSING-CANNOT-REROUTE",
+      "source": "tests/development/exchange-residuals.test.mts",
+      "capability_id": "FEATURE-M06-G03"
+    },
+    {
+      "id": "runtime:M06-G03-NATIVE-SOURCE-REJECTS-ALL-TO-LAST-INSTRUMENT",
+      "suite": "runtime",
+      "runner_case_id": "M06-G03-NATIVE-SOURCE-REJECTS-ALL-TO-LAST-INSTRUMENT",
+      "source": "tests/development/exchange-residuals.test.mts",
+      "capability_id": "FEATURE-M06-G03"
+    },
+    {
+      "id": "runtime:M06-G03-NATIVE-LEGACY-AMOUNT-CANNOT-OVERRIDE-PAID-CEILING",
+      "suite": "runtime",
+      "runner_case_id": "M06-G03-NATIVE-LEGACY-AMOUNT-CANNOT-OVERRIDE-PAID-CEILING",
+      "source": "tests/development/exchange-residuals.test.mts",
+      "capability_id": "FEATURE-M06-G03"
+    },
+    {
+      "id": "runtime:M06-G03-NATIVE-RESIDUAL-CANNOT-EXCEED-ORIGINAL-VALUE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G03-NATIVE-RESIDUAL-CANNOT-EXCEED-ORIGINAL-VALUE",
+      "source": "tests/development/exchange-residuals.test.mts",
+      "capability_id": "FEATURE-M06-G03"
+    },
+    {
+      "id": "runtime:M06-G05-TWO-PROCESS-PURCHASER-RECIPIENT-UNIT-CONTENTION",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-TWO-PROCESS-PURCHASER-RECIPIENT-UNIT-CONTENTION",
+      "source": "tests/development/gift-contention.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-CREDIT-DROPPED-RECIPIENT-PAIR-HAS-NO-NATIVE-EFFECT",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-CREDIT-DROPPED-RECIPIENT-PAIR-HAS-NO-NATIVE-EFFECT",
+      "source": "tests/development/gift-credit-boundary.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-CREDIT-CHANGED-OPERATION-STILL-BOUND-TO-ALLOCATION",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-CREDIT-CHANGED-OPERATION-STILL-BOUND-TO-ALLOCATION",
+      "source": "tests/development/gift-credit-boundary.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-CREDIT-CHANGED-ALLOCATION-STILL-BOUND-TO-NATIVE-RETURN",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-CREDIT-CHANGED-ALLOCATION-STILL-BOUND-TO-NATIVE-RETURN",
+      "source": "tests/development/gift-credit-boundary.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-CREDIT-CHANGED-NATIVE-RETURN-STILL-BOUND-TO-OPERATION",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-CREDIT-CHANGED-NATIVE-RETURN-STILL-BOUND-TO-OPERATION",
+      "source": "tests/development/gift-credit-boundary.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-CREDIT-OTHER-QUALIFIED-RECIPIENT-CANNOT-REPLACE-BENEFICIARY",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-CREDIT-OTHER-QUALIFIED-RECIPIENT-CANNOT-REPLACE-BENEFICIARY",
+      "source": "tests/development/gift-credit-boundary.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-CREDIT-OBLIGATION-CANNOT-BE-REBOUND",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-CREDIT-OBLIGATION-CANNOT-BE-REBOUND",
+      "source": "tests/development/gift-credit-boundary.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-CREDIT-PURCHASER-OTHER-RETURN-ON-SAME-ORDER-STILL-WORKS",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-CREDIT-PURCHASER-OTHER-RETURN-ON-SAME-ORDER-STILL-WORKS",
+      "source": "tests/development/gift-credit-boundary.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-EXCHANGE-PRESERVES-PURCHASER-AND-RECIPIENT-LINEAGE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-EXCHANGE-PRESERVES-PURCHASER-AND-RECIPIENT-LINEAGE",
+      "source": "tests/development/gift-fulfillment.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-INDEPENDENT-GIFT-GRANT-REQUIRED",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-INDEPENDENT-GIFT-GRANT-REQUIRED",
+      "source": "tests/development/gift-fulfillment.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-NATIVE-HOLD-DETECTS-DROPPED-RECIPIENT",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-NATIVE-HOLD-DETECTS-DROPPED-RECIPIENT",
+      "source": "tests/development/gift-fulfillment.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-NATIVE-HOLD-DETECTS-CHANGED-RECIPIENT",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-NATIVE-HOLD-DETECTS-CHANGED-RECIPIENT",
+      "source": "tests/development/gift-fulfillment.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-LOWER-PRICE-ISSUES-RECIPIENT-CREDIT-BEFORE-REPLACEMENT",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-LOWER-PRICE-ISSUES-RECIPIENT-CREDIT-BEFORE-REPLACEMENT",
+      "source": "tests/development/gift-fulfillment.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-ADDITIONAL-PAYMENT-NEEDS-SEPARATE-QUALIFICATION",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-ADDITIONAL-PAYMENT-NEEDS-SEPARATE-QUALIFICATION",
+      "source": "tests/development/gift-fulfillment.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-UNKNOWN-REPLACEMENT-RECONCILES-AFTER-ERASURE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-UNKNOWN-REPLACEMENT-RECONCILES-AFTER-ERASURE",
+      "source": "tests/development/gift-fulfillment.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-NATIVE-HOLD-DETECTS-CHANGED-ORIGINAL-ORDER",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-NATIVE-HOLD-DETECTS-CHANGED-ORIGINAL-ORDER",
+      "source": "tests/development/gift-fulfillment.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-FRESH-GIFT-RECEIVING-AND-PURCHASER-VIEW-BOUNDARY",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-FRESH-GIFT-RECEIVING-AND-PURCHASER-VIEW-BOUNDARY",
+      "source": "tests/development/gift-lifecycle.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-FRESH-GIFT-STAFF-DISPOSITION-COMPATIBILITY",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-FRESH-GIFT-STAFF-DISPOSITION-COMPATIBILITY",
+      "source": "tests/development/gift-lifecycle.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-FRESH-GIFT-STAFF-CANCELLATION-COMPATIBILITY",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-FRESH-GIFT-STAFF-CANCELLATION-COMPATIBILITY",
+      "source": "tests/development/gift-lifecycle.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-ERASURE-REDACTS-PARCEL-ADDRESSES",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-ERASURE-REDACTS-PARCEL-ADDRESSES",
+      "source": "tests/development/gift-lifecycle.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-RECIPIENT-ONLY-HOLD-PREVENTS-ERASURE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-RECIPIENT-ONLY-HOLD-PREVENTS-ERASURE",
+      "source": "tests/development/gift-retention.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-RECIPIENT-HOLD-PREVENTS-MANUAL-EVIDENCE-ERASURE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-RECIPIENT-HOLD-PREVENTS-MANUAL-EVIDENCE-ERASURE",
+      "source": "tests/development/gift-retention.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-RECIPIENT-HOLD-PREVENTS-PURGE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-RECIPIENT-HOLD-PREVENTS-PURGE",
+      "source": "tests/development/gift-retention.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-HOLD-RELEASE-ALLOWS-RECIPIENT-ERASURE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-HOLD-RELEASE-ALLOWS-RECIPIENT-ERASURE",
+      "source": "tests/development/gift-retention.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-PURCHASER-ERASURE-RESPECTS-RECIPIENT-HOLD",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-PURCHASER-ERASURE-RESPECTS-RECIPIENT-HOLD",
+      "source": "tests/development/gift-retention.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-RECIPIENT-ERASURE-RESPECTS-PURCHASER-HOLD",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-RECIPIENT-ERASURE-RESPECTS-PURCHASER-HOLD",
+      "source": "tests/development/gift-retention.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-HISTORICAL-RECIPIENT-CAN-RETAIN-EVIDENCE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-HISTORICAL-RECIPIENT-CAN-RETAIN-EVIDENCE",
+      "source": "tests/development/gift-retention.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:CASE-M06-G05-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M06-G05-01",
+      "source": "tests/development/gift-returns.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:CASE-M06-G05-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M06-G05-02",
+      "source": "tests/development/gift-returns.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:CASE-M06-G05-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M06-G05-03",
+      "source": "tests/development/gift-returns.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-GIFT-TEXT-NEVER-VERIFIES",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-GIFT-TEXT-NEVER-VERIFIES",
+      "source": "tests/development/gift-returns.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-PROOF-ONE-TIME",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-PROOF-ONE-TIME",
+      "source": "tests/development/gift-returns.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-PROOF-ATTEMPT-LIMIT",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-PROOF-ATTEMPT-LIMIT",
+      "source": "tests/development/gift-returns.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-CROSS-STORE-PROOF-DENIED",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-CROSS-STORE-PROOF-DENIED",
+      "source": "tests/development/gift-returns.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-PURCHASER-CANNOT-READ-RECIPIENT-CASE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-PURCHASER-CANNOT-READ-RECIPIENT-CASE",
+      "source": "tests/development/gift-returns.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-PRIVILEGED-STAFF-CANNOT-WIDEN-GIFT-LINES",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-PRIVILEGED-STAFF-CANNOT-WIDEN-GIFT-LINES",
+      "source": "tests/development/gift-returns.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-GENERIC-REFUND-AND-EDIT-GATEWAY-DENIED",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-GENERIC-REFUND-AND-EDIT-GATEWAY-DENIED",
+      "source": "tests/development/gift-returns.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-REVOKED-PROOF-BLOCKS-PENDING-APPROVAL",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-REVOKED-PROOF-BLOCKS-PENDING-APPROVAL",
+      "source": "tests/development/gift-returns.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-EXPIRED-PROOF-BLOCKS-STAFF-CONTINUATION",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-EXPIRED-PROOF-BLOCKS-STAFF-CONTINUATION",
+      "source": "tests/development/gift-returns.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-SOURCE-RECIPIENT-CHANGE-REQUIRES-NEW-PROOF",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-SOURCE-RECIPIENT-CHANGE-REQUIRES-NEW-PROOF",
+      "source": "tests/development/gift-returns.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-DUPLICATE-CHOICE-NO-SECOND-REQUEST",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-DUPLICATE-CHOICE-NO-SECOND-REQUEST",
+      "source": "tests/development/gift-returns.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-DELIVERY-FAILURE-NEVER-VERIFIES",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-DELIVERY-FAILURE-NEVER-VERIFIES",
+      "source": "tests/development/gift-returns.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-RECIPIENT-EXPORT-EXCLUDES-PURCHASER",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-RECIPIENT-EXPORT-EXCLUDES-PURCHASER",
+      "source": "tests/development/gift-returns.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-RECIPIENT-ERASURE-PRESERVES-PURCHASER",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-RECIPIENT-ERASURE-PRESERVES-PURCHASER",
+      "source": "tests/development/gift-returns.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-PURCHASER-ERASURE-REVOKES-GIFT-PROOF",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-PURCHASER-ERASURE-REVOKES-GIFT-PROOF",
+      "source": "tests/development/gift-returns.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-RESTORE-SUPPRESSES-ERASED-RECIPIENT-GRANT",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-RESTORE-SUPPRESSES-ERASED-RECIPIENT-GRANT",
+      "source": "tests/development/gift-returns.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-CHOICES-RESPECT-CURRENT-CREDIT-CONFIGURATION",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-CHOICES-RESPECT-CURRENT-CREDIT-CONFIGURATION",
+      "source": "tests/development/gift-returns.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-CHOICES-RESPECT-REVOKED-MERCHANT-POLICY",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-CHOICES-RESPECT-REVOKED-MERCHANT-POLICY",
+      "source": "tests/development/gift-returns.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-RENEWAL-REQUIRES-FRESH-APPROVAL",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-RENEWAL-REQUIRES-FRESH-APPROVAL",
+      "source": "tests/development/gift-returns.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-EXPIRED-PROOF-CAN-RESUME-SAME-CASE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-EXPIRED-PROOF-CAN-RESUME-SAME-CASE",
+      "source": "tests/development/gift-returns.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-RENEWAL-CANNOT-TRANSFER-RECIPIENT",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-RENEWAL-CANNOT-TRANSFER-RECIPIENT",
+      "source": "tests/development/gift-returns.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-RENEWAL-PRESERVES-ALLOCATED-UNITS",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-RENEWAL-PRESERVES-ALLOCATED-UNITS",
+      "source": "tests/development/gift-returns.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-PURCHASER-EXPORT-OMITS-RECIPIENT-ACTIVITY",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-PURCHASER-EXPORT-OMITS-RECIPIENT-ACTIVITY",
+      "source": "tests/development/gift-returns.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-GIFT-FREE-TEXT-USES-ERASABLE-EVIDENCE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-GIFT-FREE-TEXT-USES-ERASABLE-EVIDENCE",
+      "source": "tests/development/gift-returns.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-ERASURE-KEEPS-PURCHASER-RETURN-WORKING",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-ERASURE-KEEPS-PURCHASER-RETURN-WORKING",
+      "source": "tests/development/gift-returns.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-LEDGER-CANNOT-UPGRADE-GIFT-TO-CASH",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-LEDGER-CANNOT-UPGRADE-GIFT-TO-CASH",
+      "source": "tests/development/gift-returns.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-CREDIT-USES-VERIFIED-RECIPIENT-ACCOUNT",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-CREDIT-USES-VERIFIED-RECIPIENT-ACCOUNT",
+      "source": "tests/development/gift-returns.test.mts",
+      "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:M06-G05-CREDIT-LOST-RESPONSE-RECONCILES-AFTER-ERASURE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G05-CREDIT-LOST-RESPONSE-RECONCILES-AFTER-ERASURE",
+      "source": "tests/development/gift-returns.test.mts",
+      "capability_id": "FEATURE-M06-G05"
     }
   ],
   "protected_files": [
@@ -15553,7 +16518,27 @@
     "tests/development/support-tracking.test.mts",
     "tests/development/support-workflow-helpers.mts",
     "tests/development/support-workflows.test.mts",
-    "work/qualification/M05.json"
+    "work/qualification/M05.json",
+    "packages/commerce/contracts/storage-exchange-extension.v1.json",
+    "tests/browser/exchange_depth_component.py",
+    "tests/development/bundle-allocations.test.mts",
+    "tests/development/catalog-exchanges.test.mts",
+    "tests/development/exchange-depth-api.test.mts",
+    "tests/development/exchange-depth-browser.test.mts",
+    "tests/development/exchange-finance-helpers.mts",
+    "tests/development/exchange-fulfillment-helpers.mts",
+    "tests/development/exchange-fulfillment.test.mts",
+    "tests/development/exchange-payments.test.mts",
+    "tests/development/exchange-residuals.test.mts",
+    "tests/development/gift-contention.test.mts",
+    "tests/development/gift-credit-boundary.test.mts",
+    "tests/development/gift-fulfillment.test.mts",
+    "tests/development/gift-helpers.mts",
+    "tests/development/gift-lifecycle.test.mts",
+    "tests/development/gift-retention.test.mts",
+    "tests/development/gift-returns.test.mts",
+    "tests/development/gift-submit-child.mts",
+    "tests/fixtures/exchange-finance/independent-values.json"
   ],
   "source_count_fixture": "tests/fixtures/licensing/artifact-oracle.v1.json",
   "source_inventory": "planning/component-inventory.json"

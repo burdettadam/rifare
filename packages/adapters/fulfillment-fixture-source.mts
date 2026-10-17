@@ -4,16 +4,20 @@ import { exact,id,integer } from '../commerce/kernel.mts';
 import type { Row } from '../commerce/kernel.mts';
 import { canonical,contentDigest,jsonValue } from '../commerce/configuration-values.mts';
 import { minor } from '../commerce/resolution-ledger.mts';
+import { ResolutionFixtureSource } from './resolution-fixture-source.mts';
 
 /** Separate synthetic authority. It cannot connect to a store or carrier. */
 export class FulfillmentFixtureSource {
  readonly db:DatabaseSync;readonly identity:string;readonly tenant:string;readonly store:string;readonly clock:()=>number;
+ readonly financeSource:ResolutionFixtureSource|undefined;
  readonly labelTtl:number;readonly qualification='synthetic_only'; readonly mode='fixture_native';
  fault:'none'|'before'|'after'|'malformed'|'hang'='none';
  calls={reserve:0,replace:0,rate:0,buy:0,void:0,lookup:0};
- constructor(db:DatabaseSync,options:{mode:'fixture';tenant:string;store:string;identity:string;clock?:()=>number;label_ttl_ms?:number}){
+ constructor(db:DatabaseSync,options:{mode:'fixture';tenant:string;store:string;identity:string;clock?:()=>number;label_ttl_ms?:number;finance_source?:ResolutionFixtureSource}){
   integer(options.label_ttl_ms??1800000,10);if((options.label_ttl_ms??1800000)>1800000)throw new Error('INVALID_INPUT');this.labelTtl=options.label_ttl_ms??1800000;
   if(options.mode!=='fixture')throw new Error('FIXTURE_ONLY');this.db=db;this.tenant=id(options.tenant);this.store=id(options.store);id(options.identity);this.clock=options.clock??Date.now;
+  this.financeSource=options.finance_source;if(this.financeSource){const path=(db:DatabaseSync)=>db.prepare('PRAGMA database_list').all().find((r:Row)=>r.name==='main')?.file;
+   if(!(this.financeSource instanceof ResolutionFixtureSource)||this.financeSource.db===db||path(db)&&path(db)===path(this.financeSource.db)||this.financeSource.tenant!==this.tenant||this.financeSource.store!==this.store)throw new Error('EXCHANGE_FINANCE_SOURCE_REQUIRED');}
   db.exec(`PRAGMA busy_timeout=3000;
    CREATE TABLE IF NOT EXISTS fixture_identity (id TEXT PRIMARY KEY, tenant TEXT NOT NULL, store TEXT NOT NULL, label TEXT NOT NULL) STRICT;
    CREATE TABLE IF NOT EXISTS fixture_stock (catalog_id TEXT PRIMARY KEY, variant_id TEXT NOT NULL, location_id TEXT NOT NULL, version INTEGER NOT NULL, available INTEGER NOT NULL CHECK(available>=0)) STRICT;
@@ -36,6 +40,11 @@ export class FulfillmentFixtureSource {
   const holds=(this.db.prepare("SELECT * FROM fixture_holds WHERE state='active'").all() as Row[]).map(r=>this.#read(r)).filter(b=>b.catalog_id===catalogId&&b.expires_at>this.clock());
   return {...s,reserved:holds.reduce((n,b)=>n+b.quantity,0),scope:'fixture_native',live_inventory:false};}
  reserve(command:Row){this.calls.reserve++;this.#bound(command);const cmd=jsonValue(command);id(cmd.id);id(cmd.allocation_id);integer(cmd.generation,1);integer(cmd.quantity,1);integer(cmd.buffer);integer(cmd.expires_at);
+  const financialFields=['exchange_balance_minor','original_exchange_value_minor','replacement_minor','finance_source_identity'],financialCount=financialFields.filter(key=>Object.hasOwn(cmd,key)).length;
+  if(financialCount){if(financialCount!==financialFields.length||typeof cmd.exchange_balance_minor!=='string'||!/^(-?[1-9][0-9]{0,23})$/.test(cmd.exchange_balance_minor)||!this.financeSource||this.financeSource.identity!==cmd.finance_source_identity)throw new Error('EXCHANGE_FINANCE_SOURCE_REQUIRED');
+   if(minor(cmd.original_exchange_value_minor)+BigInt(cmd.exchange_balance_minor)!==minor(cmd.replacement_minor))throw new Error('EXCHANGE_FINANCE_MISMATCH');}
+  const giftFields=['gift_recipient_customer_id','gift_source_digest','gift_source_identity','original_customer_id','original_native_order_id'],giftCount=giftFields.filter(key=>Object.hasOwn(cmd,key)).length;
+  if(giftCount){if(giftCount!==giftFields.length||!/^gid:\/\/shopify\/Order\/[1-9][0-9]*$/.test(cmd.original_native_order_id)||!this.financeSource||this.financeSource.identity!==cmd.gift_source_identity)throw new Error('GIFT_RECIPIENT_UNQUALIFIED');this.financeSource.assertGiftRecipient({resource_id:cmd.resource_id,customer_id:cmd.original_customer_id,recipient_customer_id:cmd.gift_recipient_customer_id,gift_source_digest:cmd.gift_source_digest});}
   return this.tx(()=>{const old=this.db.prepare('SELECT * FROM fixture_holds WHERE id=?').get(cmd.id) as Row;
    if(old){if(old.digest!==contentDigest(cmd))throw new Error('RESERVATION_CONFLICT');return this.#reservation(old);}
    if(cmd.expires_at<=this.clock()||cmd.expires_at>this.clock()+300000)throw new Error('RESERVATION_EXPIRED');
@@ -72,6 +81,15 @@ export class FulfillmentFixtureSource {
   const r=this.db.prepare('SELECT * FROM fixture_holds WHERE id=?').get(command.reservation_id) as Row,b=this.#read(r);
   if(!r||r.state!=='active'||b.generation!==command.generation||b.expires_at<=this.clock()||contentDigest(b)!==command.reservation_digest)throw new Error('RESERVATION_EXPIRED');
   if(b.allocation_id!==command.allocation_id||b.variant_id!==command.variant_id||b.quantity!==command.quantity||b.location_id!==command.location_id)throw new Error('RESERVATION_CHANGED');
+  if(Object.hasOwn(b,'gift_recipient_customer_id')){
+   if(!this.financeSource||this.financeSource.identity!==b.gift_source_identity||command.resource_id!==b.resource_id||command.original_order_id!==b.resource_id||command.native_original_order_id!==b.original_native_order_id||command.customer_id!==b.original_customer_id||command.gift_recipient_customer_id!==b.gift_recipient_customer_id||command.gift_source_digest!==b.gift_source_digest||command.gift_source_identity!==b.gift_source_identity)throw new Error('GIFT_RECIPIENT_MISMATCH');
+   this.financeSource.assertGiftRecipient({resource_id:b.resource_id,customer_id:command.customer_id,recipient_customer_id:command.gift_recipient_customer_id,gift_source_digest:command.gift_source_digest});
+  }else if(['gift_recipient_customer_id','gift_source_digest','gift_source_identity'].some(key=>Object.hasOwn(command,key)))throw new Error('GIFT_RECIPIENT_MISMATCH');
+  if(Object.hasOwn(b,'exchange_balance_minor')){
+   if(!command.exchange_finance||!this.financeSource||this.financeSource.identity!==b.finance_source_identity)throw new Error('EXCHANGE_PAYMENT_OUTSTANDING');
+   if(command.exchange_quote_digest!==b.exchange_quote_digest||command.exchange_finance.exchange_quote_id!==b.exchange_quote_id||command.original_value_minor!==b.original_exchange_value_minor||command.exchange_value_minor!==b.replacement_minor)throw new Error('EXCHANGE_FINANCE_MISMATCH');
+   this.financeSource.assertExchangeSettlement(command);
+  }else if(command.exchange_finance!==undefined||command.balance_minor!=='0')throw new Error('EXCHANGE_FINANCE_MISMATCH');
   const stock=this.stock(b.catalog_id);if(stock.version!==b.stock_version||stock.available<stock.reserved+b.buffer)throw new Error('STOCK_CHANGED');
   this.db.prepare('UPDATE fixture_stock SET available=available-? WHERE catalog_id=?').run(b.quantity,b.catalog_id);
   this.db.prepare("UPDATE fixture_holds SET state='committed' WHERE id=?").run(r.id);

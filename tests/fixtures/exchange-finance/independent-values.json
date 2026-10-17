@@ -1,0 +1,37 @@
+{
+  "oracle": "Hand-calculated before assertions. Minor currency units; synthetic USD original source fixtures.",
+  "higher": {
+    "original_exchange_value_minor": "1000",
+    "replacement_minor": "1250",
+    "additional_payment_minor": "250",
+    "partial_payment_minor": "100",
+    "obligations": 1,
+    "captures": 1
+  },
+  "mixed": {
+    "explanation": "Original order 8740 = card 5244 + gift card 3496. Prior 1940 = 1164 + 776. Exchange gamma 1000 = 600 + 400. Replacement 600 leaves residual 400 = card 240 + gift card 160. Full 1000 original value is consumed once; only 400 is refunded.",
+    "original_paid_minor": "8740",
+    "available_minor": "6800",
+    "replacement_minor": "600",
+    "residual_minor": "400",
+    "remaining_original_minor": "5800",
+    "routes": [
+      {"instrument_id": "card-original", "type": "card", "amount_minor": "240"},
+      {"instrument_id": "gift-original", "type": "gift_card", "amount_minor": "160"}
+    ],
+    "value_routes": [
+      {"instrument_id": "card-original", "type": "card", "amount_minor": "600"},
+      {"instrument_id": "gift-original", "type": "gift_card", "amount_minor": "400"}
+    ]
+  },
+  "bundle": {
+    "explanation": "Bundle originally paid 5000: three alpha at 1000 each, two beta at 1000 each, one promotional gamma at zero. Alpha retail 6000 minus allocated discount 3000; beta 4000 minus 2000; gamma 1500 minus 1500. Prior alpha return consumed 1000. Return one alpha and one beta for 1000 each; remaining original paid balance is 2000 regardless of processing order. Gamma still names original fulfillment line 103 despite its zero price.",
+    "original_paid_minor": "5000",
+    "prior_refunded_minor": "1000",
+    "alpha_refund_minor": "1000",
+    "beta_credit_minor": "1000",
+    "gamma_paid_minor": "0",
+    "remaining_original_minor": "2000",
+    "promo_fulfillment_line_id": "gid://shopify/FulfillmentLineItem/103"
+  }
+}
