@@ -1,0 +1,34 @@
+{
+  "milestone": "M06",
+  "goal": "M06-G99",
+  "state": "blocked",
+  "local_integration": "authorized_after_verified_candidate",
+  "full_milestone_accepted": false,
+  "release_authorized": false,
+  "base": "c86fce659a1e5ca1dd195f2ffad9eeef2bef52da",
+  "worker_goals": ["M06-G01","M06-G02","M06-G03","M06-G04","M06-G05","M06-G06","M06-G07","M06-G08","M06-G09","M06-G10","M06-G11","M06-G12","M06-G13","M06-G14"],
+  "observed_scope": "Bounded SQLite commerce, independent synthetic finance, fulfillment, destination and edit source databases; native API and browser-component tests on an exact local candidate.",
+  "missing": [
+    "formal M03-G99, M04-G99 and M05-G99 acceptance",
+    "formal acceptance of M06-G01 through M06-G14",
+    "PostgreSQL and React target-stack qualification",
+    "connected financial accounts, paired currency and final fee qualification",
+    "connected instant-exchange terms, consent and capture qualification",
+    "merchant-owned or contracted destination qualification",
+    "connected inventory, shipping, delivery, receipt and disposition qualification",
+    "independent merchant policy and prevention intended-use evaluation",
+    "verified merchant total costs and retained contribution",
+    "direct served-browser and supported-host qualification"
+  ],
+  "limits": [
+    "All new capability records remain proposed_not_accepted; local review is not external qualification.",
+    "Risk assistance never grants denial authority. Customer confirmation and separate action approval remain required for prevention-related paid-goods edits.",
+    "Routing qualification and capacity are synthetic native-source observations, not real contracts or warehouse operations.",
+    "Estimated handling fees are separate from purchased carrier charges; unknown operations retain original identities.",
+    "Merchant economics use declared synthetic costs. Missing categories or overlapping resource cohorts leave aggregate contribution unknown.",
+    "Logical erasure disables further use while preserving minimized business audit and explicit native-source retention gaps."
+  ],
+  "review_kind": "separate_nonauthor_assistant_sessions_same_runtime",
+  "next_milestone_started": false,
+  "evidence": "Actual final candidate, complete unchanged controller reports, independent reviews, demonstrations and recovery audits are supplied in the cumulative handoff; this record itself is not proof of a passing run."
+}

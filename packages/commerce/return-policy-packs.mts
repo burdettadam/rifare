@@ -65,7 +65,7 @@ export class ReturnPolicyPacks {
    if(!request||request.case_id!==c.id||request.resource_id!==c.resource_id)throw new Error('PACK_REQUEST_MISMATCH');
    route=this.destinations?this.destinations.evaluate(scope,{request_id:p.request_id}):{state:'destination_source_unavailable',eligible:[],selected:null};
   }
-  const candidates=Array.isArray(route.eligible)?route.eligible:[];
+  const candidates=Array.isArray(route.destinations)?route.destinations.filter((d:Row)=>d.eligible===true):[];
   const eligible=candidates.filter((d:Row)=>pack.routing.allowed_destination_ids.includes(d.destination_id??d.id));
   const routeReady=eligible.length>0;
   const requirements=[...new Set([...pack.required_capabilities,...(pack.routing.required?['return.destination']:[])])].sort();
@@ -74,7 +74,7 @@ export class ReturnPolicyPacks {
    policy_digest:policy.digest,skill_digest:pack.skill.digest,effective_digest:c.pins.composition.effective_digest,
    presentation:pack.presentation,eligibility:current.decision,
    review:{...pack.review,reviewer_recommended:pack.review.always_review||current.decision.decision==='review',authority:'existing_scoped_reviewer_only'},
-   routing:{...pack.routing,state:route.state??(routeReady?'qualified_candidates':'manual_review'),eligible,source_snapshot:route.snapshot_digest??null},
+   routing:{...pack.routing,state:route.state??(routeReady?'qualified_candidates':'manual_review'),eligible,source_snapshot:route.binding_digest&&route.policy_digest?contentDigest({source_identity:route.source_identity,binding_digest:route.binding_digest,policy_digest:route.policy_digest,destinations:route.destinations}):null},
    readiness:{ready:missing.length===0,missing_capabilities:missing},source_version:current.source_version,source_digest:current.source_digest,
    action_approval:'separate_reviewer_required',activation:'none',execution_authorized:false,financial_effect:false,production_qualified:false};
  }
