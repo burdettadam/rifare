@@ -10,6 +10,7 @@ import { assertCaseWorkerScope } from './work-leases.mts';
 import { assertExecution } from './execution-stops.mts';
 import { assertReady,DRAFT_ACTION } from './integration-readiness.mts';
 import { money } from './money.mts';
+import { exchangeSettlement } from './exchange-finance.mts';
 
 export const FULFILLMENT_ACTIONS=Object.freeze({replacement:'diagnostic.exchange.create',label:'diagnostic.label.purchase',void:'diagnostic.label.void'});
 export const FULFILLMENT_CONTRACT={id:'rifare-fulfillment-fixture-v1',version:1,qualification:'synthetic_only',live_transport:false};
@@ -57,10 +58,12 @@ export function fulfillmentValue(k:CommerceKernel,scope:Scope,kind:string,intent
   const setting=fulfillmentSettings(k,r.ctx.s);if(b.source_identity!==setting.source_identity||b.settings_digest!==setting.digest)throw new Error('FULFILLMENT_SETTINGS_CHANGED');
   const q=new VariantExchanges(k).validateForReview(scope,{quote_id:b.exchange_quote_id,quote_digest:b.exchange_quote_digest});
   if(q.allocation_id!==r.allocation_id||b.quantity!==q.quantity||b.variant_id!==q.replacement_variant)throw new Error('RESERVATION_INTEGRITY');
+  const settlement=q.balance_minor==='0'?{balance_minor:'0'}:exchangeSettlement(k,scope,q);
+  if(q.balance_minor!=='0'&&(b.exchange_balance_minor!==q.balance_minor||b.original_exchange_value_minor!==q.available_exchange_value_minor||b.replacement_minor!==q.replacement_minor||b.finance_source_identity!==settlement.exchange_finance?.source_identity))throw new Error('RESERVATION_INTEGRITY');
   ctx=fulfillmentContext(k,scope,r.case_id,r.ctx.plan.request_id);details={reservation_id:r.id,reservation_digest:r.digest,generation:r.generation,allocation_id:r.allocation_id,
    variant_id:b.variant_id,location_id:b.location_id,quantity:b.quantity,catalog_id:b.catalog_id,exchange_quote_digest:b.exchange_quote_digest,
-   original_variant:q.original_variant,exchange_value_minor:q.replacement_minor,retained_discount_minor:q.retained_discount_minor,balance_minor:q.balance_minor};
-  if(q.balance_minor!=='0')throw new Error('PRICE_DIFFERENCE_UNSUPPORTED');currency=q.currency;obligation=r.allocation_id;expiry=Math.min(expiry,b.expires_at,q.expires_at);
+   original_variant:q.original_variant,exchange_value_minor:q.replacement_minor,retained_discount_minor:q.retained_discount_minor,...settlement};
+  currency=q.currency;obligation=r.allocation_id;expiry=Math.min(expiry,b.expires_at,q.expires_at);
  }else if(kind==='label'){
   exact(intent,['request_id','replaces']);if(intent.replaces!==null)id(intent.replaces);const p=parcelRow(k,scope,intent.request_id);ctx=fulfillmentContext(k,scope,p.case_id,p.request_id);
   const old=currentLabel(k,ctx.s,p.request_id),generation=(old?.generation??0)+1;

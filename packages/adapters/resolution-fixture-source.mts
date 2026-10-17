@@ -31,10 +31,16 @@ export class ResolutionFixtureSource {
   const original=this.db.prepare('SELECT * FROM fixture_resolution_accounts WHERE resource_id=?').get(p.resource_id) as Row;if(!original||original.customer_id===p.recipient_customer_id)throw new Error('GIFT_RECIPIENT_MISMATCH');
   this.db.prepare('INSERT INTO fixture_gift_recipients VALUES(?,?,?) ON CONFLICT(resource_id,recipient_customer_id) DO UPDATE SET gift_source_digest=excluded.gift_source_digest').run(p.resource_id,p.recipient_customer_id,p.gift_source_digest);
  }
+ assertGiftRecipient(input:unknown){const p=exact(jsonValue(input),['resource_id','customer_id','recipient_customer_id','gift_source_digest']);id(p.resource_id);id(p.customer_id);id(p.recipient_customer_id);
+  const original=this.db.prepare('SELECT * FROM fixture_resolution_accounts WHERE resource_id=?').get(p.resource_id) as Row;
+  if(!original||original.customer_id!==p.customer_id||p.customer_id===p.recipient_customer_id)throw new Error('GIFT_RECIPIENT_MISMATCH');
+  const grant=this.db.prepare('SELECT * FROM fixture_gift_recipients WHERE resource_id=? AND recipient_customer_id=?').get(p.resource_id,p.recipient_customer_id) as Row;
+  if(!grant||grant.gift_source_digest!==p.gift_source_digest)throw new Error('GIFT_RECIPIENT_UNQUALIFIED');
+  return {qualified:true,recipient_customer_id:p.recipient_customer_id,gift_source_digest:grant.gift_source_digest};
+ }
  #beneficiary(p:Row){const fields=['credit_beneficiary_id','gift_source_digest'],count=fields.filter(key=>Object.hasOwn(p,key)).length;if(!count)return p.customer_id;
   if(count!==2||p.kind!=='store_credit')throw new Error('GIFT_RECIPIENT_MISMATCH');id(p.credit_beneficiary_id);
-  const grant=this.db.prepare('SELECT * FROM fixture_gift_recipients WHERE resource_id=? AND recipient_customer_id=?').get(p.resource_id,p.credit_beneficiary_id) as Row;
-  if(!grant||grant.gift_source_digest!==p.gift_source_digest)throw new Error('GIFT_RECIPIENT_UNQUALIFIED');return p.credit_beneficiary_id;
+  this.assertGiftRecipient({resource_id:p.resource_id,customer_id:p.customer_id,recipient_customer_id:p.credit_beneficiary_id,gift_source_digest:p.gift_source_digest});return p.credit_beneficiary_id;
  }
  seedInstruments(resourceId:string,input:unknown,originalUnits:unknown){id(resourceId);if(!Array.isArray(input)||!input.length||input.length>8||!Array.isArray(originalUnits)||!originalUnits.length||originalUnits.length>1000)throw new Error('INSTRUMENT_ALLOCATION_INVALID');const values=jsonValue(input),units=jsonValue(originalUnits),seen=new Set<string>();let available=0n;
   for(const i of values){exact(i,['id','type','original_paid_minor','prior_refunded_minor','supported']);id(i.id);if(seen.has(i.id)||!['card','gift_card'].includes(i.type)||typeof i.supported!=='boolean')throw new Error('INSTRUMENT_ALLOCATION_INVALID');seen.add(i.id);const paid=minor(i.original_paid_minor),prior=minor(i.prior_refunded_minor);if(prior>paid)throw new Error('INSTRUMENT_BALANCE_EXCEEDED');available+=paid-prior;}
@@ -49,6 +55,7 @@ export class ResolutionFixtureSource {
  #routes(p:Row,effects:Row[]){const facts=this.#instruments(p.resource_id);
   if(!facts){if(p.routes!==undefined||p.value_routes!==undefined||p.line_id!==undefined||p.units!==undefined)throw new Error('INSTRUMENT_SOURCE_UNQUALIFIED');return;}const instruments=facts.instruments;
   id(p.line_id);if(!Array.isArray(p.units)||!p.units.length||new Set(p.units).size!==p.units.length)throw new Error('INSTRUMENT_ALLOCATION_INVALID');const weights=new Map<string,bigint>();for(const n of p.units){integer(n,1);const unit=facts.units.find((u:Row)=>u.line_id===p.line_id&&u.unit_index===n);if(!unit)throw new Error('INSTRUMENT_ALLOCATION_INVALID');for(const a of unit.amounts)weights.set(a.instrument_id,(weights.get(a.instrument_id)??0n)+minor(a.amount_minor));}
+  if(effects.some(prior=>prior.line_id===p.line_id&&Array.isArray(prior.units)&&prior.units.some((n:number)=>p.units.includes(n))))throw new Error('ORIGINAL_UNIT_ALREADY_RESOLVED');
   for(const key of ['routes','value_routes']){const routes=p[key];if(!Array.isArray(routes)||routes.length>8)throw new Error('INSTRUMENT_ROUTING_UNSUPPORTED');let total=0n;const seen=new Set<string>();
    for(const route of routes){exact(route,['instrument_id','type','amount_minor']);id(route.instrument_id);const i=instruments.find((i:Row)=>i.id===route.instrument_id);
     if(!i||!i.supported||i.type!==route.type||seen.has(i.id))throw new Error('INSTRUMENT_ROUTING_UNSUPPORTED');seen.add(i.id);total+=minor(route.amount_minor);

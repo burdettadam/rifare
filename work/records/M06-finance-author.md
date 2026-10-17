@@ -55,3 +55,32 @@ before restoring an earlier environment, retain both local and independent fixtu
 source state, and reconcile unknown outcomes without issuing a new operation key.
 The gift recipient and original instrument seed methods are fixture administration
 only, never an agent permission or a live-platform qualification.
+
+## Follow-up integration assignment
+
+After source checkpoint `de559908a336b1caaee30b9ad348b160d34ade69`, root
+assigned this author the payment-to-replacement integration in
+`return-fulfillment-core.mts`, `replacement-inventory.mts` and
+`fulfillment-fixture-source.mts`, plus additive integration tests. Root retains
+gift proof, erasure and final source merge. This follow-up must preserve default
+equal-price command shapes and persist any nonzero financial requirement in the
+independent native reservation before replacement execution.
+
+The follow-up is implemented and ready for independent review. A nonzero native
+reservation now binds the original signed balance, original entitlement,
+replacement value and independent finance source. Replacement review and dispatch
+require the exact settled source receipt; the native replacement call checks its
+persisted reservation and actual source capture before committing stock. Removing
+payment fields from the command cannot remove that reservation requirement.
+Equal-price command bodies retain their original shape.
+
+`exchange-fulfillment.test.mts` adds 12 permanent integration cases. All 12 pass,
+as do the 35 finance cases and 19 retained replacement-order cases (66 actual
+named Node 22 TAP cases, no skips). The native receipt-guard mutant fails two
+cases; the dropped-reservation-requirement mutant fails one. Logs and hashes are
+under `evidence/M06-finance/fulfillment-followup/`. The separate source also rejects
+overlapping original instrument units under a new allocation identity, and exposes
+`assertGiftRecipient` for root's gift replacement integration. That helper checks
+both the original account customer and the independently seeded recipient grant.
+Root retains the combined gift behavior, test registration, full protected run and
+independent acceptance decision; no connected qualification is implied here.
