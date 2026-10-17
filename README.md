@@ -2,17 +2,35 @@
 
 Merchant-owned commerce operations with tailorable skills and independently replaceable platforms, agents and models.
 
-## Current development checkpoint: M05 support operations
+## Current development checkpoint: M06 local return depth
 
-The accumulated diagnostic implementation now includes returns, safe order editing, verified support conversations, branded tracking, consent-aware messaging, helpdesk adapters, human takeover, budgets and exact configuration qualification. Read [support operations](docs/SUPPORT-OPERATIONS.md), [review](docs/SUPPORT-OPERATIONS-REVIEW.md), and [M05 assessment](docs/M05-QUALIFICATION.md).
+M06-G01 through M06-G14 now have bounded local diagnostic implementations: catalog
+exchanges, mixed resolution, original bundle money, gift choices, repeated-exchange
+history, paired refunds and final fees, instant-exchange obligations, reviewable
+risk assistance, qualified destinations, customer-confirmed prevention and versioned
+merchant policy packs. The M06-G99 assessment remains blocked for formal acceptance.
+
+Read [M06 assessment](docs/M06-QUALIFICATION.md),
+[assistance operations](docs/RETURN-ASSISTANCE-OPERATIONS.md),
+[qualified destinations](docs/QUALIFIED-RETURN-DESTINATIONS.md) and
+[policy packs](docs/RETURN-POLICY-PACKS.md). Earlier support, return, edit and
+regression capabilities remain in the accumulated source.
 
 ```sh
 python3 tools/verify.py --runtime --harness
-node --experimental-strip-types tools/demo-support.mts
-node --experimental-strip-types tools/demo-support.mts --serve
+node --experimental-strip-types tools/demo-return-depth.mts
 ```
 
-This is SQLite diagnostic behavior with synthetic protocol sources, not qualified PostgreSQL/React or a connected production deployment. Formal milestone acceptance remains blocked. Use delivered `main`, preserving all earlier source and branches. M06 has not been started. The later sections retain earlier diagnostic commands.
+The headless command requires a clean committed checkout. It creates disposable
+synthetic source ledgers and prints the integrated journeys, original operation
+IDs, every relevant ledger entry and declared cost limits. It makes no provider
+calls. Final controller results and separate nonauthor reviews accompany the
+handoff; repository documentation does not replace that exact-candidate evidence.
+
+The runtime remains a SQLite diagnostic with synthetic protocol sources.
+PostgreSQL/React, connected providers, merchant evaluation and formal milestone
+acceptance remain unqualified. M07 has not been started. The later sections retain
+earlier diagnostic commands.
 
 ## Start
 

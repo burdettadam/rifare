@@ -26,7 +26,7 @@ test('CASE-M06-G99-02 missing connected and prerequisite evidence blocks formal 
  const q=JSON.parse(readFileSync('work/qualification/M06.json','utf8'));assert.equal(q.full_milestone_accepted,false);assert.equal(q.state,'blocked');assert.equal(q.next_milestone_started,false);assert.equal(q.release_authorized,false);assert.equal(q.worker_goals.length,14);
  for(const missing of ['formal M03-G99, M04-G99 and M05-G99 acceptance','formal acceptance of M06-G01 through M06-G14','connected financial accounts, paired currency and final fee qualification','connected instant-exchange terms, consent and capture qualification','merchant-owned or contracted destination qualification','independent merchant policy and prevention intended-use evaluation','verified merchant total costs and retained contribution'])assert.ok(q.missing.includes(missing),missing);
 });
-test('CASE-M06-G99-03 unavailable stock cannot be hidden by the new milestone capabilities',()=>usingLineage(f=>{
+test('M06-G99-OUT-OF-STOCK-FALLBACK-PRESERVES-ALLOCATION',()=>usingLineage(f=>{
  const catalog=f.catalog({available:0}),quote=f.exchanges.quote(f.a.scope,{allocation_id:f.allocation.id,catalog_id:catalog.id});assert.equal(quote.quote.allowed,false);assert.ok(quote.quote.reasons.includes('INSUFFICIENT_STOCK'));assert.deepEqual(quote.quote.alternatives,['refund','store_credit']);assert.throws(()=>f.exchanges.assertCurrent(f.a.scope,{quote_id:quote.id,quote_digest:quote.digest}),/EXCHANGE_UNAVAILABLE/);assert.equal(f.fulfillmentSource.effects().length,0);
  assert.equal(f.plan.allocations.find((a:any)=>a.id===f.allocation.id).outcome,'exchange');assert.equal(f.db.prepare('SELECT count(*) n FROM commerce_fulfillment_operations').get()!.n,0);
 }));

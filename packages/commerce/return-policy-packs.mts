@@ -6,7 +6,7 @@ import {Skills} from './skills.mts';
 import {Policies} from './policies.mts';
 import {Capabilities} from './capabilities.mts';
 import {CaseConfigurations} from './case-configurations.mts';
-import {intakeEvaluation} from './return-intake-core.mts';
+import {intakeEvaluation,quoteRow} from './return-intake-core.mts';
 
 type DestinationReader={evaluate:(scope:Scope,input:unknown)=>Row};
 
@@ -59,10 +59,15 @@ export class ReturnPolicyPacks {
   if(policy.digest!==pack.policy.digest)throw new Error('PACK_INTEGRITY');
   if(c.pins.policy.digest!==pack.policy.digest||c.pins.profile.sha256!==pack.profile.sha256||c.pins.skill.digest!==pack.skill.digest)throw new Error('PACK_CASE_MISMATCH');
   const current=intakeEvaluation(k,scope,p.selection,k.clock());
-  let route:Row={state:pack.routing.required?'return_request_required':'optional',eligible:[],selected:null};
+  let route:Row={state:pack.routing.required?'return_request_required':'optional',eligible:[],selected:null},requestContext:Row|null=null;
   if(p.request_id!==null){
-   const request=k.db.prepare('SELECT case_id,resource_id FROM commerce_return_requests WHERE tenant_id=? AND store_id=? AND id=?').get(s.tenant_id,s.store_id,p.request_id) as Row;
+   const request=k.db.prepare('SELECT * FROM commerce_return_requests WHERE tenant_id=? AND store_id=? AND id=?').get(s.tenant_id,s.store_id,p.request_id) as Row;
    if(!request||request.case_id!==c.id||request.resource_id!==c.resource_id)throw new Error('PACK_REQUEST_MISMATCH');
+   const body=JSON.parse(request.body);if(contentDigest(body)!==request.digest)throw new Error('PACK_INTEGRITY');
+   if(canonical(body.selection)!==canonical(current.selection))throw new Error('PACK_REQUEST_MISMATCH');
+   const original=quoteRow(k,scope,request.quote_id);if(original.case_id!==c.id||original.resource_id!==c.resource_id||canonical(original.quote.selection)!==canonical(body.selection))throw new Error('PACK_INTEGRITY');
+   requestContext={id:request.id,state:request.state,original_quote_id:original.id,original_quote_digest:original.digest,
+    original_quote_decision:original.quote.decision,basis:'historical_original_quote_not_reauthorization'};
    route=this.destinations?this.destinations.evaluate(scope,{request_id:p.request_id}):{state:'destination_source_unavailable',eligible:[],selected:null};
   }
   const candidates=Array.isArray(route.destinations)?route.destinations.filter((d:Row)=>d.eligible===true):[];
@@ -72,7 +77,7 @@ export class ReturnPolicyPacks {
   const missing=requirements.filter(action=>action==='return.destination'?!routeReady:!this.caps.evaluate(scope,action,action==='order.read'?c.resource_id:undefined).available);
   return {pack_id:r.id,pack_revision:r.revision,pack_digest:r.digest,case_id:c.id,configuration_digest:c.configuration_digest,
    policy_digest:policy.digest,skill_digest:pack.skill.digest,effective_digest:c.pins.composition.effective_digest,
-   presentation:pack.presentation,eligibility:current.decision,
+   presentation:pack.presentation,eligibility:current.decision,eligibility_basis:p.request_id===null?'new_selection':'new_selection_with_existing_request_reserved',return_request:requestContext,
    review:{...pack.review,reviewer_recommended:pack.review.always_review||current.decision.decision==='review',authority:'existing_scoped_reviewer_only'},
    routing:{...pack.routing,state:route.state??(routeReady?'qualified_candidates':'manual_review'),eligible,source_snapshot:route.binding_digest&&route.policy_digest?contentDigest({source_identity:route.source_identity,binding_digest:route.binding_digest,policy_digest:route.policy_digest,destinations:route.destinations}):null},
    readiness:{ready:missing.length===0,missing_capabilities:missing},source_version:current.source_version,source_digest:current.source_digest,

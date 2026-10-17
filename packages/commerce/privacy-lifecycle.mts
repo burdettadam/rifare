@@ -14,12 +14,14 @@ export function storageInventory(k:CommerceKernel) {
   if(extension.base_schema_digest!==declared.schema_digest)throw new Error('STORAGE_INVENTORY_CHANGED');
   const history=JSON.parse(readFileSync(new URL('./contracts/storage-exchange-history-extension.v1.json',import.meta.url),'utf8'));
   if(history.base_schema_digest!==extension.schema_digest)throw new Error('STORAGE_INVENTORY_CHANGED');
-  const tables=[...declared.tables,...extension.tables,...history.tables].sort((a:Row,b:Row)=>a.name.localeCompare(b.name));
+  const assistance=JSON.parse(readFileSync(new URL('./contracts/storage-return-assistance-extension.v1.json',import.meta.url),'utf8'));
+  if(assistance.base_schema_digest!==history.schema_digest)throw new Error('STORAGE_INVENTORY_CHANGED');
+  const tables=[...declared.tables,...extension.tables,...history.tables,...assistance.tables].sort((a:Row,b:Row)=>a.name.localeCompare(b.name));
   if(new Set(tables.map((r:Row)=>r.name)).size!==tables.length)throw new Error('STORAGE_INVENTORY_CHANGED');
   const actual=(k.db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name").all() as Row[])
     .map(r=>({name:r.name,columns:(k.db.prepare('PRAGMA table_info('+r.name+')').all() as Row[]).map(c=>c.name)}));
-  if(contentDigest(actual)!==history.schema_digest||contentDigest(tables.map((r:Row)=>({name:r.name,columns:r.columns})))!==history.schema_digest)throw new Error('STORAGE_INVENTORY_CHANGED');
-  return {...declared,tables,schema_digest:history.schema_digest,base_schema_digest:declared.schema_digest};
+  if(contentDigest(actual)!==assistance.schema_digest||contentDigest(tables.map((r:Row)=>({name:r.name,columns:r.columns})))!==assistance.schema_digest)throw new Error('STORAGE_INVENTORY_CHANGED');
+  return {...declared,tables,schema_digest:assistance.schema_digest,base_schema_digest:declared.schema_digest};
 }
 function event(k:CommerceKernel,s:Row,hash:string,code:string,reason:string) {
   k.db.prepare('INSERT INTO commerce_privacy_events(tenant_id,store_id,subject_hash,event,reason,observed_at) VALUES(?,?,?,?,?,?)').run(s.tenant_id,s.store_id,hash,code,reason,k.clock());
@@ -43,8 +45,38 @@ function scrubRecord(k:CommerceKernel,table:string,t:string,s:string,keys:string
     k.db.prepare(`UPDATE ${table} SET body=?${suffix} WHERE ${pk.map(c=>c+'=?').join(' AND ')}`).run(body,...(suffix?[contentDigest(JSON.parse(body))]:[]),...pk.map(c=>row[c]));
   }
 }
+const ASSISTANCE_SUBJECT_TABLES=['commerce_risk_assessments','commerce_risk_reviews','commerce_destination_bindings','commerce_destination_selections','commerce_prevention_members','commerce_prevention_exposures','commerce_prevention_previews','commerce_prevention_confirmations','commerce_prevention_outcomes'];
+function eraseAssistance(k:CommerceKernel,s:Row,cases:string[],hash:string){
+ if(!cases.length)return;const args=[s.tenant_id,s.store_id,...cases],marks=where(cases),pseudonym='erased_'+hash.slice(0,32);
+ for(const table of ASSISTANCE_SUBJECT_TABLES){
+  scrubRecord(k,table,s.tenant_id,s.store_id,cases,'case_id');
+  if((k.db.prepare('PRAGMA table_info('+table+')').all() as Row[]).some(c=>c.name==='customer_id'))k.db.prepare(`UPDATE ${table} SET customer_id=? WHERE tenant_id=? AND store_id=? AND case_id IN (${marks})`).run(pseudonym,...args);
+ }
+ k.db.prepare(`UPDATE commerce_prevention_confirmations SET revoked=1,session_hash='revoked' WHERE tenant_id=? AND store_id=? AND case_id IN (${marks})`).run(...args);
+ k.db.prepare(`UPDATE commerce_risk_reviews SET actor_id=? WHERE tenant_id=? AND store_id=? AND case_id IN (${marks}) AND kind='appeal'`).run(pseudonym,...args);
+ // Frozen experiment membership IDs and aggregate denominators remain a minimized
+ // audit. Erased case access fails before any member detail or outcome is read.
+}
+function eraseUnboundGuidanceCopies(k:CommerceKernel,s:Row){
+ // Guidance is a copy of unbound store knowledge. Apply the same conservative
+ // cleanup to every configuration version and every customer's cached offer.
+ for(const row of all(k,'commerce_prevention_configurations',s.tenant_id,s.store_id)){
+  const body=JSON.parse(row.body);if(!body.guidance||body.guidance.redacted)continue;
+  const value={...body,enabled:false,guidance:{id:body.guidance.id,revision:body.guidance.revision,sha256:body.guidance.sha256,content:null,source_uri:null,redacted:true},
+   guidance_unavailable:true,original_digest:body.original_digest??row.digest};
+  k.db.prepare('UPDATE commerce_prevention_configurations SET body=?,digest=? WHERE tenant_id=? AND store_id=? AND id=? AND version=?')
+   .run(canonical(value),contentDigest(value),s.tenant_id,s.store_id,row.id,row.version);
+ }
+ for(const row of all(k,'commerce_prevention_exposures',s.tenant_id,s.store_id)){
+  const body=JSON.parse(row.body);if(!body.offer||body.guidance_unavailable)continue;
+  const value={...body,offer:{...body.offer,text:null,source:{...body.offer.source,uri:null},guidance_unavailable:true},
+   guidance_unavailable:true,original_digest:body.original_digest??row.digest};
+  k.db.prepare('UPDATE commerce_prevention_exposures SET body=?,digest=? WHERE tenant_id=? AND store_id=? AND id=?')
+   .run(canonical(value),contentDigest(value),s.tenant_id,s.store_id,row.id);
+ }
+}
 function eraseCaseData(k:CommerceKernel,s:Row,cases:string[],hash:string) {
-  if(!cases.length)return;const t=s.tenant_id,st=s.store_id;
+  if(!cases.length)return;eraseAssistance(k,s,cases,hash);const t=s.tenant_id,st=s.store_id;
       const cargs=[t,st,...cases],cm=where(cases);
       const supportLinks=all(k,'commerce_support_links',t,st).filter(r=>cases.includes(r.case_id)).map(r=>r.id);
       if(supportLinks.length)k.db.prepare(`UPDATE commerce_support_contacts SET address=NULL,erased=1,revision=revision+1 WHERE tenant_id=? AND store_id=? AND link_id IN (${where(supportLinks)})`).run(t,st,...supportLinks);
@@ -75,7 +107,7 @@ function eraseCaseData(k:CommerceKernel,s:Row,cases:string[],hash:string) {
 /** Recipient erasure preserves the purchaser's unit reservations and settlement
  * context. Free text is mutable privacy material; monetary audit is retained. */
 function eraseGiftCaseData(k:CommerceKernel,s:Row,cases:string[],hash:string) {
- if(!cases.length)return;const t=s.tenant_id,st=s.store_id,cargs=[t,st,...cases],cm=where(cases);
+ if(!cases.length)return;eraseAssistance(k,s,cases,hash);const t=s.tenant_id,st=s.store_id,cargs=[t,st,...cases],cm=where(cases);
       const supportLinks=all(k,'commerce_support_links',t,st).filter(r=>cases.includes(r.case_id)).map(r=>r.id);
       if(supportLinks.length)k.db.prepare(`UPDATE commerce_support_contacts SET address=NULL,erased=1,revision=revision+1 WHERE tenant_id=? AND store_id=? AND link_id IN (${where(supportLinks)})`).run(t,st,...supportLinks);
       for(const table of ['commerce_support_messages','commerce_support_attempts']){scrubRecord(k,table,t,st,cases,'case_id');k.db.prepare(`UPDATE ${table} SET erased=1 WHERE tenant_id=? AND store_id=? AND case_id IN (${cm})`).run(...cargs);}
@@ -138,13 +170,14 @@ export function eraseSelected(k:CommerceKernel,s:Row,ids:string[],hash:string,at
   }
   // Free-text references and raw inbox bodies can be unattributed. Conservatively purge
   // the store's unbound copies rather than assert that a keyword search found all PII.
+  eraseUnboundGuidanceCopies(k,s);
   k.db.prepare(`DELETE FROM commerce_knowledge WHERE tenant_id=? AND store_id=? AND (resource_id IS NULL${ids.length?' OR resource_id IN ('+where(ids)+')':''})`).run(t,st,...ids);
   k.db.prepare("UPDATE commerce_webhook_inbox SET body=?,metadata=?,status='quarantined' WHERE tenant_id=? AND store_id=?").run(Buffer.from(erased),erased,t,st);
   k.db.prepare('DELETE FROM commerce_simulator_receipts WHERE tenant_id=? AND store_id=?').run(t,st);
   k.db.prepare("UPDATE commerce_policy_pins SET facts=? WHERE tenant_id=? AND store_id=?").run(erased,t,st);
   event(k,s,hash,'logical_erasure','customer_request');
   return {status:'logically_erased',resource_count:ids.length,retained:'minimized_operation_audit_and_configuration_records',
-    collateral_cleanup:['unbound_store_knowledge','raw_store_webhook_bodies','simulator_response_cache','policy_test_facts'],
+    collateral_cleanup:['unbound_store_knowledge','cached_prevention_guidance','raw_store_webhook_bodies','simulator_response_cache','policy_test_facts'],
     external_cleanup_required:['caller_memory','delivery_outboxes','logs','external_providers','older_backups'],physical_erasure:false};
 }
 export function suppressionCheckpoint(k:CommerceKernel) {
@@ -173,7 +206,8 @@ export class PrivacyLifecycle {
       const support_records={links:support_links,contacts:all(k,'commerce_support_contacts',s.tenant_id,s.store_id).filter(r=>supportLinkIds.includes(r.link_id)),...Object.fromEntries(['commerce_support_messages','commerce_support_attempts','commerce_support_deliveries','commerce_support_completions','commerce_support_costs','commerce_support_rule_jobs'].map(table=>[table,all(k,table,s.tenant_id,s.store_id).filter(r=>caseIds.includes(r.case_id)).map(r=>{const copy={...r};delete copy.owner_session_hash;return copy;})]))};
       const instantOps=all(k,'commerce_instant_operations',s.tenant_id,s.store_id).filter(subjectRecord),instantIds=instantOps.map(r=>r.id);
       const exchange_history_records={...Object.fromEntries(['commerce_exchange_lineage_nodes','commerce_exchange_lineage_imports','commerce_exchange_currency_bindings','commerce_exchange_fee_observations','commerce_instant_quotes','commerce_instant_obligations'].map(table=>[table,all(k,table,s.tenant_id,s.store_id).filter(subjectRecord)])),commerce_instant_operations:instantOps,commerce_instant_observations:all(k,'commerce_instant_observations',s.tenant_id,s.store_id).filter(r=>instantIds.includes(r.operation_id))};
-      const result={exchange_history_records,support_records,order_edit_records,gift_returns:gifts,schema_version:1,tenant_id:s.tenant_id,store_id:s.store_id,subject_ref:subjectHash(s.tenant_id,s.store_id,customer),
+      const return_assistance_records=Object.fromEntries(ASSISTANCE_SUBJECT_TABLES.map(table=>[table,all(k,table,s.tenant_id,s.store_id).filter(subjectRecord).map(r=>{const copy={...r};delete copy.session_hash;return copy;})]));
+      const result={return_assistance_records,exchange_history_records,support_records,order_edit_records,gift_returns:gifts,schema_version:1,tenant_id:s.tenant_id,store_id:s.store_id,subject_ref:subjectHash(s.tenant_id,s.store_id,customer),
         resources:rs.map(r=>k.project(r)),attachments:all(k,'commerce_attachments',s.tenant_id,s.store_id).filter(subjectRecord).map(r=>({id:r.id,resource_id:r.resource_id,content:JSON.parse(r.content)})),
         knowledge:all(k,'commerce_knowledge',s.tenant_id,s.store_id).filter(subjectRecord),
         tasks,assistance:all(k,'commerce_assistance_receipts',s.tenant_id,s.store_id).filter(r=>tasks.some(t=>t.id===r.task_id)),
@@ -183,7 +217,7 @@ export class PrivacyLifecycle {
         fulfillment_records:{operations:fulfillmentOps,observations:all(k,'commerce_fulfillment_observations',s.tenant_id,s.store_id).filter(r=>fulfillmentOpIds.includes(r.operation_id)),replacement_orders:all(k,'commerce_replacement_orders',s.tenant_id,s.store_id).filter(r=>fulfillmentOpIds.includes(r.operation_id)),carrier_events:all(k,'commerce_carrier_events',s.tenant_id,s.store_id).filter(r=>labelIds.includes(r.label_id)),...Object.fromEntries(['commerce_inventory_reservations','commerce_return_parcels','commerce_fulfillment_quotes','commerce_return_labels'].map(table=>[table,all(k,table,s.tenant_id,s.store_id).filter(subjectRecord)]))},
         return_completion_records:Object.fromEntries(['commerce_receiving_sessions','commerce_receiving_scans','commerce_received_units','commerce_receiving_reviews','commerce_lifecycle_quotes','commerce_disposition_operations','commerce_lifecycle_observations','commerce_return_closures','commerce_return_lifecycle_events','commerce_native_change_snapshots','commerce_native_completed_units','commerce_native_receipts','commerce_return_workflow_pins'].map(table=>[table,all(k,table,s.tenant_id,s.store_id).filter(r=>returnIds.includes(r.request_id)||sessionIds.includes(r.session_id))])),
         return_quotes:all(k,'commerce_return_quotes',s.tenant_id,s.store_id).filter(subjectRecord),
-        cases,configurations:all(k,'commerce_case_configurations',s.tenant_id,s.store_id).filter(r=>caseIds.includes(r.case_id)),
+        cases:cases.map(r=>{const copy={...r};delete copy.verification_hash;return copy;}),configurations:all(k,'commerce_case_configurations',s.tenant_id,s.store_id).filter(r=>caseIds.includes(r.case_id)),
         previews:all(k,'commerce_action_previews',s.tenant_id,s.store_id).filter(r=>caseIds.includes(r.case_id)),operations,audit_receipts:receipts,
         customer_notes:all(k,'commerce_receipt_payloads',s.tenant_id,s.store_id).filter(r=>receipts.some(a=>a.id===r.receipt_id)),
         unbound_text_requires_manual_scope_review:true,operational_records_retained:true,credentials_included:false,generated_at:k.clock()};

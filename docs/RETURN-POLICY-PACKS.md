@@ -65,3 +65,14 @@ Migration 029 is additive. Restore it with the preceding canonical schema and
 preserve pack history alongside published policies and skill archives. Missing
 M03/M04/M05 gates, component acceptance and connected service qualification remain
 open; these synthetic evaluations do not accept M06 or qualify a real merchant.
+
+## Existing request context
+
+An evaluation with `request_id` must supply exactly that request's original
+selection. Native destinations are evaluated against the existing bound request.
+The `eligibility` field still uses the original intake engine as a new selection,
+including units already reserved by that request. Its basis is explicitly
+`new_selection_with_existing_request_reserved`; it is not reauthorization of the
+existing return. `return_request.original_quote_decision` is separately labeled
+historical evidence. Destination readiness and current policy eligibility are
+distinct, and neither grants an execution approval.
