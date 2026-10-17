@@ -1,3 +1,4 @@
+import { closureState,lifecycleObservation } from './return-lifecycle-core.mts';
 import { exact,id,integer } from './kernel.mts';
 import type { CommerceKernel,Scope,Row } from './kernel.mts';
 import { canonical,contentDigest,jsonValue } from './configuration-values.mts';
@@ -55,6 +56,15 @@ export class ReplacementInventory {
    if(k.db.prepare("SELECT 1 FROM commerce_fulfillment_operations WHERE tenant_id=? AND store_id=? AND kind='replacement' AND obligation=?").get(row.ctx.s.tenant_id,row.ctx.s.store_id,row.allocation_id))throw new Error('RECONCILIATION_REQUIRED');
    if(row.state==='unknown')throw new Error('RECONCILIATION_REQUIRED');return row;});
   return this.#sync(scope,r.id,this.source.release(r.id,p.generation));}
+
+ releaseCancelled(scope:Scope,input:unknown){const p=exact(jsonValue(input),['reservation_id','generation']);integer(p.generation,1);const k=this.kernel;
+  const r=k.transaction(()=>{const row=reservationRow(k,scope,p.reservation_id,false),s=k.authorize(scope,'action.execute',row.resource_id);assertCaseWorkerScope(k,scope,row.case_id);assertRecoveryEgress(k);assertExecution(k,s,FULFILLMENT_ACTIONS.replacement);
+   if(!closureState(k,s,row.ctx.plan.request_id))throw new Error('RETURN_NOT_CLOSED');assertFulfillmentSource(k,this.source,s);if(row.reservation.source_identity!==this.source.identity)throw new Error('FIXTURE_SOURCE_MISMATCH');if(row.generation!==p.generation)throw new Error('RESERVATION_CHANGED');
+   const op=k.db.prepare("SELECT state FROM commerce_fulfillment_operations WHERE tenant_id=? AND store_id=? AND kind='replacement' AND obligation=?").get(s.tenant_id,s.store_id,row.allocation_id) as Row;
+   if(row.state==='unknown'||op&&!['authorized','rejected'].includes(op.state))throw new Error('RECONCILIATION_REQUIRED');return row;});
+  const result=this.#sync(scope,r.id,this.source.release(r.id,p.generation));
+  k.transaction(()=>{const s=k.authorize(scope,'action.execute',r.resource_id);lifecycleObservation(k,s,r.ctx.plan.request_id,r.id,'reservation_cleanup',{state:result.state,generation:p.generation});});return result;
+ }
  read(scope:Scope,ref:string){const r=reservationRow(this.kernel,scope,ref);return {id:r.id,allocation_id:r.allocation_id,generation:r.generation,state:r.state,expires_at:r.reservation.expires_at,
   quantity:r.reservation.quantity,location_id:r.reservation.location_id,source_identity:r.reservation.source_identity,native_reserved:r.state==='active'&&r.reservation.expires_at>this.kernel.clock(),
   reservation_scope:'fixture_native_only',live_stock_ownership:false,requires_source_recheck:true};}

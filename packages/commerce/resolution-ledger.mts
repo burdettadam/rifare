@@ -1,3 +1,4 @@
+import { assertReturnWritable,assertResolutionReceipt } from './return-lifecycle-core.mts';
 import { exact,id,integer,token } from './kernel.mts';
 import type { CommerceKernel,Scope,Row } from './kernel.mts';
 import { canonical,contentDigest,jsonValue } from './configuration-values.mts';
@@ -46,6 +47,7 @@ export function allocationContext(k:CommerceKernel,scope:Scope,ref:string,active
  if(a.resource_id!==c.resource_id||b.case_id!==c.id||b.resource_id!==c.resource_id||b.customer_id!==c.customer_id)throw new Error('RESOLUTION_INTEGRITY');
  const p=k.db.prepare('SELECT * FROM commerce_resolution_plans WHERE tenant_id=? AND store_id=? AND id=?').get(s.tenant_id,s.store_id,a.plan_id) as Row;
  const plan=checkedBody(p);
+ if(active)assertResolutionReceipt(k,s,plan.request_id,b.line_id,b.units,c.resource_id);
  if(active&&b.configuration_digest!==c.configuration_digest)throw new Error('CONFIGURATION_REPREVIEW_REQUIRED');
  return {s,a,b,c,plan};
 }
@@ -76,6 +78,7 @@ export class ResolutionLedger {
   if(new Set(p.lines.map((l:Row)=>l.line_id+':'+l.outcome)).size!==p.lines.length)throw new Error('INVALID_INPUT');
   const k=this.kernel;return k.transaction(()=>{const s=k.require(scope),r=k.db.prepare('SELECT * FROM commerce_return_requests WHERE tenant_id=? AND store_id=? AND id=?').get(s.tenant_id,s.store_id,p.request_id) as Row;
    const request=checkedBody(r),cases=new CaseConfigurations(k),c=cases.resume(scope,r.case_id);k.authorize(scope,'action.propose',c.resource_id);cases.verified(scope,c.id);assertCaseWorkerScope(k,scope,c.id);assertExecution(k,s,RESOLVE_ACTION);
+   assertReturnWritable(k,s,r.id);
    if(!r.receipt_id||!['submitted','native_created'].includes(r.state))throw new Error('RETURN_APPROVAL_REQUIRED');
    const settings=resolutionSettings(k,s),f=financialFacts(k,c),fees=intakeSettings(k,s),old=k.db.prepare('SELECT * FROM commerce_resolution_plans WHERE tenant_id=? AND store_id=? AND (request_id=? OR request_key=?)').get(s.tenant_id,s.store_id,r.id,p.request_key) as Row;
    if(old){const value=checkedBody(old);if(contentDigest(value.intent)!==contentDigest(p))throw new Error('RESOLUTION_CONFLICT');return this.read(scope,old.id);}

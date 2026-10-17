@@ -1,0 +1,86 @@
+{
+  "schema_version": 2,
+  "id": "handle-return",
+  "version": "1.0.0",
+  "engine": {
+    "min": "1.0.0",
+    "max_exclusive": "2.0.0"
+  },
+  "required_actions": [
+    {
+      "name": "return.status",
+      "versions": {
+        "min": "1.0.0",
+        "max_exclusive": "2.0.0"
+      }
+    },
+    {
+      "name": "return.refund.quote",
+      "versions": {
+        "min": "1.0.0",
+        "max_exclusive": "2.0.0"
+      }
+    },
+    {
+      "name": "action.preview",
+      "versions": {
+        "min": "1.0.0",
+        "max_exclusive": "2.0.0"
+      }
+    },
+    {
+      "name": "action.approve",
+      "versions": {
+        "min": "1.0.0",
+        "max_exclusive": "2.0.0"
+      }
+    },
+    {
+      "name": "action.execute",
+      "versions": {
+        "min": "1.0.0",
+        "max_exclusive": "2.0.0"
+      }
+    },
+    {
+      "name": "return.operation.read",
+      "versions": {
+        "min": "1.0.0",
+        "max_exclusive": "2.0.0"
+      }
+    }
+  ],
+  "resources": [
+    {
+      "path": "references/configuration.json",
+      "sha256": "76f3e970e5faa034cb7fda1528002c38b9d115bc837434cce72f9054a2dcbc76"
+    },
+    {
+      "path": "references/input.json",
+      "sha256": "6f19b85ca8686ebc56d9788b944ad58f5f17b9f2d7ff00996ab723bc15ac8e12"
+    },
+    {
+      "path": "references/output.json",
+      "sha256": "c2451fec651d5b9a6d12747fb9ba58b426f49283f748a13aa458fd5f757988d8"
+    },
+    {
+      "path": "references/workflow.md",
+      "sha256": "3a66bc65c46045077736cedd291bbcc597b5710d525e5a83e1facd5138d15149"
+    }
+  ],
+  "input_schema": "references/input.json",
+  "output_schema": "references/output.json",
+  "configuration": {
+    "schema_resource": "references/configuration.json",
+    "fields": [
+      "returns.window_days",
+      "returns.require_evidence",
+      "returns.excluded_tags",
+      "returns.outcomes",
+      "presentation.tone",
+      "presentation.locale"
+    ]
+  },
+  "scripts": [],
+  "egress": []
+}

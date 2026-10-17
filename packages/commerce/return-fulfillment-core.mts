@@ -1,3 +1,4 @@
+import { assertReturnWritable } from './return-lifecycle-core.mts';
 import { exact,id,integer,token } from './kernel.mts';
 import type { CommerceKernel,Scope,Row } from './kernel.mts';
 import { canonical,contentDigest,jsonValue } from './configuration-values.mts';
@@ -24,11 +25,11 @@ export class FulfillmentConfiguration {
    const b={...p};delete b.expected_revision;k.db.prepare('INSERT INTO commerce_fulfillment_settings VALUES(?,?,?,?,?) ON CONFLICT(tenant_id,store_id) DO UPDATE SET revision=excluded.revision,body=excluded.body,digest=excluded.digest').run(s.tenant_id,s.store_id,p.expected_revision+1,canonical(b),contentDigest(b));
    return {revision:p.expected_revision+1,qualification:'synthetic_only',native_provider_qualified:false};});}
 }
-export function fulfillmentContext(k:CommerceKernel,scope:Scope,caseId:string,requestId:string,active=true){
+export function fulfillmentContext(k:CommerceKernel,scope:Scope,caseId:string,requestId:string,active=true,cleanup=false){
  const s=k.require(scope),cases=new CaseConfigurations(k),c=active?cases.resume(scope,id(caseId)):cases.inspect(scope,id(caseId));k.authorize(scope,'return.read',c.resource_id);
  const r=k.db.prepare('SELECT * FROM commerce_return_requests WHERE tenant_id=? AND store_id=? AND id=? AND case_id=?').get(s.tenant_id,s.store_id,id(requestId),c.id) as Row;checkedBody(r);
  const n=k.db.prepare("SELECT * FROM commerce_native_return_operations WHERE tenant_id=? AND store_id=? AND request_id=? AND state='created'").get(s.tenant_id,s.store_id,r.id) as Row;
- if(!n)throw new Error('NATIVE_RETURN_REQUIRED');const native=JSON.parse(n.native_body);if(contentDigest(native)!==n.native_digest)throw new Error('NATIVE_RETURN_INTEGRITY');
+ if(!n)throw new Error('NATIVE_RETURN_REQUIRED');if(active)assertReturnWritable(k,s,r.id,cleanup);const native=JSON.parse(n.native_body);if(contentDigest(native)!==n.native_digest)throw new Error('NATIVE_RETURN_INTEGRITY');
  if(active&&!['OPEN','CLOSED'].includes(native.status))throw new Error('NATIVE_RETURN_UNAVAILABLE');
  if(active&&evidenceReviewState(k,s,c.id)?.event==='evidence_requested')throw new Error('RETURN_REVIEW_REQUIRED');
  return {s,c,request:r,native:n};
@@ -73,7 +74,7 @@ export function fulfillmentValue(k:CommerceKernel,scope:Scope,kind:string,intent
   details={parcel_digest:p.digest,parcel_revision:p.revision,service:p.parcel.service,address_revision:p.parcel.address_revision,package:p.parcel.package,from_address_ref:p.parcel.from_address_ref,to_address_ref:p.parcel.to_address_ref,rate,generation,replaces:intent.replaces};
   amount=rate.amount_minor;currency=rate.currency;obligation=p.request_id+'_label_'+generation;expiry=Math.min(expiry,rate.expires_at);
  }else{
-  exact(intent,['label_id']);const l=labelRow(k,scope,intent.label_id);ctx=fulfillmentContext(k,scope,l.case_id,l.request_id);
+  exact(intent,['label_id']);const l=labelRow(k,scope,intent.label_id);ctx=fulfillmentContext(k,scope,l.case_id,l.request_id,true,true);
   if(l.label.tracking_state!=='label_created'||l.label.void_state!=='not_requested'||l.replaced_by)throw new Error('VOID_UNAVAILABLE');
   details={label_id:l.id,charge_id:l.label.charge_id,label_version:l.source_version,label_digest:l.digest};obligation=l.id;currency=l.label.currency;
  }

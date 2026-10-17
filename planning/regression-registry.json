@@ -554,6 +554,54 @@
       "contract_files": [
         "goals/M03/M03-G15.md"
       ]
+    },
+    {
+      "id": "FEATURE-M03-G16",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M03/M03-G16.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M03-G17",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M03/M03-G17.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M03-G18",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M03/M03-G18.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M03-G19",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M03/M03-G19.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M03-G20",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M03/M03-G20.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M03-G21",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M03/M03-G21.md"
+      ]
     }
   ],
   "tests": [
@@ -12918,6 +12966,566 @@
       "runner_case_id": "M03-G12-ZERO-VALUE-WITHOUT-FULFILLABILITY-REMAINS-UNKNOWN",
       "source": "tests/development/replacement-orders.test.mts",
       "capability_id": "FEATURE-M03-G12"
+    },
+    {
+      "id": "runtime:CASE-M03-G16-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G16-01",
+      "source": "tests/development/receiving-completion.test.mts",
+      "capability_id": "FEATURE-M03-G16"
+    },
+    {
+      "id": "runtime:CASE-M03-G16-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G16-02",
+      "source": "tests/development/receiving-completion.test.mts",
+      "capability_id": "FEATURE-M03-G16"
+    },
+    {
+      "id": "runtime:CASE-M03-G16-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G16-03",
+      "source": "tests/development/receiving-completion.test.mts",
+      "capability_id": "FEATURE-M03-G16"
+    },
+    {
+      "id": "runtime:RECEIVING-COMPLETION-OVERAGE-IS-PHYSICAL-EVIDENCE-NOT-ELIGIBLE-RETURNED-STOCK",
+      "suite": "runtime",
+      "runner_case_id": "RECEIVING-COMPLETION-OVERAGE-IS-PHYSICAL-EVIDENCE-NOT-ELIGIBLE-RETURNED-STOCK",
+      "source": "tests/development/receiving-completion.test.mts",
+      "capability_id": "FEATURE-M03-G16"
+    },
+    {
+      "id": "runtime:RECEIVING-COMPLETION-DUPLICATE-SCAN-ID-CANNOT-SUBSTITUTE-CONTENT",
+      "suite": "runtime",
+      "runner_case_id": "RECEIVING-COMPLETION-DUPLICATE-SCAN-ID-CANNOT-SUBSTITUTE-CONTENT",
+      "source": "tests/development/receiving-completion.test.mts",
+      "capability_id": "FEATURE-M03-G16"
+    },
+    {
+      "id": "runtime:RECEIVING-COMPLETION-STALE-SESSION-REVISION-CANNOT-APPEND-ANOTHER-SCAN",
+      "suite": "runtime",
+      "runner_case_id": "RECEIVING-COMPLETION-STALE-SESSION-REVISION-CANNOT-APPEND-ANOTHER-SCAN",
+      "source": "tests/development/receiving-completion.test.mts",
+      "capability_id": "FEATURE-M03-G16"
+    },
+    {
+      "id": "runtime:RECEIVING-COMPLETION-CLOSE-IS-NOT-AUTOMATIC-RESOLUTION-AND-PREVENTS-LATER-SCAN",
+      "suite": "runtime",
+      "runner_case_id": "RECEIVING-COMPLETION-CLOSE-IS-NOT-AUTOMATIC-RESOLUTION-AND-PREVENTS-LATER-SCAN",
+      "source": "tests/development/receiving-completion.test.mts",
+      "capability_id": "FEATURE-M03-G16"
+    },
+    {
+      "id": "runtime:RECEIVING-COMPLETION-A-DAMAGED-COMPLETE-RECEIPT-NEEDS-A-DIFFERENT-AUTHORIZED-REVIEWER",
+      "suite": "runtime",
+      "runner_case_id": "RECEIVING-COMPLETION-A-DAMAGED-COMPLETE-RECEIPT-NEEDS-A-DIFFERENT-AUTHORIZED-REVIEWER",
+      "source": "tests/development/receiving-completion.test.mts",
+      "capability_id": "FEATURE-M03-G16"
+    },
+    {
+      "id": "runtime:RECEIVING-COMPLETION-MISSING-AND-WRONG-UNITS-CANNOT-BE-REVIEWER-APPROVED-AS-COMPLETE",
+      "suite": "runtime",
+      "runner_case_id": "RECEIVING-COMPLETION-MISSING-AND-WRONG-UNITS-CANNOT-BE-REVIEWER-APPROVED-AS-COMPLETE",
+      "source": "tests/development/receiving-completion.test.mts",
+      "capability_id": "FEATURE-M03-G16"
+    },
+    {
+      "id": "runtime:RECEIVING-COMPLETION-CROSS-STORE-SESSION-LOOKUP-IS-DENIED",
+      "suite": "runtime",
+      "runner_case_id": "RECEIVING-COMPLETION-CROSS-STORE-SESSION-LOOKUP-IS-DENIED",
+      "source": "tests/development/receiving-completion.test.mts",
+      "capability_id": "FEATURE-M03-G16"
+    },
+    {
+      "id": "runtime:RECEIVING-COMPLETION-CUSTOMERS-CANNOT-CLAIM-WAREHOUSE-RECEIPT",
+      "suite": "runtime",
+      "runner_case_id": "RECEIVING-COMPLETION-CUSTOMERS-CANNOT-CLAIM-WAREHOUSE-RECEIPT",
+      "source": "tests/development/receiving-completion.test.mts",
+      "capability_id": "FEATURE-M03-G16"
+    },
+    {
+      "id": "runtime:RECEIVING-COMPLETION-IMMUTABLE-PHYSICAL-UNITS-CANNOT-BE-EDITED-OR-DELETED",
+      "suite": "runtime",
+      "runner_case_id": "RECEIVING-COMPLETION-IMMUTABLE-PHYSICAL-UNITS-CANNOT-BE-EDITED-OR-DELETED",
+      "source": "tests/development/receiving-completion.test.mts",
+      "capability_id": "FEATURE-M03-G16"
+    },
+    {
+      "id": "runtime:CASE-M03-G17-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G17-01",
+      "source": "tests/development/disposition-completion.test.mts",
+      "capability_id": "FEATURE-M03-G17"
+    },
+    {
+      "id": "runtime:CASE-M03-G17-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G17-02",
+      "source": "tests/development/disposition-completion.test.mts",
+      "capability_id": "FEATURE-M03-G17"
+    },
+    {
+      "id": "runtime:CASE-M03-G17-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G17-03",
+      "source": "tests/development/disposition-completion.test.mts",
+      "capability_id": "FEATURE-M03-G17"
+    },
+    {
+      "id": "runtime:DISPOSITION-COMPLETION-A-UNIT-CANNOT-RECEIVE-A-SECOND-DISPOSITION",
+      "suite": "runtime",
+      "runner_case_id": "DISPOSITION-COMPLETION-A-UNIT-CANNOT-RECEIVE-A-SECOND-DISPOSITION",
+      "source": "tests/development/disposition-completion.test.mts",
+      "capability_id": "FEATURE-M03-G17"
+    },
+    {
+      "id": "runtime:DISPOSITION-COMPLETION-A-QUOTE-IS-NOT-A-WAREHOUSE-ADJUSTMENT",
+      "suite": "runtime",
+      "runner_case_id": "DISPOSITION-COMPLETION-A-QUOTE-IS-NOT-A-WAREHOUSE-ADJUSTMENT",
+      "source": "tests/development/disposition-completion.test.mts",
+      "capability_id": "FEATURE-M03-G17"
+    },
+    {
+      "id": "runtime:DISPOSITION-COMPLETION-MISSING-ADAPTER-CANNOT-IMPLY-STOCK-MOVEMENT",
+      "suite": "runtime",
+      "runner_case_id": "DISPOSITION-COMPLETION-MISSING-ADAPTER-CANNOT-IMPLY-STOCK-MOVEMENT",
+      "source": "tests/development/disposition-completion.test.mts",
+      "capability_id": "FEATURE-M03-G17"
+    },
+    {
+      "id": "runtime:DISPOSITION-COMPLETION-CLOSED-WORKFLOW-INVALIDATES-AN-UNDISPATCHED-APPROVAL",
+      "suite": "runtime",
+      "runner_case_id": "DISPOSITION-COMPLETION-CLOSED-WORKFLOW-INVALIDATES-AN-UNDISPATCHED-APPROVAL",
+      "source": "tests/development/disposition-completion.test.mts",
+      "capability_id": "FEATURE-M03-G17"
+    },
+    {
+      "id": "runtime:M03-G17-QUARANTINE-PRESERVES-SELLABLE-INVENTORY",
+      "suite": "runtime",
+      "runner_case_id": "M03-G17-QUARANTINE-PRESERVES-SELLABLE-INVENTORY",
+      "source": "tests/development/disposition-completion.test.mts",
+      "capability_id": "FEATURE-M03-G17"
+    },
+    {
+      "id": "runtime:M03-G17-DISPOSE-PRESERVES-SELLABLE-INVENTORY",
+      "suite": "runtime",
+      "runner_case_id": "M03-G17-DISPOSE-PRESERVES-SELLABLE-INVENTORY",
+      "source": "tests/development/disposition-completion.test.mts",
+      "capability_id": "FEATURE-M03-G17"
+    },
+    {
+      "id": "runtime:M03-G17-SUPPLIER_RETURN-PRESERVES-SELLABLE-INVENTORY",
+      "suite": "runtime",
+      "runner_case_id": "M03-G17-SUPPLIER_RETURN-PRESERVES-SELLABLE-INVENTORY",
+      "source": "tests/development/disposition-completion.test.mts",
+      "capability_id": "FEATURE-M03-G17"
+    },
+    {
+      "id": "runtime:CASE-M03-G18-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G18-01",
+      "source": "tests/development/cancellation-completion.test.mts",
+      "capability_id": "FEATURE-M03-G18"
+    },
+    {
+      "id": "runtime:CASE-M03-G18-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G18-02",
+      "source": "tests/development/cancellation-completion.test.mts",
+      "capability_id": "FEATURE-M03-G18"
+    },
+    {
+      "id": "runtime:CASE-M03-G18-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G18-03",
+      "source": "tests/development/cancellation-completion.test.mts",
+      "capability_id": "FEATURE-M03-G18"
+    },
+    {
+      "id": "runtime:CANCELLATION-COMPLETION-CANCELLATION-DOES-NOT-RELEASE-STOCK-UNTIL-SOURCE-CONFIRMED-CLEANUP",
+      "suite": "runtime",
+      "runner_case_id": "CANCELLATION-COMPLETION-CANCELLATION-DOES-NOT-RELEASE-STOCK-UNTIL-SOURCE-CONFIRMED-CLEANUP",
+      "source": "tests/development/cancellation-completion.test.mts",
+      "capability_id": "FEATURE-M03-G18"
+    },
+    {
+      "id": "runtime:CANCELLATION-COMPLETION-UNKNOWN-REPLACEMENT-PREVENTS-RELEASING-ITS-RESERVATION",
+      "suite": "runtime",
+      "runner_case_id": "CANCELLATION-COMPLETION-UNKNOWN-REPLACEMENT-PREVENTS-RELEASING-ITS-RESERVATION",
+      "source": "tests/development/cancellation-completion.test.mts",
+      "capability_id": "FEATURE-M03-G18"
+    },
+    {
+      "id": "runtime:CANCELLATION-COMPLETION-EXPIRY-REASON-CANNOT-BE-SUPPLIED-BEFORE-THE-SERVER-DEADLINE",
+      "suite": "runtime",
+      "runner_case_id": "CANCELLATION-COMPLETION-EXPIRY-REASON-CANNOT-BE-SUPPLIED-BEFORE-THE-SERVER-DEADLINE",
+      "source": "tests/development/cancellation-completion.test.mts",
+      "capability_id": "FEATURE-M03-G18"
+    },
+    {
+      "id": "runtime:CANCELLATION-COMPLETION-CANCELLATION-KEEPS-UNUSED-LABEL-AND-PENDING-REIMBURSEMENT-DISTINCT",
+      "suite": "runtime",
+      "runner_case_id": "CANCELLATION-COMPLETION-CANCELLATION-KEEPS-UNUSED-LABEL-AND-PENDING-REIMBURSEMENT-DISTINCT",
+      "source": "tests/development/cancellation-completion.test.mts",
+      "capability_id": "FEATURE-M03-G18"
+    },
+    {
+      "id": "runtime:CANCELLATION-COMPLETION-CHANGED-PHYSICAL-HISTORY-INVALIDATES-AN-OLDER-CANCELLATION-PREVIEW",
+      "suite": "runtime",
+      "runner_case_id": "CANCELLATION-COMPLETION-CHANGED-PHYSICAL-HISTORY-INVALIDATES-AN-OLDER-CANCELLATION-PREVIEW",
+      "source": "tests/development/cancellation-completion.test.mts",
+      "capability_id": "FEATURE-M03-G18"
+    },
+    {
+      "id": "runtime:CANCELLATION-COMPLETION-CUSTOMER-CANNOT-APPROVE-CANCELLATION",
+      "suite": "runtime",
+      "runner_case_id": "CANCELLATION-COMPLETION-CUSTOMER-CANNOT-APPROVE-CANCELLATION",
+      "source": "tests/development/cancellation-completion.test.mts",
+      "capability_id": "FEATURE-M03-G18"
+    },
+    {
+      "id": "runtime:CANCELLATION-COMPLETION-PHYSICAL-RECEIVING-REMAINS-POSSIBLE-AFTER-CANCELLING-REMAINING-OBLIGATIONS",
+      "suite": "runtime",
+      "runner_case_id": "CANCELLATION-COMPLETION-PHYSICAL-RECEIVING-REMAINS-POSSIBLE-AFTER-CANCELLING-REMAINING-OBLIGATIONS",
+      "source": "tests/development/cancellation-completion.test.mts",
+      "capability_id": "FEATURE-M03-G18"
+    },
+    {
+      "id": "runtime:M03-G18-EXPIRED-REQUEST-CLOSES-WITH-FRESH-OPERATOR-AUTHORITY",
+      "suite": "runtime",
+      "runner_case_id": "M03-G18-EXPIRED-REQUEST-CLOSES-WITH-FRESH-OPERATOR-AUTHORITY",
+      "source": "tests/development/cancellation-completion.test.mts",
+      "capability_id": "FEATURE-M03-G18"
+    },
+    {
+      "id": "runtime:CASE-M03-G19-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G19-01",
+      "source": "tests/development/workflow-completion.test.mts",
+      "capability_id": "FEATURE-M03-G19"
+    },
+    {
+      "id": "runtime:CASE-M03-G19-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G19-02",
+      "source": "tests/development/workflow-completion.test.mts",
+      "capability_id": "FEATURE-M03-G19"
+    },
+    {
+      "id": "runtime:CASE-M03-G19-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G19-03",
+      "source": "tests/development/workflow-completion.test.mts",
+      "capability_id": "FEATURE-M03-G19"
+    },
+    {
+      "id": "runtime:RETURN-WORKFLOW-AN-UNAVAILABLE-MODEL-CANNOT-DISABLE-MANUAL-CANONICAL-QUOTES",
+      "suite": "runtime",
+      "runner_case_id": "RETURN-WORKFLOW-AN-UNAVAILABLE-MODEL-CANNOT-DISABLE-MANUAL-CANONICAL-QUOTES",
+      "source": "tests/development/workflow-completion.test.mts",
+      "capability_id": "FEATURE-M03-G19"
+    },
+    {
+      "id": "runtime:RETURN-WORKFLOW-ORIGINAL-SKILL-PIN-CANNOT-SILENTLY-CHANGE",
+      "suite": "runtime",
+      "runner_case_id": "RETURN-WORKFLOW-ORIGINAL-SKILL-PIN-CANNOT-SILENTLY-CHANGE",
+      "source": "tests/development/workflow-completion.test.mts",
+      "capability_id": "FEATURE-M03-G19"
+    },
+    {
+      "id": "runtime:RETURN-WORKFLOW-REVOKED-INSTALLED-CONTENT-FAILS-EVEN-WHEN-ALREADY-PINNED",
+      "suite": "runtime",
+      "runner_case_id": "RETURN-WORKFLOW-REVOKED-INSTALLED-CONTENT-FAILS-EVEN-WHEN-ALREADY-PINNED",
+      "source": "tests/development/workflow-completion.test.mts",
+      "capability_id": "FEATURE-M03-G19"
+    },
+    {
+      "id": "runtime:RETURN-WORKFLOW-ANOTHER-STORE-CANNOT-INSPECT-THE-RETURN-CONTEXT",
+      "suite": "runtime",
+      "runner_case_id": "RETURN-WORKFLOW-ANOTHER-STORE-CANNOT-INSPECT-THE-RETURN-CONTEXT",
+      "source": "tests/development/workflow-completion.test.mts",
+      "capability_id": "FEATURE-M03-G19"
+    },
+    {
+      "id": "runtime:RETURN-WORKFLOW-UNKNOWN-FINANCIAL-EFFECT-REQUESTS-RECONCILIATION-NOT-COMPLETION",
+      "suite": "runtime",
+      "runner_case_id": "RETURN-WORKFLOW-UNKNOWN-FINANCIAL-EFFECT-REQUESTS-RECONCILIATION-NOT-COMPLETION",
+      "source": "tests/development/workflow-completion.test.mts",
+      "capability_id": "FEATURE-M03-G19"
+    },
+    {
+      "id": "runtime:CASE-M03-G20-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G20-01",
+      "source": "tests/development/workflow-completion.test.mts",
+      "capability_id": "FEATURE-M03-G20"
+    },
+    {
+      "id": "runtime:CASE-M03-G20-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G20-02",
+      "source": "tests/development/workflow-completion.test.mts",
+      "capability_id": "FEATURE-M03-G20"
+    },
+    {
+      "id": "runtime:CASE-M03-G20-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G20-03",
+      "source": "tests/development/workflow-completion.test.mts",
+      "capability_id": "FEATURE-M03-G20"
+    },
+    {
+      "id": "runtime:EXCHANGE-WORKFLOW-CREATING-A-REPLACEMENT-IS-NOT-SHIPPING-IT",
+      "suite": "runtime",
+      "runner_case_id": "EXCHANGE-WORKFLOW-CREATING-A-REPLACEMENT-IS-NOT-SHIPPING-IT",
+      "source": "tests/development/workflow-completion.test.mts",
+      "capability_id": "FEATURE-M03-G20"
+    },
+    {
+      "id": "runtime:EXCHANGE-WORKFLOW-CANCELLATION-PRESERVES-ASSIGNMENT-BUT-STOPS-NEW-QUOTATIONS",
+      "suite": "runtime",
+      "runner_case_id": "EXCHANGE-WORKFLOW-CANCELLATION-PRESERVES-ASSIGNMENT-BUT-STOPS-NEW-QUOTATIONS",
+      "source": "tests/development/workflow-completion.test.mts",
+      "capability_id": "FEATURE-M03-G20"
+    },
+    {
+      "id": "runtime:EXCHANGE-WORKFLOW-NO-HIDDEN-MODEL-OR-PROVIDER-THREAD-DEPENDENCY-IN-THE-SEPARATE-CLIENT",
+      "suite": "runtime",
+      "runner_case_id": "EXCHANGE-WORKFLOW-NO-HIDDEN-MODEL-OR-PROVIDER-THREAD-DEPENDENCY-IN-THE-SEPARATE-CLIENT",
+      "source": "tests/development/workflow-completion.test.mts",
+      "capability_id": "FEATURE-M03-G20"
+    },
+    {
+      "id": "runtime:RETURN-WORKFLOW-UI-STORES-CREDENTIALS-IN-MEMORY-AND-RENDERS-GUIDANCE-AS-TEXT",
+      "suite": "runtime",
+      "runner_case_id": "RETURN-WORKFLOW-UI-STORES-CREDENTIALS-IN-MEMORY-AND-RENDERS-GUIDANCE-AS-TEXT",
+      "source": "tests/development/workflow-completion.test.mts",
+      "capability_id": "FEATURE-M03-G19"
+    },
+    {
+      "id": "runtime:RETURN-WORKFLOW-STORE-CREDIT-USES-THE-CANONICAL-INSTRUMENT-QUOTATION",
+      "suite": "runtime",
+      "runner_case_id": "RETURN-WORKFLOW-STORE-CREDIT-USES-THE-CANONICAL-INSTRUMENT-QUOTATION",
+      "source": "tests/development/workflow-completion.test.mts",
+      "capability_id": "FEATURE-M03-G19"
+    },
+    {
+      "id": "runtime:CASE-M03-G21-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G21-01",
+      "source": "tests/development/native-change-completion.test.mts",
+      "capability_id": "FEATURE-M03-G21"
+    },
+    {
+      "id": "runtime:CASE-M03-G21-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G21-02",
+      "source": "tests/development/native-change-completion.test.mts",
+      "capability_id": "FEATURE-M03-G21"
+    },
+    {
+      "id": "runtime:CASE-M03-G21-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G21-03",
+      "source": "tests/development/native-change-completion.test.mts",
+      "capability_id": "FEATURE-M03-G21"
+    },
+    {
+      "id": "runtime:NATIVE-CHANGE-COMPLETION-INCOMPLETE-OBSERVATION-BLOCKS-WRITES-ONCE-CONFIGURED",
+      "suite": "runtime",
+      "runner_case_id": "NATIVE-CHANGE-COMPLETION-INCOMPLETE-OBSERVATION-BLOCKS-WRITES-ONCE-CONFIGURED",
+      "source": "tests/development/native-change-completion.test.mts",
+      "capability_id": "FEATURE-M03-G21"
+    },
+    {
+      "id": "runtime:NATIVE-CHANGE-COMPLETION-WRONG-ORIGINAL-PAYMENT-REJECTED-ATOMICALLY",
+      "suite": "runtime",
+      "runner_case_id": "NATIVE-CHANGE-COMPLETION-WRONG-ORIGINAL-PAYMENT-REJECTED-ATOMICALLY",
+      "source": "tests/development/native-change-completion.test.mts",
+      "capability_id": "FEATURE-M03-G21"
+    },
+    {
+      "id": "runtime:NATIVE-CHANGE-COMPLETION-EXTERNAL-HISTORY-CANNOT-DISAPPEAR-IN-LATER-SNAPSHOTS",
+      "suite": "runtime",
+      "runner_case_id": "NATIVE-CHANGE-COMPLETION-EXTERNAL-HISTORY-CANNOT-DISAPPEAR-IN-LATER-SNAPSHOTS",
+      "source": "tests/development/native-change-completion.test.mts",
+      "capability_id": "FEATURE-M03-G21"
+    },
+    {
+      "id": "runtime:NATIVE-CHANGE-COMPLETION-FUTURE-SOURCE-OBSERVATION-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "NATIVE-CHANGE-COMPLETION-FUTURE-SOURCE-OBSERVATION-REJECTED",
+      "source": "tests/development/native-change-completion.test.mts",
+      "capability_id": "FEATURE-M03-G21"
+    },
+    {
+      "id": "runtime:NATIVE-CHANGE-COMPLETION-LATER-STALE-VERSION-CANNOT-UNDO-EXTERNAL-RESOLUTION",
+      "suite": "runtime",
+      "runner_case_id": "NATIVE-CHANGE-COMPLETION-LATER-STALE-VERSION-CANNOT-UNDO-EXTERNAL-RESOLUTION",
+      "source": "tests/development/native-change-completion.test.mts",
+      "capability_id": "FEATURE-M03-G21"
+    },
+    {
+      "id": "runtime:NATIVE-CHANGE-COMPLETION-SOURCE-UNAVAILABLE-LEAVES-CURRENT-FACTS-UNCHANGED",
+      "suite": "runtime",
+      "runner_case_id": "NATIVE-CHANGE-COMPLETION-SOURCE-UNAVAILABLE-LEAVES-CURRENT-FACTS-UNCHANGED",
+      "source": "tests/development/native-change-completion.test.mts",
+      "capability_id": "FEATURE-M03-G21"
+    },
+    {
+      "id": "runtime:NATIVE-CHANGE-COMPLETION-REFUNDS-CANNOT-EXCEED-ORIGINAL-PAID-VALUE",
+      "suite": "runtime",
+      "runner_case_id": "NATIVE-CHANGE-COMPLETION-REFUNDS-CANNOT-EXCEED-ORIGINAL-PAID-VALUE",
+      "source": "tests/development/native-change-completion.test.mts",
+      "capability_id": "FEATURE-M03-G21"
+    },
+    {
+      "id": "runtime:NATIVE-CHANGE-COMPLETION-STORE-ISOLATION-APPLIES-TO-SOURCE-READS",
+      "suite": "runtime",
+      "runner_case_id": "NATIVE-CHANGE-COMPLETION-STORE-ISOLATION-APPLIES-TO-SOURCE-READS",
+      "source": "tests/development/native-change-completion.test.mts",
+      "capability_id": "FEATURE-M03-G21"
+    },
+    {
+      "id": "runtime:NATIVE-CHANGE-COMPLETION-EXTERNAL-RECEIPT-CANNOT-BE-LOCALLY-RESTOCKED-TWICE",
+      "suite": "runtime",
+      "runner_case_id": "NATIVE-CHANGE-COMPLETION-EXTERNAL-RECEIPT-CANNOT-BE-LOCALLY-RESTOCKED-TWICE",
+      "source": "tests/development/native-change-completion.test.mts",
+      "capability_id": "FEATURE-M03-G21"
+    },
+    {
+      "id": "runtime:NATIVE-CHANGE-COMPLETION-ACCOUNT-OBSERVATIONS-CANNOT-PRETEND-TO-SETTLE-LOCAL-MONEY",
+      "suite": "runtime",
+      "runner_case_id": "NATIVE-CHANGE-COMPLETION-ACCOUNT-OBSERVATIONS-CANNOT-PRETEND-TO-SETTLE-LOCAL-MONEY",
+      "source": "tests/development/native-change-completion.test.mts",
+      "capability_id": "FEATURE-M03-G21"
+    },
+    {
+      "id": "runtime:NATIVE-CHANGE-COMPLETION-A-LATER-NATIVE-DISPOSITION-ADVANCES-THE-RECEIPT-WITHOUT-DUPLICATING-IT",
+      "suite": "runtime",
+      "runner_case_id": "NATIVE-CHANGE-COMPLETION-A-LATER-NATIVE-DISPOSITION-ADVANCES-THE-RECEIPT-WITHOUT-DUPLICATING-IT",
+      "source": "tests/development/native-change-completion.test.mts",
+      "capability_id": "FEATURE-M03-G21"
+    },
+    {
+      "id": "runtime:M03-COMPLETION-SCHEMA-AND-SCOPED-EXPORT",
+      "suite": "runtime",
+      "runner_case_id": "M03-COMPLETION-SCHEMA-AND-SCOPED-EXPORT",
+      "source": "tests/development/completion-review.test.mts",
+      "capability_id": "FEATURE-M03-G16"
+    },
+    {
+      "id": "runtime:M03-COMPLETION-ERASURE-BLOCKS-READS-AND-SCRUBS-QUOTES",
+      "suite": "runtime",
+      "runner_case_id": "M03-COMPLETION-ERASURE-BLOCKS-READS-AND-SCRUBS-QUOTES",
+      "source": "tests/development/completion-review.test.mts",
+      "capability_id": "FEATURE-M03-G16"
+    },
+    {
+      "id": "runtime:M03-COMPLETION-TRACKING-USES-ACTUAL-RECEIPT-NOT-DELIVERY",
+      "suite": "runtime",
+      "runner_case_id": "M03-COMPLETION-TRACKING-USES-ACTUAL-RECEIPT-NOT-DELIVERY",
+      "source": "tests/development/completion-review.test.mts",
+      "capability_id": "FEATURE-M03-G16"
+    },
+    {
+      "id": "runtime:M03-COMPLETION-REFUND-EXCHANGE-RECEIVING-JOURNEY",
+      "suite": "runtime",
+      "runner_case_id": "M03-COMPLETION-REFUND-EXCHANGE-RECEIVING-JOURNEY",
+      "source": "tests/development/completion-review.test.mts",
+      "capability_id": "FEATURE-M03-G16"
+    },
+    {
+      "id": "runtime:M03-COMPLETION-REPLAYED-CHILD-SCAN-COUNTS-ONCE",
+      "suite": "runtime",
+      "runner_case_id": "M03-COMPLETION-REPLAYED-CHILD-SCAN-COUNTS-ONCE",
+      "source": "tests/development/completion-review.test.mts",
+      "capability_id": "FEATURE-M03-G16"
+    },
+    {
+      "id": "runtime:M03-COMPLETION-DISPOSITION-SOURCE-COMMIT-PROCESS-EXIT",
+      "suite": "runtime",
+      "runner_case_id": "M03-COMPLETION-DISPOSITION-SOURCE-COMMIT-PROCESS-EXIT",
+      "source": "tests/development/completion-review.test.mts",
+      "capability_id": "FEATURE-M03-G16"
+    },
+    {
+      "id": "runtime:M03-COMPLETION-HTTP-CANNOT-INJECT-AUTHORITY",
+      "suite": "runtime",
+      "runner_case_id": "M03-COMPLETION-HTTP-CANNOT-INJECT-AUTHORITY",
+      "source": "tests/development/completion-review.test.mts",
+      "capability_id": "FEATURE-M03-G16"
+    },
+    {
+      "id": "runtime:M03-COMPLETION-CANCELLATION-AND-AUTHORIZATION-RACE",
+      "suite": "runtime",
+      "runner_case_id": "M03-COMPLETION-CANCELLATION-AND-AUTHORIZATION-RACE",
+      "source": "tests/development/completion-review.test.mts",
+      "capability_id": "FEATURE-M03-G16"
+    },
+    {
+      "id": "runtime:M03-COMPLETION-BROWSER-KEYBOARD-STATUS-QUOTE",
+      "suite": "runtime",
+      "runner_case_id": "M03-COMPLETION-BROWSER-KEYBOARD-STATUS-QUOTE",
+      "source": "tests/development/completion-browser.test.mts",
+      "capability_id": "FEATURE-M03-G19"
+    },
+    {
+      "id": "runtime:M03-COMPLETION-BROWSER-STALE-QUOTE-CLEARED",
+      "suite": "runtime",
+      "runner_case_id": "M03-COMPLETION-BROWSER-STALE-QUOTE-CLEARED",
+      "source": "tests/development/completion-browser.test.mts",
+      "capability_id": "FEATURE-M03-G19"
+    },
+    {
+      "id": "runtime:M03-G20-TWO-MERCHANTS-SHARED-SKILL-DIFFERENT-INVENTORY-POLICY",
+      "suite": "runtime",
+      "runner_case_id": "M03-G20-TWO-MERCHANTS-SHARED-SKILL-DIFFERENT-INVENTORY-POLICY",
+      "source": "tests/development/completion-merchants.test.mts",
+      "capability_id": "FEATURE-M03-G20"
+    },
+    {
+      "id": "python:test_m03_runtime_budget.CumulativeBudgetTests.test_explicit_extension_runs_the_entire_discovered_inventory",
+      "suite": "python",
+      "runner_case_id": "test_m03_runtime_budget.CumulativeBudgetTests.test_explicit_extension_runs_the_entire_discovered_inventory",
+      "source": "tests/test_m03_runtime_budget.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_m03_runtime_budget.CumulativeBudgetTests.test_original_standalone_default_remains_240",
+      "suite": "python",
+      "runner_case_id": "test_m03_runtime_budget.CumulativeBudgetTests.test_original_standalone_default_remains_240",
+      "source": "tests/test_m03_runtime_budget.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_m03_runtime_budget.CumulativeBudgetTests.test_arbitrary_or_unbounded_budget_is_rejected_before_spawn",
+      "suite": "python",
+      "runner_case_id": "test_m03_runtime_budget.CumulativeBudgetTests.test_arbitrary_or_unbounded_budget_is_rejected_before_spawn",
+      "source": "tests/test_m03_runtime_budget.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_m03_runtime_budget.CumulativeBudgetTests.test_extended_budget_does_not_allow_skips",
+      "suite": "python",
+      "runner_case_id": "test_m03_runtime_budget.CumulativeBudgetTests.test_extended_budget_does_not_allow_skips",
+      "source": "tests/test_m03_runtime_budget.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_m03_runtime_budget.CumulativeBudgetTests.test_extended_budget_does_not_allow_empty_or_failing_runs",
+      "suite": "python",
+      "runner_case_id": "test_m03_runtime_budget.CumulativeBudgetTests.test_extended_budget_does_not_allow_empty_or_failing_runs",
+      "source": "tests/test_m03_runtime_budget.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_m03_runtime_budget.CumulativeBudgetTests.test_timeout_is_not_retried_or_reported_green",
+      "suite": "python",
+      "runner_case_id": "test_m03_runtime_budget.CumulativeBudgetTests.test_timeout_is_not_retried_or_reported_green",
+      "source": "tests/test_m03_runtime_budget.py",
+      "capability_id": "FEATURE-M00-G07"
     }
   ],
   "protected_files": [
@@ -13273,7 +13881,18 @@
     "tests/development/return-tracking.test.mts",
     "tests/development/fulfillment-review.test.mts",
     "tests/development/fulfillment-api.test.mts",
-    "tests/development/fulfillment-helpers.mts"
+    "tests/development/fulfillment-helpers.mts",
+    "tests/development/receiving-completion.test.mts",
+    "tests/development/disposition-completion.test.mts",
+    "tests/development/cancellation-completion.test.mts",
+    "tests/development/workflow-completion.test.mts",
+    "tests/development/native-change-completion.test.mts",
+    "tests/development/completion-review.test.mts",
+    "tests/development/completion-browser.test.mts",
+    "tests/development/completion-merchants.test.mts",
+    "tests/development/completion-helpers.mts",
+    "tests/browser/return_completion_component.py",
+    "tests/test_m03_runtime_budget.py"
   ],
   "source_count_fixture": "tests/fixtures/licensing/artifact-oracle.v1.json",
   "source_inventory": "planning/component-inventory.json"

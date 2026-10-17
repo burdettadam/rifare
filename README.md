@@ -3,19 +3,25 @@
 Merchant-owned commerce operations with tailorable skills and independently
 replaceable platforms, agents and models.
 
-**Current checkpoint: sixty commerce goals have local diagnostic implementations.**
-The latest five add concurrent replacement reservations, approved replacement
-orders, separate label rating and purchase, independent void/reimbursement states,
-and carrier tracking that never manufactures warehouse receipt.
+**Current checkpoint: M03 implementation through receiving and completion.**
+The latest six goals add physical receiving/inspection, approved dispositions,
+remaining-work cancellation, portable return/exchange skills, and native-change
+reconciliation. The complete diagnostic regression suite and source-boundary
+journeys are recorded separately from milestone acceptance.
 
-**This remains the SQLite diagnostic implementation.** Separate synthetic inventory
-and carrier ledgers cannot establish live stock ownership, a real label, a refund,
-or physical delivery. PostgreSQL/React and connected qualification remain open.
+**This remains the SQLite diagnostic implementation.** Synthetic sources do not
+qualify PostgreSQL/React, connected Shopify/warehouse/financial behavior, an actual
+served-browser deployment or an independent pilot. M03-G99 remains blocked on
+those obligations. No M04 implementation is included.
 
-[Implementation and commands](docs/RETURN-FULFILLMENT.md) ·
-[Current review](docs/RETURN-FULFILLMENT-REVIEW.md) ·
-[Delegated authority](docs/decisions/0023-return-fulfillment-and-carrier-lifecycle.md).
-Local integration does not imply full goal or milestone qualification.
+[Current implementation and commands](docs/RETURN-COMPLETION.md) ·
+[Current review](docs/RETURN-COMPLETION-REVIEW.md) ·
+[Milestone assessment](docs/M03-QUALIFICATION.md).
+
+```sh
+node --experimental-strip-types tools/demo-return-completion.mts
+node --experimental-strip-types tools/demo-return-completion.mts --serve
+```
 
 ## Start
 

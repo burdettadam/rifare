@@ -1,3 +1,4 @@
+import { assertReturnWritable } from './return-lifecycle-core.mts';
 import { id } from './kernel.mts';
 import type { CommerceKernel,Scope,Row } from './kernel.mts';
 import { canonical,contentDigest } from './configuration-values.mts';
@@ -16,7 +17,7 @@ export class NativeReturns {
  #request(scope:Scope,ref:string,action='operation.dispatch') {
   const k=this.#k,s=k.require(scope);if(s.tenant_id!==this.#adapter.tenant||s.store_id!==this.#adapter.store)throw new Error('NATIVE_SOURCE_MISMATCH');
   const r=k.db.prepare('SELECT * FROM commerce_return_requests WHERE tenant_id=? AND store_id=? AND id=?').get(s.tenant_id,s.store_id,id(ref)) as Row;
-  if(!r)throw new Error('NOT_FOUND');const sending=action==='operation.dispatch',c=sending?this.#cases.resume(scope,r.case_id):this.#cases.inspect(scope,r.case_id);k.authorize(scope,action,c.resource_id);if(sending)this.#cases.verified(scope,c.id);
+  if(!r)throw new Error('NOT_FOUND');const sending=action==='operation.dispatch',c=sending?this.#cases.resume(scope,r.case_id):this.#cases.inspect(scope,r.case_id);k.authorize(scope,action,c.resource_id);if(sending){this.#cases.verified(scope,c.id);assertReturnWritable(k,s,r.id);}
   const body=JSON.parse(r.body);if(contentDigest(body)!==r.digest)throw new Error('RETURN_REQUEST_INTEGRITY');
   if(!r.receipt_id||!['submitted','native_unknown','native_created'].includes(r.state))throw new Error('RETURN_APPROVAL_REQUIRED');
   const receipt=new ActionGateway(k).receipt(scope,r.receipt_id);
@@ -74,6 +75,8 @@ export class NativeReturns {
  #record(ctx:Row,record:Row){const k=this.#k,{s,r}=ctx;
   const old=k.db.prepare('SELECT * FROM commerce_native_return_operations WHERE tenant_id=? AND store_id=? AND request_id=?').get(s.tenant_id,s.store_id,r.id) as Row;
   if(old.native_id&&old.native_id!==record.id)throw new Error('NATIVE_RETURN_MISMATCH');
+  const external=k.db.prepare('SELECT body FROM commerce_native_change_snapshots WHERE tenant_id=? AND store_id=? AND request_id=?').get(s.tenant_id,s.store_id,r.id) as Row;
+  if(external){const latest=JSON.parse(external.body);if(!latest.exists||latest.return_status!==record.status)throw new Error('NATIVE_CHANGE_REVIEW_REQUIRED');}
   k.db.prepare("UPDATE commerce_native_return_operations SET state='created',native_id=?,native_body=?,native_digest=?,observed_at=? WHERE tenant_id=? AND store_id=? AND request_id=?").run(record.id,canonical(record),contentDigest(record),k.clock(),s.tenant_id,s.store_id,r.id);
   k.db.prepare("UPDATE commerce_return_requests SET state='native_created' WHERE tenant_id=? AND store_id=? AND id=?").run(s.tenant_id,s.store_id,r.id);
  }
