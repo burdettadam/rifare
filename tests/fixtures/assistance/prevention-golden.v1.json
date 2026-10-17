@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "qualification": "synthetic_predeclared_nonrandom_cohort_not_a_pilot",
+  "guidance": "Compare the garment measurements in the size guide with a garment that fits. You may keep your current order or request a reviewed change.",
+  "currency": "USD",
+  "ordered_units_per_case": 2,
+  "original_paid_minor_per_case": "4000",
+  "arms": {
+    "baseline": {"denominator": 1, "returned_units": 1, "retained_revenue_minor": "2000", "total_cost_minor": "1500", "contribution_minor": "500"},
+    "control": {"denominator": 1, "returned_units": 1, "retained_revenue_minor": "2000", "total_cost_minor": "1400", "contribution_minor": "600"},
+    "treatment": {"denominator": 1, "returned_units": 0, "retained_revenue_minor": "4000", "total_cost_minor": "2200", "contribution_minor": "1800"}
+  },
+  "treatment_minus_control_contribution_minor": "1200",
+  "treatment_minus_baseline_contribution_minor": "1300",
+  "cost_categories": ["goods", "shipping", "return_shipping", "platform_fees", "operator_time", "model", "messaging", "hosting", "software"],
+  "missing_cost_result": null,
+  "automatic_order_changes": 0
+}

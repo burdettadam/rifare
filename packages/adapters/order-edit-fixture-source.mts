@@ -1,3 +1,4 @@
+import { initializePreventionSource, assertPreventionNative } from './prevention-source-guards.mts';
 import { randomUUID } from 'node:crypto';
 import type { DatabaseSync } from 'node:sqlite';
 import { exact,id,integer } from '../commerce/kernel.mts';
@@ -22,6 +23,7 @@ export class OrderEditFixtureSource {
    CREATE TABLE IF NOT EXISTS edit_source_calculated(edit_id TEXT PRIMARY KEY,order_id TEXT NOT NULL,original_version INTEGER NOT NULL,body TEXT,digest TEXT) STRICT;
    CREATE TABLE IF NOT EXISTS edit_source_finance(edit_id TEXT PRIMARY KEY,order_id TEXT NOT NULL,version INTEGER NOT NULL,kind TEXT NOT NULL,body TEXT NOT NULL,digest TEXT NOT NULL) STRICT;
   `);
+  initializePreventionSource(db);
   db.prepare('INSERT OR IGNORE INTO edit_source_identity VALUES(1,?,?,?,?,1)').run(config.identity,'edit_source_'+randomUUID().replaceAll('-',''),config.tenant,config.store);
   const r=db.prepare('SELECT * FROM edit_source_identity').get() as Row;if(r.label!==config.identity||r.tenant!==this.tenant||r.store!==this.store)throw new Error('EDIT_SOURCE_MISMATCH');this.identity=r.identity;
  }
@@ -72,7 +74,7 @@ export class OrderEditFixtureSource {
  }
  #guard(c:Row,o:Row){if(c.source_identity!==this.identity||c.tenant_id!==this.tenant||c.store_id!==this.store)throw new Error('EDIT_SOURCE_MISMATCH');if(c.source_revision!==this.revision())throw new Error('EDIT_READINESS_CHANGED');if(o.customer_id!==c.customer_id)throw new Error('EDIT_CUSTOMER_CHANGED');}
  #held(c:Row,o:Row,reason='edit'){for(const w of c.warehouse_ids){const row=this.warehouse(o.resource_id,w);if(this.#mode(w)!=='qualified'||row.stage!=='unfulfilled'||!row.holds.some((h:Row)=>h.owner==='rifare'&&h.handle===c.edit_id&&h.reason===reason))throw new Error('EDIT_HOLD_UNCONFIRMED');}}
- #run(c:Row){const o=this.order(c.resource_id);this.#guard(c,o);let result:Row={stage:c.stage,order_id:o.resource_id,edit_id:c.edit_id,source_identity:this.identity};
+ #run(c:Row){const o=this.order(c.resource_id);this.#guard(c,o);assertPreventionNative(this,c,o);let result:Row={stage:c.stage,order_id:o.resource_id,edit_id:c.edit_id,source_identity:this.identity};
   if(c.stage.startsWith('hold:')){if(o.version!==c.original_version||contentDigest(safeOrder(o))!==c.original_digest)throw new Error('EDIT_SOURCE_CHANGED');for(const id of c.line_ids){const l=o.lines.find((l:Row)=>l.id===id);if(!l||!['unfulfilled','held'].includes(l.status))throw new Error('EDIT_LINE_IRREVERSIBLE');}const [,reason,w]=c.stage.split(':');const ok=this.#addHold(o.resource_id,w,'rifare',c.edit_id,reason);if(!ok)throw new Error('EDIT_HOLD_UNCONFIRMED');return {...result,acknowledged:true,warehouse_id:w,reason,version:o.version};}
   if(['begin','change','commit'].includes(c.stage)){
    if(o.version!==c.original_version||contentDigest(safeOrder(o))!==c.original_digest)throw new Error('EDIT_SOURCE_CHANGED');if(this.clock()>=c.commit_deadline)throw new Error('EDIT_WINDOW_CLOSED');this.#held(c,o);
