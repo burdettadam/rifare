@@ -1,0 +1,34 @@
+{
+  "fixture_id": "FIX-M06-G12-01-02-03",
+  "qualification": "synthetic_only",
+  "oracle_basis": "Predeclared routing matrix. Three original selected units require fragile and standard handling in US-CO. Carrier charge is USD 500 minor, qualified destination handling estimate is USD 150 minor, combined estimate is USD 650 minor. Handling is not charged by label purchase.",
+  "account_id": "carrier-one",
+  "contract_version": "merchant-carrier-contract-v1",
+  "capabilities": ["item_routing", "category_routing", "region_routing", "capacity_admission", "handling_fee_estimate", "native_label_destination"],
+  "region": "US-CO",
+  "disposition": "inspect_then_restock",
+  "items": [
+    {"line_id": "alpha", "fulfillment_line_id": "gid://shopify/FulfillmentLineItem/101", "item_id": "shirt", "category": "fragile", "quantity": 1, "required_handling": ["fragile"]},
+    {"line_id": "beta", "fulfillment_line_id": "gid://shopify/FulfillmentLineItem/102", "item_id": "hat", "category": "accessory", "quantity": 1, "required_handling": ["standard"]},
+    {"line_id": "gamma", "fulfillment_line_id": "gid://shopify/FulfillmentLineItem/103", "item_id": "shoe", "category": "footwear", "quantity": 1, "required_handling": ["standard"]}
+  ],
+  "destination_defaults": {
+    "enabled": true, "ownership": "contracted", "agreement_id": "warehouse-agreement-v1", "accepted_item_ids": ["shirt", "hat", "shoe"],
+    "accepted_categories": ["fragile", "accessory", "footwear"], "accepted_regions": ["US-CO"], "handling_capabilities": ["fragile", "standard"],
+    "dispositions": ["inspect_then_restock"], "capacity_units": 20, "occupied_units": 0, "currency": "USD"
+  },
+  "destinations": [
+    {"destination_id": "cheap-uncontracted", "address_ref": "cheap-address", "ownership": "uncontracted", "agreement_id": null, "handling_fee_estimate_minor": "0"},
+    {"destination_id": "full-destination", "address_ref": "full-address", "capacity_units": 3, "occupied_units": 3, "handling_fee_estimate_minor": "50"},
+    {"destination_id": "wrong-category", "address_ref": "wrong-category-address", "accepted_categories": ["footwear"], "handling_fee_estimate_minor": "25"},
+    {"destination_id": "fragile-destination", "address_ref": "fragile-address", "handling_fee_estimate_minor": "150"},
+    {"destination_id": "alternate-destination", "address_ref": "alternate-address", "ownership": "merchant_owned", "agreement_id": "merchant-ownership-v1", "handling_fee_estimate_minor": "250"}
+  ],
+  "expected": {
+    "recommended_destination_id": "fragile-destination",
+    "eligible_destination_ids": ["fragile-destination", "alternate-destination"],
+    "rejections": {"cheap-uncontracted": ["OWNERSHIP_UNQUALIFIED", "AGREEMENT_REQUIRED"], "full-destination": ["CAPACITY_EXCEEDED"], "wrong-category": ["CATEGORY_UNSUPPORTED"]},
+    "carrier_charge_minor": "500", "handling_fee_estimate_minor": "150", "total_estimate_minor": "650", "currency": "USD", "admitted_units": 3,
+    "expected_disposition": "inspect_then_restock", "handling": ["fragile", "standard"]
+  }
+}
