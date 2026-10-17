@@ -1,0 +1,20 @@
+{
+  "oracle": "Predeclared hand-calculated synthetic USD amounts; the fixture is not processor or merchant qualification.",
+  "units": [
+    {"line_id": "instant_line", "unit_index": 1, "paid_minor": "1000"},
+    {"line_id": "instant_line", "unit_index": 2, "paid_minor": "1000"},
+    {"line_id": "instant_line", "unit_index": 3, "paid_minor": "1000"}
+  ],
+  "original_paid_minor": "3000",
+  "full_capture_minor": "3000",
+  "one_return_capture_minor": "2000",
+  "two_return_capture_minor": "1000",
+  "all_return_capture_minor": "0",
+  "lower_consent_ceiling_minor": "1500",
+  "late_return_compensation_minor": "1000",
+  "trial_ms": 60000,
+  "mandate_lifetime_ms": 90000,
+  "expected_capture_effects": 1,
+  "expected_replacement_effects": 1,
+  "unauthorized_effects": 0
+}
