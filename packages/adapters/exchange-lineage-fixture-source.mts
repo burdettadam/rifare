@@ -65,7 +65,9 @@ export class ExchangeLineageFixtureSource {
   const fees=minor(pin.parent_paid_minor)-minor(pin.entitlement_minor),carried=minor(pin.entitlement_minor)+addition-outflow;
   if(carried!==minor(pin.replacement_minor))throw new Error('LINEAGE_VALUE_MISMATCH');
   let funding=distribute(minor(pin.entitlement_minor),original);
-  if(effect?.value_routes){for(const f of funding)if(effect.value_routes.find((r:Row)=>r.instrument_id===f.instrument_id)?.amount_minor!==f.amount_minor)throw new Error('LINEAGE_INSTRUMENT_CHANGED');}
+  // Native routing omits a fully exhausted instrument; its retained lineage
+  // slice is still an exact zero, not a changed funding identity.
+  if(effect?.value_routes){for(const f of funding)if((effect.value_routes.find((r:Row)=>r.instrument_id===f.instrument_id)?.amount_minor??'0')!==f.amount_minor)throw new Error('LINEAGE_INSTRUMENT_CHANGED');}
   if(outflow){const routed=effect?.routes??distribute(outflow,funding);funding=funding.map(f=>({...f,amount_minor:(minor(f.amount_minor)-minor(routed.find((r:Row)=>r.instrument_id===f.instrument_id)?.amount_minor??'0')).toString()}));}
   if(addition)funding.push({instrument_id:'payment_'+contentDigest(effect!.operation_id).slice(0,24),type:'card',amount_minor:addition.toString(),payment_id:effect!.payment_id,source_identity:this.identity,source_operation_id:effect!.operation_id});
   if(funding.length>8||sum(funding)!==carried)throw new Error('LINEAGE_INSTRUMENT_UNQUALIFIED');
