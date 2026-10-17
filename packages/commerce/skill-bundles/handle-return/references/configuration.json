@@ -1,0 +1,15 @@
+{
+  "type": "object",
+  "description": "Server-owned case configuration; no client-authorized overrides.",
+  "properties": {
+    "returns.window_days": {
+      "type": "integer"
+    },
+    "returns.require_evidence": {
+      "type": "boolean"
+    },
+    "presentation.locale": {
+      "type": "string"
+    }
+  }
+}

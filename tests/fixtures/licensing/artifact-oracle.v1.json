@@ -1,6 +1,6 @@
 {
-  "source_file_count": 779,
-  "source_count_reason": "Preserves all prior source and enumerates M03-G11 through M03-G15 replacement reservations/orders, separate synthetic carrier lifecycle, tracking, schema/privacy integration, unchanged-authority HTTP hooks, tests, demonstration, contracts and review records.",
+  "source_file_count": 833,
+  "source_count_reason": "Preserves all prior files and explicitly registers M03-G16 through G21 receiving, dispositions, local closure, portable workflows, native reconciliation, tests, demonstration and milestone assessment.",
   "component_ids": [
     "git-agent-adaptations",
     "rifare-developer-helpers",

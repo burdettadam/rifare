@@ -1,0 +1,21 @@
+{
+  "authority": "DELEGATED-LOCAL-15",
+  "base": "79bd07edfc6f3eb389a02521d4b24f88f4538cb2",
+  "goals": [
+    "M03-G16",
+    "M03-G17",
+    "M03-G18",
+    "M03-G19",
+    "M03-G20",
+    "M03-G21"
+  ],
+  "assessment": "M03-G99",
+  "local_integration_authorized": true,
+  "full_milestone_accepted": false,
+  "review_kind": "same_assistant_maintainer",
+  "target_stack_qualified": false,
+  "connected_sources_qualified": false,
+  "no_earlier_goals_reaccepted": true,
+  "next_milestone_started": false,
+  "evidence": "Separately retained candidate/controller/restore reports"
+}

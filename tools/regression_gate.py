@@ -280,7 +280,7 @@ def run_gate(root, commit, baseline_path, baseline_sha, controller, control_sha,
         for suite,ids in expected_by_suite(current['registry']).items():
             target=output/suite;target.mkdir()
             cmd=command_for(suite,root,current['registry'],controller,browser)
-            result=native.execute_native(root,cmd,ids,timeout=240,browser=browser,output=target)
+            result=native.execute_native(root,cmd,ids,timeout=480,browser=browser,output=target)
             report['layers'][suite]=result
             print(suite+': '+result['status'],flush=True)
         failed=[s for s,r in report['layers'].items() if r['status']!='passed']

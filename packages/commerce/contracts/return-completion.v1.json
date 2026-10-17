@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "qualification": "synthetic_only",
+  "post_routes": {
+    "/v1/receiving/open": [
+      "request_id",
+      "location_id"
+    ],
+    "/v1/receiving/scan": [
+      "session_id",
+      "scan_id",
+      "expected_revision",
+      "items"
+    ],
+    "/v1/receiving/close": [
+      "session_id",
+      "expected_revision"
+    ],
+    "/v1/receiving/review": [
+      "session_id",
+      "revision",
+      "decision",
+      "reason"
+    ],
+    "/v1/receiving/status": [
+      "session_id"
+    ],
+    "/v1/disposition/quote": [
+      "session_id",
+      "unit_ids",
+      "disposition"
+    ],
+    "/v1/disposition/status": [
+      "operation_id"
+    ],
+    "/v1/disposition/dispatch": [
+      "operation_id"
+    ],
+    "/v1/disposition/reconcile": [
+      "operation_id"
+    ],
+    "/v1/return-closure/quote": [
+      "request_id",
+      "reason"
+    ],
+    "/v1/return-closure/status": [
+      "request_id"
+    ],
+    "/v1/return-closure/cleanup": [
+      "request_id"
+    ],
+    "/v1/returns/native-changes": [
+      "request_id"
+    ],
+    "/v1/return-workflows/open": [
+      "request_id",
+      "workflow",
+      "skill_digest"
+    ],
+    "/v1/return-workflows/status": [
+      "request_id",
+      "workflow"
+    ],
+    "/v1/return-workflows/quote": [
+      "request_id",
+      "workflow",
+      "allocation_id",
+      "catalog_id"
+    ]
+  },
+  "authority": "Existing scopes, exact-preview approval and per-dispatch checks; clients cannot supply source credentials or approvals",
+  "effects": "Only configured synthetic sources; default server lacks source adapters"
+}

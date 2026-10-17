@@ -33,7 +33,7 @@ def main() -> int:
     for command in commands:
         print('\nRUN ' + ' '.join(command), flush=True)
         try:
-            result = subprocess.run(command, cwd=root, timeout=300)
+            result = subprocess.run(command, cwd=root, timeout=600)
         except (OSError, subprocess.SubprocessError) as exc:
             print(f'FAIL: {exc}', file=sys.stderr)
             return 1

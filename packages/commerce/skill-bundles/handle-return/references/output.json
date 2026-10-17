@@ -1,0 +1,20 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "request_id",
+    "stages",
+    "source_digest"
+  ],
+  "properties": {
+    "request_id": {
+      "type": "string"
+    },
+    "stages": {
+      "type": "object"
+    },
+    "source_digest": {
+      "type": "string"
+    }
+  }
+}

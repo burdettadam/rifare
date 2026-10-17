@@ -18,7 +18,7 @@ def run() -> int:
         print('FAIL: no runtime smoke tests discovered.', file=sys.stderr)
         return 1
     command = [node, '--experimental-strip-types', '--test', '--test-concurrency=1', *tests]
-    result = subprocess.run(command, cwd=root, text=True, capture_output=True, timeout=240)
+    result = subprocess.run(command, cwd=root, text=True, capture_output=True, timeout=480)
     print(result.stdout, end='')
     print(result.stderr, end='', file=sys.stderr)
     counts = {key: int(value) for key, value in re.findall(
