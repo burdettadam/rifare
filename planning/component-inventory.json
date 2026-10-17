@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "id": "rifare-source-inventory",
-  "revision": 4,
+  "revision": 5,
   "status": "proposed",
   "components": [
     {
@@ -137,6 +137,7 @@
         "docs/decisions/0023-return-fulfillment-and-carrier-lifecycle.md",
         "docs/decisions/0024-m03-receiving-through-milestone.md",
         "docs/decisions/0025-m03-native-suite-budget.md",
+        "docs/decisions/0026-preserve-default-runtime-budget.md",
         "docs/decisions/README.md",
         "examples/external-return-draft.py",
         "goals/M00/M00-G01.md",
@@ -809,6 +810,7 @@
         "tests/harness/unit.test.mts",
         "tests/test_distribution.py",
         "tests/test_evidence_gate.py",
+        "tests/test_m03_runtime_budget.py",
         "tests/test_native_harness.py",
         "tests/test_plan_tools.py",
         "tests/test_regression_gate.py",

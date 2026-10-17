@@ -13484,6 +13484,48 @@
       "runner_case_id": "M03-G20-TWO-MERCHANTS-SHARED-SKILL-DIFFERENT-INVENTORY-POLICY",
       "source": "tests/development/completion-merchants.test.mts",
       "capability_id": "FEATURE-M03-G20"
+    },
+    {
+      "id": "python:test_m03_runtime_budget.CumulativeBudgetTests.test_explicit_extension_runs_the_entire_discovered_inventory",
+      "suite": "python",
+      "runner_case_id": "test_m03_runtime_budget.CumulativeBudgetTests.test_explicit_extension_runs_the_entire_discovered_inventory",
+      "source": "tests/test_m03_runtime_budget.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_m03_runtime_budget.CumulativeBudgetTests.test_original_standalone_default_remains_240",
+      "suite": "python",
+      "runner_case_id": "test_m03_runtime_budget.CumulativeBudgetTests.test_original_standalone_default_remains_240",
+      "source": "tests/test_m03_runtime_budget.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_m03_runtime_budget.CumulativeBudgetTests.test_arbitrary_or_unbounded_budget_is_rejected_before_spawn",
+      "suite": "python",
+      "runner_case_id": "test_m03_runtime_budget.CumulativeBudgetTests.test_arbitrary_or_unbounded_budget_is_rejected_before_spawn",
+      "source": "tests/test_m03_runtime_budget.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_m03_runtime_budget.CumulativeBudgetTests.test_extended_budget_does_not_allow_skips",
+      "suite": "python",
+      "runner_case_id": "test_m03_runtime_budget.CumulativeBudgetTests.test_extended_budget_does_not_allow_skips",
+      "source": "tests/test_m03_runtime_budget.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_m03_runtime_budget.CumulativeBudgetTests.test_extended_budget_does_not_allow_empty_or_failing_runs",
+      "suite": "python",
+      "runner_case_id": "test_m03_runtime_budget.CumulativeBudgetTests.test_extended_budget_does_not_allow_empty_or_failing_runs",
+      "source": "tests/test_m03_runtime_budget.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_m03_runtime_budget.CumulativeBudgetTests.test_timeout_is_not_retried_or_reported_green",
+      "suite": "python",
+      "runner_case_id": "test_m03_runtime_budget.CumulativeBudgetTests.test_timeout_is_not_retried_or_reported_green",
+      "source": "tests/test_m03_runtime_budget.py",
+      "capability_id": "FEATURE-M00-G07"
     }
   ],
   "protected_files": [
@@ -13849,7 +13891,8 @@
     "tests/development/completion-browser.test.mts",
     "tests/development/completion-merchants.test.mts",
     "tests/development/completion-helpers.mts",
-    "tests/browser/return_completion_component.py"
+    "tests/browser/return_completion_component.py",
+    "tests/test_m03_runtime_budget.py"
   ],
   "source_count_fixture": "tests/fixtures/licensing/artifact-oracle.v1.json",
   "source_inventory": "planning/component-inventory.json"

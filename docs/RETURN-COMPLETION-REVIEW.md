@@ -64,3 +64,23 @@ inside product operations, native ID checks, skip rejection and benchmark target
 are unchanged. The old external controller is retained; its refusal of protected
 control changes is expected. A reviewed, separately pinned controller then runs
 the complete accumulated inventory rather than overriding that refusal.
+
+The first full candidate run also caught the standalone-budget regression through
+an unchanged prior test. ADR-0026 restores the 240-second default and adds explicit
+480-second cumulative opt-in. The previous assertion is not edited, removed or
+conditioned on test execution. Separate tests prove both budgets, full inventory,
+invalid-budget rejection and unchanged failure/timeout behavior.
+
+## Targeted fault review
+
+Six isolated candidate mutations were rejected by behavioral assertions: counting a
+replayed scan twice, allowing damaged stock to be restocked, executing against a
+closed return, claiming accepted money is settled, ignoring an external refund,
+and ignoring protected assertion digests in the controller. The controller fault
+was caught by the unchanged retained test. Mutant branches/worktrees were removed;
+only their command/failure records are in the separately delivered evidence.
+
+Both the original standalone-budget tests and the new explicit-budget tests pass
+after correction. Merge approval remains conditional on the complete current
+source-bound run and no unresolved new failures. This review permits diagnostic
+integration, not formal M03 acceptance.

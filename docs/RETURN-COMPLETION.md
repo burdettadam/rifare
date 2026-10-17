@@ -120,3 +120,8 @@ cannot be edited to make counts agree. Cancellation does not reopen claims or
 retroactively undo financial/physical effects. Full M03 acceptance remains blocked;
 read [the milestone assessment](M03-QUALIFICATION.md) and
 [maintainer review](RETURN-COMPLETION-REVIEW.md).
+
+The standalone `python3 tools/test_runtime.py` preserves its 240-second default.
+For the complete accumulated native suite, use `--budget-seconds 480`; the documented
+`verify.py --runtime` command explicitly supplies this setting. Timeouts are still
+failures and never trigger automatic retry. Product-level deadlines are unchanged.

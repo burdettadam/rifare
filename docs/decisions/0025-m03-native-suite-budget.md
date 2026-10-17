@@ -18,3 +18,9 @@ path changes. After same-assistant delegated maintainer review and fault proof,
 export a fresh controller and baseline pinned to the reviewed candidate and run
 the entire old and new inventory. This is an explicit local control adoption,
 not an independent reviewer attestation or milestone/public-release acceptance.
+
+## Subsequent correction
+
+[ADR-0026](0026-preserve-default-runtime-budget.md) supersedes only the standalone
+default change after an unchanged regression test rejected it. Cumulative runs
+use an explicit larger budget; standalone execution preserves 240 seconds.

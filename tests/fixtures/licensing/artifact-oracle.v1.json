@@ -1,6 +1,6 @@
 {
-  "source_file_count": 833,
-  "source_count_reason": "Preserves all prior files and explicitly registers M03-G16 through G21 receiving, dispositions, local closure, portable workflows, native reconciliation, tests, demonstration and milestone assessment.",
+  "source_file_count": 835,
+  "source_count_reason": "M03 receiving-through-completion adds enumerated runtime, contract, skill, test, decision and milestone records; prior paths and assertions retained.",
   "component_ids": [
     "git-agent-adaptations",
     "rifare-developer-helpers",

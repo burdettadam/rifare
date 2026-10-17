@@ -27,7 +27,7 @@ def main() -> int:
         [sys.executable, 'tools/run_tests.py'],
     ]
     if args.runtime:
-        commands.append([sys.executable, 'tools/test_runtime.py'])
+        commands.append([sys.executable, 'tools/test_runtime.py', '--budget-seconds', '480'])
     if args.harness:
         commands.append([sys.executable, 'tools/test_harness.py', '--layer', 'all'])
     for command in commands:

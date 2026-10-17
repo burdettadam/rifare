@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Run actual native smoke tests and reject incomplete TAP runs."""
+import argparse
 from pathlib import Path
 import re
 import shutil
@@ -7,7 +8,11 @@ import subprocess
 import sys
 
 
-def run() -> int:
+def run(budget_seconds: int = 240) -> int:
+    # Keep the historical standalone bound; cumulative verification opts in.
+    if type(budget_seconds) is not int or budget_seconds not in (240, 480):
+        print('FAIL: runtime budget must be 240 or 480 seconds.', file=sys.stderr)
+        return 2
     root = Path(__file__).resolve().parents[1]
     node = shutil.which('node')
     if not node:
@@ -18,7 +23,7 @@ def run() -> int:
         print('FAIL: no runtime smoke tests discovered.', file=sys.stderr)
         return 1
     command = [node, '--experimental-strip-types', '--test', '--test-concurrency=1', *tests]
-    result = subprocess.run(command, cwd=root, text=True, capture_output=True, timeout=480)
+    result = subprocess.run(command, cwd=root, text=True, capture_output=True, timeout=budget_seconds)
     print(result.stdout, end='')
     print(result.stderr, end='', file=sys.stderr)
     counts = {key: int(value) for key, value in re.findall(
@@ -31,4 +36,7 @@ def run() -> int:
 
 
 if __name__ == '__main__':
-    raise SystemExit(run())
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--budget-seconds', type=int, choices=(240, 480), default=240,
+                        help='native process budget; cumulative verification explicitly uses 480')
+    raise SystemExit(run(parser.parse_args().budget_seconds))
