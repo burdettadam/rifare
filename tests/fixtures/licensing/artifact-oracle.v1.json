@@ -1,5 +1,5 @@
 {
-  "source_file_count": 883,
+  "source_file_count": 884,
   "source_count_reason": "M04 adds bounded order-edit code, source, skills, clients, tests, contracts, decision and milestone records; prior paths and assertions retained.",
   "component_ids": [
     "git-agent-adaptations",

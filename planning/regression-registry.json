@@ -14217,6 +14217,13 @@
       "runner_case_id": "M04-REVIEW-11",
       "source": "tests/development/order-edit-review.test.mts",
       "capability_id": "FEATURE-M04-G10"
+    },
+    {
+      "id": "runtime:M04-REVIEW-12",
+      "suite": "runtime",
+      "runner_case_id": "M04-REVIEW-12",
+      "source": "tests/development/order-edit-return-facts.test.mts",
+      "capability_id": "FEATURE-M04-G10"
     }
   ],
   "protected_files": [
@@ -14596,7 +14603,8 @@
     "tests/development/order-edit-process.test.mts",
     "tests/development/order-edit-review.test.mts",
     "tests/development/order-edit-workflow.test.mts",
-    "work/qualification/M04.json"
+    "work/qualification/M04.json",
+    "tests/development/order-edit-return-facts.test.mts"
   ],
   "source_count_fixture": "tests/fixtures/licensing/artifact-oracle.v1.json",
   "source_inventory": "planning/component-inventory.json"
