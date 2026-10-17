@@ -1,6 +1,7 @@
 # M06-G07 and M06-G08 — Currency and final-fee author assignment
 
-State: in_progress; local diagnostic preparation, not connected qualification.
+State: ready_for_review for bounded local preparation; connected qualification
+and formal goal acceptance remain blocked.
 Writer: `/root/finance_goals`. Integration owner: `/root`.
 Branch/worktree: `goal/M06-currency-fees`, `Rifare-M06-currency`.
 Base: `2fe529eb379734b04470bf7f0663a5440c78c314`.
@@ -73,7 +74,20 @@ boundary and exchange-fulfillment suites passed. Exact commands and raw TAP are
 indexed in `evidence/M06-currency-fees/author-iterations/checkpoint-runs.json`.
 The first currency iteration had one new-test preview-property typo (18 passed,
 one failed); the corrected second run passed 19. That typo is not feature-red
-proof. Deliberately broken behavioral variants remain pending at this checkpoint.
+proof.
+
+Four targeted variants were then run on disposable copies of immutable author
+checkpoint `0b999d01c11b09cc1ed151c9079d4ae99c4514da` with unchanged test bytes.
+An unstored 11/10 conversion failed CASE-M06-G07-01/03 with EUR 2134 versus 1746.
+Removing native money enforcement failed four currency and two final-fee cases
+on immediate native effect counts of one versus zero. Overwriting the estimate
+failed CASE-M06-G08-01 and TEST-016-NATIVE-FEE-FINALIZATION with tax four versus
+three. Reusing a stale quote failed CASE-M06-G08-02 on the missing required
+approval exception. Every predeclared expected red ID was observed. The exact
+patches, source/test digests, commands, actual counts and raw assertion failures
+are in `evidence/M06-currency-fees/mutants/`; temporary mutated source copies are
+kept separately and excluded from the compact evidence bundle. These are author
+fault checks, not independent reviewer decisions.
 
 Root's G06 source-boundary dependency `b516470` was cherry-picked before this
 checkpoint; root already owns that change. Native lineage binding precedes the
