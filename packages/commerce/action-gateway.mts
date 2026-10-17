@@ -1,3 +1,4 @@
+import { INSTANT_ACTIONS,instantGatewayQuote,commitInstant } from './instant-exchanges.mts';
 import { assertSupportAutomation } from './support-qualification.mts';
 import { EDIT_ACTION,editGatewayQuote,commitOrderEdit } from './order-edit-core.mts';
 import { LIFECYCLE_ACTIONS,assertReturnWritable } from './return-lifecycle-core.mts';
@@ -39,7 +40,7 @@ export class ActionGateway {
     const r=this.#k.db.prepare('SELECT revision,resolution,amount_minor,currency FROM commerce_case_effects WHERE tenant_id=? AND store_id=? AND case_id=?').get(s.tenant_id,s.store_id,c.id) as Row;
     return {case_id:c.id,...(r??{revision:0,resolution:'none',amount_minor:'0',currency:null}),effect:'local_case_plan_only',financial_effect:false};}
   #proposal(input:unknown){const p=exact(jsonValue(input),['case_id','action','arguments']);id(p.case_id);
-    if(p.action===EDIT_ACTION||Object.values(FULFILLMENT_ACTIONS).includes(p.action)||Object.values(LIFECYCLE_ACTIONS).includes(p.action)){const a=exact(p.arguments,['quote_id','quote_digest']);id(a.quote_id);if(typeof a.quote_digest!=='string'||!/^[a-f0-9]{64}$/.test(a.quote_digest))throw new Error('INVALID_INPUT');return p;}
+    if(p.action===EDIT_ACTION||Object.values(INSTANT_ACTIONS).includes(p.action)||Object.values(FULFILLMENT_ACTIONS).includes(p.action)||Object.values(LIFECYCLE_ACTIONS).includes(p.action)){const a=exact(p.arguments,['quote_id','quote_digest']);id(a.quote_id);if(typeof a.quote_digest!=='string'||!/^[a-f0-9]{64}$/.test(a.quote_digest))throw new Error('INVALID_INPUT');return p;}
     if(p.action===RESOLVE_ACTION){const a=exact(p.arguments,['quote_id','quote_digest']);id(a.quote_id);if(typeof a.quote_digest!=='string'||!/^[a-f0-9]{64}$/.test(a.quote_digest))throw new Error('INVALID_INPUT');return p;}
     if(p.action===INTAKE_ACTION){const a=exact(p.arguments,['quote_id','quote_digest','override_id']);id(a.quote_id);if(typeof a.quote_digest!=='string'||!/^[a-f0-9]{64}$/.test(a.quote_digest))throw new Error('INVALID_INPUT');if(a.override_id!==null)id(a.override_id);return p;}
     if(p.action!=='diagnostic.resolution.set')throw new Error('UNSUPPORTED_ACTION');
@@ -52,6 +53,7 @@ export class ActionGateway {
     assertGiftAction(this.#k,scope,p.case_id,p.action);
     const scopeRow=this.#k.require(scope),request=this.#k.db.prepare('SELECT id FROM commerce_return_requests WHERE tenant_id=? AND store_id=? AND case_id=?').get(scopeRow.tenant_id,scopeRow.store_id,p.case_id) as Row;
     if(request&&!Object.values(LIFECYCLE_ACTIONS).includes(p.action)&&p.action!==FULFILLMENT_ACTIONS.void)assertReturnWritable(this.#k,scopeRow,request.id);
+    if(Object.values(INSTANT_ACTIONS).includes(p.action))return instantGatewayQuote(this.#k,scope,p,quotedAt);
     if(p.action===EDIT_ACTION)return editGatewayQuote(this.#k,scope,p,quotedAt);
     if(Object.values(LIFECYCLE_ACTIONS).includes(p.action))return lifecycleGatewayQuote(this.#k,scope,p,quotedAt);
     if(Object.values(FULFILLMENT_ACTIONS).includes(p.action))return fulfillmentGatewayQuote(this.#k,scope,p,quotedAt);
@@ -132,20 +134,21 @@ export class ActionGateway {
       const consumed=k.db.prepare('UPDATE commerce_action_approvals SET uses=1 WHERE tenant_id=? AND store_id=? AND id=? AND uses=0 AND revoked=0').run(s.tenant_id,s.store_id,a.id);
       if(consumed.changes!==1)throw new Error('APPROVAL_UNAVAILABLE');
       const receiptId='receipt_'+token().slice(0,32);
+      const instantId=Object.values(INSTANT_ACTIONS).includes(q.action)?commitInstant(k,s,q,receiptId):null;
       const editId=q.action===EDIT_ACTION?commitOrderEdit(k,s,q,receiptId):null;
       const returnId=q.action===INTAKE_ACTION?commitReturnRequest(k,s,{...q,preview_id:r.id},receiptId):null;
       const resolutionId=q.action===RESOLVE_ACTION?commitResolution(k,s,q,receiptId):null;
       const lifecycleId=Object.values(LIFECYCLE_ACTIONS).includes(q.action)?commitLifecycle(k,s,q,receiptId):null;
       const fulfillmentId=Object.values(FULFILLMENT_ACTIONS).includes(q.action)?commitFulfillment(k,s,q,receiptId):null;
-      if(q.action!==INTAKE_ACTION&&q.action!==RESOLVE_ACTION&&!fulfillmentId&&!lifecycleId&&!editId)k.db.prepare(`INSERT INTO commerce_case_effects VALUES(?,?,?,?,?,?,?) ON CONFLICT(tenant_id,store_id,case_id)
+      if(q.action!==INTAKE_ACTION&&q.action!==RESOLVE_ACTION&&!fulfillmentId&&!lifecycleId&&!editId&&!instantId)k.db.prepare(`INSERT INTO commerce_case_effects VALUES(?,?,?,?,?,?,?) ON CONFLICT(tenant_id,store_id,case_id)
         DO UPDATE SET revision=excluded.revision,resolution=excluded.resolution,amount_minor=excluded.amount_minor,currency=excluded.currency`)
         .run(s.tenant_id,s.store_id,q.case_id,q.effect_version+1,q.arguments.resolution,q.amount.minor,q.amount.currency);
       const receipt={id:receiptId,case_id:q.case_id,preview_id:r.id,preview_digest:r.digest,approval_id:a.id,
         configuration_digest:q.configuration_digest,case_revision:q.case_revision,resource_version:q.resource_version,actor_id:s.actor_id,
-        authority_revision:permissionDecision(k.db,s,'action.execute',q.resource_id).authority_revision,effect:editId?'synthetic_order_edit_authorized':lifecycleId?'synthetic_lifecycle_authorized':returnId?'local_return_request_only':resolutionId?'synthetic_resolution_authorized':fulfillmentId?'synthetic_fulfillment_authorized':'local_case_plan_only',
-        ...(editId?{order_edit_id:editId}:{}),...(lifecycleId?{lifecycle_operation_id:lifecycleId}:{}),...(returnId?{return_request_id:returnId}:{}),...(resolutionId?{resolution_operation_id:resolutionId}:{}),...(fulfillmentId?{fulfillment_operation_id:fulfillmentId}:{}),resolution:editId?'order_edit_authorized':lifecycleId?'lifecycle_authorized':returnId?'return_requested':resolutionId?'resolution_authorized':fulfillmentId?'fulfillment_authorized':q.arguments.resolution,amount:q.amount,effect_revision:q.effect_version+1,financial_effect:false,approval_consumed:true,completed_at:k.clock()};
+        authority_revision:permissionDecision(k.db,s,'action.execute',q.resource_id).authority_revision,effect:instantId?'synthetic_instant_authorized':editId?'synthetic_order_edit_authorized':lifecycleId?'synthetic_lifecycle_authorized':returnId?'local_return_request_only':resolutionId?'synthetic_resolution_authorized':fulfillmentId?'synthetic_fulfillment_authorized':'local_case_plan_only',
+        ...(instantId?{instant_operation_id:instantId}:{}),...(editId?{order_edit_id:editId}:{}),...(lifecycleId?{lifecycle_operation_id:lifecycleId}:{}),...(returnId?{return_request_id:returnId}:{}),...(resolutionId?{resolution_operation_id:resolutionId}:{}),...(fulfillmentId?{fulfillment_operation_id:fulfillmentId}:{}),resolution:instantId?'instant_authorized':editId?'order_edit_authorized':lifecycleId?'lifecycle_authorized':returnId?'return_requested':resolutionId?'resolution_authorized':fulfillmentId?'fulfillment_authorized':q.arguments.resolution,amount:q.amount,effect_revision:q.effect_version+1,financial_effect:false,approval_consumed:true,completed_at:k.clock()};
       k.db.prepare('INSERT INTO commerce_action_receipts VALUES(?,?,?,?,?,?,?)').run(s.tenant_id,s.store_id,receipt.id,q.case_id,r.id,canonical(receipt),contentDigest(receipt));
-      if(!returnId&&!resolutionId&&!fulfillmentId&&!lifecycleId&&!editId)recordCaseExecution(k,s,receipt,q);
+      if(!returnId&&!resolutionId&&!fulfillmentId&&!lifecycleId&&!editId&&!instantId)recordCaseExecution(k,s,receipt,q);
       return receipt;
     });
   }
