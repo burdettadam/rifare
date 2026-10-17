@@ -1,0 +1,12 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "case_id"
+  ],
+  "properties": {
+    "case_id": {
+      "type": "string"
+    }
+  }
+}

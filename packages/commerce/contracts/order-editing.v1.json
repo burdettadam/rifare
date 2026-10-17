@@ -1,0 +1,65 @@
+{
+  "version": 1,
+  "qualification": "synthetic_only",
+  "default_source": null,
+  "authentication": "current tenant/store session; existing exact-preview reviewer approval",
+  "write_action": "diagnostic.order.edit",
+  "routes": {
+    "POST /v1/order-edits/configure": [
+      "expected_revision",
+      "enabled",
+      "expires_at",
+      "max_age_ms",
+      "warehouses",
+      "rules"
+    ],
+    "POST /v1/order-edits/refresh": [
+      "case_id"
+    ],
+    "POST /v1/order-edits/quote": [
+      "case_id",
+      "kind",
+      "line_id",
+      "variant_id",
+      "address"
+    ],
+    "POST /v1/order-edits/prepare": [
+      "quote_id",
+      "quote_digest"
+    ],
+    "POST /v1/order-edits/list": [
+      "case_id"
+    ],
+    "POST /v1/order-edits/status": [
+      "edit_id"
+    ],
+    "POST /v1/order-edits/dispatch": [
+      "edit_id"
+    ],
+    "POST /v1/order-edits/reconcile": [
+      "edit_id"
+    ],
+    "POST /v1/order-edits/release": [
+      "edit_id"
+    ],
+    "POST /v1/edit-workflows/open": [
+      "case_id",
+      "skill_digest"
+    ],
+    "POST /v1/edit-workflows/status": [
+      "case_id"
+    ],
+    "POST /v1/edit-workflows/quote": [
+      "case_id",
+      "intent"
+    ]
+  },
+  "excluded": [
+    "remote credentials supplied by callers",
+    "set-paid endpoint",
+    "release-all",
+    "retry unknown effect",
+    "client-supplied price",
+    "live qualification claim"
+  ]
+}

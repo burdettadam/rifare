@@ -46,6 +46,9 @@ export function eraseSelected(k:CommerceKernel,s:Row,ids:string[],hash:string,at
     const marks=where(ids),args=[t,st,...ids];
     for(const table of ['commerce_attachments','commerce_read_jobs','commerce_order_observations','commerce_woocommerce_observations'])
       k.db.prepare(`DELETE FROM ${table} WHERE tenant_id=? AND store_id=? AND resource_id IN (${marks})`).run(...args);
+    scrubRecord(k,'commerce_edit_snapshots',t,st,ids,'resource_id');
+    scrubRecord(k,'commerce_edit_inputs',t,st,ids,'resource_id');
+    scrubRecord(k,'commerce_edit_quotes',t,st,ids,'resource_id');
     const tasks=all(k,'commerce_context_tasks',t,st).filter(r=>ids.includes(r.resource_id)).map(r=>r.id);
     if(tasks.length){k.db.prepare(`DELETE FROM commerce_assistance_receipts WHERE tenant_id=? AND store_id=? AND task_id IN (${where(tasks)})`).run(t,st,...tasks);
       k.db.prepare(`DELETE FROM commerce_context_tasks WHERE tenant_id=? AND store_id=? AND id IN (${where(tasks)})`).run(t,st,...tasks);}
@@ -100,7 +103,9 @@ export class PrivacyLifecycle {
       const fulfillmentOps=all(k,'commerce_fulfillment_operations',s.tenant_id,s.store_id).filter(r=>ids.includes(r.resource_id)),fulfillmentOpIds=fulfillmentOps.map(r=>r.id),labelIds=all(k,'commerce_return_labels',s.tenant_id,s.store_id).filter(r=>ids.includes(r.resource_id)).map(r=>r.id);
       const receipts=all(k,'commerce_operation_receipts',s.tenant_id,s.store_id).filter(r=>operations.some(o=>o.id===r.operation_id));
       const returnIds=all(k,'commerce_return_requests',s.tenant_id,s.store_id).filter(r=>ids.includes(r.resource_id)).map(r=>r.id),sessionIds=all(k,'commerce_receiving_sessions',s.tenant_id,s.store_id).filter(r=>returnIds.includes(r.request_id)).map(r=>r.id);
-      const result={schema_version:1,tenant_id:s.tenant_id,store_id:s.store_id,subject_ref:subjectHash(s.tenant_id,s.store_id,customer),
+      const editIds=all(k,'commerce_order_edits',s.tenant_id,s.store_id).filter(r=>ids.includes(r.resource_id)).map(r=>r.id);
+      const order_edit_records=Object.fromEntries(['commerce_edit_snapshots','commerce_edit_inputs','commerce_edit_quotes','commerce_order_edits','commerce_edit_steps','commerce_edit_events'].map(table=>[table,all(k,table,s.tenant_id,s.store_id).filter(r=>ids.includes(r.resource_id)||editIds.includes(r.edit_id))]));
+      const result={order_edit_records,schema_version:1,tenant_id:s.tenant_id,store_id:s.store_id,subject_ref:subjectHash(s.tenant_id,s.store_id,customer),
         resources:rs.map(r=>k.project(r)),attachments:all(k,'commerce_attachments',s.tenant_id,s.store_id).filter(r=>ids.includes(r.resource_id)).map(r=>({id:r.id,resource_id:r.resource_id,content:JSON.parse(r.content)})),
         knowledge:all(k,'commerce_knowledge',s.tenant_id,s.store_id).filter(r=>ids.includes(r.resource_id)),
         tasks,assistance:all(k,'commerce_assistance_receipts',s.tenant_id,s.store_id).filter(r=>tasks.some(t=>t.id===r.task_id)),

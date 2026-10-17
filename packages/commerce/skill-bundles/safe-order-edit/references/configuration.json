@@ -1,0 +1,12 @@
+{
+  "type": "object",
+  "description": "Server-owned action windows, platform readiness, case policy and payment expiry. Merchant presentation is configurable, never permission.",
+  "properties": {
+    "presentation.tone": {
+      "type": "string"
+    },
+    "presentation.locale": {
+      "type": "string"
+    }
+  }
+}

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "schema_digest": "bd547d53ee60d2dab13be0dc93950973650b67c0ee90bbbb1b61421bbd148a1b",
+  "schema_digest": "949d0fc7b436facb56b67e46faaea628f07623b6b816d1c1e7f8e97cd5df9706",
   "tables": [
     {
       "name": "commerce_action_approvals",
@@ -320,6 +320,97 @@
         "store_id",
         "unit_id",
         "operation_id"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_edit_events",
+      "columns": [
+        "sequence",
+        "tenant_id",
+        "store_id",
+        "edit_id",
+        "event",
+        "observed_at",
+        "body",
+        "digest"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_edit_inputs",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "case_id",
+        "resource_id",
+        "body",
+        "digest"
+      ],
+      "handling": "customer_content_logical_erase"
+    },
+    {
+      "name": "commerce_edit_quotes",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "case_id",
+        "resource_id",
+        "body",
+        "digest"
+      ],
+      "handling": "customer_content_logical_erase"
+    },
+    {
+      "name": "commerce_edit_settings",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "revision",
+        "body",
+        "digest"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_edit_snapshots",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "resource_id",
+        "source_identity",
+        "observed_at",
+        "body",
+        "digest"
+      ],
+      "handling": "customer_content_logical_erase"
+    },
+    {
+      "name": "commerce_edit_steps",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "edit_id",
+        "stage",
+        "operation_id",
+        "command_digest",
+        "state",
+        "result",
+        "result_digest",
+        "started_at"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_edit_workflow_pins",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "case_id",
+        "body",
+        "digest"
       ],
       "handling": "configuration_or_minimized_audit"
     },
@@ -699,6 +790,24 @@
         "provider_ref",
         "created_at",
         "updated_at"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_order_edits",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "case_id",
+        "resource_id",
+        "quote_id",
+        "receipt_id",
+        "state",
+        "revision",
+        "source_identity",
+        "body",
+        "digest"
       ],
       "handling": "configuration_or_minimized_audit"
     },
