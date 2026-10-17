@@ -1,0 +1,47 @@
+{
+  "milestone": "M05",
+  "goal": "M05-G99",
+  "state": "blocked",
+  "local_integration": "authorized_after_verified_candidate",
+  "full_milestone_accepted": false,
+  "release_authorized": false,
+  "base": "af97015228651a6018086310b085973d65d78120",
+  "goals": [
+    "M05-G01",
+    "M05-G02",
+    "M05-G03",
+    "M05-G04",
+    "M05-G05",
+    "M05-G06",
+    "M05-G07",
+    "M05-G08",
+    "M05-G09",
+    "M05-G10",
+    "M05-G11",
+    "M05-G12",
+    "M05-G13",
+    "M05-G14",
+    "M05-G15",
+    "M05-G16"
+  ],
+  "observed_scope": "SQLite diagnostic support plus separate synthetic source journal; fixture-shaped Chatwoot/Resend; actual loopback HTTP, independent Python client, native processes and explicit browser-component bridge",
+  "missing": [
+    "PostgreSQL/React target",
+    "connected helpdesk account history and handoff validation",
+    "merchant sending domain and live delivery/bounce qualification",
+    "live model/provider pricing/tokenizer/quality and region verification",
+    "SMS delivery qualification",
+    "direct served-browser qualification",
+    "independent merchant and security intended-use validation",
+    "formal prerequisite milestone acceptance"
+  ],
+  "limits": [
+    "Source acceptance is not customer delivery. A lost native ID remains unknown; no blind retry after provider idempotency expiry.",
+    "Structured qualification is diagnostic; it does not enable real autonomous financial actions.",
+    "Logical erasure leaves minimized audit and external retention obligations.",
+    "No inferred ETA, all-parcel completion, warehouse inspection or customer resolution."
+  ],
+  "review_kind": "same_assistant_delegated_maintainer",
+  "next_milestone_started": false,
+  "evidence": "Exact committed candidate, native reports, prior-controller comparison, mutation cases and restoration records supplied separately."
+}

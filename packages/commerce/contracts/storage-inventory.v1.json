@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "schema_digest": "949d0fc7b436facb56b67e46faaea628f07623b6b816d1c1e7f8e97cd5df9706",
+  "schema_digest": "224caa84537311393f9e0117a7257e7921e05a7ce9550e4a5b0b1233ff3ae7f9",
   "tables": [
     {
       "name": "commerce_action_approvals",
@@ -294,6 +294,15 @@
         "created_at"
       ],
       "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_customer_proof_bindings",
+      "columns": [
+        "token_hash",
+        "customer_resource_id",
+        "owner_hash"
+      ],
+      "handling": "subject_linked_pseudonymize_and_disable"
     },
     {
       "name": "commerce_disposition_operations",
@@ -637,6 +646,56 @@
       "columns": [
         "version",
         "sha256"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_model_budgets",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "provider_id",
+        "period_id",
+        "starts_at",
+        "ends_at",
+        "limit_micro",
+        "input_micro",
+        "output_micro",
+        "max_input_bytes",
+        "max_output_tokens",
+        "revision"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_model_circuits",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "configuration_id",
+        "failures",
+        "open_until"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_model_reservations",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "provider_id",
+        "period_id",
+        "request_digest",
+        "maximum_micro",
+        "state",
+        "charged_micro",
+        "input_micro",
+        "output_micro",
+        "usage_digest",
+        "owner_actor",
+        "owner_session_hash",
+        "created_at"
       ],
       "handling": "configuration_or_minimized_audit"
     },
@@ -1596,6 +1655,253 @@
         "active"
       ],
       "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_support_attempts",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "case_id",
+        "resource_id",
+        "generation",
+        "body",
+        "digest",
+        "at",
+        "erased"
+      ],
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_support_completions",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "case_id",
+        "resource_id",
+        "kind",
+        "body",
+        "digest",
+        "at"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_support_consent",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "customer_id",
+        "sender_id",
+        "channel",
+        "purpose",
+        "state",
+        "source_id",
+        "source_version",
+        "effective_at",
+        "observed_at",
+        "digest"
+      ],
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_support_consent_events",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "customer_id",
+        "body",
+        "digest",
+        "observed_at"
+      ],
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_support_contacts",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "link_id",
+        "channel",
+        "address",
+        "address_digest",
+        "revision",
+        "verified_at",
+        "erased"
+      ],
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_support_costs",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "case_id",
+        "resource_id",
+        "category",
+        "currency",
+        "amount_minor",
+        "source_ref",
+        "adjustment_of",
+        "body",
+        "digest",
+        "at"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_support_deliveries",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "operation_id",
+        "case_id",
+        "resource_id",
+        "link_id",
+        "kind",
+        "purpose",
+        "channel",
+        "sender_id",
+        "source_identity",
+        "source_contract",
+        "account_id",
+        "sender_revision",
+        "generation",
+        "owner",
+        "owner_session_hash",
+        "body",
+        "digest",
+        "created_at",
+        "expires_at",
+        "observation",
+        "observation_digest",
+        "erased"
+      ],
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_support_delivery_events",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "operation_id",
+        "version",
+        "body",
+        "digest",
+        "observed_at"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_support_documents",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "kind",
+        "id",
+        "version",
+        "body",
+        "digest",
+        "author",
+        "state",
+        "reviewer",
+        "review_digest",
+        "created_at",
+        "expires_at"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_support_events",
+      "columns": [
+        "seq",
+        "tenant_id",
+        "store_id",
+        "case_id",
+        "code",
+        "actor_id",
+        "generation",
+        "ref",
+        "at"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_support_links",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "case_id",
+        "resource_id",
+        "customer_id",
+        "channel",
+        "account_id",
+        "external_id",
+        "history",
+        "source_revision",
+        "verified_at",
+        "erased"
+      ],
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_support_messages",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "case_id",
+        "resource_id",
+        "link_id",
+        "external_id",
+        "direction",
+        "visibility",
+        "body",
+        "digest",
+        "source_at",
+        "observed_at",
+        "erased"
+      ],
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_support_ownership",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "case_id",
+        "resource_id",
+        "generation",
+        "owner",
+        "mode",
+        "changed_at"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_support_rule_jobs",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "case_id",
+        "resource_id",
+        "rule_id",
+        "version",
+        "rule_digest",
+        "event_id",
+        "event_body",
+        "generation",
+        "due_at",
+        "state",
+        "result"
+      ],
+      "handling": "subject_linked_pseudonymize_and_disable"
     },
     {
       "name": "commerce_warehouse_settings",

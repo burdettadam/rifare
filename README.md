@@ -1,39 +1,18 @@
 # Rifare
 
-## Current development checkpoint: safe order editing
+Merchant-owned commerce operations with tailorable skills and independently replaceable platforms, agents and models.
 
-The M04 SQLite diagnostic implementation adds safe edits, independent fulfillment holds, payment/refund state, source reconciliation and a portable no-model workflow. See [order editing](docs/ORDER-EDITING.md), [review](docs/ORDER-EDITING-REVIEW.md), and [qualification assessment](docs/M04-QUALIFICATION.md).
+## Current development checkpoint: M05 support operations
+
+The accumulated diagnostic implementation now includes returns, safe order editing, verified support conversations, branded tracking, consent-aware messaging, helpdesk adapters, human takeover, budgets and exact configuration qualification. Read [support operations](docs/SUPPORT-OPERATIONS.md), [review](docs/SUPPORT-OPERATIONS-REVIEW.md), and [M05 assessment](docs/M05-QUALIFICATION.md).
 
 ```sh
 python3 tools/verify.py --runtime --harness
-node --experimental-strip-types tools/demo-order-edit.mts
+node --experimental-strip-types tools/demo-support.mts
+node --experimental-strip-types tools/demo-support.mts --serve
 ```
 
-This remains a synthetic development implementation; connected production and PostgreSQL/React qualification are not complete. Use the delivered `main`, not an older goal branch. Prior checkpoint sections below are historical.
-
-
-Merchant-owned commerce operations with tailorable skills and independently
-replaceable platforms, agents and models.
-
-**Current checkpoint: M03 implementation through receiving and completion.**
-The latest six goals add physical receiving/inspection, approved dispositions,
-remaining-work cancellation, portable return/exchange skills, and native-change
-reconciliation. The complete diagnostic regression suite and source-boundary
-journeys are recorded separately from milestone acceptance.
-
-**This remains the SQLite diagnostic implementation.** Synthetic sources do not
-qualify PostgreSQL/React, connected Shopify/warehouse/financial behavior, an actual
-served-browser deployment or an independent pilot. M03-G99 remains blocked on
-those obligations. No M04 implementation is included.
-
-[Current implementation and commands](docs/RETURN-COMPLETION.md) ·
-[Current review](docs/RETURN-COMPLETION-REVIEW.md) ·
-[Milestone assessment](docs/M03-QUALIFICATION.md).
-
-```sh
-node --experimental-strip-types tools/demo-return-completion.mts
-node --experimental-strip-types tools/demo-return-completion.mts --serve
-```
+This is SQLite diagnostic behavior with synthetic protocol sources, not qualified PostgreSQL/React or a connected production deployment. Formal milestone acceptance remains blocked. Use delivered `main`, preserving all earlier source and branches. M06 has not been started. The later sections retain earlier diagnostic commands.
 
 ## Start
 

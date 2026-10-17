@@ -80,6 +80,7 @@ export class CustomerAccess {
       db.prepare('UPDATE commerce_challenges SET consumed=1 WHERE id=?').run(row.id);
       db.prepare('INSERT INTO commerce_sessions VALUES(?,?,?,?,?,?,?,?,?,0)')
         .run(digest(bearer),row.tenant_id,row.store_id,row.customer_id,'customer',row.resource_id,row.customer_id,expires,now);
+      db.prepare('INSERT INTO commerce_customer_proof_bindings VALUES(?,?,?)').run(digest(bearer),owner.customer.id,owner.owner_hash);
       return {token:bearer,expires_at:expires,resource_id:row.resource_id,operations:['order.read']};
     });
     if(!result) throw new Error('VERIFICATION_FAILED');return result;

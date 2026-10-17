@@ -1,0 +1,5 @@
+import type{CommerceKernel,Scope}from'./kernel.mts';import{exact,integer}from'./kernel.mts';import{jsonValue}from'./configuration-values.mts';import{saveDocument,documentRow,supportText}from'./support-core.mts';
+export class SupportBranding{readonly k:CommerceKernel;constructor(k:CommerceKernel){this.k=k;}
+ configure(scope:Scope,input:unknown){const p=exact(jsonValue(input),['expected_revision','name','theme','locale']);integer(p.expected_revision);supportText(p.name,100);if(!['plain','warm','contrast'].includes(p.theme)||p.locale!=='en-US')throw new Error('BRANDING_UNSUPPORTED');return this.k.transaction(()=>saveDocument(this.k,this.k.authorize(scope,'support.configure'),'branding','default',p.expected_revision,p));}
+ read(scope:Scope){const s=this.k.require(scope),present=this.k.db.prepare("SELECT 1 FROM commerce_support_documents WHERE tenant_id=? AND store_id=? AND kind='branding' AND id='default'").get(s.tenant_id,s.store_id);if(!present)return{name:s.store_id,theme:'plain',locale:'en-US',revision:0};const r=documentRow(this.k,s,'branding','default');return{name:r.body.name,theme:r.body.theme,locale:r.body.locale,revision:r.version};}
+}

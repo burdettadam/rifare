@@ -1,3 +1,4 @@
+import {assertSupportAction} from './support-fence.mts';
 import { assertNotErased, erasedResource, assertRecoveryAction } from './data-guards.mts';
 import { assertExecution } from './execution-stops.mts';
 import { ROLE_ACTIONS,permissionDecision,recordSecurity } from './authorization.mts';
@@ -116,6 +117,7 @@ export class CommerceKernel {
     const limits=this.#limits.get(scope);
     if(limits&&(!limits.actions.includes(action)||(resource!==null&&resource!==limits.resource)))throw new Error('WORK_SCOPE_DENIED');
     if(action==='model.run')assertExecution(this,s,'model.run');
+    assertSupportAction(this,s,action,resource,this.#limits.get(scope)?.identity.case_id??null);
     const decision=permissionDecision(this.db,s,action,resource);
     if(!decision.allowed){recordSecurity(this.db,s,decision.action,'denied',this.clock(),decision.authority_revision);throw new Error('ACCESS_DENIED');}
     return s;
