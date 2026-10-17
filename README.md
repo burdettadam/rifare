@@ -1,5 +1,17 @@
 # Rifare
 
+## Current development checkpoint: safe order editing
+
+The M04 SQLite diagnostic implementation adds safe edits, independent fulfillment holds, payment/refund state, source reconciliation and a portable no-model workflow. See [order editing](docs/ORDER-EDITING.md), [review](docs/ORDER-EDITING-REVIEW.md), and [qualification assessment](docs/M04-QUALIFICATION.md).
+
+```sh
+python3 tools/verify.py --runtime --harness
+node --experimental-strip-types tools/demo-order-edit.mts
+```
+
+This remains a synthetic development implementation; connected production and PostgreSQL/React qualification are not complete. Use the delivered `main`, not an older goal branch. Prior checkpoint sections below are historical.
+
+
 Merchant-owned commerce operations with tailorable skills and independently
 replaceable platforms, agents and models.
 

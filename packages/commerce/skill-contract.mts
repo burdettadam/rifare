@@ -4,7 +4,7 @@ import { jsonValue,invalid,canonical } from './configuration-values.mts';
 
 const schema=JSON.parse(readFileSync(new URL('./contracts/commerce-manifest.v2.schema.json',import.meta.url),'utf8'));
 export function manifestSchema(){return jsonValue(schema);}
-export const ACTION_CONTRACTS=Object.freeze(Object.fromEntries(['order.status','knowledge.search','knowledge.get','skill.read','return.status','return.refund.quote','return.exchange.quote','action.preview','action.approve','action.execute','return.operation.read'].map(name=>[name,'1.0.0'])));
+export const ACTION_CONTRACTS=Object.freeze(Object.fromEntries(['order.edit.quote','order.edit.status','order.status','knowledge.search','knowledge.get','skill.read','return.status','return.refund.quote','return.exchange.quote','action.preview','action.approve','action.execute','return.operation.read'].map(name=>[name,'1.0.0'])));
 // Only the keywords in this checked-in schema are interpreted; this is not a general schema engine.
 function validate(value:any,rule:any,path:string){
   if(rule.const!==undefined&&value!==rule.const)invalid(path,'CONST');

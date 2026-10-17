@@ -1,0 +1,82 @@
+{
+  "schema_version": 2,
+  "id": "safe-order-edit",
+  "version": "1.0.0",
+  "engine": {
+    "min": "1.0.0",
+    "max_exclusive": "2.0.0"
+  },
+  "required_actions": [
+    {
+      "name": "order.status",
+      "versions": {
+        "min": "1.0.0",
+        "max_exclusive": "2.0.0"
+      }
+    },
+    {
+      "name": "order.edit.quote",
+      "versions": {
+        "min": "1.0.0",
+        "max_exclusive": "2.0.0"
+      }
+    },
+    {
+      "name": "order.edit.status",
+      "versions": {
+        "min": "1.0.0",
+        "max_exclusive": "2.0.0"
+      }
+    },
+    {
+      "name": "action.preview",
+      "versions": {
+        "min": "1.0.0",
+        "max_exclusive": "2.0.0"
+      }
+    },
+    {
+      "name": "action.approve",
+      "versions": {
+        "min": "1.0.0",
+        "max_exclusive": "2.0.0"
+      }
+    },
+    {
+      "name": "action.execute",
+      "versions": {
+        "min": "1.0.0",
+        "max_exclusive": "2.0.0"
+      }
+    }
+  ],
+  "resources": [
+    {
+      "path": "references/configuration.json",
+      "sha256": "adc191eb61dc3f9d88e46095615c7cbb089ae8ac80926ade41f993243554a4e8"
+    },
+    {
+      "path": "references/input.json",
+      "sha256": "470a5f7164c61dde719470ddaf7affd4c30a5583a15b86fde37ea3b6f94fccf6"
+    },
+    {
+      "path": "references/output.json",
+      "sha256": "b0cb9d3eb0c6ca24b825d4a212823e30e3f0aa25fd4a5a32624daa7a78603380"
+    },
+    {
+      "path": "references/workflow.md",
+      "sha256": "0881feead7c38a2858fa6d86151fd900c84a37f1ac51cd0dfe5a52d9a05f325c"
+    }
+  ],
+  "input_schema": "references/input.json",
+  "output_schema": "references/output.json",
+  "configuration": {
+    "schema_resource": "references/configuration.json",
+    "fields": [
+      "presentation.tone",
+      "presentation.locale"
+    ]
+  },
+  "scripts": [],
+  "egress": []
+}

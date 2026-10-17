@@ -1,0 +1,20 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "case_id",
+    "operations",
+    "source_digest"
+  ],
+  "properties": {
+    "case_id": {
+      "type": "string"
+    },
+    "operations": {
+      "type": "array"
+    },
+    "source_digest": {
+      "type": "string"
+    }
+  }
+}

@@ -3,7 +3,7 @@ import type { CommerceKernel,Scope,Row } from './kernel.mts';
 import { exact,id,integer } from './kernel.mts';
 import { contentDigest } from './configuration-values.mts';
 
-export const STOP_ACTIONS=Object.freeze(['diagnostic.warehouse.receive','diagnostic.warehouse.disposition','diagnostic.return.cancel','diagnostic.exchange.create','diagnostic.label.purchase','diagnostic.label.void','diagnostic.return.resolve','diagnostic.resolution.set','diagnostic.return.submit','diagnostic.return.create','diagnostic.projection.record','model.run','customer.message','credential.probe']);
+export const STOP_ACTIONS=Object.freeze(['diagnostic.order.edit','diagnostic.warehouse.receive','diagnostic.warehouse.disposition','diagnostic.return.cancel','diagnostic.exchange.create','diagnostic.label.purchase','diagnostic.label.void','diagnostic.return.resolve','diagnostic.resolution.set','diagnostic.return.submit','diagnostic.return.create','diagnostic.projection.record','model.run','customer.message','credential.probe']);
 export function controlAction(action:string){return action==='diagnostic.case.record'?'diagnostic.resolution.set':action;}
 const key=(tenant:string|null,store:string|null,action:string)=>JSON.stringify([tenant,store,action]);
 export function controlState(k:CommerceKernel,s:Row,action:string){

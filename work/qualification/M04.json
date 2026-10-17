@@ -1,0 +1,39 @@
+{
+  "milestone": "M04",
+  "goal": "M04-G99",
+  "state": "blocked",
+  "local_integration": "authorized_after_verified_candidate",
+  "full_milestone_accepted": false,
+  "release_authorized": false,
+  "base": "fe2c9ce1105ddca06aff084e27d320cfa0493d75",
+  "goals": [
+    "M04-G01",
+    "M04-G02",
+    "M04-G03",
+    "M04-G04",
+    "M04-G05",
+    "M04-G06",
+    "M04-G07",
+    "M04-G08",
+    "M04-G09",
+    "M04-G10",
+    "M04-G11"
+  ],
+  "observed_scope": "SQLite diagnostic plus separate synthetic store/warehouse ledger; native process crashes and concurrency; actual loopback HTTP and explicit rendered-component bridge",
+  "missing": [
+    "PostgreSQL/React target",
+    "connected platform order edit comparison",
+    "connected warehouse hold and final-order acknowledgement qualification",
+    "live payment and refund integration",
+    "direct served-browser qualification",
+    "independent merchant and production security qualification",
+    "formal prerequisite milestone acceptance"
+  ],
+  "recovery_limits": [
+    "Unknown outcomes remain blocked until the original source confirms them. Absence is not proof of failure.",
+    "Expired unpaid edits keep holds and require operator intervention or actual late settlement; automatic compensation/cancellation of an active edit is not enabled."
+  ],
+  "next_milestone_started": false,
+  "review_kind": "same_assistant_delegated_maintainer",
+  "evidence": "Exact source/controller/native reports retained in separate evidence delivery; never self-authenticating acceptance."
+}
