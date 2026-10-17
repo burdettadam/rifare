@@ -2,21 +2,22 @@
 
 ## Current integrated development
 
-M03-G01 through M03-G05 add item/quantity eligibility, scoped evidence, a verified
-customer portal, reviewer overrides and fixture-qualified native return records.
-See [the guide](docs/RETURN-INTAKE.md) and [review](docs/RETURN-INTAKE-REVIEW.md).
-Prior source, tests, model neutrality and benchmark contracts remain intact.
+M03-G06 through M03-G10 add mixed outcome allocation, original paid-value refund
+quotations, synthetic refund execution/reconciliation, native-credit fixtures and
+variant exchange quotes. Read [the guide](docs/RETURN-RESOLUTION.md) and
+[review](docs/RETURN-RESOLUTION-REVIEW.md). All earlier source, tests, model-neutral
+interfaces and benchmark contracts remain in place.
 
 ## Remaining qualification and next work
 
-M02-G99 is assessed but blocked; target PostgreSQL/React, live providers, production
-privacy and actual served-browser qualification remain open. Local integration is
-not milestone acceptance. Start M03-G06 from the accumulated source; preserve all
-unknown native operations and reservations. Real refunds/payments/shipping and
-connected Shopify creation require later implementation and qualification.
+M02-G99 and target-stack qualification remain blocked. SQLite and separate native
+source fixtures do not establish live financial authority, PostgreSQL/React behavior
+or production security/privacy. The next goal is M03-G11, inventory reservation
+under concurrency. Preserve existing unknown effects and conservative unit claims;
+no changed key, model or repeated request authorizes another effect.
 
 ## Source of truth
 
-Original planning JSON and test specifications retain their meaning. Keep work
-records separate from planning assertions. Use ordinary Git, existing commands and
-skills; no mandatory model or scheduler is added.
+Original planning JSON and test specifications retain their meaning. Work records
+are separate from acceptance assertions. Use ordinary Git and the existing project
+commands and skills; no mandatory model or scheduler is introduced.

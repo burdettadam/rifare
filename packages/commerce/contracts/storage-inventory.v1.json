@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "schema_digest": "f27e9913aa654076356c7f367215c1b3df68885188c01af4dc12be906cf60cfc",
+  "schema_digest": "afeff2cb22c68ccbbe30c1fa91981090766dc1e978e16c3acea05711129c66b9",
   "tables": [
     {
       "name": "commerce_action_approvals",
@@ -321,6 +321,20 @@
         "inbox_id"
       ],
       "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_exchange_quotes",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "allocation_id",
+        "case_id",
+        "resource_id",
+        "body",
+        "digest"
+      ],
+      "handling": "subject_linked_pseudonymize_and_disable"
     },
     {
       "name": "commerce_execution_settings",
@@ -672,6 +686,112 @@
         "created_at"
       ],
       "handling": "suppression_or_restore_control"
+    },
+    {
+      "name": "commerce_resolution_allocations",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "plan_id",
+        "case_id",
+        "resource_id",
+        "line_id",
+        "outcome",
+        "body",
+        "digest"
+      ],
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_resolution_observations",
+      "columns": [
+        "seq",
+        "tenant_id",
+        "store_id",
+        "operation_id",
+        "resource_id",
+        "stage",
+        "body",
+        "digest",
+        "observed_at"
+      ],
+      "handling": "minimized_financial_identifiers_retained_access_blocked_on_erasure"
+    },
+    {
+      "name": "commerce_resolution_operations",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "allocation_id",
+        "case_id",
+        "resource_id",
+        "receipt_id",
+        "quote_id",
+        "kind",
+        "amount_minor",
+        "currency",
+        "source_identity",
+        "command",
+        "digest",
+        "state",
+        "native_id",
+        "observed_at"
+      ],
+      "handling": "minimized_financial_identifiers_retained_access_blocked_on_erasure"
+    },
+    {
+      "name": "commerce_resolution_plans",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "request_id",
+        "case_id",
+        "resource_id",
+        "request_key",
+        "body",
+        "digest"
+      ],
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_resolution_quotes",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "allocation_id",
+        "case_id",
+        "resource_id",
+        "body",
+        "digest"
+      ],
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_resolution_settings",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "revision",
+        "body",
+        "digest"
+      ],
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_resolution_units",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "resource_id",
+        "line_id",
+        "unit_index",
+        "allocation_id"
+      ],
+      "handling": "minimized_financial_identifiers_retained_access_blocked_on_erasure"
     },
     {
       "name": "commerce_resources",

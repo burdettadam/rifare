@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "id": "rifare-return-resolution-v1",
+  "qualification": "synthetic_only",
+  "live_transport": false,
+  "authorization": "Current Rifare bearer session; existing permission, case, approval and execution-stop boundaries.",
+  "routes": {
+    "allocate": {
+      "method": "POST",
+      "path": "/v1/resolutions/allocate",
+      "required_fields": [
+        "request_id",
+        "request_key",
+        "lines"
+      ]
+    },
+    "plan": {
+      "method": "POST",
+      "path": "/v1/resolutions/plan",
+      "required_fields": [
+        "plan_id"
+      ]
+    },
+    "quote": {
+      "method": "POST",
+      "path": "/v1/resolutions/quote",
+      "required_fields": [
+        "allocation_id"
+      ]
+    },
+    "credit-quote": {
+      "method": "POST",
+      "path": "/v1/resolutions/credit-quote",
+      "required_fields": [
+        "allocation_id"
+      ]
+    },
+    "exchange-quote": {
+      "method": "POST",
+      "path": "/v1/resolutions/exchange-quote",
+      "required_fields": [
+        "allocation_id",
+        "catalog_id"
+      ]
+    },
+    "exchange-current": {
+      "method": "POST",
+      "path": "/v1/resolutions/exchange-current",
+      "required_fields": [
+        "quote_id",
+        "quote_digest"
+      ]
+    },
+    "operation": {
+      "method": "POST",
+      "path": "/v1/resolutions/operation",
+      "required_fields": [
+        "operation_id"
+      ]
+    },
+    "dispatch": {
+      "method": "POST",
+      "path": "/v1/resolutions/dispatch",
+      "required_fields": [
+        "operation_id"
+      ]
+    },
+    "reconcile": {
+      "method": "POST",
+      "path": "/v1/resolutions/reconcile",
+      "required_fields": [
+        "operation_id"
+      ]
+    },
+    "instrument": {
+      "method": "POST",
+      "path": "/v1/resolutions/instrument",
+      "required_fields": [
+        "operation_id"
+      ]
+    }
+  },
+  "line_allocation": {
+    "fields": [
+      "line_id",
+      "units",
+      "outcome"
+    ],
+    "outcomes": [
+      "refund",
+      "store_credit",
+      "exchange"
+    ],
+    "units": "One-based stable original ordinal indexes; unique across all outcomes."
+  },
+  "proposal": {
+    "action": "diagnostic.return.resolve",
+    "arguments": [
+      "quote_id",
+      "quote_digest"
+    ],
+    "approval": "Existing gateway exact-preview, separate reviewer, current permissions and one use."
+  },
+  "server_only": [
+    "source identity",
+    "source database",
+    "configuration readiness",
+    "deadline",
+    "original amount and currency"
+  ],
+  "prohibited": [
+    "live financial transport",
+    "arbitrary provider URLs",
+    "discount-code fallback",
+    "exchange inventory commit",
+    "blind retry of uncertain operations"
+  ],
+  "source_states": [
+    "authorized",
+    "unknown",
+    "accepted",
+    "settled",
+    "issued",
+    "rejected"
+  ],
+  "note": "This input inventory is not a complete generated OpenAPI schema or a live-platform conformance assertion."
+}

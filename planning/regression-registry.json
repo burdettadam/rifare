@@ -474,6 +474,46 @@
       "contract_files": [
         "goals/M03/M03-G05.md"
       ]
+    },
+    {
+      "id": "FEATURE-M03-G06",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M03/M03-G06.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M03-G07",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M03/M03-G07.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M03-G08",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M03/M03-G08.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M03-G09",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M03/M03-G09.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M03-G10",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M03/M03-G10.md"
+      ]
     }
   ],
   "tests": [
@@ -11326,6 +11366,790 @@
       "runner_case_id": "M03-G02-REVIEW-EXPIRED-HOLD-PURGE",
       "source": "tests/development/return-retention-review.test.mts",
       "capability_id": "FEATURE-M03-G02"
+    },
+    {
+      "id": "runtime:CASE-M03-G06-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G06-01",
+      "source": "tests/development/resolution-ledger.test.mts",
+      "capability_id": "FEATURE-M03-G06"
+    },
+    {
+      "id": "runtime:CASE-M03-G06-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G06-02",
+      "source": "tests/development/resolution-ledger.test.mts",
+      "capability_id": "FEATURE-M03-G06"
+    },
+    {
+      "id": "runtime:CASE-M03-G06-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G06-03",
+      "source": "tests/development/resolution-ledger.test.mts",
+      "capability_id": "FEATURE-M03-G06"
+    },
+    {
+      "id": "runtime:M03-G06-PERSISTENT-IDEMPOTENT-INTENT",
+      "suite": "runtime",
+      "runner_case_id": "M03-G06-PERSISTENT-IDEMPOTENT-INTENT",
+      "source": "tests/development/resolution-ledger.test.mts",
+      "capability_id": "FEATURE-M03-G06"
+    },
+    {
+      "id": "runtime:M03-G06-CONFLICTING-INTENT-NO-REASSIGN",
+      "suite": "runtime",
+      "runner_case_id": "M03-G06-CONFLICTING-INTENT-NO-REASSIGN",
+      "source": "tests/development/resolution-ledger.test.mts",
+      "capability_id": "FEATURE-M03-G06"
+    },
+    {
+      "id": "runtime:M03-G06-MISSING-LINE-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G06-MISSING-LINE-REJECTED",
+      "source": "tests/development/resolution-ledger.test.mts",
+      "capability_id": "FEATURE-M03-G06"
+    },
+    {
+      "id": "runtime:M03-G06-PRIOR-RESOLVED-UNIT-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G06-PRIOR-RESOLVED-UNIT-REJECTED",
+      "source": "tests/development/resolution-ledger.test.mts",
+      "capability_id": "FEATURE-M03-G06"
+    },
+    {
+      "id": "runtime:M03-G06-UNFULFILLED-UNIT-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G06-UNFULFILLED-UNIT-REJECTED",
+      "source": "tests/development/resolution-ledger.test.mts",
+      "capability_id": "FEATURE-M03-G06"
+    },
+    {
+      "id": "runtime:M03-G06-CROSS-TENANT-PLAN-HIDDEN",
+      "suite": "runtime",
+      "runner_case_id": "M03-G06-CROSS-TENANT-PLAN-HIDDEN",
+      "source": "tests/development/resolution-ledger.test.mts",
+      "capability_id": "FEATURE-M03-G06"
+    },
+    {
+      "id": "runtime:M03-G06-CUSTOMER-CANNOT-ALLOCATE-MONEY",
+      "suite": "runtime",
+      "runner_case_id": "M03-G06-CUSTOMER-CANNOT-ALLOCATE-MONEY",
+      "source": "tests/development/resolution-ledger.test.mts",
+      "capability_id": "FEATURE-M03-G06"
+    },
+    {
+      "id": "runtime:M03-G06-UNQUALIFIED-CREDIT-NO-PARTIAL-PLAN",
+      "suite": "runtime",
+      "runner_case_id": "M03-G06-UNQUALIFIED-CREDIT-NO-PARTIAL-PLAN",
+      "source": "tests/development/resolution-ledger.test.mts",
+      "capability_id": "FEATURE-M03-G06"
+    },
+    {
+      "id": "runtime:M03-G06-UNAPPROVED-REQUEST-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G06-UNAPPROVED-REQUEST-REJECTED",
+      "source": "tests/development/resolution-ledger.test.mts",
+      "capability_id": "FEATURE-M03-G06"
+    },
+    {
+      "id": "runtime:M03-G06-UNKNOWN-NATIVE-REQUEST-REMAINS-BLOCKED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G06-UNKNOWN-NATIVE-REQUEST-REMAINS-BLOCKED",
+      "source": "tests/development/resolution-ledger.test.mts",
+      "capability_id": "FEATURE-M03-G06"
+    },
+    {
+      "id": "runtime:M03-G06-QUANTITY-STRING-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G06-QUANTITY-STRING-REJECTED",
+      "source": "tests/development/resolution-ledger.test.mts",
+      "capability_id": "FEATURE-M03-G06"
+    },
+    {
+      "id": "runtime:M03-G06-IMMUTABLE-PAID-TOTALS-CONSERVE-CENTS",
+      "suite": "runtime",
+      "runner_case_id": "M03-G06-IMMUTABLE-PAID-TOTALS-CONSERVE-CENTS",
+      "source": "tests/development/resolution-ledger.test.mts",
+      "capability_id": "FEATURE-M03-G06"
+    },
+    {
+      "id": "runtime:M03-G06-SHIPPING-ALLOCATION-CHARGED-ONCE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G06-SHIPPING-ALLOCATION-CHARGED-ONCE",
+      "source": "tests/development/resolution-ledger.test.mts",
+      "capability_id": "FEATURE-M03-G06"
+    },
+    {
+      "id": "runtime:M03-G06-REOPEN-RETAINS-UNIT-CLAIMS",
+      "suite": "runtime",
+      "runner_case_id": "M03-G06-REOPEN-RETAINS-UNIT-CLAIMS",
+      "source": "tests/development/resolution-ledger.test.mts",
+      "capability_id": "FEATURE-M03-G06"
+    },
+    {
+      "id": "runtime:M03-G06-INPUT-ORDER-DOES-NOT-CHANGE-IDEMPOTENCY",
+      "suite": "runtime",
+      "runner_case_id": "M03-G06-INPUT-ORDER-DOES-NOT-CHANGE-IDEMPOTENCY",
+      "source": "tests/development/resolution-ledger.test.mts",
+      "capability_id": "FEATURE-M03-G06"
+    },
+    {
+      "id": "runtime:M03-G06-NO-SILENT-ALLOCATION-TAMPERING",
+      "suite": "runtime",
+      "runner_case_id": "M03-G06-NO-SILENT-ALLOCATION-TAMPERING",
+      "source": "tests/development/resolution-ledger.test.mts",
+      "capability_id": "FEATURE-M03-G06"
+    },
+    {
+      "id": "runtime:CASE-M03-G07-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G07-01",
+      "source": "tests/development/refund-quotes.test.mts",
+      "capability_id": "FEATURE-M03-G07"
+    },
+    {
+      "id": "runtime:CASE-M03-G07-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G07-02",
+      "source": "tests/development/refund-quotes.test.mts",
+      "capability_id": "FEATURE-M03-G07"
+    },
+    {
+      "id": "runtime:CASE-M03-G07-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G07-03",
+      "source": "tests/development/refund-quotes.test.mts",
+      "capability_id": "FEATURE-M03-G07"
+    },
+    {
+      "id": "runtime:M03-G07-CATALOG-PRICE-NOT-REFUND-BASIS",
+      "suite": "runtime",
+      "runner_case_id": "M03-G07-CATALOG-PRICE-NOT-REFUND-BASIS",
+      "source": "tests/development/refund-quotes.test.mts",
+      "capability_id": "FEATURE-M03-G07"
+    },
+    {
+      "id": "runtime:M03-G07-MISSING-PAID-FACTS-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G07-MISSING-PAID-FACTS-REJECTED",
+      "source": "tests/development/refund-quotes.test.mts",
+      "capability_id": "FEATURE-M03-G07"
+    },
+    {
+      "id": "runtime:M03-G07-MIXED-CURRENCY-FACTS-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G07-MIXED-CURRENCY-FACTS-REJECTED",
+      "source": "tests/development/refund-quotes.test.mts",
+      "capability_id": "FEATURE-M03-G07"
+    },
+    {
+      "id": "runtime:M03-G07-UNEXPLAINED-CAPTURE-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G07-UNEXPLAINED-CAPTURE-REJECTED",
+      "source": "tests/development/refund-quotes.test.mts",
+      "capability_id": "FEATURE-M03-G07"
+    },
+    {
+      "id": "runtime:M03-G07-PRIOR-REFUNDS-ABOVE-CAPTURE-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G07-PRIOR-REFUNDS-ABOVE-CAPTURE-REJECTED",
+      "source": "tests/development/refund-quotes.test.mts",
+      "capability_id": "FEATURE-M03-G07"
+    },
+    {
+      "id": "runtime:M03-G07-STALE-SOURCE-DENIED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G07-STALE-SOURCE-DENIED",
+      "source": "tests/development/refund-quotes.test.mts",
+      "capability_id": "FEATURE-M03-G07"
+    },
+    {
+      "id": "runtime:M03-G07-EXPIRED-PREVIEW-DENIED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G07-EXPIRED-PREVIEW-DENIED",
+      "source": "tests/development/refund-quotes.test.mts",
+      "capability_id": "FEATURE-M03-G07"
+    },
+    {
+      "id": "runtime:M03-G07-CHANGED-FEES-REQUIRE-NEW-PLAN",
+      "suite": "runtime",
+      "runner_case_id": "M03-G07-CHANGED-FEES-REQUIRE-NEW-PLAN",
+      "source": "tests/development/refund-quotes.test.mts",
+      "capability_id": "FEATURE-M03-G07"
+    },
+    {
+      "id": "runtime:M03-G07-CASH-QUOTE-CANNOT-QUOTE-EXCHANGE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G07-CASH-QUOTE-CANNOT-QUOTE-EXCHANGE",
+      "source": "tests/development/refund-quotes.test.mts",
+      "capability_id": "FEATURE-M03-G07"
+    },
+    {
+      "id": "runtime:M03-G07-NATIVE-RETURN-REQUIRED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G07-NATIVE-RETURN-REQUIRED",
+      "source": "tests/development/refund-quotes.test.mts",
+      "capability_id": "FEATURE-M03-G07"
+    },
+    {
+      "id": "runtime:M03-G07-DIFFERENT-CASE-CANNOT-USE-QUOTE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G07-DIFFERENT-CASE-CANNOT-USE-QUOTE",
+      "source": "tests/development/refund-quotes.test.mts",
+      "capability_id": "FEATURE-M03-G07"
+    },
+    {
+      "id": "runtime:M03-G07-MODIFIED-QUOTE-DIGEST-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G07-MODIFIED-QUOTE-DIGEST-REJECTED",
+      "source": "tests/development/refund-quotes.test.mts",
+      "capability_id": "FEATURE-M03-G07"
+    },
+    {
+      "id": "runtime:M03-G07-BALANCE-RESERVED-AT-AUTHORIZATION",
+      "suite": "runtime",
+      "runner_case_id": "M03-G07-BALANCE-RESERVED-AT-AUTHORIZATION",
+      "source": "tests/development/refund-quotes.test.mts",
+      "capability_id": "FEATURE-M03-G07"
+    },
+    {
+      "id": "runtime:M03-G07-NO-SECOND-AUTHORIZATION-PER-ALLOCATION",
+      "suite": "runtime",
+      "runner_case_id": "M03-G07-NO-SECOND-AUTHORIZATION-PER-ALLOCATION",
+      "source": "tests/development/refund-quotes.test.mts",
+      "capability_id": "FEATURE-M03-G07"
+    },
+    {
+      "id": "runtime:M03-G07-PAID-LINE-DISCOUNT-MODIFICATION-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G07-PAID-LINE-DISCOUNT-MODIFICATION-REJECTED",
+      "source": "tests/development/refund-quotes.test.mts",
+      "capability_id": "FEATURE-M03-G07"
+    },
+    {
+      "id": "runtime:M03-G07-DUPLICATE-PAID-LINES-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G07-DUPLICATE-PAID-LINES-REJECTED",
+      "source": "tests/development/refund-quotes.test.mts",
+      "capability_id": "FEATURE-M03-G07"
+    },
+    {
+      "id": "runtime:M03-G07-REVIEW-REQUEST-INVALIDATES-PREVIEW",
+      "suite": "runtime",
+      "runner_case_id": "M03-G07-REVIEW-REQUEST-INVALIDATES-PREVIEW",
+      "source": "tests/development/refund-quotes.test.mts",
+      "capability_id": "FEATURE-M03-G07"
+    },
+    {
+      "id": "runtime:CASE-M03-G08-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G08-01",
+      "source": "tests/development/refund-execution.test.mts",
+      "capability_id": "FEATURE-M03-G08"
+    },
+    {
+      "id": "runtime:CASE-M03-G08-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G08-02",
+      "source": "tests/development/refund-execution.test.mts",
+      "capability_id": "FEATURE-M03-G08"
+    },
+    {
+      "id": "runtime:CASE-M03-G08-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G08-03",
+      "source": "tests/development/refund-execution.test.mts",
+      "capability_id": "FEATURE-M03-G08"
+    },
+    {
+      "id": "runtime:M03-G08-LOST-RESPONSE-RECONCILED-NOT-RESENT",
+      "suite": "runtime",
+      "runner_case_id": "M03-G08-LOST-RESPONSE-RECONCILED-NOT-RESENT",
+      "source": "tests/development/refund-execution.test.mts",
+      "capability_id": "FEATURE-M03-G08"
+    },
+    {
+      "id": "runtime:M03-G08-ORIGINAL-PAYMENT-REFERENCE-PRESERVED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G08-ORIGINAL-PAYMENT-REFERENCE-PRESERVED",
+      "source": "tests/development/refund-execution.test.mts",
+      "capability_id": "FEATURE-M03-G08"
+    },
+    {
+      "id": "runtime:M03-G08-NATIVE-BALANCE-RECHECK-REJECTS-OVERREFUND",
+      "suite": "runtime",
+      "runner_case_id": "M03-G08-NATIVE-BALANCE-RECHECK-REJECTS-OVERREFUND",
+      "source": "tests/development/refund-execution.test.mts",
+      "capability_id": "FEATURE-M03-G08"
+    },
+    {
+      "id": "runtime:M03-G08-SOURCE-REJECTED-DOES-NOT-RESOLVE-UNIT",
+      "suite": "runtime",
+      "runner_case_id": "M03-G08-SOURCE-REJECTED-DOES-NOT-RESOLVE-UNIT",
+      "source": "tests/development/refund-execution.test.mts",
+      "capability_id": "FEATURE-M03-G08"
+    },
+    {
+      "id": "runtime:M03-G08-WRONG-AMOUNT-RESPONSE-UNKNOWN",
+      "suite": "runtime",
+      "runner_case_id": "M03-G08-WRONG-AMOUNT-RESPONSE-UNKNOWN",
+      "source": "tests/development/refund-execution.test.mts",
+      "capability_id": "FEATURE-M03-G08"
+    },
+    {
+      "id": "runtime:M03-G08-WRONG-CURRENCY-RESPONSE-UNKNOWN",
+      "suite": "runtime",
+      "runner_case_id": "M03-G08-WRONG-CURRENCY-RESPONSE-UNKNOWN",
+      "source": "tests/development/refund-execution.test.mts",
+      "capability_id": "FEATURE-M03-G08"
+    },
+    {
+      "id": "runtime:M03-G08-CUSTOMER-CANNOT-DISPATCH",
+      "suite": "runtime",
+      "runner_case_id": "M03-G08-CUSTOMER-CANNOT-DISPATCH",
+      "source": "tests/development/refund-execution.test.mts",
+      "capability_id": "FEATURE-M03-G08"
+    },
+    {
+      "id": "runtime:M03-G08-CROSS-STORE-OPERATION-HIDDEN",
+      "suite": "runtime",
+      "runner_case_id": "M03-G08-CROSS-STORE-OPERATION-HIDDEN",
+      "source": "tests/development/refund-execution.test.mts",
+      "capability_id": "FEATURE-M03-G08"
+    },
+    {
+      "id": "runtime:M03-G08-REVOKED-APPROVAL-BLOCKS-SEND",
+      "suite": "runtime",
+      "runner_case_id": "M03-G08-REVOKED-APPROVAL-BLOCKS-SEND",
+      "source": "tests/development/refund-execution.test.mts",
+      "capability_id": "FEATURE-M03-G08"
+    },
+    {
+      "id": "runtime:M03-G08-REVOKED-REVIEWER-BLOCKS-SEND",
+      "suite": "runtime",
+      "runner_case_id": "M03-G08-REVOKED-REVIEWER-BLOCKS-SEND",
+      "source": "tests/development/refund-execution.test.mts",
+      "capability_id": "FEATURE-M03-G08"
+    },
+    {
+      "id": "runtime:M03-G08-STOP-BLOCKS-DISPATCH",
+      "suite": "runtime",
+      "runner_case_id": "M03-G08-STOP-BLOCKS-DISPATCH",
+      "source": "tests/development/refund-execution.test.mts",
+      "capability_id": "FEATURE-M03-G08"
+    },
+    {
+      "id": "runtime:M03-G08-STOP-ALLOWS-RECONCILIATION",
+      "suite": "runtime",
+      "runner_case_id": "M03-G08-STOP-ALLOWS-RECONCILIATION",
+      "source": "tests/development/refund-execution.test.mts",
+      "capability_id": "FEATURE-M03-G08"
+    },
+    {
+      "id": "runtime:M03-G08-MISSING-LOOKUP-REMAINS-UNKNOWN",
+      "suite": "runtime",
+      "runner_case_id": "M03-G08-MISSING-LOOKUP-REMAINS-UNKNOWN",
+      "source": "tests/development/refund-execution.test.mts",
+      "capability_id": "FEATURE-M03-G08"
+    },
+    {
+      "id": "runtime:M03-G08-SETTLEMENT-CANNOT-REGRESS",
+      "suite": "runtime",
+      "runner_case_id": "M03-G08-SETTLEMENT-CANNOT-REGRESS",
+      "source": "tests/development/refund-execution.test.mts",
+      "capability_id": "FEATURE-M03-G08"
+    },
+    {
+      "id": "runtime:M03-G08-RECEIPTS-APPEND-ONLY",
+      "suite": "runtime",
+      "runner_case_id": "M03-G08-RECEIPTS-APPEND-ONLY",
+      "source": "tests/development/refund-execution.test.mts",
+      "capability_id": "FEATURE-M03-G08"
+    },
+    {
+      "id": "runtime:M03-G08-SAME-DATABASE-SOURCE-DENIED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G08-SAME-DATABASE-SOURCE-DENIED",
+      "source": "tests/development/refund-execution.test.mts",
+      "capability_id": "FEATURE-M03-G08"
+    },
+    {
+      "id": "runtime:M03-G08-ORIGINAL-DUPLICATE-OBLIGATION-REPLAY",
+      "suite": "runtime",
+      "runner_case_id": "M03-G08-ORIGINAL-DUPLICATE-OBLIGATION-REPLAY",
+      "source": "tests/development/refund-execution.test.mts",
+      "capability_id": "FEATURE-M03-G08"
+    },
+    {
+      "id": "runtime:CASE-M03-G09-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G09-01",
+      "source": "tests/development/store-credit.test.mts",
+      "capability_id": "FEATURE-M03-G09"
+    },
+    {
+      "id": "runtime:CASE-M03-G09-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G09-02",
+      "source": "tests/development/store-credit.test.mts",
+      "capability_id": "FEATURE-M03-G09"
+    },
+    {
+      "id": "runtime:CASE-M03-G09-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G09-03",
+      "source": "tests/development/store-credit.test.mts",
+      "capability_id": "FEATURE-M03-G09"
+    },
+    {
+      "id": "runtime:M03-G09-DISCOUNT-CODE-NOT-NATIVE-CREDIT",
+      "suite": "runtime",
+      "runner_case_id": "M03-G09-DISCOUNT-CODE-NOT-NATIVE-CREDIT",
+      "source": "tests/development/store-credit.test.mts",
+      "capability_id": "FEATURE-M03-G09"
+    },
+    {
+      "id": "runtime:M03-G09-WRONG-CUSTOMER-ACCOUNT-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G09-WRONG-CUSTOMER-ACCOUNT-REJECTED",
+      "source": "tests/development/store-credit.test.mts",
+      "capability_id": "FEATURE-M03-G09"
+    },
+    {
+      "id": "runtime:M03-G09-WRONG-CURRENCY-ACCOUNT-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G09-WRONG-CURRENCY-ACCOUNT-REJECTED",
+      "source": "tests/development/store-credit.test.mts",
+      "capability_id": "FEATURE-M03-G09"
+    },
+    {
+      "id": "runtime:M03-G09-UNQUALIFIED-EXPIRATION-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G09-UNQUALIFIED-EXPIRATION-REJECTED",
+      "source": "tests/development/store-credit.test.mts",
+      "capability_id": "FEATURE-M03-G09"
+    },
+    {
+      "id": "runtime:M03-G09-LOST-ISSUANCE-FOUND-WITHOUT-NEW-CREDIT",
+      "suite": "runtime",
+      "runner_case_id": "M03-G09-LOST-ISSUANCE-FOUND-WITHOUT-NEW-CREDIT",
+      "source": "tests/development/store-credit.test.mts",
+      "capability_id": "FEATURE-M03-G09"
+    },
+    {
+      "id": "runtime:M03-G09-CREDIT-CANNOT-BECOME-CASH-SETTLEMENT",
+      "suite": "runtime",
+      "runner_case_id": "M03-G09-CREDIT-CANNOT-BECOME-CASH-SETTLEMENT",
+      "source": "tests/development/store-credit.test.mts",
+      "capability_id": "FEATURE-M03-G09"
+    },
+    {
+      "id": "runtime:M03-G09-REDEEMED-BALANCE-NOT-REISSUED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G09-REDEEMED-BALANCE-NOT-REISSUED",
+      "source": "tests/development/store-credit.test.mts",
+      "capability_id": "FEATURE-M03-G09"
+    },
+    {
+      "id": "runtime:M03-G09-ACCOUNT-BALANCE-NOT-CREDITED-AMOUNT",
+      "suite": "runtime",
+      "runner_case_id": "M03-G09-ACCOUNT-BALANCE-NOT-CREDITED-AMOUNT",
+      "source": "tests/development/store-credit.test.mts",
+      "capability_id": "FEATURE-M03-G09"
+    },
+    {
+      "id": "runtime:M03-G09-REFUND-ALLOCATION-NOT-CREDITABLE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G09-REFUND-ALLOCATION-NOT-CREDITABLE",
+      "source": "tests/development/store-credit.test.mts",
+      "capability_id": "FEATURE-M03-G09"
+    },
+    {
+      "id": "runtime:M03-G09-NATIVE-ERROR-NOT-INSTRUMENT",
+      "suite": "runtime",
+      "runner_case_id": "M03-G09-NATIVE-ERROR-NOT-INSTRUMENT",
+      "source": "tests/development/store-credit.test.mts",
+      "capability_id": "FEATURE-M03-G09"
+    },
+    {
+      "id": "runtime:M03-G09-CROSS-TENANT-INSTRUMENT-HIDDEN",
+      "suite": "runtime",
+      "runner_case_id": "M03-G09-CROSS-TENANT-INSTRUMENT-HIDDEN",
+      "source": "tests/development/store-credit.test.mts",
+      "capability_id": "FEATURE-M03-G09"
+    },
+    {
+      "id": "runtime:M03-G09-NEGATIVE-INSTRUMENT-BALANCE-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G09-NEGATIVE-INSTRUMENT-BALANCE-REJECTED",
+      "source": "tests/development/store-credit.test.mts",
+      "capability_id": "FEATURE-M03-G09"
+    },
+    {
+      "id": "runtime:CASE-M03-G10-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G10-01",
+      "source": "tests/development/variant-exchanges.test.mts",
+      "capability_id": "FEATURE-M03-G10"
+    },
+    {
+      "id": "runtime:CASE-M03-G10-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G10-02",
+      "source": "tests/development/variant-exchanges.test.mts",
+      "capability_id": "FEATURE-M03-G10"
+    },
+    {
+      "id": "runtime:CASE-M03-G10-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M03-G10-03",
+      "source": "tests/development/variant-exchanges.test.mts",
+      "capability_id": "FEATURE-M03-G10"
+    },
+    {
+      "id": "runtime:M03-G10-STOCK-BUFFER-BOUNDARY",
+      "suite": "runtime",
+      "runner_case_id": "M03-G10-STOCK-BUFFER-BOUNDARY",
+      "source": "tests/development/variant-exchanges.test.mts",
+      "capability_id": "FEATURE-M03-G10"
+    },
+    {
+      "id": "runtime:M03-G10-HIGHER-PRICE-NOT-AUTHORIZED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G10-HIGHER-PRICE-NOT-AUTHORIZED",
+      "source": "tests/development/variant-exchanges.test.mts",
+      "capability_id": "FEATURE-M03-G10"
+    },
+    {
+      "id": "runtime:M03-G10-LOWER-PRICE-NOT-SILENT-REFUND",
+      "suite": "runtime",
+      "runner_case_id": "M03-G10-LOWER-PRICE-NOT-SILENT-REFUND",
+      "source": "tests/development/variant-exchanges.test.mts",
+      "capability_id": "FEATURE-M03-G10"
+    },
+    {
+      "id": "runtime:M03-G10-DIFFERENT-PRODUCT-NOT-VARIANT",
+      "suite": "runtime",
+      "runner_case_id": "M03-G10-DIFFERENT-PRODUCT-NOT-VARIANT",
+      "source": "tests/development/variant-exchanges.test.mts",
+      "capability_id": "FEATURE-M03-G10"
+    },
+    {
+      "id": "runtime:M03-G10-PRICE-UPDATE-INVALIDATES-QUOTE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G10-PRICE-UPDATE-INVALIDATES-QUOTE",
+      "source": "tests/development/variant-exchanges.test.mts",
+      "capability_id": "FEATURE-M03-G10"
+    },
+    {
+      "id": "runtime:M03-G10-CURRENCY-MISMATCH-UNSUPPORTED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G10-CURRENCY-MISMATCH-UNSUPPORTED",
+      "source": "tests/development/variant-exchanges.test.mts",
+      "capability_id": "FEATURE-M03-G10"
+    },
+    {
+      "id": "runtime:M03-G10-SHIPPING-CHARGE-INCLUDED-IN-BALANCE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G10-SHIPPING-CHARGE-INCLUDED-IN-BALANCE",
+      "source": "tests/development/variant-exchanges.test.mts",
+      "capability_id": "FEATURE-M03-G10"
+    },
+    {
+      "id": "runtime:M03-G10-TAX-INCLUDED-IN-BALANCE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G10-TAX-INCLUDED-IN-BALANCE",
+      "source": "tests/development/variant-exchanges.test.mts",
+      "capability_id": "FEATURE-M03-G10"
+    },
+    {
+      "id": "runtime:M03-G10-EXPIRED-QUOTE-CANNOT-BIND",
+      "suite": "runtime",
+      "runner_case_id": "M03-G10-EXPIRED-QUOTE-CANNOT-BIND",
+      "source": "tests/development/variant-exchanges.test.mts",
+      "capability_id": "FEATURE-M03-G10"
+    },
+    {
+      "id": "runtime:M03-G10-DISCOUNT-EXPIRY-REQUIRES-REQUOTE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G10-DISCOUNT-EXPIRY-REQUIRES-REQUOTE",
+      "source": "tests/development/variant-exchanges.test.mts",
+      "capability_id": "FEATURE-M03-G10"
+    },
+    {
+      "id": "runtime:M03-G10-EXCLUDED-ORIGINAL-DISCOUNT-NOT-INVENTED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G10-EXCLUDED-ORIGINAL-DISCOUNT-NOT-INVENTED",
+      "source": "tests/development/variant-exchanges.test.mts",
+      "capability_id": "FEATURE-M03-G10"
+    },
+    {
+      "id": "runtime:M03-G10-INVALID-STOCK-NOT-ZERO-COERCED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G10-INVALID-STOCK-NOT-ZERO-COERCED",
+      "source": "tests/development/variant-exchanges.test.mts",
+      "capability_id": "FEATURE-M03-G10"
+    },
+    {
+      "id": "runtime:M03-G10-CROSS-STORE-QUOTE-HIDDEN",
+      "suite": "runtime",
+      "runner_case_id": "M03-G10-CROSS-STORE-QUOTE-HIDDEN",
+      "source": "tests/development/variant-exchanges.test.mts",
+      "capability_id": "FEATURE-M03-G10"
+    },
+    {
+      "id": "runtime:M03-G10-NO-INVENTORY-MUTATION-FOR-QUOTE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G10-NO-INVENTORY-MUTATION-FOR-QUOTE",
+      "source": "tests/development/variant-exchanges.test.mts",
+      "capability_id": "FEATURE-M03-G10"
+    },
+    {
+      "id": "runtime:M03-G10-UNSUPPORTED-COMMIT-STAYS-DISABLED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G10-UNSUPPORTED-COMMIT-STAYS-DISABLED",
+      "source": "tests/development/variant-exchanges.test.mts",
+      "capability_id": "FEATURE-M03-G10"
+    },
+    {
+      "id": "runtime:M03-G08-REVIEW-SAME-LABEL-NEW-SOURCE-DENIED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G08-REVIEW-SAME-LABEL-NEW-SOURCE-DENIED",
+      "source": "tests/development/resolution-review.test.mts",
+      "capability_id": "FEATURE-M03-G08"
+    },
+    {
+      "id": "runtime:M03-G06-REVIEW-PER-UNIT-DISCOUNTS-NEVER-NEGATIVE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G06-REVIEW-PER-UNIT-DISCOUNTS-NEVER-NEGATIVE",
+      "source": "tests/development/resolution-review.test.mts",
+      "capability_id": "FEATURE-M03-G06"
+    },
+    {
+      "id": "runtime:M03-G07-REVIEW-EVIDENCE-REQUEST-BLOCKS-NEW-QUOTE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G07-REVIEW-EVIDENCE-REQUEST-BLOCKS-NEW-QUOTE",
+      "source": "tests/development/resolution-review.test.mts",
+      "capability_id": "FEATURE-M03-G07"
+    },
+    {
+      "id": "runtime:M03-G07-REVIEW-CANCELED-NATIVE-RETURN-BLOCKS",
+      "suite": "runtime",
+      "runner_case_id": "M03-G07-REVIEW-CANCELED-NATIVE-RETURN-BLOCKS",
+      "source": "tests/development/resolution-review.test.mts",
+      "capability_id": "FEATURE-M03-G07"
+    },
+    {
+      "id": "runtime:M03-G10-REVIEW-RETURN-FEES-IN-EXCHANGE-BALANCE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G10-REVIEW-RETURN-FEES-IN-EXCHANGE-BALANCE",
+      "source": "tests/development/resolution-review.test.mts",
+      "capability_id": "FEATURE-M03-G10"
+    },
+    {
+      "id": "runtime:M03-G10-REVIEW-NATIVE-RESOLUTION-INVALIDATES-EXCHANGE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G10-REVIEW-NATIVE-RESOLUTION-INVALIDATES-EXCHANGE",
+      "source": "tests/development/resolution-review.test.mts",
+      "capability_id": "FEATURE-M03-G10"
+    },
+    {
+      "id": "runtime:M03-G08-SOURCE-TIMEOUT-PRESERVES-UNKNOWN-AND-NO-RETRY",
+      "suite": "runtime",
+      "runner_case_id": "M03-G08-SOURCE-TIMEOUT-PRESERVES-UNKNOWN-AND-NO-RETRY",
+      "source": "tests/development/resolution-review.test.mts",
+      "capability_id": "FEATURE-M03-G08"
+    },
+    {
+      "id": "runtime:M03-G08-RECONCILIATION-TIMEOUT-DOES-NOT-RESEND",
+      "suite": "runtime",
+      "runner_case_id": "M03-G08-RECONCILIATION-TIMEOUT-DOES-NOT-RESEND",
+      "source": "tests/development/resolution-review.test.mts",
+      "capability_id": "FEATURE-M03-G08"
+    },
+    {
+      "id": "runtime:M03-G07-UNSETTLED-ACCOUNTING-CANNOT-RELEASE-RESERVATION",
+      "suite": "runtime",
+      "runner_case_id": "M03-G07-UNSETTLED-ACCOUNTING-CANNOT-RELEASE-RESERVATION",
+      "source": "tests/development/resolution-review.test.mts",
+      "capability_id": "FEATURE-M03-G07"
+    },
+    {
+      "id": "runtime:M03-G07-UNKNOWN-ACCOUNTING-REFERENCE-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G07-UNKNOWN-ACCOUNTING-REFERENCE-REJECTED",
+      "source": "tests/development/resolution-review.test.mts",
+      "capability_id": "FEATURE-M03-G07"
+    },
+    {
+      "id": "runtime:M03-G10-FEE-CHANGE-INVALIDATES-EXCHANGE-QUOTE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G10-FEE-CHANGE-INVALIDATES-EXCHANGE-QUOTE",
+      "source": "tests/development/resolution-review.test.mts",
+      "capability_id": "FEATURE-M03-G10"
+    },
+    {
+      "id": "runtime:M03-G08-HTTP-APPROVAL-THEN-SYNTHETIC-DISPATCH",
+      "suite": "runtime",
+      "runner_case_id": "M03-G08-HTTP-APPROVAL-THEN-SYNTHETIC-DISPATCH",
+      "source": "tests/development/resolution-api.test.mts",
+      "capability_id": "FEATURE-M03-G08"
+    },
+    {
+      "id": "runtime:M03-G08-HTTP-NO-DEFAULT-FINANCIAL-SOURCE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G08-HTTP-NO-DEFAULT-FINANCIAL-SOURCE",
+      "source": "tests/development/resolution-api.test.mts",
+      "capability_id": "FEATURE-M03-G08"
+    },
+    {
+      "id": "runtime:M03-G07-HTTP-CLIENT-AMOUNT-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M03-G07-HTTP-CLIENT-AMOUNT-REJECTED",
+      "source": "tests/development/resolution-api.test.mts",
+      "capability_id": "FEATURE-M03-G07"
+    },
+    {
+      "id": "runtime:M03-G06-HTTP-CUSTOMER-NO-ALLOCATION-AUTHORITY",
+      "suite": "runtime",
+      "runner_case_id": "M03-G06-HTTP-CUSTOMER-NO-ALLOCATION-AUTHORITY",
+      "source": "tests/development/resolution-api.test.mts",
+      "capability_id": "FEATURE-M03-G06"
+    },
+    {
+      "id": "runtime:M03-G06-HTTP-CROSS-STORE-PLAN-HIDDEN",
+      "suite": "runtime",
+      "runner_case_id": "M03-G06-HTTP-CROSS-STORE-PLAN-HIDDEN",
+      "source": "tests/development/resolution-api.test.mts",
+      "capability_id": "FEATURE-M03-G06"
+    },
+    {
+      "id": "runtime:M03-G06-PRIVACY-REDACTS-ALLOCATION-CONTENT",
+      "suite": "runtime",
+      "runner_case_id": "M03-G06-PRIVACY-REDACTS-ALLOCATION-CONTENT",
+      "source": "tests/development/resolution-api.test.mts",
+      "capability_id": "FEATURE-M03-G06"
+    },
+    {
+      "id": "runtime:M03-G10-HTTP-EXCHANGE-COMMIT-UNAVAILABLE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G10-HTTP-EXCHANGE-COMMIT-UNAVAILABLE",
+      "source": "tests/development/resolution-api.test.mts",
+      "capability_id": "FEATURE-M03-G10"
+    },
+    {
+      "id": "runtime:M03-G08-TWO-PROCESSES-SAME-OBLIGATION",
+      "suite": "runtime",
+      "runner_case_id": "M03-G08-TWO-PROCESSES-SAME-OBLIGATION",
+      "source": "tests/development/refund-execution.test.mts",
+      "capability_id": "FEATURE-M03-G08"
+    },
+    {
+      "id": "runtime:M03-G08-REVIEW-UNRELATED-RESERVATION-DOES-NOT-STALE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G08-REVIEW-UNRELATED-RESERVATION-DOES-NOT-STALE",
+      "source": "tests/development/resolution-review.test.mts",
+      "capability_id": "FEATURE-M03-G08"
     }
   ],
   "protected_files": [
@@ -11665,7 +12489,15 @@
     "tools/test_harness.py",
     "tools/test_runtime.py",
     "tools/verify.py",
-    "work/accepted-goals.json"
+    "work/accepted-goals.json",
+    "tests/development/resolution-ledger.test.mts",
+    "tests/development/refund-quotes.test.mts",
+    "tests/development/refund-execution.test.mts",
+    "tests/development/store-credit.test.mts",
+    "tests/development/variant-exchanges.test.mts",
+    "tests/development/resolution-review.test.mts",
+    "tests/development/resolution-api.test.mts",
+    "tests/development/resolution-helpers.mts"
   ],
   "source_count_fixture": "tests/fixtures/licensing/artifact-oracle.v1.json",
   "source_inventory": "planning/component-inventory.json"
