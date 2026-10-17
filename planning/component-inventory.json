@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "id": "rifare-source-inventory",
-  "revision": 7,
+  "revision": 8,
   "status": "proposed",
   "components": [
     {
@@ -588,6 +588,7 @@
         "tests/development/order-edit-milestone.test.mts",
         "tests/development/order-edit-payments.test.mts",
         "tests/development/order-edit-process.test.mts",
+        "tests/development/order-edit-return-facts.test.mts",
         "tests/development/order-edit-review.test.mts",
         "tests/development/order-edit-workflow.test.mts",
         "tests/development/policies.test.mts",

@@ -12,6 +12,8 @@ The project owner delegated decisions and local merges. [ADR-0025](decisions/002
 
 4. Source responses with a negative hold acknowledgement or a different warehouse identifier could advance local stages despite correct common operation identifiers. Two behavioral failures exposed the gap. Stage-specific receipt checks now require the expected acknowledgement, warehouse, reason, calculated session and version before progressing.
 
+5. A final cross-workflow assertion found that a native edit could retain old return-unit prices, paid-component facts, delivery time and evidence status in the canonical read model. Source projection now removes those stale fields when the authoritative order changes and marks return models as requiring refresh. Completed ledger/receipt history is retained. Future returns require newly qualified facts rather than reusing pre-edit amounts.
+
 ## Review checks and retained obligations
 
 Original executable tests and registrations are retained byte-for-byte. The controller remains exported from the pre-change commit for the first integrated run. New test files cover action-specific windows, shipped/subscription limits, hold ownership, current permissions, native edit CAS, independent finance, unknown outcomes, two-source process boundaries, privacy, REST and portable workflow contracts.

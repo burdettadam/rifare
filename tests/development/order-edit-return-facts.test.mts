@@ -1,0 +1,7 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {usingEdits} from './order-edit-helpers.mts';
+test('M04-REVIEW-12 committed edits invalidate stale return pricing and fulfillment read models',()=>usingEdits(async f=>{
+ const old=f.kernel.get(f.a.scope,f.original.id);f.kernel.ingest(f.a.scope,{kind:'order',source_system:old.source_system,external_id:old.external_id,source_version:old.source_version+1,source_updated_at:f.now(),customer_id:old.customer_id,payload:{...old.payload,return_lines:[{id:'line_one',unit_minor:'999999'}],resolution_facts:{original_paid_minor:'999999'},delivered_at:f.now()-1000,evidence_verified:true}});
+ const e=f.authorize(f.quote({variant_id:'upgrade'})).order_edit_id;await f.edits.dispatch(f.a.scope,e);const changed=f.kernel.get(f.a.scope,f.original.id);
+ assert.equal(changed.payload.total_minor,'3000');assert.equal(changed.payload.return_lines,undefined,'old unit pricing cannot remain available for another return');assert.equal(changed.payload.resolution_facts,undefined,'financial read model must be refreshed after native edit');assert.equal(changed.payload.delivered_at,undefined);assert.equal(changed.payload.evidence_verified,undefined);assert.equal(changed.payload.order_edit_observation.return_read_models_require_refresh,true);
+ assert.equal(f.native.finance(e).amount_minor,'1000');assert.equal(f.native.order(f.original.id).version,2);
+}));

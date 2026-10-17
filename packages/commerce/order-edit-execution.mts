@@ -18,10 +18,11 @@ export class OrderEdits {
  #source(s:Row,identity?:string){const x=this.source;if(!x)throw new Error('EDIT_SOURCE_UNQUALIFIED');if(x.tenant!==s.tenant_id||x.store!==s.store_id||(identity&&x.identity!==identity))throw new Error('EDIT_SOURCE_MISMATCH');return x;}
  #publish(scope:Scope,s:Row,resource:string,o:Row){const k=this.kernel; k.authorize(scope,'resource.ingest',resource);const old=k.get(scope,resource);
   if(o.resource_id!==resource||o.customer_id!==old.customer_id||o.tenant_id!==s.tenant_id||o.store_id!==s.store_id)throw new Error('EDIT_SOURCE_MISMATCH');
-  const observation={source_identity:this.#source(s).identity,version:o.version,digest:contentDigest(safeOrder(o))};if(old.payload.order_edit_observation?.digest===observation.digest)return;
+  const observation={source_identity:this.#source(s).identity,version:o.version,digest:contentDigest(safeOrder(o)),return_read_models_require_refresh:true};if(old.payload.order_edit_observation?.digest===observation.digest)return;
   if(old.payload.order_edit_observation&&old.payload.order_edit_observation.version>o.version)throw new Error('EDIT_SOURCE_REGRESSION');
+  const {return_lines,resolution_facts,delivered_at,evidence_verified,...retained}=old.payload;
   k.ingest(scope,{kind:'order',source_system:old.source_system,external_id:old.external_id,source_version:old.source_version+1,source_updated_at:k.clock(),customer_id:old.customer_id,
-   payload:{...old.payload,currency:o.currency,total_minor:o.total_minor,status:o.cancelled?'cancelled':o.lines.every((l:Row)=>l.status==='shipped'||l.status==='cancelled')?'shipped':'processing',items:o.lines.filter((l:Row)=>l.status!=='cancelled').map((l:Row)=>({sku:l.variant_id,quantity:l.quantity,unit_minor:l.unit_minor})),order_edit_observation:observation}});
+   payload:{...retained,currency:o.currency,total_minor:o.total_minor,status:o.cancelled?'cancelled':o.lines.every((l:Row)=>l.status==='shipped'||l.status==='cancelled')?'shipped':'processing',items:o.lines.filter((l:Row)=>l.status!=='cancelled').map((l:Row)=>({sku:l.variant_id,quantity:l.quantity,unit_minor:l.unit_minor})),order_edit_observation:observation}});
  }
  configure(scope:Scope,input:unknown){const k=this.kernel,p=exact(jsonValue(input),['expected_revision','enabled','expires_at','max_age_ms','warehouses','rules']);integer(p.expected_revision);integer(p.expires_at);integer(p.max_age_ms,1000);
   if(typeof p.enabled!=='boolean'||p.max_age_ms>300000||!Array.isArray(p.warehouses)||!p.warehouses.length||p.warehouses.length>4||new Set(p.warehouses).size!==p.warehouses.length)throw new Error('INVALID_INPUT');for(const w of p.warehouses)id(w);
