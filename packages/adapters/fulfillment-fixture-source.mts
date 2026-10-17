@@ -1,4 +1,5 @@
 import { InstantExchangeFixtureSource } from './instant-exchange-fixture-source.mts';
+import { ReturnDestinationFixtureSource } from './return-destination-fixture-source.mts';
 import { randomUUID } from 'node:crypto';
 import { DatabaseSync } from 'node:sqlite';
 import { exact,id,integer } from '../commerce/kernel.mts';
@@ -11,6 +12,7 @@ import { ResolutionFixtureSource } from './resolution-fixture-source.mts';
 export class FulfillmentFixtureSource {
  readonly db:DatabaseSync;readonly identity:string;readonly tenant:string;readonly store:string;readonly clock:()=>number;
  readonly financeSource:ResolutionFixtureSource|undefined;readonly instantSource:InstantExchangeFixtureSource|undefined;
+ readonly destinations:ReturnDestinationFixtureSource;
  readonly labelTtl:number;readonly qualification='synthetic_only'; readonly mode='fixture_native';
  fault:'none'|'before'|'after'|'malformed'|'hang'='none';
  calls={reserve:0,replace:0,rate:0,buy:0,void:0,lookup:0};
@@ -32,6 +34,7 @@ export class FulfillmentFixtureSource {
   this.identity=this.tx(()=>{let r=db.prepare('SELECT * FROM fixture_identity').get() as Row;
    if(!r){r={id:'fsource_'+randomUUID().replaceAll('-',''),tenant:this.tenant,store:this.store,label:options.identity};db.prepare('INSERT INTO fixture_identity VALUES(?,?,?,?)').run(r.id,r.tenant,r.store,r.label);}
    if(r.tenant!==this.tenant||r.store!==this.store||r.label!==options.identity)throw new Error('FIXTURE_SOURCE_MISMATCH');return r.id;});
+  this.destinations=new ReturnDestinationFixtureSource(db,{identity:this.identity,tenant:this.tenant,store:this.store,clock:this.clock});
   this.instantSource?.bindFulfillmentSource(this);
  }
  tx<T>(fn:()=>T):T{this.db.exec('BEGIN IMMEDIATE');try{const r=fn();this.db.exec('COMMIT');return r;}catch(e){this.db.exec('ROLLBACK');throw e;}}
@@ -66,7 +69,7 @@ export class FulfillmentFixtureSource {
    if(r.state==='committed')throw new Error('RESERVATION_COMMITTED');this.db.prepare("UPDATE fixture_holds SET state='released' WHERE id=?").run(ref);return this.#reservation(this.db.prepare('SELECT * FROM fixture_holds WHERE id=?').get(ref) as Row);});}
  seedRate(input:unknown){const p=exact(jsonValue(input),['service','revision','amount_minor','currency','expires_at']);id(p.service);integer(p.revision,1);integer(p.expires_at);minor(p.amount_minor);if(p.currency!=='USD')throw new Error('RATE_CURRENCY_UNSUPPORTED');
   this.db.prepare('INSERT INTO fixture_rates VALUES(?,?,?,?,?)').run(p.service,p.revision,p.amount_minor,p.currency,p.expires_at);}
- rate(input:Row){this.calls.rate++;this.#bound(input);const r=this.db.prepare('SELECT * FROM fixture_rates WHERE service=?').get(id(input.service)) as Row;
+ rate(input:Row){this.calls.rate++;this.#bound(input);this.destinations.assertRate(input);const r=this.db.prepare('SELECT * FROM fixture_rates WHERE service=?').get(id(input.service)) as Row;
   if(!r||r.expires_at<=this.clock())throw new Error('RATE_UNAVAILABLE');const b={...input,rate_revision:r.revision,amount_minor:r.amount_minor,currency:r.currency,expires_at:Math.min(r.expires_at,this.clock()+300000),qualification:'synthetic_only'};
   return {...b,rate_id:'rate_'+contentDigest(b).slice(0,40)};}
  #effect(command:Row,kind:string,make:()=>Row){this.#bound(command);if(command.kind!==kind)throw new Error('SOURCE_COMMAND_INVALID');
@@ -112,6 +115,7 @@ export class FulfillmentFixtureSource {
   if(this.instantSource)this.instantSource.confirmReplacement(command,command.instant_exchange??null,result);return result;
  });}
  async buy(command:Row){this.calls.buy++;return this.#call(()=>this.#effect(command,'label',()=>{
+  this.destinations.assertCommand(command);
   const rate=command.rate,r=this.db.prepare('SELECT * FROM fixture_rates WHERE service=?').get(rate.service) as Row;
   if(!r||rate.expires_at<=this.clock()||r.expires_at<=this.clock()||r.revision!==rate.rate_revision||r.amount_minor!==rate.amount_minor||r.currency!==rate.currency)throw new Error('RATE_EXPIRED');
   const {rate_id,...value}=rate;if(rate_id!=='rate_'+contentDigest(value).slice(0,40)||rate.parcel_digest!==command.parcel_digest||rate.account_id!==command.account_id||rate.source_identity!==this.identity||rate.tenant_id!==this.tenant||rate.store_id!==this.store)throw new Error('RATE_CHANGED');
@@ -119,7 +123,7 @@ export class FulfillmentFixtureSource {
    if(!old||old.request_id!==command.request_id||old.generation+1!==command.generation||!['confirmed','expired_unused'].includes(old.void_state))throw new Error('LABEL_REPLACEMENT_BLOCKED');}
   const result={...command,id:'label_'+contentDigest(command).slice(0,32),state:'purchased',source_version:1,charge_id:'charge_'+contentDigest(command).slice(0,32),amount_minor:rate.amount_minor,currency:rate.currency,
    tracking_code:'track_'+contentDigest(command).slice(0,24),tracking_state:'label_created',carrier_sequence:0,event_id:null,event_at:null,void_state:'not_requested',reimbursement:{state:'not_requested',amount_minor:'0',reference:null},valid_until:this.clock()+this.labelTtl,qualification:'synthetic_only'};
-  this.#save('fixture_labels',result);return result;
+  this.destinations.admit(command,result.id);this.#save('fixture_labels',result);return result;
  }));}
  async voidLabel(command:Row){this.calls.void++;return this.#call(()=>this.#effect(command,'void',()=>{
   const label=this.#read(this.db.prepare('SELECT * FROM fixture_labels WHERE id=?').get(command.label_id) as Row);

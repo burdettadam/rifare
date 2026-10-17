@@ -211,3 +211,24 @@ contract, golden original-payment fixtures, same-source recovery, bounded calls 
 headless demo are described in [RETURN-RESOLUTION.md](docs/RETURN-RESOLUTION.md).
 The financial source is a separate synthetic database, never a real account. No
 additional package installation or model provider is required.
+
+## M06 final local return-depth assessment
+
+```sh
+node --experimental-strip-types tools/demo-return-depth.mts
+node --experimental-strip-types --test --test-concurrency=1 tests/development/return-depth-integration.test.mts
+```
+
+The first command requires a clean committed checkout and prints ten disposable
+synthetic journeys with the relevant canonical/native ledgers, source pins,
+original operation identities and declared-cost limitations. It accepts no
+credentials or provider options. The shared HTTP service exposes the review
+page at `/return-assistance`; its native-source features need the explicit
+fixture sources passed to `startCommerceServer`. HTTP routes are documented in
+[assistance operations](docs/RETURN-ASSISTANCE-OPERATIONS.md).
+
+The permanent browser tests bridge components to the actual loopback API. This
+is separate from direct served-browser or target-host qualification. Use the
+unchanged external regression controller and protected baseline supplied with
+the cumulative evidence for final integration. Do not regenerate those controls
+from the candidate or count an IPC-restricted file wrapper as native test cases.

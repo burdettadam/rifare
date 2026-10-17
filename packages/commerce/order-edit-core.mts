@@ -1,3 +1,4 @@
+import { assertPreventionConfirmation } from './return-prevention-guards.mts';
 import { exact,id,integer,token } from './kernel.mts';
 import type { CommerceKernel,Scope,Row } from './kernel.mts';
 import { canonical,contentDigest,jsonValue } from './configuration-values.mts';
@@ -63,10 +64,12 @@ export function editGatewayQuote(k:CommerceKernel,scope:Scope,p:Row,quotedAt:num
  if(r.digest!==a.quote_digest||q.case_id!==p.case_id||q.expires_at<=k.clock())throw new Error('EDIT_QUOTE_CHANGED');
  const ir=k.db.prepare('SELECT * FROM commerce_edit_inputs WHERE tenant_id=? AND store_id=? AND id=?').get(s.tenant_id,s.store_id,r.id) as Row,intent=editBody(ir),current=editValue(k,scope,intent,q.quoted_at);
  if(contentDigest(current)!==r.digest)throw new Error('EDIT_QUOTE_CHANGED');
+ assertPreventionConfirmation(k,s,r.id,q);
  return {schema_version:1,tenant_id:s.tenant_id,store_id:s.store_id,case_id:q.case_id,case_revision:q.case_revision,configuration_digest:q.configuration_digest,resource_id:q.resource_id,resource_version:q.source_order_version,source_digest:q.source_order_digest,customer_id:q.customer_id,
   action:EDIT_ACTION,arguments:a,amount:money(q.currency,q.amount_minor),amount_ceiling:money(q.currency,q.amount_minor),readiness_digest:q.settings_digest,control_stamp:q.control_stamp,capability_revision:q.settings_revision,adapter_contract_digest:contentDigest(EDIT_CONTRACT),policy_digest:q.policy_digest,
   decision:{eligible:true,reasons:['SEPARATE_APPROVAL_AND_DOWNSTREAM_HOLD_REQUIRED']},effect_version:0,quoted_at:quotedAt,expires_at:Math.min(quotedAt+300000,q.expires_at),max_uses:1,financial_effect:false};}
 export function commitOrderEdit(k:CommerceKernel,s:Row,p:Row,receiptId:string){const r=k.db.prepare('SELECT * FROM commerce_edit_quotes WHERE tenant_id=? AND store_id=? AND id=?').get(s.tenant_id,s.store_id,p.arguments.quote_id) as Row,q=editBody(r);
+ assertPreventionConfirmation(k,s,r.id,q);
  if(k.db.prepare("SELECT 1 FROM commerce_order_edits WHERE tenant_id=? AND store_id=? AND resource_id=? AND state NOT IN ('released','cancelled','abandoned')").get(s.tenant_id,s.store_id,q.resource_id))throw new Error('EDIT_ALREADY_ACTIVE');
  const ref='edit_'+contentDigest([s.tenant_id,s.store_id,q.resource_id,q.source_order_version,r.digest]).slice(0,40),b={id:ref,case_id:q.case_id,resource_id:q.resource_id,quote_id:r.id,quote_digest:r.digest,receipt_id:receiptId,actor_id:s.actor_id,created_at:k.clock()};
  k.db.prepare("INSERT INTO commerce_order_edits VALUES(?,?,?,?,?,?,?,'authorized',1,?,?,?)").run(s.tenant_id,s.store_id,ref,q.case_id,q.resource_id,r.id,receiptId,q.source_identity,canonical(b),contentDigest(b));editEvent(k,s,ref,'authorized',{receipt_id:receiptId,quote_digest:r.digest});return ref;}

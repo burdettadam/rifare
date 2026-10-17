@@ -1,0 +1,206 @@
+{
+  "version": 1,
+  "base_schema_digest": "41e92a1cf3d51f8ba30be6cff31c5e8f382b5b5d624bcf546a3734f9d43fc3e1",
+  "schema_digest": "5b86a35a754ee03b71f28d6b60cb14f531b896072e37dde06950f39610d0e9f2",
+  "tables": [
+    {
+      "name": "commerce_destination_bindings",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "request_id",
+        "case_id",
+        "resource_id",
+        "revision",
+        "source_identity",
+        "body",
+        "digest",
+        "observed_at"
+      ],
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_destination_policies",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "revision",
+        "body",
+        "digest"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_destination_selections",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "request_id",
+        "case_id",
+        "resource_id",
+        "revision",
+        "source_identity",
+        "body",
+        "digest",
+        "observed_at"
+      ],
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_prevention_configurations",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "version",
+        "body",
+        "digest",
+        "author",
+        "reviewer",
+        "reviewer_revision",
+        "state",
+        "created_at"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_prevention_confirmations",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "quote_id",
+        "case_id",
+        "resource_id",
+        "customer_id",
+        "session_hash",
+        "body",
+        "digest",
+        "revoked",
+        "created_at"
+      ],
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_prevention_experiments",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "body",
+        "digest",
+        "created_at"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_prevention_exposures",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "experiment_id",
+        "case_id",
+        "resource_id",
+        "customer_id",
+        "event_id",
+        "body",
+        "digest",
+        "created_at"
+      ],
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_prevention_members",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "experiment_id",
+        "case_id",
+        "resource_id",
+        "customer_id",
+        "arm",
+        "body",
+        "digest"
+      ],
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_prevention_outcomes",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "experiment_id",
+        "case_id",
+        "resource_id",
+        "customer_id",
+        "source_version",
+        "body",
+        "digest",
+        "observed_at"
+      ],
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_prevention_previews",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "quote_id",
+        "case_id",
+        "resource_id",
+        "customer_id",
+        "body",
+        "digest",
+        "created_at"
+      ],
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_return_policy_packs",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "revision",
+        "body",
+        "digest",
+        "author",
+        "observed_at"
+      ],
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_risk_assessments",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "case_id",
+        "resource_id",
+        "customer_id",
+        "author",
+        "body",
+        "digest",
+        "created_at"
+      ],
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_risk_reviews",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "assessment_id",
+        "case_id",
+        "resource_id",
+        "actor_id",
+        "kind",
+        "body",
+        "digest",
+        "created_at"
+      ],
+      "handling": "subject_linked_pseudonymize_and_disable"
+    }
+  ]
+}

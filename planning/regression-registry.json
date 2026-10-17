@@ -951,6 +951,67 @@
         "migrations/commerce/026_instant_exchanges.sql",
         "tests/fixtures/instant-exchanges/independent-values.json"
       ]
+    },
+    {
+      "id": "FEATURE-M06-G11",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M06/M06-G11.md",
+        "packages/commerce/risk-assistance.mts",
+        "migrations/commerce/028_risk_prevention.sql",
+        "tests/fixtures/assistance/risk-golden.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M06-G12",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M06/M06-G12.md",
+        "packages/commerce/qualified-return-destinations.mts",
+        "packages/adapters/return-destination-fixture-source.mts",
+        "migrations/commerce/027_qualified_return_destinations.sql",
+        "tests/fixtures/qualified-destinations/routing.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M06-G13",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M06/M06-G13.md",
+        "packages/commerce/return-prevention.mts",
+        "packages/commerce/return-prevention-guards.mts",
+        "packages/commerce/prevention-experiments.mts",
+        "packages/adapters/prevention-source-guards.mts",
+        "migrations/commerce/028_risk_prevention.sql",
+        "tests/fixtures/assistance/prevention-golden.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M06-G14",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M06/M06-G14.md",
+        "packages/commerce/return-policy-packs.mts",
+        "migrations/commerce/029_return_policy_packs.sql",
+        "tests/fixtures/return-policy-packs/scenarios.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M06-G99",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M06/M06-G99.md",
+        "packages/commerce/return-economics.mts",
+        "packages/commerce/return-depth-api.mts",
+        "packages/commerce/contracts/storage-return-assistance-extension.v1.json",
+        "work/qualification/M06.json",
+        "tests/fixtures/return-depth/milestone-values.v1.json"
+      ]
     }
   ],
   "tests": [
@@ -16934,6 +16995,895 @@
       "runner_case_id": "M06-G08-OVERSIZED-FINAL-BEFORE-APPROVAL-BLOCKS-NEGATIVE-REFUND",
       "source": "tests/development/exchange-fees.test.mts",
       "capability_id": "FEATURE-M06-G08"
+    },
+    {
+      "id": "runtime:M06-PREVENTION-METRICS-01",
+      "suite": "runtime",
+      "runner_case_id": "M06-PREVENTION-METRICS-01",
+      "source": "tests/development/prevention-experiments.test.mts",
+      "capability_id": "FEATURE-M06-G13"
+    },
+    {
+      "id": "runtime:M06-PREVENTION-METRICS-02",
+      "suite": "runtime",
+      "runner_case_id": "M06-PREVENTION-METRICS-02",
+      "source": "tests/development/prevention-experiments.test.mts",
+      "capability_id": "FEATURE-M06-G13"
+    },
+    {
+      "id": "runtime:M06-PREVENTION-METRICS-03",
+      "suite": "runtime",
+      "runner_case_id": "M06-PREVENTION-METRICS-03",
+      "source": "tests/development/prevention-experiments.test.mts",
+      "capability_id": "FEATURE-M06-G13"
+    },
+    {
+      "id": "runtime:M06-PREVENTION-METRICS-04",
+      "suite": "runtime",
+      "runner_case_id": "M06-PREVENTION-METRICS-04",
+      "source": "tests/development/prevention-experiments.test.mts",
+      "capability_id": "FEATURE-M06-G13"
+    },
+    {
+      "id": "runtime:M06-PREVENTION-METRICS-05",
+      "suite": "runtime",
+      "runner_case_id": "M06-PREVENTION-METRICS-05",
+      "source": "tests/development/prevention-experiments.test.mts",
+      "capability_id": "FEATURE-M06-G13"
+    },
+    {
+      "id": "runtime:M06-PREVENTION-METRICS-06",
+      "suite": "runtime",
+      "runner_case_id": "M06-PREVENTION-METRICS-06",
+      "source": "tests/development/prevention-experiments.test.mts",
+      "capability_id": "FEATURE-M06-G13"
+    },
+    {
+      "id": "runtime:M06-PREVENTION-METRICS-07",
+      "suite": "runtime",
+      "runner_case_id": "M06-PREVENTION-METRICS-07",
+      "source": "tests/development/prevention-experiments.test.mts",
+      "capability_id": "FEATURE-M06-G13"
+    },
+    {
+      "id": "runtime:M06-PREVENTION-METRICS-08",
+      "suite": "runtime",
+      "runner_case_id": "M06-PREVENTION-METRICS-08",
+      "source": "tests/development/prevention-experiments.test.mts",
+      "capability_id": "FEATURE-M06-G13"
+    },
+    {
+      "id": "runtime:M06-PREVENTION-METRICS-09",
+      "suite": "runtime",
+      "runner_case_id": "M06-PREVENTION-METRICS-09",
+      "source": "tests/development/prevention-experiments.test.mts",
+      "capability_id": "FEATURE-M06-G13"
+    },
+    {
+      "id": "runtime:M06-PREVENTION-METRICS-10",
+      "suite": "runtime",
+      "runner_case_id": "M06-PREVENTION-METRICS-10",
+      "source": "tests/development/prevention-experiments.test.mts",
+      "capability_id": "FEATURE-M06-G13"
+    },
+    {
+      "id": "runtime:M06-PREVENTION-METRICS-11",
+      "suite": "runtime",
+      "runner_case_id": "M06-PREVENTION-METRICS-11",
+      "source": "tests/development/prevention-experiments.test.mts",
+      "capability_id": "FEATURE-M06-G13"
+    },
+    {
+      "id": "runtime:M06-PREVENTION-METRICS-12",
+      "suite": "runtime",
+      "runner_case_id": "M06-PREVENTION-METRICS-12",
+      "source": "tests/development/prevention-experiments.test.mts",
+      "capability_id": "FEATURE-M06-G13"
+    },
+    {
+      "id": "runtime:M06-G12-TWO-PROCESS-LAST-CAPACITY-ADMISSION",
+      "suite": "runtime",
+      "runner_case_id": "M06-G12-TWO-PROCESS-LAST-CAPACITY-ADMISSION",
+      "source": "tests/development/qualified-destinations-races.test.mts",
+      "capability_id": "FEATURE-M06-G12"
+    },
+    {
+      "id": "runtime:M06-G12-TWO-PROCESS-SAME-LABEL-HAS-ONE-ADMISSION",
+      "suite": "runtime",
+      "runner_case_id": "M06-G12-TWO-PROCESS-SAME-LABEL-HAS-ONE-ADMISSION",
+      "source": "tests/development/qualified-destinations-races.test.mts",
+      "capability_id": "FEATURE-M06-G12"
+    },
+    {
+      "id": "runtime:M06-G12-LOST-SELECTION-RESPONSE-RECOVERS-TO-QUALIFIED-ALTERNATIVE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G12-LOST-SELECTION-RESPONSE-RECOVERS-TO-QUALIFIED-ALTERNATIVE",
+      "source": "tests/development/qualified-destinations-recovery.test.mts",
+      "capability_id": "FEATURE-M06-G12"
+    },
+    {
+      "id": "runtime:M06-G12-LOST-POLICY-RESPONSE-RECOVERS-WITH-CURRENT-RESTRICTIONS",
+      "suite": "runtime",
+      "runner_case_id": "M06-G12-LOST-POLICY-RESPONSE-RECOVERS-WITH-CURRENT-RESTRICTIONS",
+      "source": "tests/development/qualified-destinations-recovery.test.mts",
+      "capability_id": "FEATURE-M06-G12"
+    },
+    {
+      "id": "runtime:M06-G12-UNKNOWN-LABEL-BLOCKS-NEW-DESTINATION-SELECTION",
+      "suite": "runtime",
+      "runner_case_id": "M06-G12-UNKNOWN-LABEL-BLOCKS-NEW-DESTINATION-SELECTION",
+      "source": "tests/development/qualified-destinations-recovery.test.mts",
+      "capability_id": "FEATURE-M06-G12"
+    },
+    {
+      "id": "runtime:M06-G12-CONFIRMED-VOID-RELEASES-CAPACITY-FOR-APPROVED-REPLACEMENT",
+      "suite": "runtime",
+      "runner_case_id": "M06-G12-CONFIRMED-VOID-RELEASES-CAPACITY-FOR-APPROVED-REPLACEMENT",
+      "source": "tests/development/qualified-destinations-recovery.test.mts",
+      "capability_id": "FEATURE-M06-G12"
+    },
+    {
+      "id": "runtime:CASE-M06-G12-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M06-G12-01",
+      "source": "tests/development/qualified-destinations.test.mts",
+      "capability_id": "FEATURE-M06-G12"
+    },
+    {
+      "id": "runtime:CASE-M06-G12-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M06-G12-02",
+      "source": "tests/development/qualified-destinations.test.mts",
+      "capability_id": "FEATURE-M06-G12"
+    },
+    {
+      "id": "runtime:CASE-M06-G12-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M06-G12-03",
+      "source": "tests/development/qualified-destinations.test.mts",
+      "capability_id": "FEATURE-M06-G12"
+    },
+    {
+      "id": "runtime:M06-G12-REVOKED-AFTER-APPROVAL-BLOCKS-CORE-DISPATCH",
+      "suite": "runtime",
+      "runner_case_id": "M06-G12-REVOKED-AFTER-APPROVAL-BLOCKS-CORE-DISPATCH",
+      "source": "tests/development/qualified-destinations.test.mts",
+      "capability_id": "FEATURE-M06-G12"
+    },
+    {
+      "id": "runtime:M06-G12-REVOKED-AFTER-APPROVAL-BLOCKS-NATIVE-PURCHASE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G12-REVOKED-AFTER-APPROVAL-BLOCKS-NATIVE-PURCHASE",
+      "source": "tests/development/qualified-destinations.test.mts",
+      "capability_id": "FEATURE-M06-G12"
+    },
+    {
+      "id": "runtime:M06-G12-OPTIONAL-ROUTING-METADATA-STRIPPING-FAILS-CLOSED",
+      "suite": "runtime",
+      "runner_case_id": "M06-G12-OPTIONAL-ROUTING-METADATA-STRIPPING-FAILS-CLOSED",
+      "source": "tests/development/qualified-destinations.test.mts",
+      "capability_id": "FEATURE-M06-G12"
+    },
+    {
+      "id": "runtime:M06-G12-UNREGISTERED-REQUEST-CANNOT-BYPASS-QUALIFIED-ACCOUNT",
+      "suite": "runtime",
+      "runner_case_id": "M06-G12-UNREGISTERED-REQUEST-CANNOT-BYPASS-QUALIFIED-ACCOUNT",
+      "source": "tests/development/qualified-destinations.test.mts",
+      "capability_id": "FEATURE-M06-G12"
+    },
+    {
+      "id": "runtime:M06-G12-RECOMPUTED-RATE-HASH-CANNOT-BYPASS-NATIVE-ROUTING",
+      "suite": "runtime",
+      "runner_case_id": "M06-G12-RECOMPUTED-RATE-HASH-CANNOT-BYPASS-NATIVE-ROUTING",
+      "source": "tests/development/qualified-destinations.test.mts",
+      "capability_id": "FEATURE-M06-G12"
+    },
+    {
+      "id": "runtime:M06-G12-CAPACITY-EXHAUSTION-INVALIDATES-QUOTE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G12-CAPACITY-EXHAUSTION-INVALIDATES-QUOTE",
+      "source": "tests/development/qualified-destinations.test.mts",
+      "capability_id": "FEATURE-M06-G12"
+    },
+    {
+      "id": "runtime:M06-G12-NATIVE-ITEM-AND-REGION-CHANGES-INVALIDATE-ROUTE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G12-NATIVE-ITEM-AND-REGION-CHANGES-INVALIDATE-ROUTE",
+      "source": "tests/development/qualified-destinations.test.mts",
+      "capability_id": "FEATURE-M06-G12"
+    },
+    {
+      "id": "runtime:M06-G12-SOURCE-ORIGINAL-ITEM-MISMATCH-IS-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M06-G12-SOURCE-ORIGINAL-ITEM-MISMATCH-IS-REJECTED",
+      "source": "tests/development/qualified-destinations.test.mts",
+      "capability_id": "FEATURE-M06-G12"
+    },
+    {
+      "id": "runtime:M06-G12-HANDLING-FEE-CHANGE-INVALIDATES-LABEL-QUOTE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G12-HANDLING-FEE-CHANGE-INVALIDATES-LABEL-QUOTE",
+      "source": "tests/development/qualified-destinations.test.mts",
+      "capability_id": "FEATURE-M06-G12"
+    },
+    {
+      "id": "runtime:M06-G12-POLICY-RESTRICTIONS-CANNOT-GRANT-DESTINATION-AUTHORITY",
+      "suite": "runtime",
+      "runner_case_id": "M06-G12-POLICY-RESTRICTIONS-CANNOT-GRANT-DESTINATION-AUTHORITY",
+      "source": "tests/development/qualified-destinations.test.mts",
+      "capability_id": "FEATURE-M06-G12"
+    },
+    {
+      "id": "runtime:M06-G12-POLICY-REVISION-INVALIDATES-PRIOR-APPROVAL",
+      "suite": "runtime",
+      "runner_case_id": "M06-G12-POLICY-REVISION-INVALIDATES-PRIOR-APPROVAL",
+      "source": "tests/development/qualified-destinations.test.mts",
+      "capability_id": "FEATURE-M06-G12"
+    },
+    {
+      "id": "runtime:M06-G12-NATIVE-QUALIFICATION-EXPIRY-BLOCKS-NEW-PURCHASE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G12-NATIVE-QUALIFICATION-EXPIRY-BLOCKS-NEW-PURCHASE",
+      "source": "tests/development/qualified-destinations.test.mts",
+      "capability_id": "FEATURE-M06-G12"
+    },
+    {
+      "id": "runtime:M06-G12-MISSING-NATIVE-CAPABILITY-BLOCKS-ROUTING",
+      "suite": "runtime",
+      "runner_case_id": "M06-G12-MISSING-NATIVE-CAPABILITY-BLOCKS-ROUTING",
+      "source": "tests/development/qualified-destinations.test.mts",
+      "capability_id": "FEATURE-M06-G12"
+    },
+    {
+      "id": "runtime:M06-G12-UNKNOWN-PURCHASE-RECONCILES-ORIGINAL-AFTER-REVOCATION",
+      "suite": "runtime",
+      "runner_case_id": "M06-G12-UNKNOWN-PURCHASE-RECONCILES-ORIGINAL-AFTER-REVOCATION",
+      "source": "tests/development/qualified-destinations.test.mts",
+      "capability_id": "FEATURE-M06-G12"
+    },
+    {
+      "id": "runtime:M06-G12-MANUAL-PARCEL-DESTINATION-EDIT-CANNOT-BYPASS-SELECTION",
+      "suite": "runtime",
+      "runner_case_id": "M06-G12-MANUAL-PARCEL-DESTINATION-EDIT-CANNOT-BYPASS-SELECTION",
+      "source": "tests/development/qualified-destinations.test.mts",
+      "capability_id": "FEATURE-M06-G12"
+    },
+    {
+      "id": "runtime:M06-G12-ROUTING-RECHECKS-TENANT-AND-AUTHORITY",
+      "suite": "runtime",
+      "runner_case_id": "M06-G12-ROUTING-RECHECKS-TENANT-AND-AUTHORITY",
+      "source": "tests/development/qualified-destinations.test.mts",
+      "capability_id": "FEATURE-M06-G12"
+    },
+    {
+      "id": "runtime:M06-G12-NATIVE-SOURCE-MUST-BE-SEPARATE-FROM-CORE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G12-NATIVE-SOURCE-MUST-BE-SEPARATE-FROM-CORE",
+      "source": "tests/development/qualified-destinations.test.mts",
+      "capability_id": "FEATURE-M06-G12"
+    },
+    {
+      "id": "runtime:M06-G12-LEGACY-UNCONFIGURED-LABELS-RETAIN-EXISTING-BEHAVIOR",
+      "suite": "runtime",
+      "runner_case_id": "M06-G12-LEGACY-UNCONFIGURED-LABELS-RETAIN-EXISTING-BEHAVIOR",
+      "source": "tests/development/qualified-destinations.test.mts",
+      "capability_id": "FEATURE-M06-G12"
+    },
+    {
+      "id": "runtime:M06-G11-BROWSER-SOURCE-UNCERTAINTY-AND-AUTHENTICATED-APPEAL",
+      "suite": "runtime",
+      "runner_case_id": "M06-G11-BROWSER-SOURCE-UNCERTAINTY-AND-AUTHENTICATED-APPEAL",
+      "source": "tests/development/return-assistance-browser.test.mts",
+      "capability_id": "FEATURE-M06-G11"
+    },
+    {
+      "id": "runtime:M06-G12-BROWSER-ELIGIBLE-DESTINATIONS-AND-SEPARATE-HANDLING-ESTIMATE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G12-BROWSER-ELIGIBLE-DESTINATIONS-AND-SEPARATE-HANDLING-ESTIMATE",
+      "source": "tests/development/return-assistance-browser.test.mts",
+      "capability_id": "FEATURE-M06-G12"
+    },
+    {
+      "id": "runtime:M06-G13-BROWSER-EXACT-TOTALS-AND-CUSTOMER-CONFIRMATION",
+      "suite": "runtime",
+      "runner_case_id": "M06-G13-BROWSER-EXACT-TOTALS-AND-CUSTOMER-CONFIRMATION",
+      "source": "tests/development/return-assistance-browser.test.mts",
+      "capability_id": "FEATURE-M06-G13"
+    },
+    {
+      "id": "runtime:M06-G14-BROWSER-EXACT-PUBLISHED-PACK-AND-SHARED-SKILL",
+      "suite": "runtime",
+      "runner_case_id": "M06-G14-BROWSER-EXACT-PUBLISHED-PACK-AND-SHARED-SKILL",
+      "source": "tests/development/return-assistance-browser.test.mts",
+      "capability_id": "FEATURE-M06-G14"
+    },
+    {
+      "id": "runtime:M06-G14-BROWSER-INPUT-CHANGE-INVALIDATES-LATE-PACK-RESPONSE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G14-BROWSER-INPUT-CHANGE-INVALIDATES-LATE-PACK-RESPONSE",
+      "source": "tests/development/return-assistance-browser.test.mts",
+      "capability_id": "FEATURE-M06-G14"
+    },
+    {
+      "id": "runtime:M06-G99-BROWSER-MISSING-COSTS-ARE-UNKNOWN-AND-PROFITABILITY-UNVERIFIED",
+      "suite": "runtime",
+      "runner_case_id": "M06-G99-BROWSER-MISSING-COSTS-ARE-UNKNOWN-AND-PROFITABILITY-UNVERIFIED",
+      "source": "tests/development/return-assistance-browser.test.mts",
+      "capability_id": "FEATURE-M06-G99"
+    },
+    {
+      "id": "runtime:M06-G11-HTTP-ASSESSMENT-REVIEW-AND-NEUTRAL-CUSTOMER-APPEAL",
+      "suite": "runtime",
+      "runner_case_id": "M06-G11-HTTP-ASSESSMENT-REVIEW-AND-NEUTRAL-CUSTOMER-APPEAL",
+      "source": "tests/development/return-depth-api.test.mts",
+      "capability_id": "FEATURE-M06-G11"
+    },
+    {
+      "id": "runtime:M06-G11-HTTP-SCOPE-STRICT-INPUT-AND-SAFE-LOGS",
+      "suite": "runtime",
+      "runner_case_id": "M06-G11-HTTP-SCOPE-STRICT-INPUT-AND-SAFE-LOGS",
+      "source": "tests/development/return-depth-api.test.mts",
+      "capability_id": "FEATURE-M06-G11"
+    },
+    {
+      "id": "runtime:M06-G12-HTTP-QUALIFIED-EVALUATION-AND-SELECTION-PURCHASE-NOTHING",
+      "suite": "runtime",
+      "runner_case_id": "M06-G12-HTTP-QUALIFIED-EVALUATION-AND-SELECTION-PURCHASE-NOTHING",
+      "source": "tests/development/return-depth-api.test.mts",
+      "capability_id": "FEATURE-M06-G12"
+    },
+    {
+      "id": "runtime:M06-G12-HTTP-NO-NATIVE-QUALIFICATION-ADMINISTRATION",
+      "suite": "runtime",
+      "runner_case_id": "M06-G12-HTTP-NO-NATIVE-QUALIFICATION-ADMINISTRATION",
+      "source": "tests/development/return-depth-api.test.mts",
+      "capability_id": "FEATURE-M06-G12"
+    },
+    {
+      "id": "runtime:M06-G12-HTTP-MISSING-NATIVE-SOURCE-REMAINS-UNAVAILABLE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G12-HTTP-MISSING-NATIVE-SOURCE-REMAINS-UNAVAILABLE",
+      "source": "tests/development/return-depth-api.test.mts",
+      "capability_id": "FEATURE-M06-G12"
+    },
+    {
+      "id": "runtime:M06-G13-HTTP-CUSTOMER-CONFIRMATION-IS-SEPARATE-FROM-STAFF-APPROVAL",
+      "suite": "runtime",
+      "runner_case_id": "M06-G13-HTTP-CUSTOMER-CONFIRMATION-IS-SEPARATE-FROM-STAFF-APPROVAL",
+      "source": "tests/development/return-depth-api.test.mts",
+      "capability_id": "FEATURE-M06-G13"
+    },
+    {
+      "id": "runtime:M06-G13-HTTP-CANNOT-MANUFACTURE-NATIVE-CONSENT-OR-COHORT-OUTCOMES",
+      "suite": "runtime",
+      "runner_case_id": "M06-G13-HTTP-CANNOT-MANUFACTURE-NATIVE-CONSENT-OR-COHORT-OUTCOMES",
+      "source": "tests/development/return-depth-api.test.mts",
+      "capability_id": "FEATURE-M06-G13"
+    },
+    {
+      "id": "runtime:M06-G14-HTTP-PACK-EVALUATION-REUSES-REAL-POLICY",
+      "suite": "runtime",
+      "runner_case_id": "M06-G14-HTTP-PACK-EVALUATION-REUSES-REAL-POLICY",
+      "source": "tests/development/return-depth-api.test.mts",
+      "capability_id": "FEATURE-M06-G14"
+    },
+    {
+      "id": "runtime:M06-G99-HTTP-COST-REPORT-PRESERVES-UNKNOWN-COSTS",
+      "suite": "runtime",
+      "runner_case_id": "M06-G99-HTTP-COST-REPORT-PRESERVES-UNKNOWN-COSTS",
+      "source": "tests/development/return-depth-api.test.mts",
+      "capability_id": "FEATURE-M06-G99"
+    },
+    {
+      "id": "runtime:CASE-M06-G99-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M06-G99-01",
+      "source": "tests/development/return-depth-integration.test.mts",
+      "capability_id": "FEATURE-M06-G99"
+    },
+    {
+      "id": "runtime:CASE-M06-G99-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M06-G99-02",
+      "source": "tests/development/return-depth-integration.test.mts",
+      "capability_id": "FEATURE-M06-G99"
+    },
+    {
+      "id": "runtime:M06-G99-OUT-OF-STOCK-FALLBACK-PRESERVES-ALLOCATION",
+      "suite": "runtime",
+      "runner_case_id": "M06-G99-OUT-OF-STOCK-FALLBACK-PRESERVES-ALLOCATION",
+      "source": "tests/development/return-depth-integration.test.mts",
+      "capability_id": "FEATURE-M06-G99"
+    },
+    {
+      "id": "runtime:M06-G99-NONRETURN-EXPIRED-MANDATE-REQUIRES-FRESH-CONSENT",
+      "suite": "runtime",
+      "runner_case_id": "M06-G99-NONRETURN-EXPIRED-MANDATE-REQUIRES-FRESH-CONSENT",
+      "source": "tests/development/return-depth-integration.test.mts",
+      "capability_id": "FEATURE-M06-G99"
+    },
+    {
+      "id": "runtime:M06-G99-NONRETURN-UNKNOWN-CAPTURE-RETAINS-ORIGINAL-CEILING-AND-ID",
+      "suite": "runtime",
+      "runner_case_id": "M06-G99-NONRETURN-UNKNOWN-CAPTURE-RETAINS-ORIGINAL-CEILING-AND-ID",
+      "source": "tests/development/return-depth-integration.test.mts",
+      "capability_id": "FEATURE-M06-G99"
+    },
+    {
+      "id": "runtime:M06-G99-FINAL-FEE-DISCREPANCY-STAYS-AN-OPEN-OBLIGATION",
+      "suite": "runtime",
+      "runner_case_id": "M06-G99-FINAL-FEE-DISCREPANCY-STAYS-AN-OPEN-OBLIGATION",
+      "source": "tests/development/return-depth-integration.test.mts",
+      "capability_id": "FEATURE-M06-G99"
+    },
+    {
+      "id": "runtime:M06-G99-MISSING-COST-IS-UNKNOWN-INSTEAD-OF-ZERO",
+      "suite": "runtime",
+      "runner_case_id": "M06-G99-MISSING-COST-IS-UNKNOWN-INSTEAD-OF-ZERO",
+      "source": "tests/development/return-depth-integration.test.mts",
+      "capability_id": "FEATURE-M06-G99"
+    },
+    {
+      "id": "runtime:M06-G99-DUPLICATE-COST-EVENT-DOES-NOT-INFLATE-CONTRIBUTION",
+      "suite": "runtime",
+      "runner_case_id": "M06-G99-DUPLICATE-COST-EVENT-DOES-NOT-INFLATE-CONTRIBUTION",
+      "source": "tests/development/return-depth-integration.test.mts",
+      "capability_id": "FEATURE-M06-G99"
+    },
+    {
+      "id": "runtime:M06-G99-DUPLICATE-RESOURCE-COHORT-CANNOT-DOUBLE-COUNT-RETAINED-VALUE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G99-DUPLICATE-RESOURCE-COHORT-CANNOT-DOUBLE-COUNT-RETAINED-VALUE",
+      "source": "tests/development/return-depth-integration.test.mts",
+      "capability_id": "FEATURE-M06-G99"
+    },
+    {
+      "id": "runtime:M06-G99-ECONOMICS-REQUIRES-ANALYTICS-SCOPE-AND-SAME-STORE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G99-ECONOMICS-REQUIRES-ANALYTICS-SCOPE-AND-SAME-STORE",
+      "source": "tests/development/return-depth-integration.test.mts",
+      "capability_id": "FEATURE-M06-G99"
+    },
+    {
+      "id": "runtime:M06-G99-ECONOMICS-RETAINS-UNKNOWN-OPERATION-AND-DECLARED-COST-LIMIT",
+      "suite": "runtime",
+      "runner_case_id": "M06-G99-ECONOMICS-RETAINS-UNKNOWN-OPERATION-AND-DECLARED-COST-LIMIT",
+      "source": "tests/development/return-depth-integration.test.mts",
+      "capability_id": "FEATURE-M06-G99"
+    },
+    {
+      "id": "runtime:M06-G99-ECONOMICS-REJECTS-ALTERED-LEDGER-AMOUNTS",
+      "suite": "runtime",
+      "runner_case_id": "M06-G99-ECONOMICS-REJECTS-ALTERED-LEDGER-AMOUNTS",
+      "source": "tests/development/return-depth-integration.test.mts",
+      "capability_id": "FEATURE-M06-G99"
+    },
+    {
+      "id": "runtime:M06-G99-PACK-EVALUATION-DOES-NOT-SELF-ACCEPT-A-MERCHANT",
+      "suite": "runtime",
+      "runner_case_id": "M06-G99-PACK-EVALUATION-DOES-NOT-SELF-ACCEPT-A-MERCHANT",
+      "source": "tests/development/return-depth-integration.test.mts",
+      "capability_id": "FEATURE-M06-G99"
+    },
+    {
+      "id": "runtime:M06-FINAL-PRIVACY-INVENTORY-REQUIRES-ALL-167-TABLES",
+      "suite": "runtime",
+      "runner_case_id": "M06-FINAL-PRIVACY-INVENTORY-REQUIRES-ALL-167-TABLES",
+      "source": "tests/development/return-depth-privacy.test.mts",
+      "capability_id": "FEATURE-M06-G99"
+    },
+    {
+      "id": "runtime:M06-G11-PRIVACY-EXPORT-AND-ERASURE-COVER-INDICATORS-AND-APPEALS",
+      "suite": "runtime",
+      "runner_case_id": "M06-G11-PRIVACY-EXPORT-AND-ERASURE-COVER-INDICATORS-AND-APPEALS",
+      "source": "tests/development/return-depth-privacy.test.mts",
+      "capability_id": "FEATURE-M06-G11"
+    },
+    {
+      "id": "runtime:M06-G13-PRIVACY-REVOKES-CONSENT-AND-KEEPS-FROZEN-DENOMINATOR",
+      "suite": "runtime",
+      "runner_case_id": "M06-G13-PRIVACY-REVOKES-CONSENT-AND-KEEPS-FROZEN-DENOMINATOR",
+      "source": "tests/development/return-depth-privacy.test.mts",
+      "capability_id": "FEATURE-M06-G13"
+    },
+    {
+      "id": "runtime:M06-G12-PRIVACY-ERASES-ROUTING-SUBJECT-BODIES-KEEPS-POLICY",
+      "suite": "runtime",
+      "runner_case_id": "M06-G12-PRIVACY-ERASES-ROUTING-SUBJECT-BODIES-KEEPS-POLICY",
+      "source": "tests/development/return-depth-privacy.test.mts",
+      "capability_id": "FEATURE-M06-G12"
+    },
+    {
+      "id": "runtime:M06-G13-PRIVACY-REMOVES-UNBOUND-GUIDANCE-COPIES-ACROSS-VERSIONS-AND-CUSTOMERS",
+      "suite": "runtime",
+      "runner_case_id": "M06-G13-PRIVACY-REMOVES-UNBOUND-GUIDANCE-COPIES-ACROSS-VERSIONS-AND-CUSTOMERS",
+      "source": "tests/development/return-depth-privacy.test.mts",
+      "capability_id": "FEATURE-M06-G13"
+    },
+    {
+      "id": "runtime:M06-G14-REAL-QUALIFIED-DESTINATION-CONTRIBUTES-READINESS-WITHOUT-REAUTHORIZATION",
+      "suite": "runtime",
+      "runner_case_id": "M06-G14-REAL-QUALIFIED-DESTINATION-CONTRIBUTES-READINESS-WITHOUT-REAUTHORIZATION",
+      "source": "tests/development/return-policy-pack-routing.test.mts",
+      "capability_id": "FEATURE-M06-G14"
+    },
+    {
+      "id": "runtime:M06-G14-PACK-DESTINATION-LIST-CANNOT-QUALIFY-UNCONTRACTED-DESTINATION",
+      "suite": "runtime",
+      "runner_case_id": "M06-G14-PACK-DESTINATION-LIST-CANNOT-QUALIFY-UNCONTRACTED-DESTINATION",
+      "source": "tests/development/return-policy-pack-routing.test.mts",
+      "capability_id": "FEATURE-M06-G14"
+    },
+    {
+      "id": "runtime:M06-G14-REQUEST-AND-SELECTION-MUST-REFER-TO-THE-SAME-ITEMS",
+      "suite": "runtime",
+      "runner_case_id": "M06-G14-REQUEST-AND-SELECTION-MUST-REFER-TO-THE-SAME-ITEMS",
+      "source": "tests/development/return-policy-pack-routing.test.mts",
+      "capability_id": "FEATURE-M06-G14"
+    },
+    {
+      "id": "runtime:M06-G14-PACK-READINESS-CHANGES-WHEN-NATIVE-DESTINATION-IS-REVOKED",
+      "suite": "runtime",
+      "runner_case_id": "M06-G14-PACK-READINESS-CHANGES-WHEN-NATIVE-DESTINATION-IS-REVOKED",
+      "source": "tests/development/return-policy-pack-routing.test.mts",
+      "capability_id": "FEATURE-M06-G14"
+    },
+    {
+      "id": "runtime:CASE-M06-G14-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M06-G14-01",
+      "source": "tests/development/return-policy-packs.test.mts",
+      "capability_id": "FEATURE-M06-G14"
+    },
+    {
+      "id": "runtime:CASE-M06-G14-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M06-G14-02",
+      "source": "tests/development/return-policy-packs.test.mts",
+      "capability_id": "FEATURE-M06-G14"
+    },
+    {
+      "id": "runtime:CASE-M06-G14-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M06-G14-03",
+      "source": "tests/development/return-policy-packs.test.mts",
+      "capability_id": "FEATURE-M06-G14"
+    },
+    {
+      "id": "runtime:PORT-017",
+      "suite": "runtime",
+      "runner_case_id": "PORT-017",
+      "source": "tests/development/return-policy-packs.test.mts",
+      "capability_id": "FEATURE-M06-G14"
+    },
+    {
+      "id": "runtime:M06-G14-PACK-WRITE-REQUIRES-CONFIGURATION-AUTHORITY",
+      "suite": "runtime",
+      "runner_case_id": "M06-G14-PACK-WRITE-REQUIRES-CONFIGURATION-AUTHORITY",
+      "source": "tests/development/return-policy-packs.test.mts",
+      "capability_id": "FEATURE-M06-G14"
+    },
+    {
+      "id": "runtime:M06-G14-PACK-READ-DENIES-OTHER-STORE-AND-CUSTOMER",
+      "suite": "runtime",
+      "runner_case_id": "M06-G14-PACK-READ-DENIES-OTHER-STORE-AND-CUSTOMER",
+      "source": "tests/development/return-policy-packs.test.mts",
+      "capability_id": "FEATURE-M06-G14"
+    },
+    {
+      "id": "runtime:M06-G14-PACK-STRICT-FIELDS-CANNOT-DISABLE-SEPARATE-APPROVAL",
+      "suite": "runtime",
+      "runner_case_id": "M06-G14-PACK-STRICT-FIELDS-CANNOT-DISABLE-SEPARATE-APPROVAL",
+      "source": "tests/development/return-policy-packs.test.mts",
+      "capability_id": "FEATURE-M06-G14"
+    },
+    {
+      "id": "runtime:M06-G14-PACK-REVISION-CONFLICT-PRESERVES-HISTORY",
+      "suite": "runtime",
+      "runner_case_id": "M06-G14-PACK-REVISION-CONFLICT-PRESERVES-HISTORY",
+      "source": "tests/development/return-policy-packs.test.mts",
+      "capability_id": "FEATURE-M06-G14"
+    },
+    {
+      "id": "runtime:M06-G14-PACK-PROFILE-UPDATE-REQUIRES-REFRESH-AND-CASE-REPREVIEW",
+      "suite": "runtime",
+      "runner_case_id": "M06-G14-PACK-PROFILE-UPDATE-REQUIRES-REFRESH-AND-CASE-REPREVIEW",
+      "source": "tests/development/return-policy-packs.test.mts",
+      "capability_id": "FEATURE-M06-G14"
+    },
+    {
+      "id": "runtime:M06-G14-PACK-REVOKED-POLICY-CANNOT-BE-EVALUATED",
+      "suite": "runtime",
+      "runner_case_id": "M06-G14-PACK-REVOKED-POLICY-CANNOT-BE-EVALUATED",
+      "source": "tests/development/return-policy-packs.test.mts",
+      "capability_id": "FEATURE-M06-G14"
+    },
+    {
+      "id": "runtime:M06-G14-PACK-REQUIRES-CURRENT-REAL-DESTINATION-READINESS",
+      "suite": "runtime",
+      "runner_case_id": "M06-G14-PACK-REQUIRES-CURRENT-REAL-DESTINATION-READINESS",
+      "source": "tests/development/return-policy-packs.test.mts",
+      "capability_id": "FEATURE-M06-G14"
+    },
+    {
+      "id": "runtime:M06-G14-PACK-TAMPERED-BODY-IS-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M06-G14-PACK-TAMPERED-BODY-IS-REJECTED",
+      "source": "tests/development/return-policy-packs.test.mts",
+      "capability_id": "FEATURE-M06-G14"
+    },
+    {
+      "id": "runtime:M06-G14-PACK-EVALUATION-KEEPS-POLICY-RIGHTS-AND-NO-EFFECTS",
+      "suite": "runtime",
+      "runner_case_id": "M06-G14-PACK-EVALUATION-KEEPS-POLICY-RIGHTS-AND-NO-EFFECTS",
+      "source": "tests/development/return-policy-packs.test.mts",
+      "capability_id": "FEATURE-M06-G14"
+    },
+    {
+      "id": "runtime:CASE-M06-G13-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M06-G13-01",
+      "source": "tests/development/return-prevention.test.mts",
+      "capability_id": "FEATURE-M06-G13"
+    },
+    {
+      "id": "runtime:CASE-M06-G13-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M06-G13-02",
+      "source": "tests/development/return-prevention.test.mts",
+      "capability_id": "FEATURE-M06-G13"
+    },
+    {
+      "id": "runtime:CASE-M06-G13-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M06-G13-03",
+      "source": "tests/development/return-prevention.test.mts",
+      "capability_id": "FEATURE-M06-G13"
+    },
+    {
+      "id": "runtime:M06-PREVENTION-04",
+      "suite": "runtime",
+      "runner_case_id": "M06-PREVENTION-04",
+      "source": "tests/development/return-prevention.test.mts",
+      "capability_id": "FEATURE-M06-G13"
+    },
+    {
+      "id": "runtime:M06-PREVENTION-05",
+      "suite": "runtime",
+      "runner_case_id": "M06-PREVENTION-05",
+      "source": "tests/development/return-prevention.test.mts",
+      "capability_id": "FEATURE-M06-G13"
+    },
+    {
+      "id": "runtime:M06-PREVENTION-06",
+      "suite": "runtime",
+      "runner_case_id": "M06-PREVENTION-06",
+      "source": "tests/development/return-prevention.test.mts",
+      "capability_id": "FEATURE-M06-G13"
+    },
+    {
+      "id": "runtime:M06-PREVENTION-07",
+      "suite": "runtime",
+      "runner_case_id": "M06-PREVENTION-07",
+      "source": "tests/development/return-prevention.test.mts",
+      "capability_id": "FEATURE-M06-G13"
+    },
+    {
+      "id": "runtime:M06-PREVENTION-08",
+      "suite": "runtime",
+      "runner_case_id": "M06-PREVENTION-08",
+      "source": "tests/development/return-prevention.test.mts",
+      "capability_id": "FEATURE-M06-G13"
+    },
+    {
+      "id": "runtime:M06-PREVENTION-09",
+      "suite": "runtime",
+      "runner_case_id": "M06-PREVENTION-09",
+      "source": "tests/development/return-prevention.test.mts",
+      "capability_id": "FEATURE-M06-G13"
+    },
+    {
+      "id": "runtime:M06-PREVENTION-10",
+      "suite": "runtime",
+      "runner_case_id": "M06-PREVENTION-10",
+      "source": "tests/development/return-prevention.test.mts",
+      "capability_id": "FEATURE-M06-G13"
+    },
+    {
+      "id": "runtime:M06-PREVENTION-11",
+      "suite": "runtime",
+      "runner_case_id": "M06-PREVENTION-11",
+      "source": "tests/development/return-prevention.test.mts",
+      "capability_id": "FEATURE-M06-G13"
+    },
+    {
+      "id": "runtime:M06-PREVENTION-12",
+      "suite": "runtime",
+      "runner_case_id": "M06-PREVENTION-12",
+      "source": "tests/development/return-prevention.test.mts",
+      "capability_id": "FEATURE-M06-G13"
+    },
+    {
+      "id": "runtime:M06-PREVENTION-13",
+      "suite": "runtime",
+      "runner_case_id": "M06-PREVENTION-13",
+      "source": "tests/development/return-prevention.test.mts",
+      "capability_id": "FEATURE-M06-G13"
+    },
+    {
+      "id": "runtime:M06-PREVENTION-14",
+      "suite": "runtime",
+      "runner_case_id": "M06-PREVENTION-14",
+      "source": "tests/development/return-prevention.test.mts",
+      "capability_id": "FEATURE-M06-G13"
+    },
+    {
+      "id": "runtime:M06-PREVENTION-15",
+      "suite": "runtime",
+      "runner_case_id": "M06-PREVENTION-15",
+      "source": "tests/development/return-prevention.test.mts",
+      "capability_id": "FEATURE-M06-G13"
+    },
+    {
+      "id": "runtime:M06-PREVENTION-16",
+      "suite": "runtime",
+      "runner_case_id": "M06-PREVENTION-16",
+      "source": "tests/development/return-prevention.test.mts",
+      "capability_id": "FEATURE-M06-G13"
+    },
+    {
+      "id": "runtime:M06-PREVENTION-17",
+      "suite": "runtime",
+      "runner_case_id": "M06-PREVENTION-17",
+      "source": "tests/development/return-prevention.test.mts",
+      "capability_id": "FEATURE-M06-G13"
+    },
+    {
+      "id": "runtime:M06-PREVENTION-18",
+      "suite": "runtime",
+      "runner_case_id": "M06-PREVENTION-18",
+      "source": "tests/development/return-prevention.test.mts",
+      "capability_id": "FEATURE-M06-G13"
+    },
+    {
+      "id": "runtime:M06-PREVENTION-19",
+      "suite": "runtime",
+      "runner_case_id": "M06-PREVENTION-19",
+      "source": "tests/development/return-prevention.test.mts",
+      "capability_id": "FEATURE-M06-G13"
+    },
+    {
+      "id": "runtime:M06-PREVENTION-20",
+      "suite": "runtime",
+      "runner_case_id": "M06-PREVENTION-20",
+      "source": "tests/development/return-prevention.test.mts",
+      "capability_id": "FEATURE-M06-G13"
+    },
+    {
+      "id": "runtime:M06-PREVENTION-21",
+      "suite": "runtime",
+      "runner_case_id": "M06-PREVENTION-21",
+      "source": "tests/development/return-prevention.test.mts",
+      "capability_id": "FEATURE-M06-G13"
+    },
+    {
+      "id": "runtime:M06-PREVENTION-22",
+      "suite": "runtime",
+      "runner_case_id": "M06-PREVENTION-22",
+      "source": "tests/development/return-prevention.test.mts",
+      "capability_id": "FEATURE-M06-G13"
+    },
+    {
+      "id": "runtime:CASE-M06-G11-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M06-G11-01",
+      "source": "tests/development/risk-assistance.test.mts",
+      "capability_id": "FEATURE-M06-G11"
+    },
+    {
+      "id": "runtime:CASE-M06-G11-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M06-G11-02",
+      "source": "tests/development/risk-assistance.test.mts",
+      "capability_id": "FEATURE-M06-G11"
+    },
+    {
+      "id": "runtime:CASE-M06-G11-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M06-G11-03",
+      "source": "tests/development/risk-assistance.test.mts",
+      "capability_id": "FEATURE-M06-G11"
+    },
+    {
+      "id": "runtime:M06-RISK-04",
+      "suite": "runtime",
+      "runner_case_id": "M06-RISK-04",
+      "source": "tests/development/risk-assistance.test.mts",
+      "capability_id": "FEATURE-M06-G11"
+    },
+    {
+      "id": "runtime:M06-RISK-05",
+      "suite": "runtime",
+      "runner_case_id": "M06-RISK-05",
+      "source": "tests/development/risk-assistance.test.mts",
+      "capability_id": "FEATURE-M06-G11"
+    },
+    {
+      "id": "runtime:M06-RISK-06",
+      "suite": "runtime",
+      "runner_case_id": "M06-RISK-06",
+      "source": "tests/development/risk-assistance.test.mts",
+      "capability_id": "FEATURE-M06-G11"
+    },
+    {
+      "id": "runtime:M06-RISK-07",
+      "suite": "runtime",
+      "runner_case_id": "M06-RISK-07",
+      "source": "tests/development/risk-assistance.test.mts",
+      "capability_id": "FEATURE-M06-G11"
+    },
+    {
+      "id": "runtime:M06-RISK-08",
+      "suite": "runtime",
+      "runner_case_id": "M06-RISK-08",
+      "source": "tests/development/risk-assistance.test.mts",
+      "capability_id": "FEATURE-M06-G11"
+    },
+    {
+      "id": "runtime:M06-RISK-09",
+      "suite": "runtime",
+      "runner_case_id": "M06-RISK-09",
+      "source": "tests/development/risk-assistance.test.mts",
+      "capability_id": "FEATURE-M06-G11"
+    },
+    {
+      "id": "runtime:M06-RISK-10",
+      "suite": "runtime",
+      "runner_case_id": "M06-RISK-10",
+      "source": "tests/development/risk-assistance.test.mts",
+      "capability_id": "FEATURE-M06-G11"
+    },
+    {
+      "id": "runtime:M06-RISK-11",
+      "suite": "runtime",
+      "runner_case_id": "M06-RISK-11",
+      "source": "tests/development/risk-assistance.test.mts",
+      "capability_id": "FEATURE-M06-G11"
+    },
+    {
+      "id": "runtime:M06-RISK-12",
+      "suite": "runtime",
+      "runner_case_id": "M06-RISK-12",
+      "source": "tests/development/risk-assistance.test.mts",
+      "capability_id": "FEATURE-M06-G11"
+    },
+    {
+      "id": "runtime:M06-RISK-13",
+      "suite": "runtime",
+      "runner_case_id": "M06-RISK-13",
+      "source": "tests/development/risk-assistance.test.mts",
+      "capability_id": "FEATURE-M06-G11"
+    },
+    {
+      "id": "runtime:M06-RISK-14",
+      "suite": "runtime",
+      "runner_case_id": "M06-RISK-14",
+      "source": "tests/development/risk-assistance.test.mts",
+      "capability_id": "FEATURE-M06-G11"
+    },
+    {
+      "id": "runtime:M06-RISK-15",
+      "suite": "runtime",
+      "runner_case_id": "M06-RISK-15",
+      "source": "tests/development/risk-assistance.test.mts",
+      "capability_id": "FEATURE-M06-G11"
+    },
+    {
+      "id": "runtime:M06-RISK-16",
+      "suite": "runtime",
+      "runner_case_id": "M06-RISK-16",
+      "source": "tests/development/risk-assistance.test.mts",
+      "capability_id": "FEATURE-M06-G11"
     }
   ],
   "protected_files": [
@@ -17387,7 +18337,12 @@
     "tests/development/instant-races.test.mts",
     "tests/fixtures/exchange-lineage/independent-values.json",
     "tests/fixtures/exchange-money/golden.v1.json",
-    "tests/fixtures/instant-exchanges/independent-values.json"
+    "tests/fixtures/instant-exchanges/independent-values.json",
+    "tests/fixtures/assistance/prevention-golden.v1.json",
+    "tests/fixtures/assistance/risk-golden.v1.json",
+    "tests/fixtures/qualified-destinations/routing.v1.json",
+    "tests/fixtures/return-depth/milestone-values.v1.json",
+    "tests/fixtures/return-policy-packs/scenarios.v1.json"
   ],
   "source_count_fixture": "tests/fixtures/licensing/artifact-oracle.v1.json",
   "source_inventory": "planning/component-inventory.json"

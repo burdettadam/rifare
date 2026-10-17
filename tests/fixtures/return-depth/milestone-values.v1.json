@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "provenance": "Independent synthetic arithmetic for the M06 local integrated journey; amounts are USD minor units, no live settlement or merchant profitability evidence.",
+  "mixed": {"original_paid_minor":"8740","prior_refund_minor":"1940","new_cash_refund_minor":"1940","issued_credit_minor":"960","additional_payment_minor":"200","replacement_retail_minor":"1400","replacement_carried_minor":"1200"},
+  "declared_cost_basis": "Original 8740 plus additional 200 less prior/new cash refunds 1940 each and credit liability 960 leaves declared retained revenue 4100. These are synthetic declarations; credit issuance is not a cash refund.",
+  "declared_costs": {"retained_revenue":"4100","goods":"700","shipping":"500","platform_fees":"80","operator_time":"120"},
+  "declared_total_cost_minor":"1400",
+  "declared_contribution_minor":"2700",
+  "unreturned_capture_ceiling_minor":"3000"
+}

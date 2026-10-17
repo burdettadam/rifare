@@ -5,10 +5,11 @@ import { fulfillmentContext,fulfillmentSettings,fulfillmentValue,saveFulfillment
 import { assertFulfillmentSource } from './replacement-inventory.mts';
 import { FulfillmentFixtureSource } from '../adapters/fulfillment-fixture-source.mts';
 import { assertExecution } from './execution-stops.mts';
+import { attachQualifiedDestinationSource,qualifiedDestinationPin } from './qualified-return-destinations.mts';
 
 export class ReturnLabels {
  readonly kernel:CommerceKernel;readonly source:FulfillmentFixtureSource;
- constructor(k:CommerceKernel,source:FulfillmentFixtureSource){assertFulfillmentSource(k,source);this.kernel=k;this.source=source;}
+ constructor(k:CommerceKernel,source:FulfillmentFixtureSource){assertFulfillmentSource(k,source);attachQualifiedDestinationSource(k,source);this.kernel=k;this.source=source;}
  configureParcel(scope:Scope,input:unknown){const p=exact(jsonValue(input),['case_id','request_id','expected_revision','from_address_ref','to_address_ref','address_revision','package','service']);
   id(p.case_id);id(p.request_id);integer(p.expected_revision);integer(p.address_revision,1);id(p.from_address_ref);id(p.to_address_ref);id(p.service);
   exact(p.package,['weight_g','length_mm','width_mm','height_mm']);for(const n of Object.values(p.package)){integer(n,1);if((n as number)>100000)throw new Error('PACKAGE_UNSUPPORTED');}
@@ -20,7 +21,9 @@ export class ReturnLabels {
  quote(scope:Scope,input:unknown){const p=exact(jsonValue(input),['request_id','replaces']);id(p.request_id);if(p.replaces!==null)id(p.replaces);const k=this.kernel;
   return k.transaction(()=>{const parcel=parcelRow(k,scope,p.request_id),ctx=fulfillmentContext(k,scope,parcel.case_id,parcel.request_id),settings=fulfillmentSettings(k,ctx.s);
    k.authorize(scope,'action.propose',ctx.c.resource_id);assertExecution(k,ctx.s,FULFILLMENT_ACTIONS.label);assertFulfillmentSource(k,this.source,ctx.s);if(settings.source_identity!==this.source.identity)throw new Error('FIXTURE_SOURCE_MISMATCH');
-   const rate=this.source.rate({source_identity:this.source.identity,tenant_id:ctx.s.tenant_id,store_id:ctx.s.store_id,account_id:settings.account_id,service:parcel.parcel.service,parcel_digest:parcel.digest,parcel_revision:parcel.revision});
+   const route=qualifiedDestinationPin(k,scope,ctx,parcel);
+   const rate=this.source.rate({source_identity:this.source.identity,tenant_id:ctx.s.tenant_id,store_id:ctx.s.store_id,account_id:settings.account_id,service:parcel.parcel.service,parcel_digest:parcel.digest,parcel_revision:parcel.revision,
+    ...(route?{request_id:ctx.request.id,resource_id:ctx.c.resource_id,native_return_id:ctx.native.native_id,return_destination:route}: {})});
    return saveFulfillmentQuote(k,scope,fulfillmentValue(k,scope,'label',p,k.clock(),rate));});}
  quoteVoid(scope:Scope,input:unknown){const p=exact(jsonValue(input),['label_id']);id(p.label_id);return this.kernel.transaction(()=>saveFulfillmentQuote(this.kernel,scope,fulfillmentValue(this.kernel,scope,'void',p,this.kernel.clock())));}
  inspect(scope:Scope,ref:string){const r=labelRow(this.kernel,scope,ref),s=this.kernel.require(scope),current=currentLabel(this.kernel,s,r.request_id);

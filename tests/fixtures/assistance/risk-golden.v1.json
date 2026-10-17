@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "qualification": "synthetic_known_answer_not_fraud_detection_validation",
+  "case": "A source says evidence was verified, but a separately scanned uploaded PNG was rejected.",
+  "expected_indicator_codes": ["evidence_not_clean", "evidence_state_conflict"],
+  "expected_policy_decision": "allow",
+  "expected_policy_outcomes": ["exchange", "refund"],
+  "expected_automatic_denial": false,
+  "expected_public_allegation": false,
+  "hostile_proposal": {
+    "provider": "fixture",
+    "model": "risk-model",
+    "revision": "2",
+    "score": 0.99,
+    "indicator_codes": ["customer_class"],
+    "proposed_outcome": "deny_all",
+    "public_text": "This customer class commits fraud; cancel all their orders."
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "provenance": "Predeclared synthetic policy truth table; elapsed UTC cutoff, no merchant observations or external qualification.",
+  "profiles": [
+    {"id":"apparel","window_days":30,"require_evidence":false,"excluded_tags":["final-sale"],"outcomes":["refund","exchange"],"tone":"warm","locale":"en-US","review_mode":"standard","always_review":false,"destination_ids":["apparel-hub"]},
+    {"id":"fragile","window_days":14,"require_evidence":true,"excluded_tags":["final-sale"],"outcomes":["refund","exchange"],"tone":"formal","locale":"fr-CA","review_mode":"specialist","always_review":true,"destination_ids":["fragile-hub"]},
+    {"id":"clearance","window_days":7,"require_evidence":false,"excluded_tags":["clearance","final-sale"],"outcomes":["store_credit"],"tone":"neutral","locale":"en-GB","review_mode":"policy_exception","always_review":true,"destination_ids":["clearance-hub"]}
+  ],
+  "scenarios": [
+    {"id":"ordinary_day_three","days":3,"tags":[],"evidence":false,"expected":{"apparel":{"decision":"allow","reasons":[]},"fragile":{"decision":"review","reasons":["EVIDENCE_REQUIRED"]},"clearance":{"decision":"allow","reasons":[]}}},
+    {"id":"after_two_weeks","days":15,"tags":[],"evidence":false,"expected":{"apparel":{"decision":"allow","reasons":[]},"fragile":{"decision":"review","reasons":["RETURN_WINDOW_EXPIRED","EVIDENCE_REQUIRED"]},"clearance":{"decision":"review","reasons":["RETURN_WINDOW_EXPIRED"]}}},
+    {"id":"final_sale","days":3,"tags":["final-sale"],"evidence":false,"expected":{"apparel":{"decision":"deny","reasons":["PRODUCT_EXCLUDED"]},"fragile":{"decision":"deny","reasons":["PRODUCT_EXCLUDED","EVIDENCE_REQUIRED"]},"clearance":{"decision":"deny","reasons":["PRODUCT_EXCLUDED"]}}},
+    {"id":"clearance_tag","days":3,"tags":["clearance"],"evidence":false,"expected":{"apparel":{"decision":"allow","reasons":[]},"fragile":{"decision":"review","reasons":["EVIDENCE_REQUIRED"]},"clearance":{"decision":"deny","reasons":["PRODUCT_EXCLUDED"]}}}
+  ]
+}
