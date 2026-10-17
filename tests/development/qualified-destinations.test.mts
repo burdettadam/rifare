@@ -6,6 +6,7 @@ import { usingQualifiedDestinations } from './qualified-destinations-helpers.mts
 import { FulfillmentFixtureSource } from '../../packages/adapters/fulfillment-fixture-source.mts';
 import { FulfillmentExecution } from '../../packages/commerce/fulfillment-execution.mts';
 import { QualifiedReturnDestinations } from '../../packages/commerce/qualified-return-destinations.mts';
+import { contentDigest } from '../../packages/commerce/configuration-values.mts';
 
 test('CASE-M06-G12-01',()=>usingQualifiedDestinations(async f=>{
  const e=f.routing.evaluate(f.a.scope,{request_id:f.request.id});assert.equal(e.recommended_destination_id,'fragile-destination');
@@ -44,6 +45,11 @@ test('M06-G12-UNREGISTERED-REQUEST-CANNOT-BYPASS-QUALIFIED-ACCOUNT',()=>usingQua
  f.choose();const op=f.authorizeFulfillment(f.quote()),command=f.command(op.id);delete command.return_destination;delete command.rate.return_destination;
  command.request_id='different-request';command.resource_id='different-resource';command.native_return_id='gid://shopify/Return/1234';command.obligation='different-request_label_1';
  await assert.rejects(()=>f.fulfillmentSource.buy(command),/DESTINATION_BINDING_REQUIRED/);assert.equal(f.fulfillmentSource.effects().length,0);
+}));
+test('M06-G12-RECOMPUTED-RATE-HASH-CANNOT-BYPASS-NATIVE-ROUTING',()=>usingQualifiedDestinations(async f=>{
+ f.choose();const op=f.authorizeFulfillment(f.quote()),command=f.command(op.id);delete command.return_destination;delete command.rate.return_destination;
+ const {rate_id,...body}=command.rate;command.rate.rate_id='rate_'+contentDigest(body).slice(0,40);
+ await assert.rejects(()=>f.fulfillmentSource.buy(command),/DESTINATION_BINDING_REQUIRED/);assert.equal(f.fulfillmentSource.effects().length,0);assert.equal(f.native.admissions().length,0);
 }));
 test('M06-G12-CAPACITY-EXHAUSTION-INVALIDATES-QUOTE',()=>usingQualifiedDestinations(f=>{
  f.choose();const q=f.quote();f.reviseDestination('fragile-destination',{capacity_units:3,occupied_units:1});

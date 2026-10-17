@@ -143,16 +143,18 @@ export class ReturnDestinationFixtureSource {
   if(!required){if(input.return_destination!==undefined)throw new Error('DESTINATION_BINDING_REQUIRED');return null;}
   if(!input.return_destination)throw new Error('DESTINATION_BINDING_REQUIRED');return this.assertSelection(input.return_destination,input);
  }
- admit(command:Row,labelId:string){
+ assertCommand(command:Row){
   const required=this.required(command.account_id,command.request_id,command.resource_id,command.native_return_id);
-  if(!required){if(command.return_destination!==undefined||command.rate?.return_destination!==undefined)throw new Error('DESTINATION_BINDING_REQUIRED');return;}
+  if(!required){if(command.return_destination!==undefined||command.rate?.return_destination!==undefined)throw new Error('DESTINATION_BINDING_REQUIRED');return null;}
   if(!command.return_destination||!command.rate?.return_destination)throw new Error('DESTINATION_BINDING_REQUIRED');
   if(canonical(command.return_destination)!==canonical(command.rate.return_destination))throw new Error('DESTINATION_CHANGED');
   const route=this.assertSelection(command.return_destination,command),r=this.request(command.request_id);
   if(command.customer_id!==r.customer_id||command.native_original_order_id!==r.native_order_id||command.original_order_id!==r.resource_id||command.rate.request_id!==r.request_id||command.rate.resource_id!==r.resource_id||command.rate.native_return_id!==r.native_return_id||command.obligation!==r.request_id+'_label_'+command.generation)throw new Error('DESTINATION_BINDING_CHANGED');
-  integer(command.generation,1);id(command.operation_id);id(labelId);
+  integer(command.generation,1);id(command.operation_id);
   const prior=this.admissions().filter(a=>a.request_id===r.request_id).sort((a,b)=>b.generation-a.generation)[0];
-  if(prior?command.generation!==prior.generation+1||command.replaces!==prior.label_id:command.generation!==1||command.replaces!==null)throw new Error('DESTINATION_LABEL_GENERATION_CHANGED');
+  if(prior?command.generation!==prior.generation+1||command.replaces!==prior.label_id:command.generation!==1||command.replaces!==null)throw new Error('DESTINATION_LABEL_GENERATION_CHANGED');return route;
+ }
+ admit(command:Row,labelId:string){const route=this.assertCommand(command);if(!route)return;id(labelId);const r=this.request(command.request_id);
   const admission={operation_id:command.operation_id,request_id:r.request_id,resource_id:r.resource_id,destination_id:route.destination_id,generation:command.generation,label_id:labelId,quantity:route.quantity,route_digest:contentDigest(route),command_digest:contentDigest(command),admitted_at:this.clock(),qualification:'synthetic_only'};
   this.db.prepare('INSERT INTO fixture_destination_admissions VALUES(?,?,?,?,?,?)').run(admission.operation_id,admission.request_id,admission.destination_id,admission.generation,canonical(admission),contentDigest(admission));
  }

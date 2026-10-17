@@ -115,6 +115,7 @@ export class FulfillmentFixtureSource {
   if(this.instantSource)this.instantSource.confirmReplacement(command,command.instant_exchange??null,result);return result;
  });}
  async buy(command:Row){this.calls.buy++;return this.#call(()=>this.#effect(command,'label',()=>{
+  this.destinations.assertCommand(command);
   const rate=command.rate,r=this.db.prepare('SELECT * FROM fixture_rates WHERE service=?').get(rate.service) as Row;
   if(!r||rate.expires_at<=this.clock()||r.expires_at<=this.clock()||r.revision!==rate.rate_revision||r.amount_minor!==rate.amount_minor||r.currency!==rate.currency)throw new Error('RATE_EXPIRED');
   const {rate_id,...value}=rate;if(rate_id!=='rate_'+contentDigest(value).slice(0,40)||rate.parcel_digest!==command.parcel_digest||rate.account_id!==command.account_id||rate.source_identity!==this.identity||rate.tenant_id!==this.tenant||rate.store_id!==this.store)throw new Error('RATE_CHANGED');
