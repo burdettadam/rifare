@@ -8,6 +8,7 @@ import { permissionDecision } from './authorization.mts';
 import { assertReady,DRAFT_ACTION } from './integration-readiness.mts';
 import { assertExecution } from './execution-stops.mts';
 import { money } from './money.mts';
+import { assertGiftOutcome } from './gift-proof.mts';
 
 export function intakeSettings(k:CommerceKernel,s:Row) {
  const row=k.db.prepare('SELECT * FROM commerce_return_settings WHERE tenant_id=? AND store_id=?').get(s.tenant_id,s.store_id) as Row;
@@ -27,6 +28,8 @@ export function reservations(k:CommerceKernel,s:Row,order:Row) {
 export function evidenceReviewState(k:CommerceKernel,s:Row,caseId:string){return k.db.prepare("SELECT seq,event,reason FROM commerce_return_review_events WHERE tenant_id=? AND store_id=? AND case_id=? AND event IN ('evidence_requested','evidence_accepted') ORDER BY seq DESC LIMIT 1").get(s.tenant_id,s.store_id,caseId) as Row|undefined;}
 export function intakeEvaluation(k:CommerceKernel,scope:Scope,selection:unknown,at:number,windowOverride=false) {
  const p=returnSelection(selection),cases=new CaseConfigurations(k),c=cases.resume(scope,p.case_id),s=k.authorize(scope,'return.read',c.resource_id);cases.verified(scope,c.id);
+ const gift=assertGiftOutcome(k,scope,c.id,p.outcome,p.lines);
+ if(gift&&p.note!=='')throw new Error('GIFT_PRIVATE_NOTE_REQUIRES_EVIDENCE');
  const settings=intakeSettings(k,s),ready=assertReady(k,s,DRAFT_ACTION);assertExecution(k,s,INTAKE_ACTION);
  const execution=k.db.prepare('SELECT profile_id,policy_id FROM commerce_execution_settings WHERE tenant_id=? AND store_id=?').get(s.tenant_id,s.store_id) as Row;
  if(execution?.profile_id!==c.pins.profile.id||execution?.policy_id!==c.pins.policy.policy_id)throw new Error('CONFIGURATION_NOT_APPROVED');

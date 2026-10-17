@@ -17,6 +17,7 @@ import { canonical,contentDigest,jsonValue,returnDecision } from './configuratio
 import { CaseConfigurations,WRITE_CONTRACT,WRITE_CONTRACT_DIGEST } from './case-configurations.mts';
 import { money } from './money.mts';
 import { permissionDecision } from './authorization.mts';
+import { assertGiftOutcome,assertGiftAction,verifiedGiftCase } from './gift-proof.mts';
 
 export class ActionGateway {
   #k:CommerceKernel;readonly cases:CaseConfigurations;
@@ -44,6 +45,11 @@ export class ActionGateway {
     if(p.action!=='diagnostic.resolution.set')throw new Error('UNSUPPORTED_ACTION');
     const a=exact(p.arguments,['resolution']);if(!['none','refund','exchange'].includes(a.resolution))throw new Error('INVALID_INPUT');return p;}
   #quote(scope:Scope,p:Row,quotedAt:number){
+    const q=this.#baseQuote(scope,p,quotedAt),gift=verifiedGiftCase(this.#k,this.#k.require(scope),p.case_id);
+    return gift?{...q,gift_verification_revision:gift.verification_revision,gift_source_digest:gift.source_digest}:q;
+  }
+  #baseQuote(scope:Scope,p:Row,quotedAt:number){
+    assertGiftAction(this.#k,scope,p.case_id,p.action);
     const scopeRow=this.#k.require(scope),request=this.#k.db.prepare('SELECT id FROM commerce_return_requests WHERE tenant_id=? AND store_id=? AND case_id=?').get(scopeRow.tenant_id,scopeRow.store_id,p.case_id) as Row;
     if(request&&!Object.values(LIFECYCLE_ACTIONS).includes(p.action)&&p.action!==FULFILLMENT_ACTIONS.void)assertReturnWritable(this.#k,scopeRow,request.id);
     if(p.action===EDIT_ACTION)return editGatewayQuote(this.#k,scope,p,quotedAt);
@@ -52,6 +58,7 @@ export class ActionGateway {
     if(p.action===RESOLVE_ACTION)return resolutionGatewayQuote(this.#k,scope,p,quotedAt);
     if(p.action===INTAKE_ACTION)return returnGatewayQuote(this.#k,scope,p,quotedAt);
     const k=this.#k,c=this.cases.resume(scope,p.case_id),s=k.require(scope),verified=this.cases.verified(scope,p.case_id),effect=this.state(scope,p.case_id);
+    if(p.arguments.resolution!=='none')assertGiftOutcome(k,scope,p.case_id,p.arguments.resolution);
     const control=assertExecution(k,s,p.action);
     const settings=k.db.prepare('SELECT * FROM commerce_execution_settings WHERE tenant_id=? AND store_id=?').get(s.tenant_id,s.store_id) as Row;
     if(!settings?.enabled)throw new Error('CAPABILITY_UNAVAILABLE');

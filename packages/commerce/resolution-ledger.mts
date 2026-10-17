@@ -1,6 +1,7 @@
 import { assertReturnWritable,assertResolutionReceipt } from './return-lifecycle-core.mts';
 import { exact,id,integer,token } from './kernel.mts';
 import type { CommerceKernel,Scope,Row } from './kernel.mts';
+import { assertGiftOutcome } from './gift-proof.mts';
 import { canonical,contentDigest,jsonValue } from './configuration-values.mts';
 import { money,allocateMoney } from './money.mts';
 import { CaseConfigurations } from './case-configurations.mts';
@@ -118,6 +119,7 @@ export class ResolutionLedger {
   if(new Set(p.lines.map((l:Row)=>l.line_id+':'+l.outcome)).size!==p.lines.length)throw new Error('INVALID_INPUT');
   const k=this.kernel;return k.transaction(()=>{const s=k.require(scope),r=k.db.prepare('SELECT * FROM commerce_return_requests WHERE tenant_id=? AND store_id=? AND id=?').get(s.tenant_id,s.store_id,p.request_id) as Row;
    const request=checkedBody(r),cases=new CaseConfigurations(k),c=cases.resume(scope,r.case_id);k.authorize(scope,'action.propose',c.resource_id);cases.verified(scope,c.id);assertCaseWorkerScope(k,scope,c.id);assertExecution(k,s,RESOLVE_ACTION);
+   for(const line of p.lines)assertGiftOutcome(k,scope,c.id,line.outcome,[line]);
    assertReturnWritable(k,s,r.id);
    if(!r.receipt_id||!['submitted','native_created'].includes(r.state))throw new Error('RETURN_APPROVAL_REQUIRED');
    const settings=resolutionSettings(k,s),f=financialFacts(k,c),fees=intakeSettings(k,s),old=k.db.prepare('SELECT * FROM commerce_resolution_plans WHERE tenant_id=? AND store_id=? AND (request_id=? OR request_key=?)').get(s.tenant_id,s.store_id,r.id,p.request_key) as Row;

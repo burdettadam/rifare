@@ -1,5 +1,6 @@
 import { exact,id,integer,token } from './kernel.mts';
 import type { CommerceKernel,Scope,Row } from './kernel.mts';
+import { assertGiftOutcome } from './gift-proof.mts';
 import {intakeSettings,evidenceReviewState} from './return-intake-core.mts';
 import { canonical,contentDigest,jsonValue } from './configuration-values.mts';
 import { allocationContext,resolutionSettings,checkedBody,financialFacts,minor,assertAllocationSource } from './resolution-ledger.mts';
@@ -19,6 +20,7 @@ function catalogValue(payload:unknown){
 }
 function exchangeValue(k:CommerceKernel,scope:Scope,allocationId:string,catalogId:string,quotedAt:number,authority='action.propose',boundQuote:Row|null=null){
  const ctx=allocationContext(k,scope,allocationId),{c,a,b,s}=ctx;const settings=resolutionSettings(k,s),facts=financialFacts(k,c);
+ const gift=assertGiftOutcome(k,scope,c.id,'exchange',[b]);
  if(intakeSettings(k,s).digest!==b.fee_settings_digest)throw new Error('REFUND_FEES_CHANGED');
  if(evidenceReviewState(k,s,c.id)?.event==='evidence_requested')throw new Error('RETURN_REVIEW_REQUIRED');
  const paid=facts.paid_lines.find((l:Row)=>l.id===b.line_id);
@@ -55,6 +57,7 @@ function exchangeValue(k:CommerceKernel,scope:Scope,allocationId:string,catalogI
  }
  const replacement=merchandise-incentive+minor(v.tax_per_unit_minor)*qty+minor(v.shipping_minor)+minor(v.duties_per_unit_minor)*qty;
  const restock=(minor(b.components.gross_minor)-minor(b.components.discount_minor))*BigInt(b.restocking_bps)/10000n,entitlement=minor(b.components.paid_minor)-restock-minor(b.return_shipping_minor);
+ if(gift&&replacement>entitlement)reasons.push('GIFT_ADDITIONAL_PAYMENT_UNQUALIFIED');
  if(replacement<0n||entitlement<0n||replacement!==entitlement&&!(policy?.enabled&&policy.price_differences&&policy.expires_at>k.clock()))reasons.push('PRICE_DIFFERENCE_UNSUPPORTED');
  const expires=Math.min(quotedAt+300000,catalog.observed_at+maxAge,settings.expires_at,policy?.expires_at??Number.MAX_SAFE_INTEGER,discount>0n||incentive>0n?v.promotion_expires_at:Number.MAX_SAFE_INTEGER);
  const op=k.db.prepare('SELECT * FROM commerce_resolution_operations WHERE tenant_id=? AND store_id=? AND allocation_id=?').get(s.tenant_id,s.store_id,a.id) as Row;
@@ -63,7 +66,7 @@ function exchangeValue(k:CommerceKernel,scope:Scope,allocationId:string,catalogI
   source_stock:v.available,buffer:settings.inventory_buffer,quantity:b.units.length,original_variant:b.variant_id,replacement_variant:v.variant_id,currency:b.currency,original_paid_minor:b.components.paid_minor,
   retained_discount_minor:discount.toString(),replacement_minor:replacement.toString(),balance_minor:(replacement-entitlement).toString(),available_exchange_value_minor:entitlement.toString(),restocking_minor:restock.toString(),return_shipping_minor:b.return_shipping_minor,settings_digest:settings.digest,
   ...(policy?{catalog_configuration_digest:policy.digest,catalog_configuration_revision:policy.revision,exchange_incentive_minor:incentive.toString()}:{}),
-  allowed:reasons.length===0,reasons,alternatives:reasons.length?c.pins.policy.body.rules.outcomes.filter((o:string)=>o!=='exchange'&&(o!=='store_credit'||settings.credit_instrument==='native_store_credit')):[],
+  allowed:reasons.length===0,reasons,alternatives:reasons.length?c.pins.policy.body.rules.outcomes.filter((o:string)=>o!=='exchange'&&(!gift||gift.allowed_outcomes.includes(o))&&(o!=='store_credit'||settings.credit_instrument==='native_store_credit')):[],
   quoted_at:quotedAt,expires_at:expires,stock_reserved:false,requires_atomic_reservation:true,commit_authorized:false,qualification:'synthetic_only'};
 }
 export class VariantExchanges {

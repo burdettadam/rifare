@@ -7,6 +7,7 @@ import { assertExecution } from './execution-stops.mts';
 import { money,allocateMoney } from './money.mts';
 import { intakeSettings,evidenceReviewState } from './return-intake-core.mts';
 import { exchangeFinanceQuote } from './exchange-finance.mts';
+import { assertGiftOutcome } from './gift-proof.mts';
 
 function operationCommand(r:Row){const c=JSON.parse(r.command);if(contentDigest(c)!==r.digest||c.operation_id!==r.id||c.amount_minor!==r.amount_minor||c.currency!==r.currency)throw new Error('RESOLUTION_INTEGRITY');return c;}
 function reservedValue(r:Row){const command=operationCommand(r);return minor(command.exchange_quote_id?command.original_value_minor:r.amount_minor);}
@@ -52,6 +53,7 @@ export function assertInstrumentCapacity(k:CommerceKernel,s:Row,resource:string,
 }
 export function resolutionQuote(k:CommerceKernel,scope:Scope,allocationId:string,quotedAt:number,exclude:string|null=null){
  const {s,a,b,c,plan}=allocationContext(k,scope,allocationId),f=financialFacts(k,c),settings=resolutionSettings(k,s),cases=new CaseConfigurations(k),verified=cases.verified(scope,c.id);
+ const gift=assertGiftOutcome(k,scope,c.id,a.outcome,[b]);
  if(!['refund','store_credit'].includes(a.outcome)||!c.pins.policy.body.rules.outcomes.includes(a.outcome))throw new Error('OUTCOME_UNSUPPORTED');
  if(a.outcome==='store_credit'&&settings.credit_instrument!=='native_store_credit')throw new Error('CREDIT_UNQUALIFIED');
  if(evidenceReviewState(k,s,c.id)?.event==='evidence_requested')throw new Error('RETURN_REVIEW_REQUIRED');
@@ -73,7 +75,7 @@ export function resolutionQuote(k:CommerceKernel,scope:Scope,allocationId:string
  return {schema_version:1,allocation_id:a.id,allocation_digest:a.digest,case_id:c.id,case_revision:c.revision,resource_id:c.resource_id,customer_id:verified.customer_id,
   tenant_id:s.tenant_id,store_id:s.store_id,configuration_digest:c.configuration_digest,policy_digest:c.pins.policy.digest,
   source_version:c.order.source_version,source_digest:contentDigest(c.order),financial_revision:f.revision,native_return_id:native.native_id,native_return_digest:native.native_digest,
-  payment_id:f.payment_id,kind:a.outcome,currency:f.currency,amount_minor:amount.toString(),...(routes?{routes,value_routes:routes,line_id:b.line_id,units:b.units}:{}),components:{...part,restocking_minor:restock.toString(),return_shipping_minor:b.return_shipping_minor},
+  payment_id:f.payment_id,kind:a.outcome,currency:f.currency,amount_minor:amount.toString(),...(gift?{credit_beneficiary_id:gift.recipient_customer_id,gift_source_digest:gift.source_digest}:{}),...(routes?{routes,value_routes:routes,line_id:b.line_id,units:b.units}:{}),components:{...part,restocking_minor:restock.toString(),return_shipping_minor:b.return_shipping_minor},
   remaining_before_minor:remaining.toString(),settings_digest:settings.digest,settings_revision:settings.revision,source_identity:settings.source_identity,
   credit_instrument:a.outcome==='store_credit'?'native_store_credit':null,control_stamp:control.stamp,review_revision:evidenceReviewState(k,s,c.id)?.seq??0,
   quoted_at:quotedAt,expires_at:expiry,qualification:'synthetic_only',tax_treatment:'original_paid_allocations_only',live_financial_authority:false};

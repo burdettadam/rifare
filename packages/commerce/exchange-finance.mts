@@ -7,12 +7,14 @@ import { VariantExchanges } from './variant-exchanges.mts';
 import { CaseConfigurations } from './case-configurations.mts';
 import { assertExecution } from './execution-stops.mts';
 import { evidenceReviewState } from './return-intake-core.mts';
+import { assertGiftOutcome } from './gift-proof.mts';
 
 /** Additional payment and residual value use the existing approval/operation ledger. */
 export function exchangeFinanceQuote(k:CommerceKernel,scope:Scope,input:unknown,quotedAt:number,exclude:string|null=null){
  const p=exact(jsonValue(input),['exchange_quote_id','exchange_quote_digest','outcome']);id(p.exchange_quote_id);
  if(!['additional_payment','refund','store_credit'].includes(p.outcome))throw new Error('EXCHANGE_FINANCE_OUTCOME_UNSUPPORTED');
  const q=new VariantExchanges(k).validateForFinance(scope,{quote_id:p.exchange_quote_id,quote_digest:p.exchange_quote_digest},exclude??undefined),{s,a,b,c,plan}=allocationContext(k,scope,q.allocation_id),f=financialFacts(k,c),settings=resolutionSettings(k,s),proof=new CaseConfigurations(k).verified(scope,c.id);
+ const gift=assertGiftOutcome(k,scope,c.id,p.outcome,[b]);
  assertAllocationSource(f,b);
  if(f.bundle_allocations&&settings.bundle_policy!=='preserve_original_paid')throw new Error('BUNDLE_POLICY_UNAPPROVED');
  const delta=BigInt(q.balance_minor),amount=delta<0n?-delta:delta,original=minor(q.available_exchange_value_minor);
@@ -32,7 +34,7 @@ export function exchangeFinanceQuote(k:CommerceKernel,scope:Scope,input:unknown,
   tenant_id:s.tenant_id,store_id:s.store_id,configuration_digest:c.configuration_digest,policy_digest:c.pins.policy.digest,
   source_version:c.order.source_version,source_digest:contentDigest(c.order),financial_revision:f.revision,native_return_id:native.native_id,native_return_digest:native.native_digest,
   payment_id:f.payment_id,kind:p.outcome,currency:f.currency,amount_minor:amount.toString(),original_value_minor:original.toString(),exchange_quote_id:q.quote_id,exchange_quote_digest:q.quote_digest,replacement_variant:q.replacement_variant,replacement_minor:q.replacement_minor,quantity:q.quantity,
-  ...(valueRoutes?{value_routes:valueRoutes,routes:routes??[],line_id:b.line_id,units:b.units}:{}),...(p.outcome==='additional_payment'?{payment_expires_at:expiry}:{}),
+  ...(gift?{credit_beneficiary_id:gift.recipient_customer_id,gift_source_digest:gift.source_digest}:{}),...(valueRoutes?{value_routes:valueRoutes,routes:routes??[],line_id:b.line_id,units:b.units}:{}),...(p.outcome==='additional_payment'?{payment_expires_at:expiry}:{}),
   components:{...b.components,restocking_minor:q.restocking_minor,return_shipping_minor:q.return_shipping_minor,replacement_minor:q.replacement_minor},remaining_before_minor:remaining.toString(),
   settings_digest:settings.digest,settings_revision:settings.revision,source_identity:settings.source_identity,credit_instrument:p.outcome==='store_credit'?'native_store_credit':null,
   control_stamp:control.stamp,review_revision:evidenceReviewState(k,s,c.id)?.seq??0,quoted_at:quotedAt,expires_at:expiry,qualification:'synthetic_only',tax_treatment:'original_paid_allocations_only',live_financial_authority:false};
