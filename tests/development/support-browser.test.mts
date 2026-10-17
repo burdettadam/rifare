@@ -1,0 +1,7 @@
+import test from'node:test';import assert from'node:assert/strict';import{spawn}from'node:child_process';import{createSupportDemo}from'../../packages/development/support-demo.mts';import{startCommerceServer}from'../../apps/commerce-api/server.mts';
+async function check(scenario:string){const f=createSupportDemo();f.stopModel();const s=await startCommerceServer({kernel:f.kernel,caps:f.caps,customers:f.customers,simulator:f.simulator,reads:f.reads,support:f.support});try{const r=await new Promise<any>((resolve,reject)=>{const p=spawn('python3',['tests/browser/support_component.py'],{env:{...process.env,RIFARE_TEST_INPUT:JSON.stringify({scenario,url:s.url,token:f.operator.token,customer:f.customer.token,at:f.at(),screenshot:scenario==='manual'?process.env.RIFARE_SUPPORT_SCREENSHOT:undefined})},stdio:['ignore','pipe','pipe']});const timer=setTimeout(()=>p.kill('SIGTERM'),30000);let out='',err='';p.stdout.on('data',d=>out+=d);p.stderr.on('data',d=>err+=d);p.on('error',reject);p.on('close',code=>{clearTimeout(timer);resolve({code,out,err});});});assert.equal(r.code,0,r.err);assert.equal(JSON.parse(r.out).passed,true);assert.deepEqual(JSON.parse(r.out).direct_browser_network,[]);if(['tracking','customer','stop','late'].includes(scenario))assert.equal(f.source.calls,0);}finally{await s.close();f.cleanup();}}
+test('M05-G03-BROWSER-01',()=>check('tracking'));
+test('M05-G11-BROWSER-01',()=>check('manual'));
+test('M05-G01-BROWSER-01',()=>check('customer'));
+test('M05-G06-BROWSER-01',()=>check('stop'));
+test('M05-G11-BROWSER-02',()=>check('late'));

@@ -1,0 +1,68 @@
+{
+  "schema_version": 2,
+  "id": "shipment-assistance",
+  "version": "1.0.0",
+  "engine": {
+    "min": "1.0.0",
+    "max_exclusive": "2.0.0"
+  },
+  "required_actions": [
+    {
+      "name": "order.status",
+      "versions": {
+        "min": "1.0.0",
+        "max_exclusive": "2.0.0"
+      }
+    },
+    {
+      "name": "knowledge.search",
+      "versions": {
+        "min": "1.0.0",
+        "max_exclusive": "2.0.0"
+      }
+    },
+    {
+      "name": "knowledge.get",
+      "versions": {
+        "min": "1.0.0",
+        "max_exclusive": "2.0.0"
+      }
+    },
+    {
+      "name": "skill.read",
+      "versions": {
+        "min": "1.0.0",
+        "max_exclusive": "2.0.0"
+      }
+    }
+  ],
+  "resources": [
+    {
+      "path": "references/configuration.json",
+      "sha256": "ab2916b4f9bb215fa2b62e32480836d2185bd335d1b5dd3f5b3386e37b74a407"
+    },
+    {
+      "path": "references/input.json",
+      "sha256": "0c65752f679ff9bbd6ebdecb16ba190e003a739271756f3c33019940c32e12ce"
+    },
+    {
+      "path": "references/output.json",
+      "sha256": "ba5cbddef8164ce7a043390c4a144ad899745be4990636be7bab590bf68ab0a5"
+    },
+    {
+      "path": "references/workflow.md",
+      "sha256": "7fd411c7e9fe55b9793a689ef4c6e293a9d37cda39ebf1e8b2fd1f60bf2dc2ed"
+    }
+  ],
+  "input_schema": "references/input.json",
+  "output_schema": "references/output.json",
+  "configuration": {
+    "schema_resource": "references/configuration.json",
+    "fields": [
+      "presentation.tone",
+      "presentation.locale"
+    ]
+  },
+  "scripts": [],
+  "egress": []
+}

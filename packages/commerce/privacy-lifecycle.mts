@@ -55,6 +55,15 @@ export function eraseSelected(k:CommerceKernel,s:Row,ids:string[],hash:string,at
     const cases=all(k,'commerce_cases',t,st).filter(r=>ids.includes(r.resource_id)).map(r=>r.id);
     if(cases.length) {
       const cargs=[t,st,...cases],cm=where(cases);
+      const supportLinks=all(k,'commerce_support_links',t,st).filter(r=>cases.includes(r.case_id)).map(r=>r.id);
+      if(supportLinks.length)k.db.prepare(`UPDATE commerce_support_contacts SET address=NULL,erased=1,revision=revision+1 WHERE tenant_id=? AND store_id=? AND link_id IN (${where(supportLinks)})`).run(t,st,...supportLinks);
+      for(const table of ['commerce_support_messages','commerce_support_attempts']){scrubRecord(k,table,t,st,cases,'case_id');k.db.prepare(`UPDATE ${table} SET erased=1 WHERE tenant_id=? AND store_id=? AND case_id IN (${cm})`).run(...cargs);}
+      scrubRecord(k,'commerce_support_deliveries',t,st,cases,'case_id');k.db.prepare(`UPDATE commerce_support_deliveries SET erased=1,owner_session_hash='revoked' WHERE tenant_id=? AND store_id=? AND case_id IN (${cm})`).run(...cargs);
+      k.db.prepare(`UPDATE commerce_support_rule_jobs SET state='cancelled',event_body='{"redacted":true}',result=NULL WHERE tenant_id=? AND store_id=? AND case_id IN (${cm})`).run(...cargs);
+      k.db.prepare(`UPDATE commerce_support_links SET erased=1,customer_id=? WHERE tenant_id=? AND store_id=? AND case_id IN (${cm})`).run('erased_'+hash.slice(0,32),...cargs);
+      k.db.prepare(`UPDATE commerce_support_ownership SET generation=generation+1,mode='human',owner='privacy_hold' WHERE tenant_id=? AND store_id=? AND case_id IN (${cm})`).run(...cargs);
+      k.db.prepare("UPDATE commerce_support_documents SET state='revoked' WHERE tenant_id=? AND store_id=? AND kind='insight_drafts'").run(t,st);
+
       k.db.prepare(`UPDATE commerce_return_evidence SET state='erased',bytes=NULL,note='',scanner=NULL WHERE tenant_id=? AND store_id=? AND case_id IN (${cm})`).run(...cargs);
       for(const table of ['commerce_inventory_reservations','commerce_return_parcels','commerce_fulfillment_quotes','commerce_return_labels','commerce_resolution_plans','commerce_resolution_allocations','commerce_resolution_quotes','commerce_exchange_quotes'])scrubRecord(k,table,t,st,cases,'case_id');
       const fulfillmentOps=all(k,'commerce_fulfillment_operations',t,st).filter(r=>cases.includes(r.case_id)).map(r=>r.id);
@@ -72,6 +81,9 @@ export function eraseSelected(k:CommerceKernel,s:Row,ids:string[],hash:string,at
       k.db.prepare(`UPDATE commerce_cases SET customer_id=?,verification_hash=NULL WHERE tenant_id=? AND store_id=? AND id IN (${cm})`).run('erased_'+hash.slice(0,32),...cargs);
     }
     k.db.prepare(`DELETE FROM commerce_receipt_payloads WHERE tenant_id=? AND store_id=? AND receipt_id IN (SELECT r.id FROM commerce_operation_receipts r JOIN commerce_operations o ON r.tenant_id=o.tenant_id AND r.store_id=o.store_id AND r.operation_id=o.id WHERE o.tenant_id=? AND o.store_id=? AND o.resource_id IN (${marks}))`).run(t,st,...args);
+    const privateCustomers=all(k,'commerce_resources',t,st).filter(r=>ids.includes(r.id)).flatMap(r=>r.customer_id?[r.customer_id]:[]);
+    if(privateCustomers.length){const pm=where(privateCustomers);k.db.prepare(`UPDATE commerce_support_consent SET customer_id=?,state='withdrawn' WHERE tenant_id=? AND store_id=? AND customer_id IN (${pm})`).run('erased_'+hash.slice(0,32),t,st,...privateCustomers);k.db.prepare(`UPDATE commerce_support_consent_events SET customer_id=?,body='{"redacted":true}',digest=? WHERE tenant_id=? AND store_id=? AND customer_id IN (${pm})`).run('erased_'+hash.slice(0,32),contentDigest({redacted:true}),t,st,...privateCustomers);}
+    k.db.prepare(`DELETE FROM commerce_customer_proof_bindings WHERE customer_resource_id IN (${marks})`).run(...ids);
     k.db.prepare(`DELETE FROM commerce_sessions WHERE tenant_id=? AND store_id=? AND resource_id IN (${marks})`).run(...args);
     k.db.prepare(`DELETE FROM commerce_challenges WHERE tenant_id=? AND store_id=? AND resource_id IN (${marks})`).run(...args);
     k.db.prepare(`UPDATE commerce_resources SET payload=?,customer_id=NULL,external_id='erased_'||id WHERE tenant_id=? AND store_id=? AND id IN (${marks})`).run(erased,...args);
@@ -105,7 +117,9 @@ export class PrivacyLifecycle {
       const returnIds=all(k,'commerce_return_requests',s.tenant_id,s.store_id).filter(r=>ids.includes(r.resource_id)).map(r=>r.id),sessionIds=all(k,'commerce_receiving_sessions',s.tenant_id,s.store_id).filter(r=>returnIds.includes(r.request_id)).map(r=>r.id);
       const editIds=all(k,'commerce_order_edits',s.tenant_id,s.store_id).filter(r=>ids.includes(r.resource_id)).map(r=>r.id);
       const order_edit_records=Object.fromEntries(['commerce_edit_snapshots','commerce_edit_inputs','commerce_edit_quotes','commerce_order_edits','commerce_edit_steps','commerce_edit_events'].map(table=>[table,all(k,table,s.tenant_id,s.store_id).filter(r=>ids.includes(r.resource_id)||editIds.includes(r.edit_id))]));
-      const result={order_edit_records,schema_version:1,tenant_id:s.tenant_id,store_id:s.store_id,subject_ref:subjectHash(s.tenant_id,s.store_id,customer),
+      const support_links=all(k,'commerce_support_links',s.tenant_id,s.store_id).filter(r=>caseIds.includes(r.case_id)),supportLinkIds=support_links.map(r=>r.id);
+      const support_records={links:support_links,contacts:all(k,'commerce_support_contacts',s.tenant_id,s.store_id).filter(r=>supportLinkIds.includes(r.link_id)),...Object.fromEntries(['commerce_support_messages','commerce_support_attempts','commerce_support_deliveries','commerce_support_completions','commerce_support_costs','commerce_support_rule_jobs'].map(table=>[table,all(k,table,s.tenant_id,s.store_id).filter(r=>caseIds.includes(r.case_id)).map(r=>{const copy={...r};delete copy.owner_session_hash;return copy;})]))};
+      const result={support_records,order_edit_records,schema_version:1,tenant_id:s.tenant_id,store_id:s.store_id,subject_ref:subjectHash(s.tenant_id,s.store_id,customer),
         resources:rs.map(r=>k.project(r)),attachments:all(k,'commerce_attachments',s.tenant_id,s.store_id).filter(r=>ids.includes(r.resource_id)).map(r=>({id:r.id,resource_id:r.resource_id,content:JSON.parse(r.content)})),
         knowledge:all(k,'commerce_knowledge',s.tenant_id,s.store_id).filter(r=>ids.includes(r.resource_id)),
         tasks,assistance:all(k,'commerce_assistance_receipts',s.tenant_id,s.store_id).filter(r=>tasks.some(t=>t.id===r.task_id)),

@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "id": "rifare-support-api",
+  "profile": "authenticated_sqlite_diagnostic",
+  "transport": "POST /v1/support/{operation}",
+  "authorization": "current scoped session; server fixed sources only",
+  "credentials_in_request": false,
+  "model_required": false,
+  "routes": {
+    "context": [
+      "case_id"
+    ],
+    "history": [
+      "case_id",
+      "after",
+      "limit"
+    ],
+    "customer-message": [
+      "link_id",
+      "request_id",
+      "text"
+    ],
+    "takeover": [
+      "case_id",
+      "expected_generation",
+      "reason"
+    ],
+    "assign": [
+      "case_id",
+      "expected_generation",
+      "actor_id"
+    ],
+    "consent": [
+      "case_id",
+      "sender_id",
+      "channel",
+      "purpose",
+      "state",
+      "event_id",
+      "source_version",
+      "effective_at",
+      "source_ref"
+    ],
+    "queue": [
+      "case_id",
+      "link_id",
+      "sender_id",
+      "template_id",
+      "event_id",
+      "expected_generation"
+    ],
+    "dispatch": [
+      "operation_id"
+    ],
+    "reconcile": [
+      "operation_id"
+    ],
+    "workflow-context": [
+      "case_id",
+      "workflow",
+      "skill_digest"
+    ],
+    "workflow-resource": [
+      "case_id",
+      "workflow",
+      "skill_digest",
+      "path"
+    ],
+    "workflow-answer": [
+      "case_id",
+      "workflow",
+      "skill_digest",
+      "context_digest",
+      "fact_ids",
+      "handling",
+      "request_id"
+    ],
+    "model-read": [
+      "case_id",
+      "task_id",
+      "route_id",
+      "untrusted_input"
+    ],
+    "metrics-close": [
+      "case_id",
+      "event_id"
+    ],
+    "metrics-confirm": [
+      "case_id",
+      "event_id",
+      "attempt_id"
+    ]
+  },
+  "administrative_routes": "Additional fixed typed service methods require support.configure, policy.review or support.analytics; consult SupportService.post and the exact domain contract. No arbitrary function names.",
+  "forbidden": [
+    "caller-selected tenant/source/key/URL",
+    "blind retry",
+    "arbitrary model output as authority",
+    "financial execution through messages",
+    "automatic policy publication from insights"
+  ],
+  "skills": [
+    "support-reply",
+    "shipment-assistance"
+  ],
+  "side_effects": "Configured fixture source only by default; model-read unconfigured; no live delivery or monetary qualification."
+}

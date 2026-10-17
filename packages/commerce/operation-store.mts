@@ -32,10 +32,12 @@ export function transitionOperation(k:CommerceKernel,s:Row,operationId:string,st
   const current=operationRow(k,s,operationId);appendReceipt(k,s,current,receiptFields(code,providerRef));return current;
 }
 export function blockingOperation(k:CommerceKernel,s:Row,op:Row):string|null {
+  const support=['customer.message','helpdesk.write'].includes(JSON.parse(op.command).action);
+  const stream=support?"AND json_extract(earlier.command,'$.action') IN ('customer.message','helpdesk.write')":"AND json_extract(earlier.command,'$.action') NOT IN ('customer.message','helpdesk.write')";
   const r=k.db.prepare(`SELECT earlier.id FROM commerce_operations earlier
     JOIN commerce_operation_work w ON w.tenant_id=earlier.tenant_id AND w.store_id=earlier.store_id AND w.operation_id=earlier.id
     WHERE earlier.tenant_id=? AND earlier.store_id=? AND earlier.resource_id=? AND earlier.id<>?
-    AND w.state NOT IN ('done','dead') AND (
+    ${stream} AND w.state NOT IN ('done','dead') AND (
       w.state IN ('leased','sending') OR
       (SELECT min(seq) FROM commerce_operation_receipts WHERE tenant_id=earlier.tenant_id AND store_id=earlier.store_id AND operation_id=earlier.id)
        < (SELECT min(seq) FROM commerce_operation_receipts WHERE tenant_id=? AND store_id=? AND operation_id=?))

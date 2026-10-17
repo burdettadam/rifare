@@ -1,3 +1,4 @@
+import { assertSupportAutomation } from './support-qualification.mts';
 import { EDIT_ACTION,editGatewayQuote,commitOrderEdit } from './order-edit-core.mts';
 import { LIFECYCLE_ACTIONS,assertReturnWritable } from './return-lifecycle-core.mts';
 import { lifecycleGatewayQuote,commitLifecycle } from './lifecycle-gateway.mts';
@@ -88,7 +89,7 @@ export class ActionGateway {
     const k=this.#k,p=this.#proposal(input),c=this.cases.inspect(scope,p.case_id),s=k.authorize(scope,p.action===INTAKE_ACTION?'return.request':'action.propose',c.resource_id);
     return k.transaction(()=>{
       k.authorize(scope,p.action===INTAKE_ACTION?'return.request':'action.propose',c.resource_id);assertCaseWorkerScope(k,scope,c.id);
-      const preview=this.#quote(scope,p,k.clock()),ref='preview_'+token().slice(0,32),hash=contentDigest(preview);
+      const preview=this.#quote(scope,p,k.clock());assertSupportAutomation(k,scope,preview,'propose');const ref='preview_'+token().slice(0,32),hash=contentDigest(preview);
       k.db.prepare('INSERT INTO commerce_action_previews VALUES(?,?,?,?,?,?,?)').run(s.tenant_id,s.store_id,ref,p.case_id,canonical(preview),hash,s.actor_id);
       return {id:ref,digest:hash,preview,approval_required:true,execution_authorized:false};
     });
@@ -120,7 +121,7 @@ export class ActionGateway {
       const m=k.db.prepare('SELECT * FROM commerce_members WHERE tenant_id=? AND store_id=? AND actor_id=? AND active=1').get(s.tenant_id,s.store_id,a.approver) as Row;
       const authority=m&&permissionDecision(k.db,m,'action.approve',r.preview.resource_id);
       if(!authority?.allowed||authority.authority_revision!==a.authority_revision||a.approver===r.proposer)throw new Error('APPROVAL_AUTHORITY_CHANGED');
-      const q=this.#current(scope,r);
+      const q=this.#current(scope,r);assertSupportAutomation(k,scope,q,'execute');
       const consumed=k.db.prepare('UPDATE commerce_action_approvals SET uses=1 WHERE tenant_id=? AND store_id=? AND id=? AND uses=0 AND revoked=0').run(s.tenant_id,s.store_id,a.id);
       if(consumed.changes!==1)throw new Error('APPROVAL_UNAVAILABLE');
       const receiptId='receipt_'+token().slice(0,32);

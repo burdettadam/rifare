@@ -698,6 +698,142 @@
       "contract_files": [
         "goals/M04/M04-G99.md"
       ]
+    },
+    {
+      "id": "FEATURE-M05-G01",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M05/M05-G01.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M05-G02",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M05/M05-G02.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M05-G03",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M05/M05-G03.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M05-G04",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M05/M05-G04.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M05-G05",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M05/M05-G05.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M05-G06",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M05/M05-G06.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M05-G07",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M05/M05-G07.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M05-G08",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M05/M05-G08.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M05-G09",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M05/M05-G09.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M05-G10",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M05/M05-G10.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M05-G11",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M05/M05-G11.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M05-G12",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M05/M05-G12.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M05-G13",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M05/M05-G13.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M05-G14",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M05/M05-G14.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M05-G15",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M05/M05-G15.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M05-G16",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M05/M05-G16.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M05-G99",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M05/M05-G99.md"
+      ]
     }
   ],
   "tests": [
@@ -14224,6 +14360,783 @@
       "runner_case_id": "M04-REVIEW-12",
       "source": "tests/development/order-edit-return-facts.test.mts",
       "capability_id": "FEATURE-M04-G10"
+    },
+    {
+      "id": "runtime:CASE-M05-G02-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M05-G02-01",
+      "source": "tests/development/support-adapters.test.mts",
+      "capability_id": "FEATURE-M05-G02"
+    },
+    {
+      "id": "runtime:CASE-M05-G02-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M05-G02-02",
+      "source": "tests/development/support-adapters.test.mts",
+      "capability_id": "FEATURE-M05-G02"
+    },
+    {
+      "id": "runtime:CASE-M05-G02-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M05-G02-03",
+      "source": "tests/development/support-adapters.test.mts",
+      "capability_id": "FEATURE-M05-G02"
+    },
+    {
+      "id": "runtime:M05-G02-04",
+      "suite": "runtime",
+      "runner_case_id": "M05-G02-04",
+      "source": "tests/development/support-adapters.test.mts",
+      "capability_id": "FEATURE-M05-G02"
+    },
+    {
+      "id": "runtime:M05-G02-05",
+      "suite": "runtime",
+      "runner_case_id": "M05-G02-05",
+      "source": "tests/development/support-adapters.test.mts",
+      "capability_id": "FEATURE-M05-G02"
+    },
+    {
+      "id": "runtime:M05-G04-09",
+      "suite": "runtime",
+      "runner_case_id": "M05-G04-09",
+      "source": "tests/development/support-adapters.test.mts",
+      "capability_id": "FEATURE-M05-G04"
+    },
+    {
+      "id": "runtime:M05-G04-10",
+      "suite": "runtime",
+      "runner_case_id": "M05-G04-10",
+      "source": "tests/development/support-adapters.test.mts",
+      "capability_id": "FEATURE-M05-G04"
+    },
+    {
+      "id": "runtime:M05-G02-06",
+      "suite": "runtime",
+      "runner_case_id": "M05-G02-06",
+      "source": "tests/development/support-adapters.test.mts",
+      "capability_id": "FEATURE-M05-G02"
+    },
+    {
+      "id": "runtime:M05-G02-07",
+      "suite": "runtime",
+      "runner_case_id": "M05-G02-07",
+      "source": "tests/development/support-adapters.test.mts",
+      "capability_id": "FEATURE-M05-G02"
+    },
+    {
+      "id": "runtime:M05-G02-08",
+      "suite": "runtime",
+      "runner_case_id": "M05-G02-08",
+      "source": "tests/development/support-adapters.test.mts",
+      "capability_id": "FEATURE-M05-G02"
+    },
+    {
+      "id": "runtime:M05-G02-09",
+      "suite": "runtime",
+      "runner_case_id": "M05-G02-09",
+      "source": "tests/development/support-adapters.test.mts",
+      "capability_id": "FEATURE-M05-G02"
+    },
+    {
+      "id": "runtime:M05-G03-BROWSER-01",
+      "suite": "runtime",
+      "runner_case_id": "M05-G03-BROWSER-01",
+      "source": "tests/development/support-browser.test.mts",
+      "capability_id": "FEATURE-M05-G03"
+    },
+    {
+      "id": "runtime:M05-G11-BROWSER-01",
+      "suite": "runtime",
+      "runner_case_id": "M05-G11-BROWSER-01",
+      "source": "tests/development/support-browser.test.mts",
+      "capability_id": "FEATURE-M05-G11"
+    },
+    {
+      "id": "runtime:M05-G01-BROWSER-01",
+      "suite": "runtime",
+      "runner_case_id": "M05-G01-BROWSER-01",
+      "source": "tests/development/support-browser.test.mts",
+      "capability_id": "FEATURE-M05-G01"
+    },
+    {
+      "id": "runtime:M05-G06-BROWSER-01",
+      "suite": "runtime",
+      "runner_case_id": "M05-G06-BROWSER-01",
+      "source": "tests/development/support-browser.test.mts",
+      "capability_id": "FEATURE-M05-G06"
+    },
+    {
+      "id": "runtime:M05-G11-BROWSER-02",
+      "suite": "runtime",
+      "runner_case_id": "M05-G11-BROWSER-02",
+      "source": "tests/development/support-browser.test.mts",
+      "capability_id": "FEATURE-M05-G11"
+    },
+    {
+      "id": "runtime:CASE-M05-G09-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M05-G09-01",
+      "source": "tests/development/support-budgets.test.mts",
+      "capability_id": "FEATURE-M05-G09"
+    },
+    {
+      "id": "runtime:CASE-M05-G09-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M05-G09-02",
+      "source": "tests/development/support-budgets.test.mts",
+      "capability_id": "FEATURE-M05-G09"
+    },
+    {
+      "id": "runtime:CASE-M05-G09-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M05-G09-03",
+      "source": "tests/development/support-budgets.test.mts",
+      "capability_id": "FEATURE-M05-G09"
+    },
+    {
+      "id": "runtime:M05-G09-04",
+      "suite": "runtime",
+      "runner_case_id": "M05-G09-04",
+      "source": "tests/development/support-budgets.test.mts",
+      "capability_id": "FEATURE-M05-G09"
+    },
+    {
+      "id": "runtime:M05-G09-05",
+      "suite": "runtime",
+      "runner_case_id": "M05-G09-05",
+      "source": "tests/development/support-budgets.test.mts",
+      "capability_id": "FEATURE-M05-G09"
+    },
+    {
+      "id": "runtime:M05-G09-06",
+      "suite": "runtime",
+      "runner_case_id": "M05-G09-06",
+      "source": "tests/development/support-budgets.test.mts",
+      "capability_id": "FEATURE-M05-G09"
+    },
+    {
+      "id": "runtime:M05-G09-07",
+      "suite": "runtime",
+      "runner_case_id": "M05-G09-07",
+      "source": "tests/development/support-budgets.test.mts",
+      "capability_id": "FEATURE-M05-G09"
+    },
+    {
+      "id": "runtime:M05-G09-08",
+      "suite": "runtime",
+      "runner_case_id": "M05-G09-08",
+      "source": "tests/development/support-budgets.test.mts",
+      "capability_id": "FEATURE-M05-G09"
+    },
+    {
+      "id": "runtime:M05-G09-09",
+      "suite": "runtime",
+      "runner_case_id": "M05-G09-09",
+      "source": "tests/development/support-budgets.test.mts",
+      "capability_id": "FEATURE-M05-G09"
+    },
+    {
+      "id": "runtime:CASE-M05-G05-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M05-G05-01",
+      "source": "tests/development/support-consent.test.mts",
+      "capability_id": "FEATURE-M05-G05"
+    },
+    {
+      "id": "runtime:CASE-M05-G05-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M05-G05-02",
+      "source": "tests/development/support-consent.test.mts",
+      "capability_id": "FEATURE-M05-G05"
+    },
+    {
+      "id": "runtime:CASE-M05-G05-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M05-G05-03",
+      "source": "tests/development/support-consent.test.mts",
+      "capability_id": "FEATURE-M05-G05"
+    },
+    {
+      "id": "runtime:M05-G05-04",
+      "suite": "runtime",
+      "runner_case_id": "M05-G05-04",
+      "source": "tests/development/support-consent.test.mts",
+      "capability_id": "FEATURE-M05-G05"
+    },
+    {
+      "id": "runtime:M05-G05-05",
+      "suite": "runtime",
+      "runner_case_id": "M05-G05-05",
+      "source": "tests/development/support-consent.test.mts",
+      "capability_id": "FEATURE-M05-G05"
+    },
+    {
+      "id": "runtime:M05-G05-06",
+      "suite": "runtime",
+      "runner_case_id": "M05-G05-06",
+      "source": "tests/development/support-consent.test.mts",
+      "capability_id": "FEATURE-M05-G05"
+    },
+    {
+      "id": "runtime:CASE-M05-G01-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M05-G01-01",
+      "source": "tests/development/support-conversations.test.mts",
+      "capability_id": "FEATURE-M05-G01"
+    },
+    {
+      "id": "runtime:CASE-M05-G01-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M05-G01-02",
+      "source": "tests/development/support-conversations.test.mts",
+      "capability_id": "FEATURE-M05-G01"
+    },
+    {
+      "id": "runtime:CASE-M05-G01-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M05-G01-03",
+      "source": "tests/development/support-conversations.test.mts",
+      "capability_id": "FEATURE-M05-G01"
+    },
+    {
+      "id": "runtime:M05-G01-04",
+      "suite": "runtime",
+      "runner_case_id": "M05-G01-04",
+      "source": "tests/development/support-conversations.test.mts",
+      "capability_id": "FEATURE-M05-G01"
+    },
+    {
+      "id": "runtime:M05-G01-05",
+      "suite": "runtime",
+      "runner_case_id": "M05-G01-05",
+      "source": "tests/development/support-conversations.test.mts",
+      "capability_id": "FEATURE-M05-G01"
+    },
+    {
+      "id": "runtime:M05-G01-06",
+      "suite": "runtime",
+      "runner_case_id": "M05-G01-06",
+      "source": "tests/development/support-conversations.test.mts",
+      "capability_id": "FEATURE-M05-G01"
+    },
+    {
+      "id": "runtime:M05-G01-07",
+      "suite": "runtime",
+      "runner_case_id": "M05-G01-07",
+      "source": "tests/development/support-conversations.test.mts",
+      "capability_id": "FEATURE-M05-G01"
+    },
+    {
+      "id": "runtime:CASE-M05-G04-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M05-G04-01",
+      "source": "tests/development/support-delivery.test.mts",
+      "capability_id": "FEATURE-M05-G04"
+    },
+    {
+      "id": "runtime:CASE-M05-G04-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M05-G04-02",
+      "source": "tests/development/support-delivery.test.mts",
+      "capability_id": "FEATURE-M05-G04"
+    },
+    {
+      "id": "runtime:CASE-M05-G04-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M05-G04-03",
+      "source": "tests/development/support-delivery.test.mts",
+      "capability_id": "FEATURE-M05-G04"
+    },
+    {
+      "id": "runtime:CASE-M05-G06-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M05-G06-01",
+      "source": "tests/development/support-delivery.test.mts",
+      "capability_id": "FEATURE-M05-G06"
+    },
+    {
+      "id": "runtime:CASE-M05-G06-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M05-G06-02",
+      "source": "tests/development/support-delivery.test.mts",
+      "capability_id": "FEATURE-M05-G06"
+    },
+    {
+      "id": "runtime:CASE-M05-G06-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M05-G06-03",
+      "source": "tests/development/support-delivery.test.mts",
+      "capability_id": "FEATURE-M05-G06"
+    },
+    {
+      "id": "runtime:M05-G04-07",
+      "suite": "runtime",
+      "runner_case_id": "M05-G04-07",
+      "source": "tests/development/support-delivery.test.mts",
+      "capability_id": "FEATURE-M05-G04"
+    },
+    {
+      "id": "runtime:M05-G04-08",
+      "suite": "runtime",
+      "runner_case_id": "M05-G04-08",
+      "source": "tests/development/support-delivery.test.mts",
+      "capability_id": "FEATURE-M05-G04"
+    },
+    {
+      "id": "runtime:M05-G11-04",
+      "suite": "runtime",
+      "runner_case_id": "M05-G11-04",
+      "source": "tests/development/support-delivery.test.mts",
+      "capability_id": "FEATURE-M05-G11"
+    },
+    {
+      "id": "runtime:M05-HTTP-01",
+      "suite": "runtime",
+      "runner_case_id": "M05-HTTP-01",
+      "source": "tests/development/support-http.test.mts",
+      "capability_id": "FEATURE-M05-G99"
+    },
+    {
+      "id": "runtime:M05-HTTP-02",
+      "suite": "runtime",
+      "runner_case_id": "M05-HTTP-02",
+      "source": "tests/development/support-http.test.mts",
+      "capability_id": "FEATURE-M05-G99"
+    },
+    {
+      "id": "runtime:M05-HTTP-03",
+      "suite": "runtime",
+      "runner_case_id": "M05-HTTP-03",
+      "source": "tests/development/support-http.test.mts",
+      "capability_id": "FEATURE-M05-G99"
+    },
+    {
+      "id": "runtime:M05-HTTP-04",
+      "suite": "runtime",
+      "runner_case_id": "M05-HTTP-04",
+      "source": "tests/development/support-http.test.mts",
+      "capability_id": "FEATURE-M05-G99"
+    },
+    {
+      "id": "runtime:M05-HTTP-05",
+      "suite": "runtime",
+      "runner_case_id": "M05-HTTP-05",
+      "source": "tests/development/support-http.test.mts",
+      "capability_id": "FEATURE-M05-G99"
+    },
+    {
+      "id": "runtime:M05-HTTP-06",
+      "suite": "runtime",
+      "runner_case_id": "M05-HTTP-06",
+      "source": "tests/development/support-http.test.mts",
+      "capability_id": "FEATURE-M05-G99"
+    },
+    {
+      "id": "runtime:M05-G99-INTEGRATED",
+      "suite": "runtime",
+      "runner_case_id": "M05-G99-INTEGRATED",
+      "source": "tests/development/support-http.test.mts",
+      "capability_id": "FEATURE-M05-G99"
+    },
+    {
+      "id": "runtime:CASE-M05-G15-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M05-G15-01",
+      "source": "tests/development/support-insights.test.mts",
+      "capability_id": "FEATURE-M05-G15"
+    },
+    {
+      "id": "runtime:CASE-M05-G15-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M05-G15-02",
+      "source": "tests/development/support-insights.test.mts",
+      "capability_id": "FEATURE-M05-G15"
+    },
+    {
+      "id": "runtime:CASE-M05-G15-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M05-G15-03",
+      "source": "tests/development/support-insights.test.mts",
+      "capability_id": "FEATURE-M05-G15"
+    },
+    {
+      "id": "runtime:M05-G15-04",
+      "suite": "runtime",
+      "runner_case_id": "M05-G15-04",
+      "source": "tests/development/support-insights.test.mts",
+      "capability_id": "FEATURE-M05-G15"
+    },
+    {
+      "id": "runtime:M05-G15-05",
+      "suite": "runtime",
+      "runner_case_id": "M05-G15-05",
+      "source": "tests/development/support-insights.test.mts",
+      "capability_id": "FEATURE-M05-G15"
+    },
+    {
+      "id": "runtime:CASE-M05-G14-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M05-G14-01",
+      "source": "tests/development/support-metrics.test.mts",
+      "capability_id": "FEATURE-M05-G14"
+    },
+    {
+      "id": "runtime:CASE-M05-G14-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M05-G14-02",
+      "source": "tests/development/support-metrics.test.mts",
+      "capability_id": "FEATURE-M05-G14"
+    },
+    {
+      "id": "runtime:CASE-M05-G14-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M05-G14-03",
+      "source": "tests/development/support-metrics.test.mts",
+      "capability_id": "FEATURE-M05-G14"
+    },
+    {
+      "id": "runtime:M05-G14-04",
+      "suite": "runtime",
+      "runner_case_id": "M05-G14-04",
+      "source": "tests/development/support-metrics.test.mts",
+      "capability_id": "FEATURE-M05-G14"
+    },
+    {
+      "id": "runtime:M05-G14-05",
+      "suite": "runtime",
+      "runner_case_id": "M05-G14-05",
+      "source": "tests/development/support-metrics.test.mts",
+      "capability_id": "FEATURE-M05-G14"
+    },
+    {
+      "id": "runtime:M05-G14-06",
+      "suite": "runtime",
+      "runner_case_id": "M05-G14-06",
+      "source": "tests/development/support-metrics.test.mts",
+      "capability_id": "FEATURE-M05-G14"
+    },
+    {
+      "id": "runtime:M05-G14-07",
+      "suite": "runtime",
+      "runner_case_id": "M05-G14-07",
+      "source": "tests/development/support-metrics.test.mts",
+      "capability_id": "FEATURE-M05-G14"
+    },
+    {
+      "id": "runtime:M05-G14-08",
+      "suite": "runtime",
+      "runner_case_id": "M05-G14-08",
+      "source": "tests/development/support-metrics.test.mts",
+      "capability_id": "FEATURE-M05-G14"
+    },
+    {
+      "id": "runtime:M05-PRIVACY-01",
+      "suite": "runtime",
+      "runner_case_id": "M05-PRIVACY-01",
+      "source": "tests/development/support-privacy.test.mts",
+      "capability_id": "FEATURE-M05-G99"
+    },
+    {
+      "id": "runtime:M05-PRIVACY-02",
+      "suite": "runtime",
+      "runner_case_id": "M05-PRIVACY-02",
+      "source": "tests/development/support-privacy.test.mts",
+      "capability_id": "FEATURE-M05-G99"
+    },
+    {
+      "id": "runtime:M05-PRIVACY-03",
+      "suite": "runtime",
+      "runner_case_id": "M05-PRIVACY-03",
+      "source": "tests/development/support-privacy.test.mts",
+      "capability_id": "FEATURE-M05-G99"
+    },
+    {
+      "id": "runtime:M05-PRIVACY-04",
+      "suite": "runtime",
+      "runner_case_id": "M05-PRIVACY-04",
+      "source": "tests/development/support-privacy.test.mts",
+      "capability_id": "FEATURE-M05-G99"
+    },
+    {
+      "id": "runtime:M05-G09-PROCESS-01",
+      "suite": "runtime",
+      "runner_case_id": "M05-G09-PROCESS-01",
+      "source": "tests/development/support-process.test.mts",
+      "capability_id": "FEATURE-M05-G09"
+    },
+    {
+      "id": "runtime:M05-G04-PROCESS-01",
+      "suite": "runtime",
+      "runner_case_id": "M05-G04-PROCESS-01",
+      "source": "tests/development/support-process.test.mts",
+      "capability_id": "FEATURE-M05-G04"
+    },
+    {
+      "id": "runtime:CASE-M05-G10-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M05-G10-01",
+      "source": "tests/development/support-provider-routing.test.mts",
+      "capability_id": "FEATURE-M05-G10"
+    },
+    {
+      "id": "runtime:CASE-M05-G10-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M05-G10-02",
+      "source": "tests/development/support-provider-routing.test.mts",
+      "capability_id": "FEATURE-M05-G10"
+    },
+    {
+      "id": "runtime:CASE-M05-G10-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M05-G10-03",
+      "source": "tests/development/support-provider-routing.test.mts",
+      "capability_id": "FEATURE-M05-G10"
+    },
+    {
+      "id": "runtime:CASE-M05-G11-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M05-G11-01",
+      "source": "tests/development/support-provider-routing.test.mts",
+      "capability_id": "FEATURE-M05-G11"
+    },
+    {
+      "id": "runtime:CASE-M05-G11-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M05-G11-02",
+      "source": "tests/development/support-provider-routing.test.mts",
+      "capability_id": "FEATURE-M05-G11"
+    },
+    {
+      "id": "runtime:CASE-M05-G11-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M05-G11-03",
+      "source": "tests/development/support-provider-routing.test.mts",
+      "capability_id": "FEATURE-M05-G11"
+    },
+    {
+      "id": "runtime:M05-G09-RUNNER-08",
+      "suite": "runtime",
+      "runner_case_id": "M05-G09-RUNNER-08",
+      "source": "tests/development/support-provider-routing.test.mts",
+      "capability_id": "FEATURE-M05-G09"
+    },
+    {
+      "id": "runtime:M05-G10-04",
+      "suite": "runtime",
+      "runner_case_id": "M05-G10-04",
+      "source": "tests/development/support-provider-routing.test.mts",
+      "capability_id": "FEATURE-M05-G10"
+    },
+    {
+      "id": "runtime:CASE-M05-G08-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M05-G08-01",
+      "source": "tests/development/support-qualification.test.mts",
+      "capability_id": "FEATURE-M05-G08"
+    },
+    {
+      "id": "runtime:CASE-M05-G08-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M05-G08-02",
+      "source": "tests/development/support-qualification.test.mts",
+      "capability_id": "FEATURE-M05-G08"
+    },
+    {
+      "id": "runtime:CASE-M05-G08-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M05-G08-03",
+      "source": "tests/development/support-qualification.test.mts",
+      "capability_id": "FEATURE-M05-G08"
+    },
+    {
+      "id": "runtime:CASE-M05-G16-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M05-G16-01",
+      "source": "tests/development/support-qualification.test.mts",
+      "capability_id": "FEATURE-M05-G16"
+    },
+    {
+      "id": "runtime:CASE-M05-G16-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M05-G16-02",
+      "source": "tests/development/support-qualification.test.mts",
+      "capability_id": "FEATURE-M05-G16"
+    },
+    {
+      "id": "runtime:CASE-M05-G16-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M05-G16-03",
+      "source": "tests/development/support-qualification.test.mts",
+      "capability_id": "FEATURE-M05-G16"
+    },
+    {
+      "id": "runtime:M05-G16-07",
+      "suite": "runtime",
+      "runner_case_id": "M05-G16-07",
+      "source": "tests/development/support-qualification.test.mts",
+      "capability_id": "FEATURE-M05-G16"
+    },
+    {
+      "id": "runtime:M05-G16-08",
+      "suite": "runtime",
+      "runner_case_id": "M05-G16-08",
+      "source": "tests/development/support-qualification.test.mts",
+      "capability_id": "FEATURE-M05-G16"
+    },
+    {
+      "id": "runtime:M05-G08-04",
+      "suite": "runtime",
+      "runner_case_id": "M05-G08-04",
+      "source": "tests/development/support-qualification.test.mts",
+      "capability_id": "FEATURE-M05-G08"
+    },
+    {
+      "id": "runtime:CASE-M05-G07-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M05-G07-01",
+      "source": "tests/development/support-rules.test.mts",
+      "capability_id": "FEATURE-M05-G07"
+    },
+    {
+      "id": "runtime:CASE-M05-G07-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M05-G07-02",
+      "source": "tests/development/support-rules.test.mts",
+      "capability_id": "FEATURE-M05-G07"
+    },
+    {
+      "id": "runtime:CASE-M05-G07-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M05-G07-03",
+      "source": "tests/development/support-rules.test.mts",
+      "capability_id": "FEATURE-M05-G07"
+    },
+    {
+      "id": "runtime:M05-G07-04",
+      "suite": "runtime",
+      "runner_case_id": "M05-G07-04",
+      "source": "tests/development/support-rules.test.mts",
+      "capability_id": "FEATURE-M05-G07"
+    },
+    {
+      "id": "runtime:M05-G07-05",
+      "suite": "runtime",
+      "runner_case_id": "M05-G07-05",
+      "source": "tests/development/support-rules.test.mts",
+      "capability_id": "FEATURE-M05-G07"
+    },
+    {
+      "id": "runtime:M05-G07-06",
+      "suite": "runtime",
+      "runner_case_id": "M05-G07-06",
+      "source": "tests/development/support-rules.test.mts",
+      "capability_id": "FEATURE-M05-G07"
+    },
+    {
+      "id": "runtime:M05-G07-07",
+      "suite": "runtime",
+      "runner_case_id": "M05-G07-07",
+      "source": "tests/development/support-rules.test.mts",
+      "capability_id": "FEATURE-M05-G07"
+    },
+    {
+      "id": "runtime:M05-G07-08",
+      "suite": "runtime",
+      "runner_case_id": "M05-G07-08",
+      "source": "tests/development/support-rules.test.mts",
+      "capability_id": "FEATURE-M05-G07"
+    },
+    {
+      "id": "runtime:CASE-M05-G03-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M05-G03-01",
+      "source": "tests/development/support-tracking.test.mts",
+      "capability_id": "FEATURE-M05-G03"
+    },
+    {
+      "id": "runtime:CASE-M05-G03-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M05-G03-02",
+      "source": "tests/development/support-tracking.test.mts",
+      "capability_id": "FEATURE-M05-G03"
+    },
+    {
+      "id": "runtime:CASE-M05-G03-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M05-G03-03",
+      "source": "tests/development/support-tracking.test.mts",
+      "capability_id": "FEATURE-M05-G03"
+    },
+    {
+      "id": "runtime:M05-G03-04",
+      "suite": "runtime",
+      "runner_case_id": "M05-G03-04",
+      "source": "tests/development/support-tracking.test.mts",
+      "capability_id": "FEATURE-M05-G03"
+    },
+    {
+      "id": "runtime:M05-G03-05",
+      "suite": "runtime",
+      "runner_case_id": "M05-G03-05",
+      "source": "tests/development/support-tracking.test.mts",
+      "capability_id": "FEATURE-M05-G03"
+    },
+    {
+      "id": "runtime:CASE-M05-G12-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M05-G12-01",
+      "source": "tests/development/support-workflows.test.mts",
+      "capability_id": "FEATURE-M05-G12"
+    },
+    {
+      "id": "runtime:CASE-M05-G12-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M05-G12-02",
+      "source": "tests/development/support-workflows.test.mts",
+      "capability_id": "FEATURE-M05-G12"
+    },
+    {
+      "id": "runtime:CASE-M05-G12-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M05-G12-03",
+      "source": "tests/development/support-workflows.test.mts",
+      "capability_id": "FEATURE-M05-G12"
+    },
+    {
+      "id": "runtime:CASE-M05-G13-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M05-G13-01",
+      "source": "tests/development/support-workflows.test.mts",
+      "capability_id": "FEATURE-M05-G13"
+    },
+    {
+      "id": "runtime:CASE-M05-G13-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M05-G13-02",
+      "source": "tests/development/support-workflows.test.mts",
+      "capability_id": "FEATURE-M05-G13"
+    },
+    {
+      "id": "runtime:CASE-M05-G13-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M05-G13-03",
+      "source": "tests/development/support-workflows.test.mts",
+      "capability_id": "FEATURE-M05-G13"
+    },
+    {
+      "id": "runtime:M05-G12-04",
+      "suite": "runtime",
+      "runner_case_id": "M05-G12-04",
+      "source": "tests/development/support-workflows.test.mts",
+      "capability_id": "FEATURE-M05-G12"
+    },
+    {
+      "id": "runtime:M05-G12-05",
+      "suite": "runtime",
+      "runner_case_id": "M05-G12-05",
+      "source": "tests/development/support-workflows.test.mts",
+      "capability_id": "FEATURE-M05-G12"
     }
   ],
   "protected_files": [
@@ -14604,7 +15517,43 @@
     "tests/development/order-edit-review.test.mts",
     "tests/development/order-edit-workflow.test.mts",
     "work/qualification/M04.json",
-    "tests/development/order-edit-return-facts.test.mts"
+    "tests/development/order-edit-return-facts.test.mts",
+    "clients/support_case.py",
+    "packages/commerce/contracts/support-api.v1.json",
+    "packages/commerce/skill-bundles/shipment-assistance/SKILL.md",
+    "packages/commerce/skill-bundles/shipment-assistance/commerce-manifest.json",
+    "packages/commerce/skill-bundles/shipment-assistance/references/configuration.json",
+    "packages/commerce/skill-bundles/shipment-assistance/references/input.json",
+    "packages/commerce/skill-bundles/shipment-assistance/references/output.json",
+    "packages/commerce/skill-bundles/shipment-assistance/references/workflow.md",
+    "packages/commerce/skill-bundles/support-reply/SKILL.md",
+    "packages/commerce/skill-bundles/support-reply/commerce-manifest.json",
+    "packages/commerce/skill-bundles/support-reply/references/configuration.json",
+    "packages/commerce/skill-bundles/support-reply/references/input.json",
+    "packages/commerce/skill-bundles/support-reply/references/output.json",
+    "packages/commerce/skill-bundles/support-reply/references/workflow.md",
+    "tests/browser/support_component.py",
+    "tests/development/support-adapters.test.mts",
+    "tests/development/support-browser.test.mts",
+    "tests/development/support-budgets.test.mts",
+    "tests/development/support-consent.test.mts",
+    "tests/development/support-conversations.test.mts",
+    "tests/development/support-delivery.test.mts",
+    "tests/development/support-helpers.mts",
+    "tests/development/support-http.test.mts",
+    "tests/development/support-insights.test.mts",
+    "tests/development/support-metrics.test.mts",
+    "tests/development/support-model-helpers.mts",
+    "tests/development/support-privacy.test.mts",
+    "tests/development/support-process-child.mts",
+    "tests/development/support-process.test.mts",
+    "tests/development/support-provider-routing.test.mts",
+    "tests/development/support-qualification.test.mts",
+    "tests/development/support-rules.test.mts",
+    "tests/development/support-tracking.test.mts",
+    "tests/development/support-workflow-helpers.mts",
+    "tests/development/support-workflows.test.mts",
+    "work/qualification/M05.json"
   ],
   "source_count_fixture": "tests/fixtures/licensing/artifact-oracle.v1.json",
   "source_inventory": "planning/component-inventory.json"
