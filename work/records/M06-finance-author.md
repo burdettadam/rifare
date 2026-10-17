@@ -84,3 +84,13 @@ overlapping original instrument units under a new allocation identity, and expos
 both the original account customer and the independently seeded recipient grant.
 Root retains the combined gift behavior, test registration, full protected run and
 independent acceptance decision; no connected qualification is implied here.
+
+Independent regression review identified that the first dropped-binding mutant
+log reached a reconciliation error before the effect-count assertion. That initial
+log is retained. The supplemental test now checks native replacements and stock
+immediately after dispatch. All 12 candidate cases pass again; the identical
+source mutant fails the explicit forbidden-effect assertion (one actual native
+replacement versus zero allowed). The corrected raw log is
+`reservation-payment-requirement-dropped-behavior.tap`, with source/test hashes in
+`targeted-faults-behavior.json`. Only this corrected rerun supports the direct
+stock/effect behavioral claim for that mutant.

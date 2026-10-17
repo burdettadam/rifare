@@ -29,7 +29,9 @@ test('M06-G02-FULFILLMENT-UNKNOWN-PAYMENT-CANNOT-RELEASE-STOCK',()=>usingExchang
 test('M06-G02-NATIVE-HOLD-REJECTS-DROPPED-PAYMENT-BINDING',()=>usingExchangeFulfillment(async f=>{
  const reservation=f.reserve();await f.settle();const replacement=f.authorizeFulfillment(f.replacementQuote(reservation)),send=f.fulfillmentSource.replace.bind(f.fulfillmentSource);
  f.fulfillmentSource.replace=async command=>{const altered={...command};delete altered.exchange_finance;return send(altered);};
- assert.equal((await f.execution.dispatch(f.a.scope,replacement.id)).state,'unknown');await f.execution.dispatch(f.a.scope,replacement.id);await f.execution.reconcile(f.a.scope,replacement.id);
+ assert.equal((await f.execution.dispatch(f.a.scope,replacement.id)).state,'unknown');
+ assert.equal(replacements(f),0,'dropping the binding must not create a native replacement');assert.equal(f.fulfillmentSource.stock(f.catalogResource.id).available,5,'dropping the binding must not move native stock');
+ await f.execution.dispatch(f.a.scope,replacement.id);await f.execution.reconcile(f.a.scope,replacement.id);
  assert.equal(replacements(f),0);assert.equal(captures(f),1);assert.equal(f.fulfillmentSource.stock(f.catalogResource.id).available,5);assert.equal(f.fulfillmentSource.calls.replace,1);
 }));
 test('M06-G02-NATIVE-REPLACEMENT-REJECTS-FORGED-SETTLED-LOCAL-RECEIPT',()=>usingExchangeFulfillment(async f=>{
