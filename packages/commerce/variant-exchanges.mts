@@ -2,7 +2,7 @@ import { exact,id,integer,token } from './kernel.mts';
 import type { CommerceKernel,Scope,Row } from './kernel.mts';
 import {intakeSettings,evidenceReviewState} from './return-intake-core.mts';
 import { canonical,contentDigest,jsonValue } from './configuration-values.mts';
-import { allocationContext,resolutionSettings,checkedBody,financialFacts,minor } from './resolution-ledger.mts';
+import { allocationContext,resolutionSettings,checkedBody,financialFacts,minor,assertAllocationSource } from './resolution-ledger.mts';
 
 const catalogRequired=['variant_id','product_id','currency','unit_price_minor','tax_per_unit_minor','shipping_minor','duties_per_unit_minor','available','discount_eligible','promotion_expires_at','excluded'];
 const catalogOptional=['category','active','fulfillment_qualified','cost_minor','exchange_incentive_eligible'];
@@ -23,6 +23,7 @@ function exchangeValue(k:CommerceKernel,scope:Scope,allocationId:string,catalogI
  if(evidenceReviewState(k,s,c.id)?.event==='evidence_requested')throw new Error('RETURN_REVIEW_REQUIRED');
  const paid=facts.paid_lines.find((l:Row)=>l.id===b.line_id);
  if(!paid||contentDigest({...paid,resolved_units:[]})!==b.paid_line_digest)throw new Error('PAID_ALLOCATION_CHANGED');
+ assertAllocationSource(facts,b);
  if(b.units.some((n:number)=>paid.resolved_units.includes(n)))throw new Error('UNIT_ALREADY_RESOLVED');
  k.authorize(scope,authority,c.resource_id);
  if(a.outcome!=='exchange'||!c.pins.policy.body.rules.outcomes.includes('exchange'))throw new Error('OUTCOME_UNSUPPORTED');
@@ -31,12 +32,14 @@ function exchangeValue(k:CommerceKernel,scope:Scope,allocationId:string,catalogI
  const reasons:string[]=[],maxAge=c.pins.composition.effective['data.max_age_seconds']*1000,discount=minor(b.components.discount_minor),qty=BigInt(b.units.length);
  if(catalog.observed_at>k.clock()||k.clock()-catalog.observed_at>maxAge)reasons.push('INVENTORY_STALE');
  if(v.product_id!==b.product_id&&!catalogWide)reasons.push('CATALOG_EXCHANGE_UNQUALIFIED');if(v.excluded)reasons.push('VARIANT_EXCLUDED');if(v.currency!==b.currency)reasons.push('CURRENCY_UNSUPPORTED');
+ if(v.active===false)reasons.push('VARIANT_INACTIVE');
+ if(v.fulfillment_qualified===false)reasons.push('FULFILLMENT_UNQUALIFIED');
  if(policy){
   if(!policy.enabled||policy.expires_at<=k.clock())reasons.push('CATALOG_CONFIGURATION_UNAVAILABLE');
   if(policy.allowed_product_ids.length&&!policy.allowed_product_ids.includes(v.product_id)||policy.excluded_product_ids.includes(v.product_id))reasons.push('PRODUCT_NOT_PERMITTED');
   if(policy.excluded_categories.includes(v.category))reasons.push('CATEGORY_EXCLUDED');
-  if(v.active===false)reasons.push('VARIANT_INACTIVE');
-  if(v.fulfillment_qualified===false||v.product_id!==b.product_id&&(v.fulfillment_qualified!==true||v.active!==true||!v.category))reasons.push('FULFILLMENT_UNQUALIFIED');
+  if(policy.excluded_categories.length&&!v.category)reasons.push('CATEGORY_UNQUALIFIED');
+  if(v.fulfillment_qualified!==false&&v.product_id!==b.product_id&&(v.fulfillment_qualified!==true||v.active!==true||!v.category))reasons.push('FULFILLMENT_UNQUALIFIED');
  }
  if(v.available-settings.inventory_buffer<b.units.length)reasons.push('INSUFFICIENT_STOCK');
  if(discount>0n&&(!v.discount_eligible||v.promotion_expires_at<=k.clock()))reasons.push('DISCOUNT_UNAVAILABLE');
