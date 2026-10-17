@@ -155,3 +155,14 @@ money bindings, original-unit reservations or fee history to make a rollback pas
 An expired quote or qualification cannot issue a new effect; historical receipts
 remain available for same-operation reconciliation. The current implementation
 provides no live financial authority and no automatic discrepancy write-off.
+
+## Oversized final observations
+
+A well-formed final tied to the original native allocation/fee record remains
+observable even when total fees equal or exceed the paid value in either
+currency. The canonical history marks `fee_exceeds_original_value` and
+`manual_fee_review`, retains the estimate and exact final, and blocks ordinary
+closure. This applies before an operation exists and after settlement. Existing
+receipts remain unchanged. Every new quote and native issue still requires a
+positive exact refundable amount, so no negative refund or automatic extra charge
+is created. Malformed, conflicting or unbound observations remain rejected.

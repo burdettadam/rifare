@@ -23,6 +23,8 @@ These are independent same-runtime assistant reviews, not external attestations.
 - Native instant confirmation now reads actual committed stock effect and hold.
 - Attached lineage sources leave unregistered originals on their existing path.
 - A late final fee remains observable after issuance qualification expires.
+- A well-formed oversized final remains visible for manual review, with closure
+  and nonpositive new refunds blocked.
 - Zero remaining instrument slices survive subsequent paid descendants.
 - Residual routing stays within every fee-adjusted instrument share in both core
   and independently recomputed native source validation.

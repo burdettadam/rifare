@@ -21,7 +21,9 @@ Only the local synthetic stages described here have been implemented and tested.
    preview/approval. A difference after authorization, settlement or closure
    remains attached to the original operation for review; it authorizes no new
    charge or refund. Observation remains possible after issuance qualification
-   expires, while fresh financial binding/issue stays blocked.
+   expires, while fresh financial binding/issue stays blocked. A final at or above
+   original paid value in either currency remains a visible manual review
+   obligation, blocks closure, and cannot create a negative refund.
 5. For an instant exchange, prepare an authorization quote using an existing
    source consent tied to the exact exchange and bounded terms. Follow the
    existing separate reviewer approval, then dispatch the approved operation ID.

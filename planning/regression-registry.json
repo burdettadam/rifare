@@ -16920,6 +16920,20 @@
       "runner_case_id": "M06-G10-MALFORMED-CAPTURE-RESULT-RECONCILES",
       "source": "tests/development/instant-races.test.mts",
       "capability_id": "FEATURE-M06-G10"
+    },
+    {
+      "id": "runtime:M06-G08-OVERSIZED-LATE-FINAL-REMAINS-AN-UNRESOLVED-OBSERVATION",
+      "suite": "runtime",
+      "runner_case_id": "M06-G08-OVERSIZED-LATE-FINAL-REMAINS-AN-UNRESOLVED-OBSERVATION",
+      "source": "tests/development/exchange-fees.test.mts",
+      "capability_id": "FEATURE-M06-G08"
+    },
+    {
+      "id": "runtime:M06-G08-OVERSIZED-FINAL-BEFORE-APPROVAL-BLOCKS-NEGATIVE-REFUND",
+      "suite": "runtime",
+      "runner_case_id": "M06-G08-OVERSIZED-FINAL-BEFORE-APPROVAL-BLOCKS-NEGATIVE-REFUND",
+      "source": "tests/development/exchange-fees.test.mts",
+      "capability_id": "FEATURE-M06-G08"
     }
   ],
   "protected_files": [

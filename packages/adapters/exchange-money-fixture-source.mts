@@ -113,7 +113,10 @@ export class ExchangeMoneyFixtureSource {
   const events=this.events(p.allocation_id),estimate=events.find(e=>e.phase==='estimated');
   if(p.phase==='estimated'&&(estimate||p.revision!==1||shipping.shop!==b.return_shipping_minor))throw new Error('FEE_ESTIMATE_MISMATCH');
   if(p.phase==='final'&&(!estimate||estimate.native_fee_id!==fee.id||p.revision!==Math.max(0,...events.filter(e=>e.phase==='final').map(e=>e.revision))+1))throw new Error('FEE_FINAL_UNQUALIFIED');
-  for(const side of ['shop','presentment'])if(feeTotal(body[side])>=minor(b.components[side].paid_minor))throw new Error('FEE_EXCEEDS_ORIGINAL_VALUE');
+  // A well-formed final is an observation of the original native obligation,
+  // even when too large for automatic refund issuance. Keep it for review;
+  // originalMoneyTerms independently rejects every nonpositive new refund.
+  if(p.phase==='estimated')for(const side of ['shop','presentment'])if(feeTotal(body[side])>=minor(b.components[side].paid_minor))throw new Error('FEE_EXCEEDS_ORIGINAL_VALUE');
   this.db.prepare('INSERT INTO fixture_exchange_fee_events VALUES(?,?,?,?,?,?)').run(p.event_id,p.allocation_id,p.phase,p.revision,canonical(body),contentDigest(body));return {recorded:true,event:body};
  }
  event(eventId:string){return checked(this.db.prepare('SELECT body,digest FROM fixture_exchange_fee_events WHERE event_id=?').get(id(eventId)) as Row);}

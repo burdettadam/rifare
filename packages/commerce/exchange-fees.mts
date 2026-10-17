@@ -40,12 +40,14 @@ export function feeHistory(k:CommerceKernel,s:Row,caseId:string){
   const op=k.db.prepare('SELECT * FROM commerce_resolution_operations WHERE tenant_id=? AND store_id=? AND allocation_id=?').get(s.tenant_id,s.store_id,allocation_id) as Row;
   let applied:Row|null=null;if(op){const command=JSON.parse(op.command);if(contentDigest(command)!==op.digest)throw new Error('RESOLUTION_INTEGRITY');applied=command.money_terms?.fee_snapshot??null;}
   const latest=snapshot.final??snapshot.estimate,approved=applied?.final??applied?.estimate??null;
-  const unresolved=!!op&&canonical(applied)!==canonical(snapshot),delta=approved?{shop:(total(latest.shop)-total(approved.shop)).toString(),presentment:(total(latest.presentment)-total(approved.presentment)).toString()}:null;
+  const binding=currencyBinding(k,s,allocation_id);if(!binding)throw new Error('CURRENCY_BINDING_REQUIRED');
+  const exceeds=total(latest.shop)>=minor(binding.components.shop.paid_minor)||total(latest.presentment)>=minor(binding.components.presentment.paid_minor);
+  const unresolved=exceeds||!!op&&canonical(applied)!==canonical(snapshot),delta=approved?{shop:(total(latest.shop)-total(approved.shop)).toString(),presentment:(total(latest.presentment)-total(approved.presentment)).toString()}:null;
   return {allocation_id,estimate:snapshot.estimate,final:snapshot.final,events,operation_id:op?.id??null,operation_state:op?.state??null,
    delta_from_estimate:{shop:(total(latest.shop)-total(snapshot.estimate.shop)).toString(),presentment:(total(latest.presentment)-total(snapshot.estimate.presentment)).toString()},
-   delta_from_authorized:delta,unresolved,requires_new_approval:!!snapshot.final&&!op,
-   state:unresolved?'difference_requires_review':snapshot.final?'final_recorded':'awaiting_final',
-   next_action:unresolved?'reconcile_original_operation':!op&&snapshot.final?'new_exact_preview':'none',new_effect_authorized:false};
+   delta_from_authorized:delta,unresolved,exceeds_original_value:exceeds,requires_new_approval:!!snapshot.final&&!op&&!exceeds,
+   state:exceeds?'fee_exceeds_original_value':unresolved?'difference_requires_review':snapshot.final?'final_recorded':'awaiting_final',
+   next_action:exceeds?'manual_fee_review':unresolved?'reconcile_original_operation':!op&&snapshot.final?'new_exact_preview':'none',new_effect_authorized:false};
  });
  const body={obligations,unresolved_count:obligations.filter(r=>r.unresolved).length};return {...body,digest:contentDigest(body)};
 }
