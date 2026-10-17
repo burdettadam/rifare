@@ -94,12 +94,14 @@ export class ExchangeMoneyFixtureSource {
    const result=this.allocation(p.allocation_id);this.db.exec('COMMIT');return result;
   }catch(error){this.db.exec('ROLLBACK');throw error;}
  }
- allocation(ref:string){const b=checked(this.db.prepare('SELECT body,digest FROM fixture_exchange_money_allocations WHERE allocation_id=?').get(id(ref)) as Row),q=this.#qualification(b.qualification_id);
+ #originalAllocation(ref:string){return checked(this.db.prepare('SELECT body,digest FROM fixture_exchange_money_allocations WHERE allocation_id=?').get(id(ref)) as Row);}
+ allocation(ref:string){const b=this.#originalAllocation(ref),q=this.#qualification(b.qualification_id);
   if(q.account_id!==b.account_id||q.shop_currency!==b.shop_currency||q.presentment_currency!==b.presentment_currency)throw new Error('CURRENCY_QUALIFICATION_CHANGED');return {...b,qualification:q,qualification_digest:contentDigest(q)};}
  recordFee(input:unknown){
   const p=exact(jsonValue(input),['allocation_id','event_id','phase','revision','observed_at','api_version','native_fee']);id(p.allocation_id);id(p.event_id);integer(p.revision,1);integer(p.observed_at);
   if(!['estimated','final'].includes(p.phase)||p.api_version!=='2026-10'||p.observed_at>this.clock())throw new Error('FEE_SOURCE_UNQUALIFIED');
-  const b=this.allocation(p.allocation_id),taxField=p.phase==='estimated'?'taxAmountSet':'finalizedTaxAmountSet',fee=exact(p.native_fee,['id','amountSet',taxField]);id(fee.id);
+  // Observing an existing native obligation survives issuance qualification expiry.
+  const b=this.#originalAllocation(p.allocation_id),taxField=p.phase==='estimated'?'taxAmountSet':'finalizedTaxAmountSet',fee=exact(p.native_fee,['id','amountSet',taxField]);id(fee.id);
   if(p.phase==='final'&&fee.finalizedTaxAmountSet===null)return {recorded:false,state:'pending_finalization'};
   const bag=(value:unknown)=>{const pair=exact(value,['shopMoney','presentmentMoney']),result:Row={};for(const side of ['shop','presentment']){const m=exact(pair[side+'Money'],['amount','currencyCode']);const amount=decimalMoney(m.currencyCode,m.amount);if(amount.currency!==b[side+'_currency'])throw new Error('CURRENCY_MISMATCH');result[side]=amount.minor;}return result;};
   const shipping=bag(fee.amountSet),tax=bag(fee[taxField]);

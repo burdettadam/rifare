@@ -72,6 +72,11 @@ Out-of-order canonical imports retain the highest native final revision. A null
 final-tax field means finalization is pending and does not create a final event;
 an explicit zero is a valid final amount.
 
+Recording an observation uses the immutable original allocation identity and
+continues after issuance qualification expires. Expiry still blocks current
+allocation binding and financial issue; it does not discard a late native final
+or prevent duplicate delivery from reconciling the existing history.
+
 Before authorization, a changed final invalidates the old quote and approval.
 A fresh quote, preview and approval bind the new exact component pair. After
 authorization, the existing allocation remains tied to its original operation.
@@ -112,7 +117,8 @@ report contains the individual stable IDs:
 ```
 
 Set `RIFARE_NODE22` to the verified Node binary recorded in the evidence manifest.
-The first author checkpoint has 19 currency and 17 fee cases passing. Full gate
+The first author checkpoint has 19 currency and 17 fee cases passing. A subsequent
+review regression adds an expired-qualification late-final case. Full gate
 and independent review evidence belongs to the final integration candidate.
 Author fault manifests preserve the exact changes that introduced a current-rate
 conversion, removed the native money guard, overwrote the estimate or reused a

@@ -93,6 +93,18 @@ Root's G06 source-boundary dependency `b516470` was cherry-picked before this
 checkpoint; root already owns that change. Native lineage binding precedes the
 replaceable resolution transport, and the native source checks it before effects.
 
+Independent regression review then identified a distinct late-observation gap:
+`recordFee` checked current issuance qualification before recording a final on an
+already settled obligation. The additive permanent case
+`M06-G08-LATE-FINAL-AFTER-QUALIFICATION-EXPIRY-REMAINS-VISIBLE` failed on the
+unchanged source with `CURRENCY_QUALIFICATION_EXPIRED` (17/18 fee cases passed).
+The scoped correction makes only observation read immutable original allocation
+identity; current qualification is still required for allocation binding and
+financial issue. The same case requires duplicate final delivery to remain one
+event, the original receipt to remain settled with a visible one-unit fee delta,
+one native effect, and expired direct issue to remain denied. Raw red/green
+evidence is retained under `evidence/M06-currency-fees/review-fix/`.
+
 ## Current platform evidence and recovery limits
 
 Read-only primary documentation on 2026-10-17 identifies Shopify API 2026-10's

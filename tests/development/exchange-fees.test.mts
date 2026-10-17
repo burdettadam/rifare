@@ -71,3 +71,11 @@ test('M06-G08-HISTORY-DIGEST-EXPOSES-LATE-CHANGES',()=>usingMoney(f=>{
 test('M06-G08-WRONG-API-OR-FEE-CURRENCY-UNQUALIFIED',()=>usingMoney(f=>{
  assert.throws(()=>f.recordFee('final',{api_version:'2026-07'}),/FEE_SOURCE_UNQUALIFIED/);const input=f.feeInput('final');input.native_fee.finalizedTaxAmountSet.presentmentMoney.currencyCode='USD';assert.throws(()=>f.recordFee('final',{native_fee:input.native_fee}),/CURRENCY_MISMATCH/);assert.equal(f.effects(),0);
 },{fees:true}));
+test('M06-G08-LATE-FINAL-AFTER-QUALIFICATION-EXPIRY-REMAINS-VISIBLE',()=>usingMoney(async f=>{
+ f.source.money.qualify({...f.qualification,revision:2,expires_at:f.now()+10});f.currency.bind(f.a.scope,{allocation_id:f.allocation.id});
+ const op=f.authorize(f.moneyQuote());await f.executor.dispatch(f.a.scope,op.id);f.source.settle(op.id);await f.executor.reconcile(f.a.scope,op.id);f.advance(11);
+ const late=f.recordFee('final');assert.equal(late.recorded,true,'expired issuance qualification must not discard a native final observation');f.recordFee('final');
+ const history=f.fees.read(f.a.scope,{allocation_id:f.allocation.id});assert.equal(history.events.length,2);assert.equal(history.unresolved,true);assert.deepEqual(history.delta_from_authorized,{shop:'1',presentment:'1'});assert.equal(history.operation_id,op.id);
+ const result=await f.executor.reconcile(f.a.scope,op.id);assert.equal(result.state,'settled');assert.equal(result.amount_minor,'1723');assert.equal(result.money_terms.presentment.minor,'1550');assert.equal(result.fee_history.unresolved,true);assert.equal(f.effects(),1);
+ assert.throws(()=>f.source.money.allocation(f.allocation.id),/CURRENCY_QUALIFICATION_EXPIRED/);const command=JSON.parse(f.db.prepare('SELECT command FROM commerce_resolution_operations WHERE id=?').get(op.id)!.command);await assert.rejects(()=>f.source.issue(command),/CURRENCY_QUALIFICATION_EXPIRED/);assert.equal(f.effects(),1);
+},{fees:true}));
