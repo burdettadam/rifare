@@ -108,7 +108,12 @@ with sync_playwright() as playwright:
         assert len(labels) <= 14, 'instant quote summary must not dump internal paths'
     if cfg['scenario'] == 'instant':
         assert page.locator('#instant-next').is_visible()
-        assert page.locator('#instant-next a').get_attribute('href') == '/execution'
+        execution_href = page.locator('#instant-next a').get_attribute('href')
+        assert execution_href == 'execution.html'
+        with urllib.request.urlopen(cfg['url'] + '/' + execution_href, timeout=5) as response:
+            assert response.status == 200
+            assert response.headers.get_content_type() == 'text/html'
+            assert response.read() == (assets / 'execution.html').read_bytes()
         assert 'Quote prepared for review' in status
         assert not any(call['path'].endswith('/dispatch') for call in calls), 'preparing a quote must not dispatch'
     if cfg.get('screenshot'):
