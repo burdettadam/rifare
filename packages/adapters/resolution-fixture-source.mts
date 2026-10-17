@@ -79,13 +79,16 @@ export class ResolutionFixtureSource {
   if(!facts){if(p.routes!==undefined||p.value_routes!==undefined||p.line_id!==undefined||p.units!==undefined)throw new Error('INSTRUMENT_SOURCE_UNQUALIFIED');return;}const instruments=facts.instruments;
   id(p.line_id);if(!Array.isArray(p.units)||!p.units.length||new Set(p.units).size!==p.units.length)throw new Error('INSTRUMENT_ALLOCATION_INVALID');const weights=new Map<string,bigint>();for(const n of p.units){integer(n,1);const unit=facts.units.find((u:Row)=>u.line_id===p.line_id&&u.unit_index===n);if(!unit)throw new Error('INSTRUMENT_ALLOCATION_INVALID');for(const a of unit.amounts)weights.set(a.instrument_id,(weights.get(a.instrument_id)??0n)+minor(a.amount_minor));}
   if(effects.some(prior=>prior.line_id===p.line_id&&Array.isArray(prior.units)&&prior.units.some((n:number)=>p.units.includes(n))))throw new Error('ORIGINAL_UNIT_ALREADY_RESOLVED');
+  const sharesFor=(value:string,basis:Map<string,bigint>)=>value==='0'?[]:allocateMoney(money(p.currency,value),[...basis].filter(([,amount])=>amount>0n).sort(([a],[b])=>a.localeCompare(b)).map(([id,weight])=>({id,weight:weight.toString()}))).filter(a=>a.amount.minor!=='0').map(a=>({instrument_id:a.id,type:instruments.find((i:Row)=>i.id===a.id).type,amount_minor:a.amount.minor}));
+  const nativeValueShares=sharesFor(p.original_value_minor??p.amount_minor,weights);
   for(const key of ['routes','value_routes']){const routes=p[key];if(!Array.isArray(routes)||routes.length>8)throw new Error('INSTRUMENT_ROUTING_UNSUPPORTED');let total=0n;const seen=new Set<string>();
    for(const route of routes){exact(route,['instrument_id','type','amount_minor']);id(route.instrument_id);const i=instruments.find((i:Row)=>i.id===route.instrument_id);
     if(!i||!i.supported||i.type!==route.type||seen.has(i.id))throw new Error('INSTRUMENT_ROUTING_UNSUPPORTED');seen.add(i.id);total+=minor(route.amount_minor);
    }
    const expected=key==='value_routes'?(p.original_value_minor??p.amount_minor):p.kind==='additional_payment'?'0':p.amount_minor;if(total!==minor(expected))throw new Error('INSTRUMENT_TOTAL_MISMATCH');
-   if(minor(expected)>[...weights.values()].reduce((n,v)=>n+v,0n))throw new Error('INSTRUMENT_BALANCE_EXCEEDED');
-   const shares=expected==='0'?[]:allocateMoney(money(p.currency,expected),[...weights].filter(([,amount])=>amount>0n).sort(([a],[b])=>a.localeCompare(b)).map(([id,weight])=>({id,weight:weight.toString()}))).filter(a=>a.amount.minor!=='0').map(a=>({instrument_id:a.id,type:instruments.find((i:Row)=>i.id===a.id).type,amount_minor:a.amount.minor}));
+   const basis=key==='routes'&&p.exchange_quote_id?new Map<string,bigint>(nativeValueShares.map(r=>[r.instrument_id,minor(r.amount_minor)])):weights;
+   if(minor(expected)>[...basis.values()].reduce((n,v)=>n+v,0n))throw new Error('INSTRUMENT_BALANCE_EXCEEDED');
+   const shares=sharesFor(expected,basis);
    if(canonical(shares)!==canonical(routes))throw new Error('INSTRUMENT_ROUTING_UNSUPPORTED');
   }
   for(const route of p.value_routes){const i=instruments.find((i:Row)=>i.id===route.instrument_id);let spent=minor(i.prior_refunded_minor);

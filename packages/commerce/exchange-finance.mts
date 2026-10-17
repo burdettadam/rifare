@@ -9,6 +9,7 @@ import { assertExecution } from './execution-stops.mts';
 import { evidenceReviewState } from './return-intake-core.mts';
 import { assertGiftOutcome } from './gift-proof.mts';
 import { assertExchangeMoneySupported } from './exchange-currency.mts';
+import { money,allocateMoney } from './money.mts';
 
 /** Additional payment and residual value use the existing approval/operation ledger. */
 export function exchangeFinanceQuote(k:CommerceKernel,scope:Scope,input:unknown,quotedAt:number,exclude:string|null=null){
@@ -29,7 +30,10 @@ export function exchangeFinanceQuote(k:CommerceKernel,scope:Scope,input:unknown,
  if(!native)throw new Error('NATIVE_RETURN_REQUIRED');const nativeBody=JSON.parse(native.native_body);if(contentDigest(nativeBody)!==native.native_digest)throw new Error('NATIVE_RETURN_INTEGRITY');
  if(!['OPEN','CLOSED'].includes(nativeBody.status))throw new Error('NATIVE_RETURN_UNAVAILABLE');
  const remaining=availableValue(k,s,c.resource_id,f,exclude);if(original>remaining)throw new Error('REFUND_BALANCE_EXCEEDED');
- const valueRoutes=originalInstrumentRoutes(f,b,original.toString()),routes=delta<0n?originalInstrumentRoutes(f,b,amount.toString()):undefined;
+ const valueRoutes=originalInstrumentRoutes(f,b,original.toString());
+ // Fees first reduce each instrument's transferable entitlement. Allocate the
+ // residual within those shares so independent rounding cannot overspend one.
+ const routes=delta<0n&&valueRoutes?allocateMoney(money(f.currency,amount.toString()),valueRoutes.map(r=>({id:r.instrument_id,weight:r.amount_minor}))).filter(a=>a.amount.minor!=='0').map(a=>({instrument_id:a.id,type:valueRoutes.find(r=>r.instrument_id===a.id)!.type,amount_minor:a.amount.minor})):undefined;
  assertInstrumentCapacity(k,s,c.resource_id,f,valueRoutes,exclude);
  const control=assertExecution(k,s,RESOLVE_ACTION),expiry=Math.min(q.expires_at,quotedAt+300000,proof.expires_at,settings.expires_at,f.observed_at+c.pins.composition.effective['data.max_age_seconds']*1000);
  return {schema_version:1,allocation_id:a.id,allocation_digest:a.digest,case_id:c.id,case_revision:c.revision,resource_id:c.resource_id,customer_id:c.customer_id,
