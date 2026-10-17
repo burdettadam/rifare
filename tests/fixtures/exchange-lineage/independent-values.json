@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "qualification": "synthetic_only",
+  "oracle": "Predeclared integer arithmetic; no expected amount is calculated by the product under test.",
+  "currency": "USD",
+  "original_paid_minor": "1000",
+  "first_additional_settled_minor": "200",
+  "first_carried_minor": "1200",
+  "second_residual_refund_minor": "300",
+  "second_carried_minor": "900",
+  "total_funding_minor": "1200",
+  "total_outflow_minor": "300",
+  "mixed_original": [{"instrument_id":"card-original","amount_minor":"600"},{"instrument_id":"gift-original","amount_minor":"400"}],
+  "mixed_after_250_residual": [{"instrument_id":"card-original","amount_minor":"450"},{"instrument_id":"gift-original","amount_minor":"300"}],
+  "zero_paid_minor": "0",
+  "zero_physical_units": 1
+}
