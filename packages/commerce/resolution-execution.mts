@@ -63,6 +63,7 @@ export class ResolutionExecution {
    id(i.account_id);minor(i.balance_minor);
   }else if(b.instrument!==null)throw new Error('RESOLUTION_RESULT_INVALID');
   const prev=k.db.prepare('SELECT body,digest FROM commerce_resolution_observations WHERE tenant_id=? AND store_id=? AND operation_id=? AND stage=? ORDER BY seq DESC LIMIT 1').get(s.tenant_id,s.store_id,op.id,b.state) as Row;
+  if(prev&&op.kind==='store_credit'&&b.state==='issued'&&checkedBody(prev).instrument.account_id!==b.instrument.account_id)throw new Error('CREDIT_INSTRUMENT_CHANGED');
   if(prev&&prev.digest===contentDigest(b))return;
   k.db.prepare('UPDATE commerce_resolution_operations SET state=?,native_id=?,observed_at=? WHERE tenant_id=? AND store_id=? AND id=?').run(b.state,b.id,k.clock(),s.tenant_id,s.store_id,op.id);
   recordResolutionObservation(k,s,op.id,op.resource_id,b.state,b);

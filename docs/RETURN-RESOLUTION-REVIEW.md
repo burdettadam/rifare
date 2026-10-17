@@ -29,7 +29,11 @@ thresholds remain in force.
    available balance is still rechecked, but its diagnostic display value does not
    change an already-approved obligation. Amount/source/identity terms remain pinned.
 
-The seven tests first failed at meaningful assertions and passed after correction.
+8. A later credit lookup could change the account attached to an issued credit.
+   Subsequent observations now retain the original account identity; changing its
+   balance through redemption is still permitted.
+
+The eight tests first failed at meaningful assertions and passed after correction.
 Additional tests cover bounded source calls, no speculative timeout retry,
 unconfirmed accounting references, changed exchange fees, HTTP authority and
 logical-erasure access boundaries.

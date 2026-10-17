@@ -12150,6 +12150,13 @@
       "runner_case_id": "M03-G08-REVIEW-UNRELATED-RESERVATION-DOES-NOT-STALE",
       "source": "tests/development/resolution-review.test.mts",
       "capability_id": "FEATURE-M03-G08"
+    },
+    {
+      "id": "runtime:M03-G09-REVIEW-INSTRUMENT-IDENTITY-CANNOT-CHANGE",
+      "suite": "runtime",
+      "runner_case_id": "M03-G09-REVIEW-INSTRUMENT-IDENTITY-CANNOT-CHANGE",
+      "source": "tests/development/resolution-review.test.mts",
+      "capability_id": "FEATURE-M03-G09"
     }
   ],
   "protected_files": [
