@@ -13624,597 +13624,597 @@
       "capability_id": "FEATURE-M00-G07"
     },
     {
-      "id": "runtime:M04-G11-BROWSER-01 keyboard mobile flow separates unpaid invoice and rejects hold release",
+      "id": "runtime:M04-G11-BROWSER-01",
       "suite": "runtime",
-      "runner_case_id": "M04-G11-BROWSER-01 keyboard mobile flow separates unpaid invoice and rejects hold release",
+      "runner_case_id": "M04-G11-BROWSER-01",
       "source": "tests/development/order-edit-browser.test.mts",
       "capability_id": "FEATURE-M04-G11"
     },
     {
-      "id": "runtime:M04-G11-BROWSER-02 changing intent prevents an old quote from enabling approval",
+      "id": "runtime:M04-G11-BROWSER-02",
       "suite": "runtime",
-      "runner_case_id": "M04-G11-BROWSER-02 changing intent prevents an old quote from enabling approval",
+      "runner_case_id": "M04-G11-BROWSER-02",
       "source": "tests/development/order-edit-browser.test.mts",
       "capability_id": "FEATURE-M04-G11"
     },
     {
-      "id": "runtime:M04-G11-BROWSER-03 late status response after sign-out cannot refill private records",
+      "id": "runtime:M04-G11-BROWSER-03",
       "suite": "runtime",
-      "runner_case_id": "M04-G11-BROWSER-03 late status response after sign-out cannot refill private records",
+      "runner_case_id": "M04-G11-BROWSER-03",
       "source": "tests/development/order-edit-browser.test.mts",
       "capability_id": "FEATURE-M04-G11"
     },
     {
-      "id": "runtime:CASE-M04-G05-01 native begin calculate commit preserve line mapping and stock",
+      "id": "runtime:CASE-M04-G05-01",
       "suite": "runtime",
-      "runner_case_id": "CASE-M04-G05-01 native begin calculate commit preserve line mapping and stock",
+      "runner_case_id": "CASE-M04-G05-01",
       "source": "tests/development/order-edit-commit.test.mts",
       "capability_id": "FEATURE-M04-G05"
     },
     {
-      "id": "runtime:CASE-M04-G05-02 vanished inventory blocks commit under retained hold",
+      "id": "runtime:CASE-M04-G05-02",
       "suite": "runtime",
-      "runner_case_id": "CASE-M04-G05-02 vanished inventory blocks commit under retained hold",
+      "runner_case_id": "CASE-M04-G05-02",
       "source": "tests/development/order-edit-commit.test.mts",
       "capability_id": "FEATURE-M04-G05"
     },
     {
-      "id": "runtime:CASE-M04-G05-03 lost commit response reconciles original edit without a second stock decrement",
+      "id": "runtime:CASE-M04-G05-03",
       "suite": "runtime",
-      "runner_case_id": "CASE-M04-G05-03 lost commit response reconciles original edit without a second stock decrement",
+      "runner_case_id": "CASE-M04-G05-03",
       "source": "tests/development/order-edit-commit.test.mts",
       "capability_id": "FEATURE-M04-G05"
     },
     {
-      "id": "runtime:M04-G05-04 hang has a bounded unknown result and never auto retries",
+      "id": "runtime:M04-G05-04",
       "suite": "runtime",
-      "runner_case_id": "M04-G05-04 hang has a bounded unknown result and never auto retries",
+      "runner_case_id": "M04-G05-04",
       "source": "tests/development/order-edit-commit.test.mts",
       "capability_id": "FEATURE-M04-G05"
     },
     {
-      "id": "runtime:M04-G05-05 source catalog price change cannot use the approved cheaper price",
+      "id": "runtime:M04-G05-05",
       "suite": "runtime",
-      "runner_case_id": "M04-G05-05 source catalog price change cannot use the approved cheaper price",
+      "runner_case_id": "M04-G05-05",
       "source": "tests/development/order-edit-commit.test.mts",
       "capability_id": "FEATURE-M04-G05"
     },
     {
-      "id": "runtime:M04-G05-06 duplicate authorized previews cannot create concurrent active edit sessions",
+      "id": "runtime:M04-G05-06",
       "suite": "runtime",
-      "runner_case_id": "M04-G05-06 duplicate authorized previews cannot create concurrent active edit sessions",
+      "runner_case_id": "M04-G05-06",
       "source": "tests/development/order-edit-commit.test.mts",
       "capability_id": "FEATURE-M04-G05"
     },
     {
-      "id": "runtime:CASE-M04-G09-01 cancellation confirms all eligible fulfillment endpoints",
+      "id": "runtime:CASE-M04-G09-01",
       "suite": "runtime",
-      "runner_case_id": "CASE-M04-G09-01 cancellation confirms all eligible fulfillment endpoints",
+      "runner_case_id": "CASE-M04-G09-01",
       "source": "tests/development/order-edit-commit.test.mts",
       "capability_id": "FEATURE-M04-G09"
     },
     {
-      "id": "runtime:CASE-M04-G09-02 warehouse unavailable after store cancellation remains partial not complete",
+      "id": "runtime:CASE-M04-G09-02",
       "suite": "runtime",
-      "runner_case_id": "CASE-M04-G09-02 warehouse unavailable after store cancellation remains partial not complete",
+      "runner_case_id": "CASE-M04-G09-02",
       "source": "tests/development/order-edit-commit.test.mts",
       "capability_id": "FEATURE-M04-G09"
     },
     {
-      "id": "runtime:CASE-M04-G09-03 lost warehouse cancellation acknowledgment is recovered without repeating native cancellation",
+      "id": "runtime:CASE-M04-G09-03",
       "suite": "runtime",
-      "runner_case_id": "CASE-M04-G09-03 lost warehouse cancellation acknowledgment is recovered without repeating native cancellation",
+      "runner_case_id": "CASE-M04-G09-03",
       "source": "tests/development/order-edit-commit.test.mts",
       "capability_id": "FEATURE-M04-G09"
     },
     {
-      "id": "runtime:M04-G09-04 partial cancellation preserves shipped line and its original value",
+      "id": "runtime:M04-G09-04",
       "suite": "runtime",
-      "runner_case_id": "M04-G09-04 partial cancellation preserves shipped line and its original value",
+      "runner_case_id": "M04-G09-04",
       "source": "tests/development/order-edit-commit.test.mts",
       "capability_id": "FEATURE-M04-G09"
     },
     {
-      "id": "runtime:CASE-M04-G01-01 split fulfillment allows only the unshipped line",
+      "id": "runtime:CASE-M04-G01-01",
       "suite": "runtime",
-      "runner_case_id": "CASE-M04-G01-01 split fulfillment allows only the unshipped line",
+      "runner_case_id": "CASE-M04-G01-01",
       "source": "tests/development/order-edit-eligibility.test.mts",
       "capability_id": "FEATURE-M04-G01"
     },
     {
-      "id": "runtime:CASE-M04-G01-02 per-action cutoffs reject at boundary before any source effect",
+      "id": "runtime:CASE-M04-G01-02",
       "suite": "runtime",
-      "runner_case_id": "CASE-M04-G01-02 per-action cutoffs reject at boundary before any source effect",
+      "runner_case_id": "CASE-M04-G01-02",
       "source": "tests/development/order-edit-eligibility.test.mts",
       "capability_id": "FEATURE-M04-G01"
     },
     {
-      "id": "runtime:CASE-M04-G01-03 picking after preview prevents native mutation",
+      "id": "runtime:CASE-M04-G01-03",
       "suite": "runtime",
-      "runner_case_id": "CASE-M04-G01-03 picking after preview prevents native mutation",
+      "runner_case_id": "CASE-M04-G01-03",
       "source": "tests/development/order-edit-eligibility.test.mts",
       "capability_id": "FEATURE-M04-G01"
     },
     {
-      "id": "runtime:M04-G01-04 unpaid source cannot enter another edit",
+      "id": "runtime:M04-G01-04",
       "suite": "runtime",
-      "runner_case_id": "M04-G01-04 unpaid source cannot enter another edit",
+      "runner_case_id": "M04-G01-04",
       "source": "tests/development/order-edit-eligibility.test.mts",
       "capability_id": "FEATURE-M04-G01"
     },
     {
-      "id": "runtime:M04-G01-05 subscription lines are explicit unsupported operations",
+      "id": "runtime:M04-G01-05",
       "suite": "runtime",
-      "runner_case_id": "M04-G01-05 subscription lines are explicit unsupported operations",
+      "runner_case_id": "M04-G01-05",
       "source": "tests/development/order-edit-eligibility.test.mts",
       "capability_id": "FEATURE-M04-G01"
     },
     {
-      "id": "runtime:M04-G01-06 future creation time does not extend eligibility",
+      "id": "runtime:M04-G01-06",
       "suite": "runtime",
-      "runner_case_id": "M04-G01-06 future creation time does not extend eligibility",
+      "runner_case_id": "M04-G01-06",
       "source": "tests/development/order-edit-eligibility.test.mts",
       "capability_id": "FEATURE-M04-G01"
     },
     {
-      "id": "runtime:M04-G01-07 stale snapshot never supplies a current quotation",
+      "id": "runtime:M04-G01-07",
       "suite": "runtime",
-      "runner_case_id": "M04-G01-07 stale snapshot never supplies a current quotation",
+      "runner_case_id": "M04-G01-07",
       "source": "tests/development/order-edit-eligibility.test.mts",
       "capability_id": "FEATURE-M04-G01"
     },
     {
-      "id": "runtime:M04-G01-08 wrong store and case cannot quote another order",
+      "id": "runtime:M04-G01-08",
       "suite": "runtime",
-      "runner_case_id": "M04-G01-08 wrong store and case cannot quote another order",
+      "runner_case_id": "M04-G01-08",
       "source": "tests/development/order-edit-eligibility.test.mts",
       "capability_id": "FEATURE-M04-G01"
     },
     {
-      "id": "runtime:CASE-M04-G04-01 approved address within qualified region reaches final source version",
+      "id": "runtime:CASE-M04-G04-01",
       "suite": "runtime",
-      "runner_case_id": "CASE-M04-G04-01 approved address within qualified region reaches final source version",
+      "runner_case_id": "CASE-M04-G04-01",
       "source": "tests/development/order-edit-eligibility.test.mts",
       "capability_id": "FEATURE-M04-G04"
     },
     {
-      "id": "runtime:CASE-M04-G04-02 unsupported country or tax zone is rejected before hold",
+      "id": "runtime:CASE-M04-G04-02",
       "suite": "runtime",
-      "runner_case_id": "CASE-M04-G04-02 unsupported country or tax zone is rejected before hold",
+      "runner_case_id": "CASE-M04-G04-02",
       "source": "tests/development/order-edit-eligibility.test.mts",
       "capability_id": "FEATURE-M04-G04"
     },
     {
-      "id": "runtime:CASE-M04-G04-03 changed address after approval blocks stale dispatch",
+      "id": "runtime:CASE-M04-G04-03",
       "suite": "runtime",
-      "runner_case_id": "CASE-M04-G04-03 changed address after approval blocks stale dispatch",
+      "runner_case_id": "CASE-M04-G04-03",
       "source": "tests/development/order-edit-eligibility.test.mts",
       "capability_id": "FEATURE-M04-G04"
     },
     {
-      "id": "runtime:M04-G04-04 source prices are never client input authority",
+      "id": "runtime:M04-G04-04",
       "suite": "runtime",
-      "runner_case_id": "M04-G04-04 source prices are never client input authority",
+      "runner_case_id": "M04-G04-04",
       "source": "tests/development/order-edit-eligibility.test.mts",
       "capability_id": "FEATURE-M04-G04"
     },
     {
-      "id": "runtime:M04-G04-05 address details stay out of shared previews and audit events",
+      "id": "runtime:M04-G04-05",
       "suite": "runtime",
-      "runner_case_id": "M04-G04-05 address details stay out of shared previews and audit events",
+      "runner_case_id": "M04-G04-05",
       "source": "tests/development/order-edit-eligibility.test.mts",
       "capability_id": "FEATURE-M04-G04"
     },
     {
-      "id": "runtime:CASE-M04-G02-01 synthetic probe exercises picking inhibition and update acknowledgment",
+      "id": "runtime:CASE-M04-G02-01",
       "suite": "runtime",
-      "runner_case_id": "CASE-M04-G02-01 synthetic probe exercises picking inhibition and update acknowledgment",
+      "runner_case_id": "CASE-M04-G02-01",
       "source": "tests/development/order-edit-holds.test.mts",
       "capability_id": "FEATURE-M04-G02"
     },
     {
-      "id": "runtime:CASE-M04-G02-02 tag-only warehouse fails qualification",
+      "id": "runtime:CASE-M04-G02-02",
       "suite": "runtime",
-      "runner_case_id": "CASE-M04-G02-02 tag-only warehouse fails qualification",
+      "runner_case_id": "CASE-M04-G02-02",
       "source": "tests/development/order-edit-holds.test.mts",
       "capability_id": "FEATURE-M04-G02"
     },
     {
-      "id": "runtime:CASE-M04-G02-03 changed warehouse configuration invalidates prior qualification",
+      "id": "runtime:CASE-M04-G02-03",
       "suite": "runtime",
-      "runner_case_id": "CASE-M04-G02-03 changed warehouse configuration invalidates prior qualification",
+      "runner_case_id": "CASE-M04-G02-03",
       "source": "tests/development/order-edit-holds.test.mts",
       "capability_id": "FEATURE-M04-G02"
     },
     {
-      "id": "runtime:M04-G02-04 owner cannot name an absent fulfillment endpoint as qualified",
+      "id": "runtime:M04-G02-04",
       "suite": "runtime",
-      "runner_case_id": "M04-G02-04 owner cannot name an absent fulfillment endpoint as qualified",
+      "runner_case_id": "M04-G02-04",
       "source": "tests/development/order-edit-holds.test.mts",
       "capability_id": "FEATURE-M04-G02"
     },
     {
-      "id": "runtime:M04-G02-05 unqualified source is not fabricated from a config file",
+      "id": "runtime:M04-G02-05",
       "suite": "runtime",
-      "runner_case_id": "M04-G02-05 unqualified source is not fabricated from a config file",
+      "runner_case_id": "M04-G02-05",
       "source": "tests/development/order-edit-holds.test.mts",
       "capability_id": "FEATURE-M04-G02"
     },
     {
-      "id": "runtime:CASE-M04-G03-01 payment and foreign holds remain independently owned",
+      "id": "runtime:CASE-M04-G03-01",
       "suite": "runtime",
-      "runner_case_id": "CASE-M04-G03-01 payment and foreign holds remain independently owned",
+      "runner_case_id": "CASE-M04-G03-01",
       "source": "tests/development/order-edit-holds.test.mts",
       "capability_id": "FEATURE-M04-G03"
     },
     {
-      "id": "runtime:CASE-M04-G03-02 gateway refuses an agent requested release-all action",
+      "id": "runtime:CASE-M04-G03-02",
       "suite": "runtime",
-      "runner_case_id": "CASE-M04-G03-02 gateway refuses an agent requested release-all action",
+      "runner_case_id": "CASE-M04-G03-02",
       "source": "tests/development/order-edit-holds.test.mts",
       "capability_id": "FEATURE-M04-G03"
     },
     {
-      "id": "runtime:CASE-M04-G03-03 distinct foreign hold mutations do not erase other reasons",
+      "id": "runtime:CASE-M04-G03-03",
       "suite": "runtime",
-      "runner_case_id": "CASE-M04-G03-03 distinct foreign hold mutations do not erase other reasons",
+      "runner_case_id": "CASE-M04-G03-03",
       "source": "tests/development/order-edit-holds.test.mts",
       "capability_id": "FEATURE-M04-G03"
     },
     {
-      "id": "runtime:CASE-M04-G10-01 only final acknowledged paid order releases owned holds",
+      "id": "runtime:CASE-M04-G10-01",
       "suite": "runtime",
-      "runner_case_id": "CASE-M04-G10-01 only final acknowledged paid order releases owned holds",
+      "runner_case_id": "CASE-M04-G10-01",
       "source": "tests/development/order-edit-holds.test.mts",
       "capability_id": "FEATURE-M04-G10"
     },
     {
-      "id": "runtime:CASE-M04-G10-02 foreign hold never disappears during Rifare release",
+      "id": "runtime:CASE-M04-G10-02",
       "suite": "runtime",
-      "runner_case_id": "CASE-M04-G10-02 foreign hold never disappears during Rifare release",
+      "runner_case_id": "CASE-M04-G10-02",
       "source": "tests/development/order-edit-holds.test.mts",
       "capability_id": "FEATURE-M04-G10"
     },
     {
-      "id": "runtime:CASE-M04-G10-03 blocker arriving between release preview and source CAS prevents shipping",
+      "id": "runtime:CASE-M04-G10-03",
       "suite": "runtime",
-      "runner_case_id": "CASE-M04-G10-03 blocker arriving between release preview and source CAS prevents shipping",
+      "runner_case_id": "CASE-M04-G10-03",
       "source": "tests/development/order-edit-holds.test.mts",
       "capability_id": "FEATURE-M04-G10"
     },
     {
-      "id": "runtime:M04-G10-04 pending warehouse acknowledgment cannot be treated as current",
+      "id": "runtime:M04-G10-04",
       "suite": "runtime",
-      "runner_case_id": "M04-G10-04 pending warehouse acknowledgment cannot be treated as current",
+      "runner_case_id": "M04-G10-04",
       "source": "tests/development/order-edit-holds.test.mts",
       "capability_id": "FEATURE-M04-G10"
     },
     {
-      "id": "runtime:M04-JOURNEY-01 equal-value edit reaches only final warehouse version",
+      "id": "runtime:M04-JOURNEY-01",
       "suite": "runtime",
-      "runner_case_id": "M04-JOURNEY-01 equal-value edit reaches only final warehouse version",
+      "runner_case_id": "M04-JOURNEY-01",
       "source": "tests/development/order-edit-integration.test.mts",
       "capability_id": "FEATURE-M04-G99"
     },
     {
-      "id": "runtime:M04-JOURNEY-02 paid upgrade blocks fulfillment until exact settlement and final sync",
+      "id": "runtime:M04-JOURNEY-02",
       "suite": "runtime",
-      "runner_case_id": "M04-JOURNEY-02 paid upgrade blocks fulfillment until exact settlement and final sync",
+      "runner_case_id": "M04-JOURNEY-02",
       "source": "tests/development/order-edit-integration.test.mts",
       "capability_id": "FEATURE-M04-G99"
     },
     {
-      "id": "runtime:M04-JOURNEY-03 cheaper edit remains changed while refund awaits settlement",
+      "id": "runtime:M04-JOURNEY-03",
       "suite": "runtime",
-      "runner_case_id": "M04-JOURNEY-03 cheaper edit remains changed while refund awaits settlement",
+      "runner_case_id": "M04-JOURNEY-03",
       "source": "tests/development/order-edit-integration.test.mts",
       "capability_id": "FEATURE-M04-G99"
     },
     {
-      "id": "runtime:M04-JOURNEY-04 cancellation confirms every fulfillment source and preserves refund leg",
+      "id": "runtime:M04-JOURNEY-04",
       "suite": "runtime",
-      "runner_case_id": "M04-JOURNEY-04 cancellation confirms every fulfillment source and preserves refund leg",
+      "runner_case_id": "M04-JOURNEY-04",
       "source": "tests/development/order-edit-integration.test.mts",
       "capability_id": "FEATURE-M04-G99"
     },
     {
-      "id": "runtime:CASE-M04-G99-01 integrated upgrade requires all independent source stages before release",
+      "id": "runtime:CASE-M04-G99-01",
       "suite": "runtime",
-      "runner_case_id": "CASE-M04-G99-01 integrated upgrade requires all independent source stages before release",
+      "runner_case_id": "CASE-M04-G99-01",
       "source": "tests/development/order-edit-milestone.test.mts",
       "capability_id": "FEATURE-M04-G99"
     },
     {
-      "id": "runtime:CASE-M04-G99-02 missing connected evidence blocks formal milestone acceptance despite local tests",
+      "id": "runtime:CASE-M04-G99-02",
       "suite": "runtime",
-      "runner_case_id": "CASE-M04-G99-02 missing connected evidence blocks formal milestone acceptance despite local tests",
+      "runner_case_id": "CASE-M04-G99-02",
       "source": "tests/development/order-edit-milestone.test.mts",
       "capability_id": "FEATURE-M04-G99"
     },
     {
-      "id": "runtime:CASE-M04-G99-03 component success cannot silently promote tag-only warehouse support",
+      "id": "runtime:CASE-M04-G99-03",
       "suite": "runtime",
-      "runner_case_id": "CASE-M04-G99-03 component success cannot silently promote tag-only warehouse support",
+      "runner_case_id": "CASE-M04-G99-03",
       "source": "tests/development/order-edit-milestone.test.mts",
       "capability_id": "FEATURE-M04-G99"
     },
     {
-      "id": "runtime:CASE-M04-G06-01 cheaper edit creates exact separately visible refund obligation",
+      "id": "runtime:CASE-M04-G06-01",
       "suite": "runtime",
-      "runner_case_id": "CASE-M04-G06-01 cheaper edit creates exact separately visible refund obligation",
+      "runner_case_id": "CASE-M04-G06-01",
       "source": "tests/development/order-edit-payments.test.mts",
       "capability_id": "FEATURE-M04-G06"
     },
     {
-      "id": "runtime:CASE-M04-G06-02 refund failure preserves actual edited order and blocked shipping",
+      "id": "runtime:CASE-M04-G06-02",
       "suite": "runtime",
-      "runner_case_id": "CASE-M04-G06-02 refund failure preserves actual edited order and blocked shipping",
+      "runner_case_id": "CASE-M04-G06-02",
       "source": "tests/development/order-edit-payments.test.mts",
       "capability_id": "FEATURE-M04-G06"
     },
     {
-      "id": "runtime:CASE-M04-G06-03 lost refund response never causes second refund or repeat edit",
+      "id": "runtime:CASE-M04-G06-03",
       "suite": "runtime",
-      "runner_case_id": "CASE-M04-G06-03 lost refund response never causes second refund or repeat edit",
+      "runner_case_id": "CASE-M04-G06-03",
       "source": "tests/development/order-edit-payments.test.mts",
       "capability_id": "FEATURE-M04-G06"
     },
     {
-      "id": "runtime:M04-G06-04 original line discount is retained and not replaced by catalog marketing",
+      "id": "runtime:M04-G06-04",
       "suite": "runtime",
-      "runner_case_id": "M04-G06-04 original line discount is retained and not replaced by catalog marketing",
+      "runner_case_id": "M04-G06-04",
       "source": "tests/development/order-edit-payments.test.mts",
       "capability_id": "FEATURE-M04-G06"
     },
     {
-      "id": "runtime:M04-G06-05 price reduction cannot refund already returned native payment value",
+      "id": "runtime:M04-G06-05",
       "suite": "runtime",
-      "runner_case_id": "M04-G06-05 price reduction cannot refund already returned native payment value",
+      "runner_case_id": "M04-G06-05",
       "source": "tests/development/order-edit-payments.test.mts",
       "capability_id": "FEATURE-M04-G06"
     },
     {
-      "id": "runtime:CASE-M04-G07-01 higher-price edit creates one exact invoice and separate payment hold",
+      "id": "runtime:CASE-M04-G07-01",
       "suite": "runtime",
-      "runner_case_id": "CASE-M04-G07-01 higher-price edit creates one exact invoice and separate payment hold",
+      "runner_case_id": "CASE-M04-G07-01",
       "source": "tests/development/order-edit-payments.test.mts",
       "capability_id": "FEATURE-M04-G07"
     },
     {
-      "id": "runtime:CASE-M04-G07-02 invoice creation failure cannot report paid upgrade",
+      "id": "runtime:CASE-M04-G07-02",
       "suite": "runtime",
-      "runner_case_id": "CASE-M04-G07-02 invoice creation failure cannot report paid upgrade",
+      "runner_case_id": "CASE-M04-G07-02",
       "source": "tests/development/order-edit-payments.test.mts",
       "capability_id": "FEATURE-M04-G07"
     },
     {
-      "id": "runtime:CASE-M04-G07-03 timeout after invoice commit reconciles the original payable request",
+      "id": "runtime:CASE-M04-G07-03",
       "suite": "runtime",
-      "runner_case_id": "CASE-M04-G07-03 timeout after invoice commit reconciles the original payable request",
+      "runner_case_id": "CASE-M04-G07-03",
       "source": "tests/development/order-edit-payments.test.mts",
       "capability_id": "FEATURE-M04-G07"
     },
     {
-      "id": "runtime:CASE-M04-G08-01 exact settled payment is necessary but warehouse sync remains separate",
+      "id": "runtime:CASE-M04-G08-01",
       "suite": "runtime",
-      "runner_case_id": "CASE-M04-G08-01 exact settled payment is necessary but warehouse sync remains separate",
+      "runner_case_id": "CASE-M04-G08-01",
       "source": "tests/development/order-edit-payments.test.mts",
       "capability_id": "FEATURE-M04-G08"
     },
     {
-      "id": "runtime:CASE-M04-G08-02 partial failed expired and missing payments preserve fulfillment hold",
+      "id": "runtime:CASE-M04-G08-02",
       "suite": "runtime",
-      "runner_case_id": "CASE-M04-G08-02 partial failed expired and missing payments preserve fulfillment hold",
+      "runner_case_id": "CASE-M04-G08-02",
       "source": "tests/development/order-edit-payments.test.mts",
       "capability_id": "FEATURE-M04-G08"
     },
     {
-      "id": "runtime:CASE-M04-G08-03 duplicate settlement is not counted twice and late settlement stays version bound",
+      "id": "runtime:CASE-M04-G08-03",
       "suite": "runtime",
-      "runner_case_id": "CASE-M04-G08-03 duplicate settlement is not counted twice and late settlement stays version bound",
+      "runner_case_id": "CASE-M04-G08-03",
       "source": "tests/development/order-edit-payments.test.mts",
       "capability_id": "FEATURE-M04-G08"
     },
     {
-      "id": "runtime:M04-G08-04 altered payment currency does not clear a hold",
+      "id": "runtime:M04-G08-04",
       "suite": "runtime",
-      "runner_case_id": "M04-G08-04 altered payment currency does not clear a hold",
+      "runner_case_id": "M04-G08-04",
       "source": "tests/development/order-edit-payments.test.mts",
       "capability_id": "FEATURE-M04-G08"
     },
     {
-      "id": "runtime:M04-G08-05 payment for another order version cannot settle the current edit",
+      "id": "runtime:M04-G08-05",
       "suite": "runtime",
-      "runner_case_id": "M04-G08-05 payment for another order version cannot settle the current edit",
+      "runner_case_id": "M04-G08-05",
       "source": "tests/development/order-edit-payments.test.mts",
       "capability_id": "FEATURE-M04-G08"
     },
     {
-      "id": "runtime:M04-G08-06 restoring old or mixed financial observations fails exact identity checks",
+      "id": "runtime:M04-G08-06",
       "suite": "runtime",
-      "runner_case_id": "M04-G08-06 restoring old or mixed financial observations fails exact identity checks",
+      "runner_case_id": "M04-G08-06",
       "source": "tests/development/order-edit-payments.test.mts",
       "capability_id": "FEATURE-M04-G08"
     },
     {
-      "id": "runtime:M04-G05-PROCESS-01 concurrent dispatchers produce one native commit and one stock decrement",
+      "id": "runtime:M04-G05-PROCESS-01",
       "suite": "runtime",
-      "runner_case_id": "M04-G05-PROCESS-01 concurrent dispatchers produce one native commit and one stock decrement",
+      "runner_case_id": "M04-G05-PROCESS-01",
       "source": "tests/development/order-edit-process.test.mts",
       "capability_id": "FEATURE-M04-G05"
     },
     {
-      "id": "runtime:M04-G05-PROCESS-02 source commit and process termination reconcile without another native edit",
+      "id": "runtime:M04-G05-PROCESS-02",
       "suite": "runtime",
-      "runner_case_id": "M04-G05-PROCESS-02 source commit and process termination reconcile without another native edit",
+      "runner_case_id": "M04-G05-PROCESS-02",
       "source": "tests/development/order-edit-process.test.mts",
       "capability_id": "FEATURE-M04-G05"
     },
     {
-      "id": "runtime:M04-G09-MULTI-01 cancellation holds and acknowledges two actual synthetic warehouses",
+      "id": "runtime:M04-G09-MULTI-01",
       "suite": "runtime",
-      "runner_case_id": "M04-G09-MULTI-01 cancellation holds and acknowledges two actual synthetic warehouses",
+      "runner_case_id": "M04-G09-MULTI-01",
       "source": "tests/development/order-edit-process.test.mts",
       "capability_id": "FEATURE-M04-G09"
     },
     {
-      "id": "runtime:M04-G02-REVIEW-09 initially shipped warehouse is not pickable merely because source was seeded",
+      "id": "runtime:M04-G02-REVIEW-09",
       "suite": "runtime",
-      "runner_case_id": "M04-G02-REVIEW-09 initially shipped warehouse is not pickable merely because source was seeded",
+      "runner_case_id": "M04-G02-REVIEW-09",
       "source": "tests/development/order-edit-process.test.mts",
       "capability_id": "FEATURE-M04-G02"
     },
     {
-      "id": "runtime:M04-REVIEW-01 canonical read interface reflects observed edited facts not the former catalog view",
+      "id": "runtime:M04-REVIEW-01",
       "suite": "runtime",
-      "runner_case_id": "M04-REVIEW-01 canonical read interface reflects observed edited facts not the former catalog view",
+      "runner_case_id": "M04-REVIEW-01",
       "source": "tests/development/order-edit-review.test.mts",
       "capability_id": "FEATURE-M04-G10"
     },
     {
-      "id": "runtime:M04-REVIEW-02 revoking the approver stops dispatch with no source effect",
+      "id": "runtime:M04-REVIEW-02",
       "suite": "runtime",
-      "runner_case_id": "M04-REVIEW-02 revoking the approver stops dispatch with no source effect",
+      "runner_case_id": "M04-REVIEW-02",
       "source": "tests/development/order-edit-review.test.mts",
       "capability_id": "FEATURE-M04-G10"
     },
     {
-      "id": "runtime:M04-REVIEW-03 action-specific stop prevents dispatch and reset cannot reuse prior authorization",
+      "id": "runtime:M04-REVIEW-03",
       "suite": "runtime",
-      "runner_case_id": "M04-REVIEW-03 action-specific stop prevents dispatch and reset cannot reuse prior authorization",
+      "runner_case_id": "M04-REVIEW-03",
       "source": "tests/development/order-edit-review.test.mts",
       "capability_id": "FEATURE-M04-G10"
     },
     {
-      "id": "runtime:M04-REVIEW-04 unknown operation can be investigated while execution is stopped",
+      "id": "runtime:M04-REVIEW-04",
       "suite": "runtime",
-      "runner_case_id": "M04-REVIEW-04 unknown operation can be investigated while execution is stopped",
+      "runner_case_id": "M04-REVIEW-04",
       "source": "tests/development/order-edit-review.test.mts",
       "capability_id": "FEATURE-M04-G10"
     },
     {
-      "id": "runtime:M04-REVIEW-05 same source label on a different database cannot replace the pinned identity",
+      "id": "runtime:M04-REVIEW-05",
       "suite": "runtime",
-      "runner_case_id": "M04-REVIEW-05 same source label on a different database cannot replace the pinned identity",
+      "runner_case_id": "M04-REVIEW-05",
       "source": "tests/development/order-edit-review.test.mts",
       "capability_id": "FEATURE-M04-G10"
     },
     {
-      "id": "runtime:M04-REVIEW-06 source injection cannot share the application database",
+      "id": "runtime:M04-REVIEW-06",
       "suite": "runtime",
-      "runner_case_id": "M04-REVIEW-06 source injection cannot share the application database",
+      "runner_case_id": "M04-REVIEW-06",
       "source": "tests/development/order-edit-review.test.mts",
       "capability_id": "FEATURE-M04-G10"
     },
     {
-      "id": "runtime:M04-REVIEW-07 concurrent restoration quarantine prohibits any new edit transport",
+      "id": "runtime:M04-REVIEW-07",
       "suite": "runtime",
-      "runner_case_id": "M04-REVIEW-07 concurrent restoration quarantine prohibits any new edit transport",
+      "runner_case_id": "M04-REVIEW-07",
       "source": "tests/development/order-edit-review.test.mts",
       "capability_id": "FEATURE-M04-G10"
     },
     {
-      "id": "runtime:M04-REVIEW-08 privacy export includes new addresses and erasure removes private copies",
+      "id": "runtime:M04-REVIEW-08",
       "suite": "runtime",
-      "runner_case_id": "M04-REVIEW-08 privacy export includes new addresses and erasure removes private copies",
+      "runner_case_id": "M04-REVIEW-08",
       "source": "tests/development/order-edit-review.test.mts",
       "capability_id": "FEATURE-M04-G10"
     },
     {
-      "id": "runtime:CASE-M04-G11-01 same instruction content supports different merchant action windows",
+      "id": "runtime:CASE-M04-G11-01",
       "suite": "runtime",
-      "runner_case_id": "CASE-M04-G11-01 same instruction content supports different merchant action windows",
+      "runner_case_id": "CASE-M04-G11-01",
       "source": "tests/development/order-edit-workflow.test.mts",
       "capability_id": "FEATURE-M04-G11"
     },
     {
-      "id": "runtime:CASE-M04-G11-02 unpaid receipt never becomes paid from optimistic caller text",
+      "id": "runtime:CASE-M04-G11-02",
       "suite": "runtime",
-      "runner_case_id": "CASE-M04-G11-02 unpaid receipt never becomes paid from optimistic caller text",
+      "runner_case_id": "CASE-M04-G11-02",
       "source": "tests/development/order-edit-workflow.test.mts",
       "capability_id": "FEATURE-M04-G11"
     },
     {
-      "id": "runtime:CASE-M04-G11-03 replaced runtime resumes same pinned content and uncertain edit",
+      "id": "runtime:CASE-M04-G11-03",
       "suite": "runtime",
-      "runner_case_id": "CASE-M04-G11-03 replaced runtime resumes same pinned content and uncertain edit",
+      "runner_case_id": "CASE-M04-G11-03",
       "source": "tests/development/order-edit-workflow.test.mts",
       "capability_id": "FEATURE-M04-G11"
     },
     {
-      "id": "runtime:M04-G11-04 workflow rejects changed skill pin",
+      "id": "runtime:M04-G11-04",
       "suite": "runtime",
-      "runner_case_id": "M04-G11-04 workflow rejects changed skill pin",
+      "runner_case_id": "M04-G11-04",
       "source": "tests/development/order-edit-workflow.test.mts",
       "capability_id": "FEATURE-M04-G11"
     },
     {
-      "id": "runtime:M04-G11-05 cross-store caller cannot inspect an existing edit case",
+      "id": "runtime:M04-G11-05",
       "suite": "runtime",
-      "runner_case_id": "M04-G11-05 cross-store caller cannot inspect an existing edit case",
+      "runner_case_id": "M04-G11-05",
       "source": "tests/development/order-edit-workflow.test.mts",
       "capability_id": "FEATURE-M04-G11"
     },
     {
-      "id": "runtime:M04-G11-06 REST quote and approval create same canonical obligation with no direct write route",
+      "id": "runtime:M04-G11-06",
       "suite": "runtime",
-      "runner_case_id": "M04-G11-06 REST quote and approval create same canonical obligation with no direct write route",
+      "runner_case_id": "M04-G11-06",
       "source": "tests/development/order-edit-workflow.test.mts",
       "capability_id": "FEATURE-M04-G11"
     },
     {
-      "id": "runtime:M04-G11-07 REST rejects client tenant source and amount assertions",
+      "id": "runtime:M04-G11-07",
       "suite": "runtime",
-      "runner_case_id": "M04-G11-07 REST rejects client tenant source and amount assertions",
+      "runner_case_id": "M04-G11-07",
       "source": "tests/development/order-edit-workflow.test.mts",
       "capability_id": "FEATURE-M04-G11"
     },
     {
-      "id": "runtime:M04-G11-08 REST access disappears immediately after logout",
+      "id": "runtime:M04-G11-08",
       "suite": "runtime",
-      "runner_case_id": "M04-G11-08 REST access disappears immediately after logout",
+      "runner_case_id": "M04-G11-08",
       "source": "tests/development/order-edit-workflow.test.mts",
       "capability_id": "FEATURE-M04-G11"
     },
     {
-      "id": "runtime:M04-G11-09 external standard-library client reads actual API without built-in runner imports",
+      "id": "runtime:M04-G11-09",
       "suite": "runtime",
-      "runner_case_id": "M04-G11-09 external standard-library client reads actual API without built-in runner imports",
+      "runner_case_id": "M04-G11-09",
       "source": "tests/development/order-edit-workflow.test.mts",
       "capability_id": "FEATURE-M04-G11"
     },
     {
-      "id": "runtime:M04-G11-10 no-source startup exposes reads but refuses to claim a qualified adapter",
+      "id": "runtime:M04-G11-10",
       "suite": "runtime",
-      "runner_case_id": "M04-G11-10 no-source startup exposes reads but refuses to claim a qualified adapter",
+      "runner_case_id": "M04-G11-10",
       "source": "tests/development/order-edit-workflow.test.mts",
       "capability_id": "FEATURE-M04-G11"
     },
     {
-      "id": "runtime:M04-G11-11 source-backed digest changes on actual payment observation not prose",
+      "id": "runtime:M04-G11-11",
       "suite": "runtime",
-      "runner_case_id": "M04-G11-11 source-backed digest changes on actual payment observation not prose",
+      "runner_case_id": "M04-G11-11",
       "source": "tests/development/order-edit-workflow.test.mts",
       "capability_id": "FEATURE-M04-G11"
     },
     {
-      "id": "runtime:M04-G11-12 direct UI assets require no provider or private session embedded",
+      "id": "runtime:M04-G11-12",
       "suite": "runtime",
-      "runner_case_id": "M04-G11-12 direct UI assets require no provider or private session embedded",
+      "runner_case_id": "M04-G11-12",
       "source": "tests/development/order-edit-workflow.test.mts",
       "capability_id": "FEATURE-M04-G11"
     },
     {
-      "id": "runtime:M04-REVIEW-10 negative hold acknowledgement cannot advance native editing",
+      "id": "runtime:M04-REVIEW-10",
       "suite": "runtime",
-      "runner_case_id": "M04-REVIEW-10 negative hold acknowledgement cannot advance native editing",
+      "runner_case_id": "M04-REVIEW-10",
       "source": "tests/development/order-edit-review.test.mts",
       "capability_id": "FEATURE-M04-G10"
     },
     {
-      "id": "runtime:M04-REVIEW-11 warehouse acknowledgement for a different endpoint cannot advance release",
+      "id": "runtime:M04-REVIEW-11",
       "suite": "runtime",
-      "runner_case_id": "M04-REVIEW-11 warehouse acknowledgement for a different endpoint cannot advance release",
+      "runner_case_id": "M04-REVIEW-11",
       "source": "tests/development/order-edit-review.test.mts",
       "capability_id": "FEATURE-M04-G10"
     }

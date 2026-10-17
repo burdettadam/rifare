@@ -22,6 +22,8 @@ The manual interface shows readable stage cards with expandable source history. 
 
 The separate evidence delivery records the exact candidate, actual test counts, red/green reproductions, deliberate broken variants, prior source preservation, integration decisions and archive restoration. Any failure, missing execution or unavailable external qualification remains explicit rather than converted into a passing test.
 
+The prior controller rejected the first new registration table because it used full descriptive test titles instead of the stable first-token IDs emitted by the native adapter. Registration was corrected to match actual native IDs; existing registrations, executable assertions and the controller were unchanged.
+
 ## Remaining limitations
 
 Connected platform, warehouse, payment, PostgreSQL/React, real agent/model and direct served-browser qualification have not been performed. The source is an independently persisted synthetic ledger with tested transactions and idempotency, not a universal exactly-once guarantee. Expired/unknown operations stay held; automatic compensation is not enabled. Logical local erasure does not erase external source databases or backup history.
