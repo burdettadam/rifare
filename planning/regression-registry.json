@@ -16997,86 +16997,86 @@
       "capability_id": "FEATURE-M06-G08"
     },
     {
-      "id": "runtime:M06-PREVENTION-METRICS-01 frozen baseline control and treatment preserve exact independent known answers",
+      "id": "runtime:M06-PREVENTION-METRICS-01",
       "suite": "runtime",
-      "runner_case_id": "M06-PREVENTION-METRICS-01 frozen baseline control and treatment preserve exact independent known answers",
+      "runner_case_id": "M06-PREVENTION-METRICS-01",
       "source": "tests/development/prevention-experiments.test.mts",
       "capability_id": "FEATURE-M06-G13"
     },
     {
-      "id": "runtime:M06-PREVENTION-METRICS-02 missing outcome cases stay in the declared denominator",
+      "id": "runtime:M06-PREVENTION-METRICS-02",
       "suite": "runtime",
-      "runner_case_id": "M06-PREVENTION-METRICS-02 missing outcome cases stay in the declared denominator",
+      "runner_case_id": "M06-PREVENTION-METRICS-02",
       "source": "tests/development/prevention-experiments.test.mts",
       "capability_id": "FEATURE-M06-G13"
     },
     {
-      "id": "runtime:M06-PREVENTION-METRICS-03 unknown costs are not silently replaced by zero profit",
+      "id": "runtime:M06-PREVENTION-METRICS-03",
       "suite": "runtime",
-      "runner_case_id": "M06-PREVENTION-METRICS-03 unknown costs are not silently replaced by zero profit",
+      "runner_case_id": "M06-PREVENTION-METRICS-03",
       "source": "tests/development/prevention-experiments.test.mts",
       "capability_id": "FEATURE-M06-G13"
     },
     {
-      "id": "runtime:M06-PREVENTION-METRICS-04 the same original purchase cannot inflate a later experiment cohort",
+      "id": "runtime:M06-PREVENTION-METRICS-04",
       "suite": "runtime",
-      "runner_case_id": "M06-PREVENTION-METRICS-04 the same original purchase cannot inflate a later experiment cohort",
+      "runner_case_id": "M06-PREVENTION-METRICS-04",
       "source": "tests/development/prevention-experiments.test.mts",
       "capability_id": "FEATURE-M06-G13"
     },
     {
-      "id": "runtime:M06-PREVENTION-METRICS-05 outcome-aware enrollment and selected denominators are rejected",
+      "id": "runtime:M06-PREVENTION-METRICS-05",
       "suite": "runtime",
-      "runner_case_id": "M06-PREVENTION-METRICS-05 outcome-aware enrollment and selected denominators are rejected",
+      "runner_case_id": "M06-PREVENTION-METRICS-05",
       "source": "tests/development/prevention-experiments.test.mts",
       "capability_id": "FEATURE-M06-G13"
     },
     {
-      "id": "runtime:M06-PREVENTION-METRICS-06 immature followup cannot count as a mature comparison",
+      "id": "runtime:M06-PREVENTION-METRICS-06",
       "suite": "runtime",
-      "runner_case_id": "M06-PREVENTION-METRICS-06 immature followup cannot count as a mature comparison",
+      "runner_case_id": "M06-PREVENTION-METRICS-06",
       "source": "tests/development/prevention-experiments.test.mts",
       "capability_id": "FEATURE-M06-G13"
     },
     {
-      "id": "runtime:M06-PREVENTION-METRICS-07 erasure preserves aggregate denominators without exposing the erased individual",
+      "id": "runtime:M06-PREVENTION-METRICS-07",
       "suite": "runtime",
-      "runner_case_id": "M06-PREVENTION-METRICS-07 erasure preserves aggregate denominators without exposing the erased individual",
+      "runner_case_id": "M06-PREVENTION-METRICS-07",
       "source": "tests/development/prevention-experiments.test.mts",
       "capability_id": "FEATURE-M06-G13"
     },
     {
-      "id": "runtime:M06-PREVENTION-METRICS-08 duplicate source refreshes retain one observation per native version",
+      "id": "runtime:M06-PREVENTION-METRICS-08",
       "suite": "runtime",
-      "runner_case_id": "M06-PREVENTION-METRICS-08 duplicate source refreshes retain one observation per native version",
+      "runner_case_id": "M06-PREVENTION-METRICS-08",
       "source": "tests/development/prevention-experiments.test.mts",
       "capability_id": "FEATURE-M06-G13"
     },
     {
-      "id": "runtime:M06-PREVENTION-METRICS-09 late cost observations append history and update current contribution honestly",
+      "id": "runtime:M06-PREVENTION-METRICS-09",
       "suite": "runtime",
-      "runner_case_id": "M06-PREVENTION-METRICS-09 late cost observations append history and update current contribution honestly",
+      "runner_case_id": "M06-PREVENTION-METRICS-09",
       "source": "tests/development/prevention-experiments.test.mts",
       "capability_id": "FEATURE-M06-G13"
     },
     {
-      "id": "runtime:M06-PREVENTION-METRICS-10 native fixture rejects overcounted units fabricated profit and future coverage",
+      "id": "runtime:M06-PREVENTION-METRICS-10",
       "suite": "runtime",
-      "runner_case_id": "M06-PREVENTION-METRICS-10 native fixture rejects overcounted units fabricated profit and future coverage",
+      "runner_case_id": "M06-PREVENTION-METRICS-10",
       "source": "tests/development/prevention-experiments.test.mts",
       "capability_id": "FEATURE-M06-G13"
     },
     {
-      "id": "runtime:M06-PREVENTION-METRICS-11 private outcomes and cohort identities are scoped to existing analytics authority",
+      "id": "runtime:M06-PREVENTION-METRICS-11",
       "suite": "runtime",
-      "runner_case_id": "M06-PREVENTION-METRICS-11 private outcomes and cohort identities are scoped to existing analytics authority",
+      "runner_case_id": "M06-PREVENTION-METRICS-11",
       "source": "tests/development/prevention-experiments.test.mts",
       "capability_id": "FEATURE-M06-G13"
     },
     {
-      "id": "runtime:M06-PREVENTION-METRICS-12 reusing an event for a different purchase cannot transfer its exposure",
+      "id": "runtime:M06-PREVENTION-METRICS-12",
       "suite": "runtime",
-      "runner_case_id": "M06-PREVENTION-METRICS-12 reusing an event for a different purchase cannot transfer its exposure",
+      "runner_case_id": "M06-PREVENTION-METRICS-12",
       "source": "tests/development/prevention-experiments.test.mts",
       "capability_id": "FEATURE-M06-G13"
     },
@@ -17375,16 +17375,16 @@
       "capability_id": "FEATURE-M06-G99"
     },
     {
-      "id": "runtime:CASE-M06-G99-01 integrated mixed return keeps cash credit exchange and costs distinct",
+      "id": "runtime:CASE-M06-G99-01",
       "suite": "runtime",
-      "runner_case_id": "CASE-M06-G99-01 integrated mixed return keeps cash credit exchange and costs distinct",
+      "runner_case_id": "CASE-M06-G99-01",
       "source": "tests/development/return-depth-integration.test.mts",
       "capability_id": "FEATURE-M06-G99"
     },
     {
-      "id": "runtime:CASE-M06-G99-02 missing connected and prerequisite evidence blocks formal M06 acceptance",
+      "id": "runtime:CASE-M06-G99-02",
       "suite": "runtime",
-      "runner_case_id": "CASE-M06-G99-02 missing connected and prerequisite evidence blocks formal M06 acceptance",
+      "runner_case_id": "CASE-M06-G99-02",
       "source": "tests/development/return-depth-integration.test.mts",
       "capability_id": "FEATURE-M06-G99"
     },
@@ -17529,30 +17529,30 @@
       "capability_id": "FEATURE-M06-G14"
     },
     {
-      "id": "runtime:CASE-M06-G14-01 three policy packs run the declared matrix through one return engine",
+      "id": "runtime:CASE-M06-G14-01",
       "suite": "runtime",
-      "runner_case_id": "CASE-M06-G14-01 three policy packs run the declared matrix through one return engine",
+      "runner_case_id": "CASE-M06-G14-01",
       "source": "tests/development/return-policy-packs.test.mts",
       "capability_id": "FEATURE-M06-G14"
     },
     {
-      "id": "runtime:CASE-M06-G14-02 requested financial and warehouse capabilities cannot grant server readiness",
+      "id": "runtime:CASE-M06-G14-02",
       "suite": "runtime",
-      "runner_case_id": "CASE-M06-G14-02 requested financial and warehouse capabilities cannot grant server readiness",
+      "runner_case_id": "CASE-M06-G14-02",
       "source": "tests/development/return-policy-packs.test.mts",
       "capability_id": "FEATURE-M06-G14"
     },
     {
-      "id": "runtime:CASE-M06-G14-03 a fourth merchant identity uses the identical policy and core behavior",
+      "id": "runtime:CASE-M06-G14-03",
       "suite": "runtime",
-      "runner_case_id": "CASE-M06-G14-03 a fourth merchant identity uses the identical policy and core behavior",
+      "runner_case_id": "CASE-M06-G14-03",
       "source": "tests/development/return-policy-packs.test.mts",
       "capability_id": "FEATURE-M06-G14"
     },
     {
-      "id": "runtime:PORT-017 apparel fragile and final-sale choices keep one shared skill bundle",
+      "id": "runtime:PORT-017",
       "suite": "runtime",
-      "runner_case_id": "PORT-017 apparel fragile and final-sale choices keep one shared skill bundle",
+      "runner_case_id": "PORT-017",
       "source": "tests/development/return-policy-packs.test.mts",
       "capability_id": "FEATURE-M06-G14"
     },
@@ -17620,268 +17620,268 @@
       "capability_id": "FEATURE-M06-G14"
     },
     {
-      "id": "runtime:CASE-M06-G13-01 approved multi-size suggestion preserves paid goods until customer-confirmed qualified edit",
+      "id": "runtime:CASE-M06-G13-01",
       "suite": "runtime",
-      "runner_case_id": "CASE-M06-G13-01 approved multi-size suggestion preserves paid goods until customer-confirmed qualified edit",
+      "runner_case_id": "CASE-M06-G13-01",
       "source": "tests/development/return-prevention.test.mts",
       "capability_id": "FEATURE-M06-G13"
     },
     {
-      "id": "runtime:CASE-M06-G13-02 agent risk suggestion cannot cancel paid goods or impersonate a customer",
+      "id": "runtime:CASE-M06-G13-02",
       "suite": "runtime",
-      "runner_case_id": "CASE-M06-G13-02 agent risk suggestion cannot cancel paid goods or impersonate a customer",
+      "runner_case_id": "CASE-M06-G13-02",
       "source": "tests/development/return-prevention.test.mts",
       "capability_id": "FEATURE-M06-G13"
     },
     {
-      "id": "runtime:CASE-M06-G13-03 repeated purchase events and restart preserve one offer and exposure",
+      "id": "runtime:CASE-M06-G13-03",
       "suite": "runtime",
-      "runner_case_id": "CASE-M06-G13-03 repeated purchase events and restart preserve one offer and exposure",
+      "runner_case_id": "CASE-M06-G13-03",
       "source": "tests/development/return-prevention.test.mts",
       "capability_id": "FEATURE-M06-G13"
     },
     {
-      "id": "runtime:M06-PREVENTION-04 unapproved guidance cannot enroll any purchase",
+      "id": "runtime:M06-PREVENTION-04",
       "suite": "runtime",
-      "runner_case_id": "M06-PREVENTION-04 unapproved guidance cannot enroll any purchase",
+      "runner_case_id": "M06-PREVENTION-04",
       "source": "tests/development/return-prevention.test.mts",
       "capability_id": "FEATURE-M06-G13"
     },
     {
-      "id": "runtime:M06-PREVENTION-05 configuration and independent review enforce existing roles",
+      "id": "runtime:M06-PREVENTION-05",
       "suite": "runtime",
-      "runner_case_id": "M06-PREVENTION-05 configuration and independent review enforce existing roles",
+      "runner_case_id": "M06-PREVENTION-05",
       "source": "tests/development/return-prevention.test.mts",
       "capability_id": "FEATURE-M06-G13"
     },
     {
-      "id": "runtime:M06-PREVENTION-06 stale knowledge and revoked reviewer block new suggestions",
+      "id": "runtime:M06-PREVENTION-06",
       "suite": "runtime",
-      "runner_case_id": "M06-PREVENTION-06 stale knowledge and revoked reviewer block new suggestions",
+      "runner_case_id": "M06-PREVENTION-06",
       "source": "tests/development/return-prevention.test.mts",
       "capability_id": "FEATURE-M06-G13"
     },
     {
-      "id": "runtime:M06-PREVENTION-07 source changes invalidate customer confirmation and staff approval",
+      "id": "runtime:M06-PREVENTION-07",
       "suite": "runtime",
-      "runner_case_id": "M06-PREVENTION-07 source changes invalidate customer confirmation and staff approval",
+      "runner_case_id": "M06-PREVENTION-07",
       "source": "tests/development/return-prevention.test.mts",
       "capability_id": "FEATURE-M06-G13"
     },
     {
-      "id": "runtime:M06-PREVENTION-08 disabling offers cannot authorize a previously unconfirmed quote",
+      "id": "runtime:M06-PREVENTION-08",
       "suite": "runtime",
-      "runner_case_id": "M06-PREVENTION-08 disabling offers cannot authorize a previously unconfirmed quote",
+      "runner_case_id": "M06-PREVENTION-08",
       "source": "tests/development/return-prevention.test.mts",
       "capability_id": "FEATURE-M06-G13"
     },
     {
-      "id": "runtime:M06-PREVENTION-09 independent cancellation remains possible through explicit customer confirmation",
+      "id": "runtime:M06-PREVENTION-09",
       "suite": "runtime",
-      "runner_case_id": "M06-PREVENTION-09 independent cancellation remains possible through explicit customer confirmation",
+      "runner_case_id": "M06-PREVENTION-09",
       "source": "tests/development/return-prevention.test.mts",
       "capability_id": "FEATURE-M06-G13"
     },
     {
-      "id": "runtime:M06-PREVENTION-10 a pre-enrollment authorization cannot bypass a later enrolled boundary",
+      "id": "runtime:M06-PREVENTION-10",
       "suite": "runtime",
-      "runner_case_id": "M06-PREVENTION-10 a pre-enrollment authorization cannot bypass a later enrolled boundary",
+      "runner_case_id": "M06-PREVENTION-10",
       "source": "tests/development/return-prevention.test.mts",
       "capability_id": "FEATURE-M06-G13"
     },
     {
-      "id": "runtime:M06-PREVENTION-11 customer revocation stops already authorized but unsent native edits",
+      "id": "runtime:M06-PREVENTION-11",
       "suite": "runtime",
-      "runner_case_id": "M06-PREVENTION-11 customer revocation stops already authorized but unsent native edits",
+      "runner_case_id": "M06-PREVENTION-11",
       "source": "tests/development/return-prevention.test.mts",
       "capability_id": "FEATURE-M06-G13"
     },
     {
-      "id": "runtime:M06-PREVENTION-12 customer session revocation invalidates unsent edit claims",
+      "id": "runtime:M06-PREVENTION-12",
       "suite": "runtime",
-      "runner_case_id": "M06-PREVENTION-12 customer session revocation invalidates unsent edit claims",
+      "runner_case_id": "M06-PREVENTION-12",
       "source": "tests/development/return-prevention.test.mts",
       "capability_id": "FEATURE-M06-G13"
     },
     {
-      "id": "runtime:M06-PREVENTION-13 native source rejects an unlabelled paid-goods command without customer consent",
+      "id": "runtime:M06-PREVENTION-13",
       "suite": "runtime",
-      "runner_case_id": "M06-PREVENTION-13 native source rejects an unlabelled paid-goods command without customer consent",
+      "runner_case_id": "M06-PREVENTION-13",
       "source": "tests/development/return-prevention.test.mts",
       "capability_id": "FEATURE-M06-G13"
     },
     {
-      "id": "runtime:M06-PREVENTION-14 native consent binds the exact action, original money and one operation identity",
+      "id": "runtime:M06-PREVENTION-14",
       "suite": "runtime",
-      "runner_case_id": "M06-PREVENTION-14 native consent binds the exact action, original money and one operation identity",
+      "runner_case_id": "M06-PREVENTION-14",
       "source": "tests/development/return-prevention.test.mts",
       "capability_id": "FEATURE-M06-G13"
     },
     {
-      "id": "runtime:M06-PREVENTION-15 lost commit response reconciles after revoked consent without duplicating goods",
+      "id": "runtime:M06-PREVENTION-15",
       "suite": "runtime",
-      "runner_case_id": "M06-PREVENTION-15 lost commit response reconciles after revoked consent without duplicating goods",
+      "runner_case_id": "M06-PREVENTION-15",
       "source": "tests/development/return-prevention.test.mts",
       "capability_id": "FEATURE-M06-G13"
     },
     {
-      "id": "runtime:M06-PREVENTION-16 customer confirmation is tied to exact quoted totals and preview digest",
+      "id": "runtime:M06-PREVENTION-16",
       "suite": "runtime",
-      "runner_case_id": "M06-PREVENTION-16 customer confirmation is tied to exact quoted totals and preview digest",
+      "runner_case_id": "M06-PREVENTION-16",
       "source": "tests/development/return-prevention.test.mts",
       "capability_id": "FEATURE-M06-G13"
     },
     {
-      "id": "runtime:M06-PREVENTION-17 deterministic manual prevention remains available with models disabled",
+      "id": "runtime:M06-PREVENTION-17",
       "suite": "runtime",
-      "runner_case_id": "M06-PREVENTION-17 deterministic manual prevention remains available with models disabled",
+      "runner_case_id": "M06-PREVENTION-17",
       "source": "tests/development/return-prevention.test.mts",
       "capability_id": "FEATURE-M06-G13"
     },
     {
-      "id": "runtime:M06-PREVENTION-18 erasure and store boundaries stop private reads and new consent",
+      "id": "runtime:M06-PREVENTION-18",
       "suite": "runtime",
-      "runner_case_id": "M06-PREVENTION-18 erasure and store boundaries stop private reads and new consent",
+      "runner_case_id": "M06-PREVENTION-18",
       "source": "tests/development/return-prevention.test.mts",
       "capability_id": "FEATURE-M06-G13"
     },
     {
-      "id": "runtime:M06-PREVENTION-19 the native bridge cannot accept staff or a fabricated customer scope",
+      "id": "runtime:M06-PREVENTION-19",
       "suite": "runtime",
-      "runner_case_id": "M06-PREVENTION-19 the native bridge cannot accept staff or a fabricated customer scope",
+      "runner_case_id": "M06-PREVENTION-19",
       "source": "tests/development/return-prevention.test.mts",
       "capability_id": "FEATURE-M06-G13"
     },
     {
-      "id": "runtime:M06-PREVENTION-20 duplicate customer confirmation preserves the same native receipt",
+      "id": "runtime:M06-PREVENTION-20",
       "suite": "runtime",
-      "runner_case_id": "M06-PREVENTION-20 duplicate customer confirmation preserves the same native receipt",
+      "runner_case_id": "M06-PREVENTION-20",
       "source": "tests/development/return-prevention.test.mts",
       "capability_id": "FEATURE-M06-G13"
     },
     {
-      "id": "runtime:M06-PREVENTION-21 a confirmation retry cannot endorse changed current source facts",
+      "id": "runtime:M06-PREVENTION-21",
       "suite": "runtime",
-      "runner_case_id": "M06-PREVENTION-21 a confirmation retry cannot endorse changed current source facts",
+      "runner_case_id": "M06-PREVENTION-21",
       "source": "tests/development/return-prevention.test.mts",
       "capability_id": "FEATURE-M06-G13"
     },
     {
-      "id": "runtime:M06-PREVENTION-22 interrupted native registration remains unconfirmed and retries the same customer claim",
+      "id": "runtime:M06-PREVENTION-22",
       "suite": "runtime",
-      "runner_case_id": "M06-PREVENTION-22 interrupted native registration remains unconfirmed and retries the same customer claim",
+      "runner_case_id": "M06-PREVENTION-22",
       "source": "tests/development/return-prevention.test.mts",
       "capability_id": "FEATURE-M06-G13"
     },
     {
-      "id": "runtime:CASE-M06-G11-01 exact source indicators support separately authorized evidence review",
+      "id": "runtime:CASE-M06-G11-01",
       "suite": "runtime",
-      "runner_case_id": "CASE-M06-G11-01 exact source indicators support separately authorized evidence review",
+      "runner_case_id": "CASE-M06-G11-01",
       "source": "tests/development/risk-assistance.test.mts",
       "capability_id": "FEATURE-M06-G11"
     },
     {
-      "id": "runtime:CASE-M06-G11-02 unsupported model accusations cannot deny or create public allegations",
+      "id": "runtime:CASE-M06-G11-02",
       "suite": "runtime",
-      "runner_case_id": "CASE-M06-G11-02 unsupported model accusations cannot deny or create public allegations",
+      "runner_case_id": "CASE-M06-G11-02",
       "source": "tests/development/risk-assistance.test.mts",
       "capability_id": "FEATURE-M06-G11"
     },
     {
-      "id": "runtime:CASE-M06-G11-03 changed models and removed indicators retain rights and historical provenance",
+      "id": "runtime:CASE-M06-G11-03",
       "suite": "runtime",
-      "runner_case_id": "CASE-M06-G11-03 changed models and removed indicators retain rights and historical provenance",
+      "runner_case_id": "CASE-M06-G11-03",
       "source": "tests/development/risk-assistance.test.mts",
       "capability_id": "FEATURE-M06-G11"
     },
     {
-      "id": "runtime:M06-RISK-04 customer view omits indicators, model records and source identifiers",
+      "id": "runtime:M06-RISK-04",
       "suite": "runtime",
-      "runner_case_id": "M06-RISK-04 customer view omits indicators, model records and source identifiers",
+      "runner_case_id": "M06-RISK-04",
       "source": "tests/development/risk-assistance.test.mts",
       "capability_id": "FEATURE-M06-G11"
     },
     {
-      "id": "runtime:M06-RISK-05 evidence appeal requires the real scoped customer",
+      "id": "runtime:M06-RISK-05",
       "suite": "runtime",
-      "runner_case_id": "M06-RISK-05 evidence appeal requires the real scoped customer",
+      "runner_case_id": "M06-RISK-05",
       "source": "tests/development/risk-assistance.test.mts",
       "capability_id": "FEATURE-M06-G11"
     },
     {
-      "id": "runtime:M06-RISK-06 risk dismissal does not override published eligibility",
+      "id": "runtime:M06-RISK-06",
       "suite": "runtime",
-      "runner_case_id": "M06-RISK-06 risk dismissal does not override published eligibility",
+      "runner_case_id": "M06-RISK-06",
       "source": "tests/development/risk-assistance.test.mts",
       "capability_id": "FEATURE-M06-G11"
     },
     {
-      "id": "runtime:M06-RISK-07 reviewer controls enforce current scope and prohibit self review",
+      "id": "runtime:M06-RISK-07",
       "suite": "runtime",
-      "runner_case_id": "M06-RISK-07 reviewer controls enforce current scope and prohibit self review",
+      "runner_case_id": "M06-RISK-07",
       "source": "tests/development/risk-assistance.test.mts",
       "capability_id": "FEATURE-M06-G11"
     },
     {
-      "id": "runtime:M06-RISK-08 policy window override reuses the bounded existing review action",
+      "id": "runtime:M06-RISK-08",
       "suite": "runtime",
-      "runner_case_id": "M06-RISK-08 policy window override reuses the bounded existing review action",
+      "runner_case_id": "M06-RISK-08",
       "source": "tests/development/risk-assistance.test.mts",
       "capability_id": "FEATURE-M06-G11"
     },
     {
-      "id": "runtime:M06-RISK-09 model stop still permits deterministic manual assistance",
+      "id": "runtime:M06-RISK-09",
       "suite": "runtime",
-      "runner_case_id": "M06-RISK-09 model stop still permits deterministic manual assistance",
+      "runner_case_id": "M06-RISK-09",
       "source": "tests/development/risk-assistance.test.mts",
       "capability_id": "FEATURE-M06-G11"
     },
     {
-      "id": "runtime:M06-RISK-10 forged model source pins are rejected without altering the source result",
+      "id": "runtime:M06-RISK-10",
       "suite": "runtime",
-      "runner_case_id": "M06-RISK-10 forged model source pins are rejected without altering the source result",
+      "runner_case_id": "M06-RISK-10",
       "source": "tests/development/risk-assistance.test.mts",
       "capability_id": "FEATURE-M06-G11"
     },
     {
-      "id": "runtime:M06-RISK-11 scoped history remains available after restart with exact bytes",
+      "id": "runtime:M06-RISK-11",
       "suite": "runtime",
-      "runner_case_id": "M06-RISK-11 scoped history remains available after restart with exact bytes",
+      "runner_case_id": "M06-RISK-11",
       "source": "tests/development/risk-assistance.test.mts",
       "capability_id": "FEATURE-M06-G11"
     },
     {
-      "id": "runtime:M06-RISK-12 tenant and customer erasure boundaries cover history and new assessments",
+      "id": "runtime:M06-RISK-12",
       "suite": "runtime",
-      "runner_case_id": "M06-RISK-12 tenant and customer erasure boundaries cover history and new assessments",
+      "runner_case_id": "M06-RISK-12",
       "source": "tests/development/risk-assistance.test.mts",
       "capability_id": "FEATURE-M06-G11"
     },
     {
-      "id": "runtime:M06-RISK-13 tampering with durable provenance fails closed",
+      "id": "runtime:M06-RISK-13",
       "suite": "runtime",
-      "runner_case_id": "M06-RISK-13 tampering with durable provenance fails closed",
+      "runner_case_id": "M06-RISK-13",
       "source": "tests/development/risk-assistance.test.mts",
       "capability_id": "FEATURE-M06-G11"
     },
     {
-      "id": "runtime:M06-RISK-14 assistance never creates a business receipt or unsupported denial action",
+      "id": "runtime:M06-RISK-14",
       "suite": "runtime",
-      "runner_case_id": "M06-RISK-14 assistance never creates a business receipt or unsupported denial action",
+      "runner_case_id": "M06-RISK-14",
       "source": "tests/development/risk-assistance.test.mts",
       "capability_id": "FEATURE-M06-G11"
     },
     {
-      "id": "runtime:M06-RISK-15 a migrated policy cannot relabel an old decision and historical provenance remains intact",
+      "id": "runtime:M06-RISK-15",
       "suite": "runtime",
-      "runner_case_id": "M06-RISK-15 a migrated policy cannot relabel an old decision and historical provenance remains intact",
+      "runner_case_id": "M06-RISK-15",
       "source": "tests/development/risk-assistance.test.mts",
       "capability_id": "FEATURE-M06-G11"
     },
     {
-      "id": "runtime:M06-RISK-16 profile-only case migration also requires a current quote without rewriting history",
+      "id": "runtime:M06-RISK-16",
       "suite": "runtime",
-      "runner_case_id": "M06-RISK-16 profile-only case migration also requires a current quote without rewriting history",
+      "runner_case_id": "M06-RISK-16",
       "source": "tests/development/risk-assistance.test.mts",
       "capability_id": "FEATURE-M06-G11"
     }
