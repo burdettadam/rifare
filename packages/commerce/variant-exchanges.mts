@@ -1,3 +1,4 @@
+import { assertExchangeMoneySupported } from './exchange-currency.mts';
 import { exact,id,integer,token } from './kernel.mts';
 import type { CommerceKernel,Scope,Row } from './kernel.mts';
 import { assertGiftOutcome } from './gift-proof.mts';
@@ -20,6 +21,7 @@ function catalogValue(payload:unknown){
 }
 function exchangeValue(k:CommerceKernel,scope:Scope,allocationId:string,catalogId:string,quotedAt:number,authority='action.propose',boundQuote:Row|null=null){
  const ctx=allocationContext(k,scope,allocationId),{c,a,b,s}=ctx;const settings=resolutionSettings(k,s),facts=financialFacts(k,c);
+ assertExchangeMoneySupported(k,s,allocationId);
  const gift=assertGiftOutcome(k,scope,c.id,'exchange',[b]);
  if(intakeSettings(k,s).digest!==b.fee_settings_digest)throw new Error('REFUND_FEES_CHANGED');
  if(evidenceReviewState(k,s,c.id)?.event==='evidence_requested')throw new Error('RETURN_REVIEW_REQUIRED');

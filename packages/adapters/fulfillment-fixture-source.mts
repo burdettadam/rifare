@@ -1,3 +1,4 @@
+import { InstantExchangeFixtureSource } from './instant-exchange-fixture-source.mts';
 import { randomUUID } from 'node:crypto';
 import { DatabaseSync } from 'node:sqlite';
 import { exact,id,integer } from '../commerce/kernel.mts';
@@ -9,15 +10,16 @@ import { ResolutionFixtureSource } from './resolution-fixture-source.mts';
 /** Separate synthetic authority. It cannot connect to a store or carrier. */
 export class FulfillmentFixtureSource {
  readonly db:DatabaseSync;readonly identity:string;readonly tenant:string;readonly store:string;readonly clock:()=>number;
- readonly financeSource:ResolutionFixtureSource|undefined;
+ readonly financeSource:ResolutionFixtureSource|undefined;readonly instantSource:InstantExchangeFixtureSource|undefined;
  readonly labelTtl:number;readonly qualification='synthetic_only'; readonly mode='fixture_native';
  fault:'none'|'before'|'after'|'malformed'|'hang'='none';
  calls={reserve:0,replace:0,rate:0,buy:0,void:0,lookup:0};
- constructor(db:DatabaseSync,options:{mode:'fixture';tenant:string;store:string;identity:string;clock?:()=>number;label_ttl_ms?:number;finance_source?:ResolutionFixtureSource}){
+ constructor(db:DatabaseSync,options:{mode:'fixture';tenant:string;store:string;identity:string;clock?:()=>number;label_ttl_ms?:number;finance_source?:ResolutionFixtureSource;instant_source?:InstantExchangeFixtureSource}){
   integer(options.label_ttl_ms??1800000,10);if((options.label_ttl_ms??1800000)>1800000)throw new Error('INVALID_INPUT');this.labelTtl=options.label_ttl_ms??1800000;
   if(options.mode!=='fixture')throw new Error('FIXTURE_ONLY');this.db=db;this.tenant=id(options.tenant);this.store=id(options.store);id(options.identity);this.clock=options.clock??Date.now;
   this.financeSource=options.finance_source;if(this.financeSource){const path=(db:DatabaseSync)=>db.prepare('PRAGMA database_list').all().find((r:Row)=>r.name==='main')?.file;
    if(!(this.financeSource instanceof ResolutionFixtureSource)||this.financeSource.db===db||path(db)&&path(db)===path(this.financeSource.db)||this.financeSource.tenant!==this.tenant||this.financeSource.store!==this.store)throw new Error('EXCHANGE_FINANCE_SOURCE_REQUIRED');}
+  this.instantSource=options.instant_source;if(this.instantSource){const path=(db:DatabaseSync)=>db.prepare('PRAGMA database_list').all().find((r:Row)=>r.name==='main')?.file;if(!(this.instantSource instanceof InstantExchangeFixtureSource)||this.instantSource.db===db||path(db)&&path(db)===path(this.instantSource.db)||this.financeSource&&(this.instantSource.db===this.financeSource.db||path(this.instantSource.db)&&path(this.instantSource.db)===path(this.financeSource.db))||this.instantSource.tenant!==this.tenant||this.instantSource.store!==this.store)throw new Error('INSTANT_SOURCE_MISMATCH');}
   db.exec(`PRAGMA busy_timeout=3000;
    CREATE TABLE IF NOT EXISTS fixture_identity (id TEXT PRIMARY KEY, tenant TEXT NOT NULL, store TEXT NOT NULL, label TEXT NOT NULL) STRICT;
    CREATE TABLE IF NOT EXISTS fixture_stock (catalog_id TEXT PRIMARY KEY, variant_id TEXT NOT NULL, location_id TEXT NOT NULL, version INTEGER NOT NULL, available INTEGER NOT NULL CHECK(available>=0)) STRICT;
@@ -25,10 +27,12 @@ export class FulfillmentFixtureSource {
    CREATE TABLE IF NOT EXISTS fixture_effects (id TEXT PRIMARY KEY, kind TEXT NOT NULL, obligation TEXT NOT NULL, body TEXT NOT NULL, digest TEXT NOT NULL, UNIQUE(kind,obligation)) STRICT;
    CREATE TABLE IF NOT EXISTS fixture_rates (service TEXT PRIMARY KEY, revision INTEGER NOT NULL, amount_minor TEXT NOT NULL, currency TEXT NOT NULL, expires_at INTEGER NOT NULL) STRICT;
    CREATE TABLE IF NOT EXISTS fixture_labels (id TEXT PRIMARY KEY, body TEXT NOT NULL, digest TEXT NOT NULL) STRICT;
+   CREATE TABLE IF NOT EXISTS fixture_replacement_deliveries (id TEXT PRIMARY KEY, body TEXT NOT NULL,digest TEXT NOT NULL) STRICT;
    CREATE TABLE IF NOT EXISTS fixture_replacements (id TEXT PRIMARY KEY, body TEXT NOT NULL, digest TEXT NOT NULL) STRICT;`);
   this.identity=this.tx(()=>{let r=db.prepare('SELECT * FROM fixture_identity').get() as Row;
    if(!r){r={id:'fsource_'+randomUUID().replaceAll('-',''),tenant:this.tenant,store:this.store,label:options.identity};db.prepare('INSERT INTO fixture_identity VALUES(?,?,?,?)').run(r.id,r.tenant,r.store,r.label);}
    if(r.tenant!==this.tenant||r.store!==this.store||r.label!==options.identity)throw new Error('FIXTURE_SOURCE_MISMATCH');return r.id;});
+  this.instantSource?.bindFulfillmentSource(this);
  }
  tx<T>(fn:()=>T):T{this.db.exec('BEGIN IMMEDIATE');try{const r=fn();this.db.exec('COMMIT');return r;}catch(e){this.db.exec('ROLLBACK');throw e;}}
  #read(row:Row|undefined){if(!row)return null;const b=JSON.parse(row.body);if(contentDigest(b)!==row.digest)throw new Error('SOURCE_INTEGRITY');return b;}
@@ -45,6 +49,7 @@ export class FulfillmentFixtureSource {
    if(minor(cmd.original_exchange_value_minor)+BigInt(cmd.exchange_balance_minor)!==minor(cmd.replacement_minor))throw new Error('EXCHANGE_FINANCE_MISMATCH');}
   const giftFields=['gift_recipient_customer_id','gift_source_digest','gift_source_identity','original_customer_id','original_native_order_id'],giftCount=giftFields.filter(key=>Object.hasOwn(cmd,key)).length;
   if(giftCount){if(giftCount!==giftFields.length||!/^gid:\/\/shopify\/Order\/[1-9][0-9]*$/.test(cmd.original_native_order_id)||!this.financeSource||this.financeSource.identity!==cmd.gift_source_identity)throw new Error('GIFT_RECIPIENT_UNQUALIFIED');this.financeSource.assertGiftRecipient({resource_id:cmd.resource_id,customer_id:cmd.original_customer_id,recipient_customer_id:cmd.gift_recipient_customer_id,gift_source_digest:cmd.gift_source_digest});}
+  if(cmd.instant_exchange){if(!this.instantSource||canonical(this.instantSource.binding(cmd.allocation_id))!==canonical(cmd.instant_exchange))throw new Error('INSTANT_BINDING_CHANGED');}
   return this.tx(()=>{const old=this.db.prepare('SELECT * FROM fixture_holds WHERE id=?').get(cmd.id) as Row;
    if(old){if(old.digest!==contentDigest(cmd))throw new Error('RESERVATION_CONFLICT');return this.#reservation(old);}
    if(cmd.expires_at<=this.clock()||cmd.expires_at>this.clock()+300000)throw new Error('RESERVATION_EXPIRED');
@@ -77,10 +82,18 @@ export class FulfillmentFixtureSource {
   return {...b.result,state:label.void_state==='confirmed'?'void_confirmed':label.void_state==='rejected'?'void_rejected':'void_requested',source_version:label.source_version,reimbursement:label.reimbursement};}
  async #call(fn:()=>Row):Promise<Row>{const fault=this.fault;this.fault='none';if(fault==='before')throw new Error('FIXTURE_TRANSPORT_FAILURE');if(fault==='hang')return new Promise(()=>{});
   const result=fn();if(fault==='after')throw new Error('FIXTURE_RESPONSE_LOST');return fault==='malformed'?{success:true,amount_minor:'0'}:result;}
- async replace(command:Row){this.calls.replace++;return this.#call(()=>this.#effect(command,'replacement',()=>{
+ async replace(command:Row){this.calls.replace++;return this.#call(()=>{
+  const existing=this.replacement(command.operation_id);if(!existing){const h=this.#read(this.db.prepare('SELECT * FROM fixture_holds WHERE id=?').get(command.reservation_id) as Row);
+   if(h?.instant_exchange&&canonical(h.instant_exchange)!==canonical(command.instant_exchange??null))throw new Error('INSTANT_BINDING_CHANGED');
+   if(this.instantSource)this.instantSource.reserveReplacement(command,command.instant_exchange??null);else if(command.instant_exchange||h?.instant_exchange)throw new Error('INSTANT_SOURCE_UNAVAILABLE');}
+  const result=this.#effect(command,'replacement',()=>{
+  if(this.financeSource?.money.required(command.resource_id))throw new Error('EXCHANGE_CURRENCY_UNQUALIFIED');
   const r=this.db.prepare('SELECT * FROM fixture_holds WHERE id=?').get(command.reservation_id) as Row,b=this.#read(r);
   if(!r||r.state!=='active'||b.generation!==command.generation||b.expires_at<=this.clock()||contentDigest(b)!==command.reservation_digest)throw new Error('RESERVATION_EXPIRED');
   if(b.allocation_id!==command.allocation_id||b.variant_id!==command.variant_id||b.quantity!==command.quantity||b.location_id!==command.location_id)throw new Error('RESERVATION_CHANGED');
+  if(b.instant_exchange&&canonical(b.instant_exchange)!==canonical(command.instant_exchange??null))throw new Error('INSTANT_BINDING_CHANGED');
+  if(this.instantSource)this.instantSource.assertReplacement(command,command.instant_exchange??null);else if(command.instant_exchange||b.instant_exchange)throw new Error('INSTANT_SOURCE_UNAVAILABLE');
+  if(canonical(command.exchange_lineage??null)!==canonical(b.exchange_lineage??null))throw new Error('LINEAGE_SOURCE_BINDING_REQUIRED');
   if(Object.hasOwn(b,'gift_recipient_customer_id')){
    if(!this.financeSource||this.financeSource.identity!==b.gift_source_identity||command.resource_id!==b.resource_id||command.original_order_id!==b.resource_id||command.native_original_order_id!==b.original_native_order_id||command.customer_id!==b.original_customer_id||command.gift_recipient_customer_id!==b.gift_recipient_customer_id||command.gift_source_digest!==b.gift_source_digest||command.gift_source_identity!==b.gift_source_identity)throw new Error('GIFT_RECIPIENT_MISMATCH');
    this.financeSource.assertGiftRecipient({resource_id:b.resource_id,customer_id:command.customer_id,recipient_customer_id:command.gift_recipient_customer_id,gift_source_digest:command.gift_source_digest});
@@ -95,7 +108,9 @@ export class FulfillmentFixtureSource {
   this.db.prepare("UPDATE fixture_holds SET state='committed' WHERE id=?").run(r.id);
   const result={...command,id:'replacement_'+contentDigest(command).slice(0,32),state:'created',source_version:1,fulfillable:true,inventory_committed:true,fulfillment_state:'unfulfilled',shipment_id:null,qualification:'synthetic_only'};
   this.#save('fixture_replacements',result);return result;
- }));}
+ });
+  if(this.instantSource)this.instantSource.confirmReplacement(command,command.instant_exchange??null,result);return result;
+ });}
  async buy(command:Row){this.calls.buy++;return this.#call(()=>this.#effect(command,'label',()=>{
   const rate=command.rate,r=this.db.prepare('SELECT * FROM fixture_rates WHERE service=?').get(rate.service) as Row;
   if(!r||rate.expires_at<=this.clock()||r.expires_at<=this.clock()||r.revision!==rate.rate_revision||r.amount_minor!==rate.amount_minor||r.currency!==rate.currency)throw new Error('RATE_EXPIRED');
@@ -112,7 +127,7 @@ export class FulfillmentFixtureSource {
   label.void_state='requested';label.reimbursement={state:'pending',amount_minor:'0',reference:null};label.source_version++;
   this.#save('fixture_labels',label);return {...command,id:'void_'+contentDigest(command).slice(0,32),state:'void_requested',source_version:label.source_version,reimbursement:label.reimbursement,qualification:'synthetic_only'};
  }));}
- async lookup(operationId:string){this.calls.lookup++;const r=this.db.prepare('SELECT * FROM fixture_effects WHERE id=?').get(id(operationId)) as Row;return r?this.#readEffect(r):null;}
+ async lookup(operationId:string){this.calls.lookup++;const r=this.db.prepare('SELECT * FROM fixture_effects WHERE id=?').get(id(operationId)) as Row;if(!r)return null;const result=this.#readEffect(r);if(r.kind==='replacement'&&this.instantSource){const command=JSON.parse(r.body).command;this.instantSource.confirmReplacement(command,command.instant_exchange??null,result);}return result;}
  async label(labelId:string){this.calls.lookup++;return this.#read(this.db.prepare('SELECT * FROM fixture_labels WHERE id=?').get(id(labelId)) as Row);}
  confirmVoid(labelId:string,approved:boolean){if(typeof approved!=='boolean')throw new Error('INVALID_INPUT');return this.tx(()=>{const b=this.#read(this.db.prepare('SELECT * FROM fixture_labels WHERE id=?').get(id(labelId)) as Row);
   if(!b||b.void_state!=='requested')throw new Error('VOID_NOT_REQUESTED');if(approved&&b.tracking_state!=='label_created')throw new Error('VOID_UNAVAILABLE');
@@ -131,5 +146,9 @@ export class FulfillmentFixtureSource {
    b.carrier_sequence=p.sequence;b.event_id=p.id;b.event_at=p.at;b.tracking_state=p.status;b.source_version++;this.#save('fixture_labels',b);return b;});}
  fulfillReplacement(ref:string,shipmentId:string){id(ref);id(shipmentId);return this.tx(()=>{const b=this.#read(this.db.prepare('SELECT * FROM fixture_replacements WHERE id=?').get(ref) as Row);if(!b)throw new Error('NOT_FOUND');
   if(b.shipment_id&&b.shipment_id!==shipmentId)throw new Error('SHIPMENT_CONFLICT');if(b.shipment_id)return b;b.fulfillment_state='shipped';b.shipment_id=shipmentId;b.source_version++;this.#save('fixture_replacements',b);return b;});}
+ replacement(operation:string){const row=this.db.prepare("SELECT * FROM fixture_effects WHERE id=? AND kind='replacement'").get(id(operation)) as Row;return row?this.#readEffect(row):null;}
+ delivery(replacement:string){return this.#read(this.db.prepare('SELECT * FROM fixture_replacement_deliveries WHERE id=?').get(id(replacement)) as Row);}
+ deliverReplacement(ref:string,input:unknown){const p=exact(jsonValue(input),['event_id','delivered_at']);id(p.event_id);integer(p.delivered_at);if(p.delivered_at>this.clock())throw new Error('DELIVERY_EVENT_INVALID');return this.tx(()=>{const b=this.#read(this.db.prepare('SELECT * FROM fixture_replacements WHERE id=?').get(id(ref)) as Row);if(!b||b.fulfillment_state!=='shipped'||!b.shipment_id)throw new Error('LINEAGE_DELIVERY_REQUIRED');
+  const value={id:ref,event_id:p.event_id,delivered_at:p.delivered_at,native_order_id:'gid://shopify/Order/'+(BigInt('0x'+contentDigest(ref).slice(0,14))+1n).toString(),fulfillment_line_id:'gid://shopify/FulfillmentLineItem/'+(BigInt('0x'+contentDigest([ref,'line']).slice(0,14))+1n).toString(),shipment_id:b.shipment_id,qualification:'synthetic_only'},old=this.delivery(ref);if(old&&canonical(old)!==canonical(value))throw new Error('DELIVERY_EVENT_CONFLICT');if(!old)this.#save('fixture_replacement_deliveries',value);return value;});}
  effects(){return this.db.prepare('SELECT id,kind,obligation FROM fixture_effects ORDER BY id').all();}
 }

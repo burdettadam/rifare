@@ -1,3 +1,6 @@
+import { assertExchangeMoneySupported } from './exchange-currency.mts';
+import { instantSettlement } from './instant-exchanges.mts';
+import { exchangeLineagePin } from './exchange-lineage.mts';
 import { assertReturnWritable } from './return-lifecycle-core.mts';
 import { exact,id,integer,token } from './kernel.mts';
 import type { CommerceKernel,Scope,Row } from './kernel.mts';
@@ -55,17 +58,20 @@ export function fulfillmentValue(k:CommerceKernel,scope:Scope,kind:string,intent
  if(!Object.hasOwn(FULFILLMENT_ACTIONS,kind))throw new Error('UNSUPPORTED_ACTION');let ctx:Row,details:Row,obligation:string,expiry=quotedAt+300000,amount='0',currency='USD';
  if(kind==='replacement'){
   exact(intent,['reservation_id']);const r=reservationRow(k,scope,intent.reservation_id,true),b=r.reservation;
+  assertExchangeMoneySupported(k,r.ctx.s,r.allocation_id);
   if(r.state!=='active'||b.expires_at<=k.clock())throw new Error('RESERVATION_UNAVAILABLE');
   const setting=fulfillmentSettings(k,r.ctx.s);if(b.source_identity!==setting.source_identity||b.settings_digest!==setting.digest)throw new Error('FULFILLMENT_SETTINGS_CHANGED');
   const q=new VariantExchanges(k).validateForReview(scope,{quote_id:b.exchange_quote_id,quote_digest:b.exchange_quote_digest});
   if(q.allocation_id!==r.allocation_id||b.quantity!==q.quantity||b.variant_id!==q.replacement_variant)throw new Error('RESERVATION_INTEGRITY');
   const settlement=q.balance_minor==='0'?{balance_minor:'0'}:exchangeSettlement(k,scope,q);
+  const instant=instantSettlement(k,scope,q);if(canonical(instant?.instant_exchange??null)!==canonical(b.instant_exchange??null))throw new Error('INSTANT_BINDING_CHANGED');
+  const lineage=exchangeLineagePin(k,scope,q);if(canonical(lineage?.exchange_lineage??null)!==canonical(b.exchange_lineage??null))throw new Error('LINEAGE_SOURCE_CHANGED');
   const gift=assertGiftOutcome(k,scope,r.case_id,'exchange',[r.ctx.b]);
   if(gift&&(b.gift_recipient_customer_id!==gift.recipient_customer_id||b.gift_source_digest!==gift.source_digest||b.original_customer_id!==r.ctx.c.customer_id||b.original_native_order_id!==r.ctx.c.order.payload.native_order_id||b.gift_source_identity!==resolutionSettings(k,r.ctx.s).source_identity))throw new Error('GIFT_RECIPIENT_MISMATCH');
   if(q.balance_minor!=='0'&&(b.exchange_balance_minor!==q.balance_minor||b.original_exchange_value_minor!==q.available_exchange_value_minor||b.replacement_minor!==q.replacement_minor||b.finance_source_identity!==settlement.exchange_finance?.source_identity))throw new Error('RESERVATION_INTEGRITY');
   ctx=fulfillmentContext(k,scope,r.case_id,r.ctx.plan.request_id);details={reservation_id:r.id,reservation_digest:r.digest,generation:r.generation,allocation_id:r.allocation_id,
    variant_id:b.variant_id,location_id:b.location_id,quantity:b.quantity,catalog_id:b.catalog_id,exchange_quote_digest:b.exchange_quote_digest,
-   original_variant:q.original_variant,exchange_value_minor:q.replacement_minor,retained_discount_minor:q.retained_discount_minor,...settlement,
+   original_variant:q.original_variant,exchange_value_minor:q.replacement_minor,retained_discount_minor:q.retained_discount_minor,...settlement,...lineage,...instant,
    ...(gift?{gift_recipient_customer_id:gift.recipient_customer_id,gift_source_digest:gift.source_digest,gift_source_identity:b.gift_source_identity}: {})};
   currency=q.currency;obligation=r.allocation_id;expiry=Math.min(expiry,b.expires_at,q.expires_at);
  }else if(kind==='label'){

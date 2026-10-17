@@ -9,6 +9,8 @@ import { permissionDecision } from './authorization.mts';
 import { assertExecution } from './execution-stops.mts';
 import { assertCaseWorkerScope } from './work-leases.mts';
 import { assertRecoveryEgress } from './data-guards.mts';
+import { bindLineageResolution } from '../adapters/exchange-lineage-source-guards.mts';
+import { feeHistory } from './exchange-fees.mts';
 
 export class ResolutionExecution {
  readonly kernel:CommerceKernel;readonly source:ResolutionFixtureSource;readonly deadlineMs:number;
@@ -46,11 +48,12 @@ export class ResolutionExecution {
   assertExecution(k,s,RESOLVE_ACTION,q.quote.control_stamp);
   if(resolutionSettings(k,s).source_identity!==op.source_identity)throw new Error('RESOLUTION_SOURCE_MISMATCH');return ctx;
  }
- read(scope:Scope,operationId:string){const {s,op}=this.#context(scope,operationId,'operation.read'),k=this.kernel;
+ read(scope:Scope,operationId:string){const {s,op,command}=this.#context(scope,operationId,'operation.read'),k=this.kernel;
   const observations=(k.db.prepare('SELECT stage,body,digest,observed_at FROM commerce_resolution_observations WHERE tenant_id=? AND store_id=? AND operation_id=? ORDER BY seq').all(s.tenant_id,s.store_id,op.id) as Row[]).map(r=>({stage:r.stage,body:checkedBody(r),observed_at:r.observed_at}));
   return {id:op.id,allocation_id:op.allocation_id,kind:op.kind,state:op.state,amount_minor:op.amount_minor,currency:op.currency,native_id:op.native_id,observations,
    retry_allowed:false,cash_settled:op.kind==='refund'&&op.state==='settled',credit_issued:op.kind==='store_credit'&&op.state==='issued',
-   ...(op.kind==='additional_payment'?{payment_settled:op.state==='settled',payment:observations.filter(r=>r.body.payment).at(-1)?.body.payment??null}:{}),qualification:'synthetic_only',live_financial_effect:false};
+   ...(op.kind==='additional_payment'?{payment_settled:op.state==='settled',payment:observations.filter(r=>r.body.payment).at(-1)?.body.payment??null}:{}),
+   ...(command.money_terms?{money_terms:command.money_terms,fee_history:feeHistory(k,s,op.case_id).obligations.find((r:Row)=>r.allocation_id===op.allocation_id)??null}:{}),qualification:'synthetic_only',live_financial_effect:false};
  }
  #record(ctx:Row,input:unknown){const b=jsonValue(input),{op,s,command}=ctx,k=this.kernel;
   if(!b||typeof b!=='object'||Object.keys(b).sort().join(',')!==[...Object.keys(command),'id','state','instrument','qualification',...(op.kind==='additional_payment'?['payment']:[])].sort().join(','))throw new Error('RESOLUTION_RESULT_INVALID');
@@ -85,6 +88,8 @@ export class ResolutionExecution {
   try{
    const latest=this.#beforeSend(scope,operationId);
    if(Object.hasOwn(latest.command,'gift_source_digest'))this.source.bindGiftResolution(latest.command);
+   bindLineageResolution(this.source.db,latest.command,{line_id:latest.b.line_id,units:latest.b.units});
+   this.source.money.bindCommand(latest.command);
    const response=await this.#bounded(()=>this.source.issue(latest.command));
    k.transaction(()=>{const current=this.#context(scope,operationId,'operation.dispatch');assertCaseWorkerScope(k,scope,current.op.case_id);assertExecution(k,current.s,RESOLVE_ACTION);this.#record(current,response);});
   }catch{ /* A timeout or permission change never establishes that nothing happened. */ }

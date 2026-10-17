@@ -1,3 +1,4 @@
+import { assertLineageIngest } from './exchange-lineage-guards.mts';
 import {assertSupportAction} from './support-fence.mts';
 import { assertNotErased, erasedResource, assertRecoveryAction } from './data-guards.mts';
 import { assertExecution } from './execution-stops.mts';
@@ -154,6 +155,7 @@ export class CommerceKernel {
     this.transaction(() => {
       this.authorize(scope,'resource.ingest',canonical);assertNotErased(this,s,canonical,r.customer_id??(r.kind==='customer'?r.external_id:null));
       if(r.kind==='order'&&r.payload?.gift_facts?.recipient_customer_id)assertNotErased(this,s,canonical,id(r.payload.gift_facts.recipient_customer_id));
+      assertLineageIngest(this,s,canonical,r);
       const prev=this.db.prepare('SELECT * FROM commerce_resources WHERE tenant_id=? AND store_id=? AND id=?').get(s.tenant_id,s.store_id,canonical) as Row;
       if (prev && r.source_version<=prev.source_version) {
         if (r.source_version===prev.source_version && prev.payload===encoded && prev.customer_id===r.customer_id

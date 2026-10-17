@@ -4,11 +4,13 @@ import type { Row } from '../commerce/kernel.mts';
 import { canonical,contentDigest,jsonValue } from '../commerce/configuration-values.mts';
 import { minor } from '../commerce/resolution-ledger.mts';
 import { money,allocateMoney } from '../commerce/money.mts';
+import { ExchangeMoneyFixtureSource } from './exchange-money-fixture-source.mts';
+import { assertLineageResolution } from './exchange-lineage-source-guards.mts';
 
 /** A separately persisted synthetic authority, not a live payment connector. */
 export class ResolutionFixtureSource {
  readonly db:DatabaseSync;readonly identity:string;readonly tenant:string;readonly store:string;readonly qualification='synthetic_only';
- readonly clock:()=>number;
+ readonly clock:()=>number;readonly money:ExchangeMoneyFixtureSource;
  constructor(db:DatabaseSync,options:{mode:'fixture';identity:string;tenant:string;store:string},clock=Date.now){
   exact(options,['mode','identity','tenant','store']);if(options.mode!=='fixture')throw new Error('LIVE_RESOLUTION_DISABLED');
   this.db=db;this.clock=clock;const label=id(options.identity);if(label.length>48)throw new Error('INVALID_INPUT');this.tenant=id(options.tenant);this.store=id(options.store);db.exec('PRAGMA busy_timeout=3000');
@@ -25,6 +27,7 @@ export class ResolutionFixtureSource {
   if(old&&(old.label!==label||old.tenant!==this.tenant||old.store!==this.store))throw new Error('RESOLUTION_SOURCE_MISMATCH');
   this.identity=old?.identity??'source_'+contentDigest([label,token()]).slice(0,40);
   if(!old)db.prepare('INSERT INTO fixture_resolution_identity VALUES(1,?,?,?,?)').run(label,this.identity,this.tenant,this.store);
+  this.money=new ExchangeMoneyFixtureSource(db,{identity:this.identity,tenant:this.tenant,store:this.store},this.clock);
  }
  seed(input:unknown){const p=exact(jsonValue(input),['resource_id','customer_id','payment_id','currency','available_minor']);id(p.resource_id);id(p.customer_id);id(p.payment_id);money(p.currency,p.available_minor);
   this.db.prepare('INSERT INTO fixture_resolution_accounts VALUES(?,?,?,?,?)').run(p.resource_id,p.customer_id,p.payment_id,p.currency,p.available_minor);}
@@ -76,13 +79,16 @@ export class ResolutionFixtureSource {
   if(!facts){if(p.routes!==undefined||p.value_routes!==undefined||p.line_id!==undefined||p.units!==undefined)throw new Error('INSTRUMENT_SOURCE_UNQUALIFIED');return;}const instruments=facts.instruments;
   id(p.line_id);if(!Array.isArray(p.units)||!p.units.length||new Set(p.units).size!==p.units.length)throw new Error('INSTRUMENT_ALLOCATION_INVALID');const weights=new Map<string,bigint>();for(const n of p.units){integer(n,1);const unit=facts.units.find((u:Row)=>u.line_id===p.line_id&&u.unit_index===n);if(!unit)throw new Error('INSTRUMENT_ALLOCATION_INVALID');for(const a of unit.amounts)weights.set(a.instrument_id,(weights.get(a.instrument_id)??0n)+minor(a.amount_minor));}
   if(effects.some(prior=>prior.line_id===p.line_id&&Array.isArray(prior.units)&&prior.units.some((n:number)=>p.units.includes(n))))throw new Error('ORIGINAL_UNIT_ALREADY_RESOLVED');
+  const sharesFor=(value:string,basis:Map<string,bigint>)=>value==='0'?[]:allocateMoney(money(p.currency,value),[...basis].filter(([,amount])=>amount>0n).sort(([a],[b])=>a.localeCompare(b)).map(([id,weight])=>({id,weight:weight.toString()}))).filter(a=>a.amount.minor!=='0').map(a=>({instrument_id:a.id,type:instruments.find((i:Row)=>i.id===a.id).type,amount_minor:a.amount.minor}));
+  const nativeValueShares=sharesFor(p.original_value_minor??p.amount_minor,weights);
   for(const key of ['routes','value_routes']){const routes=p[key];if(!Array.isArray(routes)||routes.length>8)throw new Error('INSTRUMENT_ROUTING_UNSUPPORTED');let total=0n;const seen=new Set<string>();
    for(const route of routes){exact(route,['instrument_id','type','amount_minor']);id(route.instrument_id);const i=instruments.find((i:Row)=>i.id===route.instrument_id);
     if(!i||!i.supported||i.type!==route.type||seen.has(i.id))throw new Error('INSTRUMENT_ROUTING_UNSUPPORTED');seen.add(i.id);total+=minor(route.amount_minor);
    }
    const expected=key==='value_routes'?(p.original_value_minor??p.amount_minor):p.kind==='additional_payment'?'0':p.amount_minor;if(total!==minor(expected))throw new Error('INSTRUMENT_TOTAL_MISMATCH');
-   if(minor(expected)>[...weights.values()].reduce((n,v)=>n+v,0n))throw new Error('INSTRUMENT_BALANCE_EXCEEDED');
-   const shares=expected==='0'?[]:allocateMoney(money(p.currency,expected),[...weights].filter(([,amount])=>amount>0n).sort(([a],[b])=>a.localeCompare(b)).map(([id,weight])=>({id,weight:weight.toString()}))).filter(a=>a.amount.minor!=='0').map(a=>({instrument_id:a.id,type:instruments.find((i:Row)=>i.id===a.id).type,amount_minor:a.amount.minor}));
+   const basis=key==='routes'&&p.exchange_quote_id?new Map<string,bigint>(nativeValueShares.map(r=>[r.instrument_id,minor(r.amount_minor)])):weights;
+   if(minor(expected)>[...basis.values()].reduce((n,v)=>n+v,0n))throw new Error('INSTRUMENT_BALANCE_EXCEEDED');
+   const shares=sharesFor(expected,basis);
    if(canonical(shares)!==canonical(routes))throw new Error('INSTRUMENT_ROUTING_UNSUPPORTED');
   }
   for(const route of p.value_routes){const i=instruments.find((i:Row)=>i.id===route.instrument_id);let spent=minor(i.prior_refunded_minor);
@@ -90,7 +96,7 @@ export class ResolutionFixtureSource {
    if(spent+minor(route.amount_minor)>minor(i.original_paid_minor))throw new Error('INSTRUMENT_BALANCE_EXCEEDED');
   }
  }
- async issue(value:unknown){const raw=jsonValue(value),optional=['exchange_quote_id','exchange_quote_digest','original_value_minor','replacement_variant','replacement_minor','quantity','routes','value_routes','payment_expires_at','credit_beneficiary_id','gift_source_digest','line_id','units'].filter(key=>Object.hasOwn(raw,key));
+ async issue(value:unknown){const raw=jsonValue(value),optional=['exchange_quote_id','exchange_quote_digest','original_value_minor','replacement_variant','replacement_minor','quantity','routes','value_routes','payment_expires_at','credit_beneficiary_id','gift_source_digest','line_id','units','money_terms'].filter(key=>Object.hasOwn(raw,key));
   const p=exact(raw,['operation_id','tenant_id','store_id','resource_id','customer_id','allocation_id','kind','currency','amount_minor','payment_id','native_return_id','source_identity','credit_instrument',...optional]);
   for(const k of ['operation_id','tenant_id','store_id','resource_id','customer_id','allocation_id','payment_id','source_identity'])id(p[k]);
   if(p.tenant_id!==this.tenant||p.store_id!==this.store||p.source_identity!==this.identity||!['refund','store_credit','additional_payment'].includes(p.kind)||minor(p.amount_minor)<=0n)throw new Error('RESOLUTION_SOURCE_MISMATCH');
@@ -102,6 +108,7 @@ export class ResolutionFixtureSource {
   if(p.kind==='additional_payment'){if(!p.exchange_quote_id)throw new Error('EXCHANGE_FINANCE_MISMATCH');integer(p.payment_expires_at);}
   else if(Object.hasOwn(p,'payment_expires_at'))throw new Error('EXCHANGE_FINANCE_MISMATCH');
   this.db.exec('BEGIN IMMEDIATE');try{
+   assertLineageResolution(this.db,p);this.money.assertCommand(p);
    const beneficiary=this.#beneficiary(p);
    const old=this.db.prepare('SELECT * FROM fixture_resolution_effects WHERE operation_id=?').get(p.operation_id) as Row;
    if(old){if(old.digest!==contentDigest(p))throw new Error('SOURCE_IDEMPOTENCY_CONFLICT');this.db.exec('COMMIT');return JSON.parse(old.body);}

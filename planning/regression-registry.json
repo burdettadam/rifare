@@ -889,6 +889,68 @@
         "migrations/commerce/023_gift_recipient_proofs.sql",
         "packages/commerce/contracts/storage-exchange-extension.v1.json"
       ]
+    },
+    {
+      "id": "FEATURE-M06-G06",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M06/M06-G06.md",
+        "packages/commerce/exchange-lineage.mts",
+        "packages/adapters/exchange-lineage-fixture-source.mts",
+        "packages/adapters/exchange-lineage-source-guards.mts",
+        "packages/commerce/exchange-lineage-guards.mts",
+        "migrations/commerce/024_exchange_lineage.sql",
+        "tests/fixtures/exchange-lineage/independent-values.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M06-G07",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M06/M06-G07.md",
+        "packages/commerce/exchange-currency.mts",
+        "packages/adapters/exchange-money-fixture-source.mts",
+        "migrations/commerce/025_exchange_money.sql",
+        "tests/fixtures/exchange-money/golden.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M06-G08",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M06/M06-G08.md",
+        "packages/commerce/exchange-fees.mts",
+        "packages/adapters/exchange-money-fixture-source.mts",
+        "migrations/commerce/025_exchange_money.sql",
+        "tests/fixtures/exchange-money/golden.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M06-G09",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M06/M06-G09.md",
+        "packages/commerce/instant-exchanges.mts",
+        "packages/adapters/instant-exchange-fixture-source.mts",
+        "migrations/commerce/026_instant_exchanges.sql",
+        "tests/fixtures/instant-exchanges/independent-values.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M06-G10",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M06/M06-G10.md",
+        "packages/commerce/instant-exchanges.mts",
+        "packages/adapters/instant-exchange-fixture-source.mts",
+        "migrations/commerce/026_instant_exchanges.sql",
+        "tests/fixtures/instant-exchanges/independent-values.json"
+      ]
     }
   ],
   "tests": [
@@ -16102,6 +16164,776 @@
       "runner_case_id": "M06-G05-CREDIT-LOST-RESPONSE-RECONCILES-AFTER-ERASURE",
       "source": "tests/development/gift-returns.test.mts",
       "capability_id": "FEATURE-M06-G05"
+    },
+    {
+      "id": "runtime:CASE-M06-G07-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M06-G07-01",
+      "source": "tests/development/exchange-currency.test.mts",
+      "capability_id": "FEATURE-M06-G07"
+    },
+    {
+      "id": "runtime:CASE-M06-G07-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M06-G07-02",
+      "source": "tests/development/exchange-currency.test.mts",
+      "capability_id": "FEATURE-M06-G07"
+    },
+    {
+      "id": "runtime:CASE-M06-G07-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M06-G07-03",
+      "source": "tests/development/exchange-currency.test.mts",
+      "capability_id": "FEATURE-M06-G07"
+    },
+    {
+      "id": "runtime:TEST-015-NATIVE-PAIRED-REFUND",
+      "suite": "runtime",
+      "runner_case_id": "TEST-015-NATIVE-PAIRED-REFUND",
+      "source": "tests/development/exchange-currency.test.mts",
+      "capability_id": "FEATURE-M06-G07"
+    },
+    {
+      "id": "runtime:M06-G07-DROPPED-ALL-MONEY-TERMS-NO-EFFECT",
+      "suite": "runtime",
+      "runner_case_id": "M06-G07-DROPPED-ALL-MONEY-TERMS-NO-EFFECT",
+      "source": "tests/development/exchange-currency.test.mts",
+      "capability_id": "FEATURE-M06-G07"
+    },
+    {
+      "id": "runtime:M06-G07-WRONG-PRESENTMENT-CURRENCY-NO-EFFECT",
+      "suite": "runtime",
+      "runner_case_id": "M06-G07-WRONG-PRESENTMENT-CURRENCY-NO-EFFECT",
+      "source": "tests/development/exchange-currency.test.mts",
+      "capability_id": "FEATURE-M06-G07"
+    },
+    {
+      "id": "runtime:M06-G07-WRONG-DUTIES-NO-EFFECT",
+      "suite": "runtime",
+      "runner_case_id": "M06-G07-WRONG-DUTIES-NO-EFFECT",
+      "source": "tests/development/exchange-currency.test.mts",
+      "capability_id": "FEATURE-M06-G07"
+    },
+    {
+      "id": "runtime:M06-G07-CALLER-CANNOT-SUPPLY-QUALIFICATION-OR-MONEY",
+      "suite": "runtime",
+      "runner_case_id": "M06-G07-CALLER-CANNOT-SUPPLY-QUALIFICATION-OR-MONEY",
+      "source": "tests/development/exchange-currency.test.mts",
+      "capability_id": "FEATURE-M06-G07"
+    },
+    {
+      "id": "runtime:M06-G07-UNSUPPORTED-CURRENCY-PRECISION-FAILS-CLOSED",
+      "suite": "runtime",
+      "runner_case_id": "M06-G07-UNSUPPORTED-CURRENCY-PRECISION-FAILS-CLOSED",
+      "source": "tests/development/exchange-currency.test.mts",
+      "capability_id": "FEATURE-M06-G07"
+    },
+    {
+      "id": "runtime:M06-G07-ZERO-DECIMAL-NATIVE-CURRENCY",
+      "suite": "runtime",
+      "runner_case_id": "M06-G07-ZERO-DECIMAL-NATIVE-CURRENCY",
+      "source": "tests/development/exchange-currency.test.mts",
+      "capability_id": "FEATURE-M06-G07"
+    },
+    {
+      "id": "runtime:M06-G07-THREE-DECIMAL-NATIVE-CURRENCY",
+      "suite": "runtime",
+      "runner_case_id": "M06-G07-THREE-DECIMAL-NATIVE-CURRENCY",
+      "source": "tests/development/exchange-currency.test.mts",
+      "capability_id": "FEATURE-M06-G07"
+    },
+    {
+      "id": "runtime:M06-G07-QUALIFICATION-REFRESH-REQUIRES-NEW-PREVIEW",
+      "suite": "runtime",
+      "runner_case_id": "M06-G07-QUALIFICATION-REFRESH-REQUIRES-NEW-PREVIEW",
+      "source": "tests/development/exchange-currency.test.mts",
+      "capability_id": "FEATURE-M06-G07"
+    },
+    {
+      "id": "runtime:M06-G07-NATIVE-REVOCATION-BLOCKS-STALE-CANONICAL-SNAPSHOT",
+      "suite": "runtime",
+      "runner_case_id": "M06-G07-NATIVE-REVOCATION-BLOCKS-STALE-CANONICAL-SNAPSHOT",
+      "source": "tests/development/exchange-currency.test.mts",
+      "capability_id": "FEATURE-M06-G07"
+    },
+    {
+      "id": "runtime:M06-G07-ORIGINAL-PROVENANCE-IMMUTABLE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G07-ORIGINAL-PROVENANCE-IMMUTABLE",
+      "source": "tests/development/exchange-currency.test.mts",
+      "capability_id": "FEATURE-M06-G07"
+    },
+    {
+      "id": "runtime:M06-G07-ORIGINAL-UNIT-NATIVE-REUSE-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M06-G07-ORIGINAL-UNIT-NATIVE-REUSE-REJECTED",
+      "source": "tests/development/exchange-currency.test.mts",
+      "capability_id": "FEATURE-M06-G07"
+    },
+    {
+      "id": "runtime:M06-G07-CORRUPT-CANONICAL-PAIR-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M06-G07-CORRUPT-CANONICAL-PAIR-REJECTED",
+      "source": "tests/development/exchange-currency.test.mts",
+      "capability_id": "FEATURE-M06-G07"
+    },
+    {
+      "id": "runtime:M06-G07-LOST-RESPONSE-RECONCILES-ORIGINAL-AFTER-EXPIRY",
+      "suite": "runtime",
+      "runner_case_id": "M06-G07-LOST-RESPONSE-RECONCILES-ORIGINAL-AFTER-EXPIRY",
+      "source": "tests/development/exchange-currency.test.mts",
+      "capability_id": "FEATURE-M06-G07"
+    },
+    {
+      "id": "runtime:M06-G07-OLD-UNKNOWN-PAYMENT-REMAINS-RECONCILABLE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G07-OLD-UNKNOWN-PAYMENT-REMAINS-RECONCILABLE",
+      "source": "tests/development/exchange-currency.test.mts",
+      "capability_id": "FEATURE-M06-G07"
+    },
+    {
+      "id": "runtime:M06-G07-OLD-UNKNOWN-REFUND-REMAINS-RECONCILABLE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G07-OLD-UNKNOWN-REFUND-REMAINS-RECONCILABLE",
+      "source": "tests/development/exchange-currency.test.mts",
+      "capability_id": "FEATURE-M06-G07"
+    },
+    {
+      "id": "runtime:CASE-M06-G08-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M06-G08-01",
+      "source": "tests/development/exchange-fees.test.mts",
+      "capability_id": "FEATURE-M06-G08"
+    },
+    {
+      "id": "runtime:CASE-M06-G08-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M06-G08-02",
+      "source": "tests/development/exchange-fees.test.mts",
+      "capability_id": "FEATURE-M06-G08"
+    },
+    {
+      "id": "runtime:CASE-M06-G08-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M06-G08-03",
+      "source": "tests/development/exchange-fees.test.mts",
+      "capability_id": "FEATURE-M06-G08"
+    },
+    {
+      "id": "runtime:TEST-016-NATIVE-FEE-FINALIZATION",
+      "suite": "runtime",
+      "runner_case_id": "TEST-016-NATIVE-FEE-FINALIZATION",
+      "source": "tests/development/exchange-fees.test.mts",
+      "capability_id": "FEATURE-M06-G08"
+    },
+    {
+      "id": "runtime:M06-G08-NATIVE-FINAL-CHANGED-BEFORE-CANONICAL-REFRESH",
+      "suite": "runtime",
+      "runner_case_id": "M06-G08-NATIVE-FINAL-CHANGED-BEFORE-CANONICAL-REFRESH",
+      "source": "tests/development/exchange-fees.test.mts",
+      "capability_id": "FEATURE-M06-G08"
+    },
+    {
+      "id": "runtime:M06-G08-FINAL-CHANGES-AFTER-AUTHORIZATION-RETAIN-OPERATION",
+      "suite": "runtime",
+      "runner_case_id": "M06-G08-FINAL-CHANGES-AFTER-AUTHORIZATION-RETAIN-OPERATION",
+      "source": "tests/development/exchange-fees.test.mts",
+      "capability_id": "FEATURE-M06-G08"
+    },
+    {
+      "id": "runtime:M06-G08-DROPPED-FINAL-BINDING-NO-NATIVE-EFFECT",
+      "suite": "runtime",
+      "runner_case_id": "M06-G08-DROPPED-FINAL-BINDING-NO-NATIVE-EFFECT",
+      "source": "tests/development/exchange-fees.test.mts",
+      "capability_id": "FEATURE-M06-G08"
+    },
+    {
+      "id": "runtime:M06-G08-ALTERED-FINAL-TAX-NO-NATIVE-EFFECT",
+      "suite": "runtime",
+      "runner_case_id": "M06-G08-ALTERED-FINAL-TAX-NO-NATIVE-EFFECT",
+      "source": "tests/development/exchange-fees.test.mts",
+      "capability_id": "FEATURE-M06-G08"
+    },
+    {
+      "id": "runtime:M06-G08-NULL-FINAL-TAX-IS-NOT-ZERO-OR-FINAL",
+      "suite": "runtime",
+      "runner_case_id": "M06-G08-NULL-FINAL-TAX-IS-NOT-ZERO-OR-FINAL",
+      "source": "tests/development/exchange-fees.test.mts",
+      "capability_id": "FEATURE-M06-G08"
+    },
+    {
+      "id": "runtime:M06-G08-ZERO-FINAL-TAX-IS-EXPLICIT",
+      "suite": "runtime",
+      "runner_case_id": "M06-G08-ZERO-FINAL-TAX-IS-EXPLICIT",
+      "source": "tests/development/exchange-fees.test.mts",
+      "capability_id": "FEATURE-M06-G08"
+    },
+    {
+      "id": "runtime:M06-G08-OUT-OF-ORDER-NATIVE-EVENTS-KEEP-LATEST-FINAL",
+      "suite": "runtime",
+      "runner_case_id": "M06-G08-OUT-OF-ORDER-NATIVE-EVENTS-KEEP-LATEST-FINAL",
+      "source": "tests/development/exchange-fees.test.mts",
+      "capability_id": "FEATURE-M06-G08"
+    },
+    {
+      "id": "runtime:M06-G08-CONFLICTING-WEBHOOK-ID-IS-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M06-G08-CONFLICTING-WEBHOOK-ID-IS-REJECTED",
+      "source": "tests/development/exchange-fees.test.mts",
+      "capability_id": "FEATURE-M06-G08"
+    },
+    {
+      "id": "runtime:M06-G08-FINAL-BOUND-TO-EXACT-ALLOCATION",
+      "suite": "runtime",
+      "runner_case_id": "M06-G08-FINAL-BOUND-TO-EXACT-ALLOCATION",
+      "source": "tests/development/exchange-fees.test.mts",
+      "capability_id": "FEATURE-M06-G08"
+    },
+    {
+      "id": "runtime:M06-G08-ESTIMATE-AND-FINAL-CANNOT-BE-OVERWRITTEN",
+      "suite": "runtime",
+      "runner_case_id": "M06-G08-ESTIMATE-AND-FINAL-CANNOT-BE-OVERWRITTEN",
+      "source": "tests/development/exchange-fees.test.mts",
+      "capability_id": "FEATURE-M06-G08"
+    },
+    {
+      "id": "runtime:M06-G08-UNKNOWN-EFFECT-WITH-LATE-FINAL-IS-NOT-REISSUED",
+      "suite": "runtime",
+      "runner_case_id": "M06-G08-UNKNOWN-EFFECT-WITH-LATE-FINAL-IS-NOT-REISSUED",
+      "source": "tests/development/exchange-fees.test.mts",
+      "capability_id": "FEATURE-M06-G08"
+    },
+    {
+      "id": "runtime:M06-G08-HISTORY-DIGEST-EXPOSES-LATE-CHANGES",
+      "suite": "runtime",
+      "runner_case_id": "M06-G08-HISTORY-DIGEST-EXPOSES-LATE-CHANGES",
+      "source": "tests/development/exchange-fees.test.mts",
+      "capability_id": "FEATURE-M06-G08"
+    },
+    {
+      "id": "runtime:M06-G08-WRONG-API-OR-FEE-CURRENCY-UNQUALIFIED",
+      "suite": "runtime",
+      "runner_case_id": "M06-G08-WRONG-API-OR-FEE-CURRENCY-UNQUALIFIED",
+      "source": "tests/development/exchange-fees.test.mts",
+      "capability_id": "FEATURE-M06-G08"
+    },
+    {
+      "id": "runtime:M06-G08-LATE-FINAL-AFTER-QUALIFICATION-EXPIRY-REMAINS-VISIBLE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G08-LATE-FINAL-AFTER-QUALIFICATION-EXPIRY-REMAINS-VISIBLE",
+      "source": "tests/development/exchange-fees.test.mts",
+      "capability_id": "FEATURE-M06-G08"
+    },
+    {
+      "id": "runtime:M06-G06-HTTP-MATERIALIZES-DELIVERED-FUNDED-CHILD",
+      "suite": "runtime",
+      "runner_case_id": "M06-G06-HTTP-MATERIALIZES-DELIVERED-FUNDED-CHILD",
+      "source": "tests/development/exchange-history-api.test.mts",
+      "capability_id": "FEATURE-M06-G06"
+    },
+    {
+      "id": "runtime:M06-G06-HTTP-SCOPE-AND-EXACT-INPUT-PROTECT-LINEAGE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G06-HTTP-SCOPE-AND-EXACT-INPUT-PROTECT-LINEAGE",
+      "source": "tests/development/exchange-history-api.test.mts",
+      "capability_id": "FEATURE-M06-G06"
+    },
+    {
+      "id": "runtime:M06-G06-HTTP-REQUIRES-EXPLICIT-NATIVE-SOURCE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G06-HTTP-REQUIRES-EXPLICIT-NATIVE-SOURCE",
+      "source": "tests/development/exchange-history-api.test.mts",
+      "capability_id": "FEATURE-M06-G06"
+    },
+    {
+      "id": "runtime:M06-G07-HTTP-READS-ORIGINAL-PAIRED-MONEY",
+      "suite": "runtime",
+      "runner_case_id": "M06-G07-HTTP-READS-ORIGINAL-PAIRED-MONEY",
+      "source": "tests/development/exchange-history-api.test.mts",
+      "capability_id": "FEATURE-M06-G07"
+    },
+    {
+      "id": "runtime:M06-G08-HTTP-FINAL-OBSERVATION-RETAINS-ESTIMATE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G08-HTTP-FINAL-OBSERVATION-RETAINS-ESTIMATE",
+      "source": "tests/development/exchange-history-api.test.mts",
+      "capability_id": "FEATURE-M06-G08"
+    },
+    {
+      "id": "runtime:M06-G08-HTTP-LATE-FINAL-SURVIVES-QUALIFICATION-EXPIRY",
+      "suite": "runtime",
+      "runner_case_id": "M06-G08-HTTP-LATE-FINAL-SURVIVES-QUALIFICATION-EXPIRY",
+      "source": "tests/development/exchange-history-api.test.mts",
+      "capability_id": "FEATURE-M06-G08"
+    },
+    {
+      "id": "runtime:M06-G09-HTTP-QUOTE-REQUIRES-SEPARATE-EXECUTION-APPROVAL",
+      "suite": "runtime",
+      "runner_case_id": "M06-G09-HTTP-QUOTE-REQUIRES-SEPARATE-EXECUTION-APPROVAL",
+      "source": "tests/development/exchange-history-api.test.mts",
+      "capability_id": "FEATURE-M06-G09"
+    },
+    {
+      "id": "runtime:M06-G09-HTTP-OMITS-SENSITIVE-VALUES-FROM-LOGS",
+      "suite": "runtime",
+      "runner_case_id": "M06-G09-HTTP-OMITS-SENSITIVE-VALUES-FROM-LOGS",
+      "source": "tests/development/exchange-history-api.test.mts",
+      "capability_id": "FEATURE-M06-G09"
+    },
+    {
+      "id": "runtime:M06-G10-HTTP-UNKNOWN-CAPTURE-RECONCILES-ORIGINAL-EFFECT",
+      "suite": "runtime",
+      "runner_case_id": "M06-G10-HTTP-UNKNOWN-CAPTURE-RECONCILES-ORIGINAL-EFFECT",
+      "source": "tests/development/exchange-history-api.test.mts",
+      "capability_id": "FEATURE-M06-G10"
+    },
+    {
+      "id": "runtime:M06-G06-BROWSER-DELIVERED-LINEAGE-SHOWS-FUNDED-VALUE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G06-BROWSER-DELIVERED-LINEAGE-SHOWS-FUNDED-VALUE",
+      "source": "tests/development/exchange-history-browser.test.mts",
+      "capability_id": "FEATURE-M06-G06"
+    },
+    {
+      "id": "runtime:M06-G07-BROWSER-ORIGINAL-PAIRED-CURRENCIES",
+      "suite": "runtime",
+      "runner_case_id": "M06-G07-BROWSER-ORIGINAL-PAIRED-CURRENCIES",
+      "source": "tests/development/exchange-history-browser.test.mts",
+      "capability_id": "FEATURE-M06-G07"
+    },
+    {
+      "id": "runtime:M06-G07-BROWSER-INPUT-CHANGE-DISCARDS-LATE-MONEY",
+      "suite": "runtime",
+      "runner_case_id": "M06-G07-BROWSER-INPUT-CHANGE-DISCARDS-LATE-MONEY",
+      "source": "tests/development/exchange-history-browser.test.mts",
+      "capability_id": "FEATURE-M06-G07"
+    },
+    {
+      "id": "runtime:M06-G09-BROWSER-PREPARES-BOUNDED-AUTHORIZATION-QUOTE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G09-BROWSER-PREPARES-BOUNDED-AUTHORIZATION-QUOTE",
+      "source": "tests/development/exchange-history-browser.test.mts",
+      "capability_id": "FEATURE-M06-G09"
+    },
+    {
+      "id": "runtime:M06-G09-CORE-HOLD-PERSISTS-NATIVE-MANDATE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G09-CORE-HOLD-PERSISTS-NATIVE-MANDATE",
+      "source": "tests/development/exchange-history-integration.test.mts",
+      "capability_id": "FEATURE-M06-G09"
+    },
+    {
+      "id": "runtime:M06-G09-CORE-HOLD-CANNOT-DROP-MANDATE-IN-TRANSPORT",
+      "suite": "runtime",
+      "runner_case_id": "M06-G09-CORE-HOLD-CANNOT-DROP-MANDATE-IN-TRANSPORT",
+      "source": "tests/development/exchange-history-integration.test.mts",
+      "capability_id": "FEATURE-M06-G09"
+    },
+    {
+      "id": "runtime:M06-G09-FABRICATED-PHYSICAL-SUCCESS-CANNOT-CONFIRM-RELEASE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G09-FABRICATED-PHYSICAL-SUCCESS-CANNOT-CONFIRM-RELEASE",
+      "source": "tests/development/exchange-history-integration.test.mts",
+      "capability_id": "FEATURE-M06-G09"
+    },
+    {
+      "id": "runtime:M06-G10-ORDINARY-CANCEL-REQUIRES-INSTANT-MANDATE-CANCELLATION",
+      "suite": "runtime",
+      "runner_case_id": "M06-G10-ORDINARY-CANCEL-REQUIRES-INSTANT-MANDATE-CANCELLATION",
+      "source": "tests/development/exchange-history-integration.test.mts",
+      "capability_id": "FEATURE-M06-G10"
+    },
+    {
+      "id": "runtime:M06-G10-RESERVED-RELEASE-BLOCKS-ORDINARY-CLOSURE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G10-RESERVED-RELEASE-BLOCKS-ORDINARY-CLOSURE",
+      "source": "tests/development/exchange-history-integration.test.mts",
+      "capability_id": "FEATURE-M06-G10"
+    },
+    {
+      "id": "runtime:M06-G10-LATE-RECEIPT-COMPENSATION-BLOCKS-ORDINARY-CLOSURE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G10-LATE-RECEIPT-COMPENSATION-BLOCKS-ORDINARY-CLOSURE",
+      "source": "tests/development/exchange-history-integration.test.mts",
+      "capability_id": "FEATURE-M06-G10"
+    },
+    {
+      "id": "runtime:M06-G10-UNKNOWN-CAPTURE-CANNOT-BE-CLOSED-AS-SETTLED",
+      "suite": "runtime",
+      "runner_case_id": "M06-G10-UNKNOWN-CAPTURE-CANNOT-BE-CLOSED-AS-SETTLED",
+      "source": "tests/development/exchange-history-integration.test.mts",
+      "capability_id": "FEATURE-M06-G10"
+    },
+    {
+      "id": "runtime:M06-G06-UNKNOWN-TRANSFER-REMAINS-A-CLOSURE-OBLIGATION",
+      "suite": "runtime",
+      "runner_case_id": "M06-G06-UNKNOWN-TRANSFER-REMAINS-A-CLOSURE-OBLIGATION",
+      "source": "tests/development/exchange-history-integration.test.mts",
+      "capability_id": "FEATURE-M06-G06"
+    },
+    {
+      "id": "runtime:M06-G06-CORE-REMAINDER-EXCLUDES-RETAINED-FEES",
+      "suite": "runtime",
+      "runner_case_id": "M06-G06-CORE-REMAINDER-EXCLUDES-RETAINED-FEES",
+      "source": "tests/development/exchange-history-integration.test.mts",
+      "capability_id": "FEATURE-M06-G06"
+    },
+    {
+      "id": "runtime:M06-G08-LATE-FEE-DISCREPANCY-BLOCKS-CLOSURE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G08-LATE-FEE-DISCREPANCY-BLOCKS-CLOSURE",
+      "source": "tests/development/exchange-history-integration.test.mts",
+      "capability_id": "FEATURE-M06-G08"
+    },
+    {
+      "id": "runtime:M06-G07-RESOURCE-CURRENCY-BOUNDARY-COVERS-SIBLING-EXCHANGES",
+      "suite": "runtime",
+      "runner_case_id": "M06-G07-RESOURCE-CURRENCY-BOUNDARY-COVERS-SIBLING-EXCHANGES",
+      "source": "tests/development/exchange-history-integration.test.mts",
+      "capability_id": "FEATURE-M06-G07"
+    },
+    {
+      "id": "runtime:M06-G06-REGISTERED-SOURCE-PRESERVES-UNENROLLED-ORIGINALS",
+      "suite": "runtime",
+      "runner_case_id": "M06-G06-REGISTERED-SOURCE-PRESERVES-UNENROLLED-ORIGINALS",
+      "source": "tests/development/exchange-history-integration.test.mts",
+      "capability_id": "FEATURE-M06-G06"
+    },
+    {
+      "id": "runtime:M06-G06-LINEAGE-EXPORT-AND-ERASURE-KEEP-MINIMIZED-AUDIT",
+      "suite": "runtime",
+      "runner_case_id": "M06-G06-LINEAGE-EXPORT-AND-ERASURE-KEEP-MINIMIZED-AUDIT",
+      "source": "tests/development/exchange-history-integration.test.mts",
+      "capability_id": "FEATURE-M06-G06"
+    },
+    {
+      "id": "runtime:M06-G09-INSTANT-EXPORT-AND-ERASURE-RETAIN-OPERATION-AUDIT",
+      "suite": "runtime",
+      "runner_case_id": "M06-G09-INSTANT-EXPORT-AND-ERASURE-RETAIN-OPERATION-AUDIT",
+      "source": "tests/development/exchange-history-integration.test.mts",
+      "capability_id": "FEATURE-M06-G09"
+    },
+    {
+      "id": "runtime:CASE-M06-G06-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M06-G06-01",
+      "source": "tests/development/exchange-lineage.test.mts",
+      "capability_id": "FEATURE-M06-G06"
+    },
+    {
+      "id": "runtime:CASE-M06-G06-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M06-G06-02",
+      "source": "tests/development/exchange-lineage.test.mts",
+      "capability_id": "FEATURE-M06-G06"
+    },
+    {
+      "id": "runtime:CASE-M06-G06-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M06-G06-03",
+      "source": "tests/development/exchange-lineage.test.mts",
+      "capability_id": "FEATURE-M06-G06"
+    },
+    {
+      "id": "runtime:M06-TEST-020-ORIGINAL-PAYMENT-SLICES-SURVIVE",
+      "suite": "runtime",
+      "runner_case_id": "M06-TEST-020-ORIGINAL-PAYMENT-SLICES-SURVIVE",
+      "source": "tests/development/exchange-lineage.test.mts",
+      "capability_id": "FEATURE-M06-G06"
+    },
+    {
+      "id": "runtime:M06-TEST-021-ZERO-PRICE-PHYSICAL-DESCENDANT",
+      "suite": "runtime",
+      "runner_case_id": "M06-TEST-021-ZERO-PRICE-PHYSICAL-DESCENDANT",
+      "source": "tests/development/exchange-lineage.test.mts",
+      "capability_id": "FEATURE-M06-G06"
+    },
+    {
+      "id": "runtime:M06-G06-RETAINED-FEE-IS-NOT-PARENT-OR-CHILD-PRINCIPAL",
+      "suite": "runtime",
+      "runner_case_id": "M06-G06-RETAINED-FEE-IS-NOT-PARENT-OR-CHILD-PRINCIPAL",
+      "source": "tests/development/exchange-lineage.test.mts",
+      "capability_id": "FEATURE-M06-G06"
+    },
+    {
+      "id": "runtime:M06-G06-LOST-TRANSFER-RESPONSE-LOOKS-UP-SAME-CHILD",
+      "suite": "runtime",
+      "runner_case_id": "M06-G06-LOST-TRANSFER-RESPONSE-LOOKS-UP-SAME-CHILD",
+      "source": "tests/development/exchange-lineage.test.mts",
+      "capability_id": "FEATURE-M06-G06"
+    },
+    {
+      "id": "runtime:M06-G06-NATIVE-DELIVERY-REQUIRED",
+      "suite": "runtime",
+      "runner_case_id": "M06-G06-NATIVE-DELIVERY-REQUIRED",
+      "source": "tests/development/exchange-lineage.test.mts",
+      "capability_id": "FEATURE-M06-G06"
+    },
+    {
+      "id": "runtime:M06-G06-CHILD-RETAIL-REWRITE-IS-DENIED",
+      "suite": "runtime",
+      "runner_case_id": "M06-G06-CHILD-RETAIL-REWRITE-IS-DENIED",
+      "source": "tests/development/exchange-lineage.test.mts",
+      "capability_id": "FEATURE-M06-G06"
+    },
+    {
+      "id": "runtime:M06-G06-DROPPING-DESCENDANT-METADATA-DOES-NOT-UNBIND-IT",
+      "suite": "runtime",
+      "runner_case_id": "M06-G06-DROPPING-DESCENDANT-METADATA-DOES-NOT-UNBIND-IT",
+      "source": "tests/development/exchange-lineage.test.mts",
+      "capability_id": "FEATURE-M06-G06"
+    },
+    {
+      "id": "runtime:M06-G06-CHILD-CANNOT-BE-CLONED-BY-NATIVE-ORDER-ID",
+      "suite": "runtime",
+      "runner_case_id": "M06-G06-CHILD-CANNOT-BE-CLONED-BY-NATIVE-ORDER-ID",
+      "source": "tests/development/exchange-lineage.test.mts",
+      "capability_id": "FEATURE-M06-G06"
+    },
+    {
+      "id": "runtime:M06-G06-CUSTOMER-SEES-DESCENDANT-WITHOUT-ANCESTOR-PAYMENTS",
+      "suite": "runtime",
+      "runner_case_id": "M06-G06-CUSTOMER-SEES-DESCENDANT-WITHOUT-ANCESTOR-PAYMENTS",
+      "source": "tests/development/exchange-lineage.test.mts",
+      "capability_id": "FEATURE-M06-G06"
+    },
+    {
+      "id": "runtime:M06-G06-OTHER-TENANT-CANNOT-READ-LINEAGE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G06-OTHER-TENANT-CANNOT-READ-LINEAGE",
+      "source": "tests/development/exchange-lineage.test.mts",
+      "capability_id": "FEATURE-M06-G06"
+    },
+    {
+      "id": "runtime:M06-G06-CREDIT-ISSUED-OUTFLOW-IS-NOT-LIVE-CREDIT-BALANCE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G06-CREDIT-ISSUED-OUTFLOW-IS-NOT-LIVE-CREDIT-BALANCE",
+      "source": "tests/development/exchange-lineage.test.mts",
+      "capability_id": "FEATURE-M06-G06"
+    },
+    {
+      "id": "runtime:M06-G06-UNRELATED-ORIGINAL-UNIT-STAYS-REFUNDABLE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G06-UNRELATED-ORIGINAL-UNIT-STAYS-REFUNDABLE",
+      "source": "tests/development/exchange-lineage.test.mts",
+      "capability_id": "FEATURE-M06-G06"
+    },
+    {
+      "id": "runtime:M06-G06-ZERO-INSTRUMENT-SLICE-PRESERVES-NEXT-PAID-GENERATION",
+      "suite": "runtime",
+      "runner_case_id": "M06-G06-ZERO-INSTRUMENT-SLICE-PRESERVES-NEXT-PAID-GENERATION",
+      "source": "tests/development/exchange-lineage.test.mts",
+      "capability_id": "FEATURE-M06-G06"
+    },
+    {
+      "id": "runtime:M06-G06-RESIDUAL-ROUNDING-STAYS-WITHIN-EACH-RETAINED-INSTRUMENT",
+      "suite": "runtime",
+      "runner_case_id": "M06-G06-RESIDUAL-ROUNDING-STAYS-WITHIN-EACH-RETAINED-INSTRUMENT",
+      "source": "tests/development/exchange-lineage.test.mts",
+      "capability_id": "FEATURE-M06-G06"
+    },
+    {
+      "id": "runtime:CASE-M06-G10-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M06-G10-01",
+      "source": "tests/development/instant-lifecycle.test.mts",
+      "capability_id": "FEATURE-M06-G10"
+    },
+    {
+      "id": "runtime:CASE-M06-G10-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M06-G10-02",
+      "source": "tests/development/instant-lifecycle.test.mts",
+      "capability_id": "FEATURE-M06-G10"
+    },
+    {
+      "id": "runtime:CASE-M06-G10-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M06-G10-03",
+      "source": "tests/development/instant-lifecycle.test.mts",
+      "capability_id": "FEATURE-M06-G10"
+    },
+    {
+      "id": "runtime:M06-G10-CAPTURE-BEFORE-DEADLINE-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M06-G10-CAPTURE-BEFORE-DEADLINE-REJECTED",
+      "source": "tests/development/instant-lifecycle.test.mts",
+      "capability_id": "FEATURE-M06-G10"
+    },
+    {
+      "id": "runtime:M06-G10-ALL-RETURNED-NO-CAPTURE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G10-ALL-RETURNED-NO-CAPTURE",
+      "source": "tests/development/instant-lifecycle.test.mts",
+      "capability_id": "FEATURE-M06-G10"
+    },
+    {
+      "id": "runtime:M06-G10-CANCEL-BEFORE-RELEASE-WAIVES-OBLIGATION",
+      "suite": "runtime",
+      "runner_case_id": "M06-G10-CANCEL-BEFORE-RELEASE-WAIVES-OBLIGATION",
+      "source": "tests/development/instant-lifecycle.test.mts",
+      "capability_id": "FEATURE-M06-G10"
+    },
+    {
+      "id": "runtime:M06-G10-RESERVED-RELEASE-BLOCKS-CAPTURE-AND-CANCEL",
+      "suite": "runtime",
+      "runner_case_id": "M06-G10-RESERVED-RELEASE-BLOCKS-CAPTURE-AND-CANCEL",
+      "source": "tests/development/instant-lifecycle.test.mts",
+      "capability_id": "FEATURE-M06-G10"
+    },
+    {
+      "id": "runtime:M06-G10-RETURN-AFTER-CAPTURE-RETAINS-COMPENSATION",
+      "suite": "runtime",
+      "runner_case_id": "M06-G10-RETURN-AFTER-CAPTURE-RETAINS-COMPENSATION",
+      "source": "tests/development/instant-lifecycle.test.mts",
+      "capability_id": "FEATURE-M06-G10"
+    },
+    {
+      "id": "runtime:M06-G10-REVOKED-CONSENT-CANNOT-CAPTURE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G10-REVOKED-CONSENT-CANNOT-CAPTURE",
+      "source": "tests/development/instant-lifecycle.test.mts",
+      "capability_id": "FEATURE-M06-G10"
+    },
+    {
+      "id": "runtime:M06-G10-EXPIRY-AT-NATIVE-CAPTURE-BOUNDARY",
+      "suite": "runtime",
+      "runner_case_id": "M06-G10-EXPIRY-AT-NATIVE-CAPTURE-BOUNDARY",
+      "source": "tests/development/instant-lifecycle.test.mts",
+      "capability_id": "FEATURE-M06-G10"
+    },
+    {
+      "id": "runtime:M06-G10-FORGED-LOCAL-MANDATE-CANNOT-RELEASE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G10-FORGED-LOCAL-MANDATE-CANNOT-RELEASE",
+      "source": "tests/development/instant-lifecycle.test.mts",
+      "capability_id": "FEATURE-M06-G10"
+    },
+    {
+      "id": "runtime:CASE-M06-G09-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M06-G09-01",
+      "source": "tests/development/instant-mandates.test.mts",
+      "capability_id": "FEATURE-M06-G09"
+    },
+    {
+      "id": "runtime:CASE-M06-G09-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M06-G09-02",
+      "source": "tests/development/instant-mandates.test.mts",
+      "capability_id": "FEATURE-M06-G09"
+    },
+    {
+      "id": "runtime:CASE-M06-G09-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M06-G09-03",
+      "source": "tests/development/instant-mandates.test.mts",
+      "capability_id": "FEATURE-M06-G09"
+    },
+    {
+      "id": "runtime:M06-G09-SAVED-CARD-IS-NOT-CONSENT",
+      "suite": "runtime",
+      "runner_case_id": "M06-G09-SAVED-CARD-IS-NOT-CONSENT",
+      "source": "tests/development/instant-mandates.test.mts",
+      "capability_id": "FEATURE-M06-G09"
+    },
+    {
+      "id": "runtime:M06-G09-CUSTOMER-CANNOT-SELF-AUTHORIZE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G09-CUSTOMER-CANNOT-SELF-AUTHORIZE",
+      "source": "tests/development/instant-mandates.test.mts",
+      "capability_id": "FEATURE-M06-G09"
+    },
+    {
+      "id": "runtime:M06-G09-REVOKED-CONSENT-BEFORE-DISPATCH",
+      "suite": "runtime",
+      "runner_case_id": "M06-G09-REVOKED-CONSENT-BEFORE-DISPATCH",
+      "source": "tests/development/instant-mandates.test.mts",
+      "capability_id": "FEATURE-M06-G09"
+    },
+    {
+      "id": "runtime:M06-G09-NATIVE-COMMAND-BINDING-PREVENTS-DOWNGRADE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G09-NATIVE-COMMAND-BINDING-PREVENTS-DOWNGRADE",
+      "source": "tests/development/instant-mandates.test.mts",
+      "capability_id": "FEATURE-M06-G09"
+    },
+    {
+      "id": "runtime:M06-G09-CROSS-TENANT-MANDATE-HIDDEN",
+      "suite": "runtime",
+      "runner_case_id": "M06-G09-CROSS-TENANT-MANDATE-HIDDEN",
+      "source": "tests/development/instant-mandates.test.mts",
+      "capability_id": "FEATURE-M06-G09"
+    },
+    {
+      "id": "runtime:M06-G09-MISSING-OR-EXPIRED-TERMS-DISABLED",
+      "suite": "runtime",
+      "runner_case_id": "M06-G09-MISSING-OR-EXPIRED-TERMS-DISABLED",
+      "source": "tests/development/instant-mandates.test.mts",
+      "capability_id": "FEATURE-M06-G09"
+    },
+    {
+      "id": "runtime:M06-G09-UNKNOWN-MANDATE-DOES-NOT-RELEASE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G09-UNKNOWN-MANDATE-DOES-NOT-RELEASE",
+      "source": "tests/development/instant-mandates.test.mts",
+      "capability_id": "FEATURE-M06-G09"
+    },
+    {
+      "id": "runtime:M06-G10-TWO-PROCESS-RETURN-CAPTURE-CONTENTION",
+      "suite": "runtime",
+      "runner_case_id": "M06-G10-TWO-PROCESS-RETURN-CAPTURE-CONTENTION",
+      "source": "tests/development/instant-races.test.mts",
+      "capability_id": "FEATURE-M06-G10"
+    },
+    {
+      "id": "runtime:M06-G10-TWO-PROCESS-SAME-CAPTURE-EXACTLY-ONCE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G10-TWO-PROCESS-SAME-CAPTURE-EXACTLY-ONCE",
+      "source": "tests/development/instant-races.test.mts",
+      "capability_id": "FEATURE-M06-G10"
+    },
+    {
+      "id": "runtime:M06-G10-REOPEN-RECONCILES-ORIGINAL-CAPTURE",
+      "suite": "runtime",
+      "runner_case_id": "M06-G10-REOPEN-RECONCILES-ORIGINAL-CAPTURE",
+      "source": "tests/development/instant-races.test.mts",
+      "capability_id": "FEATURE-M06-G10"
+    },
+    {
+      "id": "runtime:M06-G10-UNKNOWN-PRECALL-NOT-RESENT",
+      "suite": "runtime",
+      "runner_case_id": "M06-G10-UNKNOWN-PRECALL-NOT-RESENT",
+      "source": "tests/development/instant-races.test.mts",
+      "capability_id": "FEATURE-M06-G10"
+    },
+    {
+      "id": "runtime:M06-G10-CAPTURE-TRANSPORT-CANNOT-CHANGE-IDENTITY-OR-CEILING",
+      "suite": "runtime",
+      "runner_case_id": "M06-G10-CAPTURE-TRANSPORT-CANNOT-CHANGE-IDENTITY-OR-CEILING",
+      "source": "tests/development/instant-races.test.mts",
+      "capability_id": "FEATURE-M06-G10"
+    },
+    {
+      "id": "runtime:M06-G10-MALFORMED-CAPTURE-RESULT-RECONCILES",
+      "suite": "runtime",
+      "runner_case_id": "M06-G10-MALFORMED-CAPTURE-RESULT-RECONCILES",
+      "source": "tests/development/instant-races.test.mts",
+      "capability_id": "FEATURE-M06-G10"
+    },
+    {
+      "id": "runtime:M06-G08-OVERSIZED-LATE-FINAL-REMAINS-AN-UNRESOLVED-OBSERVATION",
+      "suite": "runtime",
+      "runner_case_id": "M06-G08-OVERSIZED-LATE-FINAL-REMAINS-AN-UNRESOLVED-OBSERVATION",
+      "source": "tests/development/exchange-fees.test.mts",
+      "capability_id": "FEATURE-M06-G08"
+    },
+    {
+      "id": "runtime:M06-G08-OVERSIZED-FINAL-BEFORE-APPROVAL-BLOCKS-NEGATIVE-REFUND",
+      "suite": "runtime",
+      "runner_case_id": "M06-G08-OVERSIZED-FINAL-BEFORE-APPROVAL-BLOCKS-NEGATIVE-REFUND",
+      "source": "tests/development/exchange-fees.test.mts",
+      "capability_id": "FEATURE-M06-G08"
     }
   ],
   "protected_files": [
@@ -16538,7 +17370,24 @@
     "tests/development/gift-retention.test.mts",
     "tests/development/gift-returns.test.mts",
     "tests/development/gift-submit-child.mts",
-    "tests/fixtures/exchange-finance/independent-values.json"
+    "tests/fixtures/exchange-finance/independent-values.json",
+    "tests/browser/exchange_history_component.py",
+    "tests/development/exchange-currency.test.mts",
+    "tests/development/exchange-fees.test.mts",
+    "tests/development/exchange-history-api.test.mts",
+    "tests/development/exchange-history-browser.test.mts",
+    "tests/development/exchange-history-integration.test.mts",
+    "tests/development/exchange-lineage-helpers.mts",
+    "tests/development/exchange-lineage.test.mts",
+    "tests/development/exchange-money-helpers.mts",
+    "tests/development/instant-helpers.mts",
+    "tests/development/instant-lifecycle.test.mts",
+    "tests/development/instant-mandates.test.mts",
+    "tests/development/instant-native-child.mts",
+    "tests/development/instant-races.test.mts",
+    "tests/fixtures/exchange-lineage/independent-values.json",
+    "tests/fixtures/exchange-money/golden.v1.json",
+    "tests/fixtures/instant-exchanges/independent-values.json"
   ],
   "source_count_fixture": "tests/fixtures/licensing/artifact-oracle.v1.json",
   "source_inventory": "planning/component-inventory.json"
