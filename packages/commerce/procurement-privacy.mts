@@ -2,7 +2,11 @@ import type { CommerceKernel,Row } from './kernel.mts';
 import { canonical,contentDigest } from './configuration-values.mts';
 import { PROCUREMENT_TABLES,procurementBody } from './procurement-core.mts';
 
-const select=(body:Row,fields:readonly string[])=>Object.fromEntries(fields.filter(field=>Object.hasOwn(body,field)).map(field=>[field,body[field]]));
+function select(body:Row,fields:readonly string[]):Row {
+ if(!body||typeof body!=='object'||Array.isArray(body))return {};
+ return Object.fromEntries(fields.filter(field=>Object.hasOwn(body,field)&&
+  (body[field]===null||['string','number','boolean'].includes(typeof body[field]))).map(field=>[field,body[field]]));
+}
 const LINE_FIELDS=['line_id','variant_id','location_id','quantity','ordered_quantity','ordered_base_quantity','order_unit','purchase_unit','base_unit','units_per_purchase','base_quantity','currency_code','unit_cost_minor','line_total_minor'];
 function line(value:Row){return {...select(value,LINE_FIELDS),conversion:select(value.conversion??{},['numerator','denominator'])};}
 function terms(value:Row){return {...select(value,['schema_version','tenant_id','store_id','source_identity','supplier_id','version','currency_code','effective_at','expires_at','observed_at','qualification','digest']),lines:(value.lines??[]).map((entry:Row)=>({...select(entry,['variant_id','order_unit','base_unit','minimum_quantity','lead_time_days','unit_cost_minor']),conversion:select(entry.conversion??{},['numerator','denominator'])}))};}

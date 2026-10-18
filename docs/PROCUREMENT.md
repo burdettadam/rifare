@@ -109,6 +109,8 @@ catalog/supplier business records. Hash-only erasure also sanitizes unexpected
 private fields in every selected-store record without deleting legitimate
 business rows; any changed grants are revoked. Explicit subject-linked restored
 rows are minimized with stable original operation, PO, source and monetary IDs.
+Allowed scalar fields accept only scalar values or null; a malformed object in
+such a field cannot retain nested private copies through erasure or restore.
 
 Restore and uninstall sanitize all nested fields, revoke procurement approvals,
 disable budget/configuration and version authority, and mark PO execution

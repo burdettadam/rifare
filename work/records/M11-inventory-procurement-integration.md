@@ -53,7 +53,9 @@ Production keeps reservation, consumption, WIP, output and scrap distinct.
 The additive extension has five forecasting, eight procurement and seven
 stock/production tables. These are customer-free aggregate/catalog business
 records. Subject export excludes them; canonical erasure rechecks nested field
-allowlists even with no selected resource IDs. Import, global/store recovery and
+allowlists even with no selected resource IDs. Scalar fields cannot preserve a
+malformed restored object; the retained privacy cases cover both a top-level
+budget field and a nested supplier-term field. Import, global/store recovery and
 uninstall scrub unexpected copied facts and revoke all new approval authority
 without requiring a customer tombstone. Original unknown source identities and
 quantitative obligations remain; privacy dispatches no source effect.
