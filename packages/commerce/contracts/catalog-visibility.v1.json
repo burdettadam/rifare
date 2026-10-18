@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "qualification": "local_preparation_only",
+  "default_source": null,
+  "methods": {"evaluate": ["evaluation_id", "resource_id", "observation_id"], "history": ["resource_id"]},
+  "identity": ["prompt_digest", "catalog_digest", "model_digest", "source_observation_digest", "observed_at"],
+  "observations": "Only observed permitted-fixture answers count. Missing answers, unobserved generations and prohibited scraping remain unsupported. Mentions, citations, source-version matching and factual correctness are separately reported.",
+  "history": "Evaluation IDs are immutable and never replace earlier baselines. Comparisons retain prompt and catalog/model/configuration labels.",
+  "guarantees": "No future placement guarantee, causal lift claim, prohibited scraping or real-model qualification.",
+  "privacy": "Evaluation inputs use bounded fixture questions, product claims and source references. Each evaluation is resource/customer scoped, exported and minimized with that subject. Separate source transcript stores and held caller copies require cleanup."
+}

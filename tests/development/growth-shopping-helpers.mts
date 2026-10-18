@@ -3,6 +3,21 @@ import { ShoppingCatalogFixtureSource } from '../../packages/adapters/shopping-c
 import { ShoppingCart } from '../../packages/commerce/shopping-cart.mts';
 import { PreFulfillmentUpsells } from '../../packages/commerce/pre-fulfillment-upsells.mts';
 import { CatalogVisibility, ReviewedCatalogChanges } from '../../packages/commerce/catalog-growth.mts';
+import { DatabaseSync } from 'node:sqlite';
+import { join } from 'node:path';
+import { OrderEditFixtureSource } from '../../packages/adapters/order-edit-fixture-source.mts';
+
+/** Attach an actual canonical shopping source to an existing support/kernel fixture. */
+export async function installShoppingCart(f:any){
+ const sourceDb=new DatabaseSync(join(f.directory,'growth-recovery-source.sqlite'));
+ try{const native=new OrderEditFixtureSource(sourceDb,{mode:'fixture',identity:'recovery-catalog',tenant:f.a.tenant,store:f.a.store},f.now),original=typeof f.order==='function'?f.order():f.original;
+  const line={id:'line-one',variant_id:'basic',product_id:'shirt',warehouse_id:'warehouse-one',quantity:1,unit_minor:'2000',discount_minor:'0',tax_minor:'0',tax_bps:0,status:'unfulfilled',subscription:false};
+  native.seed({tenant_id:f.a.tenant,store_id:f.a.store,resource_id:original.id,customer_id:original.customer_id,version:1,created_at:f.now()-1000,currency:'USD',shipping_minor:'0',total_minor:'2000',net_paid_minor:'2000',balance_due_minor:'0',financial_state:'paid',cancelled:false,address:{name:'Synthetic Customer',line1:'1 Test Street',city:'Provo',state:'UT',postal:'84601',country:'US'},lines:[line]},[{id:'basic',product_id:'shirt',unit_minor:'2000',stock:10,currency:'USD',tax_bps:0,subscription:false,excluded:false,available:true}]);
+  const source=new ShoppingCatalogFixtureSource(native);source.fixtureListing({variant_id:'basic',expected_revision:0,title:'Synthetic cotton shirt',description:'Cotton shirt.',approved_descriptions:['Cotton shirt.'],terms:{id:'standard',revision:1,text:'No promotional discount.'}});
+  const carts=new ShoppingCart(f.kernel,source),p=carts.propose(f.a.scope,{cart_id:'recovery-cart',resource_id:original.id,items:[{variant_id:'basic',quantity:1}]});await carts.confirm(f.customer,{cart_id:p.cart_id,preview_digest:p.preview_digest});
+  return {carts,cart_id:p.cart_id,source,native,sourceDb,purchase:()=>source.fixturePurchase(p.cart_id,'purchased-order-one'),cleanup:()=>sourceDb.close()};
+ }catch(e){sourceDb.close();throw e;}
+}
 
 export function shoppingFixture(options:any={}) {
  const f=editFixture(options),catalogSource=new ShoppingCatalogFixtureSource(f.native);

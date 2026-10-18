@@ -1,10 +1,11 @@
 import { initializePreventionSource, assertPreventionNative } from './prevention-source-guards.mts';
+import { initializeUpsellSource, assertUpsellNative } from './upsell-source-guards.mts';
 import { randomUUID } from 'node:crypto';
 import type { DatabaseSync } from 'node:sqlite';
 import { exact,id,integer } from '../commerce/kernel.mts';
 import type { Row } from '../commerce/kernel.mts';
 import { canonical,contentDigest,jsonValue } from '../commerce/configuration-values.mts';
-import { editAddress,editMinor,lineValue,orderValue,safeOrder } from '../commerce/order-edit-core.mts';
+import { editAddress,editMinor,lineValue,orderValue,safeOrder,editAddedLine } from '../commerce/order-edit-core.mts';
 
 export const WAREHOUSE_CONNECTOR=Object.freeze({id:'rifare-warehouse-fixture',version:'1.0.0',api_version:'rifare-order-edit-fixture-v1',qualification:'synthetic_only',live_transport:false});
 
@@ -28,6 +29,7 @@ export class OrderEditFixtureSource {
    CREATE TABLE IF NOT EXISTS edit_source_finance(edit_id TEXT PRIMARY KEY,order_id TEXT NOT NULL,version INTEGER NOT NULL,kind TEXT NOT NULL,body TEXT NOT NULL,digest TEXT NOT NULL) STRICT;
   `);
   initializePreventionSource(db);
+  initializeUpsellSource(db);
   db.prepare('INSERT OR IGNORE INTO edit_source_identity VALUES(1,?,?,?,?,1)').run(config.identity,'edit_source_'+randomUUID().replaceAll('-',''),config.tenant,config.store);
   const r=db.prepare('SELECT * FROM edit_source_identity').get() as Row;if(r.label!==config.identity||r.tenant!==this.tenant||r.store!==this.store)throw new Error('EDIT_SOURCE_MISMATCH');this.identity=r.identity;
  }
@@ -126,13 +128,14 @@ export class OrderEditFixtureSource {
   if(i.kind==='address'){const a=editAddress(i.address);if(a.country!==o.address.country||a.state!==o.address.state||a.postal.slice(0,3)!==o.address.postal.slice(0,3))throw new Error('EDIT_TAX_SHIPPING_UNQUALIFIED');next.address=a;}
   if(i.kind==='item'){const l=next.lines.find((x:Row)=>x.id===i.line_id),v=this.catalog(i.variant_id);if(!l||!['unfulfilled','held'].includes(l.status)||l.subscription||!v.available||v.excluded||v.subscription||v.product_id!==l.product_id||v.currency!==o.currency||v.tax_bps!==l.tax_bps)throw new Error('EDIT_VARIANT_UNSUPPORTED');
    if(v.stock-c.stock_buffer<l.quantity)throw new Error('EDIT_STOCK_UNAVAILABLE');const net=editMinor(v.unit_minor)*BigInt(l.quantity)-editMinor(l.discount_minor);if(net<0n)throw new Error('EDIT_DISCOUNT_UNSUPPORTED');const tax=net*BigInt(v.tax_bps);if(tax%10000n!==0n)throw new Error('EDIT_TAX_ROUNDING_UNQUALIFIED');l.variant_id=v.id;l.unit_minor=v.unit_minor;l.tax_minor=(tax/10000n).toString();}
+  if(i.kind==='add')next.lines.push(editAddedLine(o,this.catalog(i.variant_id),i,c.stock_buffer));
   if(i.kind==='cancel')for(const line of next.lines)if(c.line_ids.includes(line.id)){if(!['unfulfilled','held'].includes(line.status))throw new Error('EDIT_LINE_IRREVERSIBLE');line.status='cancelled';}
   const total=orderValue(next),delta=total-orderValue(o);if(total.toString()!==c.new_total_minor||delta.toString()!==c.delta_minor)throw new Error('EDIT_NATIVE_TOTAL_CHANGED');
   next.total_minor=total.toString();next.version=o.version+1;next.balance_due_minor=(total>editMinor(o.net_paid_minor)?total-editMinor(o.net_paid_minor):0n).toString();next.financial_state=next.balance_due_minor==='0'?'paid':'partially_paid';next.cancelled=next.lines.every((l:Row)=>['cancelled','shipped'].includes(l.status))&&i.kind==='cancel';return next;
  }
  #guard(c:Row,o:Row){if(c.source_identity!==this.identity||c.tenant_id!==this.tenant||c.store_id!==this.store)throw new Error('EDIT_SOURCE_MISMATCH');if(c.source_revision!==this.revision())throw new Error('EDIT_READINESS_CHANGED');this.assertConnectorReadiness(c.warehouse_ids);if(o.customer_id!==c.customer_id)throw new Error('EDIT_CUSTOMER_CHANGED');}
  #held(c:Row,o:Row,reason='edit'){for(const w of c.warehouse_ids){const row=this.warehouse(o.resource_id,w);if(this.#mode(w)!=='qualified'||row.stage!=='unfulfilled'||!row.holds.some((h:Row)=>h.owner==='rifare'&&h.handle===c.edit_id&&h.reason===reason))throw new Error('EDIT_HOLD_UNCONFIRMED');}}
- #run(c:Row){const o=this.order(c.resource_id);this.#guard(c,o);assertPreventionNative(this,c,o);let result:Row={stage:c.stage,order_id:o.resource_id,edit_id:c.edit_id,source_identity:this.identity};
+ #run(c:Row){const o=this.order(c.resource_id);this.#guard(c,o);assertPreventionNative(this,c,o);assertUpsellNative(this,c,o);let result:Row={stage:c.stage,order_id:o.resource_id,edit_id:c.edit_id,source_identity:this.identity};
   if(c.stage.startsWith('hold:')){if(o.version!==c.original_version||contentDigest(safeOrder(o))!==c.original_digest)throw new Error('EDIT_SOURCE_CHANGED');for(const id of c.line_ids){const l=o.lines.find((l:Row)=>l.id===id);if(!l||!['unfulfilled','held'].includes(l.status))throw new Error('EDIT_LINE_IRREVERSIBLE');}const [,reason,w]=c.stage.split(':');const ok=this.#addHold(o.resource_id,w,'rifare',c.edit_id,reason);if(!ok)throw new Error('EDIT_HOLD_UNCONFIRMED');return {...result,acknowledged:true,warehouse_id:w,reason,version:o.version};}
   if(['begin','change','commit'].includes(c.stage)){
    if(o.version!==c.original_version||contentDigest(safeOrder(o))!==c.original_digest)throw new Error('EDIT_SOURCE_CHANGED');if(this.clock()>=c.commit_deadline)throw new Error('EDIT_WINDOW_CLOSED');this.#held(c,o);
@@ -143,6 +146,7 @@ export class OrderEditFixtureSource {
    if(!row.body||row.digest!==contentDigest(next))throw new Error('EDIT_CALCULATION_CHANGED');
    if(editMinor(next.balance_due_minor)>0n)this.#held(c,o,'payment');
    if(c.intent.kind==='item'){const old=o.lines.find((l:Row)=>l.id===c.intent.line_id),v=this.catalog(c.intent.variant_id);v.stock-=old.quantity;this.#put('edit_source_catalog',v.id,v);const prev=this.catalog(old.variant_id);prev.stock+=old.quantity;this.#put('edit_source_catalog',prev.id,prev);}
+   if(c.intent.kind==='add'){const v=this.catalog(c.intent.variant_id);v.stock-=c.intent.quantity;this.#put('edit_source_catalog',v.id,v);}
    if(c.intent.kind==='cancel')for(const line of o.lines)if(c.line_ids.includes(line.id)){const v=this.catalog(line.variant_id);v.stock+=line.quantity;this.#put('edit_source_catalog',v.id,v);}
    this.#put('edit_source_orders',o.resource_id,next);return {...result,version:next.version,order_digest:contentDigest(safeOrder(next)),total_minor:next.total_minor,delta_minor:c.delta_minor,line_mapping:next.lines.map((l:Row)=>({original:l.id,current:l.id,variant:l.variant_id})),cancelled:next.cancelled};
   }
@@ -165,9 +169,9 @@ export class OrderEditFixtureSource {
   }
   throw new Error('EDIT_STAGE_UNSUPPORTED');
  }
- async perform(input:Row){const c=jsonValue(input),hash=contentDigest(c);id(c.operation_id);if(c.source_identity!==this.identity||c.tenant_id!==this.tenant||c.store_id!==this.store)throw new Error('EDIT_SOURCE_MISMATCH');
+ async perform(input:Row,authorize?:()=>void){const c=jsonValue(input),hash=contentDigest(c);id(c.operation_id);if(c.source_identity!==this.identity||c.tenant_id!==this.tenant||c.store_id!==this.store)throw new Error('EDIT_SOURCE_MISMATCH');
   const fault=this.faultStage===null||c.stage===this.faultStage?this.fault:'none';if(fault==='hang')return new Promise<never>(()=>{});if(fault==='before'){this.fault='none';throw new Error('EDIT_SOURCE_UNAVAILABLE');}
-  const result=this.#tx(()=>{const old=this.db.prepare('SELECT * FROM edit_source_effects WHERE operation_id=?').get(c.operation_id) as Row;if(old){if(old.command_digest!==hash)throw new Error('EDIT_OPERATION_CONFLICT');return JSON.parse(old.result);}
+  const result=this.#tx(()=>{if(c.intent?.kind==='add'){if(!authorize)throw new Error('UPSELL_CURRENT_AUTHORITY_REQUIRED');authorize();}const old=this.db.prepare('SELECT * FROM edit_source_effects WHERE operation_id=?').get(c.operation_id) as Row;if(old){if(old.command_digest!==hash)throw new Error('EDIT_OPERATION_CONFLICT');return JSON.parse(old.result);}
    const value={...this.#run(c),operation_id:c.operation_id,command_digest:hash,qualification:'synthetic_only'};this.db.prepare('INSERT INTO edit_source_effects VALUES(?,?,?,?)').run(c.operation_id,hash,canonical(value),contentDigest(value));return value;});
   if(fault==='after'){this.fault='none';throw new Error('EDIT_SOURCE_RESPONSE_LOST');}return result;
  }

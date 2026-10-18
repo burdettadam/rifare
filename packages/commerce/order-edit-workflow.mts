@@ -22,5 +22,5 @@ export class OrderEditWorkflow {
    reason,handoff_required:!!reason||operations.some((o:Row)=>o.stages.some((t:Row)=>t.state==='unknown')),execution_authorized:false,qualification:'synthetic_only',
    skill:{id:bundle.id,version:bundle.version,digest:bundle.digest,resources:Object.entries(bundle.files).sort(([a],[b])=>a.localeCompare(b)).map(([path,content])=>({path,sha256:digest(content),content,authority:'guidance_only'}))}};
  }
- quote(scope:Scope,input:unknown){const p=exact(jsonValue(input),['case_id','intent']),status=this.status(scope,{case_id:p.case_id});if(status.reason)throw new Error(status.reason);const v=exact(p.intent,['kind','line_id','variant_id','address']);return this.edits.quote(scope,{case_id:p.case_id,...v});}
+ quote(scope:Scope,input:unknown){const p=exact(jsonValue(input),['case_id','intent']),status=this.status(scope,{case_id:p.case_id});if(status.reason)throw new Error(status.reason);const v=exact(p.intent,p.intent?.kind==='add'?['kind','line_id','variant_id','address','quantity','warehouse_id']:['kind','line_id','variant_id','address']);return this.edits.quote(scope,{case_id:p.case_id,...v});}
 }

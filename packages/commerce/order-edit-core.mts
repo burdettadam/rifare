@@ -1,4 +1,5 @@
 import { assertPreventionConfirmation } from './return-prevention-guards.mts';
+import { assertUpsellConfirmation } from './upsell-guards.mts';
 import { exact,id,integer,token } from './kernel.mts';
 import type { CommerceKernel,Scope,Row } from './kernel.mts';
 import { canonical,contentDigest,jsonValue } from './configuration-values.mts';
@@ -9,7 +10,7 @@ import { money } from './money.mts';
 
 export const EDIT_ACTION='diagnostic.order.edit';
 export const EDIT_CONTRACT=Object.freeze({id:'rifare-order-edit-fixture-v1',version:1,qualification:'synthetic_only',live_transport:false});
-export const EDIT_KINDS=['address','item','cancel'] as const;
+export const EDIT_KINDS=['address','item','cancel','add'] as const;
 export function editBody(r:Row|undefined){if(!r)throw new Error('NOT_FOUND');const b=JSON.parse(r.body);if(contentDigest(b)!==r.digest)throw new Error('EDIT_INTEGRITY');return b;}
 export function editMinor(x:unknown){if(typeof x!=='string'||!/^\d{1,24}$/.test(x)||String(BigInt(x))!==x)throw new Error('EDIT_MONEY_INVALID');return BigInt(x);}
 export function editAddress(x:unknown){const a=exact(jsonValue(x),['name','line1','city','state','postal','country']);
@@ -18,22 +19,32 @@ export function editAddress(x:unknown){const a=exact(jsonValue(x),['name','line1
 export function lineValue(line:Row){integer(line.quantity,1);const gross=editMinor(line.unit_minor)*BigInt(line.quantity),discount=editMinor(line.discount_minor),tax=editMinor(line.tax_minor);if(discount>gross)throw new Error('EDIT_MONEY_INVALID');return gross-discount+tax;}
 export function orderValue(order:Row){return order.lines.reduce((sum:bigint,l:Row)=>sum+(l.status==='cancelled'?0n:lineValue(l)),editMinor(order.shipping_minor));}
 export function safeOrder(order:Row){const {address,...rest}=order;return {...rest,address_digest:contentDigest(address)};}
-export function editIntent(input:unknown){const p=exact(jsonValue(input),['case_id','kind','line_id','variant_id','address']);id(p.case_id);
+export function editIntent(input:unknown){const raw=jsonValue(input),p=exact(raw,raw?.kind==='add'?['case_id','kind','line_id','variant_id','address','quantity','warehouse_id']:['case_id','kind','line_id','variant_id','address']);id(p.case_id);
  if(!EDIT_KINDS.includes(p.kind))throw new Error('EDIT_UNSUPPORTED_ACTION');
+ if(p.kind==='add'){id(p.variant_id);id(p.warehouse_id);integer(p.quantity,1);if(p.quantity>20||p.line_id!==null||p.address!==null)throw new Error('INVALID_INPUT');}
  if(p.kind==='item'){id(p.line_id);id(p.variant_id);if(p.address!==null)throw new Error('INVALID_INPUT');}
  if(p.kind==='address'){editAddress(p.address);if(p.line_id!==null||p.variant_id!==null)throw new Error('INVALID_INPUT');}
  if(p.kind==='cancel'&&(p.line_id!==null||p.variant_id!==null||p.address!==null))throw new Error('INVALID_INPUT');return p;}
 export function editEligibility(order:Row,rules:Row,kind:string,lineId:string|null,now:number){
  const reasons:string[]=[],lines=order.lines as Row[];integer(now);if(!EDIT_KINDS.includes(kind as any))throw new Error('EDIT_UNSUPPORTED_ACTION');
- if(!Number.isSafeInteger(order.created_at)||order.created_at>now||now>=order.created_at+rules.windows_ms[kind])reasons.push('WINDOW_CLOSED');
+ const window=rules.windows_ms[kind==='add'?'item':kind];
+ if(!Number.isSafeInteger(order.created_at)||order.created_at>now||now>=order.created_at+window)reasons.push('WINDOW_CLOSED');
  if(order.cancelled)reasons.push('ORDER_CANCELLED');if(!['paid','partially_refunded'].includes(order.financial_state)||editMinor(order.balance_due_minor)>0n)reasons.push('FINANCIAL_STATE_UNSUPPORTED');
  const targets=kind==='item'?lines.filter(l=>l.id===lineId):lines.filter(l=>!['shipped','cancelled'].includes(l.status));
  if(!targets.length)reasons.push('NO_ELIGIBLE_LINES');
  if(targets.some(l=>l.subscription))reasons.push('SUBSCRIPTION_UNSUPPORTED');
  if(targets.some(l=>!['unfulfilled','held'].includes(l.status)))reasons.push('LINE_IRREVERSIBLE');
  if(kind==='address'&&lines.some(l=>l.status==='shipped'))reasons.push('SPLIT_ADDRESS_UNSUPPORTED');
+ if(kind==='add'&&lines.some(l=>['picking','shipped'].includes(l.status)))reasons.push('PRE_FULFILLMENT_REQUIRED');
  const warehouses=[...new Set(targets.map(l=>l.warehouse_id))].sort();
- return {eligible:reasons.length===0,reasons,action:kind,line_ids:targets.map(l=>l.id).sort(),warehouse_ids:warehouses,alternatives:reasons.length?['operator_review','post_delivery_return']:[],cutoff:order.created_at+rules.windows_ms[kind]};}
+ return {eligible:reasons.length===0,reasons,action:kind,line_ids:targets.map(l=>l.id).sort(),warehouse_ids:warehouses,alternatives:reasons.length?['operator_review','post_delivery_return']:[],cutoff:order.created_at+window};}
+/** One deterministic new line on an existing qualified fulfillment, using native facts only. */
+export function editAddedLine(order:Row,variant:Row,intent:Row,buffer:number){const existing=order.lines.filter((l:Row)=>l.warehouse_id===intent.warehouse_id&&['unfulfilled','held'].includes(l.status));
+ if(!existing.length||order.lines.some((l:Row)=>['picking','shipped'].includes(l.status))||order.lines.length>=50)throw new Error('EDIT_ADDITION_UNSUPPORTED');
+ if(!variant||variant.available!==true||variant.excluded!==false||variant.subscription!==false||variant.currency!==order.currency||existing.some((l:Row)=>l.tax_bps!==variant.tax_bps))throw new Error('EDIT_VARIANT_UNSUPPORTED');
+ id(variant.id);id(variant.product_id);integer(variant.tax_bps);if(variant.tax_bps>10000)throw new Error('EDIT_VARIANT_UNSUPPORTED');
+ integer(intent.quantity,1);integer(variant.stock);if(intent.quantity>20||variant.stock-buffer<intent.quantity)throw new Error('EDIT_STOCK_UNAVAILABLE');const gross=editMinor(variant.unit_minor)*BigInt(intent.quantity),tax=gross*BigInt(variant.tax_bps);if(tax%10000n)throw new Error('EDIT_TAX_ROUNDING_UNQUALIFIED');
+ return {id:'added_'+contentDigest([order.resource_id,order.version,variant.id,intent.warehouse_id,intent.quantity]).slice(0,32),variant_id:variant.id,product_id:variant.product_id,warehouse_id:intent.warehouse_id,quantity:intent.quantity,unit_minor:variant.unit_minor,discount_minor:'0',tax_minor:(tax/10000n).toString(),tax_bps:variant.tax_bps,status:'unfulfilled',subscription:false};}
 export function editSettings(k:CommerceKernel,s:Row){const r=k.db.prepare('SELECT * FROM commerce_edit_settings WHERE tenant_id=? AND store_id=?').get(s.tenant_id,s.store_id) as Row,b=editBody(r);
  if(!b.enabled||b.expires_at<=k.clock()||b.readiness?.qualified!==true||b.readiness?.qualification!=='synthetic_only')throw new Error('EDIT_INTEGRATION_NOT_READY');return {...b,revision:r.revision,digest:r.digest};}
 export function editSnapshot(k:CommerceKernel,s:Row,resource:string,settings:Row){const r=k.db.prepare('SELECT * FROM commerce_edit_snapshots WHERE tenant_id=? AND store_id=? AND resource_id=?').get(s.tenant_id,s.store_id,resource) as Row,b=editBody(r);
@@ -52,6 +63,7 @@ export function editValue(k:CommerceKernel,scope:Scope,intent:Row,quotedAt:numbe
   l.variant_id=v.id;l.unit_minor=v.unit_minor;l.tax_minor=((gross-discount)*BigInt(v.tax_bps)/10000n).toString();
   if(((gross-discount)*BigInt(v.tax_bps))%10000n!==0n)throw new Error('EDIT_TAX_ROUNDING_UNQUALIFIED');details={original_variant:o.lines.find((x:Row)=>x.id===l.id).variant_id,replacement_variant:v.id,quantity:l.quantity,stock_buffer:settings.rules.inventory_buffer};
  }
+ if(intent.kind==='add'){const variant=snap.snapshot.catalog.find((v:Row)=>v.id===intent.variant_id),line=editAddedLine(o,variant,intent,settings.rules.inventory_buffer);next.lines.push(line);details={added_line_id:line.id,added_variant:line.variant_id,quantity:line.quantity,warehouse_id:line.warehouse_id,stock_buffer:settings.rules.inventory_buffer};}
  if(intent.kind==='cancel')for(const l of next.lines)if(eligibility.line_ids.includes(l.id))l.status='cancelled';
  const total=orderValue(next),delta=total-currentTotal;
  return {schema_version:1,tenant_id:s.tenant_id,store_id:s.store_id,case_id:c.id,resource_id:c.resource_id,customer_id:c.customer_id,case_revision:c.revision,configuration_digest:c.configuration_digest,policy_digest:c.pins.policy.digest,
@@ -65,11 +77,13 @@ export function editGatewayQuote(k:CommerceKernel,scope:Scope,p:Row,quotedAt:num
  const ir=k.db.prepare('SELECT * FROM commerce_edit_inputs WHERE tenant_id=? AND store_id=? AND id=?').get(s.tenant_id,s.store_id,r.id) as Row,intent=editBody(ir),current=editValue(k,scope,intent,q.quoted_at);
  if(contentDigest(current)!==r.digest)throw new Error('EDIT_QUOTE_CHANGED');
  assertPreventionConfirmation(k,s,r.id,q);
+ assertUpsellConfirmation(k,s,r.id,q);
  return {schema_version:1,tenant_id:s.tenant_id,store_id:s.store_id,case_id:q.case_id,case_revision:q.case_revision,configuration_digest:q.configuration_digest,resource_id:q.resource_id,resource_version:q.source_order_version,source_digest:q.source_order_digest,customer_id:q.customer_id,
   action:EDIT_ACTION,arguments:a,amount:money(q.currency,q.amount_minor),amount_ceiling:money(q.currency,q.amount_minor),readiness_digest:q.settings_digest,control_stamp:q.control_stamp,capability_revision:q.settings_revision,adapter_contract_digest:contentDigest(EDIT_CONTRACT),policy_digest:q.policy_digest,
   decision:{eligible:true,reasons:['SEPARATE_APPROVAL_AND_DOWNSTREAM_HOLD_REQUIRED']},effect_version:0,quoted_at:quotedAt,expires_at:Math.min(quotedAt+300000,q.expires_at),max_uses:1,financial_effect:false};}
 export function commitOrderEdit(k:CommerceKernel,s:Row,p:Row,receiptId:string){const r=k.db.prepare('SELECT * FROM commerce_edit_quotes WHERE tenant_id=? AND store_id=? AND id=?').get(s.tenant_id,s.store_id,p.arguments.quote_id) as Row,q=editBody(r);
  assertPreventionConfirmation(k,s,r.id,q);
+ assertUpsellConfirmation(k,s,r.id,q);
  if(k.db.prepare("SELECT 1 FROM commerce_order_edits WHERE tenant_id=? AND store_id=? AND resource_id=? AND state NOT IN ('released','cancelled','abandoned')").get(s.tenant_id,s.store_id,q.resource_id))throw new Error('EDIT_ALREADY_ACTIVE');
  const ref='edit_'+contentDigest([s.tenant_id,s.store_id,q.resource_id,q.source_order_version,r.digest]).slice(0,40),b={id:ref,case_id:q.case_id,resource_id:q.resource_id,quote_id:r.id,quote_digest:r.digest,receipt_id:receiptId,actor_id:s.actor_id,created_at:k.clock()};
  k.db.prepare("INSERT INTO commerce_order_edits VALUES(?,?,?,?,?,?,?,'authorized',1,?,?,?)").run(s.tenant_id,s.store_id,ref,q.case_id,q.resource_id,r.id,receiptId,q.source_identity,canonical(b),contentDigest(b));editEvent(k,s,ref,'authorized',{receipt_id:receiptId,quote_digest:r.digest});return ref;}

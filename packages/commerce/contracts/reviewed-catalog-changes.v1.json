@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "qualification": "local_preparation_only",
+  "default_source": null,
+  "methods": {
+    "propose": ["change_id", "resource_id", "variant_id", "expected_revision", "description", "origin"],
+    "approve": ["change_id", "expected_digest", "expires_at"],
+    "dispatch": ["change_id"],
+    "reconcile": ["change_id"],
+    "rollback": ["change_id", "rollback_id"],
+    "read": ["change_id"]
+  },
+  "supported_field": "description selected from current independently supplied source-approved descriptions",
+  "protected_fields": ["price", "inventory", "currency", "certifications", "unapproved product facts", "checkout terms"],
+  "merchant_review": "A different current owner/reviewer must approve the exact command digest and source revision. Recheck current membership, authority revision, expiry, revocation, resource scope, execution stops and recovery inside source callback.",
+  "rollback": "A new proposal and independent approval; exact applied source revision must remain current or rollback reports conflict.",
+  "unknown_outcome": "Original native effect lookup only, never redispatch or new operation ID as repair.",
+  "privacy": "Canonical changes and approvals are customer/resource scoped. Minimize original effect identity and state; revoke approvals. Published merchant descriptions remain source-owned merchant data requiring review, not blind erasure rollback."
+}

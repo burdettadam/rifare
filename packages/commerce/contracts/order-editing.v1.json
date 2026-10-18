@@ -4,6 +4,15 @@
   "default_source": null,
   "authentication": "current tenant/store session; existing exact-preview reviewer approval",
   "write_action": "diagnostic.order.edit",
+  "addition_extension": {
+    "kind": "add",
+    "required_additional_fields": ["quantity", "warehouse_id"],
+    "line_id": null,
+    "address": null,
+    "window": "existing item window",
+    "confirmation": "exact authenticated customer upsell confirmation plus existing independent gateway approval",
+    "fulfillment": "one existing warehouse fulfillment; no separate order or checkout"
+  },
   "routes": {
     "POST /v1/order-edits/configure": [
       "expected_revision",

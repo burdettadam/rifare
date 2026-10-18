@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "qualification": "local_preparation_only",
+  "formal_connected_cases": "CASE-M09-G02-01 through CASE-M09-G02-03 remain unperformed",
+  "default_source": null,
+  "methods": {
+    "offer": ["offer_id", "case_id", "variant_id", "quantity", "warehouse_id"],
+    "confirm": ["offer_id", "quote_digest"],
+    "status": ["offer_id"]
+  },
+  "execution_owner": "Existing OrderEdits and ActionGateway",
+  "addition": "kind:add uses the existing item window and one existing qualified warehouse; deterministic added line, original order, original fulfillment rows and original invoice identity.",
+  "approval": "Explicit current authenticated customer confirmation binds exact quote, source order, item, quantity, terms and total. Existing independent merchant review is additionally required.",
+  "recheck": "Before every source add-line stage, recheck current scope, approver permissions, customer confirmation, execution controls and recovery; source transaction also checks original native consent and approved terms.",
+  "financial_and_physical_stages": "Native commit, unpaid invoice, settlement, warehouse acknowledgment, owned-hold release and shipment stay distinct.",
+  "unknown_outcome": "Existing original operation lookup; never create another order, invoice or fulfillment as repair.",
+  "privacy": "Offers and confirmations are customer scoped. Canonical erasure and restore revoke confirmations; native consent copies and original source customer records require separate operator cleanup."
+}

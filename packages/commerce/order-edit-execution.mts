@@ -1,4 +1,5 @@
 import { assertPreventionConfirmation } from './return-prevention-guards.mts';
+import { assertUpsellConfirmation } from './upsell-guards.mts';
 import { exact,id,integer,token } from './kernel.mts';
 import type { CommerceKernel,Scope,Row } from './kernel.mts';
 import { canonical,contentDigest,jsonValue } from './configuration-values.mts';
@@ -45,7 +46,7 @@ export class OrderEdits {
   if(qr.digest!==b.quote_digest||q.resource_id!==r.resource_id||ctx.c.resource_id!==r.resource_id||q.case_id!==r.case_id)throw new Error('EDIT_INTEGRITY');return {s,r,b,q,c:ctx.c};}
  #guard(scope:Scope,ctx:Row){const k=this.kernel,{s,r,q}=ctx;k.authorize(scope,'operation.dispatch',r.resource_id);
   const committed=k.db.prepare("SELECT 1 FROM commerce_edit_steps WHERE tenant_id=? AND store_id=? AND edit_id=? AND stage='commit' AND state='confirmed'").get(s.tenant_id,s.store_id,r.id);
-  assertPreventionConfirmation(k,s,r.quote_id,q,!!committed);assertRecoveryEgress(k);assertCaseWorkerScope(k,scope,r.case_id);assertExecution(k,s,EDIT_ACTION,q.control_stamp);
+  assertPreventionConfirmation(k,s,r.quote_id,q,!!committed);assertUpsellConfirmation(k,s,r.quote_id,q,!!committed);assertRecoveryEgress(k);assertCaseWorkerScope(k,scope,r.case_id);assertExecution(k,s,EDIT_ACTION,q.control_stamp);
   const settings=editSettings(k,s),source=this.#source(s,q.source_identity);if(settings.digest!==q.settings_digest||source.revision()!==q.source_revision)throw new Error('EDIT_READINESS_CHANGED');source.assertConnectorReadiness(q.warehouse_ids,settings.readiness.warehouses);const c=this.gateway.cases.resume(scope,r.case_id);if(c.configuration_digest!==q.configuration_digest)throw new Error('EDIT_CONFIGURATION_CHANGED');
   const receipt=k.db.prepare('SELECT * FROM commerce_action_receipts WHERE tenant_id=? AND store_id=? AND id=?').get(s.tenant_id,s.store_id,r.receipt_id) as Row,b=editBody(receipt),a=k.db.prepare('SELECT * FROM commerce_action_approvals WHERE tenant_id=? AND store_id=? AND id=?').get(s.tenant_id,s.store_id,b.approval_id) as Row;
   if(!a||a.revoked||a.uses!==1)throw new Error('EDIT_APPROVAL_CHANGED');const member=k.db.prepare('SELECT * FROM commerce_members WHERE tenant_id=? AND store_id=? AND actor_id=? AND active=1').get(s.tenant_id,s.store_id,a.approver) as Row,auth=member&&permissionDecision(k.db,member,'action.approve',r.resource_id);if(!auth?.allowed||auth.authority_revision!==a.authority_revision)throw new Error('APPROVAL_AUTHORITY_CHANGED');
@@ -76,7 +77,7 @@ export class OrderEdits {
    if(['begin','change','commit'].includes(stage)&&ctx.q.expires_at<=k.clock())throw new Error('EDIT_QUOTE_EXPIRED');
    command=this.#command(ctx,stage,extra);k.db.prepare("INSERT INTO commerce_edit_steps VALUES(?,?,?,?,?,?,'unknown',NULL,NULL,?)").run(s.tenant_id,s.store_id,r.id,stage,command.operation_id,contentDigest(command),k.clock());this.#setState(s,r,'unknown',{stage,operation_id:command.operation_id});});
   if(existing)return existing.state==='confirmed';
-  try{this.#guard(scope,ctx);const result=await bounded(()=>this.#source(s,r.source_identity).perform(command!),this.timeout);
+  try{this.#guard(scope,ctx);const result=await bounded(()=>this.#source(s,r.source_identity).perform(command!,ctx.q.action==='add'?()=>{this.#guard(scope,ctx);}:undefined),this.timeout);
    k.transaction(()=>{this.#guard(scope,ctx);this.#save(ctx,this.#step(s,r.id,stage)!,result);});return true;
   }catch(error){k.transaction(()=>{editEvent(k,s,r.id,'source_outcome_unknown',{stage,reason:'authoritative_lookup_required'});});return false;}
  }

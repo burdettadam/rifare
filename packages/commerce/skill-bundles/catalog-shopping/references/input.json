@@ -1,0 +1,9 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["resource_id", "variant_ids"],
+  "properties": {
+    "resource_id": {"type": "string"},
+    "variant_ids": {"type": "array", "items": {"type": "string"}}
+  }
+}

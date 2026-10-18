@@ -1,0 +1,68 @@
+{
+  "schema_version": 2,
+  "id": "catalog-shopping",
+  "version": "1.0.0",
+  "engine": {
+    "min": "1.0.0",
+    "max_exclusive": "2.0.0"
+  },
+  "required_actions": [
+    {
+      "name": "order.status",
+      "versions": {
+        "min": "1.0.0",
+        "max_exclusive": "2.0.0"
+      }
+    },
+    {
+      "name": "action.preview",
+      "versions": {
+        "min": "1.0.0",
+        "max_exclusive": "2.0.0"
+      }
+    },
+    {
+      "name": "action.approve",
+      "versions": {
+        "min": "1.0.0",
+        "max_exclusive": "2.0.0"
+      }
+    },
+    {
+      "name": "action.execute",
+      "versions": {
+        "min": "1.0.0",
+        "max_exclusive": "2.0.0"
+      }
+    }
+  ],
+  "resources": [
+    {
+      "path": "references/configuration.json",
+      "sha256": "2b5edcfb44ee0d4d3afe9fd02a38bee8642a520070782d3918ad37a775a664df"
+    },
+    {
+      "path": "references/input.json",
+      "sha256": "2676a57f65740042abec5a234e58f611956852cd5b5782c9301deb069174bb24"
+    },
+    {
+      "path": "references/output.json",
+      "sha256": "f09343dac5909aceca277b4b8b3b08854243af25982b9c8e498a103d3613a34e"
+    },
+    {
+      "path": "references/workflow.md",
+      "sha256": "c61c47d05d42df216a34baa5bf39da54505d5f8705b08c7d362ab5ec38d88eae"
+    }
+  ],
+  "input_schema": "references/input.json",
+  "output_schema": "references/output.json",
+  "configuration": {
+    "schema_resource": "references/configuration.json",
+    "fields": [
+      "presentation.tone",
+      "presentation.locale"
+    ]
+  },
+  "scripts": [],
+  "egress": []
+}

@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "qualification": "synthetic_only",
+  "default_source": null,
+  "source": "ShoppingCatalogFixtureSource over the existing OrderEditFixtureSource catalog/database",
+  "methods": {
+    "recommend": ["resource_id", "suggestions"],
+    "propose": ["cart_id", "resource_id", "items"],
+    "currentPreview": ["cart_id"],
+    "confirm": ["cart_id", "preview_digest"],
+    "readCart": ["cart_id"]
+  },
+  "suggestion_fields": ["variant_id", "unit_minor"],
+  "cart_item_fields": ["variant_id", "quantity"],
+  "authority": "Current scoped source reads; operator proposal; explicit current authenticated customer confirmation of the exact source-bound preview. Source callback rechecks current customer, scope, stops and recovery.",
+  "unknown_outcome": "Original operation lookup only; repeating confirm cannot resend an unknown cart commitment.",
+  "source_observations": "Native purchase is a separate fixture observation and is read synchronously for recovery. No purchase is inferred from cart commitment.",
+  "unsupported": ["checkout", "payment", "discount authority", "stock reservation", "connected production transport"],
+  "privacy": "All canonical carts are tenant/store/resource/customer scoped. Source carts and caller copies need explicit separate cleanup. Minimal original operation/native IDs survive canonical erasure without granting replay authority."
+}

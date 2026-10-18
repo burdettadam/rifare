@@ -1,0 +1,8 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "presentation.tone": {"type": "string"},
+    "presentation.locale": {"type": "string"}
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["resource_id", "proposal_digest", "explanation", "execution_authorized"],
+  "properties": {
+    "resource_id": {"type": "string"},
+    "proposal_digest": {"type": "string"},
+    "explanation": {"type": "string"},
+    "execution_authorized": {"type": "boolean", "enum": [false]}
+  }
+}
