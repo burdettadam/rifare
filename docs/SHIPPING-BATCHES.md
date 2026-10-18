@@ -70,6 +70,13 @@ packing allocations. An exact replay leaves membership, events and allocations
 unchanged. Pickup is not inferred from acceptance or acknowledgment. Outstanding
 packages remain visible when only part of a manifest has been accepted.
 
+If an earlier explicit packing observation already froze the same units, its
+observation ID and provenance remain unchanged. A later authentic carrier event
+is recorded separately after checking the original packing confirmation,
+allocation digest, parcel revision, source identity and label binding. Changed
+bindings still block the event; the carrier observation cannot silently replace
+a different package's packing history or apply the allocation effect twice.
+
 Once durable manifest membership exists, packing cancellation cannot release
 those allocations. Manifest withdrawal and repair that require new physical
 handling remain outside this bounded slice. A wrong or stale confirmation,

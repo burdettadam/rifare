@@ -208,6 +208,22 @@ test('M08-G05-EVENT-IDENTITY-AND-STAGE-INTEGRITY',()=>usingShipping(async f=>{
   assert.throws(()=>f.source.recordEvent({...event,event_id:'event-b',sequence:0}),/INVALID_INPUT/);
   const r=await f.manifests.observe(f.a.scope,'manifest-one');assert.equal(r.packages[0].picked_up,true);assert.equal(r.packages[0].carrier_accepted,false);
   assert.equal(f.db.prepare('SELECT count(*) AS n FROM commerce_shipping_manifest_events').get()!.n,1);
+  f.packing.observeShipment(f.a.scope,{session_id:'pack-a',observation_id:'packing-observation-original'});
+  const priorPacking=f.packing.read(f.a.scope,'pack-a');
+  assert.equal(priorPacking.shipment_observation.carrier_acceptance,false);
+  f.source.recordEvent({manifest_id:'manifest-one',package_id:'package-a',event_id:'carrier-observation-distinct',sequence:2,stage:'carrier_acceptance',at:f.now()});
+  const member=f.db.prepare('SELECT * FROM commerce_shipping_manifest_packages WHERE package_id=?').get('package-a') as Row;
+  const changed=JSON.parse(member.body);changed.command.packing_confirmation_id='different-confirmation';
+  f.db.prepare('UPDATE commerce_shipping_manifest_packages SET body=?,digest=? WHERE package_id=?').run(canonical(changed),contentDigest(changed),'package-a');
+  await assert.rejects(()=>f.manifests.observe(f.a.scope,'manifest-one'),/MANIFEST_PACKING_BINDING_CHANGED/);
+  assert.equal(f.manifests.read(f.a.scope,'manifest-one').packages[0].carrier_accepted,false);
+  f.db.prepare('UPDATE commerce_shipping_manifest_packages SET body=?,digest=? WHERE package_id=?').run(member.body,member.digest,'package-a');
+  const accepted=await f.manifests.observe(f.a.scope,'manifest-one');
+  assert.equal(accepted.packages[0].carrier_accepted,true);assert.equal(accepted.packages[0].acceptance_event_id,'carrier-observation-distinct');
+  assert.equal(f.packing.read(f.a.scope,'pack-a').revision,priorPacking.revision);
+  assert.deepEqual(f.packing.read(f.a.scope,'pack-a').shipment_observation,priorPacking.shipment_observation);
+  assert.equal(f.db.prepare('SELECT count(*) AS n FROM commerce_shipping_manifest_events').get()!.n,2);
+  await f.manifests.observe(f.a.scope,'manifest-one');assert.equal(f.packing.read(f.a.scope,'pack-a').revision,priorPacking.revision);
 }));
 test('M08-G05-TENANT-INPUT-AND-MEMBERSHIP-FENCES',()=>usingShipping(async f=>{
   await ready(f);await assert.rejects(()=>f.manifests.create(f.b.scope,manifestInput),/SOURCE_SCOPE_MISMATCH|NOT_FOUND/);

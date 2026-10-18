@@ -28,6 +28,8 @@ export class ShippingManifests {
     .run(canonical(b),contentDigest(b),b.tenant_id,b.store_id,b.package_id,b.manifest_id);}
   #current(scope:Scope,packageId:string){const k=this.#k,s=this.#scope(scope),packed=this.#packing.qualifiedPackage(scope,packageId),label=this.#labels.packageStatus(scope,packageId);
     if(!packed.qualified||packed.cancelled||packed.shipped||!packed.confirmation_id||packed.packed_count!==packed.expected_count)throw new Error('PACKING_UNQUALIFIED');
+    const packing=this.#packing.read(scope,packed.packing_session_id);
+    if(packing.source_identity!==label.quote_source_identity)throw new Error('PACKING_SOURCE_MISMATCH');
     if(label.resource_id!==packed.resource_id||!label.label_usable||!label.receipt||label.package_revision!==packed.package_revision||label.source_identity!==this.#source.identity)throw new Error('LABEL_UNQUALIFIED');
     if(!['owner','operator'].includes(s.role))throw new Error('WAREHOUSE_OPERATOR_REQUIRED');
     k.authorize(scope,'warehouse.receive',packed.resource_id);k.authorize(scope,'operation.dispatch',packed.resource_id);k.authorize(scope,'action.execute',packed.resource_id);
@@ -78,7 +80,17 @@ export class ShippingManifests {
     if(e.stage==='carrier_acceptance'&&!b.carrier_accepted){
       // The independently observed carrier event is retained below. The packing
       // observation freezes the same confirmed allocation; it is not its oracle.
-      this.#packing.observeShipment(scope,{session_id:b.packing_session_id,observation_id:e.event_id});
+      const packed=this.#packing.qualifiedPackage(scope,b.package_id),packing=this.#packing.read(scope,b.packing_session_id),label=this.#labels.packageStatus(scope,b.package_id);
+      if(!packed.qualified||packed.cancelled||packed.resource_id!==b.resource_id||packed.packing_session_id!==b.packing_session_id
+        ||packed.confirmation_id!==b.command.packing_confirmation_id||packed.allocation_digest!==b.command.packing_digest||packed.package_revision!==b.command.package_revision
+        ||packed.packed_count!==packed.expected_count||label.purchase_id!==b.command.purchase_id||label.receipt?.native_label_id!==b.command.native_label_id
+        ||packing.source_identity!==label.quote_source_identity||!label.parcel_current||!label.resource_current)throw new Error('MANIFEST_PACKING_BINDING_CHANGED');
+      if(packed.shipped){
+        // An earlier explicit packing observation can already have frozen these
+        // exact units. Preserve its ID and provenance; this distinct source event
+        // establishes carrier acceptance without another allocation effect.
+        if(!packing.shipment_observation||!packing.units.length||packing.units.some((u:Row)=>u.state!=='shipped'))throw new Error('MANIFEST_PACKING_BINDING_CHANGED');
+      }else this.#packing.observeShipment(scope,{session_id:b.packing_session_id,observation_id:e.event_id});
       b.carrier_accepted=true;b.shipped=true;b.acceptance_event_id=e.event_id;b.accepted_at=e.at;
     }
     if(e.stage==='exception')b.exception_event_ids.push(e.event_id);b.last_sequence=e.sequence;b.last_event_at=e.at;
