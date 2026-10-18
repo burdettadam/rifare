@@ -6,6 +6,7 @@ import { subjectHash } from './data-guards.mts';
 import { eraseGiftRecipient } from './gift-proof.mts';
 import { inventoryMovementCore,inventorySnapshotCore,inventoryRow,INVENTORY_FIELDS } from './location-inventory.mts';
 import { exportGrowthSubject,eraseGrowthSubject,revokeGrowthForRestore } from './growth-privacy.mts';
+import { exportExtendedServicesSubject,eraseExtendedServicesSubject,revokeExtendedServicesForRestore } from './extended-services-privacy.mts';
 
 const MAX_RECORDS=10000;
 const PACKING_TABLES=['commerce_packing_sessions','commerce_packing_allocations','commerce_packing_scans','commerce_packing_confirmations'];
@@ -34,13 +35,16 @@ function storageInventoryVersions(k:CommerceKernel) {
   const inventoryCurrent=[...shippingCurrent,...inventory.tables].sort((a:Row,b:Row)=>a.name.localeCompare(b.name));
   const growth=JSON.parse(readFileSync(new URL('./contracts/storage-growth-extension.v1.json',import.meta.url),'utf8'));
   if(growth.base_schema_digest!==inventory.schema_digest||contentDigest(inventoryCurrent.map((r:Row)=>({name:r.name,columns:r.columns})))!==inventory.schema_digest)throw new Error('STORAGE_INVENTORY_CHANGED');
-  const current=[...inventoryCurrent,...growth.tables].sort((a:Row,b:Row)=>a.name.localeCompare(b.name));
+  const growthCurrent=[...inventoryCurrent,...growth.tables].sort((a:Row,b:Row)=>a.name.localeCompare(b.name));
+  const extended=JSON.parse(readFileSync(new URL('./contracts/storage-extended-services-extension.v1.json',import.meta.url),'utf8'));
+  if(extended.base_schema_digest!==growth.schema_digest||contentDigest(growthCurrent.map((r:Row)=>({name:r.name,columns:r.columns})))!==growth.schema_digest)throw new Error('STORAGE_INVENTORY_CHANGED');
+  const current=[...growthCurrent,...extended.tables].sort((a:Row,b:Row)=>a.name.localeCompare(b.name));
   if(new Set(current.map((r:Row)=>r.name)).size!==current.length)throw new Error('STORAGE_INVENTORY_CHANGED');
   const actual=(k.db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name").all() as Row[])
     .map(r=>({name:r.name,columns:(k.db.prepare('PRAGMA table_info('+r.name+')').all() as Row[]).map(c=>c.name)}));
-  if(contentDigest(actual)!==growth.schema_digest||contentDigest(current.map((r:Row)=>({name:r.name,columns:r.columns})))!==growth.schema_digest||contentDigest(tables.map((r:Row)=>({name:r.name,columns:r.columns})))!==assistance.schema_digest)throw new Error('STORAGE_INVENTORY_CHANGED');
+  if(contentDigest(actual)!==extended.schema_digest||contentDigest(current.map((r:Row)=>({name:r.name,columns:r.columns})))!==extended.schema_digest||contentDigest(tables.map((r:Row)=>({name:r.name,columns:r.columns})))!==assistance.schema_digest)throw new Error('STORAGE_INVENTORY_CHANGED');
   const legacy={...declared,tables,schema_digest:assistance.schema_digest,base_schema_digest:declared.schema_digest};
-  return {legacy,current:{...declared,version:2,tables:current,schema_digest:growth.schema_digest,base_schema_digest:assistance.schema_digest}};
+  return {legacy,current:{...declared,version:2,tables:current,schema_digest:extended.schema_digest,base_schema_digest:assistance.schema_digest}};
 }
 // Preserve the established version-one projection and its immutable caller
 // expectations. Both views first validate the entire current database schema.
@@ -240,6 +244,7 @@ export function eraseSelected(k:CommerceKernel,s:Row,ids:string[],hash:string,at
   for(const customer of recipients){eraseGiftCaseData(k,s,giftCases.filter(r=>JSON.parse(r.body).recipient_customer_id===customer).map(r=>r.case_id),hash);eraseGiftRecipient(k,s,String(customer));}
   for(const resource of ids)k.db.prepare('INSERT OR IGNORE INTO commerce_privacy_resources VALUES(?,?,?,?,?)').run(t,st,resource,hash,at);
   eraseGrowthSubject(k,t,st,ids,hash);
+  eraseExtendedServicesSubject(k,t,st,ids,hash);
   if(ids.length) {
     const marks=where(ids),args=[t,st,...ids];
     eraseShippingAndPacking(k,s,ids);
@@ -322,7 +327,8 @@ export class PrivacyLifecycle {
       const shipping_records=Object.fromEntries(SHIPPING_TABLES.map(table=>[table,all(k,table,s.tenant_id,s.store_id).filter(subjectRecord)]));
       const warehouse_inventory_records=Object.fromEntries(WAREHOUSE_INVENTORY_TABLES.map(table=>[table,all(k,table,s.tenant_id,s.store_id).filter(subjectRecord)]));
       const growth_records=exportGrowthSubject(k,s.tenant_id,s.store_id,ids,customer,subjectHash(s.tenant_id,s.store_id,customer));
-      const result={growth_records,warehouse_inventory_records,packing_records,shipping_records,woocommerce_records,return_assistance_records,exchange_history_records,support_records,analytics_records,order_edit_records,gift_returns:gifts,schema_version:1,tenant_id:s.tenant_id,store_id:s.store_id,subject_ref:subjectHash(s.tenant_id,s.store_id,customer),
+      const extended_service_records=exportExtendedServicesSubject(k,s.tenant_id,s.store_id,ids,customer,subjectHash(s.tenant_id,s.store_id,customer));
+      const result={extended_service_records,growth_records,warehouse_inventory_records,packing_records,shipping_records,woocommerce_records,return_assistance_records,exchange_history_records,support_records,analytics_records,order_edit_records,gift_returns:gifts,schema_version:1,tenant_id:s.tenant_id,store_id:s.store_id,subject_ref:subjectHash(s.tenant_id,s.store_id,customer),
         resources:rs.map(r=>k.project(r)),attachments:all(k,'commerce_attachments',s.tenant_id,s.store_id).filter(subjectRecord).map(r=>({id:r.id,resource_id:r.resource_id,content:JSON.parse(r.content)})),
         knowledge:all(k,'commerce_knowledge',s.tenant_id,s.store_id).filter(subjectRecord),
         tasks,assistance:all(k,'commerce_assistance_receipts',s.tenant_id,s.store_id).filter(r=>tasks.some(t=>t.id===r.task_id)),
@@ -363,6 +369,7 @@ export class PrivacyLifecycle {
       const rs=all(k,'commerce_resources',s.tenant_id,s.store_id);const customers=[...new Set(rs.flatMap(r=>r.customer_id?[r.customer_id]:r.kind==='customer'?[r.external_id]:[]))];
       const results=customers.map(c=>this.erase(scope,c));
       revokeGrowthForRestore(k,s.tenant_id,s.store_id);
+      revokeExtendedServicesForRestore(k,s.tenant_id,s.store_id);
       k.db.prepare('UPDATE commerce_secrets SET revoked=1,envelope=? WHERE tenant_id=? AND store_id=?').run('{}',s.tenant_id,s.store_id);
       for(const [table,clause] of [['commerce_sessions','revoked=1'],['commerce_worker_grants','revoked=1'],['commerce_credential_slots','active=0'],['commerce_webhook_routes','enabled=0'],['commerce_execution_settings','enabled=0'],['commerce_action_readiness','revoked=1']])
         k.db.prepare(`UPDATE ${table} SET ${clause} WHERE tenant_id=? AND store_id=?`).run(s.tenant_id,s.store_id);
