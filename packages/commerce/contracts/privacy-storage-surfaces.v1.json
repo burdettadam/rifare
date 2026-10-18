@@ -239,7 +239,7 @@
     },
     {
       "path": "packages/adapters/procurement-inventory-source-guards.mts",
-      "sha256": "ea9a565c96274543bb26a867ce015532239893f3a9f32f48e173c6e473dae54f"
+      "sha256": "682774059f8e7d599e845d201ba3d1c135bf136ff60dc2c1a78a1ff35e703175"
     },
     {
       "path": "packages/adapters/procurement-source-guards.mts",

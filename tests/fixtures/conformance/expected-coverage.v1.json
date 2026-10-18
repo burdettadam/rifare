@@ -2495,37 +2495,37 @@
       "id": "CASE-M11-G08-01",
       "name": "CASE-M11-G08-01",
       "path": "tests/development/procurement-inventory.test.mts",
-      "sha256": "96cb53fc6c22e978049324630db44ba8d0414a774ed7ea1b73dcb25aad6f79a6"
+      "sha256": "5a444c8bf5822e689aefffdfb224fc87b3f39ff908915be9db8b6d74e6bfcd52"
     },
     {
       "id": "CASE-M11-G08-02",
       "name": "CASE-M11-G08-02",
       "path": "tests/development/procurement-inventory.test.mts",
-      "sha256": "96cb53fc6c22e978049324630db44ba8d0414a774ed7ea1b73dcb25aad6f79a6"
+      "sha256": "5a444c8bf5822e689aefffdfb224fc87b3f39ff908915be9db8b6d74e6bfcd52"
     },
     {
       "id": "CASE-M11-G08-03",
       "name": "CASE-M11-G08-03",
       "path": "tests/development/procurement-inventory.test.mts",
-      "sha256": "96cb53fc6c22e978049324630db44ba8d0414a774ed7ea1b73dcb25aad6f79a6"
+      "sha256": "5a444c8bf5822e689aefffdfb224fc87b3f39ff908915be9db8b6d74e6bfcd52"
     },
     {
       "id": "CASE-M11-G09-01",
       "name": "CASE-M11-G09-01",
       "path": "tests/development/procurement-inventory.test.mts",
-      "sha256": "96cb53fc6c22e978049324630db44ba8d0414a774ed7ea1b73dcb25aad6f79a6"
+      "sha256": "5a444c8bf5822e689aefffdfb224fc87b3f39ff908915be9db8b6d74e6bfcd52"
     },
     {
       "id": "CASE-M11-G09-02",
       "name": "CASE-M11-G09-02",
       "path": "tests/development/procurement-inventory.test.mts",
-      "sha256": "96cb53fc6c22e978049324630db44ba8d0414a774ed7ea1b73dcb25aad6f79a6"
+      "sha256": "5a444c8bf5822e689aefffdfb224fc87b3f39ff908915be9db8b6d74e6bfcd52"
     },
     {
       "id": "CASE-M11-G09-03",
       "name": "CASE-M11-G09-03",
       "path": "tests/development/procurement-inventory.test.mts",
-      "sha256": "96cb53fc6c22e978049324630db44ba8d0414a774ed7ea1b73dcb25aad6f79a6"
+      "sha256": "5a444c8bf5822e689aefffdfb224fc87b3f39ff908915be9db8b6d74e6bfcd52"
     },
     {
       "id": "M01-G04-01",
@@ -3257,43 +3257,43 @@
       "id": "M11-G07-PREP-01",
       "name": "M11-G07-PREP-01",
       "path": "tests/development/procurement-inventory.test.mts",
-      "sha256": "96cb53fc6c22e978049324630db44ba8d0414a774ed7ea1b73dcb25aad6f79a6"
+      "sha256": "5a444c8bf5822e689aefffdfb224fc87b3f39ff908915be9db8b6d74e6bfcd52"
     },
     {
       "id": "M11-G07-PREP-02",
       "name": "M11-G07-PREP-02",
       "path": "tests/development/procurement-inventory.test.mts",
-      "sha256": "96cb53fc6c22e978049324630db44ba8d0414a774ed7ea1b73dcb25aad6f79a6"
+      "sha256": "5a444c8bf5822e689aefffdfb224fc87b3f39ff908915be9db8b6d74e6bfcd52"
     },
     {
       "id": "M11-G07-PREP-03",
       "name": "M11-G07-PREP-03",
       "path": "tests/development/procurement-inventory.test.mts",
-      "sha256": "96cb53fc6c22e978049324630db44ba8d0414a774ed7ea1b73dcb25aad6f79a6"
+      "sha256": "5a444c8bf5822e689aefffdfb224fc87b3f39ff908915be9db8b6d74e6bfcd52"
     },
     {
       "id": "M11-G10-PREP-01",
       "name": "M11-G10-PREP-01",
       "path": "tests/development/procurement-inventory.test.mts",
-      "sha256": "96cb53fc6c22e978049324630db44ba8d0414a774ed7ea1b73dcb25aad6f79a6"
+      "sha256": "5a444c8bf5822e689aefffdfb224fc87b3f39ff908915be9db8b6d74e6bfcd52"
     },
     {
       "id": "M11-G10-PREP-02",
       "name": "M11-G10-PREP-02",
       "path": "tests/development/procurement-inventory.test.mts",
-      "sha256": "96cb53fc6c22e978049324630db44ba8d0414a774ed7ea1b73dcb25aad6f79a6"
+      "sha256": "5a444c8bf5822e689aefffdfb224fc87b3f39ff908915be9db8b6d74e6bfcd52"
     },
     {
       "id": "M11-G10-PREP-03",
       "name": "M11-G10-PREP-03",
       "path": "tests/development/procurement-inventory.test.mts",
-      "sha256": "96cb53fc6c22e978049324630db44ba8d0414a774ed7ea1b73dcb25aad6f79a6"
+      "sha256": "5a444c8bf5822e689aefffdfb224fc87b3f39ff908915be9db8b6d74e6bfcd52"
     },
     {
       "id": "M11-PORT-025-PURCHASE-PARTIAL-SCAN",
       "name": "M11-PORT-025-PURCHASE-PARTIAL-SCAN",
       "path": "tests/development/procurement-inventory.test.mts",
-      "sha256": "96cb53fc6c22e978049324630db44ba8d0414a774ed7ea1b73dcb25aad6f79a6"
+      "sha256": "5a444c8bf5822e689aefffdfb224fc87b3f39ff908915be9db8b6d74e6bfcd52"
     },
     {
       "id": "M11-PREP-INTEGRATION-01",
@@ -3311,19 +3311,19 @@
       "id": "M11-STOCK-CONSERVATION",
       "name": "M11-STOCK-CONSERVATION",
       "path": "tests/development/procurement-inventory.test.mts",
-      "sha256": "96cb53fc6c22e978049324630db44ba8d0414a774ed7ea1b73dcb25aad6f79a6"
+      "sha256": "5a444c8bf5822e689aefffdfb224fc87b3f39ff908915be9db8b6d74e6bfcd52"
     },
     {
       "id": "M11-STOCK-CURRENT-AUTHORITY",
       "name": "M11-STOCK-CURRENT-AUTHORITY",
       "path": "tests/development/procurement-inventory.test.mts",
-      "sha256": "96cb53fc6c22e978049324630db44ba8d0414a774ed7ea1b73dcb25aad6f79a6"
+      "sha256": "5a444c8bf5822e689aefffdfb224fc87b3f39ff908915be9db8b6d74e6bfcd52"
     },
     {
       "id": "M11-STOCK-SOURCE-INTEGRITY",
       "name": "M11-STOCK-SOURCE-INTEGRITY",
       "path": "tests/development/procurement-inventory.test.mts",
-      "sha256": "96cb53fc6c22e978049324630db44ba8d0414a774ed7ea1b73dcb25aad6f79a6"
+      "sha256": "5a444c8bf5822e689aefffdfb224fc87b3f39ff908915be9db8b6d74e6bfcd52"
     },
     {
       "id": "PORT-027",
