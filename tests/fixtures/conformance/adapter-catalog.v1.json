@@ -22,6 +22,7 @@
     "packages/adapters/claims-fixture-source.mts",
     "packages/adapters/claims-source-guards.mts",
     "packages/adapters/delivery-trial-source-guards.mts",
+    "packages/adapters/demand-fixture-source.mts",
     "packages/adapters/exchange-lineage-fixture-source.mts",
     "packages/adapters/exchange-lineage-source-guards.mts",
     "packages/adapters/exchange-money-fixture-source.mts",
@@ -33,6 +34,9 @@
     "packages/adapters/order-edit-fixture-source.mts",
     "packages/adapters/partner-fixture-source.mts",
     "packages/adapters/prevention-source-guards.mts",
+    "packages/adapters/procurement-fixture-source.mts",
+    "packages/adapters/procurement-inventory-source-guards.mts",
+    "packages/adapters/procurement-source-guards.mts",
     "packages/adapters/reliability/synthetic-journal.mts",
     "packages/adapters/resolution-fixture-source.mts",
     "packages/adapters/return-destination-fixture-source.mts",
@@ -57,11 +61,22 @@
     "packages/adapters/woocommerce/return-source.mts",
     "packages/agent/local-model.mts",
     "packages/agent/providers.mts",
+    "packages/commerce/bill-of-materials.mts",
     "packages/commerce/capabilities.mts",
     "packages/commerce/delivery-trial-core.mts",
     "packages/commerce/delivery-trials.mts",
+    "packages/commerce/demand-history.mts",
+    "packages/commerce/forecast-backtests.mts",
+    "packages/commerce/inventory-forecasts.mts",
     "packages/commerce/partner-readiness.mts",
-    "packages/commerce/simulator.mts"
+    "packages/commerce/procurement-approvals.mts",
+    "packages/commerce/procurement-inventory-core.mts",
+    "packages/commerce/production-orders.mts",
+    "packages/commerce/purchase-receiving.mts",
+    "packages/commerce/replenishment-planning.mts",
+    "packages/commerce/simulator.mts",
+    "packages/commerce/supplier-purchase-orders.mts",
+    "packages/commerce/supplier-returns.mts"
   ],
   "adapters": [
     {
@@ -3161,10 +3176,34 @@
       "source_files": [
         {
           "path": "packages/adapters/warehouse-inventory-fixture-source.mts",
-          "sha256": "b148bcd10662364cb9c7843fcd5083fecfad54f46795965af155bf01a104bc88"
+          "sha256": "35f01e673a33935f84756269186d2dfcbd81393b3f2944b2fb59987dc07ede08"
+        },
+        {
+          "path": "packages/adapters/procurement-inventory-source-guards.mts",
+          "sha256": "e66612f32f9f91d35c70c5d02e4f12841083fe459d63576c43aeae7b4c408dbe"
+        },
+        {
+          "path": "packages/commerce/procurement-inventory-core.mts",
+          "sha256": "03af5cd502672072dfbcda1985aa7fe93b7521a5018915792b64c244001e63b6"
+        },
+        {
+          "path": "packages/commerce/purchase-receiving.mts",
+          "sha256": "3185dc16321453ec28bce2c7ebf9f407ef1eb9fc96ae453e263895dbd2b6bdca"
+        },
+        {
+          "path": "packages/commerce/supplier-returns.mts",
+          "sha256": "dc911e658046fa79d567515375fcc38add62b301388c91f5daf6f3081c0baa60"
+        },
+        {
+          "path": "packages/commerce/bill-of-materials.mts",
+          "sha256": "54c7564c4db7cfbb81d4be1135867bd3dcb3f7c0ebdb45d7491e3f0891c458d0"
+        },
+        {
+          "path": "packages/commerce/production-orders.mts",
+          "sha256": "7b693c0fd0a136d5ede8f9acb76395b5066211a437128b80a7a3d67e8a7efb93"
         }
       ],
-      "version": "source-sha256:b148bcd10662364cb9c7843fcd5083fecfad54f46795965af155bf01a104bc88",
+      "version": "source-sha256:35f01e673a33935f84756269186d2dfcbd81393b3f2944b2fb59987dc07ede08",
       "api_version": "rifare-warehouse-inventory-fixture-v1",
       "external_version": null,
       "external_account": null,
@@ -3265,6 +3304,172 @@
               "name": "M08-G10-LOCAL-NAMED-STOCK-DIFFERENCE-FAULT-IS-DETECTED",
               "path": "tests/development/inventory-reconciliation.test.mts",
               "sha256": "19e75585494ab55005d3e31cd56d9360614bc709fa65babd64483a9778a90693"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "purchase.receipt.apply",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M11-G07-PREP-01",
+              "name": "M11-G07-PREP-01",
+              "path": "tests/development/procurement-inventory.test.mts",
+              "sha256": "96cb53fc6c22e978049324630db44ba8d0414a774ed7ea1b73dcb25aad6f79a6"
+            },
+            {
+              "id": "M11-G07-PREP-02",
+              "name": "M11-G07-PREP-02",
+              "path": "tests/development/procurement-inventory.test.mts",
+              "sha256": "96cb53fc6c22e978049324630db44ba8d0414a774ed7ea1b73dcb25aad6f79a6"
+            },
+            {
+              "id": "M11-G07-PREP-03",
+              "name": "M11-G07-PREP-03",
+              "path": "tests/development/procurement-inventory.test.mts",
+              "sha256": "96cb53fc6c22e978049324630db44ba8d0414a774ed7ea1b73dcb25aad6f79a6"
+            },
+            {
+              "id": "M11-PORT-025-PURCHASE-PARTIAL-SCAN",
+              "name": "M11-PORT-025-PURCHASE-PARTIAL-SCAN",
+              "path": "tests/development/procurement-inventory.test.mts",
+              "sha256": "96cb53fc6c22e978049324630db44ba8d0414a774ed7ea1b73dcb25aad6f79a6"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "supplier.return.apply",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M11-G08-01",
+              "name": "CASE-M11-G08-01",
+              "path": "tests/development/procurement-inventory.test.mts",
+              "sha256": "96cb53fc6c22e978049324630db44ba8d0414a774ed7ea1b73dcb25aad6f79a6"
+            },
+            {
+              "id": "CASE-M11-G08-03",
+              "name": "CASE-M11-G08-03",
+              "path": "tests/development/procurement-inventory.test.mts",
+              "sha256": "96cb53fc6c22e978049324630db44ba8d0414a774ed7ea1b73dcb25aad6f79a6"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "supplier.receipt.correct",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M11-G08-02",
+              "name": "CASE-M11-G08-02",
+              "path": "tests/development/procurement-inventory.test.mts",
+              "sha256": "96cb53fc6c22e978049324630db44ba8d0414a774ed7ea1b73dcb25aad6f79a6"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "bom.expand",
+          "semantics": "composed",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M11-G09-01",
+              "name": "CASE-M11-G09-01",
+              "path": "tests/development/procurement-inventory.test.mts",
+              "sha256": "96cb53fc6c22e978049324630db44ba8d0414a774ed7ea1b73dcb25aad6f79a6"
+            },
+            {
+              "id": "CASE-M11-G09-02",
+              "name": "CASE-M11-G09-02",
+              "path": "tests/development/procurement-inventory.test.mts",
+              "sha256": "96cb53fc6c22e978049324630db44ba8d0414a774ed7ea1b73dcb25aad6f79a6"
+            },
+            {
+              "id": "CASE-M11-G09-03",
+              "name": "CASE-M11-G09-03",
+              "path": "tests/development/procurement-inventory.test.mts",
+              "sha256": "96cb53fc6c22e978049324630db44ba8d0414a774ed7ea1b73dcb25aad6f79a6"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "production.apply",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M11-G10-PREP-01",
+              "name": "M11-G10-PREP-01",
+              "path": "tests/development/procurement-inventory.test.mts",
+              "sha256": "96cb53fc6c22e978049324630db44ba8d0414a774ed7ea1b73dcb25aad6f79a6"
+            },
+            {
+              "id": "M11-G10-PREP-02",
+              "name": "M11-G10-PREP-02",
+              "path": "tests/development/procurement-inventory.test.mts",
+              "sha256": "96cb53fc6c22e978049324630db44ba8d0414a774ed7ea1b73dcb25aad6f79a6"
+            },
+            {
+              "id": "M11-G10-PREP-03",
+              "name": "M11-G10-PREP-03",
+              "path": "tests/development/procurement-inventory.test.mts",
+              "sha256": "96cb53fc6c22e978049324630db44ba8d0414a774ed7ea1b73dcb25aad6f79a6"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "procurement.stock.lookup",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M11-STOCK-SOURCE-INTEGRITY",
+              "name": "M11-STOCK-SOURCE-INTEGRITY",
+              "path": "tests/development/procurement-inventory.test.mts",
+              "sha256": "96cb53fc6c22e978049324630db44ba8d0414a774ed7ea1b73dcb25aad6f79a6"
+            },
+            {
+              "id": "M11-STOCK-CONSERVATION",
+              "name": "M11-STOCK-CONSERVATION",
+              "path": "tests/development/procurement-inventory.test.mts",
+              "sha256": "96cb53fc6c22e978049324630db44ba8d0414a774ed7ea1b73dcb25aad6f79a6"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "procurement.stock.guard",
+          "semantics": "composed",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M11-STOCK-CURRENT-AUTHORITY",
+              "name": "M11-STOCK-CURRENT-AUTHORITY",
+              "path": "tests/development/procurement-inventory.test.mts",
+              "sha256": "96cb53fc6c22e978049324630db44ba8d0414a774ed7ea1b73dcb25aad6f79a6"
             }
           ],
           "direct_fixtures": []
@@ -3980,6 +4185,342 @@
           "direct_fixtures": []
         }
       ]
+    },
+    {
+      "id": "demand_fixture_source",
+      "kind": "diagnostic",
+      "source_files": [
+        {
+          "path": "packages/adapters/demand-fixture-source.mts",
+          "sha256": "53bdfc3eb9d96f343a934fec0417d1555d8acb8229026fbc1d7d3f79b19c4676"
+        },
+        {
+          "path": "packages/commerce/demand-history.mts",
+          "sha256": "43cffec2cdf14b22d75b558e3453b6e06e6ccc769d8619489b7b0e9b8f4425fe"
+        },
+        {
+          "path": "packages/commerce/forecast-backtests.mts",
+          "sha256": "8892d143570dbc3adbcb688f2751623610d20164aa9ea640bed4d7a506f29d7e"
+        },
+        {
+          "path": "packages/commerce/inventory-forecasts.mts",
+          "sha256": "8fc45176ef3e58125597de4a3b03e37d250c62b1eccf4df494a06f104b7a61e5"
+        }
+      ],
+      "version": "source-sha256:53bdfc3eb9d96f343a934fec0417d1555d8acb8229026fbc1d7d3f79b19c4676",
+      "api_version": "demand_fixture_v1",
+      "external_version": null,
+      "external_account": null,
+      "external_scopes_attested": false,
+      "source_oracle": "Separate synthetic immutable daily aggregate observation revisions bind event, availability and observed times. Frozen temporal cohorts and exact independent known answers assess declared local baselines and small methods; empirical residual envelopes do not establish statistical coverage or real forecasting performance. No customer facts or purchasing authority.",
+      "operations": [
+        {
+          "id": "demand.observe",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M11-G01-01",
+              "name": "CASE-M11-G01-01",
+              "path": "tests/development/demand-planning.test.mts",
+              "sha256": "a76e02c9172c7cc45d053d8ba83bd04a71782ea841acbb77f40e2a28ed473b5e"
+            },
+            {
+              "id": "CASE-M11-G01-02",
+              "name": "CASE-M11-G01-02",
+              "path": "tests/development/demand-planning.test.mts",
+              "sha256": "a76e02c9172c7cc45d053d8ba83bd04a71782ea841acbb77f40e2a28ed473b5e"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "demand.snapshot",
+          "semantics": "composed",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M11-G01-03",
+              "name": "CASE-M11-G01-03",
+              "path": "tests/development/demand-planning.test.mts",
+              "sha256": "a76e02c9172c7cc45d053d8ba83bd04a71782ea841acbb77f40e2a28ed473b5e"
+            },
+            {
+              "id": "PORT-030",
+              "name": "PORT-030",
+              "path": "tests/development/demand-planning.test.mts",
+              "sha256": "a76e02c9172c7cc45d053d8ba83bd04a71782ea841acbb77f40e2a28ed473b5e"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "forecast.backtest",
+          "semantics": "composed",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M11-G02-01",
+              "name": "CASE-M11-G02-01",
+              "path": "tests/development/demand-planning.test.mts",
+              "sha256": "a76e02c9172c7cc45d053d8ba83bd04a71782ea841acbb77f40e2a28ed473b5e"
+            },
+            {
+              "id": "CASE-M11-G02-02",
+              "name": "CASE-M11-G02-02",
+              "path": "tests/development/demand-planning.test.mts",
+              "sha256": "a76e02c9172c7cc45d053d8ba83bd04a71782ea841acbb77f40e2a28ed473b5e"
+            },
+            {
+              "id": "CASE-M11-G02-03",
+              "name": "CASE-M11-G02-03",
+              "path": "tests/development/demand-planning.test.mts",
+              "sha256": "a76e02c9172c7cc45d053d8ba83bd04a71782ea841acbb77f40e2a28ed473b5e"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "forecast.propose",
+          "semantics": "composed",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M11-G03-01",
+              "name": "CASE-M11-G03-01",
+              "path": "tests/development/demand-planning.test.mts",
+              "sha256": "a76e02c9172c7cc45d053d8ba83bd04a71782ea841acbb77f40e2a28ed473b5e"
+            },
+            {
+              "id": "CASE-M11-G03-02",
+              "name": "CASE-M11-G03-02",
+              "path": "tests/development/demand-planning.test.mts",
+              "sha256": "a76e02c9172c7cc45d053d8ba83bd04a71782ea841acbb77f40e2a28ed473b5e"
+            },
+            {
+              "id": "CASE-M11-G03-03",
+              "name": "CASE-M11-G03-03",
+              "path": "tests/development/demand-planning.test.mts",
+              "sha256": "a76e02c9172c7cc45d053d8ba83bd04a71782ea841acbb77f40e2a28ed473b5e"
+            },
+            {
+              "id": "M11-FORECAST-QUANTITY-01",
+              "name": "M11-FORECAST-QUANTITY-01",
+              "path": "tests/development/demand-planning.test.mts",
+              "sha256": "a76e02c9172c7cc45d053d8ba83bd04a71782ea841acbb77f40e2a28ed473b5e"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "forecast.review",
+          "semantics": "composed",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M11-FORECAST-AUTHORITY-01",
+              "name": "M11-FORECAST-AUTHORITY-01",
+              "path": "tests/development/demand-planning.test.mts",
+              "sha256": "a76e02c9172c7cc45d053d8ba83bd04a71782ea841acbb77f40e2a28ed473b5e"
+            }
+          ],
+          "direct_fixtures": []
+        }
+      ]
+    },
+    {
+      "id": "procurement_fixture_source",
+      "kind": "diagnostic",
+      "source_files": [
+        {
+          "path": "packages/adapters/procurement-fixture-source.mts",
+          "sha256": "a56448fe926a184225c9f47131726cdcb893b11fac6899843e797460ae5efc90"
+        },
+        {
+          "path": "packages/adapters/procurement-source-guards.mts",
+          "sha256": "631a0fcefac10765b535fa113c2ac4fec90667f427ab1596aca7edacf4ce13f3"
+        },
+        {
+          "path": "packages/commerce/supplier-purchase-orders.mts",
+          "sha256": "f908bbf38a5edb3b9df56e205d56869cc331810507d3ddf8c2c5104dd354e45c"
+        },
+        {
+          "path": "packages/commerce/procurement-approvals.mts",
+          "sha256": "21d94cd9d17ea4969d36e66c115282819eb233e28a287805b59f7a4a7608e69b"
+        },
+        {
+          "path": "packages/commerce/replenishment-planning.mts",
+          "sha256": "146a4f31a4d8b45f6c8be32495055581162609c70baa1fc50817d2e623daca30"
+        }
+      ],
+      "version": "source-sha256:a56448fe926a184225c9f47131726cdcb893b11fac6899843e797460ae5efc90",
+      "api_version": "procurement_fixture_v1",
+      "external_version": null,
+      "external_account": null,
+      "external_scopes_attested": false,
+      "source_oracle": "Separate synthetic supplier terms, purchase sends, acknowledgments and cancellation observations retain exact original IDs, versions, units and amounts. Canonical independent approvals and atomic reservations recheck current permissions, stops and terms at the final source boundary. Unknown sends retain the original obligation. Fixture stages establish no real contract, invoice, payment or physical delivery.",
+      "operations": [
+        {
+          "id": "replenishment.propose",
+          "semantics": "composed",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M11-G04-01",
+              "name": "M11-G04-01",
+              "path": "tests/development/procurement-planning.test.mts",
+              "sha256": "0fd30c518771dbbc7bf4f964ebd0aa847805cd6547a7f37dae6fa0c55cd37c01"
+            },
+            {
+              "id": "M11-G04-02",
+              "name": "M11-G04-02",
+              "path": "tests/development/procurement-planning.test.mts",
+              "sha256": "0fd30c518771dbbc7bf4f964ebd0aa847805cd6547a7f37dae6fa0c55cd37c01"
+            },
+            {
+              "id": "M11-G04-03",
+              "name": "M11-G04-03",
+              "path": "tests/development/procurement-planning.test.mts",
+              "sha256": "0fd30c518771dbbc7bf4f964ebd0aa847805cd6547a7f37dae6fa0c55cd37c01"
+            },
+            {
+              "id": "M11-PREP-INTEGRATION-01",
+              "name": "M11-PREP-INTEGRATION-01",
+              "path": "tests/development/procurement-planning.test.mts",
+              "sha256": "0fd30c518771dbbc7bf4f964ebd0aa847805cd6547a7f37dae6fa0c55cd37c01"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "supplier.terms",
+          "semantics": "composed",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M11-G05-01",
+              "name": "M11-G05-01",
+              "path": "tests/development/procurement-planning.test.mts",
+              "sha256": "0fd30c518771dbbc7bf4f964ebd0aa847805cd6547a7f37dae6fa0c55cd37c01"
+            },
+            {
+              "id": "M11-G05-02",
+              "name": "M11-G05-02",
+              "path": "tests/development/procurement-planning.test.mts",
+              "sha256": "0fd30c518771dbbc7bf4f964ebd0aa847805cd6547a7f37dae6fa0c55cd37c01"
+            },
+            {
+              "id": "M11-G05-03",
+              "name": "M11-G05-03",
+              "path": "tests/development/procurement-planning.test.mts",
+              "sha256": "0fd30c518771dbbc7bf4f964ebd0aa847805cd6547a7f37dae6fa0c55cd37c01"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "purchase.approve",
+          "semantics": "composed",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M11-G06-01",
+              "name": "M11-G06-01",
+              "path": "tests/development/procurement-planning.test.mts",
+              "sha256": "0fd30c518771dbbc7bf4f964ebd0aa847805cd6547a7f37dae6fa0c55cd37c01"
+            },
+            {
+              "id": "M11-G06-02",
+              "name": "M11-G06-02",
+              "path": "tests/development/procurement-planning.test.mts",
+              "sha256": "0fd30c518771dbbc7bf4f964ebd0aa847805cd6547a7f37dae6fa0c55cd37c01"
+            },
+            {
+              "id": "M11-G06-03",
+              "name": "M11-G06-03",
+              "path": "tests/development/procurement-planning.test.mts",
+              "sha256": "0fd30c518771dbbc7bf4f964ebd0aa847805cd6547a7f37dae6fa0c55cd37c01"
+            },
+            {
+              "id": "PORT-031-M11",
+              "name": "PORT-031-M11",
+              "path": "tests/development/procurement-planning.test.mts",
+              "sha256": "0fd30c518771dbbc7bf4f964ebd0aa847805cd6547a7f37dae6fa0c55cd37c01"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "purchase.send",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M11-G06-01",
+              "name": "M11-G06-01",
+              "path": "tests/development/procurement-planning.test.mts",
+              "sha256": "0fd30c518771dbbc7bf4f964ebd0aa847805cd6547a7f37dae6fa0c55cd37c01"
+            },
+            {
+              "id": "M11-PROCUREMENT-SOURCE-BOUNDARY",
+              "name": "M11-PROCUREMENT-SOURCE-BOUNDARY",
+              "path": "tests/development/procurement-planning.test.mts",
+              "sha256": "0fd30c518771dbbc7bf4f964ebd0aa847805cd6547a7f37dae6fa0c55cd37c01"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "purchase.lookup",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M11-G06-01",
+              "name": "M11-G06-01",
+              "path": "tests/development/procurement-planning.test.mts",
+              "sha256": "0fd30c518771dbbc7bf4f964ebd0aa847805cd6547a7f37dae6fa0c55cd37c01"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "purchase.cancel.observe",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M11-G04-02",
+              "name": "M11-G04-02",
+              "path": "tests/development/procurement-planning.test.mts",
+              "sha256": "0fd30c518771dbbc7bf4f964ebd0aa847805cd6547a7f37dae6fa0c55cd37c01"
+            }
+          ],
+          "direct_fixtures": []
+        }
+      ]
     }
   ],
   "fixture_administration": "Seed, injected faults, and source observation setters are fixture administration, not remote provider operations. Unnamed real gateway/carrier/warehouse/ERP adapters are unavailable.",
@@ -4370,7 +4911,7 @@
     },
     {
       "path": "packages/commerce/execution-stops.mts",
-      "sha256": "028f89ddf656375cd587ea22e8d3cb7f96613b1e13f6facdccb885f0cb5b263a"
+      "sha256": "ced98bf127d4ba380a0ec706baadff34e6f18128b5da9b4fa942b2795dae974e"
     },
     {
       "path": "packages/commerce/fulfillment-execution.mts",
@@ -4450,7 +4991,7 @@
     },
     {
       "path": "packages/commerce/privacy-lifecycle.mts",
-      "sha256": "92741026f662f5ef923a457ffa070c83eef1c76050c4ee4aad0f6aefbf92aa77"
+      "sha256": "15f2d9737e5fddd885778ba33a8b774a9059725b5b6f0e427846aea9df4502c5"
     },
     {
       "path": "packages/commerce/profile-editor.mts",
@@ -4586,7 +5127,7 @@
     },
     {
       "path": "packages/commerce/safe-recovery.mts",
-      "sha256": "adcc946ae783f5594d50e3c6ab518c768b2250e18db45ece56f8c4b6033a0df5"
+      "sha256": "d02c2638d2061e22c7729a5afe53e2522ec77819c513ab1f023e1c612fea1aee"
     },
     {
       "path": "packages/commerce/secrets.mts",
@@ -5018,7 +5559,7 @@
     },
     {
       "path": "tests/fixtures/conformance/expected-coverage.v1.json",
-      "sha256": "84e51d2d2bb5a8875b1917c7ad51bf5171c065c0643cd02477ef7c0ce5b4d80a"
+      "sha256": "9f4bd56d5b8bb86fb1294eae408c28020918c8a82f0980bca5b4742b0fe1f416"
     },
     {
       "path": "tests/fixtures/conformance/source-inputs.v1.json",
@@ -5198,7 +5739,7 @@
     },
     {
       "path": "packages/commerce/merchant-portability.mts",
-      "sha256": "f66a91580960c5d5277c948e64d34e3c4b929fe831d1e6707ca220e9007a30ca"
+      "sha256": "99ff12959d191db7a29dad4c231e76bae1dfcb970fad00ebe7542b6da72cadfd"
     },
     {
       "path": "packages/commerce/contracts/carrier-quotes.v1.json",
@@ -5258,7 +5799,7 @@
     },
     {
       "path": "packages/adapters/warehouse-inventory-fixture-source.mts",
-      "sha256": "b148bcd10662364cb9c7843fcd5083fecfad54f46795965af155bf01a104bc88"
+      "sha256": "35f01e673a33935f84756269186d2dfcbd81393b3f2944b2fb59987dc07ede08"
     },
     {
       "path": "packages/commerce/warehouse-return-events.mts",
@@ -5767,6 +6308,190 @@
     {
       "path": "tests/fixtures/extended-services/storage-baseline.v1.json",
       "sha256": "ca2e558213b2824d1f1bb090a27e9c4096a936abfee92509d56dbe9e6423a01e"
+    },
+    {
+      "path": "migrations/commerce/042_demand_planning.sql",
+      "sha256": "97027cfd4c1d1cd12a29777b0efcb886690c2dc8143bb760ee255ef7e8f37b4d"
+    },
+    {
+      "path": "migrations/commerce/043_procurement.sql",
+      "sha256": "5e17a4cada4214bc555231b4d11750371205aebe23f3bde10a0c69b0783294d8"
+    },
+    {
+      "path": "migrations/commerce/044_procurement_inventory.sql",
+      "sha256": "7222c8ecb2ba80064d2b8d5bc1ce8be89c6ec13cd9709298c7f38ee9dade7cd9"
+    },
+    {
+      "path": "packages/adapters/demand-fixture-source.mts",
+      "sha256": "53bdfc3eb9d96f343a934fec0417d1555d8acb8229026fbc1d7d3f79b19c4676"
+    },
+    {
+      "path": "packages/adapters/procurement-fixture-source.mts",
+      "sha256": "a56448fe926a184225c9f47131726cdcb893b11fac6899843e797460ae5efc90"
+    },
+    {
+      "path": "packages/adapters/procurement-inventory-source-guards.mts",
+      "sha256": "e66612f32f9f91d35c70c5d02e4f12841083fe459d63576c43aeae7b4c408dbe"
+    },
+    {
+      "path": "packages/adapters/procurement-source-guards.mts",
+      "sha256": "631a0fcefac10765b535fa113c2ac4fec90667f427ab1596aca7edacf4ce13f3"
+    },
+    {
+      "path": "packages/commerce/bill-of-materials.mts",
+      "sha256": "54c7564c4db7cfbb81d4be1135867bd3dcb3f7c0ebdb45d7491e3f0891c458d0"
+    },
+    {
+      "path": "packages/commerce/contracts/bill-of-materials.v1.json",
+      "sha256": "56542c772f43dabc25adefe985a724c98bf1afbc64515f5ba326ecf4265e2298"
+    },
+    {
+      "path": "packages/commerce/contracts/demand-history.v1.json",
+      "sha256": "3c5cf209addd64114bcc3d68fe73a1e53a52b42e854ee53b0bee112547d6d56c"
+    },
+    {
+      "path": "packages/commerce/contracts/forecast-backtests.v1.json",
+      "sha256": "0dbf83fb26cb5f914a8b669e2e0efd8d89b304658a76c40b2cb5b53f29962053"
+    },
+    {
+      "path": "packages/commerce/contracts/inventory-forecasts.v1.json",
+      "sha256": "247eeb6fb90dddb365864d3fb03765201cb63ebcd1dd4a568716e3bcef2c834f"
+    },
+    {
+      "path": "packages/commerce/contracts/procurement-approvals.v1.json",
+      "sha256": "0c83dfdfee17dc7f73d190cd3e713c44f783cdbdb333b7a991efa5e5dea05fda"
+    },
+    {
+      "path": "packages/commerce/contracts/production-orders.v1.json",
+      "sha256": "8fb340de29670e35b0bf3facd68f62074071e45d39c0b22b6d95d915c5a99f90"
+    },
+    {
+      "path": "packages/commerce/contracts/purchase-receiving.v1.json",
+      "sha256": "2d36860a869641f94e60f9fff17083c5f5575616bc26432b51c2a2291e17df1a"
+    },
+    {
+      "path": "packages/commerce/contracts/replenishment-planning.v1.json",
+      "sha256": "be5e82fa600869a87f7a8927957a09882a2fd1cc4c8ff422289339f8b12044e7"
+    },
+    {
+      "path": "packages/commerce/contracts/supplier-purchase-orders.v1.json",
+      "sha256": "3179fdf5fff072f143028b300256d20e3c45d25de687210ed9350e8911800869"
+    },
+    {
+      "path": "packages/commerce/contracts/supplier-returns.v1.json",
+      "sha256": "7fa1a9ffb5c5aa766b1866be75ea1b7540e681f11004d00c82729b7e00a9419c"
+    },
+    {
+      "path": "packages/commerce/demand-history.mts",
+      "sha256": "43cffec2cdf14b22d75b558e3453b6e06e6ccc769d8619489b7b0e9b8f4425fe"
+    },
+    {
+      "path": "packages/commerce/forecast-backtests.mts",
+      "sha256": "8892d143570dbc3adbcb688f2751623610d20164aa9ea640bed4d7a506f29d7e"
+    },
+    {
+      "path": "packages/commerce/forecast-core.mts",
+      "sha256": "c8d624cc8b7bbfdecab15f169329f77e4e961f8086d6a58fca7449537bb2ffe6"
+    },
+    {
+      "path": "packages/commerce/forecast-privacy.mts",
+      "sha256": "a38798e2af49d9c8b82a53f787fa80cb2bf85fd4c5eee68798425b262987263e"
+    },
+    {
+      "path": "packages/commerce/inventory-forecasts.mts",
+      "sha256": "8fc45176ef3e58125597de4a3b03e37d250c62b1eccf4df494a06f104b7a61e5"
+    },
+    {
+      "path": "packages/commerce/inventory-planning-privacy.mts",
+      "sha256": "322dbc1850f377205ef6aad3a24dddf1004fd4691533e6c11bb09a33b544272d"
+    },
+    {
+      "path": "packages/commerce/procurement-approvals.mts",
+      "sha256": "21d94cd9d17ea4969d36e66c115282819eb233e28a287805b59f7a4a7608e69b"
+    },
+    {
+      "path": "packages/commerce/procurement-core.mts",
+      "sha256": "82a659a9801da927f1daf567dcac80638926fca29421266cf06138ec2f524de2"
+    },
+    {
+      "path": "packages/commerce/procurement-inventory-core.mts",
+      "sha256": "03af5cd502672072dfbcda1985aa7fe93b7521a5018915792b64c244001e63b6"
+    },
+    {
+      "path": "packages/commerce/procurement-inventory-privacy.mts",
+      "sha256": "a685ad580e78255763b2d815d5eb3a7c1db6b85a836cc201f615def9ffb14df9"
+    },
+    {
+      "path": "packages/commerce/procurement-privacy.mts",
+      "sha256": "25b33f3a747e96d91c32380273149c7f9dabb73802b05432ff3a20f49a66c019"
+    },
+    {
+      "path": "packages/commerce/production-orders.mts",
+      "sha256": "7b693c0fd0a136d5ede8f9acb76395b5066211a437128b80a7a3d67e8a7efb93"
+    },
+    {
+      "path": "packages/commerce/purchase-receiving.mts",
+      "sha256": "3185dc16321453ec28bce2c7ebf9f407ef1eb9fc96ae453e263895dbd2b6bdca"
+    },
+    {
+      "path": "packages/commerce/replenishment-planning.mts",
+      "sha256": "146a4f31a4d8b45f6c8be32495055581162609c70baa1fc50817d2e623daca30"
+    },
+    {
+      "path": "packages/commerce/supplier-purchase-orders.mts",
+      "sha256": "f908bbf38a5edb3b9df56e205d56869cc331810507d3ddf8c2c5104dd354e45c"
+    },
+    {
+      "path": "packages/commerce/supplier-returns.mts",
+      "sha256": "dc911e658046fa79d567515375fcc38add62b301388c91f5daf6f3081c0baa60"
+    },
+    {
+      "path": "tests/development/demand-planning-helpers.mts",
+      "sha256": "437295c272daacea87392e1d21cec8df838a592f8659d5e66e696f2a2d476005"
+    },
+    {
+      "path": "tests/development/demand-planning.test.mts",
+      "sha256": "a76e02c9172c7cc45d053d8ba83bd04a71782ea841acbb77f40e2a28ed473b5e"
+    },
+    {
+      "path": "tests/development/inventory-planning-privacy-helpers.mts",
+      "sha256": "0b4ad2e70e279b9a5703d31f11ab870f7a29acfcb35f405cb85d811aed90a8ad"
+    },
+    {
+      "path": "tests/development/procurement-inventory-helpers.mts",
+      "sha256": "8451fc35b54898d735e7a8c89e21c13caf8193bb3ef0e09f75d3d369f4b74aa7"
+    },
+    {
+      "path": "tests/development/procurement-inventory.test.mts",
+      "sha256": "96cb53fc6c22e978049324630db44ba8d0414a774ed7ea1b73dcb25aad6f79a6"
+    },
+    {
+      "path": "tests/development/procurement-planning-helpers.mts",
+      "sha256": "25a73329470ac427e6ca80747deddaf278e252600290198b0f3dd6ed4b404f5b"
+    },
+    {
+      "path": "tests/development/procurement-planning.test.mts",
+      "sha256": "0fd30c518771dbbc7bf4f964ebd0aa847805cd6547a7f37dae6fa0c55cd37c01"
+    },
+    {
+      "path": "tests/fixtures/demand-planning/known-answer.v1.json",
+      "sha256": "7845f41e283b9a516215eb0ebb877b1de1de0d94f8a1c0380e077232d8d66b2e"
+    },
+    {
+      "path": "tests/fixtures/inventory-planning/storage-baseline.v1.json",
+      "sha256": "f3ffd99921566376719b171e5b2fc045a3aa6216abcf9d032ca75f93a7cce2b8"
+    },
+    {
+      "path": "tests/fixtures/procurement-inventory/independent-values.json",
+      "sha256": "1553f5b40bdc1231784d1156efa17ff6e9a6d4853dcef076ad6d5bacdd68000c"
+    },
+    {
+      "path": "tests/fixtures/procurement/known-answer.v1.json",
+      "sha256": "ca1de7b3f5dee3499d492694e8c733ad94f5b40f80d89cb4a6c6d8d93f4639be"
+    },
+    {
+      "path": "packages/commerce/contracts/storage-inventory-planning-extension.v1.json",
+      "sha256": "78fa6625ebab395d3f7e80840c04d0dc5f5abbc2bd768c94fb7e8b7a106ccb50"
     }
   ]
 }

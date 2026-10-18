@@ -1597,6 +1597,86 @@
       "contract_files": [
         "packages/commerce/contracts/trial-final-capture.v1.json"
       ]
+    },
+    {
+      "id": "FEATURE-M11-G01",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/demand-history.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M11-G02",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/forecast-backtests.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M11-G03",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/inventory-forecasts.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M11-G04",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/replenishment-planning.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M11-G05",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/supplier-purchase-orders.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M11-G06",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/procurement-approvals.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M11-G07-PREPARATION",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/purchase-receiving.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M11-G08",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/supplier-returns.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M11-G09",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/bill-of-materials.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M11-G10-PREPARATION",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/production-orders.v1.json"
+      ]
     }
   ],
   "tests": [
@@ -21850,6 +21930,286 @@
       "runner_case_id": "M10-G14-PREP-03",
       "source": "tests/development/trial-payments.test.mts",
       "capability_id": "FEATURE-M10-G14-PREPARATION"
+    },
+    {
+      "id": "runtime:CASE-M11-G01-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M11-G01-01",
+      "source": "tests/development/demand-planning.test.mts",
+      "capability_id": "FEATURE-M11-G01"
+    },
+    {
+      "id": "runtime:CASE-M11-G01-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M11-G01-02",
+      "source": "tests/development/demand-planning.test.mts",
+      "capability_id": "FEATURE-M11-G01"
+    },
+    {
+      "id": "runtime:CASE-M11-G01-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M11-G01-03",
+      "source": "tests/development/demand-planning.test.mts",
+      "capability_id": "FEATURE-M11-G01"
+    },
+    {
+      "id": "runtime:CASE-M11-G02-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M11-G02-01",
+      "source": "tests/development/demand-planning.test.mts",
+      "capability_id": "FEATURE-M11-G02"
+    },
+    {
+      "id": "runtime:CASE-M11-G02-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M11-G02-02",
+      "source": "tests/development/demand-planning.test.mts",
+      "capability_id": "FEATURE-M11-G02"
+    },
+    {
+      "id": "runtime:CASE-M11-G02-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M11-G02-03",
+      "source": "tests/development/demand-planning.test.mts",
+      "capability_id": "FEATURE-M11-G02"
+    },
+    {
+      "id": "runtime:CASE-M11-G03-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M11-G03-01",
+      "source": "tests/development/demand-planning.test.mts",
+      "capability_id": "FEATURE-M11-G03"
+    },
+    {
+      "id": "runtime:CASE-M11-G03-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M11-G03-02",
+      "source": "tests/development/demand-planning.test.mts",
+      "capability_id": "FEATURE-M11-G03"
+    },
+    {
+      "id": "runtime:CASE-M11-G03-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M11-G03-03",
+      "source": "tests/development/demand-planning.test.mts",
+      "capability_id": "FEATURE-M11-G03"
+    },
+    {
+      "id": "runtime:PORT-030",
+      "suite": "runtime",
+      "runner_case_id": "PORT-030",
+      "source": "tests/development/demand-planning.test.mts",
+      "capability_id": "FEATURE-M11-G01"
+    },
+    {
+      "id": "runtime:M11-FORECAST-QUANTITY-01",
+      "suite": "runtime",
+      "runner_case_id": "M11-FORECAST-QUANTITY-01",
+      "source": "tests/development/demand-planning.test.mts",
+      "capability_id": "FEATURE-M11-G03"
+    },
+    {
+      "id": "runtime:M11-FORECAST-AUTHORITY-01",
+      "suite": "runtime",
+      "runner_case_id": "M11-FORECAST-AUTHORITY-01",
+      "source": "tests/development/demand-planning.test.mts",
+      "capability_id": "FEATURE-M11-G03"
+    },
+    {
+      "id": "runtime:M11-PREP-INTEGRATION-01",
+      "suite": "runtime",
+      "runner_case_id": "M11-PREP-INTEGRATION-01",
+      "source": "tests/development/procurement-planning.test.mts",
+      "capability_id": "FEATURE-M11-G06"
+    },
+    {
+      "id": "runtime:M11-G04-01",
+      "suite": "runtime",
+      "runner_case_id": "M11-G04-01",
+      "source": "tests/development/procurement-planning.test.mts",
+      "capability_id": "FEATURE-M11-G04"
+    },
+    {
+      "id": "runtime:M11-G04-02",
+      "suite": "runtime",
+      "runner_case_id": "M11-G04-02",
+      "source": "tests/development/procurement-planning.test.mts",
+      "capability_id": "FEATURE-M11-G04"
+    },
+    {
+      "id": "runtime:M11-G04-03",
+      "suite": "runtime",
+      "runner_case_id": "M11-G04-03",
+      "source": "tests/development/procurement-planning.test.mts",
+      "capability_id": "FEATURE-M11-G04"
+    },
+    {
+      "id": "runtime:M11-G05-01",
+      "suite": "runtime",
+      "runner_case_id": "M11-G05-01",
+      "source": "tests/development/procurement-planning.test.mts",
+      "capability_id": "FEATURE-M11-G05"
+    },
+    {
+      "id": "runtime:M11-G05-02",
+      "suite": "runtime",
+      "runner_case_id": "M11-G05-02",
+      "source": "tests/development/procurement-planning.test.mts",
+      "capability_id": "FEATURE-M11-G05"
+    },
+    {
+      "id": "runtime:M11-G05-03",
+      "suite": "runtime",
+      "runner_case_id": "M11-G05-03",
+      "source": "tests/development/procurement-planning.test.mts",
+      "capability_id": "FEATURE-M11-G05"
+    },
+    {
+      "id": "runtime:M11-G06-01",
+      "suite": "runtime",
+      "runner_case_id": "M11-G06-01",
+      "source": "tests/development/procurement-planning.test.mts",
+      "capability_id": "FEATURE-M11-G06"
+    },
+    {
+      "id": "runtime:M11-G06-02",
+      "suite": "runtime",
+      "runner_case_id": "M11-G06-02",
+      "source": "tests/development/procurement-planning.test.mts",
+      "capability_id": "FEATURE-M11-G06"
+    },
+    {
+      "id": "runtime:M11-G06-03",
+      "suite": "runtime",
+      "runner_case_id": "M11-G06-03",
+      "source": "tests/development/procurement-planning.test.mts",
+      "capability_id": "FEATURE-M11-G06"
+    },
+    {
+      "id": "runtime:PORT-031-M11",
+      "suite": "runtime",
+      "runner_case_id": "PORT-031-M11",
+      "source": "tests/development/procurement-planning.test.mts",
+      "capability_id": "FEATURE-M11-G06"
+    },
+    {
+      "id": "runtime:M11-PROCUREMENT-SOURCE-BOUNDARY",
+      "suite": "runtime",
+      "runner_case_id": "M11-PROCUREMENT-SOURCE-BOUNDARY",
+      "source": "tests/development/procurement-planning.test.mts",
+      "capability_id": "FEATURE-M11-G06"
+    },
+    {
+      "id": "runtime:M11-G07-PREP-01",
+      "suite": "runtime",
+      "runner_case_id": "M11-G07-PREP-01",
+      "source": "tests/development/procurement-inventory.test.mts",
+      "capability_id": "FEATURE-M11-G07-PREPARATION"
+    },
+    {
+      "id": "runtime:M11-G07-PREP-02",
+      "suite": "runtime",
+      "runner_case_id": "M11-G07-PREP-02",
+      "source": "tests/development/procurement-inventory.test.mts",
+      "capability_id": "FEATURE-M11-G07-PREPARATION"
+    },
+    {
+      "id": "runtime:M11-G07-PREP-03",
+      "suite": "runtime",
+      "runner_case_id": "M11-G07-PREP-03",
+      "source": "tests/development/procurement-inventory.test.mts",
+      "capability_id": "FEATURE-M11-G07-PREPARATION"
+    },
+    {
+      "id": "runtime:CASE-M11-G08-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M11-G08-01",
+      "source": "tests/development/procurement-inventory.test.mts",
+      "capability_id": "FEATURE-M11-G08"
+    },
+    {
+      "id": "runtime:CASE-M11-G08-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M11-G08-02",
+      "source": "tests/development/procurement-inventory.test.mts",
+      "capability_id": "FEATURE-M11-G08"
+    },
+    {
+      "id": "runtime:CASE-M11-G08-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M11-G08-03",
+      "source": "tests/development/procurement-inventory.test.mts",
+      "capability_id": "FEATURE-M11-G08"
+    },
+    {
+      "id": "runtime:CASE-M11-G09-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M11-G09-01",
+      "source": "tests/development/procurement-inventory.test.mts",
+      "capability_id": "FEATURE-M11-G09"
+    },
+    {
+      "id": "runtime:CASE-M11-G09-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M11-G09-02",
+      "source": "tests/development/procurement-inventory.test.mts",
+      "capability_id": "FEATURE-M11-G09"
+    },
+    {
+      "id": "runtime:CASE-M11-G09-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M11-G09-03",
+      "source": "tests/development/procurement-inventory.test.mts",
+      "capability_id": "FEATURE-M11-G09"
+    },
+    {
+      "id": "runtime:M11-G10-PREP-01",
+      "suite": "runtime",
+      "runner_case_id": "M11-G10-PREP-01",
+      "source": "tests/development/procurement-inventory.test.mts",
+      "capability_id": "FEATURE-M11-G10-PREPARATION"
+    },
+    {
+      "id": "runtime:M11-G10-PREP-02",
+      "suite": "runtime",
+      "runner_case_id": "M11-G10-PREP-02",
+      "source": "tests/development/procurement-inventory.test.mts",
+      "capability_id": "FEATURE-M11-G10-PREPARATION"
+    },
+    {
+      "id": "runtime:M11-G10-PREP-03",
+      "suite": "runtime",
+      "runner_case_id": "M11-G10-PREP-03",
+      "source": "tests/development/procurement-inventory.test.mts",
+      "capability_id": "FEATURE-M11-G10-PREPARATION"
+    },
+    {
+      "id": "runtime:M11-PORT-025-PURCHASE-PARTIAL-SCAN",
+      "suite": "runtime",
+      "runner_case_id": "M11-PORT-025-PURCHASE-PARTIAL-SCAN",
+      "source": "tests/development/procurement-inventory.test.mts",
+      "capability_id": "FEATURE-M11-G07-PREPARATION"
+    },
+    {
+      "id": "runtime:M11-STOCK-CURRENT-AUTHORITY",
+      "suite": "runtime",
+      "runner_case_id": "M11-STOCK-CURRENT-AUTHORITY",
+      "source": "tests/development/procurement-inventory.test.mts",
+      "capability_id": "FEATURE-M11-G10-PREPARATION"
+    },
+    {
+      "id": "runtime:M11-STOCK-SOURCE-INTEGRITY",
+      "suite": "runtime",
+      "runner_case_id": "M11-STOCK-SOURCE-INTEGRITY",
+      "source": "tests/development/procurement-inventory.test.mts",
+      "capability_id": "FEATURE-M11-G07-PREPARATION"
+    },
+    {
+      "id": "runtime:M11-STOCK-CONSERVATION",
+      "suite": "runtime",
+      "runner_case_id": "M11-STOCK-CONSERVATION",
+      "source": "tests/development/procurement-inventory.test.mts",
+      "capability_id": "FEATURE-M11-G10-PREPARATION"
     }
   ],
   "protected_files": [

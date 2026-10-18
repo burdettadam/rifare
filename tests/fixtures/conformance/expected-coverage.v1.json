@@ -639,6 +639,34 @@
       "inventory.reconcile": {
         "semantics": "composed",
         "qualification": "sandbox-only"
+      },
+      "purchase.receipt.apply": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      },
+      "supplier.return.apply": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      },
+      "supplier.receipt.correct": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      },
+      "bom.expand": {
+        "semantics": "composed",
+        "qualification": "sandbox-only"
+      },
+      "production.apply": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      },
+      "procurement.stock.lookup": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      },
+      "procurement.stock.guard": {
+        "semantics": "composed",
+        "qualification": "sandbox-only"
       }
     },
     "shopping_catalog_source": {
@@ -778,6 +806,54 @@
         "semantics": "native",
         "qualification": "sandbox-only"
       }
+    },
+    "demand_fixture_source": {
+      "demand.observe": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      },
+      "demand.snapshot": {
+        "semantics": "composed",
+        "qualification": "sandbox-only"
+      },
+      "forecast.backtest": {
+        "semantics": "composed",
+        "qualification": "sandbox-only"
+      },
+      "forecast.propose": {
+        "semantics": "composed",
+        "qualification": "sandbox-only"
+      },
+      "forecast.review": {
+        "semantics": "composed",
+        "qualification": "sandbox-only"
+      }
+    },
+    "procurement_fixture_source": {
+      "replenishment.propose": {
+        "semantics": "composed",
+        "qualification": "sandbox-only"
+      },
+      "supplier.terms": {
+        "semantics": "composed",
+        "qualification": "sandbox-only"
+      },
+      "purchase.approve": {
+        "semantics": "composed",
+        "qualification": "sandbox-only"
+      },
+      "purchase.send": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      },
+      "purchase.lookup": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      },
+      "purchase.cancel.observe": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      }
     }
   },
   "declarations": [
@@ -785,6 +861,7 @@
     "packages/adapters/claims-fixture-source.mts",
     "packages/adapters/claims-source-guards.mts",
     "packages/adapters/delivery-trial-source-guards.mts",
+    "packages/adapters/demand-fixture-source.mts",
     "packages/adapters/exchange-lineage-fixture-source.mts",
     "packages/adapters/exchange-lineage-source-guards.mts",
     "packages/adapters/exchange-money-fixture-source.mts",
@@ -796,6 +873,9 @@
     "packages/adapters/order-edit-fixture-source.mts",
     "packages/adapters/partner-fixture-source.mts",
     "packages/adapters/prevention-source-guards.mts",
+    "packages/adapters/procurement-fixture-source.mts",
+    "packages/adapters/procurement-inventory-source-guards.mts",
+    "packages/adapters/procurement-source-guards.mts",
     "packages/adapters/reliability/synthetic-journal.mts",
     "packages/adapters/resolution-fixture-source.mts",
     "packages/adapters/return-destination-fixture-source.mts",
@@ -820,11 +900,22 @@
     "packages/adapters/woocommerce/return-source.mts",
     "packages/agent/local-model.mts",
     "packages/agent/providers.mts",
+    "packages/commerce/bill-of-materials.mts",
     "packages/commerce/capabilities.mts",
     "packages/commerce/delivery-trial-core.mts",
     "packages/commerce/delivery-trials.mts",
+    "packages/commerce/demand-history.mts",
+    "packages/commerce/forecast-backtests.mts",
+    "packages/commerce/inventory-forecasts.mts",
     "packages/commerce/partner-readiness.mts",
-    "packages/commerce/simulator.mts"
+    "packages/commerce/procurement-approvals.mts",
+    "packages/commerce/procurement-inventory-core.mts",
+    "packages/commerce/production-orders.mts",
+    "packages/commerce/purchase-receiving.mts",
+    "packages/commerce/replenishment-planning.mts",
+    "packages/commerce/simulator.mts",
+    "packages/commerce/supplier-purchase-orders.mts",
+    "packages/commerce/supplier-returns.mts"
   ],
   "adapter_contracts": {
     "simulator": {
@@ -1609,7 +1700,7 @@
       }
     },
     "warehouse_inventory_source": {
-      "version": "source-sha256:b148bcd10662364cb9c7843fcd5083fecfad54f46795965af155bf01a104bc88",
+      "version": "source-sha256:35f01e673a33935f84756269186d2dfcbd81393b3f2944b2fb59987dc07ede08",
       "api_version": "rifare-warehouse-inventory-fixture-v1",
       "operations": {
         "stock.snapshot": {
@@ -1629,6 +1720,34 @@
           "scope_kind": "server_local_fixture_only"
         },
         "inventory.reconcile": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "purchase.receipt.apply": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "supplier.return.apply": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "supplier.receipt.correct": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "bom.expand": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "production.apply": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "procurement.stock.lookup": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "procurement.stock.guard": {
           "required_scopes": [],
           "scope_kind": "server_local_fixture_only"
         }
@@ -1787,6 +1906,62 @@
           "scope_kind": "server_local_fixture_only"
         },
         "submission.lookup": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        }
+      }
+    },
+    "demand_fixture_source": {
+      "version": "source-sha256:53bdfc3eb9d96f343a934fec0417d1555d8acb8229026fbc1d7d3f79b19c4676",
+      "api_version": "demand_fixture_v1",
+      "operations": {
+        "demand.observe": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "demand.snapshot": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "forecast.backtest": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "forecast.propose": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "forecast.review": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        }
+      }
+    },
+    "procurement_fixture_source": {
+      "version": "source-sha256:a56448fe926a184225c9f47131726cdcb893b11fac6899843e797460ae5efc90",
+      "api_version": "procurement_fixture_v1",
+      "operations": {
+        "replenishment.propose": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "supplier.terms": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "purchase.approve": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "purchase.send": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "purchase.lookup": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "purchase.cancel.observe": {
           "required_scopes": [],
           "scope_kind": "server_local_fixture_only"
         }
@@ -2261,6 +2436,96 @@
       "name": "CASE-M10-G05-03",
       "path": "tests/development/claims-milestone.test.mts",
       "sha256": "4b25b8ca721306d1fa8dad08ad4a096427a4060b216f70ee520f8a3828ba81dc"
+    },
+    {
+      "id": "CASE-M11-G01-01",
+      "name": "CASE-M11-G01-01",
+      "path": "tests/development/demand-planning.test.mts",
+      "sha256": "a76e02c9172c7cc45d053d8ba83bd04a71782ea841acbb77f40e2a28ed473b5e"
+    },
+    {
+      "id": "CASE-M11-G01-02",
+      "name": "CASE-M11-G01-02",
+      "path": "tests/development/demand-planning.test.mts",
+      "sha256": "a76e02c9172c7cc45d053d8ba83bd04a71782ea841acbb77f40e2a28ed473b5e"
+    },
+    {
+      "id": "CASE-M11-G01-03",
+      "name": "CASE-M11-G01-03",
+      "path": "tests/development/demand-planning.test.mts",
+      "sha256": "a76e02c9172c7cc45d053d8ba83bd04a71782ea841acbb77f40e2a28ed473b5e"
+    },
+    {
+      "id": "CASE-M11-G02-01",
+      "name": "CASE-M11-G02-01",
+      "path": "tests/development/demand-planning.test.mts",
+      "sha256": "a76e02c9172c7cc45d053d8ba83bd04a71782ea841acbb77f40e2a28ed473b5e"
+    },
+    {
+      "id": "CASE-M11-G02-02",
+      "name": "CASE-M11-G02-02",
+      "path": "tests/development/demand-planning.test.mts",
+      "sha256": "a76e02c9172c7cc45d053d8ba83bd04a71782ea841acbb77f40e2a28ed473b5e"
+    },
+    {
+      "id": "CASE-M11-G02-03",
+      "name": "CASE-M11-G02-03",
+      "path": "tests/development/demand-planning.test.mts",
+      "sha256": "a76e02c9172c7cc45d053d8ba83bd04a71782ea841acbb77f40e2a28ed473b5e"
+    },
+    {
+      "id": "CASE-M11-G03-01",
+      "name": "CASE-M11-G03-01",
+      "path": "tests/development/demand-planning.test.mts",
+      "sha256": "a76e02c9172c7cc45d053d8ba83bd04a71782ea841acbb77f40e2a28ed473b5e"
+    },
+    {
+      "id": "CASE-M11-G03-02",
+      "name": "CASE-M11-G03-02",
+      "path": "tests/development/demand-planning.test.mts",
+      "sha256": "a76e02c9172c7cc45d053d8ba83bd04a71782ea841acbb77f40e2a28ed473b5e"
+    },
+    {
+      "id": "CASE-M11-G03-03",
+      "name": "CASE-M11-G03-03",
+      "path": "tests/development/demand-planning.test.mts",
+      "sha256": "a76e02c9172c7cc45d053d8ba83bd04a71782ea841acbb77f40e2a28ed473b5e"
+    },
+    {
+      "id": "CASE-M11-G08-01",
+      "name": "CASE-M11-G08-01",
+      "path": "tests/development/procurement-inventory.test.mts",
+      "sha256": "96cb53fc6c22e978049324630db44ba8d0414a774ed7ea1b73dcb25aad6f79a6"
+    },
+    {
+      "id": "CASE-M11-G08-02",
+      "name": "CASE-M11-G08-02",
+      "path": "tests/development/procurement-inventory.test.mts",
+      "sha256": "96cb53fc6c22e978049324630db44ba8d0414a774ed7ea1b73dcb25aad6f79a6"
+    },
+    {
+      "id": "CASE-M11-G08-03",
+      "name": "CASE-M11-G08-03",
+      "path": "tests/development/procurement-inventory.test.mts",
+      "sha256": "96cb53fc6c22e978049324630db44ba8d0414a774ed7ea1b73dcb25aad6f79a6"
+    },
+    {
+      "id": "CASE-M11-G09-01",
+      "name": "CASE-M11-G09-01",
+      "path": "tests/development/procurement-inventory.test.mts",
+      "sha256": "96cb53fc6c22e978049324630db44ba8d0414a774ed7ea1b73dcb25aad6f79a6"
+    },
+    {
+      "id": "CASE-M11-G09-02",
+      "name": "CASE-M11-G09-02",
+      "path": "tests/development/procurement-inventory.test.mts",
+      "sha256": "96cb53fc6c22e978049324630db44ba8d0414a774ed7ea1b73dcb25aad6f79a6"
+    },
+    {
+      "id": "CASE-M11-G09-03",
+      "name": "CASE-M11-G09-03",
+      "path": "tests/development/procurement-inventory.test.mts",
+      "sha256": "96cb53fc6c22e978049324630db44ba8d0414a774ed7ea1b73dcb25aad6f79a6"
     },
     {
       "id": "M01-G04-01",
@@ -2923,6 +3188,144 @@
       "sha256": "c00d30f07e824bf3ec09754ac3aba520f05f3f565af77acfeb01ef3cb49ff45d"
     },
     {
+      "id": "M11-FORECAST-AUTHORITY-01",
+      "name": "M11-FORECAST-AUTHORITY-01",
+      "path": "tests/development/demand-planning.test.mts",
+      "sha256": "a76e02c9172c7cc45d053d8ba83bd04a71782ea841acbb77f40e2a28ed473b5e"
+    },
+    {
+      "id": "M11-FORECAST-QUANTITY-01",
+      "name": "M11-FORECAST-QUANTITY-01",
+      "path": "tests/development/demand-planning.test.mts",
+      "sha256": "a76e02c9172c7cc45d053d8ba83bd04a71782ea841acbb77f40e2a28ed473b5e"
+    },
+    {
+      "id": "M11-G04-01",
+      "name": "M11-G04-01",
+      "path": "tests/development/procurement-planning.test.mts",
+      "sha256": "0fd30c518771dbbc7bf4f964ebd0aa847805cd6547a7f37dae6fa0c55cd37c01"
+    },
+    {
+      "id": "M11-G04-02",
+      "name": "M11-G04-02",
+      "path": "tests/development/procurement-planning.test.mts",
+      "sha256": "0fd30c518771dbbc7bf4f964ebd0aa847805cd6547a7f37dae6fa0c55cd37c01"
+    },
+    {
+      "id": "M11-G04-03",
+      "name": "M11-G04-03",
+      "path": "tests/development/procurement-planning.test.mts",
+      "sha256": "0fd30c518771dbbc7bf4f964ebd0aa847805cd6547a7f37dae6fa0c55cd37c01"
+    },
+    {
+      "id": "M11-G05-01",
+      "name": "M11-G05-01",
+      "path": "tests/development/procurement-planning.test.mts",
+      "sha256": "0fd30c518771dbbc7bf4f964ebd0aa847805cd6547a7f37dae6fa0c55cd37c01"
+    },
+    {
+      "id": "M11-G05-02",
+      "name": "M11-G05-02",
+      "path": "tests/development/procurement-planning.test.mts",
+      "sha256": "0fd30c518771dbbc7bf4f964ebd0aa847805cd6547a7f37dae6fa0c55cd37c01"
+    },
+    {
+      "id": "M11-G05-03",
+      "name": "M11-G05-03",
+      "path": "tests/development/procurement-planning.test.mts",
+      "sha256": "0fd30c518771dbbc7bf4f964ebd0aa847805cd6547a7f37dae6fa0c55cd37c01"
+    },
+    {
+      "id": "M11-G06-01",
+      "name": "M11-G06-01",
+      "path": "tests/development/procurement-planning.test.mts",
+      "sha256": "0fd30c518771dbbc7bf4f964ebd0aa847805cd6547a7f37dae6fa0c55cd37c01"
+    },
+    {
+      "id": "M11-G06-02",
+      "name": "M11-G06-02",
+      "path": "tests/development/procurement-planning.test.mts",
+      "sha256": "0fd30c518771dbbc7bf4f964ebd0aa847805cd6547a7f37dae6fa0c55cd37c01"
+    },
+    {
+      "id": "M11-G06-03",
+      "name": "M11-G06-03",
+      "path": "tests/development/procurement-planning.test.mts",
+      "sha256": "0fd30c518771dbbc7bf4f964ebd0aa847805cd6547a7f37dae6fa0c55cd37c01"
+    },
+    {
+      "id": "M11-G07-PREP-01",
+      "name": "M11-G07-PREP-01",
+      "path": "tests/development/procurement-inventory.test.mts",
+      "sha256": "96cb53fc6c22e978049324630db44ba8d0414a774ed7ea1b73dcb25aad6f79a6"
+    },
+    {
+      "id": "M11-G07-PREP-02",
+      "name": "M11-G07-PREP-02",
+      "path": "tests/development/procurement-inventory.test.mts",
+      "sha256": "96cb53fc6c22e978049324630db44ba8d0414a774ed7ea1b73dcb25aad6f79a6"
+    },
+    {
+      "id": "M11-G07-PREP-03",
+      "name": "M11-G07-PREP-03",
+      "path": "tests/development/procurement-inventory.test.mts",
+      "sha256": "96cb53fc6c22e978049324630db44ba8d0414a774ed7ea1b73dcb25aad6f79a6"
+    },
+    {
+      "id": "M11-G10-PREP-01",
+      "name": "M11-G10-PREP-01",
+      "path": "tests/development/procurement-inventory.test.mts",
+      "sha256": "96cb53fc6c22e978049324630db44ba8d0414a774ed7ea1b73dcb25aad6f79a6"
+    },
+    {
+      "id": "M11-G10-PREP-02",
+      "name": "M11-G10-PREP-02",
+      "path": "tests/development/procurement-inventory.test.mts",
+      "sha256": "96cb53fc6c22e978049324630db44ba8d0414a774ed7ea1b73dcb25aad6f79a6"
+    },
+    {
+      "id": "M11-G10-PREP-03",
+      "name": "M11-G10-PREP-03",
+      "path": "tests/development/procurement-inventory.test.mts",
+      "sha256": "96cb53fc6c22e978049324630db44ba8d0414a774ed7ea1b73dcb25aad6f79a6"
+    },
+    {
+      "id": "M11-PORT-025-PURCHASE-PARTIAL-SCAN",
+      "name": "M11-PORT-025-PURCHASE-PARTIAL-SCAN",
+      "path": "tests/development/procurement-inventory.test.mts",
+      "sha256": "96cb53fc6c22e978049324630db44ba8d0414a774ed7ea1b73dcb25aad6f79a6"
+    },
+    {
+      "id": "M11-PREP-INTEGRATION-01",
+      "name": "M11-PREP-INTEGRATION-01",
+      "path": "tests/development/procurement-planning.test.mts",
+      "sha256": "0fd30c518771dbbc7bf4f964ebd0aa847805cd6547a7f37dae6fa0c55cd37c01"
+    },
+    {
+      "id": "M11-PROCUREMENT-SOURCE-BOUNDARY",
+      "name": "M11-PROCUREMENT-SOURCE-BOUNDARY",
+      "path": "tests/development/procurement-planning.test.mts",
+      "sha256": "0fd30c518771dbbc7bf4f964ebd0aa847805cd6547a7f37dae6fa0c55cd37c01"
+    },
+    {
+      "id": "M11-STOCK-CONSERVATION",
+      "name": "M11-STOCK-CONSERVATION",
+      "path": "tests/development/procurement-inventory.test.mts",
+      "sha256": "96cb53fc6c22e978049324630db44ba8d0414a774ed7ea1b73dcb25aad6f79a6"
+    },
+    {
+      "id": "M11-STOCK-CURRENT-AUTHORITY",
+      "name": "M11-STOCK-CURRENT-AUTHORITY",
+      "path": "tests/development/procurement-inventory.test.mts",
+      "sha256": "96cb53fc6c22e978049324630db44ba8d0414a774ed7ea1b73dcb25aad6f79a6"
+    },
+    {
+      "id": "M11-STOCK-SOURCE-INTEGRITY",
+      "name": "M11-STOCK-SOURCE-INTEGRITY",
+      "path": "tests/development/procurement-inventory.test.mts",
+      "sha256": "96cb53fc6c22e978049324630db44ba8d0414a774ed7ea1b73dcb25aad6f79a6"
+    },
+    {
       "id": "PORT-027",
       "name": "PORT-027",
       "path": "tests/development/growth-marketing.test.mts",
@@ -2933,6 +3336,18 @@
       "name": "PORT-029",
       "path": "tests/development/claims-milestone.test.mts",
       "sha256": "4b25b8ca721306d1fa8dad08ad4a096427a4060b216f70ee520f8a3828ba81dc"
+    },
+    {
+      "id": "PORT-030",
+      "name": "PORT-030",
+      "path": "tests/development/demand-planning.test.mts",
+      "sha256": "a76e02c9172c7cc45d053d8ba83bd04a71782ea841acbb77f40e2a28ed473b5e"
+    },
+    {
+      "id": "PORT-031-M11",
+      "name": "PORT-031-M11",
+      "path": "tests/development/procurement-planning.test.mts",
+      "sha256": "0fd30c518771dbbc7bf4f964ebd0aa847805cd6547a7f37dae6fa0c55cd37c01"
     },
     {
       "id": "TEST-034",

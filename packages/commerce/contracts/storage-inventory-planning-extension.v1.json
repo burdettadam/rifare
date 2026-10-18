@@ -1,0 +1,291 @@
+{
+  "version": 1,
+  "base_schema_digest": "c9f4dc24870896ae5459ee03f0afc648651cf4c8dc7180a0645ca2b9cf4e3307",
+  "schema_digest": "2fbc8a0e548b1366becce7ed8eec0be2a3d80dff3ee40558a1f221737993cbfa",
+  "tables": [
+    {
+      "name": "commerce_bom_versions",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "resource_id",
+        "id",
+        "version",
+        "body",
+        "digest"
+      ],
+      "handling": "merchant_catalog_m11_allowlisted_versioned_business_configuration"
+    },
+    {
+      "name": "commerce_demand_observations",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "resource_id",
+        "source_identity",
+        "observation_id",
+        "revision",
+        "body",
+        "digest"
+      ],
+      "handling": "merchant_catalog_m11_allowlisted_original_source_observations"
+    },
+    {
+      "name": "commerce_demand_snapshots",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "body",
+        "digest"
+      ],
+      "handling": "merchant_aggregate_m11_allowlisted_frozen_quantitative_history"
+    },
+    {
+      "name": "commerce_forecast_backtests",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "state",
+        "body",
+        "digest"
+      ],
+      "handling": "merchant_aggregate_m11_allowlisted_frozen_quantitative_history"
+    },
+    {
+      "name": "commerce_forecast_reviews",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "resource_id",
+        "forecast_id",
+        "state",
+        "body",
+        "digest"
+      ],
+      "handling": "merchant_catalog_m11_revocable_independent_authority"
+    },
+    {
+      "name": "commerce_inventory_forecasts",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "resource_id",
+        "state",
+        "body",
+        "digest"
+      ],
+      "handling": "merchant_aggregate_m11_allowlisted_frozen_quantitative_history"
+    },
+    {
+      "name": "commerce_material_items",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "resource_id",
+        "id",
+        "version",
+        "body",
+        "digest"
+      ],
+      "handling": "merchant_catalog_m11_allowlisted_versioned_business_configuration"
+    },
+    {
+      "name": "commerce_procurement_approvals",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "resource_id",
+        "po_id",
+        "po_version",
+        "state",
+        "body",
+        "digest"
+      ],
+      "handling": "merchant_catalog_m11_revocable_independent_authority"
+    },
+    {
+      "name": "commerce_procurement_budgets",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "resource_id",
+        "state",
+        "body",
+        "digest"
+      ],
+      "handling": "merchant_catalog_m11_allowlisted_versioned_business_configuration"
+    },
+    {
+      "name": "commerce_procurement_reservations",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "resource_id",
+        "budget_id",
+        "po_id",
+        "po_version",
+        "state",
+        "amount_minor",
+        "currency_code",
+        "body",
+        "digest"
+      ],
+      "handling": "merchant_catalog_m11_original_quantitative_obligation_and_uncertain_effect_audit"
+    },
+    {
+      "name": "commerce_procurement_sends",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "resource_id",
+        "po_id",
+        "po_version",
+        "state",
+        "body",
+        "digest"
+      ],
+      "handling": "merchant_catalog_m11_original_quantitative_obligation_and_uncertain_effect_audit"
+    },
+    {
+      "name": "commerce_procurement_suppliers",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "resource_id",
+        "state",
+        "body",
+        "digest"
+      ],
+      "handling": "merchant_catalog_m11_allowlisted_versioned_business_configuration"
+    },
+    {
+      "name": "commerce_production_orders",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "resource_id",
+        "id",
+        "source_identity",
+        "state",
+        "body",
+        "digest"
+      ],
+      "handling": "merchant_catalog_m11_allowlisted_business_record"
+    },
+    {
+      "name": "commerce_purchase_order_versions",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "resource_id",
+        "po_id",
+        "version",
+        "state",
+        "body",
+        "digest"
+      ],
+      "handling": "merchant_catalog_m11_original_quantitative_obligation_and_uncertain_effect_audit"
+    },
+    {
+      "name": "commerce_purchase_orders",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "resource_id",
+        "current_version",
+        "state",
+        "body",
+        "digest"
+      ],
+      "handling": "merchant_catalog_m11_allowlisted_business_record"
+    },
+    {
+      "name": "commerce_purchase_receipts",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "resource_id",
+        "receipt_id",
+        "po_id",
+        "po_version",
+        "operation_id",
+        "source_identity",
+        "body",
+        "digest"
+      ],
+      "handling": "merchant_catalog_m11_allowlisted_original_source_observations"
+    },
+    {
+      "name": "commerce_replenishment_drafts",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "resource_id",
+        "state",
+        "body",
+        "digest"
+      ],
+      "handling": "merchant_catalog_m11_allowlisted_business_record"
+    },
+    {
+      "name": "commerce_stock_approvals",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "resource_id",
+        "id",
+        "reference_id",
+        "kind",
+        "state",
+        "body",
+        "digest"
+      ],
+      "handling": "merchant_catalog_m11_revocable_independent_authority"
+    },
+    {
+      "name": "commerce_stock_operations",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "resource_id",
+        "operation_id",
+        "source_identity",
+        "business_key",
+        "kind",
+        "state",
+        "body",
+        "digest"
+      ],
+      "handling": "merchant_catalog_m11_original_quantitative_obligation_and_uncertain_effect_audit"
+    },
+    {
+      "name": "commerce_supplier_receipt_events",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "resource_id",
+        "event_id",
+        "receipt_id",
+        "operation_id",
+        "source_identity",
+        "kind",
+        "body",
+        "digest"
+      ],
+      "handling": "merchant_catalog_m11_original_quantitative_obligation_and_uncertain_effect_audit"
+    }
+  ]
+}
