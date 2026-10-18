@@ -147,6 +147,20 @@ test('M11-G05-02',async()=>{
   f.receipts.approve(f.reviewer,receipt.operation_id,{expected_digest:receipt.command_digest,expires_at:f.now()+60000});
   assert.equal((await f.receipts.dispatch(f.a.scope,receipt.operation_id)).state,'applied');
   const line=f.receipts.summary(f.a.scope,ref).lines[0];assert.equal(line.received,1000000);assert.equal(line.outstanding,999000000);assert.equal(f.balance().on_hand,1000010);
+  const receiveCases=async(po:any,quantity:number,receipt_id:string)=>{
+   f.receipts.facts.recordReceipt({receipt_id,po_id:po.id,version:po.version,po_digest:po.digest,lines:[{line_id:'line-a',quantity,unit:'case'}],observed_at:f.now(),evidence_ref:receipt_id+'-evidence'});
+   const op=f.receipts.propose(f.a.scope,{po_id:po.id,version:po.version,expected_digest:po.digest,receipt_id,operation_id:receipt_id+'-operation'});
+   f.receipts.approve(f.reviewer,op.operation_id,{expected_digest:op.command_digest,expires_at:f.now()+60000});
+   assert.equal((await f.receipts.dispatch(f.a.scope,op.operation_id)).state,'applied');
+  };
+  await receiveCases(maximum,999,'maximum-remainder');
+  assert.equal(f.receipts.summary(f.a.scope,ref).lines[0].outstanding,0);assert.equal(f.balance().on_hand,1000000010);
+  // Stock accumulated across valid effects retains the original ledger's
+  // safe-integer domain; a following bounded command must remain usable.
+  const next=f.orders.draft(f.a.scope,input('following-bounded-order',1)),nextRef={po_id:next.id,version:next.version,expected_digest:next.digest};f.approve(next);
+  assert.equal((await f.approvals.send(f.a.scope,{...nextRef,operation_id:'following-bounded-send'})).state,'sent');
+  f.supplierSource.acknowledge('following-bounded-send',{event_id:'following-bounded-ack'});await f.approvals.reconcile(f.a.scope,nextRef);
+  await receiveCases(next,1,'following-bounded-receipt');assert.equal(f.balance().on_hand,1001000010);
 
   // Model a validly hashed historical draft from the earlier, wider domain.
   // Its actual current review must still reach a source that rejects the size.
@@ -159,7 +173,7 @@ test('M11-G05-02',async()=>{
   f.supplierSource.send=async command=>{try{return await send(command);}catch(error){sourceError=(error as Error).message;throw error;}};
   const blocked=await f.approvals.send(f.a.scope,{...historicalRef,operation_id:'historical-wide-domain-send'});
   assert.equal(sourceError,'PROCUREMENT_QUANTITY_LIMIT');assert.equal(blocked.state,'unknown');assert.equal(blocked.operation_id,'historical-wide-domain-send');
-  assert.equal(nativeSendCount(f),1);assert.equal(f.approvals.budget(f.owner,'procurement-budget').obligated_minor,'2001');assert.equal(f.balance().on_hand,1000010);
+  assert.equal(nativeSendCount(f),2);assert.equal(f.approvals.budget(f.owner,'procurement-budget').obligated_minor,'2002');assert.equal(f.balance().on_hand,1001000010);
  });
 });
 
