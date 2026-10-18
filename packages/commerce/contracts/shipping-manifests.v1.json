@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "contract": "rifare-outbound-manifests-v1",
+  "qualification": "synthetic_only",
+  "formal_goal_accepted": false,
+  "physical_qualified": false,
+  "carrier_connected": false,
+  "eligibility": "Query current PackingSessions.qualifiedPackage and ShippingBatchLabels.packageStatus directly; verify shared resource/package revision, immutable packing confirmation and allocation digest, usable native label and current parcel/resource bindings.",
+  "membership": "One tenant/store/package belongs to at most one durable manifest; all packages use one carrier account. Membership is sorted, bounded to 32, digested and fixed before source dispatch.",
+  "states": ["unknown acknowledgment", "manifest acknowledged", "pickup observed", "carrier acceptance observed", "per-package exception"],
+  "acknowledgment": "A manifest receipt never sets pickup, shipped or carrier acceptance. Same source identity and original manifest ID are used to repair uncertain acknowledgment.",
+  "acceptance": "A source-bound per-package carrier_acceptance event is required for shipped. The same event freezes existing packing allocations. Pickup is separately recorded and does not imply acceptance.",
+  "event_identity": "Stable source event ID and monotonically increasing per-package sequence; exact replays are idempotent, changed bodies or reused sequences fail.",
+  "authority": "Current owner/operator with warehouse.receive, action.execute and operation.dispatch for creation; operation.reconcile and event.process for observation; manifest creation shares the outbound label execution stop and recovery egress fence.",
+  "durable_tables": ["commerce_shipping_manifest_packages", "commerce_shipping_manifest_events"],
+  "privacy": "Per-resource membership/event bodies only. Whole membership appears as a digest rather than a shared body that exposes other customers. Existing manifest membership prevents allocation cancellation even when acknowledgment is unknown.",
+  "limits": ["No live manifest endpoint", "No pickup scheduling", "No manifest withdrawal or uncertain-membership cancellation", "No physical-world qualification", "No full milestone acceptance"]
+}

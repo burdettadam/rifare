@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "contract": "rifare-outbound-batch-labels-v1",
+  "qualification": "synthetic_only",
+  "formal_goal_accepted": false,
+  "carrier_connected": false,
+  "financial_effect": false,
+  "purchase_identity": "One durable tenant/store/package purchase_id before any source call; a new request key, whole batch retry, null lookup or service reconstruction never permits another purchase.",
+  "authorization": "Current kernel action.propose, distinct owner/reviewer action.approve, action.execute and operation.dispatch; current source/resource/quote/account/rate bindings and diagnostic.label.purchase execution stops; recovery egress interlock.",
+  "quote_authority": "New purchases require the currently held CarrierQuotes instance to revalidate the original sealed G01 snapshot. Stored commands and old HMACs only identify already sent effects after restart.",
+  "approval": "Per-package immutable command digest, approver identity and current authority revision, bounded expiry, one consumed use and explicit revocation. Separate reviewed void command.",
+  "purchase_states": ["proposed", "unknown", "purchased"],
+  "void_states": ["not_requested", "unknown", "requested", "confirmed", "rejected"],
+  "refund_states": ["not_requested", "pending", "refunded", "rejected"],
+  "money": "Canonical unsigned decimal minor-unit strings, supported currencies and exact BigInt sums grouped by currency; confirmed native refund reference and original amount required for refunded.",
+  "durable_tables": ["commerce_shipping_label_operations", "commerce_shipping_label_approvals"],
+  "privacy": "Each row has one tenant/store/resource/package. No session token or token hash is retained. Erasure keeps minimal original identity and financial audit while scrubbing private references and making replay impossible.",
+  "external_obligations": ["Authorized carrier test account", "Approved API/version/scopes and spending budget", "Connected purchase and refund records", "Formal prerequisite acceptance"],
+  "limits": ["No live transport", "No relabelling an already purchased package", "No retrying an unobserved effect", "No automatic settlement claim", "No outbound HTTP route or background worker"]
+}

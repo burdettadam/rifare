@@ -167,7 +167,7 @@ test('CASE-M08-G05-03',()=>usingShipping(async f=>{
   assert.equal(f.db.prepare('SELECT count(*) AS n FROM commerce_shipping_manifest_events').get()!.n,1);assert.equal(f.source.ledger().manifests.length,1);
 }));
 test('M08-G05-CURRENT-PACKING-AND-LABEL-QUALIFICATION',()=>usingShipping(async f=>{
-  await f.labels.purchase(f.a.scope,f.approved());await assert.rejects(()=>f.manifests.create(f.a.scope,manifestInput),/PACKING_UNQUALIFIED|NOT_FOUND/);
+  await f.labels.purchase(f.a.scope,f.approved());await assert.rejects(()=>f.manifests.create(f.a.scope,manifestInput),/PACKING_UNQUALIFIED|PACKING_SESSION_NOT_FOUND/);
   f.packed();const status=f.labels.packageStatus(f.a.scope,'package-a');
   f.labels.approveVoid(f.reviewer,'package-a',{expected_receipt_digest:contentDigest(status.receipt),expires_at:f.now()+60000});await f.labels.requestVoid(f.a.scope,'package-a');
   await assert.rejects(()=>f.manifests.create(f.a.scope,manifestInput),/LABEL_UNQUALIFIED/);assert.equal(f.source.ledger().manifests.length,0);
@@ -176,6 +176,7 @@ test('M08-G05-CURRENT-PACKING-AND-LABEL-QUALIFICATION',()=>usingShipping(async f
 test('M08-G05-UNKNOWN-MANIFEST-USES-ORIGINAL-IDENTITY',()=>usingShipping(async f=>{
   await ready(f);f.source.setFault('manifest','manifest-one','after');const unknown=await f.manifests.create(f.a.scope,manifestInput);
   assert.equal(unknown.packages.every((p:Row)=>p.state==='unknown'),true);
+  assert.throws(()=>f.packing.cancel(f.a.scope,{session_id:'pack-a',expected_revision:f.packing.read(f.a.scope,'pack-a').revision}),/PACKAGE_ALREADY_MANIFESTED/);
   const restarted=new ShippingManifests(f.kernel,f.packing,f.labels,new ShippingCarrierFixtureSource(f.sourceDB,f.sourceOptions));
   const repaired=await restarted.create(f.a.scope,manifestInput);assert.equal(repaired.packages.every((p:Row)=>p.manifest_acknowledged),true);
   assert.equal(f.source.calls.manifest.length,1);assert.equal(f.source.ledger().manifests.length,1);
@@ -214,7 +215,11 @@ test('M08-G05-SOURCE-INTEGRITY-AND-SUBJECT-PRIVACY',()=>usingShipping(async f=>{
   const privacy=new PrivacyLifecycle(f.kernel),before=privacy.export(f.owner,'customer-a');
   const tables=['commerce_shipping_label_operations','commerce_shipping_label_approvals','commerce_shipping_manifest_packages','commerce_shipping_manifest_events'];
   for(const table of tables){assert.equal(before.shipping_records[table].length,1);assert.equal(before.shipping_records[table][0].resource_id,f.orders[0].id);}
-  const purchase=f.labels.packageStatus(f.a.scope,'package-a');privacy.erase(f.owner,'customer-a');
+  const purchase=f.labels.packageStatus(f.a.scope,'package-a');
+  const imported=f.db.prepare('SELECT * FROM commerce_shipping_label_operations WHERE package_id=?').get('package-a') as Row;
+  const importedBody={...JSON.parse(imported.body),redacted:true,private_note:'fixture private note must be removed'};
+  f.db.prepare('UPDATE commerce_shipping_label_operations SET body=?,digest=? WHERE package_id=?').run(canonical(importedBody),contentDigest(importedBody),'package-a');
+  privacy.erase(f.owner,'customer-a');
   for(const table of tables){const row=f.db.prepare(`SELECT * FROM ${table} WHERE resource_id=?`).get(f.orders[0].id) as Row;
     const body=JSON.parse(row.body);assert.equal(body.redacted,true);assert.match(body.original_digest,/^[a-f0-9]{64}$/);assert.equal(row.package_id,'package-a');
     assert.equal(contentDigest(body),row.digest);if(table==='commerce_shipping_label_approvals')assert.equal(row.revoked,1);
@@ -222,6 +227,7 @@ test('M08-G05-SOURCE-INTEGRITY-AND-SUBJECT-PRIVACY',()=>usingShipping(async f=>{
   const retained=f.db.prepare('SELECT * FROM commerce_shipping_label_operations WHERE package_id=?').get('package-a') as Row;
   assert.equal(retained.purchase_id,purchase.purchase_id);assert.equal(JSON.parse(retained.body).amount_minor,'500');
   assert.equal(JSON.parse(retained.body).currency,'USD');assert.equal(JSON.parse(retained.body).native_charge_id,purchase.receipt.native_charge_id);
+  for(const key of ['private_note','command','native_tracking_ref'])assert.equal(Object.hasOwn(JSON.parse(retained.body),key),false);
   assert.throws(()=>f.labels.packageStatus(f.a.scope,'package-a'),/SUBJECT_ERASED/);
   assert.equal(f.labels.packageStatus(f.a.scope,'package-b').state,'purchased');assert.equal(f.source.ledger().purchases.length,2);
 }));
