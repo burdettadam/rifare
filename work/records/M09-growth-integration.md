@@ -82,7 +82,7 @@ The coherent development selection is exactly these four whole files:
 Every worker goal's named unsafe behavior changes an isolated actual module and
 is rejected by a fixed assertion within that selection. The fourteen faults cover
 invented shopping facts, duplicate fulfillment, unstable assignment, false
-incrementality, unqualified offers, cross-store audience use, consent bypass,
+incrementality, automatic scheduling without review, cross-store audience use, consent bypass,
 recovery after purchase, scanner mutation, placement guarantees, unapproved
 catalog writes, return-evidence reuse, false fit claims and a private identity
 graph. The retained privacy cases add populated export, erasure, original unknown
