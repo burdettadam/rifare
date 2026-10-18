@@ -1255,6 +1255,69 @@
         "packages/adapters/carrier-quote-fixture-source.mts",
         "docs/CARRIER-QUOTES.md"
       ]
+    },
+    {
+      "id": "FEATURE-M08-G02",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M08/M08-G02.md",
+        "packages/commerce/contracts/shipping-batch-labels.v1.json",
+        "packages/commerce/shipping-batch-labels.mts",
+        "packages/adapters/shipping-carrier-fixture-source.mts",
+        "migrations/commerce/033_shipping_batches.sql",
+        "docs/SHIPPING-BATCHES.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M08-G03",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M08/M08-G03.md",
+        "packages/commerce/contracts/packing-sessions.v1.json",
+        "packages/commerce/packing-sessions.mts",
+        "migrations/commerce/032_packing_sessions.sql",
+        "docs/PACKING-SESSIONS.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M08-G04",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M08/M08-G04.md",
+        "packages/commerce/contracts/packing-sessions.v1.json",
+        "packages/commerce/packing-sessions.mts",
+        "migrations/commerce/032_packing_sessions.sql",
+        "docs/PACKING-SESSIONS.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M08-G05",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M08/M08-G05.md",
+        "packages/commerce/contracts/shipping-manifests.v1.json",
+        "packages/commerce/shipping-manifests.mts",
+        "packages/adapters/shipping-carrier-fixture-source.mts",
+        "migrations/commerce/033_shipping_batches.sql",
+        "docs/SHIPPING-BATCHES.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M08-G06-PREPARATION",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "docs/decisions/0036-shipping-and-warehouse-development.md",
+        "packages/commerce/contracts/warehouse-connector.v1.json",
+        "packages/commerce/warehouse-connector.mts",
+        "packages/adapters/order-edit-fixture-source.mts",
+        "work/records/M08-G06.md",
+        "docs/WAREHOUSE-CONNECTOR.md"
+      ]
     }
   ],
   "tests": [
@@ -20122,6 +20185,363 @@
       "runner_case_id": "M08-G01-CLI-CONTRACT",
       "source": "tests/development/carrier-quotes.test.mts",
       "capability_id": "FEATURE-M08-G01"
+    },
+    {
+      "id": "runtime:CASE-M08-G02-01-LOCAL",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M08-G02-01-LOCAL",
+      "source": "tests/development/shipping-batches.test.mts",
+      "capability_id": "FEATURE-M08-G02"
+    },
+    {
+      "id": "runtime:CASE-M08-G02-02-LOCAL",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M08-G02-02-LOCAL",
+      "source": "tests/development/shipping-batches.test.mts",
+      "capability_id": "FEATURE-M08-G02"
+    },
+    {
+      "id": "runtime:CASE-M08-G02-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M08-G02-03",
+      "source": "tests/development/shipping-batches.test.mts",
+      "capability_id": "FEATURE-M08-G02"
+    },
+    {
+      "id": "runtime:M08-G02-APPROVAL-CURRENT-AUTHORITY",
+      "suite": "runtime",
+      "runner_case_id": "M08-G02-APPROVAL-CURRENT-AUTHORITY",
+      "source": "tests/development/shipping-batches.test.mts",
+      "capability_id": "FEATURE-M08-G02"
+    },
+    {
+      "id": "runtime:M08-G02-CURRENT-QUOTE-PACKAGE-FENCES",
+      "suite": "runtime",
+      "runner_case_id": "M08-G02-CURRENT-QUOTE-PACKAGE-FENCES",
+      "source": "tests/development/shipping-batches.test.mts",
+      "capability_id": "FEATURE-M08-G02"
+    },
+    {
+      "id": "runtime:M08-G02-EXACT-CURRENCY-AND-COMMAND-MONEY",
+      "suite": "runtime",
+      "runner_case_id": "M08-G02-EXACT-CURRENCY-AND-COMMAND-MONEY",
+      "source": "tests/development/shipping-batches.test.mts",
+      "capability_id": "FEATURE-M08-G02"
+    },
+    {
+      "id": "runtime:M08-G02-RECONSTRUCTED-QUOTE-CANNOT-AUTHORIZE-UNSENT",
+      "suite": "runtime",
+      "runner_case_id": "M08-G02-RECONSTRUCTED-QUOTE-CANNOT-AUTHORIZE-UNSENT",
+      "source": "tests/development/shipping-batches.test.mts",
+      "capability_id": "FEATURE-M08-G02"
+    },
+    {
+      "id": "runtime:M08-G02-UNKNOWN-NULL-LOOKUP-NEVER-REPURCHASES",
+      "suite": "runtime",
+      "runner_case_id": "M08-G02-UNKNOWN-NULL-LOOKUP-NEVER-REPURCHASES",
+      "source": "tests/development/shipping-batches.test.mts",
+      "capability_id": "FEATURE-M08-G02"
+    },
+    {
+      "id": "runtime:M08-G02-VOID-AND-REFUND-ARE-SEPARATE",
+      "suite": "runtime",
+      "runner_case_id": "M08-G02-VOID-AND-REFUND-ARE-SEPARATE",
+      "source": "tests/development/shipping-batches.test.mts",
+      "capability_id": "FEATURE-M08-G02"
+    },
+    {
+      "id": "runtime:M08-G02-UNTRUSTED-RECEIPT-FAILS-CLOSED",
+      "suite": "runtime",
+      "runner_case_id": "M08-G02-UNTRUSTED-RECEIPT-FAILS-CLOSED",
+      "source": "tests/development/shipping-batches.test.mts",
+      "capability_id": "FEATURE-M08-G02"
+    },
+    {
+      "id": "runtime:M08-G02-STOPS-RESTORE-AND-REVOKED-APPROVAL",
+      "suite": "runtime",
+      "runner_case_id": "M08-G02-STOPS-RESTORE-AND-REVOKED-APPROVAL",
+      "source": "tests/development/shipping-batches.test.mts",
+      "capability_id": "FEATURE-M08-G02"
+    },
+    {
+      "id": "runtime:M08-G02-DURABLE-BODY-INTEGRITY-AND-SUBJECT-FENCE",
+      "suite": "runtime",
+      "runner_case_id": "M08-G02-DURABLE-BODY-INTEGRITY-AND-SUBJECT-FENCE",
+      "source": "tests/development/shipping-batches.test.mts",
+      "capability_id": "FEATURE-M08-G02"
+    },
+    {
+      "id": "runtime:CASE-M08-G05-01-LOCAL",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M08-G05-01-LOCAL",
+      "source": "tests/development/shipping-batches.test.mts",
+      "capability_id": "FEATURE-M08-G05"
+    },
+    {
+      "id": "runtime:CASE-M08-G05-02-LOCAL",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M08-G05-02-LOCAL",
+      "source": "tests/development/shipping-batches.test.mts",
+      "capability_id": "FEATURE-M08-G05"
+    },
+    {
+      "id": "runtime:CASE-M08-G05-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M08-G05-03",
+      "source": "tests/development/shipping-batches.test.mts",
+      "capability_id": "FEATURE-M08-G05"
+    },
+    {
+      "id": "runtime:M08-G05-CURRENT-PACKING-AND-LABEL-QUALIFICATION",
+      "suite": "runtime",
+      "runner_case_id": "M08-G05-CURRENT-PACKING-AND-LABEL-QUALIFICATION",
+      "source": "tests/development/shipping-batches.test.mts",
+      "capability_id": "FEATURE-M08-G05"
+    },
+    {
+      "id": "runtime:M08-G05-UNKNOWN-MANIFEST-USES-ORIGINAL-IDENTITY",
+      "suite": "runtime",
+      "runner_case_id": "M08-G05-UNKNOWN-MANIFEST-USES-ORIGINAL-IDENTITY",
+      "source": "tests/development/shipping-batches.test.mts",
+      "capability_id": "FEATURE-M08-G05"
+    },
+    {
+      "id": "runtime:M08-G05-EVENT-IDENTITY-AND-STAGE-INTEGRITY",
+      "suite": "runtime",
+      "runner_case_id": "M08-G05-EVENT-IDENTITY-AND-STAGE-INTEGRITY",
+      "source": "tests/development/shipping-batches.test.mts",
+      "capability_id": "FEATURE-M08-G05"
+    },
+    {
+      "id": "runtime:M08-G05-TENANT-INPUT-AND-MEMBERSHIP-FENCES",
+      "suite": "runtime",
+      "runner_case_id": "M08-G05-TENANT-INPUT-AND-MEMBERSHIP-FENCES",
+      "source": "tests/development/shipping-batches.test.mts",
+      "capability_id": "FEATURE-M08-G05"
+    },
+    {
+      "id": "runtime:M08-G05-SOURCE-INTEGRITY-AND-SUBJECT-PRIVACY",
+      "suite": "runtime",
+      "runner_case_id": "M08-G05-SOURCE-INTEGRITY-AND-SUBJECT-PRIVACY",
+      "source": "tests/development/shipping-batches.test.mts",
+      "capability_id": "FEATURE-M08-G05"
+    },
+    {
+      "id": "runtime:CASE-M08-G03-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M08-G03-01",
+      "source": "tests/development/packing-sessions.test.mts",
+      "capability_id": "FEATURE-M08-G03"
+    },
+    {
+      "id": "runtime:CASE-M08-G03-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M08-G03-02",
+      "source": "tests/development/packing-sessions.test.mts",
+      "capability_id": "FEATURE-M08-G03"
+    },
+    {
+      "id": "runtime:CASE-M08-G03-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M08-G03-03",
+      "source": "tests/development/packing-sessions.test.mts",
+      "capability_id": "FEATURE-M08-G03"
+    },
+    {
+      "id": "runtime:PORT-025",
+      "suite": "runtime",
+      "runner_case_id": "PORT-025",
+      "source": "tests/development/packing-sessions.test.mts",
+      "capability_id": "FEATURE-M08-G03"
+    },
+    {
+      "id": "runtime:M08-G03-UNIT-IDENTITY-AND-SAME-SKU-LINES",
+      "suite": "runtime",
+      "runner_case_id": "M08-G03-UNIT-IDENTITY-AND-SAME-SKU-LINES",
+      "source": "tests/development/packing-sessions.test.mts",
+      "capability_id": "FEATURE-M08-G03"
+    },
+    {
+      "id": "runtime:M08-G03-CONFIRMATION-AUTHORITY-AND-REVISION",
+      "suite": "runtime",
+      "runner_case_id": "M08-G03-CONFIRMATION-AUTHORITY-AND-REVISION",
+      "source": "tests/development/packing-sessions.test.mts",
+      "capability_id": "FEATURE-M08-G03"
+    },
+    {
+      "id": "runtime:M08-G03-CURRENT-ORDER-PARCEL-AND-SOURCE-RECHECKS",
+      "suite": "runtime",
+      "runner_case_id": "M08-G03-CURRENT-ORDER-PARCEL-AND-SOURCE-RECHECKS",
+      "source": "tests/development/packing-sessions.test.mts",
+      "capability_id": "FEATURE-M08-G03"
+    },
+    {
+      "id": "runtime:M08-G03-TENANT-RESOURCE-AND-ERASURE-GUARDS",
+      "suite": "runtime",
+      "runner_case_id": "M08-G03-TENANT-RESOURCE-AND-ERASURE-GUARDS",
+      "source": "tests/development/packing-sessions.test.mts",
+      "capability_id": "FEATURE-M08-G03"
+    },
+    {
+      "id": "runtime:M08-G03-RECOVERY-AND-BOUNDED-INPUT",
+      "suite": "runtime",
+      "runner_case_id": "M08-G03-RECOVERY-AND-BOUNDED-INPUT",
+      "source": "tests/development/packing-sessions.test.mts",
+      "capability_id": "FEATURE-M08-G03"
+    },
+    {
+      "id": "runtime:CASE-M08-G04-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M08-G04-01",
+      "source": "tests/development/packing-sessions.test.mts",
+      "capability_id": "FEATURE-M08-G04"
+    },
+    {
+      "id": "runtime:CASE-M08-G04-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M08-G04-02",
+      "source": "tests/development/packing-sessions.test.mts",
+      "capability_id": "FEATURE-M08-G04"
+    },
+    {
+      "id": "runtime:CASE-M08-G04-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M08-G04-03",
+      "source": "tests/development/packing-sessions.test.mts",
+      "capability_id": "FEATURE-M08-G04"
+    },
+    {
+      "id": "runtime:M08-G04-BACKORDERS-CANCELLATIONS-AND-RETURN-LINKS",
+      "suite": "runtime",
+      "runner_case_id": "M08-G04-BACKORDERS-CANCELLATIONS-AND-RETURN-LINKS",
+      "source": "tests/development/packing-sessions.test.mts",
+      "capability_id": "FEATURE-M08-G04"
+    },
+    {
+      "id": "runtime:M08-G04-RESTART-ALLOCATION-AND-PACKAGE-IDEMPOTENCY",
+      "suite": "runtime",
+      "runner_case_id": "M08-G04-RESTART-ALLOCATION-AND-PACKAGE-IDEMPOTENCY",
+      "source": "tests/development/packing-sessions.test.mts",
+      "capability_id": "FEATURE-M08-G04"
+    },
+    {
+      "id": "runtime:M08-G04-CANCELLED-AND-SHIPPED-IDENTITIES-REMAIN-FENCED",
+      "suite": "runtime",
+      "runner_case_id": "M08-G04-CANCELLED-AND-SHIPPED-IDENTITIES-REMAIN-FENCED",
+      "source": "tests/development/packing-sessions.test.mts",
+      "capability_id": "FEATURE-M08-G04"
+    },
+    {
+      "id": "runtime:M08-G04-PERMISSIONS-AND-DURABLE-COUNT-INTEGRITY",
+      "suite": "runtime",
+      "runner_case_id": "M08-G04-PERMISSIONS-AND-DURABLE-COUNT-INTEGRITY",
+      "source": "tests/development/packing-sessions.test.mts",
+      "capability_id": "FEATURE-M08-G04"
+    },
+    {
+      "id": "runtime:M08-G04-POPULATED-STORAGE-EXPORT-AND-ERASURE",
+      "suite": "runtime",
+      "runner_case_id": "M08-G04-POPULATED-STORAGE-EXPORT-AND-ERASURE",
+      "source": "tests/development/packing-sessions.test.mts",
+      "capability_id": "FEATURE-M08-G04"
+    },
+    {
+      "id": "runtime:M08-G04-CLI-SYNTHETIC-CONTRACT",
+      "suite": "runtime",
+      "runner_case_id": "M08-G04-CLI-SYNTHETIC-CONTRACT",
+      "source": "tests/development/packing-sessions.test.mts",
+      "capability_id": "FEATURE-M08-G04"
+    },
+    {
+      "id": "runtime:M08-G06-LOCAL-HOLD-UPDATE-AND-PICK-STATE",
+      "suite": "runtime",
+      "runner_case_id": "M08-G06-LOCAL-HOLD-UPDATE-AND-PICK-STATE",
+      "source": "tests/development/warehouse-connector.test.mts",
+      "capability_id": "FEATURE-M08-G06-PREPARATION"
+    },
+    {
+      "id": "runtime:M08-G06-LOCAL-TRANSPORT-ACK-DOES-NOT-QUALIFY-HOLD",
+      "suite": "runtime",
+      "runner_case_id": "M08-G06-LOCAL-TRANSPORT-ACK-DOES-NOT-QUALIFY-HOLD",
+      "source": "tests/development/warehouse-connector.test.mts",
+      "capability_id": "FEATURE-M08-G06-PREPARATION"
+    },
+    {
+      "id": "runtime:M08-G06-LOCAL-IGNORED-UPDATE-FAILS-PAYLOAD-CONSUMPTION",
+      "suite": "runtime",
+      "runner_case_id": "M08-G06-LOCAL-IGNORED-UPDATE-FAILS-PAYLOAD-CONSUMPTION",
+      "source": "tests/development/warehouse-connector.test.mts",
+      "capability_id": "FEATURE-M08-G06-PREPARATION"
+    },
+    {
+      "id": "runtime:M08-G06-LOCAL-WORKFLOW-CHANGE-INVALIDATES-APPROVED-EDIT",
+      "suite": "runtime",
+      "runner_case_id": "M08-G06-LOCAL-WORKFLOW-CHANGE-INVALIDATES-APPROVED-EDIT",
+      "source": "tests/development/warehouse-connector.test.mts",
+      "capability_id": "FEATURE-M08-G06-PREPARATION"
+    },
+    {
+      "id": "runtime:M08-G06-LOCAL-CALLBACK-DISCONNECT-BLOCKS-NEW-EFFECTS",
+      "suite": "runtime",
+      "runner_case_id": "M08-G06-LOCAL-CALLBACK-DISCONNECT-BLOCKS-NEW-EFFECTS",
+      "source": "tests/development/warehouse-connector.test.mts",
+      "capability_id": "FEATURE-M08-G06-PREPARATION"
+    },
+    {
+      "id": "runtime:M08-G06-LOCAL-CALLBACK-LEASE-EXPIRES-WITHOUT-CONFIG-CHANGE",
+      "suite": "runtime",
+      "runner_case_id": "M08-G06-LOCAL-CALLBACK-LEASE-EXPIRES-WITHOUT-CONFIG-CHANGE",
+      "source": "tests/development/warehouse-connector.test.mts",
+      "capability_id": "FEATURE-M08-G06-PREPARATION"
+    },
+    {
+      "id": "runtime:M08-G06-LOCAL-VERSION-CONFIG-AND-CAS-ARE-STRICT",
+      "suite": "runtime",
+      "runner_case_id": "M08-G06-LOCAL-VERSION-CONFIG-AND-CAS-ARE-STRICT",
+      "source": "tests/development/warehouse-connector.test.mts",
+      "capability_id": "FEATURE-M08-G06-PREPARATION"
+    },
+    {
+      "id": "runtime:M08-G06-LOCAL-SCOPE-AND-OWNER-AUTHORITY-ARE-RECHECKED",
+      "suite": "runtime",
+      "runner_case_id": "M08-G06-LOCAL-SCOPE-AND-OWNER-AUTHORITY-ARE-RECHECKED",
+      "source": "tests/development/warehouse-connector.test.mts",
+      "capability_id": "FEATURE-M08-G06-PREPARATION"
+    },
+    {
+      "id": "runtime:M08-G06-LOCAL-RESTART-RETAINS-BINDING-AND-CANARY-ROLLBACK",
+      "suite": "runtime",
+      "runner_case_id": "M08-G06-LOCAL-RESTART-RETAINS-BINDING-AND-CANARY-ROLLBACK",
+      "source": "tests/development/warehouse-connector.test.mts",
+      "capability_id": "FEATURE-M08-G06-PREPARATION"
+    },
+    {
+      "id": "runtime:M08-G06-LOCAL-UNKNOWN-SYNC-RECONCILES-ORIGINAL-RECEIPT",
+      "suite": "runtime",
+      "runner_case_id": "M08-G06-LOCAL-UNKNOWN-SYNC-RECONCILES-ORIGINAL-RECEIPT",
+      "source": "tests/development/warehouse-connector.test.mts",
+      "capability_id": "FEATURE-M08-G06-PREPARATION"
+    },
+    {
+      "id": "runtime:M08-G06-LOCAL-NAMED-HTTP-ACCEPTANCE-FAULT-IS-DETECTED",
+      "suite": "runtime",
+      "runner_case_id": "M08-G06-LOCAL-NAMED-HTTP-ACCEPTANCE-FAULT-IS-DETECTED",
+      "source": "tests/development/warehouse-connector.test.mts",
+      "capability_id": "FEATURE-M08-G06-PREPARATION"
+    },
+    {
+      "id": "runtime:M08-G06-LOCAL-ERASED-RESOURCE-CANNOT-READ-WAREHOUSE-COPY",
+      "suite": "runtime",
+      "runner_case_id": "M08-G06-LOCAL-ERASED-RESOURCE-CANNOT-READ-WAREHOUSE-COPY",
+      "source": "tests/development/warehouse-connector.test.mts",
+      "capability_id": "FEATURE-M08-G06-PREPARATION"
+    },
+    {
+      "id": "runtime:M08-G06-LOCAL-LEGACY-M04-PROBE-AND-APPROVAL-STILL-WORK",
+      "suite": "runtime",
+      "runner_case_id": "M08-G06-LOCAL-LEGACY-M04-PROBE-AND-APPROVAL-STILL-WORK",
+      "source": "tests/development/warehouse-connector.test.mts",
+      "capability_id": "FEATURE-M08-G06-PREPARATION"
     }
   ],
   "protected_files": [

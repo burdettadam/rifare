@@ -263,3 +263,14 @@ For the new headless, in-memory inventory/carrier demonstration:
 ```sh
 node --experimental-strip-types tools/demo-return-fulfillment.mts
 ```
+
+## Shipping and warehouse development
+
+The next five locally prepared goals are M08-G02 through M08-G06: per-package
+label obligations and repair, durable scan-to-pack, conserved split allocations,
+separate manifest/pickup/carrier stages, and a named warehouse fixture connector.
+Read [shipping batches](docs/SHIPPING-BATCHES.md), [packing sessions](docs/PACKING-SESSIONS.md)
+and [warehouse connector preparation](docs/WAREHOUSE-CONNECTOR.md). New durable
+records participate in scoped export, minimization and restored execution
+quarantine. Formal and connected qualification remain blocked. The existing
+60-case/four-file/60-second development defaults are unchanged.

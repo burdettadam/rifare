@@ -159,12 +159,17 @@ function eraseShippingAndPacking(k:CommerceKernel,s:Row,ids:string[]){
     const original=JSON.parse(row.body);
     if(contentDigest(original)!==row.digest)throw new Error('SHIPPING_INTEGRITY');
     const receipt=original.receipt??{},quote=original.command?.quote??{};
+    const voidId=original.void?.command?.void_id??receipt.void_operation_id??original.void_operation_id??null;
+    // An older purchase receipt has no observation of a newly dispatched void.
+    // Preserve that command's original identity and unknown stage until its
+    // matching receipt exists; erasure must not turn uncertainty into absence.
+    const voidObserved=voidId!==null&&receipt.void_operation_id===voidId;
+    const voidState=voidObserved?receipt.void_state:original.void?.state??original.void_state??receipt.void_state??'not_requested';
     const body={redacted:true,original_digest:original.original_digest??row.digest,purchase_id:row.purchase_id,
       source_identity:original.source_identity??null,command_digest:original.command_digest??null,
       amount_minor:quote.amount_minor??receipt.amount_minor??original.amount_minor??null,currency:quote.currency??receipt.currency??original.currency??null,
       state:original.state??'unknown',native_label_id:receipt.native_label_id??original.native_label_id??null,native_charge_id:receipt.native_charge_id??original.native_charge_id??null,
-      void_operation_id:receipt.void_operation_id??original.void?.command?.void_operation_id??original.void_operation_id??null,
-      void_state:receipt.void_state??original.void?.state??original.void_state??'not_requested',
+      void_operation_id:voidId,void_state:voidState,
       refund_state:receipt.refund_state??original.refund_state??'not_requested',refund_amount_minor:receipt.refund_amount_minor??original.refund_amount_minor??null,
       native_refund_id:receipt.native_refund_id??original.native_refund_id??null,qualification:'synthetic_only'};
     k.db.prepare('UPDATE commerce_shipping_label_operations SET body=?,digest=? WHERE tenant_id=? AND store_id=? AND package_id=?')

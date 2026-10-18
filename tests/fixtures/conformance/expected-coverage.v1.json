@@ -457,6 +457,18 @@
       "prevention.native-guard": {
         "semantics": "native",
         "qualification": "sandbox-only"
+      },
+      "warehouse.connector.configure": {
+        "semantics": "composed",
+        "qualification": "sandbox-only"
+      },
+      "warehouse.connector.qualify": {
+        "semantics": "composed",
+        "qualification": "sandbox-only"
+      },
+      "warehouse.connector.inspect": {
+        "semantics": "composed",
+        "qualification": "sandbox-only"
       }
     },
     "exchange_lineage_source": {
@@ -542,9 +554,50 @@
         "semantics": "native",
         "qualification": "sandbox-only"
       }
+    },
+    "carrier_quote_source": {
+      "account.read": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      },
+      "package.read": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      },
+      "rate.read": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      }
+    },
+    "shipping_carrier_source": {
+      "label.purchase": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      },
+      "label.lookup": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      },
+      "label.void": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      },
+      "manifest.create": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      },
+      "manifest.lookup": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      },
+      "manifest.events": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      }
     }
   },
   "declarations": [
+    "packages/adapters/carrier-quote-fixture-source.mts",
     "packages/adapters/exchange-lineage-fixture-source.mts",
     "packages/adapters/exchange-lineage-source-guards.mts",
     "packages/adapters/exchange-money-fixture-source.mts",
@@ -556,6 +609,7 @@
     "packages/adapters/reliability/synthetic-journal.mts",
     "packages/adapters/resolution-fixture-source.mts",
     "packages/adapters/return-destination-fixture-source.mts",
+    "packages/adapters/shipping-carrier-fixture-source.mts",
     "packages/adapters/shopify-return-fixture.mts",
     "packages/adapters/shopify/orders.mts",
     "packages/adapters/support-fixture-source.mts",
@@ -1117,7 +1171,7 @@
       }
     },
     "order_edit_source": {
-      "version": "source-sha256:5a17151bb888a069288f284f46852b6169fb4dea7975bc361e940701229f0dd2",
+      "version": "source-sha256:929bfcc7d530f2d3409a13eebbf528213dc861965c3a49629637902f5e6bb3b4",
       "api_version": "local-order-edit-source",
       "operations": {
         "order.snapshot": {
@@ -1169,6 +1223,18 @@
           "scope_kind": "server_local_fixture_only"
         },
         "prevention.native-guard": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "warehouse.connector.configure": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "warehouse.connector.qualify": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "warehouse.connector.inspect": {
           "required_scopes": [],
           "scope_kind": "server_local_fixture_only"
         }
@@ -1269,6 +1335,54 @@
           "scope_kind": "server_local_fixture_only"
         },
         "destination.lookup": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        }
+      }
+    },
+    "carrier_quote_source": {
+      "version": "source-sha256:07697f3b4b65ee69c82b1a6ca170f1ebce695b4cbd8eb920baf9ce5c45c07f5f",
+      "api_version": "rifare-carrier-quote-fixture-v1",
+      "operations": {
+        "account.read": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "package.read": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "rate.read": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        }
+      }
+    },
+    "shipping_carrier_source": {
+      "version": "source-sha256:f88a5d5fbcc2d56ff281fb3fe66d29e800d3631051a1efc360b937c20e6ce709",
+      "api_version": "rifare-outbound-carrier-fixture-v1",
+      "operations": {
+        "label.purchase": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "label.lookup": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "label.void": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "manifest.create": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "manifest.lookup": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "manifest.events": {
           "required_scopes": [],
           "scope_kind": "server_local_fixture_only"
         }
@@ -1619,6 +1733,60 @@
       "sha256": "644e8cdbe920fa8eb214d83a00bc96d5deaf3fa875207ace5cd26144bb34625c"
     },
     {
+      "id": "CASE-M08-G01-01",
+      "name": "CASE-M08-G01-01",
+      "path": "tests/development/carrier-quotes.test.mts",
+      "sha256": "b2be1324b0bdcaad236961f6fe157e92f4b2286e05eba66681831fbdc8362446"
+    },
+    {
+      "id": "CASE-M08-G01-02",
+      "name": "CASE-M08-G01-02",
+      "path": "tests/development/carrier-quotes.test.mts",
+      "sha256": "b2be1324b0bdcaad236961f6fe157e92f4b2286e05eba66681831fbdc8362446"
+    },
+    {
+      "id": "CASE-M08-G01-03",
+      "name": "CASE-M08-G01-03",
+      "path": "tests/development/carrier-quotes.test.mts",
+      "sha256": "b2be1324b0bdcaad236961f6fe157e92f4b2286e05eba66681831fbdc8362446"
+    },
+    {
+      "id": "CASE-M08-G02-01-LOCAL",
+      "name": "CASE-M08-G02-01-LOCAL",
+      "path": "tests/development/shipping-batches.test.mts",
+      "sha256": "81ccb66ed58919fa659ce1289404fc1dd69f54ffd116dadcd99d66123e6f18ee"
+    },
+    {
+      "id": "CASE-M08-G02-02-LOCAL",
+      "name": "CASE-M08-G02-02-LOCAL",
+      "path": "tests/development/shipping-batches.test.mts",
+      "sha256": "81ccb66ed58919fa659ce1289404fc1dd69f54ffd116dadcd99d66123e6f18ee"
+    },
+    {
+      "id": "CASE-M08-G02-03",
+      "name": "CASE-M08-G02-03",
+      "path": "tests/development/shipping-batches.test.mts",
+      "sha256": "81ccb66ed58919fa659ce1289404fc1dd69f54ffd116dadcd99d66123e6f18ee"
+    },
+    {
+      "id": "CASE-M08-G05-01-LOCAL",
+      "name": "CASE-M08-G05-01-LOCAL",
+      "path": "tests/development/shipping-batches.test.mts",
+      "sha256": "81ccb66ed58919fa659ce1289404fc1dd69f54ffd116dadcd99d66123e6f18ee"
+    },
+    {
+      "id": "CASE-M08-G05-02-LOCAL",
+      "name": "CASE-M08-G05-02-LOCAL",
+      "path": "tests/development/shipping-batches.test.mts",
+      "sha256": "81ccb66ed58919fa659ce1289404fc1dd69f54ffd116dadcd99d66123e6f18ee"
+    },
+    {
+      "id": "CASE-M08-G05-03",
+      "name": "CASE-M08-G05-03",
+      "path": "tests/development/shipping-batches.test.mts",
+      "sha256": "81ccb66ed58919fa659ce1289404fc1dd69f54ffd116dadcd99d66123e6f18ee"
+    },
+    {
       "id": "M01-G04-01",
       "name": "M01-G04-01",
       "path": "tests/development/commerce-capabilities.test.mts",
@@ -1875,6 +2043,168 @@
       "name": "M07-G03-WOO-WRONG-TOPIC-OR-ORIGIN-REJECTED",
       "path": "tests/development/woocommerce-events.test.mts",
       "sha256": "b47cefe37f697a9fc8b78bd1c49d35f14fda0e3890be4d04dac0cdde085a7656"
+    },
+    {
+      "id": "M08-G02-APPROVAL-CURRENT-AUTHORITY",
+      "name": "M08-G02-APPROVAL-CURRENT-AUTHORITY",
+      "path": "tests/development/shipping-batches.test.mts",
+      "sha256": "81ccb66ed58919fa659ce1289404fc1dd69f54ffd116dadcd99d66123e6f18ee"
+    },
+    {
+      "id": "M08-G02-CURRENT-QUOTE-PACKAGE-FENCES",
+      "name": "M08-G02-CURRENT-QUOTE-PACKAGE-FENCES",
+      "path": "tests/development/shipping-batches.test.mts",
+      "sha256": "81ccb66ed58919fa659ce1289404fc1dd69f54ffd116dadcd99d66123e6f18ee"
+    },
+    {
+      "id": "M08-G02-DURABLE-BODY-INTEGRITY-AND-SUBJECT-FENCE",
+      "name": "M08-G02-DURABLE-BODY-INTEGRITY-AND-SUBJECT-FENCE",
+      "path": "tests/development/shipping-batches.test.mts",
+      "sha256": "81ccb66ed58919fa659ce1289404fc1dd69f54ffd116dadcd99d66123e6f18ee"
+    },
+    {
+      "id": "M08-G02-EXACT-CURRENCY-AND-COMMAND-MONEY",
+      "name": "M08-G02-EXACT-CURRENCY-AND-COMMAND-MONEY",
+      "path": "tests/development/shipping-batches.test.mts",
+      "sha256": "81ccb66ed58919fa659ce1289404fc1dd69f54ffd116dadcd99d66123e6f18ee"
+    },
+    {
+      "id": "M08-G02-RECONSTRUCTED-QUOTE-CANNOT-AUTHORIZE-UNSENT",
+      "name": "M08-G02-RECONSTRUCTED-QUOTE-CANNOT-AUTHORIZE-UNSENT",
+      "path": "tests/development/shipping-batches.test.mts",
+      "sha256": "81ccb66ed58919fa659ce1289404fc1dd69f54ffd116dadcd99d66123e6f18ee"
+    },
+    {
+      "id": "M08-G02-STOPS-RESTORE-AND-REVOKED-APPROVAL",
+      "name": "M08-G02-STOPS-RESTORE-AND-REVOKED-APPROVAL",
+      "path": "tests/development/shipping-batches.test.mts",
+      "sha256": "81ccb66ed58919fa659ce1289404fc1dd69f54ffd116dadcd99d66123e6f18ee"
+    },
+    {
+      "id": "M08-G02-UNKNOWN-NULL-LOOKUP-NEVER-REPURCHASES",
+      "name": "M08-G02-UNKNOWN-NULL-LOOKUP-NEVER-REPURCHASES",
+      "path": "tests/development/shipping-batches.test.mts",
+      "sha256": "81ccb66ed58919fa659ce1289404fc1dd69f54ffd116dadcd99d66123e6f18ee"
+    },
+    {
+      "id": "M08-G02-UNTRUSTED-RECEIPT-FAILS-CLOSED",
+      "name": "M08-G02-UNTRUSTED-RECEIPT-FAILS-CLOSED",
+      "path": "tests/development/shipping-batches.test.mts",
+      "sha256": "81ccb66ed58919fa659ce1289404fc1dd69f54ffd116dadcd99d66123e6f18ee"
+    },
+    {
+      "id": "M08-G02-VOID-AND-REFUND-ARE-SEPARATE",
+      "name": "M08-G02-VOID-AND-REFUND-ARE-SEPARATE",
+      "path": "tests/development/shipping-batches.test.mts",
+      "sha256": "81ccb66ed58919fa659ce1289404fc1dd69f54ffd116dadcd99d66123e6f18ee"
+    },
+    {
+      "id": "M08-G05-CURRENT-PACKING-AND-LABEL-QUALIFICATION",
+      "name": "M08-G05-CURRENT-PACKING-AND-LABEL-QUALIFICATION",
+      "path": "tests/development/shipping-batches.test.mts",
+      "sha256": "81ccb66ed58919fa659ce1289404fc1dd69f54ffd116dadcd99d66123e6f18ee"
+    },
+    {
+      "id": "M08-G05-EVENT-IDENTITY-AND-STAGE-INTEGRITY",
+      "name": "M08-G05-EVENT-IDENTITY-AND-STAGE-INTEGRITY",
+      "path": "tests/development/shipping-batches.test.mts",
+      "sha256": "81ccb66ed58919fa659ce1289404fc1dd69f54ffd116dadcd99d66123e6f18ee"
+    },
+    {
+      "id": "M08-G05-SOURCE-INTEGRITY-AND-SUBJECT-PRIVACY",
+      "name": "M08-G05-SOURCE-INTEGRITY-AND-SUBJECT-PRIVACY",
+      "path": "tests/development/shipping-batches.test.mts",
+      "sha256": "81ccb66ed58919fa659ce1289404fc1dd69f54ffd116dadcd99d66123e6f18ee"
+    },
+    {
+      "id": "M08-G05-TENANT-INPUT-AND-MEMBERSHIP-FENCES",
+      "name": "M08-G05-TENANT-INPUT-AND-MEMBERSHIP-FENCES",
+      "path": "tests/development/shipping-batches.test.mts",
+      "sha256": "81ccb66ed58919fa659ce1289404fc1dd69f54ffd116dadcd99d66123e6f18ee"
+    },
+    {
+      "id": "M08-G05-UNKNOWN-MANIFEST-USES-ORIGINAL-IDENTITY",
+      "name": "M08-G05-UNKNOWN-MANIFEST-USES-ORIGINAL-IDENTITY",
+      "path": "tests/development/shipping-batches.test.mts",
+      "sha256": "81ccb66ed58919fa659ce1289404fc1dd69f54ffd116dadcd99d66123e6f18ee"
+    },
+    {
+      "id": "M08-G06-LOCAL-CALLBACK-DISCONNECT-BLOCKS-NEW-EFFECTS",
+      "name": "M08-G06-LOCAL-CALLBACK-DISCONNECT-BLOCKS-NEW-EFFECTS",
+      "path": "tests/development/warehouse-connector.test.mts",
+      "sha256": "03ee15e984b09710020e13cf75a3bca5bdafdb5d6dcd6c4a5e2fb6b0144aa3a9"
+    },
+    {
+      "id": "M08-G06-LOCAL-CALLBACK-LEASE-EXPIRES-WITHOUT-CONFIG-CHANGE",
+      "name": "M08-G06-LOCAL-CALLBACK-LEASE-EXPIRES-WITHOUT-CONFIG-CHANGE",
+      "path": "tests/development/warehouse-connector.test.mts",
+      "sha256": "03ee15e984b09710020e13cf75a3bca5bdafdb5d6dcd6c4a5e2fb6b0144aa3a9"
+    },
+    {
+      "id": "M08-G06-LOCAL-ERASED-RESOURCE-CANNOT-READ-WAREHOUSE-COPY",
+      "name": "M08-G06-LOCAL-ERASED-RESOURCE-CANNOT-READ-WAREHOUSE-COPY",
+      "path": "tests/development/warehouse-connector.test.mts",
+      "sha256": "03ee15e984b09710020e13cf75a3bca5bdafdb5d6dcd6c4a5e2fb6b0144aa3a9"
+    },
+    {
+      "id": "M08-G06-LOCAL-HOLD-UPDATE-AND-PICK-STATE",
+      "name": "M08-G06-LOCAL-HOLD-UPDATE-AND-PICK-STATE",
+      "path": "tests/development/warehouse-connector.test.mts",
+      "sha256": "03ee15e984b09710020e13cf75a3bca5bdafdb5d6dcd6c4a5e2fb6b0144aa3a9"
+    },
+    {
+      "id": "M08-G06-LOCAL-IGNORED-UPDATE-FAILS-PAYLOAD-CONSUMPTION",
+      "name": "M08-G06-LOCAL-IGNORED-UPDATE-FAILS-PAYLOAD-CONSUMPTION",
+      "path": "tests/development/warehouse-connector.test.mts",
+      "sha256": "03ee15e984b09710020e13cf75a3bca5bdafdb5d6dcd6c4a5e2fb6b0144aa3a9"
+    },
+    {
+      "id": "M08-G06-LOCAL-LEGACY-M04-PROBE-AND-APPROVAL-STILL-WORK",
+      "name": "M08-G06-LOCAL-LEGACY-M04-PROBE-AND-APPROVAL-STILL-WORK",
+      "path": "tests/development/warehouse-connector.test.mts",
+      "sha256": "03ee15e984b09710020e13cf75a3bca5bdafdb5d6dcd6c4a5e2fb6b0144aa3a9"
+    },
+    {
+      "id": "M08-G06-LOCAL-NAMED-HTTP-ACCEPTANCE-FAULT-IS-DETECTED",
+      "name": "M08-G06-LOCAL-NAMED-HTTP-ACCEPTANCE-FAULT-IS-DETECTED",
+      "path": "tests/development/warehouse-connector.test.mts",
+      "sha256": "03ee15e984b09710020e13cf75a3bca5bdafdb5d6dcd6c4a5e2fb6b0144aa3a9"
+    },
+    {
+      "id": "M08-G06-LOCAL-RESTART-RETAINS-BINDING-AND-CANARY-ROLLBACK",
+      "name": "M08-G06-LOCAL-RESTART-RETAINS-BINDING-AND-CANARY-ROLLBACK",
+      "path": "tests/development/warehouse-connector.test.mts",
+      "sha256": "03ee15e984b09710020e13cf75a3bca5bdafdb5d6dcd6c4a5e2fb6b0144aa3a9"
+    },
+    {
+      "id": "M08-G06-LOCAL-SCOPE-AND-OWNER-AUTHORITY-ARE-RECHECKED",
+      "name": "M08-G06-LOCAL-SCOPE-AND-OWNER-AUTHORITY-ARE-RECHECKED",
+      "path": "tests/development/warehouse-connector.test.mts",
+      "sha256": "03ee15e984b09710020e13cf75a3bca5bdafdb5d6dcd6c4a5e2fb6b0144aa3a9"
+    },
+    {
+      "id": "M08-G06-LOCAL-TRANSPORT-ACK-DOES-NOT-QUALIFY-HOLD",
+      "name": "M08-G06-LOCAL-TRANSPORT-ACK-DOES-NOT-QUALIFY-HOLD",
+      "path": "tests/development/warehouse-connector.test.mts",
+      "sha256": "03ee15e984b09710020e13cf75a3bca5bdafdb5d6dcd6c4a5e2fb6b0144aa3a9"
+    },
+    {
+      "id": "M08-G06-LOCAL-UNKNOWN-SYNC-RECONCILES-ORIGINAL-RECEIPT",
+      "name": "M08-G06-LOCAL-UNKNOWN-SYNC-RECONCILES-ORIGINAL-RECEIPT",
+      "path": "tests/development/warehouse-connector.test.mts",
+      "sha256": "03ee15e984b09710020e13cf75a3bca5bdafdb5d6dcd6c4a5e2fb6b0144aa3a9"
+    },
+    {
+      "id": "M08-G06-LOCAL-VERSION-CONFIG-AND-CAS-ARE-STRICT",
+      "name": "M08-G06-LOCAL-VERSION-CONFIG-AND-CAS-ARE-STRICT",
+      "path": "tests/development/warehouse-connector.test.mts",
+      "sha256": "03ee15e984b09710020e13cf75a3bca5bdafdb5d6dcd6c4a5e2fb6b0144aa3a9"
+    },
+    {
+      "id": "M08-G06-LOCAL-WORKFLOW-CHANGE-INVALIDATES-APPROVED-EDIT",
+      "name": "M08-G06-LOCAL-WORKFLOW-CHANGE-INVALIDATES-APPROVED-EDIT",
+      "path": "tests/development/warehouse-connector.test.mts",
+      "sha256": "03ee15e984b09710020e13cf75a3bca5bdafdb5d6dcd6c4a5e2fb6b0144aa3a9"
     }
   ]
 }

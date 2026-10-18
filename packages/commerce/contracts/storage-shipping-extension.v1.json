@@ -1,0 +1,127 @@
+{
+  "version": 1,
+  "base_schema_digest": "6e8fd17800ab49965a9cf964a4652877ee1784dbaa3dd78263a6dd19e4881d3f",
+  "schema_digest": "d3db27ee01179ab0b7dc38afdc890a5470b21ebae0b84ca1a72e645ad1948579",
+  "tables": [
+    {
+      "name": "commerce_packing_allocations",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "resource_id",
+        "session_id",
+        "unit_key",
+        "state",
+        "scanned",
+        "body",
+        "digest"
+      ],
+      "handling": "subject_linked_redact_minimized_package_identity"
+    },
+    {
+      "name": "commerce_packing_confirmations",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "resource_id",
+        "session_id",
+        "body",
+        "digest",
+        "created_at"
+      ],
+      "handling": "subject_linked_redact_minimized_package_identity"
+    },
+    {
+      "name": "commerce_packing_scans",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "resource_id",
+        "session_id",
+        "command_digest",
+        "outcome",
+        "body",
+        "digest",
+        "created_at"
+      ],
+      "handling": "subject_linked_redact_minimized_package_identity"
+    },
+    {
+      "name": "commerce_packing_sessions",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "resource_id",
+        "package_id",
+        "state",
+        "revision",
+        "expected_count",
+        "packed_count",
+        "confirmation_id",
+        "body",
+        "digest",
+        "created_at",
+        "updated_at"
+      ],
+      "handling": "subject_linked_redact_minimized_package_identity"
+    },
+    {
+      "name": "commerce_shipping_label_approvals",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "resource_id",
+        "package_id",
+        "id",
+        "body",
+        "digest",
+        "revoked"
+      ],
+      "handling": "subject_linked_redact_minimized_package_identity"
+    },
+    {
+      "name": "commerce_shipping_label_operations",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "resource_id",
+        "package_id",
+        "purchase_id",
+        "body",
+        "digest"
+      ],
+      "handling": "subject_linked_minimized_shipping_monetary_audit"
+    },
+    {
+      "name": "commerce_shipping_manifest_events",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "resource_id",
+        "package_id",
+        "event_id",
+        "manifest_id",
+        "body",
+        "digest"
+      ],
+      "handling": "subject_linked_redact_minimized_package_identity"
+    },
+    {
+      "name": "commerce_shipping_manifest_packages",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "resource_id",
+        "package_id",
+        "manifest_id",
+        "body",
+        "digest"
+      ],
+      "handling": "subject_linked_redact_minimized_package_identity"
+    }
+  ]
+}

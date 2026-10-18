@@ -109,7 +109,15 @@ test('CASE-M07-G14-03',()=>usingSupport(f=>{
 
 test('M07-G14-ALL-170-TABLES-HAVE-EXPLICIT-SURFACES',()=>usingSupport(f=>{
   const r=auditPrivacyCoverage(f.kernel,f.owner.scope),actual=f.db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name").all().map((x:any)=>x.name);
-  assert.equal(r.tables.length,170);assert.deepEqual(r.tables.map((t:any)=>t.name).sort(),actual);
+  assert.equal(r.tables.length,178);assert.deepEqual(r.tables.map((t:any)=>t.name).sort(),actual);
+  const baseline=JSON.parse(readFileSync(new URL('../fixtures/shipping/storage-baseline.v1.json',import.meta.url),'utf8'));
+  assert.equal(baseline.tables.length,170);
+  const originalNames=new Set(baseline.tables.map((t:any)=>t.name));
+  assert.deepEqual(r.tables.filter((t:any)=>originalNames.has(t.name)).map((t:any)=>({name:t.name,surface:t.surface,handling:t.handling})).sort((a:any,b:any)=>a.name.localeCompare(b.name)),baseline.tables);
+  assert.deepEqual(r.tables.filter((t:any)=>!originalNames.has(t.name)).map((t:any)=>t.name).sort(),[
+    'commerce_packing_allocations','commerce_packing_confirmations','commerce_packing_scans','commerce_packing_sessions',
+    'commerce_shipping_label_approvals','commerce_shipping_label_operations','commerce_shipping_manifest_events','commerce_shipping_manifest_packages',
+  ]);
   assert.ok(r.tables.every((t:any)=>t.surface&&t.handling));assert.equal(r.local_inventory_current,true);
   assert.equal(r.deployment_coverage_verified,false);assert.equal(r.privacy_qualified,false);assert.equal(r.physical_erasure,false);
   assert.ok(r.outstanding.some((x:any)=>x.surface==='provider_copies'));assert.ok(r.outstanding.some((x:any)=>x.surface==='recovery_files_and_database_pages'));

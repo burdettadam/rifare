@@ -4,20 +4,41 @@
   "formal_entry_accepted": false,
   "entry_goal": "M07-G99",
   "assigned_local_preparation": [
-    "M08-G01"
+    "M08-G01",
+    "M08-G02",
+    "M08-G03",
+    "M08-G04",
+    "M08-G05",
+    "M08-G06"
   ],
-  "unassigned_next_goal": "M08-G02",
-  "authority": "docs/decisions/0035-locale-pilot-and-carrier-preparation.md",
-  "base": "0748116fe58901d318bf2f0d9c30fd35a8005d43",
-  "scope": "Local per-package carrier quote preparation only; original entry prerequisite remains blocked.",
+  "unassigned_next_goal": "M08-G07",
+  "authority": "docs/decisions/0036-shipping-and-warehouse-development.md",
+  "base": "c8d4d68ddcae5721a2925553707b3c19ff825df8",
+  "scope": "Local carrier quotes, approved synthetic per-package label operations, packing and split allocations, separate manifest/pickup/acceptance observations and named warehouse fixture preparation; formal entry and connected obligations remain blocked.",
   "full_milestone_accepted": false,
   "release_authorized": false,
   "label_purchase_authorized": false,
   "live_provider_access": false,
   "missing": [
     "M07-G99 formal acceptance",
-    "authorized carrier accounts/endpoints and current connected qualification",
-    "formal M08 worker acceptance and original milestone evidence"
+    "authorized carrier accounts/endpoints and current connected label/charge, manifest and pickup qualification",
+    "authorized named warehouse account/version/configuration and observed hold/update/pick behavior",
+    "formal M08 worker acceptance and original integrated warehouse, return and stock cycle evidence"
   ],
-  "evidence": "Exact local development source, tests, source fixtures and independent reviews accompany the checkpoint; this file cannot establish execution or acceptance."
+  "evidence": "Exact local development source, tests, source fixtures and independent reviews accompany the checkpoint; this file cannot establish execution or acceptance.",
+  "synthetic_label_execution": true,
+  "synthetic_warehouse_connector": {
+    "id": "rifare-warehouse-fixture",
+    "version": "1.0.0",
+    "api_version": "rifare-order-edit-fixture-v1",
+    "live_qualified": false
+  },
+  "development_evidence": {
+    "profile": "focused",
+    "maximum_actual_cases": 60,
+    "maximum_whole_files": 4,
+    "invocation_deadline_seconds": 60,
+    "full_regression": false,
+    "goal_accepted": false
+  }
 }

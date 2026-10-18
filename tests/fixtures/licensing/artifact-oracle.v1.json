@@ -1,6 +1,6 @@
 {
-  "source_file_count": 1257,
-  "source_count_reason": "ADR-0035 reviewed additive locale, pilot instrumentation/readiness, blocked M07 assessment and carrier quote preparation source inventory; original licensing obligations remain unchanged.",
+  "source_file_count": 1288,
+  "source_count_reason": "ADR-0036 reviewed additive shipping, packing and named warehouse preparation source inventory; original licensing obligations, source members and accepted controls remain unchanged.",
   "component_ids": [
     "git-agent-adaptations",
     "rifare-developer-helpers",
