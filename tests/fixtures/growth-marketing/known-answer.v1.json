@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "provenance": "Predeclared synthetic arithmetic and independently calculated HMAC-SHA256 assignments; not product-generated outcomes.",
+  "assignment_seed_hex": "0000000000000000000000000000000000000000000000000000000000000000",
+  "assignment_customer_arms": {"C-1001":"treatment","GROWTH-C-2":"treatment","GROWTH-C-3":"holdout","GROWTH-C-5":"holdout"},
+  "denominators": {"treatment":2,"holdout":2},
+  "purchases":2,
+  "attributed_revenue_minor":"10000",
+  "holdout_estimated_incremental_revenue_minor":"0",
+  "gross_revenue_minor":"20000",
+  "refunds_minor":"3000",
+  "costs_minor":"3000",
+  "net_margin_minor":"14000",
+  "treatment_net_margin_minor":"5000",
+  "holdout_net_margin_minor":"9000",
+  "incremental_margin_minor":"-4000",
+  "qualification":"synthetic_known_answer_only"
+}
