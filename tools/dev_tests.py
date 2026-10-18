@@ -207,7 +207,7 @@ def select_plan(root, config, registry, changed, *, profile='changed', files=Non
             'max_tests': max_tests, 'max_files': max_files, 'full_regression': False, 'goal_accepted': False}
 
 
-def read_native(path, suite, expected_ids):
+def read_native(path, suite, expected_ids, *, source=None):
     root = ET.parse(path, parser=ET.XMLParser(target=ET.TreeBuilder(insert_comments=True))).getroot()
     for node in root.iter():
         if node.tag in ('testsuite', 'testsuites'):
@@ -219,6 +219,11 @@ def read_native(path, suite, expected_ids):
     ids = []
     for case in root.iter('testcase'):
         name = case.get('name', '').strip()
+        if suite != 'python' and source:
+            reported = posixpath.normpath(name.replace('\\', '/'))
+            selected = posixpath.normpath(str(source).replace('\\', '/'))
+            if reported in (selected, posixpath.basename(selected)) or reported.endswith('/' + selected):
+                raise ValueError(f'native Node report contains a file wrapper instead of test IDs: {name}')
         name = name.split()[0] if suite != 'python' and name else name
         if not name or len(case) or case.get('status', 'passed') not in ('passed', 'run'):
             raise ValueError(f'native result is failed, skipped, cancelled or incomplete: {name or "unnamed"}')
@@ -365,7 +370,7 @@ def main():
                 print(f"FAIL {source}: exit {result['returncode']}; see {log}", flush=True)
                 break
             try:
-                result.update(read_native(native, selection['suite'], selection['expected_ids']))
+                result.update(read_native(native, selection['suite'], selection['expected_ids'], source=source))
                 total += result['count']
                 if total > max_tests:
                     raise ValueError('native dynamic cases exceeded the planned budget; narrow selection explicitly')

@@ -1,11 +1,14 @@
 """Bounded development feedback; these checks do not accept a product goal."""
 import json
+from contextlib import redirect_stdout
+from io import StringIO
 from pathlib import Path
 import subprocess
 import sys
 import tempfile
 import time
 import unittest
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'tools'))
@@ -112,6 +115,44 @@ class DevelopmentTests(unittest.TestCase):
             native.write_text(xml)
             with self.assertRaises(ValueError):
                 dev.read_native(native, 'runtime', ['CASE-1'])
+
+    def test_unregistered_node_file_wrapper_cannot_pass_development(self):
+        source = 'tests/new.test.mts'
+        self.put(source, "test('NEW-1',()=>{}); test('NEW-2',()=>{});\n")
+        config = {**self.config(), 'max_tests': 60, 'max_files': 4, 'timeout_seconds': 60}
+        self.put('planning/development-test-profiles.json', json.dumps(config))
+        self.put('planning/regression-registry.json', json.dumps({'tests': []}))
+        output = self.root / 'wrapper-report'
+        # Actual restricted Node shape: exit 0 and internally consistent totals,
+        # but only a filename testcase instead of the two planned native IDs.
+        def wrapper_run(command, root, log, deadline):
+            destination = next(arg.split('=', 1)[1] for arg in command
+                               if arg.startswith('--test-reporter-destination='))
+            Path(destination).write_text(
+                f'<testsuites><testcase name="{source}"/><!-- tests 1 -->'
+                '<!-- pass 1 --><!-- fail 0 --><!-- skipped 0 --></testsuites>')
+            return {'returncode': 0, 'timed_out': False, 'elapsed_seconds': 0, 'started': True}
+
+        argv = ['dev_tests.py', '--root', str(self.root), '--files', source, '--output', str(output)]
+        with patch.object(sys, 'argv', argv), patch.object(dev, 'resolve_node', return_value='fixture-node'), \
+                patch.object(dev, 'run_process', side_effect=wrapper_run), redirect_stdout(StringIO()):
+            self.assertEqual(dev.main(), 1)
+        report = json.loads((output / 'report.json').read_text())
+        self.assertEqual(report['planned_tests'], 2)
+        self.assertEqual(report['selected'][0]['expected_ids'], [])
+        self.assertEqual(report['status'], 'failed')
+        self.assertEqual(report['actual_tests'], 0)
+        self.assertIn('file wrapper', report['results'][0]['validation_error'])
+
+        native = self.root / 'native.xml'
+        for name in [source, str(self.root / source), source.replace('/', '\\'), 'new.test.mts']:
+            native.write_text(f'<testsuite><testcase name="{name}"/></testsuite>')
+            with self.assertRaisesRegex(ValueError, 'file wrapper'):
+                dev.read_native(native, 'runtime', [], source=source)
+        native.write_text('<testsuite><testcase name="NEW-1"/><testcase name="NEW-2"/></testsuite>')
+        actual = dev.read_native(native, 'runtime', [], source=source)
+        self.assertEqual(actual['count'], 2)
+        self.assertEqual(actual['unregistered_ids'], ['NEW-1', 'NEW-2'])
 
     def test_native_failure_and_total_deadline_propagate_without_retry(self):
         result = dev.run_process([sys.executable, '-c', 'raise SystemExit(7)'], self.root,
