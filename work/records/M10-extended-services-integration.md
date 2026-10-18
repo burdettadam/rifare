@@ -60,7 +60,7 @@ source lookup; they cannot be discarded or retried under new identifiers.
 
 The fourteen named behavioral faults alter real isolated modules: credential as
 contract, retroactive warranty terms, repeated entitlement, submitted as paid,
-fabricated acknowledgment, HTTP success as recovered funds, fee as coverage
+fabricated acknowledgment, submission acknowledgment as a dispute win, fee as coverage
 guarantee, estimate replacing final duty assessment, route as physical receipt,
 first hub as entire journey, generated text as HSA/FSA eligibility, fixture as
 contracted network coverage, order creation as trial start, and full capture

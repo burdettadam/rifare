@@ -40,8 +40,23 @@ test('M10-G13-PREP-02',async()=>{
     assert.deepEqual(await reopened.lookup(current.operation_id),result);return result;
    }finally{reopenedDb.close();}
   };
-  assert.equal((await f.instant.dispatch(f.a.scope,op.id)).state,'mandate_active');f.delivery();f.advance(70001);
+  assert.equal((await f.instant.dispatch(f.a.scope,op.id)).state,'mandate_active');
+  assert.equal((await issue(command)).state,'mandate_active');
+  assert.equal(f.sourceDb.prepare('SELECT count(*) n FROM fixture_instant_operations').get().n,1);
+  f.delivery();f.advance(70001);
   f.readiness.outage(f.owner.scope,{service:'trial_payments',account_id:'trial-account',unavailable:true});assert.throws(()=>f.instant.quoteCapture(f.a.scope,{obligation_id:f.obligationId}),/PARTNER|TRIAL/);
+ });
+ await usingTrials(async f=>{
+  const op=f.approve(f.instant.quoteAuthorize(f.a.scope,{trial_id:f.trial.id,consent_id:f.consent.id}));
+  f.source.fault='before';const result=await f.instant.dispatch(f.a.scope,op.id);
+  assert.equal(result.state,'unknown');assert.equal(result.retry_allowed,false);
+  const command=JSON.parse(f.db.prepare('SELECT command FROM commerce_instant_operations WHERE id=?').get(op.id).command);
+  assert.equal(f.sourceDb.prepare('SELECT count(*) n FROM fixture_instant_operation_bindings WHERE id=?').get(op.id).n,1);
+  assert.equal(await f.source.lookup(op.id),null);
+  await assert.rejects(f.source.issue(command),/TRIAL_GUARD_REQUIRED/);
+  assert.equal(f.sourceDb.prepare('SELECT count(*) n FROM fixture_instant_operations').get().n,0);
+  assert.equal(f.sourceDb.prepare('SELECT count(*) n FROM fixture_instant_obligations').get().n,0);
+  assert.equal(f.instant.read(f.a.scope,op.id).state,'unknown');
  });
  await usingTrials(f=>{
   const current=f.facts.window('trial-account');f.facts.qualifyWindow({...f.windowInput,expected_revision:current.revision,authorization_duration_ms:60000});
