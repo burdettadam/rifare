@@ -70,7 +70,7 @@ ownership, conserved transfers and full-cycle reconciliation extend the existing
 canonical sources and services. G07/G10 connected qualification remains blocked;
 G99 is a blocked assessment and does not trigger a broad milestone campaign.
 Development retains the 60-case/four-file/60-second defaults, source-bound native
-evidence and independent focused review. M09 remains unassigned.
+evidence and independent focused review. The following ADR-0038 assigns M09.
 
 The [inventory integration record](work/records/M08-inventory-five-integration.md)
 describes the five bounded outcomes and preserved source/effect identities.
@@ -79,3 +79,25 @@ reconciliation cases) plus the nine-case retained privacy file form the planned
 60-case selection. The checkpoint binds actual native results and independent
 review to its clean candidate. No original formal case or milestone campaign is
 substituted by this development evidence.
+
+## Assigned all-goals M09 growth development
+
+The owner requested all goals for the next milestone. ADR-0038 assigns M09-G01
+through G14 and the G99 assessment from reviewed `63767bbd`. Three isolated
+worktrees cover shopping/upsells/catalog, experiments/campaigns, and optional
+media/identity boundaries. Root owns privacy, recovery, shared metadata and
+integration. Canonical order edits, delivery, source receipts, consent and
+customer authority remain the execution foundations.
+
+The planned coherent selection is 15 shopping, 24 marketing/measurement,
+12 optional-provider and nine retained privacy cases: 60 actual cases across
+four whole files with one 60-second deadline. Only concrete failures or
+consequential corrections justify affected-file repeats. The prior cumulative
+checkpoint and all older registrations, capability claims, source obligations
+and independent storage fixtures remain preserved.
+
+Read [the M09 assessment](docs/M09-QUALIFICATION.md). M07-G99 remains blocked;
+connected G02/G06/G07/G10/G11/G13 and external G14 evidence is not supplied by
+synthetic development. Optional capabilities remain default-disabled, not
+silently excluded or accepted. G99 records the missing formal evidence without
+an automatic full milestone campaign. M10 is unassigned.

@@ -30,13 +30,16 @@ function storageInventoryVersions(k:CommerceKernel) {
   const shippingCurrent=[...wooCurrent,...shipping.tables].sort((a:Row,b:Row)=>a.name.localeCompare(b.name));
   const inventory=JSON.parse(readFileSync(new URL('./contracts/storage-warehouse-inventory-extension.v1.json',import.meta.url),'utf8'));
   if(inventory.base_schema_digest!==shipping.schema_digest||contentDigest(shippingCurrent.map((r:Row)=>({name:r.name,columns:r.columns})))!==shipping.schema_digest)throw new Error('STORAGE_INVENTORY_CHANGED');
-  const current=[...shippingCurrent,...inventory.tables].sort((a:Row,b:Row)=>a.name.localeCompare(b.name));
+  const inventoryCurrent=[...shippingCurrent,...inventory.tables].sort((a:Row,b:Row)=>a.name.localeCompare(b.name));
+  const growth=JSON.parse(readFileSync(new URL('./contracts/storage-growth-extension.v1.json',import.meta.url),'utf8'));
+  if(growth.base_schema_digest!==inventory.schema_digest||contentDigest(inventoryCurrent.map((r:Row)=>({name:r.name,columns:r.columns})))!==inventory.schema_digest)throw new Error('STORAGE_INVENTORY_CHANGED');
+  const current=[...inventoryCurrent,...growth.tables].sort((a:Row,b:Row)=>a.name.localeCompare(b.name));
   if(new Set(current.map((r:Row)=>r.name)).size!==current.length)throw new Error('STORAGE_INVENTORY_CHANGED');
   const actual=(k.db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name").all() as Row[])
     .map(r=>({name:r.name,columns:(k.db.prepare('PRAGMA table_info('+r.name+')').all() as Row[]).map(c=>c.name)}));
-  if(contentDigest(actual)!==inventory.schema_digest||contentDigest(current.map((r:Row)=>({name:r.name,columns:r.columns})))!==inventory.schema_digest||contentDigest(tables.map((r:Row)=>({name:r.name,columns:r.columns})))!==assistance.schema_digest)throw new Error('STORAGE_INVENTORY_CHANGED');
+  if(contentDigest(actual)!==growth.schema_digest||contentDigest(current.map((r:Row)=>({name:r.name,columns:r.columns})))!==growth.schema_digest||contentDigest(tables.map((r:Row)=>({name:r.name,columns:r.columns})))!==assistance.schema_digest)throw new Error('STORAGE_INVENTORY_CHANGED');
   const legacy={...declared,tables,schema_digest:assistance.schema_digest,base_schema_digest:declared.schema_digest};
-  return {legacy,current:{...declared,version:2,tables:current,schema_digest:inventory.schema_digest,base_schema_digest:assistance.schema_digest}};
+  return {legacy,current:{...declared,version:2,tables:current,schema_digest:growth.schema_digest,base_schema_digest:assistance.schema_digest}};
 }
 // Preserve the established version-one projection and its immutable caller
 // expectations. Both views first validate the entire current database schema.

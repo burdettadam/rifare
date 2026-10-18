@@ -10,6 +10,9 @@ export const ADAPTER_CATALOG_VERSION='rifare-adapter-catalog-v1';
 export const CATALOG_ROOT=resolve(dirname(fileURLToPath(import.meta.url)),'../..');
 const catalogFile='tests/fixtures/conformance/adapter-catalog.v1.json';
 const coverageFile='tests/fixtures/conformance/expected-coverage.v1.json';
+// ADR-0038: retaining the additive source/case inventory exceeds the generic
+// configuration ceiling. Only this local catalog receives the bounded budget.
+const CATALOG_BYTES=262144;
 const fail=(reason:string):never=>{throw new Error('ADAPTER_CATALOG_'+reason);};
 export const fileHash=(bytes:Buffer|string)=>createHash('sha256').update(bytes).digest('hex');
 export function catalogPath(root:string,path:unknown){if(typeof path!=='string'||! /^(?:apps|packages|migrations|tests|planning|examples)\/[A-Za-z0-9_./-]+$/.test(path)||path.split('/').includes('..'))fail('PATH_INVALID');
@@ -22,7 +25,7 @@ export function catalogCases(input:Row){const found=new Map<string,Row>();for(co
 /** Source and native-test pins are reviewable inputs. This function cannot grant
  * runtime capability, enable transport, or qualify an external account. */
 export function validateAdapterCatalog(input:unknown,root=CATALOG_ROOT){
- const c=exact(jsonValue(input),['schema_version','catalog_version','scope','qualification','declaration_pins','source_files','adapters','fixture_administration','oracle_pins']);
+ const c=exact(jsonValue(input,CATALOG_BYTES),['schema_version','catalog_version','scope','qualification','declaration_pins','source_files','adapters','fixture_administration','oracle_pins']);
  if(c.schema_version!==1||c.catalog_version!==ADAPTER_CATALOG_VERSION||c.scope!=='local_reusable_fixture_package'||c.qualification!=='external_qualification_blocked')fail('VERSION_CHANGED');
  const expected=JSON.parse(readFileSync(catalogPath(root,coverageFile),'utf8'));if(expected.schema_version!==1)fail('VERSION_CHANGED');
  if(!Array.isArray(c.adapters)||!c.adapters.length||c.adapters.length>100)fail('INVALID');
@@ -54,7 +57,7 @@ export function validateAdapterCatalog(input:unknown,root=CATALOG_ROOT){
  for(const provider of ['openai','anthropic'])if(!ids.has(provider))fail('PROVIDER_REMOVED');
  for(const platform of ['shopify','woocommerce']){const p=JSON.parse(readFileSync(catalogPath(root,'examples/platforms/'+platform+'.json'),'utf8'));if(p.platform!==platform||p.status!=='design_example_unverified'||p.tested_api_version!==null)fail('PLATFORM_DECLARATION_CHANGED');}
  const cases=catalogCases(c);if(canonical(cases)!==canonical(expected.native_cases))fail('CASE_SET_CHANGED');
- return {catalog:c,digest:fileHash(canonical(c)),adapter_count:ids.size,operation_count:c.adapters.reduce((n:number,a:Row)=>n+a.operations.length,0),native_case_count:cases.length,direct_fixture_count:c.adapters.reduce((n:number,a:Row)=>n+a.operations.reduce((m:number,o:Row)=>m+o.direct_fixtures.length,0),0),external_qualification:false,production_qualified:false};
+ return {catalog:c,digest:fileHash(JSON.stringify(c)),adapter_count:ids.size,operation_count:c.adapters.reduce((n:number,a:Row)=>n+a.operations.length,0),native_case_count:cases.length,direct_fixture_count:c.adapters.reduce((n:number,a:Row)=>n+a.operations.reduce((m:number,o:Row)=>m+o.direct_fixtures.length,0),0),external_qualification:false,production_qualified:false};
 }
 export function catalogDescriptor(adapter:Row,operation:Row){return {id:adapter.id,version:adapter.version,api_version:adapter.api_version,granted_scopes:[...operation.required_scopes],semantics:operation.semantics,qualification:operation.qualification};}
 export function catalogOperation(catalog:Row,adapterId:string,operationId:string){const adapter=catalog.adapters.find((a:Row)=>a.id===adapterId),operation=adapter?.operations.find((o:Row)=>o.id===operationId);if(!adapter||!operation)fail('OPERATION_UNAVAILABLE');return {adapter,operation,descriptor:catalogDescriptor(adapter,operation)};}
