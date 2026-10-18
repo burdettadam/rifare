@@ -6,6 +6,8 @@ import type { Row } from '../commerce/kernel.mts';
 import { canonical,contentDigest,jsonValue } from '../commerce/configuration-values.mts';
 import { editAddress,editMinor,lineValue,orderValue,safeOrder } from '../commerce/order-edit-core.mts';
 
+export const WAREHOUSE_CONNECTOR=Object.freeze({id:'rifare-warehouse-fixture',version:'1.0.0',api_version:'rifare-order-edit-fixture-v1',qualification:'synthetic_only',live_transport:false});
+
 /** A separate synthetic store/warehouse system. No live transport is implemented. */
 export class OrderEditFixtureSource {
  readonly db:DatabaseSync;readonly identity:string;readonly tenant:string;readonly store:string;readonly clock:()=>number;
@@ -14,6 +16,8 @@ export class OrderEditFixtureSource {
   this.db=db;this.tenant=config.tenant;this.store=config.store;this.clock=clock;
   db.exec(`PRAGMA busy_timeout=3000;
    CREATE TABLE IF NOT EXISTS edit_source_identity(singleton INTEGER PRIMARY KEY CHECK(singleton=1),label TEXT NOT NULL,identity TEXT NOT NULL,tenant TEXT NOT NULL,store TEXT NOT NULL,revision INTEGER NOT NULL) STRICT;
+   CREATE TABLE IF NOT EXISTS edit_source_connector_requirements(warehouse_id TEXT PRIMARY KEY,first_binding_digest TEXT NOT NULL) STRICT;
+   CREATE TABLE IF NOT EXISTS edit_source_connector_bindings(warehouse_id TEXT PRIMARY KEY,revision INTEGER NOT NULL,body TEXT NOT NULL,digest TEXT NOT NULL) STRICT;
    CREATE TABLE IF NOT EXISTS edit_source_orders(id TEXT PRIMARY KEY,body TEXT NOT NULL,digest TEXT NOT NULL) STRICT;
    CREATE TABLE IF NOT EXISTS edit_source_catalog(id TEXT PRIMARY KEY,body TEXT NOT NULL,digest TEXT NOT NULL) STRICT;
    CREATE TABLE IF NOT EXISTS edit_source_warehouses(id TEXT PRIMARY KEY,revision INTEGER NOT NULL,mode TEXT NOT NULL) STRICT;
@@ -45,19 +49,73 @@ export class OrderEditFixtureSource {
  warehouse(order:string,warehouse:string){const r=this.db.prepare('SELECT * FROM edit_source_fulfillments WHERE order_id=? AND warehouse_id=?').get(order,warehouse) as Row;if(!r)throw new Error('EDIT_WAREHOUSE_MISSING');const b=JSON.parse(r.body);if(contentDigest(b)!==r.digest)throw new Error('EDIT_SOURCE_INTEGRITY');return {id:warehouse,revision:r.revision,...b,holds:this.db.prepare('SELECT owner,handle,reason FROM edit_source_holds WHERE order_id=? AND warehouse_id=? ORDER BY owner,handle,reason').all(order,warehouse)};}
  #warehouseSave(order:string,warehouse:string,b:Row){const {id:_id,revision,holds,...body}=b;this.db.prepare('UPDATE edit_source_fulfillments SET revision=?,body=?,digest=? WHERE order_id=? AND warehouse_id=?').run(revision+1,canonical(body),contentDigest(body),order,warehouse);}
  snapshot(resource:string){const o=this.order(resource);return {source_identity:this.identity,source_revision:this.revision(),order:o,catalog:(this.db.prepare('SELECT body FROM edit_source_catalog ORDER BY id').all() as Row[]).map(r=>JSON.parse(r.body)),warehouses:([...new Set(o.lines.map((l:Row)=>l.warehouse_id))] as string[]).sort().map(w=>this.warehouse(resource,w))};}
+ connectorBinding(warehouse:string){
+  const r=this.db.prepare('SELECT revision,body,digest FROM edit_source_connector_bindings WHERE warehouse_id=?').get(id(warehouse)) as Row|undefined;
+  const required=this.db.prepare('SELECT first_binding_digest FROM edit_source_connector_requirements WHERE warehouse_id=?').get(warehouse) as Row|undefined;
+  if(!r){if(required)throw new Error('WAREHOUSE_BINDING_MISSING');return null;}
+  if(!required||!/^[a-f0-9]{64}$/.test(required.first_binding_digest))throw new Error('EDIT_SOURCE_INTEGRITY');
+  const body=JSON.parse(r.body);
+  if(contentDigest(body)!==r.digest||body.source_identity!==this.identity||body.warehouse_id!==warehouse||contentDigest(body.connector)!==contentDigest(WAREHOUSE_CONNECTOR))throw new Error('EDIT_SOURCE_INTEGRITY');
+  return {...body,revision:r.revision,digest:r.digest};
+ }
+ connectorIssues(warehouse:string):string[]{
+  const b=this.connectorBinding(warehouse);if(!b)return [];
+  const actual=this.db.prepare('SELECT mode FROM edit_source_warehouses WHERE id=?').get(warehouse) as Row|undefined;
+  if(actual?.mode!==(b.behavior==='transport_only'?'tag_only':b.behavior))return ['WAREHOUSE_CONFIGURATION_CHANGED'];
+  if(!b.callbacks_connected)return ['WAREHOUSE_CALLBACKS_DISCONNECTED'];
+  const now=this.clock();if(!Number.isSafeInteger(now)||b.callback_observed_at>now||b.callback_observed_at+b.callback_max_age_ms<=now)return ['WAREHOUSE_CALLBACKS_STALE'];
+  return [];
+ }
+ assertConnectorReadiness(warehouses:string[],expected?:Row[]){
+  for(const w of warehouses){const binding=this.connectorBinding(w);
+   if(expected){const prior=expected.find(r=>r.warehouse_id===w);if(!prior||(prior.binding_digest??null)!==(binding?.digest??null))throw new Error('WAREHOUSE_CONFIGURATION_CHANGED');}
+   const issues=this.connectorIssues(w);if(issues.length)throw new Error(issues[0]);
+  }
+ }
+ configureConnector(input:unknown){
+  const p=exact(jsonValue(input),['warehouse_id','expected_revision','connector_version','api_version','workflow_revision','callbacks_connected','callback_observed_at','callback_max_age_ms','behavior']);
+  id(p.warehouse_id);id(p.workflow_revision);integer(p.expected_revision);integer(p.callback_observed_at);integer(p.callback_max_age_ms,1000);
+  if(p.connector_version!==WAREHOUSE_CONNECTOR.version||p.api_version!==WAREHOUSE_CONNECTOR.api_version)throw new Error('WAREHOUSE_VERSION_UNSUPPORTED');
+  if(typeof p.callbacks_connected!=='boolean'||p.callback_observed_at>this.clock()||p.callback_max_age_ms>300000||!['qualified','transport_only','ignore_updates'].includes(p.behavior))throw new Error('INVALID_INPUT');
+  return this.#tx(()=>{
+   const old=this.connectorBinding(p.warehouse_id);
+   if((old?.revision??0)!==p.expected_revision)throw new Error('WAREHOUSE_CONFIGURATION_CHANGED');
+   const mode=p.behavior==='transport_only'?'tag_only':p.behavior;
+   const changed=this.db.prepare('UPDATE edit_source_warehouses SET mode=?,revision=revision+1 WHERE id=?').run(mode,p.warehouse_id);
+   if(changed.changes!==1)throw new Error('EDIT_WAREHOUSE_MISSING');
+   const body={warehouse_id:p.warehouse_id,source_identity:this.identity,connector:WAREHOUSE_CONNECTOR,workflow_revision:p.workflow_revision,callbacks_connected:p.callbacks_connected,callback_observed_at:p.callback_observed_at,callback_max_age_ms:p.callback_max_age_ms,behavior:p.behavior};
+   this.db.prepare('INSERT OR IGNORE INTO edit_source_connector_requirements VALUES(?,?)').run(p.warehouse_id,contentDigest(body));
+   this.db.prepare('INSERT INTO edit_source_connector_bindings VALUES(?,?,?,?) ON CONFLICT(warehouse_id) DO UPDATE SET revision=excluded.revision,body=excluded.body,digest=excluded.digest')
+    .run(p.warehouse_id,p.expected_revision+1,canonical(body),contentDigest(body));
+   this.db.prepare('UPDATE edit_source_identity SET revision=revision+1').run();
+   return this.connectorBinding(p.warehouse_id);
+  });
+ }
+ #consumeWarehouseUpdate(o:Row,w:string,cancellation=false){
+  const row=this.warehouse(o.resource_id,w),mode=this.#mode(w);
+  // A transport acknowledgment can exist while the actual business payload is ignored.
+  if(mode==='ignore_updates'||mode==='tag_only')return row;
+  row.ack_version=o.version;row.ack_digest=contentDigest(safeOrder(o));
+  row.final_variant_ids=o.lines.filter((l:Row)=>l.warehouse_id===w&&l.status!=='cancelled').map((l:Row)=>l.variant_id);
+  if(cancellation)row.cancelled=o.lines.filter((l:Row)=>l.warehouse_id===w).every((l:Row)=>['cancelled','shipped'].includes(l.status));
+  this.#warehouseSave(o.resource_id,w,row);return this.warehouse(o.resource_id,w);
+ }
  configureWarehouse(warehouse:string,mode:'qualified'|'tag_only'|'offline'){if(!['qualified','tag_only','offline'].includes(mode))throw new Error('INVALID_INPUT');this.#tx(()=>{const r=this.db.prepare('UPDATE edit_source_warehouses SET mode=?,revision=revision+1 WHERE id=?').run(mode,id(warehouse));if(r.changes!==1)throw new Error('EDIT_WAREHOUSE_MISSING');this.db.prepare('UPDATE edit_source_identity SET revision=revision+1').run();});}
  #mode(warehouse:string){const r=this.db.prepare('SELECT mode FROM edit_source_warehouses WHERE id=?').get(warehouse) as Row;if(!r||r.mode==='offline')throw new Error('EDIT_WAREHOUSE_UNAVAILABLE');return r.mode;}
  #addHold(order:string,w:string,owner:string,handle:string,reason:string){const row=this.warehouse(order,w);if(['picking','shipped'].includes(row.stage))throw new Error('EDIT_WAREHOUSE_IRREVERSIBLE');if(this.#mode(w)==='tag_only')return false;
   const r=this.db.prepare('INSERT OR IGNORE INTO edit_source_holds VALUES(?,?,?,?,?)').run(order,w,owner,handle,reason);if(r.changes)this.#warehouseSave(order,w,row);return true;}
- canPick(orderId:string,w:string){const o=this.order(orderId),s=this.warehouse(orderId,w);return this.#mode(w)!=='offline'&&!s.cancelled&&s.stage==='unfulfilled'&&s.holds.length===0&&o.balance_due_minor==='0'&&s.ack_version===o.version&&s.ack_digest===contentDigest(safeOrder(o));}
+ canPick(orderId:string,w:string){const o=this.order(orderId),s=this.warehouse(orderId,w);if(this.connectorIssues(w).length)return false;return this.#mode(w)!=='offline'&&!s.cancelled&&s.stage==='unfulfilled'&&s.holds.length===0&&o.balance_due_minor==='0'&&s.ack_version===o.version&&s.ack_digest===contentDigest(safeOrder(o));}
  tryPick(orderId:string,w:string){return this.#tx(()=>{if(!this.canPick(orderId,w))return {picked:false};const s=this.warehouse(orderId,w);s.stage='picking';this.#warehouseSave(orderId,w,s);const o=this.order(orderId);for(const l of o.lines)if(l.warehouse_id===w&&l.status==='unfulfilled')l.status='picking';o.version++;this.#put('edit_source_orders',orderId,o);return {picked:true};});}
  probe(warehouses:string[]){if(!warehouses.length||warehouses.length>4||new Set(warehouses).size!==warehouses.length)throw new Error('INVALID_INPUT');const results:Row[]=[];
   // Exercise the actual picking and acknowledgment predicates on a temporary canary.
-  this.db.exec('BEGIN IMMEDIATE');try{for(const w of warehouses){id(w);const key='probe_'+randomUUID().replaceAll('-',''),o={resource_id:key,tenant_id:this.tenant,store_id:this.store,customer_id:'probe',version:1,created_at:this.clock(),currency:'USD',shipping_minor:'0',total_minor:'0',net_paid_minor:'0',balance_due_minor:'0',financial_state:'paid',cancelled:false,address:{name:'Probe',line1:'1 Test',city:'Test',state:'UT',postal:'84601',country:'US'},lines:[]};this.#put('edit_source_orders',key,o);
+  this.db.exec('BEGIN IMMEDIATE');try{for(const w of warehouses){id(w);
+    const reasons=this.connectorIssues(w),binding=this.connectorBinding(w);
+    if(reasons.length){results.push({warehouse_id:w,transport_accepted:false,picking_before:false,hold_acknowledged:false,picking_blocked:false,update_consumed:false,payload_digest_matched:false,binding_digest:binding?.digest??null,reasons});continue;}
+    const key='probe_'+randomUUID().replaceAll('-',''),o={resource_id:key,tenant_id:this.tenant,store_id:this.store,customer_id:'probe',version:1,created_at:this.clock(),currency:'USD',shipping_minor:'0',total_minor:'0',net_paid_minor:'0',balance_due_minor:'0',financial_state:'paid',cancelled:false,address:{name:'Probe',line1:'1 Test',city:'Test',state:'UT',postal:'84601',country:'US'},lines:[]};this.#put('edit_source_orders',key,o);
     const b={ack_version:1,ack_digest:contentDigest(safeOrder(o)),cancelled:false,stage:'unfulfilled',final_variant_ids:[]};this.db.prepare('INSERT INTO edit_source_fulfillments VALUES(?,?,1,?,?)').run(key,w,canonical(b),contentDigest(b));
-    const before=this.canPick(key,w),ack=this.#addHold(key,w,'rifare','probe','edit'),blocked=!this.canPick(key,w);o.version=2;this.#put('edit_source_orders',key,o);const row=this.warehouse(key,w);row.ack_version=2;row.ack_digest=contentDigest(safeOrder(o));this.#warehouseSave(key,w,row);
-    results.push({warehouse_id:w,picking_before:before,hold_acknowledged:ack,picking_blocked:blocked,update_consumed:this.warehouse(key,w).ack_version===2});}
-   return {source_identity:this.identity,source_revision:this.revision(),qualification:'synthetic_only',qualified:results.every(r=>r.picking_before&&r.hold_acknowledged&&r.picking_blocked&&r.update_consumed),warehouses:results};
+    const before=this.canPick(key,w),ack=this.#addHold(key,w,'rifare','probe','edit'),blocked=!this.canPick(key,w);o.version=2;o.address.line1='2 Updated Test';this.#put('edit_source_orders',key,o);const row=this.#consumeWarehouseUpdate(o,w);
+    results.push({warehouse_id:w,transport_accepted:true,picking_before:before,hold_acknowledged:ack,picking_blocked:blocked,update_consumed:row.ack_version===2,payload_digest_matched:row.ack_digest===contentDigest(safeOrder(o)),binding_digest:binding?.digest??null,reasons:[]});}
+   return {source_identity:this.identity,source_revision:this.revision(),qualification:'synthetic_only',qualified:results.every(r=>r.picking_before&&r.hold_acknowledged&&r.picking_blocked&&r.update_consumed&&r.payload_digest_matched),warehouses:results};
   }finally{this.db.exec('ROLLBACK');}
  }
  foreignHold(order:string,w:string,handle:string,reason='fraud'){return this.#tx(()=>this.#addHold(order,w,'external',id(handle),id(reason)));}
@@ -72,7 +130,7 @@ export class OrderEditFixtureSource {
   const total=orderValue(next),delta=total-orderValue(o);if(total.toString()!==c.new_total_minor||delta.toString()!==c.delta_minor)throw new Error('EDIT_NATIVE_TOTAL_CHANGED');
   next.total_minor=total.toString();next.version=o.version+1;next.balance_due_minor=(total>editMinor(o.net_paid_minor)?total-editMinor(o.net_paid_minor):0n).toString();next.financial_state=next.balance_due_minor==='0'?'paid':'partially_paid';next.cancelled=next.lines.every((l:Row)=>['cancelled','shipped'].includes(l.status))&&i.kind==='cancel';return next;
  }
- #guard(c:Row,o:Row){if(c.source_identity!==this.identity||c.tenant_id!==this.tenant||c.store_id!==this.store)throw new Error('EDIT_SOURCE_MISMATCH');if(c.source_revision!==this.revision())throw new Error('EDIT_READINESS_CHANGED');if(o.customer_id!==c.customer_id)throw new Error('EDIT_CUSTOMER_CHANGED');}
+ #guard(c:Row,o:Row){if(c.source_identity!==this.identity||c.tenant_id!==this.tenant||c.store_id!==this.store)throw new Error('EDIT_SOURCE_MISMATCH');if(c.source_revision!==this.revision())throw new Error('EDIT_READINESS_CHANGED');this.assertConnectorReadiness(c.warehouse_ids);if(o.customer_id!==c.customer_id)throw new Error('EDIT_CUSTOMER_CHANGED');}
  #held(c:Row,o:Row,reason='edit'){for(const w of c.warehouse_ids){const row=this.warehouse(o.resource_id,w);if(this.#mode(w)!=='qualified'||row.stage!=='unfulfilled'||!row.holds.some((h:Row)=>h.owner==='rifare'&&h.handle===c.edit_id&&h.reason===reason))throw new Error('EDIT_HOLD_UNCONFIRMED');}}
  #run(c:Row){const o=this.order(c.resource_id);this.#guard(c,o);assertPreventionNative(this,c,o);let result:Row={stage:c.stage,order_id:o.resource_id,edit_id:c.edit_id,source_identity:this.identity};
   if(c.stage.startsWith('hold:')){if(o.version!==c.original_version||contentDigest(safeOrder(o))!==c.original_digest)throw new Error('EDIT_SOURCE_CHANGED');for(const id of c.line_ids){const l=o.lines.find((l:Row)=>l.id===id);if(!l||!['unfulfilled','held'].includes(l.status))throw new Error('EDIT_LINE_IRREVERSIBLE');}const [,reason,w]=c.stage.split(':');const ok=this.#addHold(o.resource_id,w,'rifare',c.edit_id,reason);if(!ok)throw new Error('EDIT_HOLD_UNCONFIRMED');return {...result,acknowledged:true,warehouse_id:w,reason,version:o.version};}
@@ -96,7 +154,7 @@ export class OrderEditFixtureSource {
    const value={id:'finance_'+c.edit_id,edit_id:c.edit_id,order_id:o.resource_id,order_version:o.version,source_identity:this.identity,customer_id:o.customer_id,currency:o.currency,amount_minor:amount,paid_minor:'0',state:c.stage==='invoice'?'unpaid':'accepted',kind:c.stage,version:1,expires_at:this.clock()+c.payment_ttl_ms,method:'fixture',settled:false};
    this.db.prepare('INSERT INTO edit_source_finance VALUES(?,?,?,?,?,?)').run(c.edit_id,o.resource_id,1,c.stage,canonical(value),contentDigest(value));return {...result,finance:value};
   }
-  if(c.stage.startsWith('sync:')){const w=c.stage.split(':')[1];this.#held(c,o);const row=this.warehouse(o.resource_id,w);row.ack_version=o.version;row.ack_digest=contentDigest(safeOrder(o));row.final_variant_ids=o.lines.filter((l:Row)=>l.warehouse_id===w&&l.status!=='cancelled').map((l:Row)=>l.variant_id);if(c.intent.kind==='cancel')row.cancelled=o.lines.filter((l:Row)=>l.warehouse_id===w).every((l:Row)=>['cancelled','shipped'].includes(l.status));this.#warehouseSave(o.resource_id,w,row);return {...result,warehouse_id:w,ack_version:o.version,ack_digest:row.ack_digest,cancelled:row.cancelled};}
+  if(c.stage.startsWith('sync:')){const w=c.stage.split(':')[1];this.#held(c,o);const row=this.#consumeWarehouseUpdate(o,w,c.intent.kind==='cancel');return {...result,warehouse_id:w,ack_version:row.ack_version,ack_digest:row.ack_digest,cancelled:row.cancelled};}
   if(c.stage.startsWith('release:')){const [,reason,w]=c.stage.split(':'),row=this.warehouse(o.resource_id,w);if(row.revision!==c.warehouse_revision)throw new Error('EDIT_WAREHOUSE_CHANGED');
    if(row.ack_version!==o.version||row.ack_digest!==contentDigest(safeOrder(o)))throw new Error('EDIT_WAREHOUSE_STALE');
    if(o.balance_due_minor!=='0')throw new Error('EDIT_PAYMENT_OUTSTANDING');

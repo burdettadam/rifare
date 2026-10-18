@@ -6,6 +6,8 @@ import { subjectHash } from './data-guards.mts';
 import { eraseGiftRecipient } from './gift-proof.mts';
 
 const MAX_RECORDS=10000;
+const PACKING_TABLES=['commerce_packing_sessions','commerce_packing_allocations','commerce_packing_scans','commerce_packing_confirmations'];
+const SHIPPING_TABLES=['commerce_shipping_label_operations','commerce_shipping_label_approvals','commerce_shipping_manifest_packages','commerce_shipping_manifest_events'];
 const all=(k:CommerceKernel,table:string,t:string,s:string)=>k.db.prepare(`SELECT * FROM ${table} WHERE tenant_id=? AND store_id=?`).all(t,s) as Row[];
 const where=(ids:string[])=>ids.map(()=>'?').join(',');
 function storageInventoryVersions(k:CommerceKernel) {
@@ -20,13 +22,16 @@ function storageInventoryVersions(k:CommerceKernel) {
   if(new Set(tables.map((r:Row)=>r.name)).size!==tables.length)throw new Error('STORAGE_INVENTORY_CHANGED');
   const woo=JSON.parse(readFileSync(new URL('./contracts/storage-woocommerce-extension.v1.json',import.meta.url),'utf8'));
   if(woo.base_schema_digest!==assistance.schema_digest)throw new Error('STORAGE_INVENTORY_CHANGED');
-  const current=[...tables,...woo.tables].sort((a:Row,b:Row)=>a.name.localeCompare(b.name));
+  const wooCurrent=[...tables,...woo.tables].sort((a:Row,b:Row)=>a.name.localeCompare(b.name));
+  const shipping=JSON.parse(readFileSync(new URL('./contracts/storage-shipping-extension.v1.json',import.meta.url),'utf8'));
+  if(shipping.base_schema_digest!==woo.schema_digest||contentDigest(wooCurrent.map((r:Row)=>({name:r.name,columns:r.columns})))!==woo.schema_digest)throw new Error('STORAGE_INVENTORY_CHANGED');
+  const current=[...wooCurrent,...shipping.tables].sort((a:Row,b:Row)=>a.name.localeCompare(b.name));
   if(new Set(current.map((r:Row)=>r.name)).size!==current.length)throw new Error('STORAGE_INVENTORY_CHANGED');
   const actual=(k.db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name").all() as Row[])
     .map(r=>({name:r.name,columns:(k.db.prepare('PRAGMA table_info('+r.name+')').all() as Row[]).map(c=>c.name)}));
-  if(contentDigest(actual)!==woo.schema_digest||contentDigest(current.map((r:Row)=>({name:r.name,columns:r.columns})))!==woo.schema_digest||contentDigest(tables.map((r:Row)=>({name:r.name,columns:r.columns})))!==assistance.schema_digest)throw new Error('STORAGE_INVENTORY_CHANGED');
+  if(contentDigest(actual)!==shipping.schema_digest||contentDigest(current.map((r:Row)=>({name:r.name,columns:r.columns})))!==shipping.schema_digest||contentDigest(tables.map((r:Row)=>({name:r.name,columns:r.columns})))!==assistance.schema_digest)throw new Error('STORAGE_INVENTORY_CHANGED');
   const legacy={...declared,tables,schema_digest:assistance.schema_digest,base_schema_digest:declared.schema_digest};
-  return {legacy,current:{...declared,version:2,tables:current,schema_digest:woo.schema_digest,base_schema_digest:assistance.schema_digest}};
+  return {legacy,current:{...declared,version:2,tables:current,schema_digest:shipping.schema_digest,base_schema_digest:assistance.schema_digest}};
 }
 // Preserve the established version-one projection and its immutable caller
 // expectations. Both views first validate the entire current database schema.
@@ -142,6 +147,31 @@ function eraseGiftCaseData(k:CommerceKernel,s:Row,cases:string[],hash:string) {
  const submissions=all(k,'commerce_worker_submissions',t,st).filter(r=>cases.includes(r.case_id)).map(r=>r.id);scrubRecord(k,'commerce_worker_effects',t,st,submissions,'submission_id');
 }
 
+function eraseShippingAndPacking(k:CommerceKernel,s:Row,ids:string[]){
+  if(!ids.length)return;
+  const t=s.tenant_id,st=s.store_id;
+  for(const table of [...PACKING_TABLES,...SHIPPING_TABLES.filter(name=>name!=='commerce_shipping_label_operations')])
+    scrubRecord(k,table,t,st,ids,'resource_id');
+  k.db.prepare('UPDATE commerce_shipping_label_approvals SET revoked=1 WHERE tenant_id=? AND store_id=? AND resource_id IN ('+where(ids)+')').run(t,st,...ids);
+  // Retain exact monetary and native effect identity without parcel/address,
+  // tracking, operator, source snapshot, policy or approval payload copies.
+  for(const row of all(k,'commerce_shipping_label_operations',t,st).filter(r=>ids.includes(r.resource_id))){
+    const original=JSON.parse(row.body);
+    if(contentDigest(original)!==row.digest)throw new Error('SHIPPING_INTEGRITY');
+    const receipt=original.receipt??{},quote=original.command?.quote??{};
+    const body={redacted:true,original_digest:original.original_digest??row.digest,purchase_id:row.purchase_id,
+      source_identity:original.source_identity??null,command_digest:original.command_digest??null,
+      amount_minor:quote.amount_minor??receipt.amount_minor??original.amount_minor??null,currency:quote.currency??receipt.currency??original.currency??null,
+      state:original.state??'unknown',native_label_id:receipt.native_label_id??original.native_label_id??null,native_charge_id:receipt.native_charge_id??original.native_charge_id??null,
+      void_operation_id:receipt.void_operation_id??original.void?.command?.void_operation_id??original.void_operation_id??null,
+      void_state:receipt.void_state??original.void?.state??original.void_state??'not_requested',
+      refund_state:receipt.refund_state??original.refund_state??'not_requested',refund_amount_minor:receipt.refund_amount_minor??original.refund_amount_minor??null,
+      native_refund_id:receipt.native_refund_id??original.native_refund_id??null,qualification:'synthetic_only'};
+    k.db.prepare('UPDATE commerce_shipping_label_operations SET body=?,digest=? WHERE tenant_id=? AND store_id=? AND package_id=?')
+      .run(canonical(body),contentDigest(body),t,st,row.package_id);
+  }
+}
+
 // Requires caller-owned transaction and explicit resource identities. Also used to replay
 // an independently retained erasure checkpoint before a restored database is exposed.
 export function eraseSelected(k:CommerceKernel,s:Row,ids:string[],hash:string,at:number) {
@@ -155,6 +185,7 @@ export function eraseSelected(k:CommerceKernel,s:Row,ids:string[],hash:string,at
   for(const resource of ids)k.db.prepare('INSERT OR IGNORE INTO commerce_privacy_resources VALUES(?,?,?,?,?)').run(t,st,resource,hash,at);
   if(ids.length) {
     const marks=where(ids),args=[t,st,...ids];
+    eraseShippingAndPacking(k,s,ids);
     k.db.prepare(`DELETE FROM commerce_gift_challenges WHERE tenant_id=? AND store_id=? AND resource_id IN (${marks})`).run(...args);
     k.db.prepare(`DELETE FROM commerce_gift_sessions WHERE tenant_id=? AND store_id=? AND resource_id IN (${marks})`).run(...args);
     scrubRecord(k,'commerce_gift_cases',t,st,ids,'resource_id');
@@ -229,7 +260,9 @@ export class PrivacyLifecycle {
       const exchange_history_records={...Object.fromEntries(['commerce_exchange_lineage_nodes','commerce_exchange_lineage_imports','commerce_exchange_currency_bindings','commerce_exchange_fee_observations','commerce_instant_quotes','commerce_instant_obligations'].map(table=>[table,all(k,table,s.tenant_id,s.store_id).filter(subjectRecord)])),commerce_instant_operations:instantOps,commerce_instant_observations:all(k,'commerce_instant_observations',s.tenant_id,s.store_id).filter(r=>instantIds.includes(r.operation_id))};
       const return_assistance_records=Object.fromEntries(ASSISTANCE_SUBJECT_TABLES.map(table=>[table,all(k,table,s.tenant_id,s.store_id).filter(subjectRecord).map(r=>{const copy={...r};delete copy.session_hash;return copy;})]));
       const woocommerce_records=Object.fromEntries(['commerce_woo_return_sources','commerce_woo_rma_bindings','commerce_woo_event_observations'].map(table=>[table,all(k,table,s.tenant_id,s.store_id).filter(subjectRecord)]));
-      const result={woocommerce_records,return_assistance_records,exchange_history_records,support_records,analytics_records,order_edit_records,gift_returns:gifts,schema_version:1,tenant_id:s.tenant_id,store_id:s.store_id,subject_ref:subjectHash(s.tenant_id,s.store_id,customer),
+      const packing_records=Object.fromEntries(PACKING_TABLES.map(table=>[table,all(k,table,s.tenant_id,s.store_id).filter(subjectRecord)]));
+      const shipping_records=Object.fromEntries(SHIPPING_TABLES.map(table=>[table,all(k,table,s.tenant_id,s.store_id).filter(subjectRecord)]));
+      const result={packing_records,shipping_records,woocommerce_records,return_assistance_records,exchange_history_records,support_records,analytics_records,order_edit_records,gift_returns:gifts,schema_version:1,tenant_id:s.tenant_id,store_id:s.store_id,subject_ref:subjectHash(s.tenant_id,s.store_id,customer),
         resources:rs.map(r=>k.project(r)),attachments:all(k,'commerce_attachments',s.tenant_id,s.store_id).filter(subjectRecord).map(r=>({id:r.id,resource_id:r.resource_id,content:JSON.parse(r.content)})),
         knowledge:all(k,'commerce_knowledge',s.tenant_id,s.store_id).filter(subjectRecord),
         tasks,assistance:all(k,'commerce_assistance_receipts',s.tenant_id,s.store_id).filter(r=>tasks.some(t=>t.id===r.task_id)),

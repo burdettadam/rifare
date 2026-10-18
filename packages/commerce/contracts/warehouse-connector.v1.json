@@ -1,0 +1,75 @@
+{
+  "version": 1,
+  "id": "rifare-warehouse-fixture",
+  "connector_version": "1.0.0",
+  "api_version": "rifare-order-edit-fixture-v1",
+  "goals": [
+    "M08-G06"
+  ],
+  "qualification": "synthetic_only",
+  "live_transport": false,
+  "formal_goal_accepted": false,
+  "canonical_execution": "packages/commerce/order-edit-execution.mts",
+  "source": "packages/adapters/order-edit-fixture-source.mts",
+  "administration": "packages/commerce/warehouse-connector.mts",
+  "binding": [
+    "tenant",
+    "store",
+    "source_identity",
+    "warehouse_id",
+    "connector_version",
+    "api_version",
+    "workflow_revision",
+    "configuration_revision",
+    "configuration_digest",
+    "callbacks_connected",
+    "callback_observed_at",
+    "callback_max_age_ms"
+  ],
+  "observed_predicates": [
+    "picking_before",
+    "hold_acknowledged",
+    "picking_blocked",
+    "update_consumed",
+    "payload_digest_matched"
+  ],
+  "callback_max_age_ms": {
+    "min": 1000,
+    "max": 300000,
+    "expiry": "inclusive"
+  },
+  "synthetic_behaviors": [
+    "qualified",
+    "transport_only",
+    "ignore_updates"
+  ],
+  "effect_boundaries": [
+    "transport acceptance",
+    "warehouse hold record",
+    "picking blocked",
+    "final version and payload consumed",
+    "Rifare-owned holds released",
+    "separate pick observation"
+  ],
+  "invalidation": [
+    "changed source or configuration revision",
+    "workflow change",
+    "callback disconnection",
+    "callback observation expiry",
+    "source scope mismatch",
+    "approval or actor revocation",
+    "erasure",
+    "restore quarantine"
+  ],
+  "original_connected_obligations": {
+    "CASE-M08-G06-01": "unperformed: no authorized warehouse account, version or physical observation",
+    "CASE-M08-G06-02": "local analogous negative only",
+    "CASE-M08-G06-03": "local analogous invalidation and executed source fault only"
+  },
+  "retained_controls": [
+    "foreign holds never released",
+    "unknown operation reconciles original identity",
+    "legacy M04 synthetic source behavior",
+    "no financial settlement or physical shipping inferred"
+  ]
+}

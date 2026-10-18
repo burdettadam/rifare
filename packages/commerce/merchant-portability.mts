@@ -18,7 +18,7 @@ const EXCLUDED:Record<string,string>={
 };
 const PAUSE:Record<string,string>={
   commerce_credential_slots:'active=0',commerce_webhook_routes:'enabled=0',commerce_execution_settings:'enabled=0',
-  commerce_action_readiness:'revoked=1',commerce_action_approvals:'revoked=1',commerce_skill_approvals:'revoked=1',
+  commerce_action_readiness:'revoked=1',commerce_action_approvals:'revoked=1',commerce_shipping_label_approvals:'revoked=1',commerce_skill_approvals:'revoked=1',
   commerce_return_overrides:'revoked=1',commerce_prevention_confirmations:"revoked=1,session_hash='revoked'",
   commerce_case_work:"state='revoked',expires_at=0",commerce_support_documents:"state='revoked'",
 };

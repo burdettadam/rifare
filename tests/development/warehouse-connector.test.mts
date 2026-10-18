@@ -119,7 +119,7 @@ test('M08-G06-LOCAL-SCOPE-AND-OWNER-AUTHORITY-ARE-RECHECKED',()=>usingEdits(f=>{
   f.kernel.revoke(f.owner.scope);
   assert.throws(()=>connector.configure(f.owner.scope,binding(f,{expected_revision:1})),/ACCESS_DENIED/);
 }));
-test('M08-G06-LOCAL-RESTART-RETAINS-BINDING-AND-CANARY-ROLLBACK',()=>usingEdits(f=>{
+test('M08-G06-LOCAL-RESTART-RETAINS-BINDING-AND-CANARY-ROLLBACK',()=>usingEdits(async f=>{
   const {connector,configured}=ready(f);
   const before=f.sourceDb.prepare('SELECT id,body,digest FROM edit_source_orders ORDER BY id').all();
   connector.qualify(f.owner.scope,{warehouses:['warehouse_one']});
@@ -130,6 +130,12 @@ test('M08-G06-LOCAL-RESTART-RETAINS-BINDING-AND-CANARY-ROLLBACK',()=>usingEdits(
   assert.equal(next.qualify(f.owner.scope,{warehouses:['warehouse_one']}).qualified,true);
   assert.deepEqual(f.sourceDb.prepare('SELECT id,body,digest FROM edit_source_orders ORDER BY id').all(),before);
   assert.equal(f.sourceDb.prepare('SELECT count(*) n FROM edit_source_holds').get().n,0);
+  const edit=f.authorize().order_edit_id;
+  f.sourceDb.prepare('DELETE FROM edit_source_connector_bindings WHERE warehouse_id=?').run('warehouse_one');
+  const afterLoss=new OrderEditFixtureSource(f.sourceDb,{mode:'fixture',identity:'edit-fixture',tenant:f.a.tenant,store:f.a.store},f.now);
+  assert.throws(()=>afterLoss.canPick(f.original.id,'warehouse_one'),/WAREHOUSE_BINDING_MISSING/);
+  await assert.rejects(f.edits.dispatch(f.a.scope,edit),/WAREHOUSE_BINDING_MISSING/);
+  assert.equal(effects(f),0);
 }));
 test('M08-G06-LOCAL-UNKNOWN-SYNC-RECONCILES-ORIGINAL-RECEIPT',()=>usingEdits(async f=>{
   const {connector}=ready(f),edit=f.authorize().order_edit_id;
