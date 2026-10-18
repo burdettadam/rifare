@@ -1,0 +1,406 @@
+{
+  "version": 1,
+  "base_schema_digest": "580e13a9e01ca6ea702ea8f48f05670599439e40c10898b50bdbc523ae8498cb",
+  "schema_digest": "c9f4dc24870896ae5459ee03f0afc648651cf4c8dc7180a0645ca2b9cf4e3307",
+  "tables": [
+    {
+      "name": "commerce_claim_approvals",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "resource_id",
+        "customer_id",
+        "subject_hash",
+        "state",
+        "target_kind",
+        "target_id",
+        "body",
+        "digest"
+      ],
+      "handling": "subject_hash_bound_m10_revoke_consent_approval_minimize"
+    },
+    {
+      "name": "commerce_claim_observations",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "resource_id",
+        "customer_id",
+        "subject_hash",
+        "state",
+        "target_kind",
+        "target_id",
+        "operation_id",
+        "body",
+        "digest"
+      ],
+      "handling": "subject_hash_bound_m10_minimal_original_native_outcome_audit"
+    },
+    {
+      "name": "commerce_claim_submissions",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "resource_id",
+        "customer_id",
+        "subject_hash",
+        "state",
+        "kind",
+        "target_id",
+        "business_key",
+        "native_id",
+        "body",
+        "digest"
+      ],
+      "handling": "subject_hash_bound_m10_minimal_original_native_outcome_audit"
+    },
+    {
+      "name": "commerce_delivery_trials",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "case_id",
+        "resource_id",
+        "customer_id",
+        "subject_hash",
+        "revision",
+        "state",
+        "body",
+        "digest"
+      ],
+      "handling": "subject_hash_bound_m10_allowlist_minimized_original_identity"
+    },
+    {
+      "name": "commerce_dispute_packets",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "resource_id",
+        "customer_id",
+        "subject_hash",
+        "state",
+        "revision",
+        "body",
+        "digest"
+      ],
+      "handling": "subject_hash_bound_m10_allowlist_minimized_original_identity"
+    },
+    {
+      "name": "commerce_duty_assessments",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "resource_id",
+        "subject_hash",
+        "state",
+        "body",
+        "digest",
+        "created_at"
+      ],
+      "handling": "subject_hash_bound_m10_minimal_original_native_outcome_audit"
+    },
+    {
+      "name": "commerce_hsa_fsa_eligibility",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "resource_id",
+        "subject_hash",
+        "state",
+        "body",
+        "digest",
+        "created_at"
+      ],
+      "handling": "subject_hash_bound_m10_minimal_original_native_outcome_audit"
+    },
+    {
+      "name": "commerce_international_handoffs",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "resource_id",
+        "subject_hash",
+        "state",
+        "body",
+        "digest",
+        "created_at"
+      ],
+      "handling": "subject_hash_bound_m10_minimal_original_native_outcome_audit"
+    },
+    {
+      "name": "commerce_network_alert_actions",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "resource_id",
+        "subject_hash",
+        "state",
+        "body",
+        "digest",
+        "created_at"
+      ],
+      "handling": "subject_hash_bound_m10_minimal_original_native_outcome_audit"
+    },
+    {
+      "name": "commerce_network_alerts",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "resource_id",
+        "subject_hash",
+        "state",
+        "body",
+        "digest",
+        "created_at"
+      ],
+      "handling": "subject_hash_bound_m10_minimal_original_native_outcome_audit"
+    },
+    {
+      "name": "commerce_partner_approvals",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "service",
+        "account_id",
+        "revision",
+        "state",
+        "body",
+        "digest",
+        "expires_at",
+        "created_at"
+      ],
+      "handling": "merchant_scoped_m10_configuration_authority_revoked_on_restore"
+    },
+    {
+      "name": "commerce_partner_configurations",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "service",
+        "account_id",
+        "revision",
+        "enabled",
+        "unavailable",
+        "body",
+        "digest",
+        "expires_at"
+      ],
+      "handling": "merchant_scoped_m10_configuration_authority_revoked_on_restore"
+    },
+    {
+      "name": "commerce_protection_confirmations",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "resource_id",
+        "subject_hash",
+        "state",
+        "body",
+        "digest",
+        "created_at"
+      ],
+      "handling": "subject_hash_bound_m10_revoke_consent_approval_minimize"
+    },
+    {
+      "name": "commerce_protection_operations",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "resource_id",
+        "subject_hash",
+        "state",
+        "body",
+        "digest",
+        "created_at"
+      ],
+      "handling": "subject_hash_bound_m10_minimal_original_native_outcome_audit"
+    },
+    {
+      "name": "commerce_protection_proposals",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "resource_id",
+        "subject_hash",
+        "state",
+        "body",
+        "digest",
+        "created_at"
+      ],
+      "handling": "subject_hash_bound_m10_allowlist_minimized_original_identity"
+    },
+    {
+      "name": "commerce_reverse_hub_routes",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "resource_id",
+        "subject_hash",
+        "state",
+        "body",
+        "digest",
+        "created_at"
+      ],
+      "handling": "subject_hash_bound_m10_allowlist_minimized_original_identity"
+    },
+    {
+      "name": "commerce_shipping_claims",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "resource_id",
+        "customer_id",
+        "subject_hash",
+        "state",
+        "approval_id",
+        "operation_id",
+        "business_key",
+        "body",
+        "digest"
+      ],
+      "handling": "subject_hash_bound_m10_allowlist_minimized_original_identity"
+    },
+    {
+      "name": "commerce_trial_consents",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "trial_id",
+        "resource_id",
+        "customer_id",
+        "subject_hash",
+        "revoked",
+        "body",
+        "digest"
+      ],
+      "handling": "subject_hash_bound_m10_revoke_consent_approval_minimize"
+    },
+    {
+      "name": "commerce_trial_events",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "trial_id",
+        "resource_id",
+        "customer_id",
+        "subject_hash",
+        "kind",
+        "body",
+        "digest"
+      ],
+      "handling": "subject_hash_bound_m10_minimal_original_native_outcome_audit"
+    },
+    {
+      "name": "commerce_trial_term_approvals",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "terms_id",
+        "version",
+        "approver",
+        "authority_revision",
+        "expires_at",
+        "revoked",
+        "body",
+        "digest"
+      ],
+      "handling": "merchant_scoped_m10_configuration_authority_revoked_on_restore"
+    },
+    {
+      "name": "commerce_trial_terms",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "version",
+        "author",
+        "authority_revision",
+        "body",
+        "digest"
+      ],
+      "handling": "merchant_scoped_m10_configuration_authority_revoked_on_restore"
+    },
+    {
+      "name": "commerce_warranty_claims",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "resource_id",
+        "customer_id",
+        "subject_hash",
+        "state",
+        "approval_id",
+        "operation_id",
+        "body",
+        "digest"
+      ],
+      "handling": "subject_hash_bound_m10_allowlist_minimized_original_identity"
+    },
+    {
+      "name": "commerce_warranty_entitlements",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "resource_id",
+        "customer_id",
+        "subject_hash",
+        "claim_id",
+        "state",
+        "body",
+        "digest"
+      ],
+      "handling": "subject_hash_bound_m10_minimal_original_native_outcome_audit"
+    },
+    {
+      "name": "commerce_warranty_registrations",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "resource_id",
+        "customer_id",
+        "subject_hash",
+        "state",
+        "serial_hash",
+        "purchase_key",
+        "body",
+        "digest"
+      ],
+      "handling": "subject_hash_bound_m10_allowlist_minimized_original_identity"
+    },
+    {
+      "name": "commerce_warranty_terms",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "product_id",
+        "version",
+        "body",
+        "digest"
+      ],
+      "handling": "merchant_scoped_m10_configuration_authority_revoked_on_restore"
+    }
+  ]
+}

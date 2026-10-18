@@ -1,6 +1,6 @@
 {
-  "source_file_count": 1399,
-  "source_count_reason": "ADR-0038 reviewed additive M09 growth source; all 1322 prior source members retained.",
+  "source_file_count": 1472,
+  "source_count_reason": "ADR-0039 reviewed additive M10 warranty, partner and delivery-trial source; all 1399 prior source members retained.",
   "component_ids": [
     "git-agent-adaptations",
     "rifare-developer-helpers",

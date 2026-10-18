@@ -19,6 +19,9 @@
   ],
   "source_files": [
     "packages/adapters/carrier-quote-fixture-source.mts",
+    "packages/adapters/claims-fixture-source.mts",
+    "packages/adapters/claims-source-guards.mts",
+    "packages/adapters/delivery-trial-source-guards.mts",
     "packages/adapters/exchange-lineage-fixture-source.mts",
     "packages/adapters/exchange-lineage-source-guards.mts",
     "packages/adapters/exchange-money-fixture-source.mts",
@@ -28,6 +31,7 @@
     "packages/adapters/native-change-fixture-source.mts",
     "packages/adapters/optional-provider-fixture-source.mts",
     "packages/adapters/order-edit-fixture-source.mts",
+    "packages/adapters/partner-fixture-source.mts",
     "packages/adapters/prevention-source-guards.mts",
     "packages/adapters/reliability/synthetic-journal.mts",
     "packages/adapters/resolution-fixture-source.mts",
@@ -54,6 +58,9 @@
     "packages/agent/local-model.mts",
     "packages/agent/providers.mts",
     "packages/commerce/capabilities.mts",
+    "packages/commerce/delivery-trial-core.mts",
+    "packages/commerce/delivery-trials.mts",
+    "packages/commerce/partner-readiness.mts",
     "packages/commerce/simulator.mts"
   ],
   "adapters": [
@@ -1523,10 +1530,10 @@
       "source_files": [
         {
           "path": "packages/adapters/resolution-fixture-source.mts",
-          "sha256": "b03ff40c566e6118467173965af71f0694d9d8e9aa61c5e9b69ce36e5a0625b3"
+          "sha256": "8954f363509fd380b844964f831c6dd02964ac80082eb13b3c85a85de455e39e"
         }
       ],
-      "version": "source-sha256:b03ff40c566e6118467173965af71f0694d9d8e9aa61c5e9b69ce36e5a0625b3",
+      "version": "source-sha256:8954f363509fd380b844964f831c6dd02964ac80082eb13b3c85a85de455e39e",
       "api_version": "local-resolution-source",
       "external_version": null,
       "external_account": null,
@@ -1687,10 +1694,10 @@
       "source_files": [
         {
           "path": "packages/adapters/fulfillment-fixture-source.mts",
-          "sha256": "097a6b7b7963e50362a9f0c2633d8b63213eca29441409787b9c940b887fe551"
+          "sha256": "8edec66b72d28603072ab98137b9dd5e7af655a0967fa22318ee027cc15a710f"
         }
       ],
-      "version": "source-sha256:097a6b7b7963e50362a9f0c2633d8b63213eca29441409787b9c940b887fe551",
+      "version": "source-sha256:8edec66b72d28603072ab98137b9dd5e7af655a0967fa22318ee027cc15a710f",
       "api_version": "local-fulfillment-source",
       "external_version": null,
       "external_account": null,
@@ -2586,10 +2593,22 @@
       "source_files": [
         {
           "path": "packages/adapters/instant-exchange-fixture-source.mts",
-          "sha256": "79888faef78231823392065853ac0823b66ea3024248de432b62cde2bbb28501"
+          "sha256": "2293b47d08d04d619c78597963e581286dcc5d3e5e53e50f638dd9b14da5e1ed"
+        },
+        {
+          "path": "packages/adapters/delivery-trial-source-guards.mts",
+          "sha256": "df8560f8916aaa67ec01208e660810da3d621899a7ab79ceb06d7a4bcfe3ee6b"
+        },
+        {
+          "path": "packages/commerce/delivery-trials.mts",
+          "sha256": "e61fad209ba28ba1e97f24f5eb94aca34c10de70e66805e96653aa97e8b0179b"
+        },
+        {
+          "path": "packages/commerce/delivery-trial-core.mts",
+          "sha256": "6f7643fcdb92b1a6b8f1bd4f578877ef9fff5f397c7b9edde17f309e74f910fd"
         }
       ],
-      "version": "source-sha256:79888faef78231823392065853ac0823b66ea3024248de432b62cde2bbb28501",
+      "version": "source-sha256:2293b47d08d04d619c78597963e581286dcc5d3e5e53e50f638dd9b14da5e1ed",
       "api_version": "local-consent-mandate-source",
       "external_version": null,
       "external_account": null,
@@ -2706,6 +2725,82 @@
               "name": "CASE-M06-G10-03",
               "path": "tests/development/instant-lifecycle.test.mts",
               "sha256": "352fdc5e55e92c37836ee58f44c25d2fd39ef4be69a814a19825c214e7d07328"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "trial.authorize",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M10-G13-PREP-01",
+              "name": "M10-G13-PREP-01",
+              "path": "tests/development/trial-payments.test.mts",
+              "sha256": "3e6e6ca70dd68c88e2d1e0b1d8d578359cc49cf30eb7818c7a2aa0cb5c8c2726"
+            },
+            {
+              "id": "M10-G13-PREP-02",
+              "name": "M10-G13-PREP-02",
+              "path": "tests/development/trial-payments.test.mts",
+              "sha256": "3e6e6ca70dd68c88e2d1e0b1d8d578359cc49cf30eb7818c7a2aa0cb5c8c2726"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "trial.reauthorize",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M10-G14-PREP-01",
+              "name": "M10-G14-PREP-01",
+              "path": "tests/development/trial-payments.test.mts",
+              "sha256": "3e6e6ca70dd68c88e2d1e0b1d8d578359cc49cf30eb7818c7a2aa0cb5c8c2726"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "trial.capture",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M10-G14-PREP-01",
+              "name": "M10-G14-PREP-01",
+              "path": "tests/development/trial-payments.test.mts",
+              "sha256": "3e6e6ca70dd68c88e2d1e0b1d8d578359cc49cf30eb7818c7a2aa0cb5c8c2726"
+            },
+            {
+              "id": "M10-G14-PREP-03",
+              "name": "M10-G14-PREP-03",
+              "path": "tests/development/trial-payments.test.mts",
+              "sha256": "3e6e6ca70dd68c88e2d1e0b1d8d578359cc49cf30eb7818c7a2aa0cb5c8c2726"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "trial.cancel",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M10-G14-PREP-01",
+              "name": "M10-G14-PREP-01",
+              "path": "tests/development/trial-payments.test.mts",
+              "sha256": "3e6e6ca70dd68c88e2d1e0b1d8d578359cc49cf30eb7818c7a2aa0cb5c8c2726"
             }
           ],
           "direct_fixtures": []
@@ -3519,6 +3614,372 @@
           "direct_fixtures": []
         }
       ]
+    },
+    {
+      "id": "partner_fixture_source",
+      "kind": "diagnostic",
+      "source_files": [
+        {
+          "path": "packages/adapters/partner-fixture-source.mts",
+          "sha256": "6865d3ed78b629a5597ce03edfb54a06ec10f6ae4950e34282e00563b574288a"
+        },
+        {
+          "path": "packages/commerce/partner-readiness.mts",
+          "sha256": "8b50a64c2f741b520ce9c843414ab38f2a68bbfeb976dbd15903cf8976693976"
+        }
+      ],
+      "version": "source-sha256:6865d3ed78b629a5597ce03edfb54a06ec10f6ae4950e34282e00563b574288a",
+      "api_version": "partner_fixture_v1",
+      "external_version": null,
+      "external_account": null,
+      "external_scopes_attested": false,
+      "source_oracle": "Separate synthetic provider SQLite records bind service, account, source, configuration, region and current independent readiness. Native coverage, eligibility and alert responses have original operation identities; duty and custody records are observations. Local fixtures establish no provider agreement, reimbursement, medical eligibility or physical receipt.",
+      "operations": [
+        {
+          "id": "coverage.issue",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M10-G07-PREP-01",
+              "name": "M10-G07-PREP-01",
+              "path": "tests/development/partner-services.test.mts",
+              "sha256": "31e95efa409da8c952ef311677b488741ad40a4c243a001ed9da71fe04f3ab07"
+            },
+            {
+              "id": "M10-G07-PREP-03",
+              "name": "M10-G07-PREP-03",
+              "path": "tests/development/partner-services.test.mts",
+              "sha256": "31e95efa409da8c952ef311677b488741ad40a4c243a001ed9da71fe04f3ab07"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "coverage.lookup",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M10-G01-03",
+              "name": "CASE-M10-G01-03",
+              "path": "tests/development/partner-services.test.mts",
+              "sha256": "31e95efa409da8c952ef311677b488741ad40a4c243a001ed9da71fe04f3ab07"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "duty.observe",
+          "semantics": "composed",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M10-G08-PREP-01",
+              "name": "M10-G08-PREP-01",
+              "path": "tests/development/partner-services.test.mts",
+              "sha256": "31e95efa409da8c952ef311677b488741ad40a4c243a001ed9da71fe04f3ab07"
+            },
+            {
+              "id": "M10-G08-PREP-03",
+              "name": "M10-G08-PREP-03",
+              "path": "tests/development/partner-services.test.mts",
+              "sha256": "31e95efa409da8c952ef311677b488741ad40a4c243a001ed9da71fe04f3ab07"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "eligibility.confirm",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M10-G11-PREP-01",
+              "name": "M10-G11-PREP-01",
+              "path": "tests/development/partner-services.test.mts",
+              "sha256": "31e95efa409da8c952ef311677b488741ad40a4c243a001ed9da71fe04f3ab07"
+            },
+            {
+              "id": "M10-G11-PREP-03",
+              "name": "M10-G11-PREP-03",
+              "path": "tests/development/partner-services.test.mts",
+              "sha256": "31e95efa409da8c952ef311677b488741ad40a4c243a001ed9da71fe04f3ab07"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "eligibility.lookup",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M10-G11-PREP-03",
+              "name": "M10-G11-PREP-03",
+              "path": "tests/development/partner-services.test.mts",
+              "sha256": "31e95efa409da8c952ef311677b488741ad40a4c243a001ed9da71fe04f3ab07"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "handoff.observe",
+          "semantics": "composed",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M10-G10-PREP-01",
+              "name": "M10-G10-PREP-01",
+              "path": "tests/development/partner-services.test.mts",
+              "sha256": "31e95efa409da8c952ef311677b488741ad40a4c243a001ed9da71fe04f3ab07"
+            },
+            {
+              "id": "M10-G10-PREP-03",
+              "name": "M10-G10-PREP-03",
+              "path": "tests/development/partner-services.test.mts",
+              "sha256": "31e95efa409da8c952ef311677b488741ad40a4c243a001ed9da71fe04f3ab07"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "network_alert.respond",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M10-G12-PREP-01",
+              "name": "M10-G12-PREP-01",
+              "path": "tests/development/partner-services.test.mts",
+              "sha256": "31e95efa409da8c952ef311677b488741ad40a4c243a001ed9da71fe04f3ab07"
+            },
+            {
+              "id": "M10-G12-PREP-03",
+              "name": "M10-G12-PREP-03",
+              "path": "tests/development/partner-services.test.mts",
+              "sha256": "31e95efa409da8c952ef311677b488741ad40a4c243a001ed9da71fe04f3ab07"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "network_alert.lookup",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M10-G12-PREP-03",
+              "name": "M10-G12-PREP-03",
+              "path": "tests/development/partner-services.test.mts",
+              "sha256": "31e95efa409da8c952ef311677b488741ad40a4c243a001ed9da71fe04f3ab07"
+            }
+          ],
+          "direct_fixtures": []
+        }
+      ]
+    },
+    {
+      "id": "claims_fixture_source",
+      "kind": "diagnostic",
+      "source_files": [
+        {
+          "path": "packages/adapters/claims-fixture-source.mts",
+          "sha256": "012802db6348686e55b3410bfc3ee301761eb8e43ae809aecfe2f4210423bd9f"
+        },
+        {
+          "path": "packages/adapters/claims-source-guards.mts",
+          "sha256": "6d342f0fe446ed3743d8d5e67fa7f16104ae15e78973797568741103642d64a8"
+        }
+      ],
+      "version": "source-sha256:012802db6348686e55b3410bfc3ee301761eb8e43ae809aecfe2f4210423bd9f",
+      "api_version": "claims-fixture-v1",
+      "external_version": null,
+      "external_account": null,
+      "external_scopes_attested": false,
+      "source_oracle": "Separate synthetic purchase, terms, shipping coverage and dispute records retain attributable versions and evidence. Repair, shipping and dispute submissions use one original native identity and observation history. Durable warranty bindings guard the existing refund and fulfillment owners; fixture submission or acceptance establishes no compensation, dispute win or external qualification.",
+      "operations": [
+        {
+          "id": "warranty.purchase.read",
+          "semantics": "composed",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M10-G02-01",
+              "name": "CASE-M10-G02-01",
+              "path": "tests/development/claims-milestone.test.mts",
+              "sha256": "1d9212ce2c05f2b39cff9fd4f586b2ad98825d13f96450223b50c93dc8537db1"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "warranty.terms.read",
+          "semantics": "composed",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M10-G02-03",
+              "name": "CASE-M10-G02-03",
+              "path": "tests/development/claims-milestone.test.mts",
+              "sha256": "1d9212ce2c05f2b39cff9fd4f586b2ad98825d13f96450223b50c93dc8537db1"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "shipping.coverage.read",
+          "semantics": "composed",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M10-G04-PREP-01",
+              "name": "M10-G04-PREP-01",
+              "path": "tests/development/claims-milestone.test.mts",
+              "sha256": "1d9212ce2c05f2b39cff9fd4f586b2ad98825d13f96450223b50c93dc8537db1"
+            },
+            {
+              "id": "M10-G04-PREP-02",
+              "name": "M10-G04-PREP-02",
+              "path": "tests/development/claims-milestone.test.mts",
+              "sha256": "1d9212ce2c05f2b39cff9fd4f586b2ad98825d13f96450223b50c93dc8537db1"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "dispute.records.read",
+          "semantics": "composed",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M10-G05-01",
+              "name": "CASE-M10-G05-01",
+              "path": "tests/development/claims-milestone.test.mts",
+              "sha256": "1d9212ce2c05f2b39cff9fd4f586b2ad98825d13f96450223b50c93dc8537db1"
+            },
+            {
+              "id": "CASE-M10-G05-03",
+              "name": "CASE-M10-G05-03",
+              "path": "tests/development/claims-milestone.test.mts",
+              "sha256": "1d9212ce2c05f2b39cff9fd4f586b2ad98825d13f96450223b50c93dc8537db1"
+            },
+            {
+              "id": "PORT-029",
+              "name": "PORT-029",
+              "path": "tests/development/claims-milestone.test.mts",
+              "sha256": "1d9212ce2c05f2b39cff9fd4f586b2ad98825d13f96450223b50c93dc8537db1"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "repair.submit",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M10-G03-PREP-01",
+              "name": "M10-G03-PREP-01",
+              "path": "tests/development/claims-milestone.test.mts",
+              "sha256": "1d9212ce2c05f2b39cff9fd4f586b2ad98825d13f96450223b50c93dc8537db1"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "shipping.submit",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M10-G04-PREP-01",
+              "name": "M10-G04-PREP-01",
+              "path": "tests/development/claims-milestone.test.mts",
+              "sha256": "1d9212ce2c05f2b39cff9fd4f586b2ad98825d13f96450223b50c93dc8537db1"
+            },
+            {
+              "id": "M10-G04-PREP-03",
+              "name": "M10-G04-PREP-03",
+              "path": "tests/development/claims-milestone.test.mts",
+              "sha256": "1d9212ce2c05f2b39cff9fd4f586b2ad98825d13f96450223b50c93dc8537db1"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "dispute.submit",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M10-G06-PREP-01",
+              "name": "M10-G06-PREP-01",
+              "path": "tests/development/claims-milestone.test.mts",
+              "sha256": "1d9212ce2c05f2b39cff9fd4f586b2ad98825d13f96450223b50c93dc8537db1"
+            },
+            {
+              "id": "M10-G06-PREP-03",
+              "name": "M10-G06-PREP-03",
+              "path": "tests/development/claims-milestone.test.mts",
+              "sha256": "1d9212ce2c05f2b39cff9fd4f586b2ad98825d13f96450223b50c93dc8537db1"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "submission.lookup",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M10-G04-PREP-03",
+              "name": "M10-G04-PREP-03",
+              "path": "tests/development/claims-milestone.test.mts",
+              "sha256": "1d9212ce2c05f2b39cff9fd4f586b2ad98825d13f96450223b50c93dc8537db1"
+            },
+            {
+              "id": "M10-G06-PREP-03",
+              "name": "M10-G06-PREP-03",
+              "path": "tests/development/claims-milestone.test.mts",
+              "sha256": "1d9212ce2c05f2b39cff9fd4f586b2ad98825d13f96450223b50c93dc8537db1"
+            }
+          ],
+          "direct_fixtures": []
+        }
+      ]
     }
   ],
   "fixture_administration": "Seed, injected faults, and source observation setters are fixture administration, not remote provider operations. Unnamed real gateway/carrier/warehouse/ERP adapters are unavailable.",
@@ -3665,11 +4126,11 @@
     },
     {
       "path": "packages/adapters/fulfillment-fixture-source.mts",
-      "sha256": "097a6b7b7963e50362a9f0c2633d8b63213eca29441409787b9c940b887fe551"
+      "sha256": "8edec66b72d28603072ab98137b9dd5e7af655a0967fa22318ee027cc15a710f"
     },
     {
       "path": "packages/adapters/instant-exchange-fixture-source.mts",
-      "sha256": "79888faef78231823392065853ac0823b66ea3024248de432b62cde2bbb28501"
+      "sha256": "2293b47d08d04d619c78597963e581286dcc5d3e5e53e50f638dd9b14da5e1ed"
     },
     {
       "path": "packages/adapters/native-change-fixture-source.mts",
@@ -3689,7 +4150,7 @@
     },
     {
       "path": "packages/adapters/resolution-fixture-source.mts",
-      "sha256": "b03ff40c566e6118467173965af71f0694d9d8e9aa61c5e9b69ce36e5a0625b3"
+      "sha256": "8954f363509fd380b844964f831c6dd02964ac80082eb13b3c85a85de455e39e"
     },
     {
       "path": "packages/adapters/return-destination-fixture-source.mts",
@@ -3909,7 +4370,7 @@
     },
     {
       "path": "packages/commerce/execution-stops.mts",
-      "sha256": "aee02a4d9828bf9a08ef33d720d3c382ce89907fb43eb2f4f22291a602e1b436"
+      "sha256": "028f89ddf656375cd587ea22e8d3cb7f96613b1e13f6facdccb885f0cb5b263a"
     },
     {
       "path": "packages/commerce/fulfillment-execution.mts",
@@ -3925,7 +4386,7 @@
     },
     {
       "path": "packages/commerce/instant-exchanges.mts",
-      "sha256": "ccbb6c90130605b94b8efd7a0b5852b18ddbdbf84cc0ab449347e1f3dfbbf5f1"
+      "sha256": "58231f5ee1b98d716f1e9eaf45cadb0878af441408af87750ffc6eec629f4b1a"
     },
     {
       "path": "packages/commerce/integration-readiness.mts",
@@ -3989,7 +4450,7 @@
     },
     {
       "path": "packages/commerce/privacy-lifecycle.mts",
-      "sha256": "a1bd069a9ac8011abc2bde6a38000a012159589460fd28005965c241891a8c0a"
+      "sha256": "92741026f662f5ef923a457ffa070c83eef1c76050c4ee4aad0f6aefbf92aa77"
     },
     {
       "path": "packages/commerce/profile-editor.mts",
@@ -4125,7 +4586,7 @@
     },
     {
       "path": "packages/commerce/safe-recovery.mts",
-      "sha256": "d82aacafee1e63d4bdd28779fb55cc5b7f574d1ffea8c15d602f2188b63349d3"
+      "sha256": "adcc946ae783f5594d50e3c6ab518c768b2250e18db45ece56f8c4b6033a0df5"
     },
     {
       "path": "packages/commerce/secrets.mts",
@@ -4553,11 +5014,11 @@
     },
     {
       "path": "tests/fixtures/conformance/contract-cases.v1.json",
-      "sha256": "8df62ecae867bbcf05876a80f61766a3ddae34f5d913d4c0214c5d91adc76864"
+      "sha256": "80b37e9321ebc52ed3704815724a101716b2f6fd09a28512d30a9b8ab8f73ab6"
     },
     {
       "path": "tests/fixtures/conformance/expected-coverage.v1.json",
-      "sha256": "ca4e5c0f60d7097fc24d9d604b5478c8f3ac99f8d9453d506c4f63b6f60543ea"
+      "sha256": "2b00b8dd4a94d4e9a75487f35301a4a500986542b217f77422bac3c83be7ca74"
     },
     {
       "path": "tests/fixtures/conformance/source-inputs.v1.json",
@@ -4737,7 +5198,7 @@
     },
     {
       "path": "packages/commerce/merchant-portability.mts",
-      "sha256": "85cb42e215613394b6044dabcf67f2755bff0cc635fade59c5e7e0902be69382"
+      "sha256": "f66a91580960c5d5277c948e64d34e3c4b929fe831d1e6707ca220e9007a30ca"
     },
     {
       "path": "packages/commerce/contracts/carrier-quotes.v1.json",
@@ -5098,6 +5559,214 @@
     {
       "path": "tests/fixtures/growth/storage-baseline.v1.json",
       "sha256": "4d48315f2ccc9281284f0dee5896e8211036a5efa821f3091211a0a8d3e473a6"
+    },
+    {
+      "path": "migrations/commerce/039_partner_services.sql",
+      "sha256": "ce54cf5d9934b5f1a0ddba271c493a917e6457e8b11bfc6d08733f4f781e196c"
+    },
+    {
+      "path": "migrations/commerce/040_warranty_disputes.sql",
+      "sha256": "ee47169b951d5dd0ddd0ebf4af339b1c32c9192c6abeeabc2459f96231bc2d2a"
+    },
+    {
+      "path": "migrations/commerce/041_delivery_trials.sql",
+      "sha256": "96dc54d30bca60df8aeb601007ef99477c4e1688f478446c53c0421feb1f472f"
+    },
+    {
+      "path": "packages/adapters/claims-fixture-source.mts",
+      "sha256": "012802db6348686e55b3410bfc3ee301761eb8e43ae809aecfe2f4210423bd9f"
+    },
+    {
+      "path": "packages/adapters/claims-source-guards.mts",
+      "sha256": "6d342f0fe446ed3743d8d5e67fa7f16104ae15e78973797568741103642d64a8"
+    },
+    {
+      "path": "packages/adapters/delivery-trial-source-guards.mts",
+      "sha256": "df8560f8916aaa67ec01208e660810da3d621899a7ab79ceb06d7a4bcfe3ee6b"
+    },
+    {
+      "path": "packages/adapters/partner-fixture-source.mts",
+      "sha256": "6865d3ed78b629a5597ce03edfb54a06ec10f6ae4950e34282e00563b574288a"
+    },
+    {
+      "path": "packages/commerce/claims-core.mts",
+      "sha256": "222824c1746232450ddaabe1100477d7a0d2a0bb799c4d8ae238c9da218d50d3"
+    },
+    {
+      "path": "packages/commerce/claims-privacy.mts",
+      "sha256": "8bdc765c8da62bf99fb51c4b477a7afd291cf017c13d64205a088a0d8b66f288"
+    },
+    {
+      "path": "packages/commerce/contracts/delivery-trials.v1.json",
+      "sha256": "b9703d029a14fc531e2bf5fe28df6829c411ae4fc2ca2a31b10176ae526a0fcd"
+    },
+    {
+      "path": "packages/commerce/contracts/dispute-evidence.v1.json",
+      "sha256": "43c92fb07d3ea89d99baa3dd1588dc0ae5f3b5f5aaff6ce768b19da03c08967e"
+    },
+    {
+      "path": "packages/commerce/contracts/dispute-submissions.v1.json",
+      "sha256": "22c8cf701b2c34187690217e383dbac41d2b505ca48941d4481482e9ea622cf2"
+    },
+    {
+      "path": "packages/commerce/contracts/duty-assessments.v1.json",
+      "sha256": "406c6b116173ce437301c0bf636d72e609946da59f8a76880a0ea592e9e642b0"
+    },
+    {
+      "path": "packages/commerce/contracts/hsa-fsa.v1.json",
+      "sha256": "f9419a6bf5b18f843f40d990c5cfecb5178451cfe14699dc76888ff9ef99110f"
+    },
+    {
+      "path": "packages/commerce/contracts/international-handoffs.v1.json",
+      "sha256": "f1267200a847f8eb8772be09e199d8c119c6a515676976a7db23bbee2450d9ba"
+    },
+    {
+      "path": "packages/commerce/contracts/network-alerts.v1.json",
+      "sha256": "cdd8030704787e0dff78b16919283b98f8d1bc9012d0f5905940638e14b6969c"
+    },
+    {
+      "path": "packages/commerce/contracts/partner-readiness.v1.json",
+      "sha256": "8e4e11ad72f20f70d79e8f38d052b21d3e086440ff0ef6884ecf20acfc4ce9fa"
+    },
+    {
+      "path": "packages/commerce/contracts/protection-coverage.v1.json",
+      "sha256": "267cea70e9d201542aa3c047bad184b5d51e14198d46ca37d7335558113e7ad6"
+    },
+    {
+      "path": "packages/commerce/contracts/reverse-hubs.v1.json",
+      "sha256": "565a181d4250fa2def4c5cff3df9255df285cd2fb2802cf649b7288243c1a93a"
+    },
+    {
+      "path": "packages/commerce/contracts/shipping-claims.v1.json",
+      "sha256": "83ade55e8451c02ac8cdf7f175a233b84a06831b1d65ac81a68a46146eeeccd9"
+    },
+    {
+      "path": "packages/commerce/contracts/trial-final-capture.v1.json",
+      "sha256": "d76c22da2815d0f170d1b5b018afe79450b23f8061bf4e0f8b1ee21df397e316"
+    },
+    {
+      "path": "packages/commerce/contracts/warranty-claims.v1.json",
+      "sha256": "7df933c6756136df38e16a7275d10739fe6c8a64cbd22372fdc66ca4fe4aef09"
+    },
+    {
+      "path": "packages/commerce/contracts/warranty-registration.v1.json",
+      "sha256": "b55d0f5cf1dec3dd7e619723220da50d5d50f4593578735d9b169e0d231b16cd"
+    },
+    {
+      "path": "packages/commerce/delivery-trial-core.mts",
+      "sha256": "6f7643fcdb92b1a6b8f1bd4f578877ef9fff5f397c7b9edde17f309e74f910fd"
+    },
+    {
+      "path": "packages/commerce/delivery-trial-privacy.mts",
+      "sha256": "f53f6fda6fa885d946b67e865f275ef35adfe6515c383aef8dd47790ca16a5b5"
+    },
+    {
+      "path": "packages/commerce/delivery-trials.mts",
+      "sha256": "e61fad209ba28ba1e97f24f5eb94aca34c10de70e66805e96653aa97e8b0179b"
+    },
+    {
+      "path": "packages/commerce/dispute-evidence.mts",
+      "sha256": "ab24610a791ae26671b0c2bfa385d82db0f89a6854fe3bf1fd89ab83635164e0"
+    },
+    {
+      "path": "packages/commerce/dispute-submissions.mts",
+      "sha256": "60d95f429f1b328495cea077e555b53c5f939681834224f797281a10417b0b51"
+    },
+    {
+      "path": "packages/commerce/duty-assessments.mts",
+      "sha256": "dfd8a0f207e951bc9900e51160624dfd6387c68c5c74cdb78a7e8234fb949a20"
+    },
+    {
+      "path": "packages/commerce/extended-services-privacy.mts",
+      "sha256": "a7308397d4bdc4f6516f9fa012d0f4f81c101d6f19b98712209998ef5dbb39f9"
+    },
+    {
+      "path": "packages/commerce/hsa-fsa.mts",
+      "sha256": "6977dc86c9650e0465a23a48c1d8d132e85fe2eb3ca72773c7b4715a24e58491"
+    },
+    {
+      "path": "packages/commerce/international-handoffs.mts",
+      "sha256": "2bdaf8f9c2b41a115d1ac7424df93c71aae23bf3700684a262f8396994500919"
+    },
+    {
+      "path": "packages/commerce/network-alerts.mts",
+      "sha256": "a2aa86f11089b730defd1477d2d35b64efcac28fba99afb2a048c9d6dd2b6f00"
+    },
+    {
+      "path": "packages/commerce/partner-privacy.mts",
+      "sha256": "736027d34d44200ac83fec04d609c6111af49bc81afc69cc4ee1337c568ce9de"
+    },
+    {
+      "path": "packages/commerce/partner-readiness.mts",
+      "sha256": "8b50a64c2f741b520ce9c843414ab38f2a68bbfeb976dbd15903cf8976693976"
+    },
+    {
+      "path": "packages/commerce/partner-service-core.mts",
+      "sha256": "beb0e5ce62f9d1ad086c4c1f38b0155a5ffc6be4ce70b37e88922689fc230364"
+    },
+    {
+      "path": "packages/commerce/protection-coverage.mts",
+      "sha256": "2301f40aaf9df3cd462b33fd2d8140aa0ee298c1833721252a4ce328e8c846c7"
+    },
+    {
+      "path": "packages/commerce/reverse-hubs.mts",
+      "sha256": "d41109bdb992caafb0325e9dfd446e261f519e9bb6cd65273da628bc1e7307f0"
+    },
+    {
+      "path": "packages/commerce/shipping-claims.mts",
+      "sha256": "82cf0f3ada7bbf54f8b4a6b7765dc1a8c3c39f1f5030a0d6a85573337f444f50"
+    },
+    {
+      "path": "packages/commerce/warranty-claims.mts",
+      "sha256": "692f09f6f17874416f6c718e5be940763de15398d0b3f81df63c90d1e2f8387b"
+    },
+    {
+      "path": "packages/commerce/warranty-registration.mts",
+      "sha256": "234c28b4de7ecc801d98fc1bf358f6871c90a7d33444a5557257d2361de90105"
+    },
+    {
+      "path": "tests/development/claims-helpers.mts",
+      "sha256": "e519c29c1b216a7c16f2245636c9306071a86ec0e3c1a3a44e0d3286975fd545"
+    },
+    {
+      "path": "tests/development/claims-milestone.test.mts",
+      "sha256": "1d9212ce2c05f2b39cff9fd4f586b2ad98825d13f96450223b50c93dc8537db1"
+    },
+    {
+      "path": "tests/development/extended-services-privacy-helpers.mts",
+      "sha256": "ad0e9779b4b4a9dd390f1cf96eca111e4d46db79b64115870a6edef1fc90b2d6"
+    },
+    {
+      "path": "tests/development/partner-services-helpers.mts",
+      "sha256": "a30d6768cc28e5db085f73a3333a52cfc0acfed2759741f941ed16ebce8b9a45"
+    },
+    {
+      "path": "tests/development/partner-services.test.mts",
+      "sha256": "31e95efa409da8c952ef311677b488741ad40a4c243a001ed9da71fe04f3ab07"
+    },
+    {
+      "path": "tests/development/trial-payments-helpers.mts",
+      "sha256": "0bbb018ff54a7f2ec8643cd538d05ecd47079e1e5d9450a009d48c8fbd490974"
+    },
+    {
+      "path": "tests/development/trial-payments.test.mts",
+      "sha256": "3e6e6ca70dd68c88e2d1e0b1d8d578359cc49cf30eb7818c7a2aa0cb5c8c2726"
+    },
+    {
+      "path": "tests/fixtures/claims/known-answer.v1.json",
+      "sha256": "49bdd1c5784b80fbb815c83a69432ce9cab2eaf75fa45a2faa8ce20ef2f0c463"
+    },
+    {
+      "path": "tests/fixtures/delivery-trials/independent-values.json",
+      "sha256": "7540d0a3bab5a9bc98e76a2cc390e38c10d1aaa3a57cd05bc02086e84fdb3320"
+    },
+    {
+      "path": "tests/fixtures/extended-services/storage-baseline.v1.json",
+      "sha256": "ca2e558213b2824d1f1bb090a27e9c4096a936abfee92509d56dbe9e6423a01e"
+    },
+    {
+      "path": "packages/commerce/contracts/storage-extended-services-extension.v1.json",
+      "sha256": "e35a1435c075a8a54dbad516df1ab3c8109bfba452d23d3299ad8b800ab4f28e"
     }
   ]
 }

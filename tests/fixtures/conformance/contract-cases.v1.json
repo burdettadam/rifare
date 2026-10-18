@@ -1002,7 +1002,7 @@
         "id": "catalog_resolution",
         "adapter": {
           "id": "resolution_source",
-          "version": "source-sha256:b03ff40c566e6118467173965af71f0694d9d8e9aa61c5e9b69ce36e5a0625b3",
+          "version": "source-sha256:8954f363509fd380b844964f831c6dd02964ac80082eb13b3c85a85de455e39e",
           "api_version": "local-resolution-source",
           "required_scopes": [],
           "semantics": "native",
@@ -1041,7 +1041,7 @@
         "id": "catalog_fulfillment_label",
         "adapter": {
           "id": "fulfillment_source",
-          "version": "source-sha256:097a6b7b7963e50362a9f0c2633d8b63213eca29441409787b9c940b887fe551",
+          "version": "source-sha256:8edec66b72d28603072ab98137b9dd5e7af655a0967fa22318ee027cc15a710f",
           "api_version": "local-fulfillment-source",
           "required_scopes": [],
           "semantics": "native",
@@ -1077,7 +1077,7 @@
         "id": "catalog_fulfillment_replacement",
         "adapter": {
           "id": "fulfillment_source",
-          "version": "source-sha256:097a6b7b7963e50362a9f0c2633d8b63213eca29441409787b9c940b887fe551",
+          "version": "source-sha256:8edec66b72d28603072ab98137b9dd5e7af655a0967fa22318ee027cc15a710f",
           "api_version": "local-fulfillment-source",
           "required_scopes": [],
           "semantics": "native",
@@ -1416,7 +1416,7 @@
         "id": "catalog_instant",
         "adapter": {
           "id": "instant_exchange_source",
-          "version": "source-sha256:79888faef78231823392065853ac0823b66ea3024248de432b62cde2bbb28501",
+          "version": "source-sha256:2293b47d08d04d619c78597963e581286dcc5d3e5e53e50f638dd9b14da5e1ed",
           "api_version": "local-consent-mandate-source",
           "required_scopes": [],
           "semantics": "native",

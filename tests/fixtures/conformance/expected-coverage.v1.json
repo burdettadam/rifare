@@ -543,6 +543,22 @@
       "operation.lookup": {
         "semantics": "native",
         "qualification": "sandbox-only"
+      },
+      "trial.authorize": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      },
+      "trial.reauthorize": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      },
+      "trial.capture": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      },
+      "trial.cancel": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
       }
     },
     "return_destination_source": {
@@ -694,10 +710,81 @@
         "semantics": "composed",
         "qualification": "sandbox-only"
       }
+    },
+    "partner_fixture_source": {
+      "coverage.issue": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      },
+      "coverage.lookup": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      },
+      "duty.observe": {
+        "semantics": "composed",
+        "qualification": "sandbox-only"
+      },
+      "eligibility.confirm": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      },
+      "eligibility.lookup": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      },
+      "handoff.observe": {
+        "semantics": "composed",
+        "qualification": "sandbox-only"
+      },
+      "network_alert.respond": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      },
+      "network_alert.lookup": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      }
+    },
+    "claims_fixture_source": {
+      "warranty.purchase.read": {
+        "semantics": "composed",
+        "qualification": "sandbox-only"
+      },
+      "warranty.terms.read": {
+        "semantics": "composed",
+        "qualification": "sandbox-only"
+      },
+      "shipping.coverage.read": {
+        "semantics": "composed",
+        "qualification": "sandbox-only"
+      },
+      "dispute.records.read": {
+        "semantics": "composed",
+        "qualification": "sandbox-only"
+      },
+      "repair.submit": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      },
+      "shipping.submit": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      },
+      "dispute.submit": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      },
+      "submission.lookup": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      }
     }
   },
   "declarations": [
     "packages/adapters/carrier-quote-fixture-source.mts",
+    "packages/adapters/claims-fixture-source.mts",
+    "packages/adapters/claims-source-guards.mts",
+    "packages/adapters/delivery-trial-source-guards.mts",
     "packages/adapters/exchange-lineage-fixture-source.mts",
     "packages/adapters/exchange-lineage-source-guards.mts",
     "packages/adapters/exchange-money-fixture-source.mts",
@@ -707,6 +794,7 @@
     "packages/adapters/native-change-fixture-source.mts",
     "packages/adapters/optional-provider-fixture-source.mts",
     "packages/adapters/order-edit-fixture-source.mts",
+    "packages/adapters/partner-fixture-source.mts",
     "packages/adapters/prevention-source-guards.mts",
     "packages/adapters/reliability/synthetic-journal.mts",
     "packages/adapters/resolution-fixture-source.mts",
@@ -733,6 +821,9 @@
     "packages/agent/local-model.mts",
     "packages/agent/providers.mts",
     "packages/commerce/capabilities.mts",
+    "packages/commerce/delivery-trial-core.mts",
+    "packages/commerce/delivery-trials.mts",
+    "packages/commerce/partner-readiness.mts",
     "packages/commerce/simulator.mts"
   ],
   "adapter_contracts": {
@@ -1148,7 +1239,7 @@
       }
     },
     "resolution_source": {
-      "version": "source-sha256:b03ff40c566e6118467173965af71f0694d9d8e9aa61c5e9b69ce36e5a0625b3",
+      "version": "source-sha256:8954f363509fd380b844964f831c6dd02964ac80082eb13b3c85a85de455e39e",
       "api_version": "local-resolution-source",
       "operations": {
         "refund.issue": {
@@ -1190,7 +1281,7 @@
       }
     },
     "fulfillment_source": {
-      "version": "source-sha256:097a6b7b7963e50362a9f0c2633d8b63213eca29441409787b9c940b887fe551",
+      "version": "source-sha256:8edec66b72d28603072ab98137b9dd5e7af655a0967fa22318ee027cc15a710f",
       "api_version": "local-fulfillment-source",
       "operations": {
         "inventory.reserve": {
@@ -1398,7 +1489,7 @@
       }
     },
     "instant_exchange_source": {
-      "version": "source-sha256:79888faef78231823392065853ac0823b66ea3024248de432b62cde2bbb28501",
+      "version": "source-sha256:2293b47d08d04d619c78597963e581286dcc5d3e5e53e50f638dd9b14da5e1ed",
       "api_version": "local-consent-mandate-source",
       "operations": {
         "mandate.authorize": {
@@ -1426,6 +1517,22 @@
           "scope_kind": "server_local_fixture_only"
         },
         "operation.lookup": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "trial.authorize": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "trial.reauthorize": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "trial.capture": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "trial.cancel": {
           "required_scopes": [],
           "scope_kind": "server_local_fixture_only"
         }
@@ -1604,6 +1711,82 @@
           "scope_kind": "server_local_fixture_only"
         },
         "quality.read": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        }
+      }
+    },
+    "partner_fixture_source": {
+      "version": "source-sha256:6865d3ed78b629a5597ce03edfb54a06ec10f6ae4950e34282e00563b574288a",
+      "api_version": "partner_fixture_v1",
+      "operations": {
+        "coverage.issue": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "coverage.lookup": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "duty.observe": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "eligibility.confirm": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "eligibility.lookup": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "handoff.observe": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "network_alert.respond": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "network_alert.lookup": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        }
+      }
+    },
+    "claims_fixture_source": {
+      "version": "source-sha256:012802db6348686e55b3410bfc3ee301761eb8e43ae809aecfe2f4210423bd9f",
+      "api_version": "claims-fixture-v1",
+      "operations": {
+        "warranty.purchase.read": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "warranty.terms.read": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "shipping.coverage.read": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "dispute.records.read": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "repair.submit": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "shipping.submit": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "dispute.submit": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "submission.lookup": {
           "required_scopes": [],
           "scope_kind": "server_local_fixture_only"
         }
@@ -2048,6 +2231,36 @@
       "name": "CASE-M09-G12-03",
       "path": "tests/development/growth-optional.test.mts",
       "sha256": "0ab6e949de2041b9352eb4c350cc67ba5c8379e30cb5f5a36bab022d2bfaf426"
+    },
+    {
+      "id": "CASE-M10-G01-03",
+      "name": "CASE-M10-G01-03",
+      "path": "tests/development/partner-services.test.mts",
+      "sha256": "31e95efa409da8c952ef311677b488741ad40a4c243a001ed9da71fe04f3ab07"
+    },
+    {
+      "id": "CASE-M10-G02-01",
+      "name": "CASE-M10-G02-01",
+      "path": "tests/development/claims-milestone.test.mts",
+      "sha256": "1d9212ce2c05f2b39cff9fd4f586b2ad98825d13f96450223b50c93dc8537db1"
+    },
+    {
+      "id": "CASE-M10-G02-03",
+      "name": "CASE-M10-G02-03",
+      "path": "tests/development/claims-milestone.test.mts",
+      "sha256": "1d9212ce2c05f2b39cff9fd4f586b2ad98825d13f96450223b50c93dc8537db1"
+    },
+    {
+      "id": "CASE-M10-G05-01",
+      "name": "CASE-M10-G05-01",
+      "path": "tests/development/claims-milestone.test.mts",
+      "sha256": "1d9212ce2c05f2b39cff9fd4f586b2ad98825d13f96450223b50c93dc8537db1"
+    },
+    {
+      "id": "CASE-M10-G05-03",
+      "name": "CASE-M10-G05-03",
+      "path": "tests/development/claims-milestone.test.mts",
+      "sha256": "1d9212ce2c05f2b39cff9fd4f586b2ad98825d13f96450223b50c93dc8537db1"
     },
     {
       "id": "M01-G04-01",
@@ -2590,10 +2803,136 @@
       "sha256": "0ab6e949de2041b9352eb4c350cc67ba5c8379e30cb5f5a36bab022d2bfaf426"
     },
     {
+      "id": "M10-G03-PREP-01",
+      "name": "M10-G03-PREP-01",
+      "path": "tests/development/claims-milestone.test.mts",
+      "sha256": "1d9212ce2c05f2b39cff9fd4f586b2ad98825d13f96450223b50c93dc8537db1"
+    },
+    {
+      "id": "M10-G04-PREP-01",
+      "name": "M10-G04-PREP-01",
+      "path": "tests/development/claims-milestone.test.mts",
+      "sha256": "1d9212ce2c05f2b39cff9fd4f586b2ad98825d13f96450223b50c93dc8537db1"
+    },
+    {
+      "id": "M10-G04-PREP-02",
+      "name": "M10-G04-PREP-02",
+      "path": "tests/development/claims-milestone.test.mts",
+      "sha256": "1d9212ce2c05f2b39cff9fd4f586b2ad98825d13f96450223b50c93dc8537db1"
+    },
+    {
+      "id": "M10-G04-PREP-03",
+      "name": "M10-G04-PREP-03",
+      "path": "tests/development/claims-milestone.test.mts",
+      "sha256": "1d9212ce2c05f2b39cff9fd4f586b2ad98825d13f96450223b50c93dc8537db1"
+    },
+    {
+      "id": "M10-G06-PREP-01",
+      "name": "M10-G06-PREP-01",
+      "path": "tests/development/claims-milestone.test.mts",
+      "sha256": "1d9212ce2c05f2b39cff9fd4f586b2ad98825d13f96450223b50c93dc8537db1"
+    },
+    {
+      "id": "M10-G06-PREP-03",
+      "name": "M10-G06-PREP-03",
+      "path": "tests/development/claims-milestone.test.mts",
+      "sha256": "1d9212ce2c05f2b39cff9fd4f586b2ad98825d13f96450223b50c93dc8537db1"
+    },
+    {
+      "id": "M10-G07-PREP-01",
+      "name": "M10-G07-PREP-01",
+      "path": "tests/development/partner-services.test.mts",
+      "sha256": "31e95efa409da8c952ef311677b488741ad40a4c243a001ed9da71fe04f3ab07"
+    },
+    {
+      "id": "M10-G07-PREP-03",
+      "name": "M10-G07-PREP-03",
+      "path": "tests/development/partner-services.test.mts",
+      "sha256": "31e95efa409da8c952ef311677b488741ad40a4c243a001ed9da71fe04f3ab07"
+    },
+    {
+      "id": "M10-G08-PREP-01",
+      "name": "M10-G08-PREP-01",
+      "path": "tests/development/partner-services.test.mts",
+      "sha256": "31e95efa409da8c952ef311677b488741ad40a4c243a001ed9da71fe04f3ab07"
+    },
+    {
+      "id": "M10-G08-PREP-03",
+      "name": "M10-G08-PREP-03",
+      "path": "tests/development/partner-services.test.mts",
+      "sha256": "31e95efa409da8c952ef311677b488741ad40a4c243a001ed9da71fe04f3ab07"
+    },
+    {
+      "id": "M10-G10-PREP-01",
+      "name": "M10-G10-PREP-01",
+      "path": "tests/development/partner-services.test.mts",
+      "sha256": "31e95efa409da8c952ef311677b488741ad40a4c243a001ed9da71fe04f3ab07"
+    },
+    {
+      "id": "M10-G10-PREP-03",
+      "name": "M10-G10-PREP-03",
+      "path": "tests/development/partner-services.test.mts",
+      "sha256": "31e95efa409da8c952ef311677b488741ad40a4c243a001ed9da71fe04f3ab07"
+    },
+    {
+      "id": "M10-G11-PREP-01",
+      "name": "M10-G11-PREP-01",
+      "path": "tests/development/partner-services.test.mts",
+      "sha256": "31e95efa409da8c952ef311677b488741ad40a4c243a001ed9da71fe04f3ab07"
+    },
+    {
+      "id": "M10-G11-PREP-03",
+      "name": "M10-G11-PREP-03",
+      "path": "tests/development/partner-services.test.mts",
+      "sha256": "31e95efa409da8c952ef311677b488741ad40a4c243a001ed9da71fe04f3ab07"
+    },
+    {
+      "id": "M10-G12-PREP-01",
+      "name": "M10-G12-PREP-01",
+      "path": "tests/development/partner-services.test.mts",
+      "sha256": "31e95efa409da8c952ef311677b488741ad40a4c243a001ed9da71fe04f3ab07"
+    },
+    {
+      "id": "M10-G12-PREP-03",
+      "name": "M10-G12-PREP-03",
+      "path": "tests/development/partner-services.test.mts",
+      "sha256": "31e95efa409da8c952ef311677b488741ad40a4c243a001ed9da71fe04f3ab07"
+    },
+    {
+      "id": "M10-G13-PREP-01",
+      "name": "M10-G13-PREP-01",
+      "path": "tests/development/trial-payments.test.mts",
+      "sha256": "3e6e6ca70dd68c88e2d1e0b1d8d578359cc49cf30eb7818c7a2aa0cb5c8c2726"
+    },
+    {
+      "id": "M10-G13-PREP-02",
+      "name": "M10-G13-PREP-02",
+      "path": "tests/development/trial-payments.test.mts",
+      "sha256": "3e6e6ca70dd68c88e2d1e0b1d8d578359cc49cf30eb7818c7a2aa0cb5c8c2726"
+    },
+    {
+      "id": "M10-G14-PREP-01",
+      "name": "M10-G14-PREP-01",
+      "path": "tests/development/trial-payments.test.mts",
+      "sha256": "3e6e6ca70dd68c88e2d1e0b1d8d578359cc49cf30eb7818c7a2aa0cb5c8c2726"
+    },
+    {
+      "id": "M10-G14-PREP-03",
+      "name": "M10-G14-PREP-03",
+      "path": "tests/development/trial-payments.test.mts",
+      "sha256": "3e6e6ca70dd68c88e2d1e0b1d8d578359cc49cf30eb7818c7a2aa0cb5c8c2726"
+    },
+    {
       "id": "PORT-027",
       "name": "PORT-027",
       "path": "tests/development/growth-marketing.test.mts",
       "sha256": "c6d1efb28caff707c65399a952e555a371772afb0b02397ad195c583adad3651"
+    },
+    {
+      "id": "PORT-029",
+      "name": "PORT-029",
+      "path": "tests/development/claims-milestone.test.mts",
+      "sha256": "1d9212ce2c05f2b39cff9fd4f586b2ad98825d13f96450223b50c93dc8537db1"
     },
     {
       "id": "TEST-034",

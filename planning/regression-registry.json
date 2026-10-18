@@ -1485,6 +1485,118 @@
       "contract_files": [
         "packages/commerce/contracts/identity-partner.v1.json"
       ]
+    },
+    {
+      "id": "FEATURE-M10-G01",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/partner-readiness.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M10-G02",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/warranty-registration.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M10-G03-PREPARATION",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/warranty-claims.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M10-G04-PREPARATION",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/shipping-claims.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M10-G05",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/dispute-evidence.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M10-G06-PREPARATION",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/dispute-submissions.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M10-G07-PREPARATION",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/protection-coverage.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M10-G08-PREPARATION",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/duty-assessments.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M10-G09-PREPARATION",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/reverse-hubs.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M10-G10-PREPARATION",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/international-handoffs.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M10-G11-PREPARATION",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/hsa-fsa.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M10-G12-PREPARATION",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/network-alerts.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M10-G13-PREPARATION",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/delivery-trials.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M10-G14-PREPARATION",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/trial-final-capture.v1.json"
+      ]
     }
   ],
   "tests": [
@@ -21423,6 +21535,321 @@
       "runner_case_id": "M09-G14-PREP-04-NAMED-PRIVATE-CROSS-MERCHANT-GRAPH-FAULT",
       "source": "tests/development/growth-optional.test.mts",
       "capability_id": "FEATURE-M09-G14-PREPARATION"
+    },
+    {
+      "id": "runtime:CASE-M10-G01-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M10-G01-01",
+      "source": "tests/development/partner-services.test.mts",
+      "capability_id": "FEATURE-M10-G01"
+    },
+    {
+      "id": "runtime:CASE-M10-G01-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M10-G01-02",
+      "source": "tests/development/partner-services.test.mts",
+      "capability_id": "FEATURE-M10-G01"
+    },
+    {
+      "id": "runtime:CASE-M10-G01-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M10-G01-03",
+      "source": "tests/development/partner-services.test.mts",
+      "capability_id": "FEATURE-M10-G01"
+    },
+    {
+      "id": "runtime:M10-G07-PREP-01",
+      "suite": "runtime",
+      "runner_case_id": "M10-G07-PREP-01",
+      "source": "tests/development/partner-services.test.mts",
+      "capability_id": "FEATURE-M10-G07-PREPARATION"
+    },
+    {
+      "id": "runtime:M10-G07-PREP-02",
+      "suite": "runtime",
+      "runner_case_id": "M10-G07-PREP-02",
+      "source": "tests/development/partner-services.test.mts",
+      "capability_id": "FEATURE-M10-G07-PREPARATION"
+    },
+    {
+      "id": "runtime:M10-G07-PREP-03",
+      "suite": "runtime",
+      "runner_case_id": "M10-G07-PREP-03",
+      "source": "tests/development/partner-services.test.mts",
+      "capability_id": "FEATURE-M10-G07-PREPARATION"
+    },
+    {
+      "id": "runtime:M10-G08-PREP-01",
+      "suite": "runtime",
+      "runner_case_id": "M10-G08-PREP-01",
+      "source": "tests/development/partner-services.test.mts",
+      "capability_id": "FEATURE-M10-G08-PREPARATION"
+    },
+    {
+      "id": "runtime:M10-G08-PREP-02",
+      "suite": "runtime",
+      "runner_case_id": "M10-G08-PREP-02",
+      "source": "tests/development/partner-services.test.mts",
+      "capability_id": "FEATURE-M10-G08-PREPARATION"
+    },
+    {
+      "id": "runtime:M10-G08-PREP-03",
+      "suite": "runtime",
+      "runner_case_id": "M10-G08-PREP-03",
+      "source": "tests/development/partner-services.test.mts",
+      "capability_id": "FEATURE-M10-G08-PREPARATION"
+    },
+    {
+      "id": "runtime:M10-G09-PREP-01",
+      "suite": "runtime",
+      "runner_case_id": "M10-G09-PREP-01",
+      "source": "tests/development/partner-services.test.mts",
+      "capability_id": "FEATURE-M10-G09-PREPARATION"
+    },
+    {
+      "id": "runtime:M10-G09-PREP-02",
+      "suite": "runtime",
+      "runner_case_id": "M10-G09-PREP-02",
+      "source": "tests/development/partner-services.test.mts",
+      "capability_id": "FEATURE-M10-G09-PREPARATION"
+    },
+    {
+      "id": "runtime:M10-G09-PREP-03",
+      "suite": "runtime",
+      "runner_case_id": "M10-G09-PREP-03",
+      "source": "tests/development/partner-services.test.mts",
+      "capability_id": "FEATURE-M10-G09-PREPARATION"
+    },
+    {
+      "id": "runtime:M10-G10-PREP-01",
+      "suite": "runtime",
+      "runner_case_id": "M10-G10-PREP-01",
+      "source": "tests/development/partner-services.test.mts",
+      "capability_id": "FEATURE-M10-G10-PREPARATION"
+    },
+    {
+      "id": "runtime:M10-G10-PREP-02",
+      "suite": "runtime",
+      "runner_case_id": "M10-G10-PREP-02",
+      "source": "tests/development/partner-services.test.mts",
+      "capability_id": "FEATURE-M10-G10-PREPARATION"
+    },
+    {
+      "id": "runtime:M10-G10-PREP-03",
+      "suite": "runtime",
+      "runner_case_id": "M10-G10-PREP-03",
+      "source": "tests/development/partner-services.test.mts",
+      "capability_id": "FEATURE-M10-G10-PREPARATION"
+    },
+    {
+      "id": "runtime:M10-G11-PREP-01",
+      "suite": "runtime",
+      "runner_case_id": "M10-G11-PREP-01",
+      "source": "tests/development/partner-services.test.mts",
+      "capability_id": "FEATURE-M10-G11-PREPARATION"
+    },
+    {
+      "id": "runtime:M10-G11-PREP-02",
+      "suite": "runtime",
+      "runner_case_id": "M10-G11-PREP-02",
+      "source": "tests/development/partner-services.test.mts",
+      "capability_id": "FEATURE-M10-G11-PREPARATION"
+    },
+    {
+      "id": "runtime:M10-G11-PREP-03",
+      "suite": "runtime",
+      "runner_case_id": "M10-G11-PREP-03",
+      "source": "tests/development/partner-services.test.mts",
+      "capability_id": "FEATURE-M10-G11-PREPARATION"
+    },
+    {
+      "id": "runtime:M10-G12-PREP-01",
+      "suite": "runtime",
+      "runner_case_id": "M10-G12-PREP-01",
+      "source": "tests/development/partner-services.test.mts",
+      "capability_id": "FEATURE-M10-G12-PREPARATION"
+    },
+    {
+      "id": "runtime:M10-G12-PREP-02",
+      "suite": "runtime",
+      "runner_case_id": "M10-G12-PREP-02",
+      "source": "tests/development/partner-services.test.mts",
+      "capability_id": "FEATURE-M10-G12-PREPARATION"
+    },
+    {
+      "id": "runtime:M10-G12-PREP-03",
+      "suite": "runtime",
+      "runner_case_id": "M10-G12-PREP-03",
+      "source": "tests/development/partner-services.test.mts",
+      "capability_id": "FEATURE-M10-G12-PREPARATION"
+    },
+    {
+      "id": "runtime:PORT-028",
+      "suite": "runtime",
+      "runner_case_id": "PORT-028",
+      "source": "tests/development/partner-services.test.mts",
+      "capability_id": "FEATURE-M10-G01"
+    },
+    {
+      "id": "runtime:M10-PREP-INTEGRATION-01",
+      "suite": "runtime",
+      "runner_case_id": "M10-PREP-INTEGRATION-01",
+      "source": "tests/development/claims-milestone.test.mts",
+      "capability_id": "FEATURE-M10-G01"
+    },
+    {
+      "id": "runtime:CASE-M10-G02-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M10-G02-01",
+      "source": "tests/development/claims-milestone.test.mts",
+      "capability_id": "FEATURE-M10-G02"
+    },
+    {
+      "id": "runtime:CASE-M10-G02-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M10-G02-02",
+      "source": "tests/development/claims-milestone.test.mts",
+      "capability_id": "FEATURE-M10-G02"
+    },
+    {
+      "id": "runtime:CASE-M10-G02-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M10-G02-03",
+      "source": "tests/development/claims-milestone.test.mts",
+      "capability_id": "FEATURE-M10-G02"
+    },
+    {
+      "id": "runtime:M10-G03-PREP-01",
+      "suite": "runtime",
+      "runner_case_id": "M10-G03-PREP-01",
+      "source": "tests/development/claims-milestone.test.mts",
+      "capability_id": "FEATURE-M10-G03-PREPARATION"
+    },
+    {
+      "id": "runtime:M10-G03-PREP-02",
+      "suite": "runtime",
+      "runner_case_id": "M10-G03-PREP-02",
+      "source": "tests/development/claims-milestone.test.mts",
+      "capability_id": "FEATURE-M10-G03-PREPARATION"
+    },
+    {
+      "id": "runtime:M10-G03-PREP-03",
+      "suite": "runtime",
+      "runner_case_id": "M10-G03-PREP-03",
+      "source": "tests/development/claims-milestone.test.mts",
+      "capability_id": "FEATURE-M10-G03-PREPARATION"
+    },
+    {
+      "id": "runtime:M10-G04-PREP-01",
+      "suite": "runtime",
+      "runner_case_id": "M10-G04-PREP-01",
+      "source": "tests/development/claims-milestone.test.mts",
+      "capability_id": "FEATURE-M10-G04-PREPARATION"
+    },
+    {
+      "id": "runtime:M10-G04-PREP-02",
+      "suite": "runtime",
+      "runner_case_id": "M10-G04-PREP-02",
+      "source": "tests/development/claims-milestone.test.mts",
+      "capability_id": "FEATURE-M10-G04-PREPARATION"
+    },
+    {
+      "id": "runtime:M10-G04-PREP-03",
+      "suite": "runtime",
+      "runner_case_id": "M10-G04-PREP-03",
+      "source": "tests/development/claims-milestone.test.mts",
+      "capability_id": "FEATURE-M10-G04-PREPARATION"
+    },
+    {
+      "id": "runtime:CASE-M10-G05-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M10-G05-01",
+      "source": "tests/development/claims-milestone.test.mts",
+      "capability_id": "FEATURE-M10-G05"
+    },
+    {
+      "id": "runtime:CASE-M10-G05-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M10-G05-02",
+      "source": "tests/development/claims-milestone.test.mts",
+      "capability_id": "FEATURE-M10-G05"
+    },
+    {
+      "id": "runtime:CASE-M10-G05-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M10-G05-03",
+      "source": "tests/development/claims-milestone.test.mts",
+      "capability_id": "FEATURE-M10-G05"
+    },
+    {
+      "id": "runtime:PORT-029",
+      "suite": "runtime",
+      "runner_case_id": "PORT-029",
+      "source": "tests/development/claims-milestone.test.mts",
+      "capability_id": "FEATURE-M10-G05"
+    },
+    {
+      "id": "runtime:M10-G06-PREP-01",
+      "suite": "runtime",
+      "runner_case_id": "M10-G06-PREP-01",
+      "source": "tests/development/claims-milestone.test.mts",
+      "capability_id": "FEATURE-M10-G06-PREPARATION"
+    },
+    {
+      "id": "runtime:M10-G06-PREP-02",
+      "suite": "runtime",
+      "runner_case_id": "M10-G06-PREP-02",
+      "source": "tests/development/claims-milestone.test.mts",
+      "capability_id": "FEATURE-M10-G06-PREPARATION"
+    },
+    {
+      "id": "runtime:M10-G06-PREP-03",
+      "suite": "runtime",
+      "runner_case_id": "M10-G06-PREP-03",
+      "source": "tests/development/claims-milestone.test.mts",
+      "capability_id": "FEATURE-M10-G06-PREPARATION"
+    },
+    {
+      "id": "runtime:M10-G13-PREP-01",
+      "suite": "runtime",
+      "runner_case_id": "M10-G13-PREP-01",
+      "source": "tests/development/trial-payments.test.mts",
+      "capability_id": "FEATURE-M10-G13-PREPARATION"
+    },
+    {
+      "id": "runtime:M10-G13-PREP-02",
+      "suite": "runtime",
+      "runner_case_id": "M10-G13-PREP-02",
+      "source": "tests/development/trial-payments.test.mts",
+      "capability_id": "FEATURE-M10-G13-PREPARATION"
+    },
+    {
+      "id": "runtime:M10-G13-PREP-03",
+      "suite": "runtime",
+      "runner_case_id": "M10-G13-PREP-03",
+      "source": "tests/development/trial-payments.test.mts",
+      "capability_id": "FEATURE-M10-G13-PREPARATION"
+    },
+    {
+      "id": "runtime:M10-G14-PREP-01",
+      "suite": "runtime",
+      "runner_case_id": "M10-G14-PREP-01",
+      "source": "tests/development/trial-payments.test.mts",
+      "capability_id": "FEATURE-M10-G14-PREPARATION"
+    },
+    {
+      "id": "runtime:M10-G14-PREP-02",
+      "suite": "runtime",
+      "runner_case_id": "M10-G14-PREP-02",
+      "source": "tests/development/trial-payments.test.mts",
+      "capability_id": "FEATURE-M10-G14-PREPARATION"
+    },
+    {
+      "id": "runtime:M10-G14-PREP-03",
+      "suite": "runtime",
+      "runner_case_id": "M10-G14-PREP-03",
+      "source": "tests/development/trial-payments.test.mts",
+      "capability_id": "FEATURE-M10-G14-PREPARATION"
     }
   ],
   "protected_files": [
