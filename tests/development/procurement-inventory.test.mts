@@ -7,6 +7,7 @@ import { pathToFileURL } from 'node:url';
 import { DatabaseSync } from 'node:sqlite';
 import { WarehouseFixtureSource } from '../../packages/adapters/warehouse-fixture-source.mts';
 import { WarehouseInventoryFixtureSource } from '../../packages/adapters/warehouse-inventory-fixture-source.mts';
+import { PurchaseReceiving } from '../../packages/commerce/purchase-receiving.mts';
 import { contentDigest } from '../../packages/commerce/configuration-values.mts';
 import { usingProcurementInventory,oracle,populateProcurementInventoryPrivacy } from './procurement-inventory-helpers.mts';
 
@@ -32,6 +33,9 @@ test('M11-G07-PREP-02',()=>usingProcurementInventory(async f=>{
  assert.equal((await f.receiving.dispatch(f.operator,replay.operation_id)).state,'applied');assert.equal(f.warehouse.stock('sku-a','location-a'),before);
  f.observeReceipt('receipt-excess',6);assert.throws(()=>f.receiving.propose(f.operator,{operation_id:'excess-operation',...f.po_ref,receipt_id:'receipt-excess'}),/EXCESS|QUANTITY/);
  f.observeReceipt('receipt-wrong-unit',1,'kg');assert.throws(()=>f.receiving.propose(f.operator,{operation_id:'unit-operation',...f.po_ref,receipt_id:'receipt-wrong-unit'}),/UNIT/);
+ const detached=new PurchaseReceiving(f.kernel,f.inventory,f.source);f.observeReceipt('receipt-no-current-source',1);assert.throws(()=>detached.propose(f.operator,{operation_id:'missing-current-supplier',...f.po_ref,receipt_id:'receipt-no-current-source'}),/SOURCE_REQUIRED/);assert.equal((await detached.reconcile(f.operator,original.operation_id)).state,'applied');
+ const late=f.prepareReceipt('receipt-cancelled-after-approval',1),apply=f.source.applyProcurement.bind(f.source);f.source.applyProcurement=async command=>{f.supplierSource.observeCancellation(f.po.operation_id,{event_id:'supplier-cancel-after-review',line_id:'line-a',quantity_base:1});return apply(command);};
+ assert.equal((await f.receiving.dispatch(f.operator,late.operation_id)).state,'unknown');assert.equal(f.warehouse.stock('sku-a','location-a'),15);f.observeReceipt('receipt-after-unreconciled-cancellation',1);assert.throws(()=>f.receiving.propose(f.operator,{operation_id:'unreconciled-cancellation',...f.po_ref,receipt_id:'receipt-after-unreconciled-cancellation'}),/RECONCILIATION/);
  assert.equal(f.source.movements().filter((movement:any)=>movement.kind==='purchase_receive').length,1);
 }));
 
@@ -66,6 +70,8 @@ test('CASE-M11-G08-02',()=>usingProcurementInventory(async f=>{
  f.returns.approve(f.reviewer,proposal.operation_id,{expected_digest:proposal.command_digest,expires_at:f.now()+60000});await f.returns.dispatch(f.operator,proposal.operation_id);
  const corrected=f.returns.receipt(f.operator,'receipt-cost');assert.equal(corrected.lines[0].receipt_cost_minor,oracle.purchase.corrected_receipt_cost_minor);assert.equal(corrected.lines[0].cost_variance_minor,oracle.purchase.cost_variance_minor);
  assert.equal(f.po.body.lines[0].unit_cost_minor,'100');assert.equal(f.balance('sku-a').on_hand,15);
+ const original=f.receiving.receipts(f.operator,f.po_ref)[0];await f.supplierEvent('receipt-count-correction',{kind:'receipt_correction',receipt_id:'receipt-cost',quantity_delta:-1});
+ const revised=f.returns.receipt(f.operator,'receipt-cost');assert.equal(revised.lines[0].received,4);assert.equal(revised.lines[0].receipt_cost_minor,'480');assert.equal(revised.lines[0].cost_variance_minor,'80');assert.equal(f.balance('sku-a').on_hand,14);assert.equal(f.receiving.summary(f.operator,f.po_ref).lines[0].outstanding,6);assert.equal(f.receiving.receipts(f.operator,f.po_ref)[0].digest,original.digest);
 }));
 
 test('CASE-M11-G08-03',async()=>{
@@ -115,6 +121,7 @@ test('M11-G10-PREP-01',()=>usingProcurementInventory(async f=>{
  const event=f.observeOutput(job.id,4,1,'output-complete');await f.step(job.id,'complete',event.event_id);const result=f.production.read(f.operator,job.id);
  assert.equal(result.native.good,4);assert.equal(result.native.scrap,1);assert.equal(result.native.wip_cost_minor,'0');assert.equal(result.native.output_cost_minor,oracle.bom.output_cost_minor);assert.equal(result.native.scrap_cost_minor,oracle.bom.scrap_cost_minor);
  assert.equal(f.balance('finished').on_hand,4);assert.equal(f.balance('buttons').on_hand,30);assert.equal(result.native.bom_digest,f.bom.digest);
+ const cancelled=f.approvedJob('released-production');await f.step(cancelled.id,'reserve');await f.step(cancelled.id,'release');assert.equal(f.production.read(f.operator,cancelled.id).state,'released');assert.equal(f.position('cotton').reserved,0);assert.equal(f.balance('cotton').available,2500);assert.equal(f.balance('finished').on_hand,4);
 }));
 
 test('M11-G10-PREP-02',()=>usingProcurementInventory(async f=>{
