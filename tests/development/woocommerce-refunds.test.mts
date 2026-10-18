@@ -1,11 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readFileSync,readdirSync} from 'node:fs';
+import {readFileSync,readdirSync,linkSync,unlinkSync} from 'node:fs';
+import {join} from 'node:path';
 import {DatabaseSync} from 'node:sqlite';
 import {contentDigest,canonical} from '../../packages/commerce/configuration-values.mts';
 import {usingWooRefund} from './woocommerce-refund-helpers.mts';
 import {WooRefundFixtureSource} from '../../packages/adapters/woocommerce/refund-fixture-source.mts';
-import {WooRefundGatewayFixture} from '../../packages/adapters/woocommerce/refund-gateway-fixture.mts';
+import {WooRefundGatewayFixture,assertSeparateWooDatabases} from '../../packages/adapters/woocommerce/refund-gateway-fixture.mts';
 import {ResolutionExecution} from '../../packages/commerce/resolution-execution.mts';
 import {ExecutionStops} from '../../packages/commerce/execution-stops.mts';
 
@@ -37,6 +38,7 @@ test('M07-G02-GATEWAY-ACCEPTED-WITHOUT-WOO-RECORD-STAYS-UNSETTLED',()=>usingWooR
 test('M07-G02-REVOKED-APPROVAL-AND-STOP-BLOCK-SEND',()=>usingWooRefund(async f=>{const op=f.approved();f.gateway.revokeApproval(f.reviewer.scope,op.approval.id);await assert.rejects(()=>f.executor.dispatch(f.a.scope,op.id),/APPROVAL_AUTHORITY_CHANGED/);new ExecutionStops(f.kernel).set(f.owner.scope,{action:'diagnostic.return.resolve',stopped:true,reason:'incident',expected_revision:0});await assert.rejects(()=>f.executor.dispatch(f.a.scope,op.id));assert.equal(count(f.gatewayDb,'fixture_woo_gateway_refunds'),0);}));
 test('M07-G02-TENANT-AND-CUSTOMER-AUTHORITY-PRESERVED',()=>usingWooRefund(async f=>{const op=f.approved();assert.throws(()=>f.executor.read(f.b.scope,op.id),/NOT_FOUND/);await assert.rejects(()=>f.executor.dispatch(f.customer,op.id),/ACCESS_DENIED/);assert.equal(count(f.gatewayDb,'fixture_woo_gateway_refunds'),0);}));
 test('M07-G02-THREE-INDEPENDENT-DATABASES-REQUIRED',()=>usingWooRefund(f=>{assert.throws(()=>new WooRefundFixtureSource(f.gatewayDb,f.gatewaySource,f.sourceOptions,f.now),/SEPARATE_WOO_GATEWAY_SOURCE_REQUIRED/);const db=new DatabaseSync(':memory:');try{const gateway=new WooRefundGatewayFixture(f.db,f.gatewayOptions,f.now),source=new WooRefundFixtureSource(db,gateway,f.sourceOptions,f.now);assert.throws(()=>new ResolutionExecution(f.kernel,source),/SEPARATE_WOO_GATEWAY_SOURCE_REQUIRED/);}finally{db.close();}}));
+test('M07-G02-SOURCE-FILE-ALIASES-ARE-NOT-INDEPENDENT',()=>usingWooRefund(f=>{const alias=join(f.directory,'gateway-alias.sqlite');linkSync(f.gatewayFilename,alias);const db=new DatabaseSync(alias);try{assert.throws(()=>assertSeparateWooDatabases(f.gatewayDb,db),/SEPARATE_WOO_GATEWAY_SOURCE_REQUIRED/);}finally{db.close();unlinkSync(alias);}}));
 test('M07-G02-MIGRATION-PRESERVES-ALL-PRIOR-OPERATION-STATES',()=>{const db=new DatabaseSync(':memory:');try{const directory=new URL('../../migrations/commerce/',import.meta.url);for(const name of readdirSync(directory).filter(name=>name.endsWith('.sql')&&name<'031_').sort())db.exec(readFileSync(new URL(name,directory),'utf8'));
  const states=['authorized','unknown','accepted','settled','issued','rejected','unpaid','partial','failed','expired'];for(const [n,state] of states.entries())db.prepare('INSERT INTO commerce_resolution_operations VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)').run('tenant','store','op'+n,'allocation'+n,'case','resource','receipt'+n,'quote'+n,n===4?'store_credit':n>5?'additional_payment':'refund','1234','USD','source','{"original":"preserved"}','digest',state,'native'+n,123456);
  const before=db.prepare('SELECT * FROM commerce_resolution_operations ORDER BY id').all();db.exec(readFileSync(new URL('031_woocommerce_refund_state.sql',directory),'utf8'));assert.deepEqual(db.prepare('SELECT * FROM commerce_resolution_operations ORDER BY id').all(),before);assert.equal(db.prepare("SELECT name FROM sqlite_master WHERE type='index' AND name='commerce_resolution_operations_order'").get()!.name,'commerce_resolution_operations_order');

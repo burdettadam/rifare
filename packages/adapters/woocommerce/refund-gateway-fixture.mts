@@ -1,12 +1,14 @@
 import { DatabaseSync } from 'node:sqlite';
+import { statSync } from 'node:fs';
 import { exact,id,token,integer } from '../../commerce/kernel.mts';
 import type { Row } from '../../commerce/kernel.mts';
 import { canonical,contentDigest,jsonValue } from '../../commerce/configuration-values.mts';
 import { money } from '../../commerce/money.mts';
 import { WOO_GATEWAY_CONTRACT,WOO_GATEWAY_ID,wooMinor,wooHash,wooNative } from './refund-contract.mts';
 
-export function assertSeparateWooDatabases(a:DatabaseSync,b:DatabaseSync){const path=(db:DatabaseSync)=>(db.prepare('PRAGMA database_list').all() as Row[]).find(r=>r.name==='main')?.file;
- if(a===b||path(a)&&path(a)===path(b))throw new Error('SEPARATE_WOO_GATEWAY_SOURCE_REQUIRED');}
+export function assertSeparateWooDatabases(a:DatabaseSync,b:DatabaseSync){const path=(db:DatabaseSync)=>(db.prepare('PRAGMA database_list').all() as Row[]).find(r=>r.name==='main')?.file,first=path(a),second=path(b);
+ if(a===b||first&&first===second)throw new Error('SEPARATE_WOO_GATEWAY_SOURCE_REQUIRED');
+ if(first&&second){const x=statSync(first,{bigint:true}),y=statSync(second,{bigint:true});if(x.dev===y.dev&&x.ino===y.ino)throw new Error('SEPARATE_WOO_GATEWAY_SOURCE_REQUIRED');}}
 function body(row:Row|undefined){if(!row)throw new Error('WOO_GATEWAY_SOURCE_MISSING');const value=JSON.parse(row.body);if(contentDigest(value)!==row.digest)throw new Error('WOO_GATEWAY_SOURCE_INTEGRITY');return value;}
 const contextFields=['tenant_id','store_id','gateway_id','gateway_account_id','gateway_identity','gateway_contract_version','resource_id','customer_id','native_order_id','payment_id','transaction_id','instrument_id','currency'];
 function checkedCharge(value:unknown){const p=exact(jsonValue(value),['resource_id','customer_id','native_order_id','payment_id','transaction_id','instrument_id','currency','original_paid_minor','prior_refunded_minor']);
