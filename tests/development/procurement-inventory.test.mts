@@ -100,6 +100,8 @@ test('CASE-M11-G09-02',()=>usingProcurementInventory(f=>{
  assert.throws(()=>f.boms.define(f.owner,{...f.bomInput,bom_id:'missing-component',expected_version:0,components:[{quantity:'1',unit:'each',bom:null,material:{id:'missing',version:1,digest:'0'.repeat(64)}}]}),/COMPONENT|NOT_FOUND/);
  assert.throws(()=>f.boms.define(f.owner,{...f.bomInput,bom_id:'zero-yield',expected_version:0,yield_numerator:0}),/YIELD|INVALID/);
  assert.throws(()=>f.boms.define(f.owner,{...f.bomInput,bom_id:'wrong-dimension',expected_version:0,components:[{quantity:'1',unit:'kg',bom:null,material:f.materialRefs.buttons}]}),/UNIT|DIMENSION/);
+ const expensive=f.boms.material(f.owner,{material_id:'material-cost-bound',expected_version:0,resource_id:f.resource.id,variant_id:'cotton',base_unit:'g',currency_code:'USD',unit_cost_minor:'9'.repeat(24)}),priced=f.boms.define(f.owner,{...f.bomInput,bom_id:'cost-total-bound',expected_version:0,output:{material:f.materialRefs.finished,quantity:'1',unit:'each'},yield_numerator:1,yield_denominator:1,components:[{quantity:'2',unit:'g',material:{id:expensive.id,version:expensive.version,digest:expensive.digest},bom:null}]});
+ assert.throws(()=>f.boms.expand(f.operator,{bom_id:priced.id,version:priced.version,expected_digest:priced.digest,quantity:1}),/COST|LIMIT/);
  assert.equal(f.source.movements().length,0);
 }));
 
