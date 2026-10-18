@@ -1,5 +1,6 @@
 import type { CommerceKernel, Row } from './kernel.mts';
 import { createHash } from 'node:crypto';
+import {assertMigrationAction,assertMigrationEgress} from './migration-fence.mts';
 
 export function subjectHash(tenant:string, store:string, customer:string) {
   return createHash('sha256').update(JSON.stringify(['rifare-subject-v1',tenant,store,customer])).digest('hex');
@@ -13,11 +14,13 @@ export function assertNotErased(k:CommerceKernel,s:Row,resource:string,customer:
 }
 const RECOVERY_READS=new Set(['resource.read','attachment.read','knowledge.read','skill.read','profile.read','task.read','capability.read','case.read','audit.read','operation.read','operation.reconcile','exception.read','privacy.manage','recovery.manage']);
 export function assertRecoveryAction(k:CommerceKernel, action:string) {
+  assertMigrationAction(k,action);
   const state=k.db.prepare('SELECT mode FROM commerce_recovery_state WHERE id=1').get() as Row|undefined;
   if(state?.mode==='quarantine'&&!RECOVERY_READS.has(action))throw new Error('RESTORE_WRITE_BLOCKED');
   if(state&&['secret.invoke','model.run'].includes(action))throw new Error('RESTORE_EGRESS_BLOCKED');
 }
 export function assertRecoveryEgress(k:CommerceKernel) {
+  assertMigrationEgress(k);
   if(k.db.prepare('SELECT 1 FROM commerce_recovery_state WHERE id=1').get())throw new Error('RESTORE_EGRESS_BLOCKED');
 }
 export function assertRecoveredOperation(k:CommerceKernel,s:Row,operation:string) {
