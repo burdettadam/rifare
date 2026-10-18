@@ -8,6 +8,8 @@ import { pathToFileURL } from 'node:url';
 import { ProcurementFixtureSource } from '../../packages/adapters/procurement-fixture-source.mts';
 import { ForecastBacktests } from '../../packages/commerce/forecast-backtests.mts';
 import { InventoryTransfers } from '../../packages/commerce/inventory-transfers.mts';
+import { calculateReplenishment } from '../../packages/commerce/replenishment-planning.mts';
+import { canonical,contentDigest } from '../../packages/commerce/configuration-values.mts';
 import { usingProcurement,oracle,nativeSendCount } from './procurement-planning-helpers.mts';
 
 async function mutant(file:string,marker:string,replacement:string,run:(module:any)=>unknown){
@@ -122,12 +124,44 @@ test('M11-G05-01',()=>usingProcurement(f=>{
  assert.throws(()=>f.orders.current(f.b.scope,{po_id:po.id,version:po.version,expected_digest:po.digest}),/NOT_FOUND|ACCESS_DENIED/);
 }));
 
-test('M11-G05-02',()=>usingProcurement(f=>{
+test('M11-G05-02',async()=>{
+ await usingProcurement(f=>{
  assert.throws(()=>f.orders.draft(f.a.scope,{...f.draftInput('unsupported',5),lines:[{line_id:'line-a',variant_id:'sku-a',location_id:'location-a',quantity:5,order_unit:'pallet'}]}),/UNIT|TERMS/);
  assert.throws(()=>f.supplierSource.recordSupplierTerms({...f.termsInput,version:2,currency_code:'FAKE'}),/CURRENCY/);
  f.supplierSource.recordSupplierTerms({...f.termsInput,version:2,lines:f.termsInput.lines.map((line:any)=>({...line,unit_cost_minor:'300'}))});
  assert.throws(()=>f.draft('changed-price',5),/TERMS_CHANGED/);assert.equal(nativeSendCount(f),0);
-}));
+ });
+ await usingProcurement(async f=>{
+  const terms=f.supplierSource.recordSupplierTerms({...f.termsInput,version:2,lines:[{...f.termsInput.lines[0],order_unit:'case',conversion:{numerator:1000000,denominator:1},unit_cost_minor:'1'}]});
+  f.orders.importSupplier(f.a.scope,{supplier_id:'supplier-a',resource_id:f.resource.id});
+  const input=(po_id:string,quantity:number)=>({...f.draftInput(po_id,quantity),expected_terms_digest:terms.digest,lines:[{line_id:'line-a',variant_id:'sku-a',location_id:'location-a',quantity,order_unit:'case'}]});
+  assert.throws(()=>f.orders.draft(f.a.scope,input('oversized-conversion',1001)),/PROCUREMENT_QUANTITY_LIMIT/);
+  assert.throws(()=>calculateReplenishment({target_units:1001000000,available_units:0,incoming_units:0,units_per_purchase:1000000,minimum_quantity:1}),/REPLENISHMENT_QUANTITY_INVALID/);
+  assert.equal(nativeSendCount(f),0);assert.equal(f.balance().on_hand,10);
+  const maximum=f.orders.draft(f.a.scope,input('maximum-conversion',1000));assert.equal(maximum.lines[0].ordered_base_quantity,1000000000);
+  f.approve(maximum);const ref={po_id:maximum.id,version:maximum.version,expected_digest:maximum.digest};
+  assert.equal((await f.approvals.send(f.a.scope,{...ref,operation_id:'maximum-conversion-send'})).state,'sent');
+  f.supplierSource.acknowledge('maximum-conversion-send',{event_id:'maximum-conversion-ack'});await f.approvals.reconcile(f.a.scope,ref);
+  f.receipts.facts.recordReceipt({receipt_id:'maximum-partial',po_id:maximum.id,version:maximum.version,po_digest:maximum.digest,lines:[{line_id:'line-a',quantity:1,unit:'case'}],observed_at:f.now(),evidence_ref:'maximum-partial-evidence'});
+  const receipt=f.receipts.propose(f.a.scope,{...ref,receipt_id:'maximum-partial',operation_id:'maximum-partial-operation'});
+  f.receipts.approve(f.reviewer,receipt.operation_id,{expected_digest:receipt.command_digest,expires_at:f.now()+60000});
+  assert.equal((await f.receipts.dispatch(f.a.scope,receipt.operation_id)).state,'applied');
+  const line=f.receipts.summary(f.a.scope,ref).lines[0];assert.equal(line.received,1000000);assert.equal(line.outstanding,999000000);assert.equal(f.balance().on_hand,1000010);
+
+  // Model a validly hashed historical draft from the earlier, wider domain.
+  // Its actual current review must still reach a source that rejects the size.
+  const old=f.orders.draft(f.a.scope,input('historical-wide-domain',1000));
+  const row=f.db.prepare('SELECT * FROM commerce_purchase_order_versions WHERE tenant_id=? AND store_id=? AND po_id=? AND version=?').get(f.a.tenant,f.a.store,old.id,old.version) as any;
+  const body=JSON.parse(row.body);body.total_minor='1001';Object.assign(body.lines[0],{quantity:1001,ordered_quantity:1001,ordered_base_quantity:1001000000,base_quantity:1001000000,line_total_minor:'1001'});
+  f.db.prepare('UPDATE commerce_purchase_order_versions SET body=?,digest=? WHERE tenant_id=? AND store_id=? AND id=?').run(canonical(body),contentDigest(body),f.a.tenant,f.a.store,row.id);
+  const historicalRef={po_id:old.id,version:old.version,expected_digest:contentDigest(body)},historical=f.orders.current(f.a.scope,historicalRef);f.approve(historical);
+  let sourceError='';const send=f.supplierSource.send.bind(f.supplierSource);
+  f.supplierSource.send=async command=>{try{return await send(command);}catch(error){sourceError=(error as Error).message;throw error;}};
+  const blocked=await f.approvals.send(f.a.scope,{...historicalRef,operation_id:'historical-wide-domain-send'});
+  assert.equal(sourceError,'PROCUREMENT_QUANTITY_LIMIT');assert.equal(blocked.state,'unknown');assert.equal(blocked.operation_id,'historical-wide-domain-send');
+  assert.equal(nativeSendCount(f),1);assert.equal(f.approvals.budget(f.owner,'procurement-budget').obligated_minor,'2001');assert.equal(f.balance().on_hand,1000010);
+ });
+});
 
 test('M11-G05-03',async()=>{
  await usingProcurement(async f=>{
