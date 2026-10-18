@@ -1,7 +1,7 @@
 import { CommerceKernel,exact,id,token,digest } from './kernel.mts';
 import type { Scope,Row } from './kernel.mts';
 import { canonical,jsonValue } from './configuration-values.mts';
-import { uniqueHeaders,verifyShopifyWebhook,verifySyntheticWebhook } from '../adapters/webhooks/signatures.mts';
+import { uniqueHeaders,verifyShopifyWebhook,verifySyntheticWebhook,verifyWooCommerceWebhook } from '../adapters/webhooks/signatures.mts';
 
 export const WEBHOOK_MAX_BYTES=131072;
 export class WebhookInbox {
@@ -13,7 +13,8 @@ export class WebhookInbox {
   }
   register(scope:Scope,input:unknown){
     const k=this.#k,s=k.authorize(scope,'webhook.manage'),p=exact(jsonValue(input),['provider','topic','shop_domain','api_version','key_ref']);id(p.key_ref);
-    if(!['synthetic','shopify'].includes(p.provider)||!(/^[a-z_]+\/[a-z_]+$/).test(p.topic)||p.topic.length>80||!(/^[a-z0-9-]+\.myshopify\.com$|^[a-z0-9-]+\.example\.invalid$/).test(p.shop_domain)||p.api_version!=='2026-10')throw new Error('INVALID_INPUT');
+    const woo=p.provider==='woocommerce';
+    if(woo?(!['order.created','order.updated'].includes(p.topic)||! /^[a-z0-9-]+\.example\.invalid$/.test(p.shop_domain)||p.api_version!=='wc/v3'):!['synthetic','shopify'].includes(p.provider)||!(/^[a-z_]+\/[a-z_]+$/).test(p.topic)||p.topic.length>80||!(/^[a-z0-9-]+\.myshopify\.com$|^[a-z0-9-]+\.example\.invalid$/).test(p.shop_domain)||p.api_version!=='2026-10')throw new Error('INVALID_INPUT');
     if(p.provider==='shopify'&&!p.shop_domain.endsWith('.myshopify.com'))throw new Error('INVALID_INPUT');
     const key=this.#key(p.key_ref);try{
       const fingerprint=digest(key),existing=k.db.prepare('SELECT 1 FROM commerce_webhook_routes WHERE key_fingerprint=? AND (tenant_id<>? OR store_id<>?)').get(fingerprint,s.tenant_id,s.store_id);
@@ -32,8 +33,8 @@ export class WebhookInbox {
     if(h['content-type']!=='application/json'||h['content-encoding']&&h['content-encoding']!=='identity')throw new Error('WEBHOOK_CONTENT_TYPE');
     const r=k.db.prepare('SELECT r.* FROM commerce_webhook_routes r JOIN commerce_stores s USING(tenant_id,store_id) WHERE r.id=? AND r.enabled=1 AND s.active=1').get(routeId) as Row;
     if(!r)throw new Error('WEBHOOK_ROUTE_UNAVAILABLE');
-    const key=this.#key(r.key_ref,r.key_fingerprint);let verified:ReturnType<typeof verifySyntheticWebhook>|ReturnType<typeof verifyShopifyWebhook>;
-    try{verified=r.provider==='synthetic'?verifySyntheticWebhook(r as any,h,raw,key,k.clock()):verifyShopifyWebhook(r as any,h,raw,key);}finally{key.fill(0);}
+    const key=this.#key(r.key_ref,r.key_fingerprint);let verified:ReturnType<typeof verifySyntheticWebhook>|ReturnType<typeof verifyShopifyWebhook>|ReturnType<typeof verifyWooCommerceWebhook>;
+    try{verified=r.provider==='synthetic'?verifySyntheticWebhook(r as any,h,raw,key,k.clock()):r.provider==='woocommerce'?verifyWooCommerceWebhook(r as any,h,raw,key):verifyShopifyWebhook(r as any,h,raw,key);}finally{key.fill(0);}
     let decoded:unknown;try{decoded=JSON.parse(new TextDecoder('utf8',{fatal:true}).decode(raw));jsonValue(decoded,WEBHOOK_MAX_BYTES);}catch{throw new Error('WEBHOOK_PAYLOAD_INVALID');}
     if(!decoded||typeof decoded!=='object'||Array.isArray(decoded))throw new Error('WEBHOOK_PAYLOAD_INVALID');
     const hash=digest(raw);

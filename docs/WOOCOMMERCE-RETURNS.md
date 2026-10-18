@@ -42,6 +42,9 @@ The returned fixture exposes `source`, `sourceDb`, `woo`, `binding`, `order`,
 `caseId`, `selection`, `quote`, `prepare`, `submit`, `publish` and `cleanup`.
 Its separate source `records()` gives the independently inspectable wire records,
 version/digest history and zero native return-create effects.
+Effect counts are calculated from independent `woo_fixture_effect_records` rows;
+the fixture source has no return-create operation. A sentinel test proves the
+oracle observes a directly inserted effect rather than returning a fixed zero.
 
 ```sh
 node --experimental-strip-types --test --test-concurrency=1 tests/development/woocommerce-returns.test.mts
@@ -50,6 +53,26 @@ node --experimental-strip-types --test --test-concurrency=1 tests/development/wo
 The source has no default network client, live mode or credentials. Restoring a
 core database does not authorize writes: its server-owned source must be attached,
 with matching identity and account, and current facts must validate again.
+
+## Woo order events
+
+`verifyWooCommerceWebhook` verifies the exact raw-body HMAC and validates the
+declared Woo headers before durable acknowledgement. Only local fixture hosts
+and the `wc/v3` route contract are configured. Because Woo's HMAC does not cover
+routing or delivery headers, the inbox record starts quarantined.
+`WooOrderEvents.process` then corroborates the entire order body against the
+attached independent source for the same tenant, store and account before
+refreshing canonical facts. Its separate observation records the source revision,
+wire digest and resulting canonical version. The observation grants no financial
+authority or permission for a new write.
+
+Duplicate event IDs reuse that observation. A different delivery ID for the same
+source snapshot does not increment the canonical version. Conflicting deliveries,
+old source snapshots, unsigned bodies and mismatched routing do not alter the
+bound order or create a return. The helper
+`tests/development/woocommerce-event-helpers.mts` exports `wooEventFixture(f)`;
+it uses owner authorization for route management and existing operator authority
+for source processing. Permanent cases are in `woocommerce-events.test.mts`.
 
 ## Wire references and qualification limits
 

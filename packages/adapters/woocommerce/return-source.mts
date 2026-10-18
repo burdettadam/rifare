@@ -57,6 +57,7 @@ export class WooReturnFixtureSource {
   exact(options,['mode','identity','tenant','store','account_id','origin']);if(options.mode!=='fixture'||typeof clock!=='function')throw new Error('WOO_SOURCE_UNQUALIFIED');
   this.db=db;this.identity=id(options.identity);this.tenant=id(options.tenant);this.store=id(options.store);this.account_id=id(options.account_id);this.origin=origin(options.origin);this.clock=clock;
   db.exec('CREATE TABLE IF NOT EXISTS woo_fixture_order_versions(native_order_id TEXT NOT NULL,revision INTEGER NOT NULL,body TEXT NOT NULL,digest TEXT NOT NULL,PRIMARY KEY(native_order_id,revision)) STRICT');
+  db.exec('CREATE TABLE IF NOT EXISTS woo_fixture_effect_records(id TEXT PRIMARY KEY,kind TEXT NOT NULL,body TEXT NOT NULL,digest TEXT NOT NULL) STRICT');
  }
  seed(input:unknown){const facts=sourceFacts(input,this.clock()),old=this.db.prepare('SELECT max(revision) revision FROM woo_fixture_order_versions WHERE native_order_id=?').get(facts.native_order_id) as Row;
   if(facts.input.revision!==(old.revision??0)+1)throw new Error('WOO_SOURCE_REVISION_CONFLICT');
@@ -64,7 +65,9 @@ export class WooReturnFixtureSource {
  snapshot(nativeId:string){native(nativeId);const row=this.db.prepare('SELECT * FROM woo_fixture_order_versions WHERE native_order_id=? ORDER BY revision DESC LIMIT 1').get(nativeId) as Row;
   if(!row)throw new Error('WOO_SOURCE_UNAVAILABLE');const input=JSON.parse(row.body);if(contentDigest(input)!==row.digest)throw new Error('WOO_NATIVE_SOURCE_INTEGRITY');
   return {...sourceFacts(input,this.clock()),revision:row.revision,digest:row.digest};}
- records(){return {identity:this.identity,account_id:this.account_id,origin:this.origin,contract:this.contract,qualification:this.qualification,native_return_records:[],native_return_create_effects:0,
+ records(){const effects=(this.db.prepare('SELECT id,kind,body,digest FROM woo_fixture_effect_records ORDER BY id').all() as Row[]).map(r=>{const body=JSON.parse(r.body);if(contentDigest(body)!==r.digest)throw new Error('WOO_NATIVE_SOURCE_INTEGRITY');return {...r,body};});
+  const nativeReturns=effects.filter(r=>r.kind==='return.create');
+  return {identity:this.identity,account_id:this.account_id,origin:this.origin,contract:this.contract,qualification:this.qualification,effects,native_return_records:nativeReturns,native_return_create_effects:nativeReturns.length,
   orders:(this.db.prepare('SELECT native_order_id,revision,body,digest FROM woo_fixture_order_versions ORDER BY native_order_id,revision').all() as Row[]).map(r=>({...r,body:JSON.parse(r.body)}))};}
 }
 export class WooReturnSources {
