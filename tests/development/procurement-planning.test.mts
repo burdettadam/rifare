@@ -6,6 +6,8 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { ProcurementFixtureSource } from '../../packages/adapters/procurement-fixture-source.mts';
+import { ForecastBacktests } from '../../packages/commerce/forecast-backtests.mts';
+import { InventoryTransfers } from '../../packages/commerce/inventory-transfers.mts';
 import { usingProcurement,oracle,nativeSendCount } from './procurement-planning-helpers.mts';
 
 async function mutant(file:string,marker:string,replacement:string,run:(module:any)=>unknown){
@@ -15,6 +17,60 @@ async function mutant(file:string,marker:string,replacement:string,run:(module:a
   const target=join(directory,'mutant.mts');writeFileSync(target,source);await run(await import(pathToFileURL(target).href));
  }finally{rmSync(directory,{recursive:true,force:true});}
 }
+
+// Root's reserved integration slot; independent expected quantities are fixed
+// here before the first integrated native execution. This is local preparation.
+test('M11-PREP-INTEGRATION-01',t=>usingProcurement(async f=>{
+ const opening=f.balance();assert.equal(opening.available,10);assert.equal(opening.on_hand,10);
+ await f.openPO('demo-existing-po',6);
+ const proposal=f.plan('demo-stockout-risk');
+ assert.equal(proposal.assumptions.target_units,20);assert.equal(proposal.assumptions.incoming_units,6);
+ assert.equal(proposal.net_required_units,4);assert.equal(proposal.quantity,4);assert.equal(proposal.purchasing_authorized,false);
+ const forecast=f.forecasts.assertReviewed(f.a.scope,{forecast_id:proposal.forecast.id,expected_digest:proposal.forecast.digest});
+ const backtest=new ForecastBacktests(f.kernel).read(f.a.scope,forecast.backtest_id);
+ assert.deepEqual(backtest.plan.baseline_versions,['last_value_v1','seasonal_2_v1']);assert.deepEqual(backtest.plan.horizons,[5]);
+ assert.equal(backtest.cells.length,2);assert.ok(backtest.cells.every((cell:any)=>cell.training_max_event_at<=cell.origin&&cell.training_max_observed_at<=cell.origin));
+ const metrics=backtest.metrics.filter((row:any)=>row.cohort_key==='all');
+ assert.equal(metrics.length,3);for(const row of metrics){assert.equal(row.declared_count,2);assert.equal(row.scored_count,2);assert.equal(row.actual_units,40);assert.equal(row.absolute_error,0);assert.equal(row.signed_error,0);assert.equal(row.service_rate,1);}
+ const draft=f.orders.draft(f.a.scope,{...f.draftInput('demo-new-po',proposal.quantity),replenishment_id:proposal.id});
+ assert.equal(draft.state,'draft');assert.equal(draft.total_minor,'1000');
+ const ref={po_id:draft.id,version:draft.version,expected_digest:draft.digest};
+ assert.throws(()=>f.approvals.approve(f.a.scope,{...ref,budget_id:'procurement-budget',expires_at:f.now()+60000}),/ACCESS_DENIED|SELF_APPROVAL/);
+ const approval=f.approve(draft);assert.notEqual(approval.approver,draft.proposed_by);assert.equal(approval.po_digest,draft.digest);
+ const sent=await f.approvals.send(f.a.scope,{...ref,operation_id:'demo-original-send'});assert.equal(sent.state,'sent');assert.equal(f.balance().on_hand,10);
+ f.supplierSource.acknowledge('demo-original-send',{event_id:'demo-native-ack'});
+ const acknowledged=await f.approvals.reconcile(f.a.scope,ref);assert.equal(acknowledged.state,'acknowledged');
+ const receipt=await f.receive(acknowledged,2,'demo-partial-receipt');assert.equal(receipt.state,'applied');
+ const summary=f.receipts.summary(f.a.scope,ref),line=summary.lines[0];
+ assert.deepEqual({ordered:line.ordered,cancelled:line.cancelled,received:line.received,unknown:line.unknown,outstanding:line.outstanding},{ordered:4,cancelled:0,received:2,unknown:0,outstanding:2});
+ assert.equal(f.balance().on_hand,12);assert.equal(f.warehouse.stock('sku-a','location-a'),12);
+ const after=f.plan('demo-after-partial');assert.equal(after.assumptions.incoming_units,8);assert.equal(after.assumptions.available_units,12);assert.equal(after.quantity,0);
+ assert.equal(acknowledged.invoice_state,'unobserved');assert.equal(acknowledged.payment_state,'unobserved');
+
+ // Retained transfer behavior uses the same source, SKU, resource and kernel.
+ f.warehouse.seed('sku-a','location-b',0);
+ f.inventory.claim(f.owner,{resource_id:f.resource.id,variant_id:'sku-a',location_id:'location-b',source_identity:f.stockSource.identity,fields:['available','on_hand','reserved','in_transit']});
+ f.stockSource.snapshot({observation_id:'demo-location-b-opening',resource_id:f.resource.id,variant_id:'sku-a',location_id:'location-b'});
+ f.inventory.importSnapshot(f.a.scope,'demo-location-b-opening');
+ const transfers=new InventoryTransfers(f.kernel,f.inventory,f.stockSource,{deadline_ms:25});
+ transfers.plan(f.a.scope,{transfer_id:'demo-transfer',resource_id:f.resource.id,variant_id:'sku-a',from_location:'location-a',to_location:'location-b',quantity:3});
+ for(const kind of ['reserve','dispatch','receive']) {
+  const state=transfers.read(f.a.scope,'demo-transfer'),op=transfers.propose(f.a.scope,'demo-transfer',{operation_id:'demo-transfer-'+kind,kind,quantity:3,expected_revision:state.revision});
+  transfers.approve(f.reviewer,op.operation_id,{expected_digest:op.command_digest,expires_at:f.now()+60000});
+  assert.equal((await transfers.dispatch(f.a.scope,op.operation_id)).state,'applied');
+ }
+ const origin=f.inventory.balance(f.a.scope,{resource_id:f.resource.id,variant_id:'sku-a',location_id:'location-a'}),destination=f.inventory.balance(f.a.scope,{resource_id:f.resource.id,variant_id:'sku-a',location_id:'location-b'});
+ assert.equal(origin.on_hand,9);assert.equal(destination.on_hand,3);assert.equal(origin.on_hand+destination.on_hand,12);
+ assert.equal(origin.reserved+destination.reserved+origin.in_transit+destination.in_transit,0);
+ assert.equal(f.warehouse.stock('sku-a','location-a')+f.warehouse.stock('sku-a','location-b'),12);
+ t.diagnostic('M11_LOCAL_INTEGRATION_EVIDENCE '+JSON.stringify({qualification:'synthetic_local_preparation',formal_goal_accepted:false,
+  forecast:{id:forecast.id,digest:forecast.digest,dataset_digest:forecast.dataset_digest,backtest_digest:forecast.backtest_digest,as_of:forecast.as_of,horizon_days:forecast.horizon_days,quantity:forecast.quantity},
+  backtest:{id:backtest.id,digest:backtest.digest,baselines:backtest.plan.baseline_versions,horizons:backtest.plan.horizons,metrics},
+  stockout:{target_units:20,opening_available:10,existing_incoming:6,proposed_units:proposal.quantity},
+  purchase:{...ref,approval_id:approval.id,amount_minor:draft.total_minor,original_operation_id:sent.operation_id,native_id:sent.native_id},
+  receipt:{operation_id:receipt.operation_id,source_identity:f.stockSource.identity,ordered:line.ordered,received:line.received,outstanding:line.outstanding},
+  conservation:{after_partial_on_hand:12,incoming_after_partial:after.assumptions.incoming_units,location_a:origin.on_hand,location_b:destination.on_hand,total_on_hand:origin.on_hand+destination.on_hand}}));
+}));
 
 test('M11-G04-01',()=>usingProcurement(async f=>{
  await f.openPO('incoming',oracle.open_po_units);

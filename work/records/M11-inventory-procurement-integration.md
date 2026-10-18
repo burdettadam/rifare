@@ -108,7 +108,8 @@ the unchanged 60-actual-case/four-file/one-total-60-second limit. Actual source
 bindings, commands, IDs, counts, timers and all failed/superseded reports belong
 to `evidence/checkpoint-input.json`. The comparison is in
 `evidence/inventory-planning-preservation-audit.json`. Final independent
-authority/security and regression reports and `evidence/local-integration.json`+provide the bounded disposition and separate maintainer decision. This source
+authority/security and regression reports and `evidence/local-integration.json`
+provide the bounded disposition and separate maintainer decision. This source
 record preclaims no native pass, independent review or integration outcome.
 
 ## Recovery and next scope
