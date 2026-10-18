@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "kind": "rifare-source-release-audit",
+  "artifact_kind": "regular-source-tree",
+  "maximum_files": 20000,
+  "maximum_file_bytes": 16777216,
+  "maximum_total_bytes": 134217728,
+  "maximum_evidence_bytes": 8388608,
+  "scan_max_age_ms": 86400000,
+  "advisory_database_max_age_ms": 86400000,
+  "required_scan_types": ["dependency_vulnerabilities", "artifact_secrets"],
+  "secret_rules": [
+    {"id": "private-key-header", "pattern": "-----BEGIN (?:RSA |EC |OPENSSH |DSA )?PRIVATE KEY-----"},
+    {"id": "aws-access-key-id", "pattern": "\\bAKIA[A-Z0-9]{16}\\b"},
+    {"id": "long-provider-token", "pattern": "\\b(?:sk-proj-|ghp_)[A-Za-z0-9_-]{32,}\\b"}
+  ],
+  "public_release_supported": false,
+  "limits": [
+    "Offline source-directory audit; archive containers, Git history and bundled runtimes need separate qualification.",
+    "Patterns identify a limited set of secret formats, not arbitrary private data or all credentials.",
+    "Dependency metadata is observed without registry access, downloads, package installation or lifecycle scripts.",
+    "Supplied evidence hashes prove byte identity, not scanner truth, reviewer identity or approval authority.",
+    "No vulnerability database is bundled or fetched; current dependency vulnerability clearance is unavailable.",
+    "Stable owned source and staging directories are required; hostile concurrent filesystem writers are outside this checker."
+  ]
+}
