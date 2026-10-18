@@ -8,6 +8,7 @@ import { DatabaseSync } from 'node:sqlite';
 import { WarehouseFixtureSource } from '../../packages/adapters/warehouse-fixture-source.mts';
 import { WarehouseInventoryFixtureSource } from '../../packages/adapters/warehouse-inventory-fixture-source.mts';
 import { PurchaseReceiving } from '../../packages/commerce/purchase-receiving.mts';
+import { InventoryTransfers } from '../../packages/commerce/inventory-transfers.mts';
 import { contentDigest } from '../../packages/commerce/configuration-values.mts';
 import { usingProcurementInventory,oracle,populateProcurementInventoryPrivacy } from './procurement-inventory-helpers.mts';
 
@@ -175,11 +176,31 @@ test('M11-STOCK-SOURCE-INTEGRITY',()=>usingProcurementInventory(async f=>{
  assert.throws(()=>f.receiving.summary(f.operator,f.po_ref),/INTEGRITY|SOURCE|RECONCILIATION/);
 }));
 
-test('M11-STOCK-CONSERVATION',()=>usingProcurementInventory(async f=>{
+test('M11-STOCK-CONSERVATION',async()=>{
+ await usingProcurementInventory(async f=>{
  const job=f.approvedJob();await f.step(job.id,'reserve');await f.step(job.id,'consume');const first=f.observeOutput(job.id,2,0,'partial-output');await f.step(job.id,'complete',first.event_id);
  let state=f.production.read(f.operator,job.id).native;assert.equal(state.good,2);assert.equal(state.wip_cost_minor,oracle.bom.partial_wip_cost_minor);assert.equal(f.balance('finished').on_hand,2);
  const second=f.observeOutput(job.id,2,1,'remaining-output');await f.step(job.id,'complete',second.event_id);
  const correction=f.observeOutput(job.id,-1,1,'output-correction','partial-output');await f.step(job.id,'correct_output',correction.event_id);state=f.production.read(f.operator,job.id).native;
  assert.equal(state.good,3);assert.equal(state.scrap,2);assert.equal(state.wip_cost_minor,'0');assert.equal(BigInt(state.output_cost_minor)+BigInt(state.scrap_cost_minor),2600n);assert.equal(f.balance('finished').on_hand,3);
  const privacy=await populateProcurementInventoryPrivacy(f);assert.equal(privacy.tables.length,7);assert.ok(privacy.unknown_operations.length);assert.equal(f.resource.customer_id,null);
-}));
+ });
+ await usingProcurementInventory(async f=>{
+  // Establish the boundary through the original source movement and ledger importer.
+  const opening=f.source.recordMovement({movement_id:'maximum-stock-adjustment',resource_id:f.resource.id,variant_id:'sku-a',location_id:'location-a',kind:'adjustment',quantity_delta:Number.MAX_SAFE_INTEGER-10,reference_id:'maximum-stock-observation',linked_movement_id:null});
+  f.inventory.importMovement(f.operator,opening.movement_id);
+  f.source.snapshot({observation_id:'maximum-stock-snapshot',resource_id:f.resource.id,variant_id:'sku-a',location_id:'location-a'});f.inventory.importSnapshot(f.operator,'maximum-stock-snapshot');
+  assert.equal(f.balance('sku-a').on_hand,9007199254740991);
+  const transfers=new InventoryTransfers(f.kernel,f.inventory,f.source,{deadline_ms:25});
+  transfers.plan(f.operator,{transfer_id:'maximum-stock-transfer',resource_id:f.resource.id,variant_id:'sku-a',from_location:'location-a',to_location:'location-b',quantity:1});
+  const transfer=transfers.read(f.operator,'maximum-stock-transfer'),reserve=transfers.propose(f.operator,'maximum-stock-transfer',{operation_id:'maximum-stock-reserve',kind:'reserve',quantity:1,expected_revision:transfer.revision});
+  transfers.approve(f.reviewer,reserve.operation_id,{expected_digest:reserve.command_digest,expires_at:f.now()+60000});assert.equal((await transfers.dispatch(f.operator,reserve.operation_id)).state,'applied');
+  const position={available:9007199254740990,on_hand:9007199254740991,reserved:1,in_transit:0};assert.deepEqual(f.position('sku-a'),position);
+  const balance=f.balance('sku-a'),history=f.inventory.history(f.operator,{resource_id:f.resource.id}),movements=f.source.movements(),commands=f.source.db.prepare('SELECT * FROM warehouse_inventory_commands ORDER BY operation_id').all(),applies=f.source.calls.apply;
+  f.observeReceipt('overflow-on-hand',1);
+  assert.throws(()=>f.receiving.propose(f.operator,{operation_id:'overflow-on-hand-operation',...f.po_ref,receipt_id:'overflow-on-hand'}),/^Error: STOCK_POSITION_INVALID$/);
+  assert.deepEqual(f.position('sku-a'),position);assert.deepEqual(f.balance('sku-a'),balance);assert.deepEqual(f.inventory.history(f.operator,{resource_id:f.resource.id}),history);
+  assert.deepEqual(f.source.movements(),movements);assert.deepEqual(f.source.db.prepare('SELECT * FROM warehouse_inventory_commands ORDER BY operation_id').all(),commands);assert.equal(f.source.calls.apply,applies);
+  assert.equal(await f.source.lookup('overflow-on-hand-operation'),null);assert.equal(f.receiving.receipts(f.operator,f.po_ref).length,0);assert.equal(f.db.prepare('SELECT count(*) n FROM commerce_stock_operations WHERE operation_id=?').get('overflow-on-hand-operation').n,0);
+ });
+});
