@@ -101,4 +101,3 @@ export async function populateMarketingPrivacy(f:ReturnType<typeof marketingFixt
     return {shop,recovery,recovery_id:proposal.id,operation_id:queued.operation_id,sync_operation_id:'privacy-template-original',experiment_id:'checkout-one',campaign_id:campaign.id,resource_id:f.first.resource_id,customer_id:f.first.customer_id,denominators:{treatment:2,holdout:2},cleanup:()=>shop.cleanup()};
   }catch(error){shop.cleanup();throw error;}
 }
-
