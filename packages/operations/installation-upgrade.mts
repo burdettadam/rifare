@@ -68,6 +68,8 @@ function checkArtifact(value: Artifact): Buffer {
   if (digest(bytes) !== value.bundle_sha256) fail('ARTIFACT_CHECKSUM_MISMATCH');
   const header = bytes.subarray(0, Math.min(bytes.length, 1024 * 1024)).toString('latin1').split('\n\n', 1)[0];
   if (!/^# v[23] git bundle\n/.test(header) || header.split('\n').some(line => line.startsWith('-'))) fail('ARTIFACT_FULL_BUNDLE_REQUIRED');
+  if (git('-C', ROOT, 'rev-parse', 'HEAD') !== value.commit || git('-C', ROOT, 'rev-parse', 'HEAD^{tree}') !== value.tree
+    || git('-C', ROOT, 'status', '--porcelain=v1')) fail('ARTIFACT_RUNTIME_SOURCE_MISMATCH');
   return bytes;
 }
 function materializeArtifact(artifact: Artifact, destination: string, bytes: Buffer) {
@@ -189,8 +191,8 @@ export function prepareUpgrade(input: { artifact: Artifact; destination: string;
     restoreRecoverySnapshot({ snapshot: snapshot.directory, destination: join(input.destination, 'data'), manifest_sha256: snapshot.manifest_sha256,
       suppression: cp, suppression_sha256: contentDigest(cp) });
   } finally { db.close(); }
-  if (digest(closedDatabase(prior.database)) !== originalHash) fail('INSTALLATION_SOURCE_CHANGED');
   observe('database_prepared');
+  if (digest(closedDatabase(prior.database)) !== originalHash) fail('INSTALLATION_SOURCE_CHANGED');
   return finish(input.destination, artifact, { operation: 'upgrade', mode: 'quarantine', seeded_demo: prior.manifest.seeded_demo,
     source: { artifact: prior.manifest.artifact, manifest_sha256: input.source.manifest_sha256, database_sha256: originalHash }, rollback,
     rollback_limit: rollback ? null : 'Use the preserved original installation and its matching artifact; cross-schema restore is not supported.' });

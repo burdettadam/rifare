@@ -44,7 +44,10 @@ bundle verification run with hooks/templates disabled and file transport only.
 
 ## Install and seed
 
-Run this tool from the selected artifact's source checkout. Place a request JSON
+Run this tool from the selected artifact's clean, committed source checkout. Its
+current commit and tree must match the supplied artifact; the installer refuses
+modified or untracked source instead of mixing transitive runtime versions.
+Ignored private evidence does not change the source identity. Place a request JSON
 outside source; replace every uppercase placeholder with an actual absolute path
 or the independently retained hexadecimal pin. Destination parents must already
 exist. The destination itself must **not exist**, even as an empty directory.
@@ -70,8 +73,8 @@ node --experimental-strip-types tools/install-upgrade.mts install /absolute/path
 The result gives the private database path and `manifest_sha256`. Retain this pin
 outside the installation. `source/` contains the actual selected Git checkout;
 `data/database.sqlite` contains the commerce schema. The installer refuses
-different runtime/kernel/recovery bytes or migration files instead of mixing
-incompatible installed code and the currently running installer.
+different installer commit/tree, runtime/kernel/recovery bytes or migration files
+instead of mixing incompatible installed code and the currently running installer.
 
 With `seed_demo: true`, the existing synthetic simulator creates seven resources
 for tenant `installation-demo`, store `store`, owner member `operator`. Its order
@@ -79,6 +82,11 @@ for tenant `installation-demo`, store `store`, owner member `operator`. Its orde
 These are synthetic fixtures. Set `seed_demo: false` for an empty commerce schema;
 there is then no precreated operator or authentication session. Merchant import
 is a separate scoped operation and does not activate live credentials or work.
+That operation requires a fresh scoped `exportMerchantSuppression(kernel, owner)`
+checkpoint from the authoritative source after the transfer snapshot, with its
+`merchantSnapshotDigest` supplied as the fifth import argument. An old snapshot
+alone cannot establish that later erasures were applied. See the public
+[merchant portability guide](MERCHANT-PORTABILITY.md) for the complete API.
 
 Files and directories are private. `installation.json` is written only after
 preparation succeeds. A directory with only `preparing.json` is incomplete and

@@ -10,7 +10,7 @@ import { Capabilities } from '../../packages/commerce/capabilities.mts';
 import { ReadContext } from '../../packages/commerce/read-context.mts';
 import { contentDigest } from '../../packages/commerce/configuration-values.mts';
 import { suppressionCheckpoint } from '../../packages/commerce/safe-recovery.mts';
-import { exportMerchant, importMerchant } from '../../packages/commerce/merchant-portability.mts';
+import { exportMerchant, exportMerchantSuppression, importMerchant, merchantSnapshotDigest } from '../../packages/commerce/merchant-portability.mts';
 import { installOffline, prepareUpgrade, rollbackUpgrade, inspectInstallation, startInstalledDiagnostic } from '../../packages/operations/installation-upgrade.mts';
 
 const root = resolve(import.meta.dirname, '../..');
@@ -94,7 +94,7 @@ test('CASE-M07-G10-03 interrupted preparation leaves the original usable and doc
   assert.equal(withKernel(restored, k => status(k).order.number), 'ORD-1001');
   withKernel(restored, k => {
     const scope = k.authenticate(k.issueSession('installation-demo', 'store', 'operator'));
-    assert.throws(() => k.authorize(scope, 'model.run'), /RESTORE_EGRESS_BLOCKED/);
+    assert.throws(() => k.authorize(scope, 'model.run'), /RESTORE_WRITE_BLOCKED/);
     assert.equal(k.db.prepare('SELECT mode FROM commerce_recovery_state WHERE id=1').get()!.mode, 'quarantine');
   });
 });
@@ -129,6 +129,17 @@ test('M07-G10-ARTIFACT-PINS checksum, commit, tree and runtime-source mismatches
     assert.throws(() => installOffline({ artifact: { ...artifact, ...patch }, destination, profile: 'commerce-sqlite-diagnostic', seed_demo: true }), /ARTIFACT_/);
     assert.equal(existsSync(join(destination, 'installation.json')), false);
   }
+  const source = place('modified-installer');
+  execFileSync('git', ['clone', '--no-checkout', '--template=', '--', artifact.bundle_path, source], { stdio: 'pipe' });
+  execFileSync('git', ['-C', source, 'checkout', '--detach', artifact.commit], { stdio: 'pipe' });
+  const transitive = join(source, 'packages/commerce/configuration-values.mts');
+  writeFileSync(transitive, readFileSync(transitive, 'utf8') + '\n// Changed transitive runtime fixture.\n');
+  const destination = place('mixed-runtime'), request = place('mixed-runtime.json');
+  writeFileSync(request, JSON.stringify({ artifact, destination, profile: 'commerce-sqlite-diagnostic', seed_demo: true }));
+  const mixed = spawnSync(process.execPath, ['--experimental-strip-types', join(source, 'tools/install-upgrade.mts'), 'install', request], { encoding: 'utf8', timeout: 10000 });
+  assert.equal(mixed.status, 1);
+  assert.match(mixed.stderr, /ARTIFACT_RUNTIME_SOURCE_MISMATCH/);
+  assert.equal(existsSync(destination), false);
 });
 
 test('M07-G10-UNSAFE-DESTINATIONS existing directories, symlink parents and linked input artifacts are refused', () => {
@@ -199,12 +210,17 @@ test('M07-G10-MERCHANT-IMPORT a clean empty installation accepts a pinned mercha
     k.provisionStore('installation-demo', 'store');
     k.provisionMember('installation-demo', 'store', 'operator', 'owner');
     const scope = k.authenticate(k.issueSession('installation-demo', 'store', 'operator'));
-    const imported = importMerchant(k, scope, snapshot, snapshot.digest);
+    const suppression = withKernel(origin, source => {
+      const owner = source.authenticate(source.issueSession('installation-demo', 'store', 'operator'));
+      return exportMerchantSuppression(source, owner);
+    });
+    const imported = importMerchant(k, scope, snapshot, snapshot.digest,
+      { suppression, suppression_sha256: merchantSnapshotDigest(suppression) });
     assert.equal(imported.mode, 'quarantine');
     assert.equal(imported.live_activation_supported, false);
     assert.equal(k.db.prepare('SELECT count(*) n FROM commerce_resources').get()!.n, 7);
     assert.deepEqual(status(k).order.totals, { amount_minor: 12500, currency: 'USD' });
-    assert.throws(() => k.authorize(scope, 'model.run'), /RESTORE_EGRESS_BLOCKED/);
+    assert.throws(() => k.authorize(scope, 'model.run'), /RESTORE_WRITE_BLOCKED/);
     assert.equal(k.db.prepare('SELECT count(*) n FROM commerce_members').get()!.n, 1);
   });
 });
