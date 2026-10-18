@@ -1,3 +1,4 @@
+import { assertWarrantySourceEffect } from './claims-source-guards.mts';
 import { InstantExchangeFixtureSource } from './instant-exchange-fixture-source.mts';
 import { ReturnDestinationFixtureSource } from './return-destination-fixture-source.mts';
 import { randomUUID } from 'node:crypto';
@@ -76,6 +77,7 @@ export class FulfillmentFixtureSource {
   return this.tx(()=>{const old=this.db.prepare('SELECT * FROM fixture_effects WHERE id=?').get(id(command.operation_id)) as Row;
    if(old){if(old.digest!==contentDigest(command))throw new Error('OPERATION_CONFLICT');const b=this.#readEffect(old);return b;}
    if(this.db.prepare('SELECT 1 FROM fixture_effects WHERE kind=? AND obligation=?').get(kind,command.obligation))throw new Error('OBLIGATION_ALREADY_COMMITTED');
+   assertWarrantySourceEffect(this.db,command);
    const result=make();this.db.prepare('INSERT INTO fixture_effects VALUES(?,?,?,?,?)').run(command.operation_id,kind,command.obligation,canonical({command,result}),contentDigest(command));return result;
   });}
  #readEffect(r:Row){const b=JSON.parse(r.body);if(contentDigest(b.command)!==r.digest)throw new Error('SOURCE_INTEGRITY');

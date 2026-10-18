@@ -1,3 +1,4 @@
+import { assertWarrantySourceEffect } from './claims-source-guards.mts';
 import { DatabaseSync } from 'node:sqlite';
 import { exact,id,token,integer } from '../commerce/kernel.mts';
 import type { Row } from '../commerce/kernel.mts';
@@ -112,6 +113,7 @@ export class ResolutionFixtureSource {
    const beneficiary=this.#beneficiary(p);
    const old=this.db.prepare('SELECT * FROM fixture_resolution_effects WHERE operation_id=?').get(p.operation_id) as Row;
    if(old){if(old.digest!==contentDigest(p))throw new Error('SOURCE_IDEMPOTENCY_CONFLICT');this.db.exec('COMMIT');return JSON.parse(old.body);}
+   assertWarrantySourceEffect(this.db,p);
    const account=this.db.prepare('SELECT * FROM fixture_resolution_accounts WHERE resource_id=?').get(p.resource_id) as Row;
    if(!account||account.currency!==p.currency||account.customer_id!==p.customer_id||account.payment_id!==p.payment_id)throw new Error('RESOLUTION_SOURCE_MISMATCH');
    const effects=(this.db.prepare('SELECT body FROM fixture_resolution_effects WHERE resource_id=?').all(p.resource_id) as Row[]).map(r=>JSON.parse(r.body)).filter(r=>r.state!=='rejected'),spent=effects.reduce((n,r)=>n+minor(r.original_value_minor??r.amount_minor),0n);

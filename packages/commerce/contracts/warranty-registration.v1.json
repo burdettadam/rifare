@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "id": "rifare-warranty-registration",
+  "version": "1.0.0",
+  "goal": "M10-G02",
+  "qualification": "synthetic_local_preparation_only",
+  "external_qualified": false,
+  "formal_goal_accepted": false,
+  "operations": [
+    "publish",
+    "register",
+    "read"
+  ],
+  "tests": [
+    "CASE-M10-G02-01",
+    "CASE-M10-G02-02",
+    "CASE-M10-G02-03"
+  ],
+  "named_fault": "Apply new warranty terms retroactively to a registration.",
+  "source_contract": "claims-fixture-v1",
+  "authority": "Current scoped canonical permissions, current customer proof when required, exact independent approval, current source versions, execution controls, recovery and original operation identity.",
+  "financial_and_fulfillment_owner": "Existing ResolutionExecution and FulfillmentExecution. This contract adds no money, stock or settlement executor.",
+  "privacy": "Canonical subject/resource scope with export minimization, repeated hash-only erasure and restored authority revocation.",
+  "guide": "docs/WARRANTY-DISPUTES.md"
+}
