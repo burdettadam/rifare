@@ -30,6 +30,8 @@ test('M10-G13-PREP-01',()=>usingTrials(async f=>{
 
 test('M10-G13-PREP-02',async()=>{
  await usingTrials(async f=>{
+  assert.throws(()=>f.instant.quoteAuthorize(f.a.scope,null),{message:'INVALID_INPUT'});
+  assert.throws(()=>f.source.grantConsent(null),{message:'INVALID_INPUT'});
   const q=f.instant.quoteAuthorize(f.a.scope,{trial_id:f.trial.id,consent_id:f.consent.id}),op=f.approve(q),command=JSON.parse(f.kernel.db.prepare('SELECT command FROM commerce_instant_operations WHERE id=?').get(op.id).command);
   assert.throws(()=>f.source.bindOperation(command),/TRIAL_GUARD_REQUIRED/);assert.equal(captureCount(f),0);
   const issue=f.source.issue.bind(f.source);f.source.issue=async current=>{
