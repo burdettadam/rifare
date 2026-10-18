@@ -5,8 +5,11 @@
   function say(text,error=false){if(window.RifareA11y)window.RifareA11y.announce(message,text,{error});else{message.textContent=text;message.className=error?'error':'';message.focus();}}
   function clear(){clearTimeout(expiry);result.replaceChildren();result.hidden=true;}
   function cancel(){sequence++;active?.abort();clear();}
-  function line(parent,label,value){const dt=document.createElement('dt'),dd=document.createElement('dd');dt.textContent=label;dd.textContent=typeof value==='string'?value:JSON.stringify(value);parent.append(dt,dd);}
-  function time(value){return typeof value==='number'&&Number.isFinite(value)?new Date(value).toISOString():'Unavailable';}
+  function line(parent,label,value){const dt=document.createElement('dt'),dd=document.createElement('dd');dt.textContent=label;dd.textContent=typeof value==='string'?value:JSON.stringify(value);parent.append(dt,dd);return dd;}
+  function time(value){return Number.isSafeInteger(value)&&value>=0&&value<=253402300799999?new Date(value).toISOString():'Unavailable';}
+  function timeLine(parent,label,value){const field=line(parent,label,time(value));if(window.RifareLocale&&value!==null&&value!==undefined){try{window.RifareLocale.instant(field,value);}catch(error){field.textContent='Unavailable. '+window.RifareLocale.errorText(error.message);}}}
+  function totalLines(parent,totals){if(!window.RifareLocale||!totals)return;const amounts=Object.hasOwn(totals,'shop')||Object.hasOwn(totals,'presentment')?[['Shop total (formatted)',totals.shop],['Presentment total (formatted)',totals.presentment]]:[['Total (formatted)',totals]];
+    for(const [label,value] of amounts){if(value===null||value===undefined)continue;const field=line(parent,label,'Unavailable');try{window.RifareLocale.money(field,window.RifareLocale.sourceAmount(value));}catch(error){field.textContent='Unavailable. '+window.RifareLocale.errorText(error.message);}}}
   async function request(path,method='GET',data,auth=session,signal){
     const response=await fetch(path,{method,cache:'no-store',credentials:'omit',redirect:'error',signal,
       headers:{...(auth?{authorization:'Bearer '+auth}:{}),...(data?{'content-type':'application/json'}:{})},body:data?JSON.stringify(data):undefined});
@@ -20,8 +23,9 @@
     line(list,'Source state',facts.status==='fixture_snapshot'?'Synthetic fixture snapshot — not live':facts.status);
     line(list,'Fulfillment status',facts.order.fulfillment_status??'Unavailable');
     line(list,'Totals (source values)',facts.order.totals??'Unavailable');
-    line(list,'Source system',facts.source.system);line(list,'Observed at',time(facts.source.observed_at));
-    line(list,'Source updated at',time(facts.source.source_updated_at));line(list,'Source revision',facts.source.revision);
+    totalLines(list,facts.order.totals);
+    line(list,'Source system',facts.source.system);timeLine(list,'Observed at',facts.source.observed_at);
+    timeLine(list,'Source updated at',facts.source.source_updated_at);line(list,'Source revision',facts.source.revision);
     const h=document.createElement('h3');h.textContent='Shipments';result.append(h);
     for(const [i,shipment] of (facts.order.shipments??[]).entries()){
       const card=document.createElement('article'),title=document.createElement('h4'),details=document.createElement('dl');

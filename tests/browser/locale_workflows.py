@@ -127,17 +127,22 @@ with sync_playwright() as playwright:
         assert canonical == [['USD','2000'],['USD','200'],['USD','100'],['USD','1700']]
         deadline = page.locator('#deadline').get_attribute('data-rifare-deadline')
         quote_count = len(calls)
+        rendered_estimates = []
         for locale in expected:
             page.locator('#display-locale').select_option(locale)
             for zone in ['UTC', 'America/Denver']:
                 page.locator('#display-zone').select_option(zone)
+                actual = [text_space(value) for value in page.locator('#estimate [data-rifare-money]').all_inner_texts()]
+                golden = ['20,00 USD', '2,00 USD', '1,00 USD', '17,00 USD'] if locale in ['de-DE', 'fr-FR'] else ['USD 20.00', 'USD 2.00', 'USD 1.00', 'USD 17.00']
+                assert actual == golden
                 assert page.locator('#estimate [data-rifare-money]').evaluate_all('els=>els.map(e=>[e.dataset.canonicalCurrency,e.dataset.canonicalMinor])') == canonical
                 assert page.locator('#deadline').get_attribute('data-rifare-deadline') == deadline
                 assert 'America/Denver' in page.locator('#deadline').inner_text() and deadline in page.locator('#deadline').inner_text()
                 assert page.locator('#submit').is_disabled()
                 assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1')
+                rendered_estimates.append({'locale': locale, 'display_zone': zone, 'amounts': actual, 'deadline': page.locator('#deadline').inner_text()})
         assert len(calls) == quote_count
-        observations.append({'screen': 'returns', 'locale_count': 5, 'zone_count': 2, 'canonical_values_retained': True, 'approval_preserved': True})
+        observations.append({'screen': 'returns', 'locale_count': 5, 'zone_count': 2, 'canonical_values_retained': True, 'approval_preserved': True, 'rendered_estimates': rendered_estimates})
         page.locator('#logout').click()
         assert page.locator('#estimate [data-rifare-money]').count() == 0
         assert not page.locator('#deadline').get_attribute('data-rifare-deadline')
