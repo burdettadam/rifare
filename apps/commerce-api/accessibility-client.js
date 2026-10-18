@@ -59,13 +59,15 @@
     field.insertAdjacentElement('afterend', error);
     if (!invalidBatch) {
       invalidBatch = field;
-      queueMicrotask(() => {
+      // Native validation may checkpoint microtasks between invalid fields.
+      // Wait for this validation task to finish so the first field keeps focus.
+      setTimeout(() => {
         const first = invalidBatch; invalidBatch = null;
         if (!first?.isConnected) return;
         const notice = document.querySelector('[data-workflow-notice]');
         if (notice) announce(notice, 'Check the marked fields before continuing.', { error: true, form: first.form });
         focus(first);
-      });
+      }, 0);
     }
   }, { capture: true, signal: controller.signal });
   document.addEventListener('input', event => clearField(event.target), { signal: controller.signal });
