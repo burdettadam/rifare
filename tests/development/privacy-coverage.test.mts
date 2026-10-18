@@ -22,6 +22,7 @@ import { readAdapterCatalog, validateAdapterCatalog } from '../../packages/confo
 import { usingShopping, populateShoppingPrivacy } from './growth-shopping-helpers.mts';
 import { usingOptional, populateOptionalPrivacy } from './growth-optional-helpers.mts';
 import { usingMarketing, populateMarketingPrivacy, usingCancellation } from './growth-marketing-helpers.mts';
+import { EXTENDED_SERVICE_TABLES, extendedServicesPrivacy, extendedServicesRestore, extendedServicesUninstall } from './extended-services-privacy-helpers.mts';
 
 const SENTINEL='SYNTHETIC_PRIVACY_CUSTOMER_NOTE';
 const PHOTO=JSON.parse(readFileSync(new URL('../fixtures/return-intake/photo.v1.json',import.meta.url),'utf8')).base64;
@@ -241,7 +242,7 @@ test('CASE-M07-G14-01',async()=>{await usingSupport(f=>{
   assert.throws(()=>x.evidence.inspect(f.a.scope,x.media.id),/SUBJECT_ERASED/);
   const rebuilt=x.metrics.report(f.a.scope,'privacy_cohort');assert.equal(rebuilt.denominator,1);assert.equal(rebuilt.unavailable_cases,1);
   assert.deepEqual(rebuilt.cases,[{case_id:'case_one',state:'unavailable_still_in_denominator'}]);
-});await shoppingPrivacy();await optionalPrivacy();await marketingPrivacy();});
+});await shoppingPrivacy();await optionalPrivacy();await marketingPrivacy();await extendedServicesPrivacy();});
 
 test('CASE-M07-G14-02',()=>usingSupport(f=>{
   f.db.exec('CREATE TABLE unregistered_agent_memory(customer_id TEXT, content TEXT)');
@@ -275,11 +276,11 @@ test('CASE-M07-G14-03',async()=>{await usingSupport(f=>{
     assert.equal(JSON.stringify(rebuilt).includes(SENTINEL),false);
     assert.deepEqual(db.prepare('PRAGMA foreign_key_check').all(),[]);
   }finally{db.close();}
-});await growthRestore();});
+});await growthRestore();await extendedServicesRestore();});
 
 test('M07-G14-ALL-170-TABLES-HAVE-EXPLICIT-SURFACES',()=>usingSupport(f=>{
   const r=auditPrivacyCoverage(f.kernel,f.owner.scope),actual=f.db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name").all().map((x:any)=>x.name);
-  assert.equal(r.tables.length,209);assert.deepEqual(r.tables.map((t:any)=>t.name).sort(),actual);
+  assert.equal(r.tables.length,234);assert.deepEqual(r.tables.map((t:any)=>t.name).sort(),actual);
   const baseline=JSON.parse(readFileSync(new URL('../fixtures/shipping/storage-baseline.v1.json',import.meta.url),'utf8'));
   assert.equal(baseline.tables.length,170);
   const originalNames=new Set(baseline.tables.map((t:any)=>t.name));
@@ -289,8 +290,13 @@ test('M07-G14-ALL-170-TABLES-HAVE-EXPLICIT-SURFACES',()=>usingSupport(f=>{
   const original186=JSON.parse(readFileSync(new URL('../fixtures/growth/storage-baseline.v1.json',import.meta.url),'utf8'));
   assert.equal(original186.tables.length,186);assert.equal(original186.protected_base,'63767bbd0a1dbcc49475827afaee5402dc00a3ba');
   const original186Names=new Set(original186.tables.map((t:any)=>t.name));
+  const original209=JSON.parse(readFileSync(new URL('../fixtures/extended-services/storage-baseline.v1.json',import.meta.url),'utf8'));
+  assert.equal(original209.tables.length,209);assert.equal(original209.protected_base,'221556c379f2ca878e94c50d49eb6fc587680b04');
+  const original209Names=new Set(original209.tables.map((t:any)=>t.name));
+  assert.deepEqual(r.tables.filter((t:any)=>original209Names.has(t.name)).map((t:any)=>({name:t.name,surface:t.surface,handling:t.handling})).sort((a:any,b:any)=>a.name.localeCompare(b.name)),original209.tables);
+  assert.deepEqual(r.tables.filter((t:any)=>!original209Names.has(t.name)).map((t:any)=>t.name).sort(),EXTENDED_SERVICE_TABLES);
   assert.deepEqual(r.tables.filter((t:any)=>original186Names.has(t.name)).map((t:any)=>({name:t.name,surface:t.surface,handling:t.handling})).sort((a:any,b:any)=>a.name.localeCompare(b.name)),original186.tables);
-  assert.deepEqual(r.tables.filter((t:any)=>!original186Names.has(t.name)).map((t:any)=>t.name).sort(),GROWTH_TABLES);
+  assert.deepEqual(r.tables.filter((t:any)=>original209Names.has(t.name)&&!original186Names.has(t.name)).map((t:any)=>t.name).sort(),GROWTH_TABLES);
   assert.deepEqual(r.tables.filter((t:any)=>original178Names.has(t.name)).map((t:any)=>({name:t.name,surface:t.surface,handling:t.handling})).sort((a:any,b:any)=>a.name.localeCompare(b.name)),original178.tables);
   assert.deepEqual(r.tables.filter((t:any)=>original186Names.has(t.name)&&!original178Names.has(t.name)).map((t:any)=>t.name).sort(),[
     'commerce_inventory_discrepancies','commerce_inventory_movements','commerce_inventory_owners','commerce_inventory_snapshots',
@@ -357,11 +363,11 @@ test('M07-G14-HELD-COPIES-ARE-RETAINED-AND-EXPORTED',()=>usingSupport(f=>{
   x.privacy.releaseHold(f.owner.scope,x.order.customer_id,'privacy_case_hold');assert.equal(x.privacy.erase(f.owner.scope,x.order.customer_id).status,'logically_erased');
 }));
 
-test('M07-G14-UNINSTALL-DISCONNECTS-AND-RETAINS-NAMED-LIMITS',()=>usingSupport(f=>{
+test('M07-G14-UNINSTALL-DISCONNECTS-AND-RETAINS-NAMED-LIMITS',async()=>{await usingSupport(f=>{
   const x=populate(f),vault=new SecretVault(f.kernel,{activeId:'one',get:()=>Buffer.alloc(32,3)},{probe:()=>true});
   vault.put(f.owner.scope,{provider:'synthetic',adapter:'probe',value:'SYNTHETIC_PRIVATE_CREDENTIAL'});
   const result=x.privacy.uninstall(f.owner.scope);assert.equal(result.status,'disconnected');assert.equal(result.physical_deletion,false);
   assertErased(f.db,f.a.tenant,f.a.store,x.order.id);
   assert.equal(f.db.prepare('SELECT envelope,revoked FROM commerce_secrets').get().envelope,'{}');assert.equal(f.db.prepare('SELECT envelope,revoked FROM commerce_secrets').get().revoked,1);
   assert.throws(()=>f.kernel.require(f.owner.scope),/ACCESS_DENIED/);assert.equal(f.source.calls,0);
-}));
+});await extendedServicesUninstall();});
