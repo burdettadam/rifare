@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "base_schema_digest": "5b86a35a754ee03b71f28d6b60cb14f531b896072e37dde06950f39610d0e9f2",
+  "schema_digest": "6e8fd17800ab49965a9cf964a4652877ee1784dbaa3dd78263a6dd19e4881d3f",
+  "tables": [
+    {
+      "name": "commerce_woo_event_observations",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "event_id",
+        "resource_id",
+        "body",
+        "digest",
+        "observed_at"
+      ],
+      "handling": "subject_linked_cache_delete"
+    },
+    {
+      "name": "commerce_woo_return_sources",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "resource_id",
+        "source_identity",
+        "account_id",
+        "native_order_id",
+        "revision",
+        "source_revision",
+        "source_digest",
+        "body",
+        "digest",
+        "observed_at"
+      ],
+      "handling": "subject_linked_cache_delete"
+    },
+    {
+      "name": "commerce_woo_rma_bindings",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "request_id",
+        "resource_id",
+        "body",
+        "digest",
+        "created_at"
+      ],
+      "handling": "subject_linked_redact_minimized_receipt_identity"
+    }
+  ]
+}

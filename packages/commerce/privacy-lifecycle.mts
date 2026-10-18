@@ -8,7 +8,7 @@ import { eraseGiftRecipient } from './gift-proof.mts';
 const MAX_RECORDS=10000;
 const all=(k:CommerceKernel,table:string,t:string,s:string)=>k.db.prepare(`SELECT * FROM ${table} WHERE tenant_id=? AND store_id=?`).all(t,s) as Row[];
 const where=(ids:string[])=>ids.map(()=>'?').join(',');
-export function storageInventory(k:CommerceKernel) {
+function storageInventoryVersions(k:CommerceKernel) {
   const declared=JSON.parse(readFileSync(new URL('./contracts/storage-inventory.v1.json',import.meta.url),'utf8'));
   const extension=JSON.parse(readFileSync(new URL('./contracts/storage-exchange-extension.v1.json',import.meta.url),'utf8'));
   if(extension.base_schema_digest!==declared.schema_digest)throw new Error('STORAGE_INVENTORY_CHANGED');
@@ -18,11 +18,20 @@ export function storageInventory(k:CommerceKernel) {
   if(assistance.base_schema_digest!==history.schema_digest)throw new Error('STORAGE_INVENTORY_CHANGED');
   const tables=[...declared.tables,...extension.tables,...history.tables,...assistance.tables].sort((a:Row,b:Row)=>a.name.localeCompare(b.name));
   if(new Set(tables.map((r:Row)=>r.name)).size!==tables.length)throw new Error('STORAGE_INVENTORY_CHANGED');
+  const woo=JSON.parse(readFileSync(new URL('./contracts/storage-woocommerce-extension.v1.json',import.meta.url),'utf8'));
+  if(woo.base_schema_digest!==assistance.schema_digest)throw new Error('STORAGE_INVENTORY_CHANGED');
+  const current=[...tables,...woo.tables].sort((a:Row,b:Row)=>a.name.localeCompare(b.name));
+  if(new Set(current.map((r:Row)=>r.name)).size!==current.length)throw new Error('STORAGE_INVENTORY_CHANGED');
   const actual=(k.db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name").all() as Row[])
     .map(r=>({name:r.name,columns:(k.db.prepare('PRAGMA table_info('+r.name+')').all() as Row[]).map(c=>c.name)}));
-  if(contentDigest(actual)!==assistance.schema_digest||contentDigest(tables.map((r:Row)=>({name:r.name,columns:r.columns})))!==assistance.schema_digest)throw new Error('STORAGE_INVENTORY_CHANGED');
-  return {...declared,tables,schema_digest:assistance.schema_digest,base_schema_digest:declared.schema_digest};
+  if(contentDigest(actual)!==woo.schema_digest||contentDigest(current.map((r:Row)=>({name:r.name,columns:r.columns})))!==woo.schema_digest||contentDigest(tables.map((r:Row)=>({name:r.name,columns:r.columns})))!==assistance.schema_digest)throw new Error('STORAGE_INVENTORY_CHANGED');
+  const legacy={...declared,tables,schema_digest:assistance.schema_digest,base_schema_digest:declared.schema_digest};
+  return {legacy,current:{...declared,version:2,tables:current,schema_digest:woo.schema_digest,base_schema_digest:assistance.schema_digest}};
 }
+// Preserve the established version-one projection and its immutable caller
+// expectations. Both views first validate the entire current database schema.
+export function storageInventory(k:CommerceKernel){const {legacy,current}=storageInventoryVersions(k);return {...legacy,view_version:1,legacy_schema_projection:'m06-167',current_view:'storageInventoryCurrent',current_table_count:current.tables.length,current_schema_digest:current.schema_digest};}
+export function storageInventoryCurrent(k:CommerceKernel){return storageInventoryVersions(k).current;}
 function event(k:CommerceKernel,s:Row,hash:string,code:string,reason:string) {
   k.db.prepare('INSERT INTO commerce_privacy_events(tenant_id,store_id,subject_hash,event,reason,observed_at) VALUES(?,?,?,?,?,?)').run(s.tenant_id,s.store_id,hash,code,reason,k.clock());
 }
@@ -136,7 +145,7 @@ function eraseGiftCaseData(k:CommerceKernel,s:Row,cases:string[],hash:string) {
 // Requires caller-owned transaction and explicit resource identities. Also used to replay
 // an independently retained erasure checkpoint before a restored database is exposed.
 export function eraseSelected(k:CommerceKernel,s:Row,ids:string[],hash:string,at:number) {
-  storageInventory(k);if(ids.length>MAX_RECORDS)throw new Error('PRIVACY_BATCH_LIMIT');
+  storageInventoryCurrent(k);if(ids.length>MAX_RECORDS)throw new Error('PRIVACY_BATCH_LIMIT');
   const t=s.tenant_id,st=s.store_id,erased='{"redacted":true}';
   k.db.prepare('INSERT OR IGNORE INTO commerce_privacy_subjects VALUES(?,?,?,?)').run(t,st,hash,at);
   // A recipient can have no purchaser-owned resources. Restore checkpoints
@@ -155,6 +164,8 @@ export function eraseSelected(k:CommerceKernel,s:Row,ids:string[],hash:string,at
     scrubRecord(k,'commerce_edit_snapshots',t,st,ids,'resource_id');
     scrubRecord(k,'commerce_edit_inputs',t,st,ids,'resource_id');
     scrubRecord(k,'commerce_edit_quotes',t,st,ids,'resource_id');
+    scrubRecord(k,'commerce_woo_rma_bindings',t,st,ids,'resource_id');
+    for(const table of ['commerce_woo_return_sources','commerce_woo_event_observations'])k.db.prepare(`DELETE FROM ${table} WHERE tenant_id=? AND store_id=? AND resource_id IN (${marks})`).run(...args);
     const tasks=all(k,'commerce_context_tasks',t,st).filter(r=>ids.includes(r.resource_id)).map(r=>r.id);
     if(tasks.length){k.db.prepare(`DELETE FROM commerce_assistance_receipts WHERE tenant_id=? AND store_id=? AND task_id IN (${where(tasks)})`).run(t,st,...tasks);
       k.db.prepare(`DELETE FROM commerce_context_tasks WHERE tenant_id=? AND store_id=? AND id IN (${where(tasks)})`).run(t,st,...tasks);}
@@ -181,14 +192,14 @@ export function eraseSelected(k:CommerceKernel,s:Row,ids:string[],hash:string,at
     external_cleanup_required:['caller_memory','delivery_outboxes','logs','external_providers','older_backups'],physical_erasure:false};
 }
 export function suppressionCheckpoint(k:CommerceKernel) {
-  storageInventory(k);const subjects=k.db.prepare('SELECT * FROM commerce_privacy_subjects ORDER BY tenant_id,store_id,subject_hash').all();
+  storageInventoryCurrent(k);const subjects=k.db.prepare('SELECT * FROM commerce_privacy_subjects ORDER BY tenant_id,store_id,subject_hash').all();
   const records=k.db.prepare('SELECT * FROM commerce_privacy_resources ORDER BY tenant_id,store_id,resource_id').all();
   return {version:1,generated_at:k.clock(),subjects,resources:records};
 }
 export class PrivacyLifecycle {
   #k:CommerceKernel;constructor(kernel:CommerceKernel){this.#k=kernel;}
   export(scope:Scope,customer:string) {
-    const k=this.#k,s=k.authorize(scope,'privacy.manage');id(customer);storageInventory(k);
+    const k=this.#k,s=k.authorize(scope,'privacy.manage');id(customer);storageInventoryCurrent(k);
     return k.transaction(()=>{k.authorize(scope,'privacy.manage');const rs=resources(k,s,customer),ids=rs.map(r=>r.id);
       const gifts=all(k,'commerce_resources',s.tenant_id,s.store_id).filter(r=>r.kind==='order'&&JSON.parse(r.payload).gift_facts?.recipient_customer_id===customer).map(r=>{const g=JSON.parse(r.payload).gift_facts;return {gift_id:g.gift_id,lines:g.lines,allowed_outcomes:g.allowed_outcomes};});
       if(!rs.length&&!gifts.length)throw new Error('NOT_FOUND');
@@ -207,7 +218,8 @@ export class PrivacyLifecycle {
       const instantOps=all(k,'commerce_instant_operations',s.tenant_id,s.store_id).filter(subjectRecord),instantIds=instantOps.map(r=>r.id);
       const exchange_history_records={...Object.fromEntries(['commerce_exchange_lineage_nodes','commerce_exchange_lineage_imports','commerce_exchange_currency_bindings','commerce_exchange_fee_observations','commerce_instant_quotes','commerce_instant_obligations'].map(table=>[table,all(k,table,s.tenant_id,s.store_id).filter(subjectRecord)])),commerce_instant_operations:instantOps,commerce_instant_observations:all(k,'commerce_instant_observations',s.tenant_id,s.store_id).filter(r=>instantIds.includes(r.operation_id))};
       const return_assistance_records=Object.fromEntries(ASSISTANCE_SUBJECT_TABLES.map(table=>[table,all(k,table,s.tenant_id,s.store_id).filter(subjectRecord).map(r=>{const copy={...r};delete copy.session_hash;return copy;})]));
-      const result={return_assistance_records,exchange_history_records,support_records,order_edit_records,gift_returns:gifts,schema_version:1,tenant_id:s.tenant_id,store_id:s.store_id,subject_ref:subjectHash(s.tenant_id,s.store_id,customer),
+      const woocommerce_records=Object.fromEntries(['commerce_woo_return_sources','commerce_woo_rma_bindings','commerce_woo_event_observations'].map(table=>[table,all(k,table,s.tenant_id,s.store_id).filter(subjectRecord)]));
+      const result={woocommerce_records,return_assistance_records,exchange_history_records,support_records,order_edit_records,gift_returns:gifts,schema_version:1,tenant_id:s.tenant_id,store_id:s.store_id,subject_ref:subjectHash(s.tenant_id,s.store_id,customer),
         resources:rs.map(r=>k.project(r)),attachments:all(k,'commerce_attachments',s.tenant_id,s.store_id).filter(subjectRecord).map(r=>({id:r.id,resource_id:r.resource_id,content:JSON.parse(r.content)})),
         knowledge:all(k,'commerce_knowledge',s.tenant_id,s.store_id).filter(subjectRecord),
         tasks,assistance:all(k,'commerce_assistance_receipts',s.tenant_id,s.store_id).filter(r=>tasks.some(t=>t.id===r.task_id)),
@@ -236,7 +248,7 @@ export class PrivacyLifecycle {
       if(r.changes!==1)throw new Error('HOLD_NOT_FOUND');event(k,s,hash,'hold_released','explicit_authority');return {released:true};});
   }
   erase(scope:Scope,customer:string) {id(customer);const k=this.#k;
-    return k.transaction(()=>{const s=k.authorize(scope,'privacy.manage');storageInventory(k);const hash=subjectHash(s.tenant_id,s.store_id,customer);
+    return k.transaction(()=>{const s=k.authorize(scope,'privacy.manage');storageInventoryCurrent(k);const hash=subjectHash(s.tenant_id,s.store_id,customer);
       const owned=resources(k,s,customer),related=new Set([customer,...recipientResources(k,s,customer).map(r=>r.customer_id),...owned.map(r=>JSON.parse(r.payload).gift_facts?.recipient_customer_id),...all(k,'commerce_gift_cases',s.tenant_id,s.store_id).filter(r=>owned.some(o=>o.id===r.resource_id)).map(r=>JSON.parse(r.body).recipient_customer_id)].filter(Boolean));
       const hold=[...related].map(c=>k.db.prepare('SELECT reason,authority_ref,expires_at FROM commerce_privacy_holds WHERE tenant_id=? AND store_id=? AND subject_hash=? AND released=0 AND expires_at>?').get(s.tenant_id,s.store_id,subjectHash(s.tenant_id,s.store_id,c),k.clock())).find(Boolean);
       if(hold){event(k,s,hash,'erasure_held','configured_hold');return {status:'held',hold,erased:false};}
@@ -244,7 +256,7 @@ export class PrivacyLifecycle {
       const rs=resources(k,s,customer),giftCount=all(k,'commerce_resources',s.tenant_id,s.store_id).filter(r=>r.kind==='order'&&JSON.parse(r.payload).gift_facts?.recipient_customer_id===customer).length+all(k,'commerce_gift_cases',s.tenant_id,s.store_id).filter(r=>JSON.parse(r.body).recipient_customer_id===customer).length;if(!rs.length&&!giftCount)throw new Error('NOT_FOUND');return eraseSelected(k,s,rs.map(r=>r.id),hash,k.clock());});
   }
   uninstall(scope:Scope) {
-    const k=this.#k;return k.transaction(()=>{const s=k.authorize(scope,'privacy.manage');storageInventory(k);
+    const k=this.#k;return k.transaction(()=>{const s=k.authorize(scope,'privacy.manage');storageInventoryCurrent(k);
       const rs=all(k,'commerce_resources',s.tenant_id,s.store_id);const customers=[...new Set(rs.flatMap(r=>r.customer_id?[r.customer_id]:r.kind==='customer'?[r.external_id]:[]))];
       const results=customers.map(c=>this.erase(scope,c));
       k.db.prepare('UPDATE commerce_secrets SET revoked=1,envelope=? WHERE tenant_id=? AND store_id=?').run('{}',s.tenant_id,s.store_id);

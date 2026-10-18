@@ -5,7 +5,8 @@ import {supportCase,documentRow,saveDocument,checkedDocument} from './support-co
 import {receiptSummary} from './return-lifecycle-core.mts';
 import {permissionDecision} from './authorization.mts';
 export type SupportQualificationPins={skill_digest:string;profile_digest:string;policy_digest:string;adapter_digest:string;model_id:string;runtime_id:string;prompt_digest:string;configuration_digest:string;action:string};
-const ACTIONS=['order.status','shipment.status','return.draft','diagnostic.resolution.set'];
+const APPROVED_CASE_ACTIONS=['diagnostic.resolution.set','diagnostic.return.submit','diagnostic.return.resolve'];
+const ACTIONS=['order.status','shipment.status','return.draft',...APPROVED_CASE_ACTIONS];
 export function qualificationPins(input:unknown){const p=exact(jsonValue(input),['skill_digest','profile_digest','policy_digest','adapter_digest','model_id','runtime_id','prompt_digest','configuration_digest','action']);for(const key of ['skill_digest','profile_digest','policy_digest','adapter_digest','prompt_digest','configuration_digest'])if(typeof p[key]!=='string'||! /^[a-f0-9]{64}$/.test(p[key]))throw new Error('QUALIFICATION_PINS_INVALID');id(p.model_id);id(p.runtime_id);if(!ACTIONS.includes(p.action))throw new Error('QUALIFICATION_ACTION_UNSUPPORTED');return p;}
 export class SupportQualification {
  readonly k:CommerceKernel;constructor(k:CommerceKernel){this.k=k;}
@@ -34,7 +35,7 @@ export class SupportQualification {
  check(scope:Scope,caseId:string,action:string,stage:'propose'|'execute',amount?:{minor:string;currency:string}){const {s,c}=supportCase(this.k,scope,caseId);const r=checkedDocument(this.k,s,'support_modes',caseId),p=r.body;this.#casePins(c,p.pins);if(p.case_configuration_digest!==c.configuration_digest||p.pins.action!==action)throw new Error('QUALIFICATION_CASE_MISMATCH');
   if(p.mode==='read_only'||stage==='execute'&&p.mode==='copilot')throw new Error('SUPPORT_MODE_DENIED');
   if(!['read_only','copilot'].includes(p.mode)){const q=this.inspect(scope,p.qualification_id,p.qualification_version,p.pins);if(q.digest!==p.qualification_digest)throw new Error('QUALIFICATION_CHANGED');}
-  if(stage==='execute'){if(action!=='diagnostic.resolution.set')throw new Error('AUTONOMOUS_EFFECT_UNQUALIFIED');if(!amount||amount.currency!==p.currency||BigInt(amount.minor)>BigInt(p.maximum_minor))throw new Error('AUTOMATION_LIMIT');
+  if(stage==='execute'){if(!APPROVED_CASE_ACTIONS.includes(action))throw new Error('AUTONOMOUS_EFFECT_UNQUALIFIED');if(!amount||amount.currency!==p.currency||BigInt(amount.minor)>BigInt(p.maximum_minor))throw new Error('AUTOMATION_LIMIT');
    if(p.require_inspection){const request=this.k.db.prepare('SELECT id FROM commerce_return_requests WHERE tenant_id=? AND store_id=? AND case_id=?').get(s.tenant_id,s.store_id,c.id) as Row;const receipt=request?receiptSummary(this.k,s,request.id):null;if(!receipt||receipt.inspection!=='complete'||receipt.requires_review)throw new Error('INSPECTION_REQUIRED');}}
   return {mode:p.mode,action,qualification_digest:p.qualification_digest,approval_required:true,automatic_money_execution:false};}
 }
