@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { usingDemand,demandOracle,demandMutant } from './demand-planning-helpers.mts';
 import { Permissions } from '../../packages/commerce/authorization.mts';
+import { contentDigest } from '../../packages/commerce/configuration-values.mts';
 import { revokeForecastsForRestore,exportForecastSubject,eraseForecastSubject } from '../../packages/commerce/forecast-privacy.mts';
 
 test('CASE-M11-G01-01',()=>usingDemand(f=>{
@@ -103,12 +104,21 @@ test('M11-FORECAST-QUANTITY-01',()=>usingDemand(f=>{
 test('M11-FORECAST-AUTHORITY-01',()=>usingDemand(f=>{
   f.snapshot();f.evaluate();const forecast=f.forecast();
   assert.throws(()=>f.forecasts.approve(f.a.scope,{forecast_id:forecast.id,expected_digest:forecast.digest,expires_at:f.now()+60000}),/ACCESS_DENIED|SELF_APPROVAL_DENIED/);
+  const backtest=f.backtests.read(f.owner,'evaluation-one'),ownerDraft=f.forecasts.create(f.owner,{forecast_id:'owner-draft',backtest_id:backtest.id,expected_digest:backtest.digest,...f.cohort[0],horizon_days:2});
+  assert.throws(()=>f.forecasts.approve(f.owner,{forecast_id:ownerDraft.id,expected_digest:ownerDraft.digest,expires_at:f.now()+60000}),/SELF_APPROVAL_DENIED/);
+  f.forecasts.approve(f.reviewer,{forecast_id:forecast.id,expected_digest:forecast.digest,expires_at:f.now()+10});f.advance(11);
+  assert.throws(()=>f.forecasts.assertReviewed(f.a.scope,{forecast_id:forecast.id,expected_digest:forecast.digest}),/FORECAST_REVIEW_EXPIRED/);
   const review=f.forecasts.approve(f.reviewer,{forecast_id:forecast.id,expected_digest:forecast.digest,expires_at:f.now()+60000});
   assert.throws(()=>f.forecasts.assertReviewed(f.b.scope,{forecast_id:forecast.id,expected_digest:forecast.digest}),/NOT_FOUND/);
   assert.throws(()=>f.forecasts.assertReviewed(f.a.scope,{forecast_id:forecast.id,expected_digest:'0'.repeat(64)}),/FORECAST_CHANGED/);
   new Permissions(f.kernel).change(f.owner,{actor_id:'forecast-reviewer',role:'reviewer',expected_revision:0,actions:['resource.read'],resource_ids:null});
   assert.throws(()=>f.forecasts.assertReviewed(f.a.scope,{forecast_id:forecast.id,expected_digest:forecast.digest}),/FORECAST_REVIEW_AUTHORITY_CHANGED/);
   assert.equal(Object.values(exportForecastSubject(f.kernel,f.a.tenant,f.a.store,[],'C-1001','a'.repeat(64))).flat().length,0);
+  assert.equal(eraseForecastSubject(f.kernel,f.a.tenant,f.a.store,[],'a'.repeat(64)).minimized,0);
+  const saved=JSON.parse(f.db.prepare('SELECT body FROM commerce_inventory_forecasts WHERE id=?').get(forecast.id).body),malformed={...saved,customer_email:'forbidden-restored@example.invalid',uncertainty:{...saved.uncertainty,customer_notes:'forbidden'}};
+  f.db.prepare('UPDATE commerce_inventory_forecasts SET body=?,digest=? WHERE id=?').run(JSON.stringify(malformed),contentDigest(malformed),forecast.id);
+  assert.equal(eraseForecastSubject(f.kernel,f.a.tenant,f.a.store,[],'a'.repeat(64)).minimized,1);
+  const minimized=f.db.prepare('SELECT body FROM commerce_inventory_forecasts WHERE id=?').get(forecast.id).body;assert.equal(minimized.includes('forbidden'),false);
   assert.equal(eraseForecastSubject(f.kernel,f.a.tenant,f.a.store,[],'a'.repeat(64)).minimized,0);
   const revoked=revokeForecastsForRestore(f.kernel,f.a.tenant,f.a.store);assert.equal(revoked.reviews_revoked,true);
   assert.equal(f.db.prepare('SELECT state FROM commerce_forecast_reviews WHERE id=?').get(review.id).state,'revoked');

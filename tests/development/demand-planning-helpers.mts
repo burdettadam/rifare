@@ -1,6 +1,9 @@
 import assert from 'node:assert/strict';
 import { DatabaseSync } from 'node:sqlite';
-import { readFileSync, writeFileSync, unlinkSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdtempSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { pathToFileURL } from 'node:url';
 import { randomUUID } from 'node:crypto';
 import { commerceFixture } from './commerce-helpers.mts';
 import { DemandFixtureSource } from '../../packages/adapters/demand-fixture-source.mts';
@@ -17,7 +20,7 @@ export function demandFixture(options: {censored?:boolean;short?:boolean} = {}) 
   k.provisionMember(f.a.tenant,f.a.store,'forecast-reviewer','reviewer');
   const owner=k.authenticate(k.issueSession(f.a.tenant,f.a.store,'forecast-owner'));
   const reviewer=k.authenticate(k.issueSession(f.a.tenant,f.a.store,'forecast-reviewer'));
-  const end=Math.floor(f.now()/DEMAND_DAY)*DEMAND_DAY,day=(n:number)=>end+(n-8)*DEMAND_DAY;
+  const end=Math.floor(f.now()/DEMAND_DAY)*DEMAND_DAY-DEMAND_DAY,day=(n:number)=>end+(n-8)*DEMAND_DAY;
   let archiveNow=day(1);
   const sourceDb=new DatabaseSync(':memory:'),source=new DemandFixtureSource(sourceDb,{mode:'fixture',identity:'demand-source',tenant:f.a.tenant,store:f.a.store},()=>archiveNow);
   const cohort=Object.keys(demandOracle.series).map((name,index)=>{
@@ -61,10 +64,11 @@ export async function usingDemand(fn:(f:ReturnType<typeof demandFixture>)=>unkno
 export async function demandMutant(relative:string,name:string,marker:string,replacement:string,fn:(Broken:any)=>unknown) {
   const original=new URL(relative,import.meta.url),source=readFileSync(original,'utf8');
   assert.equal(source.split(marker).length-1,1,'one exact real implementation mutation');
-  const target=new URL('.forecast-mutant-'+randomUUID()+'.mts',original);
-  writeFileSync(target,source.replace(marker,replacement),{flag:'wx'});
-  try {const module=await import(target.href);assert.equal(typeof module[name],'function');await fn(module[name]);}
-  finally {unlinkSync(target);}
+  const directory=mkdtempSync(join(tmpdir(),'rifare-forecast-fault-')),target=join(directory,'mutant.mts');
+  const changed=source.replace(marker,replacement).replace(/from '(\.[^']+)'/g,(_match,path)=>"from '"+new URL(path,original).href+"'");
+  writeFileSync(target,changed,{flag:'wx'});
+  try {const module=await import(pathToFileURL(target).href);assert.equal(typeof module[name],'function');await fn(module[name]);}
+  finally {rmSync(directory,{recursive:true,force:true});}
 }
 
 /** Synthetic archived source observations, native canonical records and current
@@ -86,4 +90,12 @@ export function installReviewedForecast(k:CommerceKernel,scope:Scope,reviewer:Sc
   const forecast=forecasts.create(scope,{forecast_id:forecastId,backtest_id:result.id,expected_digest:result.digest,...member,horizon_days:horizon});
   forecasts.approve(reviewer,{forecast_id:forecast.id,expected_digest:forecast.digest,expires_at:Math.min(k.clock()+600000,forecast.valid_until)});
   return {forecast:forecasts.assertReviewed(scope,{forecast_id:forecast.id,expected_digest:forecast.digest}),forecasts,history,backtests,source,sourceDb,close:()=>sourceDb.close()};
+}
+
+export function populateForecastPrivacy(f:ReturnType<typeof demandFixture>) {
+  f.snapshot();f.evaluate();const forecast=f.forecast();
+  const review=f.forecasts.approve(f.reviewer,{forecast_id:forecast.id,expected_digest:forecast.digest,expires_at:f.now()+60000});
+  return {tables:['commerce_demand_observations','commerce_demand_snapshots','commerce_forecast_backtests','commerce_inventory_forecasts','commerce_forecast_reviews'],
+    subject_tables:[],forecast_id:forecast.id,forecast_digest:forecast.digest,review_id:review.id,resource_id:forecast.resource_id,
+    customer_id:null,forecast_service:f.forecasts,owner_scope:f.owner,reviewer_scope:f.reviewer};
 }

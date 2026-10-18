@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "contract_id": "rifare-forecast-backtests-v1",
+  "goal_id": "M11-G02",
+  "source": "packages/commerce/forecast-backtests.mts",
+  "test_source": "tests/development/demand-planning.test.mts",
+  "native_cases": ["CASE-M11-G02-01", "CASE-M11-G02-02", "CASE-M11-G02-03"],
+  "tables": ["commerce_forecast_backtests"],
+  "methods": ["mean_2_v1", "mean_3_v1"],
+  "baselines": ["last_value_v1", "seasonal_2_v1"],
+  "metrics_version": "absolute_signed_and_service_v1",
+  "metrics": ["absolute_error", "signed_error", "mae", "wape", "relative_bias", "under_units", "over_units", "service_rate"],
+  "denominators": "Every declared SKU, origin and horizon remains visible; unavailable cells are explicitly unscored; zero actual units produce null relative rates",
+  "service_interpretation": "Counterfactual units covered by the prediction, excluding inventory and lead-time effects; no observed real service qualification",
+  "temporal_design": "Immutable plan before scoring, rolling origins, source-available training revisions, exact holdout horizons, fixed baseline/method versions, tuning cutoff strictly before the first origin",
+  "targeted_fault": "Replace rolling historical training with alternating randomly selected past/future rows",
+  "qualification": "synthetic_local_only",
+  "external_qualified": false,
+  "accepted": false
+}

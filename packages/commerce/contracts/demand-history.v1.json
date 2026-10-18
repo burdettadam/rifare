@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "contract_id": "rifare-demand-history-v1",
+  "goal_id": "M11-G01",
+  "source": "packages/commerce/demand-history.mts",
+  "test_source": "tests/development/demand-planning.test.mts",
+  "native_cases": ["CASE-M11-G01-01", "CASE-M11-G01-02", "CASE-M11-G01-03", "PORT-030"],
+  "tables": ["commerce_demand_observations", "commerce_demand_snapshots"],
+  "source_boundary": {
+    "adapter": "demand_fixture_source",
+    "version": "demand_fixture_v1",
+    "operation": "demand.observations.read",
+    "separate_database_required": true,
+    "availability": "event_at AND source available_at AND immutable source observed_at at or before cutoff",
+    "local_import": "Recorded independently; reconstruction relies on the synthetic source's historical revision journal, not a claim the local system saw records earlier"
+  },
+  "history": {
+    "unit": "each",
+    "time_bucket": "UTC daily closing timestamp",
+    "demand": "sales_units minus cancellation_units",
+    "returns": "reported separately; retained units subtract observed returns",
+    "stockouts": "observed sales are lower bounds; never impute lost demand",
+    "missing": "explicit missing flag and null demand, distinct from an observed zero",
+    "corrections": "append-only source revisions, one original bucket identity and immutable captured observation time"
+  },
+  "bounded_scope": {"maximum_cohort_members": 4, "maximum_daily_buckets": 32, "maximum_snapshot_revisions": 128, "maximum_units_per_daily_fact": 1000000},
+  "targeted_fault": "Filter by sale event time while ignoring when a later correction became observable",
+  "qualification": "synthetic_local_only",
+  "external_qualified": false,
+  "accepted": false
+}

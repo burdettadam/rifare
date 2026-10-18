@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "contract_id": "rifare-inventory-forecasts-v1",
+  "goal_id": "M11-G03",
+  "source": "packages/commerce/inventory-forecasts.mts",
+  "test_source": "tests/development/demand-planning.test.mts",
+  "native_cases": ["CASE-M11-G03-01", "CASE-M11-G03-02", "CASE-M11-G03-03", "M11-FORECAST-QUANTITY-01", "M11-FORECAST-AUTHORITY-01"],
+  "tables": ["commerce_inventory_forecasts", "commerce_forecast_reviews"],
+  "consumer": "InventoryForecasts(k).assertReviewed(scope, {forecast_id, expected_digest})",
+  "scope": ["tenant_id", "store_id", "catalog_resource_id", "variant_id", "location_id", "unit", "horizon_days", "dataset_digest", "backtest_digest", "method_version", "current_independent_review"],
+  "local_eligibility": {
+    "horizon_days": [1, 7],
+    "minimum_known_history_days": 4,
+    "maximum_censored_fraction_exclusive": 0.5,
+    "minimum_scored_backtest_cells_per_scope": 2,
+    "incomplete_scoped_backtest": "unsupported",
+    "missing_history_days": "unsupported",
+    "qualification_thresholds": "These are bounded implementation choices; formal acceptance thresholds are unchanged"
+  },
+  "selection": "Strictly lower per-SKU per-horizon MAE with identical complete declared cells selects the candidate; equality or underperformance retains the named baseline",
+  "uncertainty": "Nonnegative integer bounds from the maximum measured absolute residual; empirical envelope only, no probability/confidence guarantee",
+  "authority": "Current distinct proposal and approval permissions, exact immutable digests, current catalog pin, expiry, revocation and restore interlocks; no caller Boolean or model-confidence authority",
+  "privacy": "Customer-free catalog business aggregates; subject export empty; explicit nested restore allowlists and all forecast review grants revoked without requiring tombstones",
+  "targeted_fault": "Use a high model confidence value as sufficient evidence for a stronger forecast claim despite worse frozen error",
+  "autonomous_purchase_orders": false,
+  "qualification": "synthetic_local_only",
+  "external_qualified": false,
+  "accepted": false
+}
