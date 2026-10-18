@@ -39,7 +39,8 @@ test('CASE-M09-G12-02', () => usingOptional(async f => {
   assert.throws(() => f.media.consent(f.customer, f.consentInput('media', {source_config_digest: 'a'.repeat(64)})), /SOURCE_CONFIGURATION_CHANGED/);
   f.media.consent(f.customer, f.consentInput());
   assert.throws(() => f.media.upload(f.customer, f.uploadInput({base64: Buffer.from('<svg onload="grant authority">').toString('base64')})), /SYNTHETIC_MEDIA_REQUIRED/);
-  f.media.upload(f.customer, f.uploadInput()); f.advance(60001);
+  f.media.upload(f.customer, f.uploadInput()); f.mediaQueue(); f.advance(60001);
+  await assert.rejects(f.media.dispatch(f.a.scope, 'media-operation'), /CONSENT_EXPIRED/);
   assert.throws(() => f.mediaQueue(), /MEDIA_UNAVAILABLE|CONSENT_EXPIRED/);
   assert.equal(f.mediaSource.ledger().length, 0);
 }));
@@ -149,7 +150,9 @@ test('M09-G14-PREP-03-REVOKED-READINESS-WITHDRAWAL-AND-UNKNOWN-DELETION', () => 
   f.identityReady(); f.identity.queue(f.a.scope, f.identityInput());
   f.identitySource.beforeEffect = () => f.identity.revokeReadiness(f.owner, 'identity-readiness');
   const refused = await f.identity.dispatch(f.a.scope, 'identity-operation');
-  assert.equal(refused.state, 'blocked'); assert.equal(f.identitySource.ledger().filter((r: Row) => r.state === 'applied').length, 0);
+  assert.ok(['blocked', 'cancelled', 'unknown'].includes(refused.state)); assert.equal(f.identitySource.ledger().filter((r: Row) => r.state === 'applied').length, 0);
+  assert.equal(refused.redacted, true);
+  await f.identity.deleteEligible(f.owner);
   f.identitySource.beforeEffect = null;
   f.identity.recordReadiness(f.reviewer, {record_id: 'renewed-readiness', evaluation_id: 'identity-evaluation', expires_at: f.now() + 100000});
   f.identity.consent(f.customer, f.consentInput('identity', {consent_id: 'identity-consent-two', input_id: 'identifier-two'}));

@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "contract_id": "rifare-optional-media-v1",
+  "goal_id": "M09-G12",
+  "mode": "synthetic_local_preparation_only",
+  "enabled_by_default": false,
+  "accepted_media": {"mime": "application/x-rifare-synthetic-media", "content": "bounded inert fixture marker", "origin": "customer_optional_upload"},
+  "return_evidence_access": false,
+  "return_evidence_model_access_remains": false,
+  "consent": {
+    "authority": "current CustomerAccess proof for the exact order owner",
+    "scope": ["tenant_id", "store_id", "resource_id", "subject_hash", "purpose", "input_id", "input_sha256", "provider_id", "account_id", "api_version", "model_id", "model_version", "settings", "source_config_digest", "configuration_revision", "product_id", "material", "retention_until", "expires_at"],
+    "biometric": false,
+    "reusable_after_withdrawal": false,
+    "export_contains_session_or_proof_secret": false
+  },
+  "final_recheck": ["current customer binding", "purpose consent", "exact input", "source identity and configuration", "independent local quality record", "product and material coverage", "current proposer and dispatcher permission", "execution stop stamp", "recovery egress quarantine", "retention and expiry"],
+  "unknown_outcome": "preserve original operation ID; dispatch never resends; original-source lookup only",
+  "deletion": "withdrawal, expiry, erasure or quality revocation queues deletion by original source and operation ID; authorized deleteEligible drains at most 100 records",
+  "restore": "revoke configuration, quality and consent; minimize queued work and preserve original unknown identity",
+  "physical_erasure": false,
+  "live_provider_supported": false,
+  "canonical_tables": ["commerce_optional_configurations", "commerce_optional_consents", "commerce_optional_media", "commerce_optional_quality", "commerce_optional_operations", "commerce_optional_deletions"]
+}

@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "contract_id": "rifare-optional-identity-partner-v1",
+  "goal_id": "M09-G14",
+  "formal_execution": "external_qualification_unperformed",
+  "local_case_prefix": "M09-G14-PREP-",
+  "enabled_by_default": false,
+  "qualification": "synthetic_local_preparation_only",
+  "accepted_input": {"type": "synthetic_customer_token", "value": "bounded fixture-only identifier", "cross_merchant_identifiers": []},
+  "readiness_scope": ["tenant", "store", "source identity", "provider", "account", "API and model versions", "settings", "purpose", "synthetic data provenance", "US_TEST geography", "opt-out", "eligible deletion", "expiry", "independent current reviewer"],
+  "customer_authority": "verified CustomerAccess owner with exact identifier digest and purpose-specific consent",
+  "forbidden": ["default partner", "real identifier", "provider fallback", "local shadow identity graph", "private cross-merchant join", "replaying an unknown resolution", "treating fixture readiness as real partner rights"],
+  "output": {"confidence": 0.5, "confidence_limitation": "Synthetic fixture result; no verified real-world identity.", "external_qualified": false, "real_partner_agreement": false},
+  "withdrawal_or_revoke": "minimize dependent work; retain original unknown operation ID; queue eligible original-source deletion",
+  "named_fault": "absent partner access replaced by a graph of private customer records across merchants"
+}

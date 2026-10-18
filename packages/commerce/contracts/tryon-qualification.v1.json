@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "contract_id": "rifare-tryon-local-quality-v1",
+  "goal_id": "M09-G13",
+  "formal_execution": "connected_test_unperformed",
+  "local_case_prefix": "M09-G13-PREP-",
+  "qualification": "synthetic_local_preparation_only",
+  "requires": ["explicit scoped fixture configuration", "original immutable source evaluation", "declared synthetic dataset ID and hash", "independent current merchant reviewer", "vision-capable fixture configuration", "safe declared observation", "covered product and material", "unexpired exact model and settings pins"],
+  "changes_invalidating_record": ["source revision", "provider", "account", "API version", "model", "model version", "settings", "provenance", "geography", "reviewer authority", "expiry", "revocation"],
+  "output": {"kind": "synthetic_generated_preview", "generated": true, "fit_guarantee": false, "return_policy_change": false, "external_qualified": false},
+  "unsupported_behavior": "text-only, unsafe, stale, unsupported product or material is rejected; no fabricated assessment or fallback provider",
+  "real_observation_or_agreement": false,
+  "named_fault": "successful image operation incorrectly asserts physical garment fit"
+}
