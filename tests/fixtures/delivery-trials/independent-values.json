@@ -1,0 +1,19 @@
+{
+  "qualification": "synthetic_local_only",
+  "currency": "USD",
+  "units": [
+    {"line_id": "trial_line", "unit_index": 1, "variant_id": "shirt-small", "obligation_minor": "1000"},
+    {"line_id": "trial_line", "unit_index": 2, "variant_id": "shirt-small", "obligation_minor": "1000"},
+    {"line_id": "trial_line", "unit_index": 3, "variant_id": "shirt-small", "obligation_minor": "1000"}
+  ],
+  "original_obligation_minor": "3000",
+  "retained_after_one_return_minor": "2000",
+  "captured_after_one_return_minor": "2000",
+  "trial_ms": 60000,
+  "delivery_window_ms": 120000,
+  "return_grace_ms": 10000,
+  "maximum_extension_ms": 60000,
+  "authorization_duration_ms": 600000,
+  "native_capture_count": 1,
+  "native_stock_delta": 0
+}
