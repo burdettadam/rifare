@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "contract_id": "rifare-partner-readiness-v1",
+  "goal_id": "M10-G01",
+  "outcome": "Current scoped configuration and independent local readiness approval",
+  "qualification": "synthetic_local_only",
+  "external_qualified": false,
+  "enabled_by_default": false,
+  "formal_execution": "local_control_with_unaccepted_prerequisites",
+  "native_cases": [
+    "CASE-M10-G01-01",
+    "CASE-M10-G01-02",
+    "CASE-M10-G01-03",
+    "PORT-028"
+  ],
+  "test_source": "tests/development/partner-services.test.mts",
+  "source": "packages/commerce/partner-readiness.mts",
+  "readiness_fields": [
+    "tenant_id",
+    "store_id",
+    "service",
+    "account_id",
+    "source_identity",
+    "source_config_digest",
+    "region",
+    "capability",
+    "configuration_revision",
+    "configuration_digest",
+    "approval_id",
+    "approval_digest",
+    "expires_at",
+    "control_stamp"
+  ],
+  "source_boundaries": {
+    "adapter": "partner_fixture_source",
+    "api_version": "partner_fixture_v1",
+    "native_lookup": "original_operation_only",
+    "source_callbacks": "current authentic authority and exact pin immediately before a new effect",
+    "money_owner": "unchanged existing payment services",
+    "stock_owner": "unchanged WarehouseFixtureSource and warehouse receiving services"
+  },
+  "tables": [
+    "commerce_partner_configurations",
+    "commerce_partner_approvals"
+  ],
+  "privacy": {
+    "canonical_export": "subject records only; no session or verification hashes",
+    "erasure": "rebuild explicit hash-bound allowlists even on repeated erasure",
+    "restore": "disable readiness and revoke approvals/confirmations without effect replay",
+    "source_store": "separate invented fixture database; canonical erasure dispatches no source deletion"
+  },
+  "targeted_fault": "Credential or configuration presence as proof of contractual authority",
+  "release_qualified": false,
+  "accepted": false
+}

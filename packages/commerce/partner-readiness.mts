@@ -37,8 +37,10 @@ export class PartnerReadiness {
   readonly k: CommerceKernel;
   constructor(k: CommerceKernel) {this.k = k;}
   #configuration(s: Row, service: string, account: string) {
-    return checked(this.k.db.prepare('SELECT * FROM commerce_partner_configurations WHERE tenant_id=? AND store_id=? AND service=? AND account_id=?')
+    const row = checked(this.k.db.prepare('SELECT * FROM commerce_partner_configurations WHERE tenant_id=? AND store_id=? AND service=? AND account_id=?')
       .get(s.tenant_id, s.store_id, service, account) as Row | undefined);
+    if (row && (row.body.service !== row.service || row.body.account_id !== row.account_id || row.body.revision !== row.revision || row.body.expires_at !== row.expires_at)) throw new Error('PARTNER_RECORD_INTEGRITY');
+    return row;
   }
   configure(scope: Scope, input: unknown) {
     const p = exact(jsonValue(input), ['service', 'account_id', 'source_identity', 'source_config_digest', 'regions', 'capabilities',
@@ -77,7 +79,8 @@ export class PartnerReadiness {
       if (c.body.configured_by === s.actor_id) throw new Error('INDEPENDENT_REVIEW_REQUIRED');
       if (!partnerCurrentActor(this.k, s, c.body.configured_by, 'action.configure')) throw new Error('PARTNER_AUTHOR_AUTHORITY_CHANGED');
       const controls = assertExecution(this.k, s, PARTNER_ACTION);
-      const body = {configuration_digest: c.digest, revision: c.revision, approved_by: s.actor_id,
+      const body = {service: p.service, account_id: p.account_id, approval_id: p.approval_id, expires_at: p.expires_at,
+        configuration_digest: c.digest, revision: c.revision, approved_by: s.actor_id,
         control_stamp: controls.stamp, qualification: PARTNER_QUALIFICATION, external_qualified: false};
       const old = checked(this.k.db.prepare('SELECT * FROM commerce_partner_approvals WHERE tenant_id=? AND store_id=? AND id=?')
         .get(s.tenant_id, s.store_id, p.approval_id) as Row | undefined);
@@ -102,7 +105,8 @@ export class PartnerReadiness {
     const approval = c ? checked(this.k.db.prepare(`SELECT * FROM commerce_partner_approvals WHERE tenant_id=? AND store_id=? AND service=? AND account_id=?
       AND revision=? AND state='approved' ORDER BY created_at DESC,id DESC LIMIT 1`).get(s.tenant_id, s.store_id, context.service, context.account_id, c.revision) as Row | undefined) : null;
     if (!approval || approval.expires_at <= this.k.clock()) reasons.push('INDEPENDENT_APPROVAL_REQUIRED');
-    if (approval && (!c || approval.body.configuration_digest !== c.digest || approval.body.approved_by === c.body.configured_by ||
+    if (approval && (!c || approval.body.approval_id !== approval.id || approval.body.service !== approval.service || approval.body.account_id !== approval.account_id ||
+      approval.body.revision !== approval.revision || approval.body.expires_at !== approval.expires_at || approval.body.configuration_digest !== c.digest || approval.body.approved_by === c.body.configured_by ||
       !partnerCurrentActor(this.k, s, approval.body.approved_by, 'action.approve') || approval.body.control_stamp !== controls.stamp)) reasons.push('PARTNER_APPROVAL_CHANGED');
     if (controls.stopped) reasons.push('EXECUTION_STOPPED');
     try {assertRecoveryEgress(this.k);} catch {reasons.push('RECOVERY_EGRESS_BLOCKED');}

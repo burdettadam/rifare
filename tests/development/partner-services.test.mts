@@ -189,6 +189,13 @@ test('M10-G11-PREP-03', async () => {
     await assert.rejects(f.hsa.confirm(f.customer, {operation_id: p.id, preview_digest: p.preview_digest}), /PROVIDER_ELIGIBILITY_REQUIRED|PREVIEW_CHANGED/);
     assert.equal(f.source.eligibilityEffects().length, 0);
   });
+  await usingPartner(async f => {
+    f.enable('hsa_fsa'); const p = f.hsaProposal(); f.source.loseNextResponse = true;
+    assert.equal((await f.hsa.confirm(f.customer, {operation_id: p.id, preview_digest: p.preview_digest})).state, 'unknown');
+    f.readiness.revoke(f.owner, {service: 'hsa_fsa', account_id: 'hsa_fsa_account'});
+    assert.equal((await f.hsa.reconcile(f.a.scope, p.id)).state, 'eligibility_confirmed');
+    assert.equal(f.source.eligibilityEffects().length, 1);
+  });
   await changedPartnerModule('../../packages/commerce/hsa-fsa.mts', 'HsaFsa',
     "if (!eligibility.eligible) throw new Error('PROVIDER_ELIGIBILITY_REQUIRED');", '// Deliberate model-description-as-authority bypass', Broken => usingPartner(f => {
       f.enable('hsa_fsa'); f.eligibility({eligible: false});

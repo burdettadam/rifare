@@ -5,7 +5,7 @@ import { subjectHash, assertNotErased } from './data-guards.mts';
 import { growthCustomer, growthCustomerProof } from './growth-shopping-core.mts';
 import { PartnerReadiness } from './partner-readiness.mts';
 import type { PartnerContext } from './partner-readiness.mts';
-import type { PartnerFixtureSource } from '../adapters/partner-fixture-source.mts';
+import { PartnerFixtureSource } from '../adapters/partner-fixture-source.mts';
 
 export const PARTNER_SUBJECT_TABLES = Object.freeze(['commerce_protection_proposals', 'commerce_protection_confirmations', 'commerce_protection_operations',
   'commerce_duty_assessments', 'commerce_reverse_hub_routes', 'commerce_international_handoffs', 'commerce_hsa_fsa_eligibility',
@@ -36,6 +36,7 @@ export function partnerUpdate(k: CommerceKernel, name: string, row: Row, state: 
 }
 export function partnerSource(k: CommerceKernel, scope: Scope, source: PartnerFixtureSource, context?: PartnerContext) {
   const s = k.require(scope);
+  if (!(source instanceof PartnerFixtureSource)) throw new Error('SEPARATE_FIXTURE_SOURCE_REQUIRED');
   if (source.tenant !== s.tenant_id || source.store !== s.store_id || source.db === k.db || context && source.identity !== context.source_identity) throw new Error('PARTNER_SOURCE_SCOPE');
   const path = (db: any) => db.prepare('PRAGMA database_list').all().find((row: Row) => row.name === 'main')?.file;
   if (path(source.db) && path(source.db) === path(k.db)) throw new Error('SEPARATE_FIXTURE_SOURCE_REQUIRED'); return s;

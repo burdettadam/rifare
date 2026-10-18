@@ -78,7 +78,7 @@ function services(f: any, owner: Scope, reviewer: Scope, resourceId: string, war
     kind: 'estimate', quote_ref: 'duty_estimate', amount_minor: '700', currency: 'USD', party_ref: 'synthetic_calculator', observed_at: f.now(), ...patch});
   const dutyCase = () => {estimate(); return duties.open(f.a.scope, {case_id: 'duty_case', resource_id: resourceId, estimate_id: 'duty_estimate', region: 'US_TEST'});};
   const payment = f.kernel.ingest(f.a.scope, {kind: 'payment', source_system: 'synthetic', external_id: 'partner_payment', source_version: 1,
-    source_updated_at: f.now(), customer_id: 'C-1001', payload: {order_resource_id: resourceId, provider_reference: 'native_payment_one',
+    source_updated_at: f.now(), customer_id: f.kernel.get(f.a.scope, resourceId).customer_id, payload: {order_resource_id: resourceId, provider_reference: 'native_payment_one',
       state: 'authorized', currency: 'USD', amount_minor: '12500', account_id: 'hsa_fsa_account'}});
   const eligibility = (patch: Row = {}) => source.recordEligibility({eligibility_id: 'eligibility_one', resource_id: resourceId, product_id: 'shirt',
     revision: 1, region: 'US_TEST', eligible: true, currency: 'USD', allowed_minor: '12500', payment_reference: 'native_payment_one',
@@ -131,6 +131,33 @@ export async function partnerWarehouseFixture() {
 }
 export async function usingPartnerWarehouse(run: (f: Awaited<ReturnType<typeof partnerWarehouseFixture>>) => unknown) {
   const f = await partnerWarehouseFixture(); try {return await run(f);} finally {f.cleanup();}
+}
+
+/** Fills all eleven canonical tables through actual services and the original
+ * warehouse receipt owner. Root's retained privacy cases execute this helper. */
+export async function populatePartnerPrivacy(f: Awaited<ReturnType<typeof partnerWarehouseFixture>>) {
+  for (const service of Object.keys(partnerCapabilities)) f.enable(service);
+  const proposal = f.proposal(); f.reviewProtection(proposal);
+  f.protection.confirm(f.customer, {proposal_id: proposal.id, preview_digest: proposal.preview_digest});
+  f.source.loseNextResponse = true; await f.protection.dispatch(f.a.scope, proposal.id);
+  const duty = f.dutyCase();
+  f.source.recordDuty({event_id: 'privacy_customs_assessment', resource_id: f.resource_id, route_id: 'US_TEST_CA_TEST', kind: 'assessment', quote_ref: 'duty_estimate',
+    amount_minor: '850', currency: 'USD', party_ref: 'customs_fixture', observed_at: f.now()});
+  f.duties.assess(f.a.scope, {case_id: duty.id, assessment_id: 'privacy_customs_assessment'});
+  const route = f.route(), receipt = f.event(); f.hubs.importReceipt(f.a.scope, {route_id: route.id, event_id: receipt.event_id});
+  f.journey(); f.handoffEvent(); f.handoffs.import(f.a.scope, {journey_id: 'journey_one', event_id: 'handoff_one'});
+  const eligibility = f.hsaProposal(); await f.hsa.confirm(f.customer, {operation_id: eligibility.id, preview_digest: eligibility.preview_digest});
+  f.importAlert(); const response = f.response(); f.approveResponse(response); f.source.loseNextResponse = true; await f.alerts.dispatch(f.a.scope, response.id);
+  const otherCustomer = 'partner_other_customer', other = f.kernel.ingest(f.a.scope, {kind: 'order', source_system: 'synthetic', external_id: 'partner_other_order',
+    source_version: 1, source_updated_at: f.now(), customer_id: otherCustomer, payload: {total_minor: '1000', status: 'processing'}});
+  f.protection.propose(f.a.scope, {proposal_id: 'other_subject_proposal', resource_id: other.id, product_id: 'shirt', region: 'US_TEST'});
+  const subject_tables = ['commerce_protection_proposals', 'commerce_protection_confirmations', 'commerce_protection_operations', 'commerce_duty_assessments',
+    'commerce_reverse_hub_routes', 'commerce_international_handoffs', 'commerce_hsa_fsa_eligibility', 'commerce_network_alerts', 'commerce_network_alert_actions'];
+  const native = f.protection.read(f.a.scope, proposal.id);
+  return {customer_id: f.order().customer_id, resource_id: f.resource_id, other_customer_id: otherCustomer, other_resource_id: other.id,
+    tables: ['commerce_partner_configurations', 'commerce_partner_approvals', ...subject_tables], subject_tables,
+    unknown_operations: [{table: 'commerce_protection_operations', id: proposal.id, operation_id: native.original_operation_id, source_identity: f.source.identity},
+      {table: 'commerce_network_alert_actions', id: response.id, operation_id: response.id, source_identity: f.source.identity}]};
 }
 
 export async function changedPartnerModule(file: string, name: string, marker: string, replacement: string, run: (Module: any) => unknown) {
