@@ -3343,13 +3343,13 @@
               "id": "M09-G06-PREP-01",
               "name": "M09-G06-PREP-01",
               "path": "tests/development/growth-marketing.test.mts",
-              "sha256": "2c163d158e3e20da171edd425594fa2dca113345039f0be43e41492cbe3e20d5"
+              "sha256": "c6d1efb28caff707c65399a952e555a371772afb0b02397ad195c583adad3651"
             },
             {
               "id": "M09-G06-PREP-02",
               "name": "M09-G06-PREP-02",
               "path": "tests/development/growth-marketing.test.mts",
-              "sha256": "2c163d158e3e20da171edd425594fa2dca113345039f0be43e41492cbe3e20d5"
+              "sha256": "c6d1efb28caff707c65399a952e555a371772afb0b02397ad195c583adad3651"
             }
           ],
           "direct_fixtures": []
@@ -3365,7 +3365,7 @@
               "id": "M09-G06-PREP-01",
               "name": "M09-G06-PREP-01",
               "path": "tests/development/growth-marketing.test.mts",
-              "sha256": "2c163d158e3e20da171edd425594fa2dca113345039f0be43e41492cbe3e20d5"
+              "sha256": "c6d1efb28caff707c65399a952e555a371772afb0b02397ad195c583adad3651"
             }
           ],
           "direct_fixtures": []
@@ -3381,7 +3381,7 @@
               "id": "M09-G06-PREP-03",
               "name": "M09-G06-PREP-03",
               "path": "tests/development/growth-marketing.test.mts",
-              "sha256": "2c163d158e3e20da171edd425594fa2dca113345039f0be43e41492cbe3e20d5"
+              "sha256": "c6d1efb28caff707c65399a952e555a371772afb0b02397ad195c583adad3651"
             }
           ],
           "direct_fixtures": []
@@ -3397,7 +3397,7 @@
               "id": "CASE-M09-G05-01",
               "name": "CASE-M09-G05-01",
               "path": "tests/development/growth-marketing.test.mts",
-              "sha256": "2c163d158e3e20da171edd425594fa2dca113345039f0be43e41492cbe3e20d5"
+              "sha256": "c6d1efb28caff707c65399a952e555a371772afb0b02397ad195c583adad3651"
             }
           ],
           "direct_fixtures": []
@@ -3413,13 +3413,13 @@
               "id": "TEST-034",
               "name": "TEST-034",
               "path": "tests/development/growth-marketing.test.mts",
-              "sha256": "2c163d158e3e20da171edd425594fa2dca113345039f0be43e41492cbe3e20d5"
+              "sha256": "c6d1efb28caff707c65399a952e555a371772afb0b02397ad195c583adad3651"
             },
             {
               "id": "PORT-027",
               "name": "PORT-027",
               "path": "tests/development/growth-marketing.test.mts",
-              "sha256": "2c163d158e3e20da171edd425594fa2dca113345039f0be43e41492cbe3e20d5"
+              "sha256": "c6d1efb28caff707c65399a952e555a371772afb0b02397ad195c583adad3651"
             }
           ],
           "direct_fixtures": []
@@ -4557,7 +4557,7 @@
     },
     {
       "path": "tests/fixtures/conformance/expected-coverage.v1.json",
-      "sha256": "589e70ad78fefa6682563a2843038ee065917648a61005095ce0b90e26e0667d"
+      "sha256": "ca4e5c0f60d7097fc24d9d604b5478c8f3ac99f8d9453d506c4f63b6f60543ea"
     },
     {
       "path": "tests/fixtures/conformance/source-inputs.v1.json",
@@ -5065,7 +5065,7 @@
     },
     {
       "path": "tests/development/growth-marketing.test.mts",
-      "sha256": "2c163d158e3e20da171edd425594fa2dca113345039f0be43e41492cbe3e20d5"
+      "sha256": "c6d1efb28caff707c65399a952e555a371772afb0b02397ad195c583adad3651"
     },
     {
       "path": "tests/development/growth-optional-helpers.mts",
