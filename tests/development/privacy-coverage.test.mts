@@ -20,6 +20,14 @@ import { exportMerchant, exportMerchantSuppression, importMerchant, merchantSnap
 
 const SENTINEL='SYNTHETIC_PRIVACY_CUSTOMER_NOTE';
 const PHOTO=JSON.parse(readFileSync(new URL('../fixtures/return-intake/photo.v1.json',import.meta.url),'utf8')).base64;
+const GROWTH_TABLES=[
+  'commerce_cart_recoveries','commerce_catalog_approvals','commerce_catalog_changes','commerce_catalog_evaluations',
+  'commerce_checkout_assignments','commerce_checkout_experiments','commerce_checkout_exposures','commerce_email_action_links',
+  'commerce_growth_campaign_approvals','commerce_growth_campaign_recipients','commerce_growth_campaigns','commerce_growth_observations',
+  'commerce_marketing_segments','commerce_marketing_sync_operations','commerce_optional_configurations','commerce_optional_consents',
+  'commerce_optional_deletions','commerce_optional_media','commerce_optional_operations','commerce_optional_quality',
+  'commerce_shopping_carts','commerce_upsell_confirmations','commerce_upsell_offers',
+];
 function populate(f:any){
   const order=f.order(),privacy=new PrivacyLifecycle(f.kernel),metrics=new SupportMetrics(f.kernel);
   f.conversations.ingest(f.a.scope,{link_id:f.link.id,external_id:'privacy_message',direction:'incoming',visibility:'public',text:SENTINEL,source_at:f.now()});
@@ -109,15 +117,20 @@ test('CASE-M07-G14-03',()=>usingSupport(f=>{
 
 test('M07-G14-ALL-170-TABLES-HAVE-EXPLICIT-SURFACES',()=>usingSupport(f=>{
   const r=auditPrivacyCoverage(f.kernel,f.owner.scope),actual=f.db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name").all().map((x:any)=>x.name);
-  assert.equal(r.tables.length,186);assert.deepEqual(r.tables.map((t:any)=>t.name).sort(),actual);
+  assert.equal(r.tables.length,209);assert.deepEqual(r.tables.map((t:any)=>t.name).sort(),actual);
   const baseline=JSON.parse(readFileSync(new URL('../fixtures/shipping/storage-baseline.v1.json',import.meta.url),'utf8'));
   assert.equal(baseline.tables.length,170);
   const originalNames=new Set(baseline.tables.map((t:any)=>t.name));
   const original178=JSON.parse(readFileSync(new URL('../fixtures/inventory-reconciliation/storage-baseline.v1.json',import.meta.url),'utf8'));
   assert.equal(original178.tables.length,178);assert.equal(original178.protected_base,'60bdc1fa1281ea165a4edbf815eb8a1b02004ecf');
   const original178Names=new Set(original178.tables.map((t:any)=>t.name));
+  const original186=JSON.parse(readFileSync(new URL('../fixtures/growth/storage-baseline.v1.json',import.meta.url),'utf8'));
+  assert.equal(original186.tables.length,186);assert.equal(original186.protected_base,'63767bbd0a1dbcc49475827afaee5402dc00a3ba');
+  const original186Names=new Set(original186.tables.map((t:any)=>t.name));
+  assert.deepEqual(r.tables.filter((t:any)=>original186Names.has(t.name)).map((t:any)=>({name:t.name,surface:t.surface,handling:t.handling})).sort((a:any,b:any)=>a.name.localeCompare(b.name)),original186.tables);
+  assert.deepEqual(r.tables.filter((t:any)=>!original186Names.has(t.name)).map((t:any)=>t.name).sort(),GROWTH_TABLES);
   assert.deepEqual(r.tables.filter((t:any)=>original178Names.has(t.name)).map((t:any)=>({name:t.name,surface:t.surface,handling:t.handling})).sort((a:any,b:any)=>a.name.localeCompare(b.name)),original178.tables);
-  assert.deepEqual(r.tables.filter((t:any)=>!original178Names.has(t.name)).map((t:any)=>t.name).sort(),[
+  assert.deepEqual(r.tables.filter((t:any)=>original186Names.has(t.name)&&!original178Names.has(t.name)).map((t:any)=>t.name).sort(),[
     'commerce_inventory_discrepancies','commerce_inventory_movements','commerce_inventory_owners','commerce_inventory_snapshots',
     'commerce_inventory_transfer_approvals','commerce_inventory_transfer_operations','commerce_inventory_transfers','commerce_warehouse_return_events',
   ]);
