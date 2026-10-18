@@ -215,11 +215,21 @@ export class PrivacyLifecycle {
       const order_edit_records=Object.fromEntries(['commerce_edit_snapshots','commerce_edit_inputs','commerce_edit_quotes','commerce_order_edits','commerce_edit_steps','commerce_edit_events'].map(table=>[table,all(k,table,s.tenant_id,s.store_id).filter(r=>ids.includes(r.resource_id)||editIds.includes(r.edit_id))]));
       const support_links=all(k,'commerce_support_links',s.tenant_id,s.store_id).filter(r=>caseIds.includes(r.case_id)),supportLinkIds=support_links.map(r=>r.id);
       const support_records={links:support_links,contacts:all(k,'commerce_support_contacts',s.tenant_id,s.store_id).filter(r=>supportLinkIds.includes(r.link_id)),...Object.fromEntries(['commerce_support_messages','commerce_support_attempts','commerce_support_deliveries','commerce_support_completions','commerce_support_costs','commerce_support_rule_jobs'].map(table=>[table,all(k,table,s.tenant_id,s.store_id).filter(r=>caseIds.includes(r.case_id)).map(r=>{const copy={...r};delete copy.owner_session_hash;return copy;})]))};
+      // Consent is customer-bound rather than case-bound. Include its current
+      // state and history without exporting another customer's preferences.
+      Object.assign(support_records,Object.fromEntries(['commerce_support_consent','commerce_support_consent_events'].map(table=>[table,all(k,table,s.tenant_id,s.store_id).filter(r=>r.customer_id===customer)])));
+      // A frozen cohort can span customers. Export only this subject's member
+      // records; the original denominator and other members stay in the audit.
+      const analytics_records={metric_cohorts:all(k,'commerce_support_documents',s.tenant_id,s.store_id).filter(r=>r.kind==='metric_cohorts').flatMap(r=>{
+        const body=JSON.parse(r.body);if(contentDigest(body)!==r.digest||!Array.isArray(body.members))throw new Error('SUPPORT_CONFIGURATION_INTEGRITY');
+        const members=body.members.filter((m:Row)=>caseIds.includes(m.case_id)&&ids.includes(m.resource_id));
+        return members.length?[{id:r.id,version:r.version,state:r.state,starts_at:body.starts_at,ends_at:body.ends_at,members,subject_projection:true,original_document_digest:r.digest}]:[];
+      })};
       const instantOps=all(k,'commerce_instant_operations',s.tenant_id,s.store_id).filter(subjectRecord),instantIds=instantOps.map(r=>r.id);
       const exchange_history_records={...Object.fromEntries(['commerce_exchange_lineage_nodes','commerce_exchange_lineage_imports','commerce_exchange_currency_bindings','commerce_exchange_fee_observations','commerce_instant_quotes','commerce_instant_obligations'].map(table=>[table,all(k,table,s.tenant_id,s.store_id).filter(subjectRecord)])),commerce_instant_operations:instantOps,commerce_instant_observations:all(k,'commerce_instant_observations',s.tenant_id,s.store_id).filter(r=>instantIds.includes(r.operation_id))};
       const return_assistance_records=Object.fromEntries(ASSISTANCE_SUBJECT_TABLES.map(table=>[table,all(k,table,s.tenant_id,s.store_id).filter(subjectRecord).map(r=>{const copy={...r};delete copy.session_hash;return copy;})]));
       const woocommerce_records=Object.fromEntries(['commerce_woo_return_sources','commerce_woo_rma_bindings','commerce_woo_event_observations'].map(table=>[table,all(k,table,s.tenant_id,s.store_id).filter(subjectRecord)]));
-      const result={woocommerce_records,return_assistance_records,exchange_history_records,support_records,order_edit_records,gift_returns:gifts,schema_version:1,tenant_id:s.tenant_id,store_id:s.store_id,subject_ref:subjectHash(s.tenant_id,s.store_id,customer),
+      const result={woocommerce_records,return_assistance_records,exchange_history_records,support_records,analytics_records,order_edit_records,gift_returns:gifts,schema_version:1,tenant_id:s.tenant_id,store_id:s.store_id,subject_ref:subjectHash(s.tenant_id,s.store_id,customer),
         resources:rs.map(r=>k.project(r)),attachments:all(k,'commerce_attachments',s.tenant_id,s.store_id).filter(subjectRecord).map(r=>({id:r.id,resource_id:r.resource_id,content:JSON.parse(r.content)})),
         knowledge:all(k,'commerce_knowledge',s.tenant_id,s.store_id).filter(subjectRecord),
         tasks,assistance:all(k,'commerce_assistance_receipts',s.tenant_id,s.store_id).filter(r=>tasks.some(t=>t.id===r.task_id)),

@@ -1,0 +1,1177 @@
+{
+  "version": 1,
+  "schema_digest": "6e8fd17800ab49965a9cf964a4652877ee1784dbaa3dd78263a6dd19e4881d3f",
+  "runtime_roots": [
+    "apps",
+    "packages"
+  ],
+  "runtime_extensions": [
+    ".cjs",
+    ".html",
+    ".js",
+    ".jsx",
+    ".mjs",
+    ".mts",
+    ".py",
+    ".ts",
+    ".tsx"
+  ],
+  "runtime_sources": [
+    {
+      "path": "apps/api/main.mts",
+      "sha256": "6270a7a8b2101272bfa0747f93131d36d1e8e03d8331450d8766da75259394af"
+    },
+    {
+      "path": "apps/commerce-api/client.js",
+      "sha256": "e1420048eef2ee68b89584bdc4158fd0a8e7b52df50baed79b3cc34db0f5ff4a"
+    },
+    {
+      "path": "apps/commerce-api/configuration-client.js",
+      "sha256": "617ce15820d9b72ada0b360dbdbfc4c91ee85738fcd88f4dd150dce52ba922b8"
+    },
+    {
+      "path": "apps/commerce-api/configuration.html",
+      "sha256": "e4f5839e2768ef0cfc9b04bdb16245aad11090761030c48724bf4e556b8a6d83"
+    },
+    {
+      "path": "apps/commerce-api/exceptions-client.js",
+      "sha256": "4b4492bf57e4c61526c5a12d2f5de51b9f5c17d365cae81f320c680174d4de35"
+    },
+    {
+      "path": "apps/commerce-api/exceptions.html",
+      "sha256": "687fb8230809e4f960d10b3fa57028c0dc32a15ea44725057a4601e1075efc16"
+    },
+    {
+      "path": "apps/commerce-api/exchange-depth-client.js",
+      "sha256": "f83a3d56416502de522df0f4dfa9be80450b66805a41eeab73b367589bf364bd"
+    },
+    {
+      "path": "apps/commerce-api/exchange-history-client.js",
+      "sha256": "9152e893dc30af04f65480aa01b1c879fbd2f0c31e59dc9bf67d26556b1e0fc1"
+    },
+    {
+      "path": "apps/commerce-api/exchange-history.html",
+      "sha256": "94590ea5c584b253eae715fe8da44cf522ca39c09594dda059922a234560b953"
+    },
+    {
+      "path": "apps/commerce-api/exchanges.html",
+      "sha256": "2c60e318a8818e2533bebb05d0cf4cec1a14b98211a8fec14a20f906d7d4b7a5"
+    },
+    {
+      "path": "apps/commerce-api/execution-client.js",
+      "sha256": "1ba51d0b72a5b15cb48e2d6792c7e9cb24700fd80cc1664af338917e980b290f"
+    },
+    {
+      "path": "apps/commerce-api/execution.html",
+      "sha256": "2fa23f51cfca71477b6ad206e62104650a3db7d94978d6d0ccd9f27a793426b7"
+    },
+    {
+      "path": "apps/commerce-api/gift-returns.html",
+      "sha256": "9160c24595d3fc25d5f633c5d520e4c7032a68fd2d3f1a2604a6eff99d7f983d"
+    },
+    {
+      "path": "apps/commerce-api/index.html",
+      "sha256": "cbef42f2097d0958886eca96a3593947a6ed13b63e519e8ffa2d21d01a9a4d62"
+    },
+    {
+      "path": "apps/commerce-api/order-edits-client.js",
+      "sha256": "26d51da553a11d8ef145bbe5fd7a5818c277c26709d0d0f348ef46a12a55cd12"
+    },
+    {
+      "path": "apps/commerce-api/order-edits.html",
+      "sha256": "5e91cca639cb98d2190c1d00965310b5392d979d8dc9c7c9dae490ca27aa1efb"
+    },
+    {
+      "path": "apps/commerce-api/return-assistance-client.js",
+      "sha256": "5e60cd8c11d42c31fd3d49fb73e6f9e01700d9dacf857551f56f3d4a36738004"
+    },
+    {
+      "path": "apps/commerce-api/return-assistance.html",
+      "sha256": "31f79ec5ff75416c551e37500a276f2f3f6a1389e776f6d113a85e4c535ebcea"
+    },
+    {
+      "path": "apps/commerce-api/return-draft-client.js",
+      "sha256": "23ae9c76bebaa45ce997524f1ad4611379eb9d20d75f589537b205e29d26dafe"
+    },
+    {
+      "path": "apps/commerce-api/return-draft.html",
+      "sha256": "9af40a5a27b4f5584ef6ad96800cc1792485aa21da545594261cd51905e3c1f4"
+    },
+    {
+      "path": "apps/commerce-api/return-operations-client.js",
+      "sha256": "d57f04b6f0ec95aab11384cf0e172e3326aff68d4f835b49b6020c2545816251"
+    },
+    {
+      "path": "apps/commerce-api/return-operations.html",
+      "sha256": "bc2c332fd2795e0c15b068d0e389a62961b6f5bc88b815145107d55141ef34f2"
+    },
+    {
+      "path": "apps/commerce-api/return-portability-client.js",
+      "sha256": "f8a18a7866b730cacd7546669f368b7228bec272f236f3c8f2bc0107aa15e92e"
+    },
+    {
+      "path": "apps/commerce-api/return-portability.html",
+      "sha256": "5fdb36cc8cf45dbf089ba7ef82637f9a0ad6cf6353e07c013b6203c60921e96c"
+    },
+    {
+      "path": "apps/commerce-api/returns-client.js",
+      "sha256": "36ca4f25a01d360009b0e0f4631dd9cc1c8032944716a74e3448b262bcc2e1b0"
+    },
+    {
+      "path": "apps/commerce-api/returns.html",
+      "sha256": "cce9be73c75a8cb50b9daa66fdd2aa3383fcedad1bc4f0aa67e45e1afd6e4267"
+    },
+    {
+      "path": "apps/commerce-api/server.mts",
+      "sha256": "f93fba999a85081452587b551f2cda702532ffe180106dc47af92d4c3aafa3fe"
+    },
+    {
+      "path": "apps/commerce-api/status-client.js",
+      "sha256": "cad4577857631a5808463d30d912dea29fcc3541a4c2bc23c9f27c0b577ded26"
+    },
+    {
+      "path": "apps/commerce-api/status.html",
+      "sha256": "4563f175fae1a2c57f66c416c9e5dace098fa1dde81eb282a3b078a2b52d9571"
+    },
+    {
+      "path": "apps/commerce-api/support-client.js",
+      "sha256": "e60903e846f36a68a1374714342838e294821b2fcb317adadaff95b2dc923a68"
+    },
+    {
+      "path": "apps/commerce-api/support-tracking.html",
+      "sha256": "18df84e754b39a4bec4ba4e3729a34392db92cbe826f9dfdae0a605f8c311981"
+    },
+    {
+      "path": "apps/commerce-api/support.html",
+      "sha256": "4f9e5d44747292e8bb0ab5a29bb7687d8322a3ec2d309b64dd1b44e67b184faa"
+    },
+    {
+      "path": "apps/web/index.html",
+      "sha256": "3a3407c82ed4fe82a0aaecff56731b36f1c29cc977c8da0c60084adb3f793a3a"
+    },
+    {
+      "path": "apps/web/server.mts",
+      "sha256": "c0f280db64982201f46fe3e56dce51642bc860613feb9f929dc41c0d19d1ca6a"
+    },
+    {
+      "path": "apps/web/smoke.js",
+      "sha256": "d0a9f611a4b422bb0133a4ccfe7baa7a311f58f62c10dfc7bff8a232f1d92a97"
+    },
+    {
+      "path": "apps/worker/main.mts",
+      "sha256": "9c56ee878bb6d7abfe86c597a01d335eb73deda831026922023577431a62422a"
+    },
+    {
+      "path": "packages/adapters/exchange-lineage-fixture-source.mts",
+      "sha256": "dc3b32b3633fbc76176aeb27b6476326525af4f3fbfa721e429806e841df381e"
+    },
+    {
+      "path": "packages/adapters/exchange-lineage-source-guards.mts",
+      "sha256": "277c1d729f1baafa2b1f0873bd15b1416212327a249268604afac1d50a56b7bb"
+    },
+    {
+      "path": "packages/adapters/exchange-money-fixture-source.mts",
+      "sha256": "a4f37fbf7ed1d577a64f0e4750f3a860ebddb983617d81b1b4847836761b8fda"
+    },
+    {
+      "path": "packages/adapters/fulfillment-fixture-source.mts",
+      "sha256": "097a6b7b7963e50362a9f0c2633d8b63213eca29441409787b9c940b887fe551"
+    },
+    {
+      "path": "packages/adapters/instant-exchange-fixture-source.mts",
+      "sha256": "79888faef78231823392065853ac0823b66ea3024248de432b62cde2bbb28501"
+    },
+    {
+      "path": "packages/adapters/native-change-fixture-source.mts",
+      "sha256": "20d15c0030308715c982278377e50946e8ca1a4516f909d91cbf10679631d3d7"
+    },
+    {
+      "path": "packages/adapters/order-edit-fixture-source.mts",
+      "sha256": "5a17151bb888a069288f284f46852b6169fb4dea7975bc361e940701229f0dd2"
+    },
+    {
+      "path": "packages/adapters/prevention-source-guards.mts",
+      "sha256": "85fdc96d3cd2633c3ac0b4b79e6b78a177b83aeaf01c85f254617c1f387096f1"
+    },
+    {
+      "path": "packages/adapters/reliability/synthetic-journal.mts",
+      "sha256": "ab29608ff2bd79b6f7c7e51711bed1a1a6b8b7b58a108b183f49590c17f29ac6"
+    },
+    {
+      "path": "packages/adapters/resolution-fixture-source.mts",
+      "sha256": "b03ff40c566e6118467173965af71f0694d9d8e9aa61c5e9b69ce36e5a0625b3"
+    },
+    {
+      "path": "packages/adapters/return-destination-fixture-source.mts",
+      "sha256": "b1207f123a954b32262f4dc989db32563bcacf4f18bed4def8510f7043302cd1"
+    },
+    {
+      "path": "packages/adapters/shopify-return-fixture.mts",
+      "sha256": "9cb01b29082cc41e6176fd2d282dd3e6c396282b849f46274268917a9839c803"
+    },
+    {
+      "path": "packages/adapters/shopify/orders.mts",
+      "sha256": "cd5fd9fe73422d3e7005cee8a281c90de9c22603b848ef6dfdc3ca86b0e76832"
+    },
+    {
+      "path": "packages/adapters/support-fixture-source.mts",
+      "sha256": "1e9921151382684620a39a6fc4744cdfce921e50ac77446704c17905ceed4e85"
+    },
+    {
+      "path": "packages/adapters/support/chatwoot.mts",
+      "sha256": "8838a8bc5457039830d79344e3baa26720ca24f296976503732471e6196d3e43"
+    },
+    {
+      "path": "packages/adapters/support/resend.mts",
+      "sha256": "998fed5126bc88ae4e8fb64a0522ae3e5353b2cedcb4e14dd0b3a4be4ba15bce"
+    },
+    {
+      "path": "packages/adapters/support/transport.mts",
+      "sha256": "2eefdeb256d944eb9956b0cf58fc2d5f95b9fc23bcb29517591d00ff1b4e9db3"
+    },
+    {
+      "path": "packages/adapters/warehouse-fixture-source.mts",
+      "sha256": "4e4f47d2c6f02a5a24f1dade3fe9112b0bb201af28423e6980422e8eae32fb6e"
+    },
+    {
+      "path": "packages/adapters/webhooks/signatures.mts",
+      "sha256": "6d67ed85137766a21bd6624b9042609fa0098ce615067c1c068be1e6f93db64b"
+    },
+    {
+      "path": "packages/adapters/woocommerce/events.mts",
+      "sha256": "5d89104f80aeba204cd2ff5831629ac5d0720dcb4dffcb1ba3ab7a797242a395"
+    },
+    {
+      "path": "packages/adapters/woocommerce/orders.mts",
+      "sha256": "fb6ae120fc7440567f9226207709b65ebe1be913fd60a86e52fbaa24c06166aa"
+    },
+    {
+      "path": "packages/adapters/woocommerce/refund-contract.mts",
+      "sha256": "2220229fe198f1f1f588bbb24d5916cbee8e373d036d092fc7890e2b443f0257"
+    },
+    {
+      "path": "packages/adapters/woocommerce/refund-fixture-source.mts",
+      "sha256": "44f229486f5db0daabeae3d201d7d51074a7fa547dad7e7f848746395db46b01"
+    },
+    {
+      "path": "packages/adapters/woocommerce/refund-gateway-fixture.mts",
+      "sha256": "5761fcf35ca6dbeb692f7a4ec3a3e8cc08e8ebc194165f1281a6aea9ac3b6bef"
+    },
+    {
+      "path": "packages/adapters/woocommerce/return-contract.mts",
+      "sha256": "bc3708e6c43f62dea3884bde3c92fae25c4a61c8b8e9aaab613e88c23302e103"
+    },
+    {
+      "path": "packages/adapters/woocommerce/return-source.mts",
+      "sha256": "8fed2831ba21c23c259e8027b843d46be231595b5a8ccc34af58933ec759ad59"
+    },
+    {
+      "path": "packages/agent/action-mcp.mts",
+      "sha256": "2c4d5abe073c3c916da8fdf78cbe28014c865d44b0958281aa423b3133dcbeac"
+    },
+    {
+      "path": "packages/agent/evaluation.mts",
+      "sha256": "230308a801443d719d3316b1508b81d46d8a22cc24e545b14e4b75245c764700"
+    },
+    {
+      "path": "packages/agent/facts.mts",
+      "sha256": "15b8137cb555ff4076e71333d73d43ec4ff343d9077825aa84d09c2088941314"
+    },
+    {
+      "path": "packages/agent/local-model.mts",
+      "sha256": "eaa6988cd176dce8f6a7402d1cb99a5ed054ec4c72f9407e6a1c940efc1a4d42"
+    },
+    {
+      "path": "packages/agent/mcp.mts",
+      "sha256": "a54bb3bc31441e8c2cac5d6c2d5938e1d23f2a10f3fd040d25289b168b8c49b5"
+    },
+    {
+      "path": "packages/agent/providers.mts",
+      "sha256": "2a1e2ca504133ae467efc351118e04fe6713db9d25bae09dfc91689daef54dd4"
+    },
+    {
+      "path": "packages/agent/return-draft.mts",
+      "sha256": "6514d87a44c0ef04064489c02956d677d2027c748feb8436b31aafbf415af72c"
+    },
+    {
+      "path": "packages/agent/runner.mts",
+      "sha256": "c084a2b647b8f685ef346e60bebb4f35233adac7f087583ce622ed6a4cc20225"
+    },
+    {
+      "path": "packages/agent/untrusted.mts",
+      "sha256": "43619ba490cf51afe7e7bcf7ae22870592b56014b4b3774461cca6f72ee85e56"
+    },
+    {
+      "path": "packages/assistance/return-workflow-runner.mts",
+      "sha256": "f27fbefdb8d48d36626e2448547698cf5e64186c6cdb196863e3bc8fa3fe63ba"
+    },
+    {
+      "path": "packages/commerce/action-gateway.mts",
+      "sha256": "af5944ee783f8679ad114e7b613f9783812714e7cff0b429194747ad850b6ae7"
+    },
+    {
+      "path": "packages/commerce/authorization.mts",
+      "sha256": "9811f1692f9dc57545b907fcf1c5982dc2cb61c5b9b54d3bd2e001823f87ec75"
+    },
+    {
+      "path": "packages/commerce/capabilities.mts",
+      "sha256": "110491efcde69a2a80e24ef8f321138eb89059078893e9352cc00095f310a445"
+    },
+    {
+      "path": "packages/commerce/case-configurations.mts",
+      "sha256": "8791a9dc4d79059553ff7c5d9198dc2d6845cebb1508933536f922c14481fa86"
+    },
+    {
+      "path": "packages/commerce/configuration-values.mts",
+      "sha256": "81c9e69b56a2c288d2a09770651ce2c6ef9dcbcf605dc3291b99bc693992a5da"
+    },
+    {
+      "path": "packages/commerce/credential-lifecycle.mts",
+      "sha256": "b592f6be128503b02247bfc26fb00389b653af3c3918e8dca5c928d308db342d"
+    },
+    {
+      "path": "packages/commerce/customer-access.mts",
+      "sha256": "1a92cebb026ea5a584178dfdf205e913f76b4a319574fd00e6636db9cb3b74a7"
+    },
+    {
+      "path": "packages/commerce/data-guards.mts",
+      "sha256": "e01d50bb34c6011a8198504610f89c0cd097eebf61bf946c7f41799f82be9020"
+    },
+    {
+      "path": "packages/commerce/durable-work.mts",
+      "sha256": "c898d3b826914663df493a60ce22eca32edceab38737be7b81f6c55cc47fa5a8"
+    },
+    {
+      "path": "packages/commerce/event-processing.mts",
+      "sha256": "b4a4b190ec964d764b4510394526d3b3c6404c26fc23c54cdc0276e984aacfae"
+    },
+    {
+      "path": "packages/commerce/exception-queue.mts",
+      "sha256": "c9194323b59adf225930467609f74e9d518c69557be29ee7db711a3030e20b98"
+    },
+    {
+      "path": "packages/commerce/exchange-currency.mts",
+      "sha256": "58d5aca19d90f8bfeeb230406995b11415321700c4271ccc42541141f6a27cd4"
+    },
+    {
+      "path": "packages/commerce/exchange-fees.mts",
+      "sha256": "2fa60332e02fb31894ff4594dc8a453141b919d5bbe1e0e077e6bb1b517abd9c"
+    },
+    {
+      "path": "packages/commerce/exchange-finance.mts",
+      "sha256": "36315a9a3d6da58b7e4bf844c6018dc8f6727f829578af16ac7b51d12ee3bb99"
+    },
+    {
+      "path": "packages/commerce/exchange-lineage-guards.mts",
+      "sha256": "6b6eabaaa2e77dd17dad1975572aa40816fecaf82e7e0af59c4c43f7702da562"
+    },
+    {
+      "path": "packages/commerce/exchange-lineage.mts",
+      "sha256": "8ebdfcf058bf4967294d4d9fd699a5a58f6ed1d5c6cbaf13554df746bf3e1250"
+    },
+    {
+      "path": "packages/commerce/execution-stops.mts",
+      "sha256": "aee02a4d9828bf9a08ef33d720d3c382ce89907fb43eb2f4f22291a602e1b436"
+    },
+    {
+      "path": "packages/commerce/fulfillment-execution.mts",
+      "sha256": "6105a8933c4b22b14ddaeece6f334997da39ba2702386afa40ceb035456a09ac"
+    },
+    {
+      "path": "packages/commerce/gift-proof.mts",
+      "sha256": "4cf5e48c5b7e097acb487dae47ea3bbbf3538eab7037a95199162c1afd0827aa"
+    },
+    {
+      "path": "packages/commerce/gift-returns.mts",
+      "sha256": "8cfdb9a95343f6a850949609b4a70bbd4007efd08c7c093bfdd82689c433a041"
+    },
+    {
+      "path": "packages/commerce/instant-exchanges.mts",
+      "sha256": "ccbb6c90130605b94b8efd7a0b5852b18ddbdbf84cc0ab449347e1f3dfbbf5f1"
+    },
+    {
+      "path": "packages/commerce/integration-readiness.mts",
+      "sha256": "4cf6235d15b2721b8350a53191778e20ff81b768b2e5246600557b218489830d"
+    },
+    {
+      "path": "packages/commerce/kernel.mts",
+      "sha256": "f462705e27b2848decee85168381f90d0f89b4840f8bebe2e30605ce6717a58c"
+    },
+    {
+      "path": "packages/commerce/knowledge.mts",
+      "sha256": "cd21eaac93b7152056947fe3e294cb51bb8af890b2bd82b72761a167837b21f0"
+    },
+    {
+      "path": "packages/commerce/lifecycle-gateway.mts",
+      "sha256": "cd56a2675323af867634e87f91f9efad6c99d0f3020737ef814cdb85cd8f1ffb"
+    },
+    {
+      "path": "packages/commerce/merchant-portability.mts",
+      "sha256": "d7106fee4bc749fb5d5c3f02b09ef83492283c02347ebac1460d5749e0467a31"
+    },
+    {
+      "path": "packages/commerce/migration-cutover.mts",
+      "sha256": "c82b1dbeeb9c79f480fe847a4982a12ecd6160468401c4576df7a0438b4659cb"
+    },
+    {
+      "path": "packages/commerce/migration-fence.mts",
+      "sha256": "ed4aee87268bc83e6146f4ceb94dc6562e4c63033b8c8a21dc1fa1f9f68a0b30"
+    },
+    {
+      "path": "packages/commerce/model-budgets.mts",
+      "sha256": "01b30f9f11b10ad5499733e5bda63dcd57bea09258761aeed62ec222fb2183ce"
+    },
+    {
+      "path": "packages/commerce/money.mts",
+      "sha256": "8cfe47175d6cf4f2b87235ed7bf5231e54ca5dfb12a9c19ef71dfab5fccac4e1"
+    },
+    {
+      "path": "packages/commerce/native-change-reconciliation.mts",
+      "sha256": "1d0735940869604d11052e9de3d71db42f76efcb2f08f79960e79c1d1891799b"
+    },
+    {
+      "path": "packages/commerce/native-returns.mts",
+      "sha256": "2c3c446a9bba63adeb119b1765917014d49ec1f8d654caa669e61ed87afa2494"
+    },
+    {
+      "path": "packages/commerce/operation-receipts.mts",
+      "sha256": "2d101161d4636d1af89db8fa698dafcb28e063578ab780d9ae0d3281812fff01"
+    },
+    {
+      "path": "packages/commerce/operation-store.mts",
+      "sha256": "c7ff7f2ee9da036fff8f310f110e2d52f31a439024f20f77f7b3a1fd98304924"
+    },
+    {
+      "path": "packages/commerce/operator-runbooks.mts",
+      "sha256": "fe835ab20481f7d8e3f35e48b12ea940dab4b14c9005af5bc68ec4068f3a6f26"
+    },
+    {
+      "path": "packages/commerce/order-edit-core.mts",
+      "sha256": "3a36acafbffd0545485b1379ad21f069bbafc42d07198dee77c344107c284c36"
+    },
+    {
+      "path": "packages/commerce/order-edit-execution.mts",
+      "sha256": "072e9fe6e3589cdd73d4b8c591039c86076176cf65692812464ccb969677d46d"
+    },
+    {
+      "path": "packages/commerce/order-edit-workflow.mts",
+      "sha256": "894b09c4a4eb6b02c69dd6486fa89bc6be496c574247f95278b8b59b69df98d1"
+    },
+    {
+      "path": "packages/commerce/policies.mts",
+      "sha256": "4e0434ea4209176861c66b32705ee432ce712b86eee42c5ed7e6f0f190bd7176"
+    },
+    {
+      "path": "packages/commerce/prevention-experiments.mts",
+      "sha256": "7862d686ad50efe843676bc9d85de8aa8076e8bb131e3aa045ea94adbc8843e5"
+    },
+    {
+      "path": "packages/commerce/privacy-coverage.mts",
+      "sha256": "e002011022b4c145bfe602dec276e8d0976099c88c737b811dfbf280f577f178"
+    },
+    {
+      "path": "packages/commerce/privacy-lifecycle.mts",
+      "sha256": "3b2ba1101a11e9b8c292a2ef7f856503748ea549aac09db0e28f65fb3cbc85a3"
+    },
+    {
+      "path": "packages/commerce/profile-editor.mts",
+      "sha256": "9386558226833a7fb75ed7adb5d6e322d4bc9859142340bbd03bd9addfd0391d"
+    },
+    {
+      "path": "packages/commerce/profile-layers.mts",
+      "sha256": "5bee292e131236fe55424ab4387f802e647fbf8908cdaa4e346423c2814c12e0"
+    },
+    {
+      "path": "packages/commerce/profiles.mts",
+      "sha256": "6922a8959a3d571f6a435ba05b436303d8274ffc393becd9082e4f4894e25b51"
+    },
+    {
+      "path": "packages/commerce/qualified-return-destinations.mts",
+      "sha256": "6e51ff2819b8f9691ea8792201cee7875a4ee0a54e4ca95e0b53949a2d83dbf8"
+    },
+    {
+      "path": "packages/commerce/read-context.mts",
+      "sha256": "3c2c6e48a565230eec4536751a36d0cb404d66dc5e24a4171c2ba0d9f9436753"
+    },
+    {
+      "path": "packages/commerce/reconciliation.mts",
+      "sha256": "5e9401c20bdd38d1bdd825af1b225e9f80af3e195d77e04c6211d4bd961de9b5"
+    },
+    {
+      "path": "packages/commerce/refund-message-facts.mts",
+      "sha256": "1d92c124a09fa41b72c51a3c252e7d2a5ea6af1fed3d85dc8baac67741b2ba0d"
+    },
+    {
+      "path": "packages/commerce/refund-quotes.mts",
+      "sha256": "5b472a7d2fa06f32c28a098ffbaee97f00b64cc778a85f62db12e3674fa48158"
+    },
+    {
+      "path": "packages/commerce/replacement-inventory.mts",
+      "sha256": "24079a549fa4df6f425bbce1c44aeb9e52fde254cefb7b9c02d2cafeeefadf14"
+    },
+    {
+      "path": "packages/commerce/replacement-orders.mts",
+      "sha256": "9032d17c7db47634c2c704a359a707b90d2d42517fa6998efa1cbc94df09e528"
+    },
+    {
+      "path": "packages/commerce/resolution-execution.mts",
+      "sha256": "047688506a94a2d3f22c50dd4f4c274ed99b31f65c97bf80825f7b2cf990e24e"
+    },
+    {
+      "path": "packages/commerce/resolution-ledger.mts",
+      "sha256": "b8ac65f6793f47a6cb1b6d604ca6b8b146b0c08d2dce191174b174ad4b41a8f9"
+    },
+    {
+      "path": "packages/commerce/return-cancellation.mts",
+      "sha256": "b490d9b86954d53336fb00fe750925e3e4eed6fdcc24330922c951706fbae0d0"
+    },
+    {
+      "path": "packages/commerce/return-depth-api.mts",
+      "sha256": "ed36927974e5ffe8816ad784294c80a8520085297941d03c2e4478ded57c941c"
+    },
+    {
+      "path": "packages/commerce/return-depth-errors.mts",
+      "sha256": "4c1df6e73e0ed52981e56415019920d81ba0576708d147fff6ea2779215afd59"
+    },
+    {
+      "path": "packages/commerce/return-disposition.mts",
+      "sha256": "9d65a199a2f7e98c45c1963ec6abc1d1b63f9bb5966eef504f3fb5f12ef09060"
+    },
+    {
+      "path": "packages/commerce/return-drafts.mts",
+      "sha256": "189f515f4c7017a22c3f434bef810683202950de86406d2b03331b0d3ed327a2"
+    },
+    {
+      "path": "packages/commerce/return-economics.mts",
+      "sha256": "d86bd497a1ff720dc2daa3b53b42f0c2645caf50166e350e08776fc628612842"
+    },
+    {
+      "path": "packages/commerce/return-eligibility.mts",
+      "sha256": "a2dd42ad47b7aaa587834e231b62dd20fac80e7e8d176d064a1d7f758d0fdefd"
+    },
+    {
+      "path": "packages/commerce/return-evidence.mts",
+      "sha256": "9136b6982d9a76359400ee022bfde1aba2575e5084ebf05bd6ef77cfcec80d37"
+    },
+    {
+      "path": "packages/commerce/return-fulfillment-core.mts",
+      "sha256": "3d23e40243e1d32cd41bf1f8fe734ce3e56f17faae37fdf1d12278a4f1e65bc0"
+    },
+    {
+      "path": "packages/commerce/return-intake-core.mts",
+      "sha256": "25b785d7ed91ae458d146fd868764da9058a61d3aa978fb0573a106819a491a4"
+    },
+    {
+      "path": "packages/commerce/return-intake.mts",
+      "sha256": "40815c2ee06227962bb2db1b3b74137ca8adb00cd7c0727beaf96f556c5cec51"
+    },
+    {
+      "path": "packages/commerce/return-labels.mts",
+      "sha256": "d6d071d26cc7bf99113ffdf5f840a9c15562c1d194ae2feb45f81479bda9da05"
+    },
+    {
+      "path": "packages/commerce/return-lifecycle-core.mts",
+      "sha256": "0b7b8e94597948f44fddcbc0a2f7646cd69bdcf196cf84b9bb9f350b5a4242ca"
+    },
+    {
+      "path": "packages/commerce/return-policy-packs.mts",
+      "sha256": "f082763b025954460a3ccbb80921aca3b018051b6dc7ffc684767f482438a7f8"
+    },
+    {
+      "path": "packages/commerce/return-portability-api.mts",
+      "sha256": "5f4b5368edea20fdcbb008b2b20894b79c94992712ef84ff7fe6f9ecebc7e903"
+    },
+    {
+      "path": "packages/commerce/return-portability-errors.mts",
+      "sha256": "84690897d983045263780bd11b4fa512a79af0d911dc06a068152f02a5dcbec9"
+    },
+    {
+      "path": "packages/commerce/return-prevention-guards.mts",
+      "sha256": "d19bd5985ac3699d93a4435d7baf2e61b7ce6637970e608dabe931bfdb778206"
+    },
+    {
+      "path": "packages/commerce/return-prevention.mts",
+      "sha256": "72df01b2158cee3e3f4caf6623b1ed38469f54709661612dd004da179a7232da"
+    },
+    {
+      "path": "packages/commerce/return-receiving.mts",
+      "sha256": "cda7fe30fa2a4331af0d04bf3a4f3f9ac87f1b90c8856687d875bd94ab6ca26d"
+    },
+    {
+      "path": "packages/commerce/return-tracking.mts",
+      "sha256": "a4278d3f1be3baad514f6b54f337457232335fc5ecc72c982111382fdb9e3553"
+    },
+    {
+      "path": "packages/commerce/return-workflows.mts",
+      "sha256": "6624713dacff239f727d8d9d0a68b84cb1e83f5db2ba42a0f65e366e8de3ca84"
+    },
+    {
+      "path": "packages/commerce/risk-assistance.mts",
+      "sha256": "b333c200f8be98306ef37044b547a5b14cbfca261e84375006727c6f12e352d8"
+    },
+    {
+      "path": "packages/commerce/safe-recovery.mts",
+      "sha256": "22606d93365c08712996042aec36611553fbc337d6a2bb09ea15aec24f82c8a5"
+    },
+    {
+      "path": "packages/commerce/secrets.mts",
+      "sha256": "a777cfb21160f37c1d1470ec6d9cbe8af90e9b8ce780d1566e207b9beaad177c"
+    },
+    {
+      "path": "packages/commerce/simulator.mts",
+      "sha256": "2d05c796b01d92f2a52efc37043945430a39c3433a9d30d8d611fa3ba3eb2fdc"
+    },
+    {
+      "path": "packages/commerce/skill-contract.mts",
+      "sha256": "a187d8cc9d0580b1ca8f505967cea8e6780d2b5b25d7cc0c6d01709deb55a501"
+    },
+    {
+      "path": "packages/commerce/skill-installer.mts",
+      "sha256": "8656d37a78878154a80bc888c9c0998d44157137ead41522f2906e12875efacd"
+    },
+    {
+      "path": "packages/commerce/skill-releases.mts",
+      "sha256": "740e8b1dd1686251854db277ada76735bffd474e3438492878341e3c483fe668"
+    },
+    {
+      "path": "packages/commerce/skills.mts",
+      "sha256": "6665660dc2c53b4692b9cb04522b9d892870755aba7da702e4c7831cc864a2ce"
+    },
+    {
+      "path": "packages/commerce/store-credit.mts",
+      "sha256": "cc39005a0760a77e5bd45cacac01e29b700b5363ab02e46c1c4938fb04d91f52"
+    },
+    {
+      "path": "packages/commerce/support-branding.mts",
+      "sha256": "fd253d5e9818946d5ad96b23f18337b3208827195350124cf628f43c53b0f6d9"
+    },
+    {
+      "path": "packages/commerce/support-consent.mts",
+      "sha256": "6fb4968a3e089a563d01f6c36f239a149826636451d1b41009fb068ba641fb32"
+    },
+    {
+      "path": "packages/commerce/support-conversations.mts",
+      "sha256": "a25462a44ff5477ebe16bb419b9c121a07f8b52c5845f72594d6de8005be0b06"
+    },
+    {
+      "path": "packages/commerce/support-core.mts",
+      "sha256": "270cc210a75ec8f3ae756cd53f1cc67268a9a6f16e335fbd8f46b89b783d60ab"
+    },
+    {
+      "path": "packages/commerce/support-delivery.mts",
+      "sha256": "21c88acb0cb84873394424899e87579dd5bd259389598f5252d4a38996e76073"
+    },
+    {
+      "path": "packages/commerce/support-errors.mts",
+      "sha256": "301c010d0591a23a5ef96a2e622aebd88353b8ef068ccda1a8432bab2249d590"
+    },
+    {
+      "path": "packages/commerce/support-fence.mts",
+      "sha256": "9be6041c61d3c9c2de6d228f679d78750421b60172e2dd9caf49d8dce168ecf4"
+    },
+    {
+      "path": "packages/commerce/support-helpdesk.mts",
+      "sha256": "52485b825cab107b33e0f008e8cf1811a1da5a301d6c9546f06977ac3a8fce78"
+    },
+    {
+      "path": "packages/commerce/support-insights.mts",
+      "sha256": "a3b387b47bdffd2601a4210b2e7cdc7fb73b99dd6a0f5a26a2eaed9cf948eeda"
+    },
+    {
+      "path": "packages/commerce/support-metrics.mts",
+      "sha256": "2b6f540a73e5ff154aa21ad3c6a1cc1e1a2c4556acca2427e2a30a1fee7575f5"
+    },
+    {
+      "path": "packages/commerce/support-provider-routing.mts",
+      "sha256": "738ba83643d673bf4627cbae192aaaa92e119a11d7aade523ecff3e396eb8a1c"
+    },
+    {
+      "path": "packages/commerce/support-qualification.mts",
+      "sha256": "4ece10a02446c09b18036529f14079cf6126a37b27ed26832489af1d038c4fe9"
+    },
+    {
+      "path": "packages/commerce/support-rules.mts",
+      "sha256": "1d56ae73daafc4c0bd7096187520acb114a63af98bd63038f62d35b81b388987"
+    },
+    {
+      "path": "packages/commerce/support-service.mts",
+      "sha256": "83f551c2b76a548366021ef7c49d59f8129e05ded6425436f052ac64ebefb792"
+    },
+    {
+      "path": "packages/commerce/support-tracking.mts",
+      "sha256": "b5ffae67af98084c80a104a2921eab62c6493df9c811567278fc1a495f68ed6e"
+    },
+    {
+      "path": "packages/commerce/support-workflows.mts",
+      "sha256": "0a307331994ae19d49ec8481e678f2cb7f5419c1c85326d36f1d17d8313c1059"
+    },
+    {
+      "path": "packages/commerce/variant-exchanges.mts",
+      "sha256": "6cfbc2797e3db410f4f617e29e43646d2d74d9bed230fce9dd97b9a2b888f1eb"
+    },
+    {
+      "path": "packages/commerce/webhook-inbox.mts",
+      "sha256": "944fc83187003b7ca301b89b7eec4f017323be2880b87f05f070db9923625ef4"
+    },
+    {
+      "path": "packages/commerce/work-leases.mts",
+      "sha256": "d0eb3555dec59fd051b73e7a6b06de22e8df85d399b8e726e71755c700aa6b4c"
+    },
+    {
+      "path": "packages/commerce/worker-api.mts",
+      "sha256": "7f5e982921b91dce5123eefc6a321e2b9b40eb377c5836d448c25f8b397353ba"
+    },
+    {
+      "path": "packages/conformance/adapter-catalog.mts",
+      "sha256": "b0f880467682b00462919cec4f66d95953901992dea372338aa7d35e4f6a4f5f"
+    },
+    {
+      "path": "packages/conformance/adapter-fixtures.mts",
+      "sha256": "c415ad1d00324892cb719b8afa690213b3dc0aa9401d601ad24a5b02151abef5"
+    },
+    {
+      "path": "packages/conformance/catalog-fixtures.mts",
+      "sha256": "c906c337c5d3227b53952875e16f3d45396eb541e51017f1a7f5da94458b8bf9"
+    },
+    {
+      "path": "packages/conformance/compatibility-matrix.mts",
+      "sha256": "8781a0cfa8b54ff811b6ec05027b89807ae32f00e814c6ba71f90fdbcf477335"
+    },
+    {
+      "path": "packages/conformance/native-catalog-runner.mts",
+      "sha256": "41579bb2d4e3a610219b70754ccdcef4affb17d8f7001d02d447cfd6300731f5"
+    },
+    {
+      "path": "packages/development/config.mts",
+      "sha256": "04051bb33980ddaf757a0791774cd5dac1eb20e69e3b880851dfb3d1221d6260"
+    },
+    {
+      "path": "packages/development/egress.mts",
+      "sha256": "7e1e70e63e435d51c290f2312bf59c9134fe3c1fba366b6e1b4ed74d0b0b98d5"
+    },
+    {
+      "path": "packages/development/exchange-depth-demo.mts",
+      "sha256": "41a42f279c550d3f359441118fb2e3a0b0dca0bcb57fe989326047a752ad2d76"
+    },
+    {
+      "path": "packages/development/http.mts",
+      "sha256": "ae40c862caa9d796c7122a630d4085432a673204b2fe4065361559e9162a28ad"
+    },
+    {
+      "path": "packages/development/order-edit-demo.mts",
+      "sha256": "17daf4ebf2b5b9c77b7330f2343cb8d28501303a3a628726692a5866bef7b36f"
+    },
+    {
+      "path": "packages/development/return-completion-demo.mts",
+      "sha256": "0741760598b22a2bc64435fe9bb75df14af9e2f7967c0faaa5eec329afce530f"
+    },
+    {
+      "path": "packages/development/store.mts",
+      "sha256": "4925735cb570e37845515c72e156121658e858c8a8fd5d61741457bbd09361fa"
+    },
+    {
+      "path": "packages/development/support-demo.mts",
+      "sha256": "56920ecc804a57842a0a2ea8f6724010d3d2032f4ae866e6b5e5529b439cca92"
+    },
+    {
+      "path": "packages/operations/installation-upgrade.mts",
+      "sha256": "ade237cc0cef4f616d657514529d1e156a9b4c7f89b13de34cbdef81bf820797"
+    }
+  ],
+  "surfaces": [
+    {
+      "id": "business_resources",
+      "control": "local_sqlite",
+      "tables": [
+        "commerce_cases",
+        "commerce_resources"
+      ],
+      "implementation": [
+        "packages/commerce/kernel.mts",
+        "packages/commerce/privacy-lifecycle.mts",
+        "packages/commerce/data-guards.mts"
+      ],
+      "export": "Scoped customer resources, linked cases and downstream subject records through PrivacyLifecycle.export. Gift recipient export has a separate minimized projection.",
+      "erasure": "Replace subject payload/identity with redaction and pseudonym; retain suppression hashes and refuse future reads or ingest.",
+      "retention": "Minimized resource/case identities remain for reconciliation. A configured active hold delays customer erasure.",
+      "observation_required": "Exercise actual linked resource rows, customer proof and cross-store denial."
+    },
+    {
+      "id": "support_conversations",
+      "control": "local_sqlite",
+      "tables": [
+        "commerce_support_attempts",
+        "commerce_support_consent",
+        "commerce_support_consent_events",
+        "commerce_support_contacts",
+        "commerce_support_deliveries",
+        "commerce_support_delivery_events",
+        "commerce_support_links",
+        "commerce_support_messages",
+        "commerce_support_rule_jobs"
+      ],
+      "implementation": [
+        "packages/commerce/support-conversations.mts",
+        "packages/commerce/support-consent.mts",
+        "packages/commerce/support-delivery.mts",
+        "packages/commerce/privacy-lifecycle.mts"
+      ],
+      "export": "Subject conversations, contacts, attempts/deliveries, current consent and consent events are scoped to the customer and cases.",
+      "erasure": "Redact messages and delivery bodies, null contacts, withdraw/pseudonymize consent, revoke session ownership and cancel rule jobs.",
+      "retention": "Delivery references and operational observations remain minimized; an already delivered provider copy cannot be recalled.",
+      "observation_required": "Exercise real conversation/contact/consent APIs and verify local copy fields and blocked subsequent access."
+    },
+    {
+      "id": "attachment_media",
+      "control": "local_sqlite",
+      "tables": [
+        "commerce_attachments",
+        "commerce_return_evidence"
+      ],
+      "implementation": [
+        "packages/commerce/kernel.mts",
+        "packages/commerce/return-evidence.mts",
+        "packages/commerce/privacy-lifecycle.mts"
+      ],
+      "export": "Embedded attachments and base64 return evidence are included for scoped resources/cases.",
+      "erasure": "Delete attachment rows; clear evidence bytes, note and scanner. Existing expiry purger respects configured holds.",
+      "retention": "Evidence IDs, hashes, MIME and timestamps remain; SQLite free pages and caller downloads need separate handling.",
+      "observation_required": "Upload actual accepted image bytes and verify export plus null bytes after erasure."
+    },
+    {
+      "id": "retrieval_index",
+      "control": "local_sqlite",
+      "tables": [
+        "commerce_knowledge",
+        "commerce_prevention_configurations"
+      ],
+      "implementation": [
+        "packages/commerce/knowledge.mts",
+        "packages/commerce/privacy-lifecycle.mts"
+      ],
+      "export": "Bound knowledge rows export with subject resource; unbound store text requires manual scope review.",
+      "erasure": "Delete bound and conservatively all unbound knowledge, redact copied prevention guidance and disable its cached offers.",
+      "retention": "Unrelated source identities and configuration audit survive without revoked guidance content.",
+      "observation_required": "Query the real lexical store after erasure; separately inspect any deployed search/vector service."
+    },
+    {
+      "id": "agent_task_state",
+      "control": "local_sqlite",
+      "tables": [
+        "commerce_assistance_receipts",
+        "commerce_case_work",
+        "commerce_context_tasks",
+        "commerce_read_jobs",
+        "commerce_worker_completions",
+        "commerce_worker_effects",
+        "commerce_worker_submissions"
+      ],
+      "implementation": [
+        "packages/commerce/read-context.mts",
+        "packages/agent/runner.mts",
+        "packages/commerce/worker-api.mts",
+        "packages/commerce/privacy-lifecycle.mts"
+      ],
+      "export": "Scoped tasks and assistance receipts are exported with relevant case configuration/proposals.",
+      "erasure": "Delete task/read-job/assistance rows; redact worker submission/completion/effect bodies and revoke work.",
+      "retention": "Authority/audit identities stay minimized. Caller memory and already sent provider inputs are outside these database mutations.",
+      "observation_required": "Exercise a real task and denied old task access, then inspect deployed process/provider copies separately."
+    },
+    {
+      "id": "analytics_readmodels",
+      "control": "local_sqlite",
+      "tables": [
+        "commerce_prevention_confirmations",
+        "commerce_prevention_experiments",
+        "commerce_prevention_exposures",
+        "commerce_prevention_members",
+        "commerce_prevention_outcomes",
+        "commerce_prevention_previews",
+        "commerce_risk_assessments",
+        "commerce_risk_reviews",
+        "commerce_support_completions",
+        "commerce_support_costs",
+        "commerce_support_documents"
+      ],
+      "implementation": [
+        "packages/commerce/support-metrics.mts",
+        "packages/commerce/support-insights.mts",
+        "packages/commerce/prevention-experiments.mts",
+        "packages/commerce/privacy-lifecycle.mts"
+      ],
+      "export": "Subject cost/completion and return assistance records export; mixed-customer metric documents expose only owned members. Other aggregate and unbound configuration text requires scope review.",
+      "erasure": "Support metrics recheck case access when rebuilt; erased members remain unavailable in the frozen denominator. Insight drafts revoke. Bound prevention/risk bodies and customer IDs redact.",
+      "retention": "The support_documents table also carries merchant configuration, qualification and migration/import control. Do not bulk-delete it. Frozen denominator and minimized financial facts remain; no legal retention duration is inferred.",
+      "observation_required": "Rebuild the actual metric report after erasure and current-checkpoint import; inspect unbound document data before claiming subject completeness."
+    },
+    {
+      "id": "integration_replicas",
+      "control": "local_sqlite",
+      "tables": [
+        "commerce_event_consumption",
+        "commerce_event_identities",
+        "commerce_event_projections",
+        "commerce_order_observations",
+        "commerce_simulator_receipts",
+        "commerce_webhook_inbox",
+        "commerce_woo_event_observations",
+        "commerce_woo_return_sources",
+        "commerce_woo_rma_bindings",
+        "commerce_woocommerce_observations"
+      ],
+      "implementation": [
+        "packages/commerce/webhook-inbox.mts",
+        "packages/commerce/event-processing.mts",
+        "packages/commerce/privacy-lifecycle.mts"
+      ],
+      "export": "Subject native copies are included where attributed; raw unbound inbox text requires manual scope review.",
+      "erasure": "Delete subject read/native caches, redact RMA binding content, purge simulator replies, conservatively redact and quarantine raw store inbox bytes.",
+      "retention": "Event state, duplicate identities and hashes remain as minimized operation audit; upstream source records are distinct.",
+      "observation_required": "Verify actual cached/inbox rows and prevent suppressed resource reimport. Provider cleanup needs its own observation."
+    },
+    {
+      "id": "security_and_configuration",
+      "control": "local_sqlite",
+      "tables": [
+        "commerce_action_readiness",
+        "commerce_audit",
+        "commerce_challenge_rates",
+        "commerce_challenges",
+        "commerce_configuration_drafts",
+        "commerce_connections",
+        "commerce_credential_calls",
+        "commerce_credential_slots",
+        "commerce_credential_versions",
+        "commerce_customer_proof_bindings",
+        "commerce_destination_policies",
+        "commerce_edit_settings",
+        "commerce_exchange_settings",
+        "commerce_execution_settings",
+        "commerce_execution_stops",
+        "commerce_fulfillment_settings",
+        "commerce_gift_challenges",
+        "commerce_gift_sessions",
+        "commerce_instant_settings",
+        "commerce_members",
+        "commerce_migrations",
+        "commerce_model_budgets",
+        "commerce_model_circuits",
+        "commerce_model_reservations",
+        "commerce_native_change_settings",
+        "commerce_permissions",
+        "commerce_policy_pins",
+        "commerce_policy_versions",
+        "commerce_profiles",
+        "commerce_resolution_settings",
+        "commerce_return_policy_packs",
+        "commerce_return_settings",
+        "commerce_secrets",
+        "commerce_security_events",
+        "commerce_sessions",
+        "commerce_shopify_connections",
+        "commerce_simulator",
+        "commerce_skill_activation",
+        "commerce_skill_activation_log",
+        "commerce_skill_approvals",
+        "commerce_skill_archive",
+        "commerce_skill_installations",
+        "commerce_skill_releases",
+        "commerce_skill_revocations",
+        "commerce_skills",
+        "commerce_stores",
+        "commerce_support_ownership",
+        "commerce_warehouse_settings",
+        "commerce_webhook_routes",
+        "commerce_woocommerce_connections",
+        "commerce_worker_grants"
+      ],
+      "implementation": [
+        "packages/commerce/authorization.mts",
+        "packages/commerce/customer-access.mts",
+        "packages/commerce/secrets.mts",
+        "packages/commerce/privacy-lifecycle.mts"
+      ],
+      "export": "Customer export excludes credentials, authentication tokens and unbound merchant/staff configuration.",
+      "erasure": "Invalidate customer proof/session and gift grants; uninstall revokes/envelope-clears vault entries, routes, credentials, readiness and store access.",
+      "retention": "Staff/security/configuration and source provenance audits persist. Unbound arbitrary configuration text needs operator review; no blanket customer-data-free claim.",
+      "observation_required": "Check exported bytes exclude bearer/credential material and actual uninstall disables store access and clears local vault envelopes."
+    },
+    {
+      "id": "operation_audit",
+      "control": "local_sqlite",
+      "tables": [
+        "commerce_action_approvals",
+        "commerce_action_previews",
+        "commerce_action_receipts",
+        "commerce_carrier_events",
+        "commerce_case_configurations",
+        "commerce_case_effects",
+        "commerce_control_events",
+        "commerce_destination_bindings",
+        "commerce_destination_selections",
+        "commerce_disposition_operations",
+        "commerce_disposition_units",
+        "commerce_edit_events",
+        "commerce_edit_inputs",
+        "commerce_edit_quotes",
+        "commerce_edit_snapshots",
+        "commerce_edit_steps",
+        "commerce_edit_workflow_pins",
+        "commerce_exchange_currency_bindings",
+        "commerce_exchange_fee_observations",
+        "commerce_exchange_lineage_imports",
+        "commerce_exchange_lineage_nodes",
+        "commerce_exchange_quotes",
+        "commerce_fulfillment_observations",
+        "commerce_fulfillment_operations",
+        "commerce_fulfillment_quotes",
+        "commerce_gift_cases",
+        "commerce_instant_obligations",
+        "commerce_instant_observations",
+        "commerce_instant_operations",
+        "commerce_instant_quotes",
+        "commerce_inventory_reservations",
+        "commerce_lifecycle_observations",
+        "commerce_lifecycle_quotes",
+        "commerce_native_change_snapshots",
+        "commerce_native_completed_units",
+        "commerce_native_receipts",
+        "commerce_native_return_operations",
+        "commerce_operation_controls",
+        "commerce_operation_keys",
+        "commerce_operation_receipts",
+        "commerce_operation_targets",
+        "commerce_operation_work",
+        "commerce_operations",
+        "commerce_order_edits",
+        "commerce_receipt_payloads",
+        "commerce_received_units",
+        "commerce_receiving_reviews",
+        "commerce_receiving_scans",
+        "commerce_receiving_sessions",
+        "commerce_reconciliation_drift",
+        "commerce_reconciliation_runs",
+        "commerce_replacement_orders",
+        "commerce_resolution_allocations",
+        "commerce_resolution_observations",
+        "commerce_resolution_operations",
+        "commerce_resolution_plans",
+        "commerce_resolution_quotes",
+        "commerce_resolution_units",
+        "commerce_return_closures",
+        "commerce_return_drafts",
+        "commerce_return_labels",
+        "commerce_return_lifecycle_events",
+        "commerce_return_overrides",
+        "commerce_return_parcels",
+        "commerce_return_quotes",
+        "commerce_return_requests",
+        "commerce_return_review_events",
+        "commerce_return_shipments",
+        "commerce_return_workflow_pins",
+        "commerce_support_events"
+      ],
+      "implementation": [
+        "packages/commerce/operation-store.mts",
+        "packages/commerce/operation-receipts.mts",
+        "packages/commerce/privacy-lifecycle.mts"
+      ],
+      "export": "Scoped native financial/physical/return/edit history, receipts and associated subject payloads export through their existing projections.",
+      "erasure": "Redact privacy-bearing case/quote/plan/input bodies and delete receipt notes while retaining command/receipt/effect identities; subject reads remain guarded.",
+      "retention": "Monetary amounts, currencies, original native identity and audit digests must not be deleted or replayed. Arbitrary external source identifiers are not certified anonymous.",
+      "observation_required": "Verify representative retained receipts and subject access denial; qualify actual legal retention and source identifier policy separately."
+    },
+    {
+      "id": "privacy_and_restore_controls",
+      "control": "local_sqlite",
+      "tables": [
+        "commerce_privacy_events",
+        "commerce_privacy_holds",
+        "commerce_privacy_resources",
+        "commerce_privacy_subjects",
+        "commerce_recovery_state",
+        "commerce_restored_operations"
+      ],
+      "implementation": [
+        "packages/commerce/privacy-lifecycle.mts",
+        "packages/commerce/safe-recovery.mts",
+        "packages/commerce/merchant-portability.mts",
+        "packages/commerce/migration-fence.mts"
+      ],
+      "export": "Merchant transfer includes scoped suppression controls; ordinary subject export does not disclose other subject hashes or installation-wide recovery rows.",
+      "erasure": "Retain subject/resource tombstones. Restore/import requires a separately retained current checkpoint, applies erasure before exposure and leaves execution quarantined.",
+      "retention": "Suppression hashes are linkable control data, not claimed anonymous; current checkpoint freshness and delivery remain explicit caller duties.",
+      "observation_required": "Use one old snapshot with a later independently retained suppression checkpoint; verify no restored active subject payloads or analytics exposure."
+    },
+    {
+      "id": "provider_copies",
+      "control": "external",
+      "tables": [],
+      "implementation": [
+        "packages/agent/runner.mts",
+        "packages/commerce/support-delivery.mts",
+        "packages/commerce/support-helpdesk.mts"
+      ],
+      "export": "Caller/partner retrieval is separately authorized; local export cannot query every external copy.",
+      "erasure": "Provider, sender, helpdesk, scanner and fulfillment replicas are not physically erased by local SQL.",
+      "retention": "Provider agreements, deletion confirmations and backup windows need actual current evidence.",
+      "observation_required": "Identify each connected account and data copy, obtain authorized deletion/retention outcomes, and independently retain relevant provider receipts."
+    },
+    {
+      "id": "process_and_browser_memory",
+      "control": "external",
+      "tables": [],
+      "implementation": [
+        "packages/agent/runner.mts",
+        "packages/commerce/return-evidence.mts",
+        "apps/commerce-api/support-client.js",
+        "apps/commerce-api/status-client.js"
+      ],
+      "export": "Previously returned response bodies, clipboard, screenshots and tabs are caller copies.",
+      "erasure": "Revocation blocks later server reads/completion; it cannot recall bytes already in an arbitrary process, plugin, scanner or browser.",
+      "retention": "No general heap, browser history, swap, core dump or log deletion is implemented.",
+      "observation_required": "Inventory actual deployed processes/plugins/logging and browser storage; observe their cleanup and retention separately. Source pins only flag code drift."
+    },
+    {
+      "id": "caller_export_artifacts",
+      "control": "operator",
+      "tables": [],
+      "implementation": [
+        "packages/commerce/privacy-lifecycle.mts",
+        "packages/commerce/merchant-portability.mts"
+      ],
+      "export": "Customer export and owner transfer return scoped caller-owned data; transfer excludes vault envelopes and secrets.",
+      "erasure": "Exported JSON, downloaded media and derived spreadsheets remain outside the running kernel.",
+      "retention": "An old export remains private even when the live store is erased. No filesystem scan discovers every copy.",
+      "observation_required": "Identify controlled export destinations, permissions, copies and retention; record actual deletion or retention decision."
+    },
+    {
+      "id": "recovery_files_and_database_pages",
+      "control": "operator",
+      "tables": [],
+      "implementation": [
+        "packages/commerce/safe-recovery.mts",
+        "packages/commerce/merchant-portability.mts",
+        "packages/operations/installation-upgrade.mts"
+      ],
+      "export": "Private SQLite snapshots contain encrypted vault envelopes without wrapping keys; merchant exports exclude vault envelopes.",
+      "erasure": "Current checkpoint erasure replays before a restored/imported database is exposed. Quarantine does not erase old archives, journal, free pages, WAL, replicas or wrapping keys.",
+      "retention": "Physical medium deletion, backup schedule/key rotation and retention holds need deployment-specific observation.",
+      "observation_required": "Inventory all snapshots, staged upgrades, databases, journal/replica paths and keys; observe access controls and retention/deletion separately."
+    },
+    {
+      "id": "synthetic_fixture_storage",
+      "control": "synthetic_only",
+      "tables": [],
+      "implementation": [
+        "packages/development/store.mts",
+        "packages/development/support-demo.mts",
+        "packages/adapters/support-fixture-source.mts"
+      ],
+      "export": "The legacy smoke SQLite/files and synthetic adapter ledgers are separate from commerce stores and do not contain authorized customer data.",
+      "erasure": "Commerce erasure cannot attest cleanup of independent fixture databases or filesystem attachments.",
+      "retention": "Fixture cleanup belongs to its owning test/operator directory; no migration to a production storage backend is claimed.",
+      "observation_required": "Verify that only synthetic data is used and inventory/clean owned fixture directories separately; treating them as a real deployment blocks privacy qualification."
+    }
+  ]
+}
