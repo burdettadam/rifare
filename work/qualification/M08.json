@@ -1,0 +1,23 @@
+{
+  "milestone": "M08",
+  "state": "blocked",
+  "formal_entry_accepted": false,
+  "entry_goal": "M07-G99",
+  "assigned_local_preparation": [
+    "M08-G01"
+  ],
+  "unassigned_next_goal": "M08-G02",
+  "authority": "docs/decisions/0035-locale-pilot-and-carrier-preparation.md",
+  "base": "0748116fe58901d318bf2f0d9c30fd35a8005d43",
+  "scope": "Local per-package carrier quote preparation only; original entry prerequisite remains blocked.",
+  "full_milestone_accepted": false,
+  "release_authorized": false,
+  "label_purchase_authorized": false,
+  "live_provider_access": false,
+  "missing": [
+    "M07-G99 formal acceptance",
+    "authorized carrier accounts/endpoints and current connected qualification",
+    "formal M08 worker acceptance and original milestone evidence"
+  ],
+  "evidence": "Exact local development source, tests, source fixtures and independent reviews accompany the checkpoint; this file cannot establish execution or acceptance."
+}

@@ -1,11 +1,13 @@
 # M07 portability and operations development assessment
 
 The owner assigned M07-G01 through M07-G05 in ADR-0031, then requested the next
-five goals, M07-G06 through M07-G10, in ADR-0033 and G11–G15 in ADR-0034. **Formal acceptance of these connected-test
-goals remains blocked.** M05-G99 and M06-G99 have not been formally accepted, and
+five goals, M07-G06 through M07-G10, in ADR-0033 and G11–G15 in ADR-0034. The next
+five planning entries, G16, G17, G18, G99 and M08-G01, are assigned in ADR-0035.
+**Formal M07 acceptance remains blocked.** M05-G99 and M06-G99 have not been formally accepted, and
 no connected Woo store, gateway, provider account or endpoint scope was supplied.
 The original dependency, account, budget and qualification requirements remain
-unchanged. Work beyond M07-G15 is outside this development batch.
+unchanged. M08-G01 is explicitly assigned local quote preparation while its entry
+gate remains blocked; M08-G02 label purchasing is outside this batch.
 
 | Goal | Local deliverable | Remaining formal proof |
 | --- | --- | --- |
@@ -24,6 +26,36 @@ unchanged. Work beyond M07-G15 is outside this development batch.
 | G13 | Offline artifact membership, dependency/license inventory, SBOM, source-bound provenance and release-blocking findings | Authenticated current vulnerability/security scans, independent review, licensing decisions and specific owner release authority |
 | G14 | All current tables plus explicit storage surfaces and executable-source drift check; scoped consent/cohort export coverage and retained erasure/suppression | Observed deployment caches/replicas, caller/provider copies, physical retention and applicable privacy qualification |
 | G15 | Native names, inline errors, focus and keyboard paths across six existing screens; explicit local browser/API checks | Human screen-reader and device/zoom observations, target-stack and comprehensive accessibility review |
+| G16 | Explicit presentation locale/timezone and exact canonical-money display on existing status/returns screens; fixed-instant and DST observations | Approved deployment locale/error-text combinations and human/target-stack observations; inclusive elapsed-UTC policy cutoffs remain unchanged |
+| G17 | Frozen pilot enrollment, minimized append-only observations, deterministic scoring with the unchanged benchmark and explicit evidence references | Authenticated consent, ownership, source and adjudication; benchmark approval and verified real operating costs |
+| G18 | Evidence intake/readiness and an empty real-observation register | Actual opted-in merchants, source records, independent review and completed live observation/follow-up windows |
+| G99 | Current blocked assessment against the original entry, worker and exit obligations | Every missing acceptance, current full applicable regression and integrated journey, external proof and the specifically authorized acceptance/release decision |
+
+## M07 acceptance assessment
+
+The eighteen worker deliverables remain distinct from their formal acceptance.
+The accepted-goal ledger still contains only the four original M00 delegated
+development acceptances. The original gate is preserved, including its required
+released-artifact demonstration and complete applicable regression evidence.
+
+| Original exit criterion | Why it remains blocked |
+| --- | --- |
+| Independent clean installation, upgrade and safe restore | Recorded local source rehearsals do not establish a released artifact on an independent target machine. PostgreSQL/React and target-host restore qualification remain open. |
+| Complete critical conformance, reconciled source effects and no unresolved high release blockers | Local fixtures and focused source checks do not supply connected source reconciliation or current full conformance. Existing scan, licensing and release findings remain unwaived. |
+| Two platforms, independent runtimes and supported model configurations | Local shared-lifecycle and independent-client observations exist; actual deployed account/runtime/model scope and intended-use qualification are still missing. |
+| Approved pilot quality, costs, exceptions and reopening | The real-observation register is empty. There are no authenticated merchant approvals or completed live cohort/exposure/follow-up records. |
+
+The frozen benchmark's three independent merchants, one hundred in-scope live
+outcomes, thirty consecutive pilot days and seven-day follow-up remain project
+targets. A simulated clock, synthetic source, byte-pinned JSON document or locally
+named reviewer cannot authenticate these observations. Missing and difficult
+cases remain in their frozen denominator.
+
+The G99 assessment reports the missing obligations without running a new full
+regression campaign. Its three original formal cases remain unperformed; no
+document test or readiness-helper pass substitutes for them. Separate current
+development reviews can approve local integration while this gate stays blocked.
+No beta/RC label, release or public capability claim is authorized by this record.
 
 Each adapter operation must retain an honest native/composed/manual/unavailable
 classification and a separate local-fixture or external qualification status.
@@ -46,6 +78,12 @@ security, privacy and accessibility. Only its new small keyboard/browser file is
 explicitly selected. Actual source-bound reports and separate nonauthor reviews
 accompany its checkpoint. A local pass cannot supply any missing formal proof in
 the table above or relabel the historical full-gate results as current.
+
+The ADR-0035 batch uses the new locale, pilot and carrier quote files plus the
+existing privacy file for its concrete source/storage impact. Exact native IDs,
+commands and any necessary corrections are retained with the final candidate.
+Caller-owned pilot journals and output remain outside automatic commerce erasure;
+their identifiers may be personal data and require their own retention/deletion.
 
 The current review caught and corrected stale-snapshot erasure resurrection,
 bracket-leading merchant text being mistaken for JSON, migration binding that
@@ -71,6 +109,8 @@ See [common lifecycle](COMMON-RETURN-LIFECYCLE.md),
 [operator runbooks](OPERATOR-RUNBOOKS.md), and
 [installation/upgrade](INSTALL-UPGRADE.md), [recovery/load](RECOVERY-LOAD.md),
 [release security](RELEASE-SECURITY.md), [privacy coverage](PRIVACY-COVERAGE.md),
-and [accessible workflows](ACCESSIBLE-WORKFLOWS.md) for implementation boundaries.
+and [accessible workflows](ACCESSIBLE-WORKFLOWS.md),
+[locale presentation](LOCALE-PRESENTATION.md), [pilot protocol](PILOT-PROTOCOL.md)
+and [carrier quotes](CARRIER-QUOTES.md) for implementation boundaries.
 The source record [M07.json](../work/qualification/M07.json) lists the remaining
 qualification gaps; it is not a substitute for native or independent evidence.

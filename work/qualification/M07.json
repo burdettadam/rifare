@@ -1,6 +1,6 @@
 {
   "milestone": "M07",
-  "scope": "M07-G01 through M07-G15 bounded local development under ADR-0031, ADR-0033 and ADR-0034",
+  "scope": "M07-G01 through M07-G18 bounded local development/preparation and the blocked M07-G99 assessment under ADR-0031, ADR-0033, ADR-0034 and ADR-0035",
   "state": "blocked",
   "local_integration": "authorized_after_verified_candidate",
   "full_milestone_accepted": false,
@@ -21,9 +21,12 @@
     "M07-G12",
     "M07-G13",
     "M07-G14",
-    "M07-G15"
+    "M07-G15",
+    "M07-G16",
+    "M07-G17",
+    "M07-G18"
   ],
-  "observed_scope": "Bounded SQLite commerce with separate synthetic Woo, gateway and message ledgers; common HTTP lifecycle, independent local runtime clients, adapter conformance, evidence-bound compatibility, merchant transfer with current suppression and quarantine, shared migration ownership, executable operator drills, and offline installation/upgrade preparation. G11\u2013G15 add measured local recovery and load/backpressure, offline release security/provenance, privacy storage/source coverage and scoped export additions, and accessible keyboard/error/focus workflows.",
+  "observed_scope": "Bounded SQLite commerce with separate synthetic Woo, gateway and message ledgers; common HTTP lifecycle, independent local runtime clients, adapter conformance, evidence-bound compatibility, merchant transfer with current suppression and quarantine, shared migration ownership, executable operator drills, and offline installation/upgrade preparation. G11\u2013G15 add measured local recovery and load/backpressure, offline release security/provenance, privacy storage/source coverage and scoped export additions, and accessible keyboard/error/focus workflows. The new assigned scope is locale presentation, frozen pilot instrumentation and evidence-readiness preparation; actual results require the current checkpoint reports.",
   "missing": [
     "formal M05-G99 and M06-G99 acceptance and accepted M07 prerequisites",
     "connected Woo account, complete source history, exact deployed versions and authorized scopes",
@@ -37,7 +40,11 @@
     "approved deployment hardware/workload recovery and performance targets plus actual provider waiting/queue observations",
     "authenticated current vulnerability/security scans, independently reviewed artifact provenance and licensing decisions",
     "deployment-wide provider/caller/cache/backup retention and physical erasure observations",
-    "human screen-reader, touch device, zoom and target-stack accessibility qualification"
+    "human screen-reader, touch device, zoom and target-stack accessibility qualification",
+    "formal acceptance of all eighteen M07 worker goals",
+    "actual merchant authorization, frozen live enrollment, source adjudication and elapsed pilot/follow-up evidence",
+    "current full applicable acceptance evidence and original released-artifact integrated demonstration",
+    "approved deployment locale/timezone/error-text combinations and human observation"
   ],
   "limits": [
     "All new capability objects remain proposed_not_accepted.",
@@ -56,23 +63,56 @@
     "Measured recovery and load outputs record this host and synthetic work only; source ages are not proof of actual data loss.",
     "Release audit inventories actual artifact bytes and blocks missing/high findings; JSON pins do not authenticate a scanner, reviewer or release authority.",
     "Privacy inventory checks all current SQLite tables and runtime source drift; it cannot discover arbitrary live caches or delete independent caller/provider copies.",
-    "Accessibility evidence covers automated rendered keyboard/DOM behavior with an explicit local API bridge; no human screen-reader observation is inferred."
+    "Accessibility evidence covers automated rendered keyboard/DOM behavior with an explicit local API bridge; no human screen-reader observation is inferred.",
+    "The existing inclusive elapsed-UTC return cutoff is unchanged; policy/display timezones label canonical instants only.",
+    "Pilot enrollment/events are caller-owned artifacts; a reference or digest is not authenticated consent, source ownership, adjudication or exposure.",
+    "The real-observation register is empty and synthetic/connected-test outcomes never count as verified live results.",
+    "M08-G01 quote preparation is explicitly assigned local development while M07-G99 remains blocked; M08-G02 is unassigned."
   ],
   "review_kind": "separate_nonauthor_assistant_sessions_same_runtime",
   "later_m07_goals_started": true,
-  "evidence": "Historical first-five and next-five evidence is retained separately. The G11\u2013G15 checkpoint binds its exact source to one bounded four-file selection, targeted fault assertions, focused nonauthor reviews and cumulative native Git history. The source record alone proves no passing test or formal acceptance.",
+  "evidence": "Prior checkpoint evidence keeps its original source identity. The current locale/pilot/carrier development reports and separate nonauthor reviews bind the final candidate; this assessment establishes no passing test, full regression, real pilot or formal acceptance.",
   "current_batch": {
     "goals": [
-      "M07-G11",
-      "M07-G12",
-      "M07-G13",
-      "M07-G14",
-      "M07-G15"
+      "M07-G16",
+      "M07-G17",
+      "M07-G18",
+      "M07-G99",
+      "M08-G01"
     ],
-    "authority": "docs/decisions/0034-recovery-security-privacy-accessibility.md",
-    "base": "6dfd50853525c707138e52673c32ce71707f9ad4",
+    "authority": "docs/decisions/0035-locale-pilot-and-carrier-preparation.md",
+    "base": "0748116fe58901d318bf2f0d9c30fd35a8005d43",
     "test_profile": "focused_development",
     "full_regression": false,
     "formal_goal_acceptance": false
+  },
+  "goal": "M07-G99",
+  "gate_assessment": {
+    "state": "blocked",
+    "original_goal": "goals/M07/M07-G99.md",
+    "original_milestone": "milestones/M07.md",
+    "accepted_ledger": "work/accepted-goals.json",
+    "accepted_ledger_sha256": "88a647d341a8e2cac118f7fb41f129055d45bf2d3f4899c4ef266354975fdbe8",
+    "all_worker_goals_accepted": false,
+    "entry_milestones_accepted": false,
+    "current_full_applicable_regression_observed": false,
+    "original_integrated_release_journey_observed": false,
+    "real_pilot_complete": false,
+    "release_security_cleared": false,
+    "formal_cases": {
+      "CASE-M07-G99-01": "not_executed_as_formal_acceptance",
+      "CASE-M07-G99-02": "not_executed_as_formal_acceptance",
+      "CASE-M07-G99-03": "not_executed_as_formal_acceptance"
+    },
+    "beta_or_rc_designation": null,
+    "replacement_gate_created": false
+  },
+  "next_milestone": {
+    "id": "M08",
+    "formal_entry_accepted": false,
+    "assigned_local_preparation": [
+      "M08-G01"
+    ],
+    "connected_or_paid_operations_authorized": false
   }
 }
