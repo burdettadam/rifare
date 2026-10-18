@@ -16,8 +16,11 @@ export function dispositionValue(k:CommerceKernel,scope:Scope,intent:Row,quotedA
  const s=k.require(scope),session=k.db.prepare('SELECT * FROM commerce_receiving_sessions WHERE tenant_id=? AND store_id=? AND id=?').get(s.tenant_id,s.store_id,p.session_id) as Row,config=lifecycleBody(session),ctx=returnContext(k,scope,session.request_id,'return.read',true),settings=warehouseSettings(k,s);
  if(!settings.locations.includes(config.location_id))throw new Error('WAREHOUSE_MAPPING_REQUIRED');
  const summary=receiptSummary(k,s,session.request_id);if(session.state!=='closed')throw new Error('RECEIVING_NOT_CLOSED');
- const units=p.unit_ids.map((ref:string)=>{const r=k.db.prepare('SELECT * FROM commerce_received_units WHERE tenant_id=? AND store_id=? AND id=? AND session_id=?').get(s.tenant_id,s.store_id,ref,session.id) as Row,b=lifecycleBody(r);
+ if(summary.discrepancies.some((reason:string)=>reason.startsWith('warehouse_')||reason==='missing_source_event'))throw new Error('WAREHOUSE_RECONCILIATION_REQUIRED');
+ const units=p.unit_ids.map((ref:string)=>{const r=k.db.prepare('SELECT * FROM commerce_received_units WHERE tenant_id=? AND store_id=? AND id=? AND session_id=?').get(s.tenant_id,s.store_id,ref,session.id) as Row; lifecycleBody(r);
+  const b=summary.units.find((u:Row)=>u.id===ref);if(!b)throw new Error('DISPOSITION_DENIED');
   if(b.line_id===null||p.disposition==='restock'&&b.grade!=='sellable')throw new Error('DISPOSITION_DENIED');
+  if(b.warehouse_disposition_fenced)throw new Error('UNIT_ALREADY_DISPOSED');
   if(k.db.prepare('SELECT 1 FROM commerce_disposition_units WHERE tenant_id=? AND store_id=? AND unit_id=?').get(s.tenant_id,s.store_id,ref))throw new Error('UNIT_ALREADY_DISPOSED');
   const external=k.db.prepare('SELECT body,digest FROM commerce_native_receipts WHERE tenant_id=? AND store_id=? AND request_id=? AND line_id=? AND ordinal=?').get(s.tenant_id,s.store_id,session.request_id,b.line_id,b.ordinal) as Row;
   if(external&&lifecycleBody(external).disposition!==null)throw new Error('UNIT_ALREADY_DISPOSED');

@@ -53,7 +53,8 @@ export class ReturnReceiving {
  review(scope:Scope,input:unknown){const p=exact(jsonValue(input),['session_id','revision','decision','reason']);integer(p.revision);if(!['accept','hold'].includes(p.decision)||!['observed_condition','wrong_contents','missing_contents'].includes(p.reason))throw new Error('INVALID_INPUT');const k=this.kernel;
   return k.transaction(()=>{const {s,session}=this.#session(scope,p.session_id,'return.review');if(session.revision!==p.revision||session.state!=='closed')throw new Error('RECEIVING_CHANGED');
    if(k.db.prepare('SELECT 1 FROM commerce_receiving_scans WHERE tenant_id=? AND store_id=? AND session_id=? AND actor_id=?').get(s.tenant_id,s.store_id,session.id,s.actor_id))throw new Error('SELF_REVIEW_DENIED');
-   const summary=receiptSummary(k,s,session.request_id);if(p.decision==='accept'&&(summary.lines.some((l:Row)=>l.missing>0)||summary.units.some(u=>u.grade==='unknown'||u.line_id===null)))throw new Error('DISCREPANCY_REQUIRES_FOLLOWUP');
+   const summary=receiptSummary(k,s,session.request_id);if(p.decision==='accept'&&(summary.lines.some((l:Row)=>l.missing>0)||summary.units.some(u=>u.grade==='unknown'||u.line_id===null)
+    ||summary.discrepancies.some((reason:string)=>reason.startsWith('warehouse_')||reason==='missing_source_event')))throw new Error('DISCREPANCY_REQUIRES_FOLLOWUP');
    const rev=permissionDecision(k.db,s,'return.review',session.resource_id).authority_revision;
    k.db.prepare('INSERT INTO commerce_receiving_reviews(tenant_id,store_id,session_id,revision,actor_id,authority_revision,decision,reason,observed_at) VALUES(?,?,?,?,?,?,?,?,?)').run(s.tenant_id,s.store_id,session.id,p.revision,s.actor_id,rev,p.decision,p.reason,k.clock());
    lifecycleObservation(k,s,session.request_id,session.id,'receiving_review',{revision:p.revision,decision:p.decision,reason:p.reason,actor_id:s.actor_id});return this.read(scope,session.id);});}

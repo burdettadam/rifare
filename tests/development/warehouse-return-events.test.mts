@@ -20,7 +20,7 @@ test('M08-G07-LOCAL-PARTIAL-RECEIPT-PRESERVES-NATIVE-GRADES-AND-EVIDENCE',()=>us
 test('M08-G07-LOCAL-DELIVERY-DOES-NOT-INVENT-RECEIPT-INSPECTION-OR-STOCK',()=>usingWarehouseReturn(f=>{
  const r=f.observe(f.event({kind:'delivery',units:[],completeness:'complete'}));
  assert.equal(r.receipt.total_actual,0);assert.equal(r.receipt.inspection,'pending');assert.equal(r.receipt.requires_review,true);
- assert.ok(r.discrepancies.includes('delivery_without_receipt'));assert.equal(f.warehouse.stock('shirt-small','warehouse-one'),0);
+ assert.ok(r.discrepancies.includes('delivery_without_receipt'));assert.ok(r.discrepancies.includes('declared_complete_but_units_missing'));assert.equal(f.warehouse.stock('shirt-small','warehouse-one'),0);
 }));
 test('M08-G07-LOCAL-PORT025-DUPLICATE-NATIVE-AND-IMPORTED-RECEIPTS-COUNT-ONCE',()=>usingWarehouseReturn(f=>{
  const e=f.event(),first=f.observe(e),again=f.observe(e);
@@ -88,8 +88,11 @@ test('M08-G07-LOCAL-CURRENT-SOURCE-BINDING-AND-SETTINGS-ARE-REQUIRED',()=>usingW
  const e=f.event();f.disposition.configure(f.owner.scope,{expected_revision:1,enabled:true,source_identity:'different_source',locations:['warehouse-one'],expires_at:f.now()+300000});
  assert.throws(()=>f.observe(e),/WAREHOUSE_SOURCE_MISMATCH/);assert.equal(f.kernel.db.prepare('SELECT count(*) n FROM commerce_warehouse_return_events').get()?.n,0);
 }));
-test('M08-G07-LOCAL-NATIVE-AND-CANONICAL-EVENT-INTEGRITY-FAIL-CLOSED',()=>usingWarehouseReturn(f=>{
- const e=f.event();f.observe(e);
+test('M08-G07-LOCAL-NATIVE-AND-CANONICAL-EVENT-INTEGRITY-FAIL-CLOSED',()=>usingWarehouseReturn(async f=>{
+ const e=f.event(),observed=f.observe(e);
+ await f.warehouse.apply({operation_id:'integrity_disposition',source_identity:f.warehouse.identity,tenant_id:f.a.tenant,store_id:f.a.store,request_id:f.request.id,resource_id:f.order().id,native_return_id:e.native_return_id,location_id:'warehouse-one',disposition:'restock',units:[{id:observed.receipt.units[0].id,line_id:'alpha',ordinal:1,variant_id:'shirt-small',grade:'sellable'}]});
+ f.warehouseDb.prepare("UPDATE warehouse_effects SET body=replace(body,'\"available_delta\":1','\"available_delta\":2')").run();
+ assert.throws(()=>f.warehouse.effects(),/WAREHOUSE_EFFECT_INTEGRITY/);await assert.rejects(f.warehouse.lookup('integrity_disposition'),/WAREHOUSE_EFFECT_INTEGRITY/);
  f.warehouseDb.prepare("UPDATE warehouse_return_events SET body=replace(body,'partner_operator_1','partner_operator_2') WHERE event_id=?").run(e.event_id);
  assert.throws(()=>f.warehouse.returnEvent(e.event_id),/WAREHOUSE_EVENT_INTEGRITY/);
  f.kernel.db.prepare("UPDATE commerce_warehouse_return_events SET body=replace(body,'partner_operator_1','partner_operator_2')").run();
