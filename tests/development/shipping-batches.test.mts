@@ -111,6 +111,28 @@ test('M08-G02-VOID-AND-REFUND-ARE-SEPARATE',()=>usingShipping(async f=>{
   f.source.refund(p.purchase_id);await f.labels.reconcile(f.a.scope,'package-a');
   const end=f.labels.packageStatus(f.a.scope,'package-a');assert.equal(end.refund_state,'refunded');assert.equal(end.refund_amount_minor,'500');
   assert.equal(end.label_usable,false);await f.labels.requestVoid(f.a.scope,'package-a');assert.equal(f.source.calls.void.length,1);
+  const second=f.labels.packageStatus(f.a.scope,'package-b');
+  f.labels.approveVoid(f.reviewer,'package-b',{expected_receipt_digest:contentDigest(second.receipt),expires_at:f.now()+60000});
+  f.source.setFault('void','package-b','after');const uncertain=await f.labels.requestVoid(f.a.scope,'package-b');
+  assert.equal(uncertain.void_state,'unknown');assert.equal(uncertain.receipt.void_state,'not_requested');assert.equal(uncertain.receipt.void_operation_id,null);
+  const durable=f.db.prepare('SELECT * FROM commerce_shipping_label_operations WHERE package_id=?').get('package-b') as Row;
+  const voidId=JSON.parse(durable.body).void.command.void_id;assert.equal(voidId,uncertain.void_operation_id);
+  assert.equal(f.source.calls.void.at(-1),voidId);
+  const privacy=new PrivacyLifecycle(f.kernel);privacy.erase(f.owner,'customer-b');
+  const erased=f.db.prepare('SELECT * FROM commerce_shipping_label_operations WHERE package_id=?').get('package-b') as Row,body=JSON.parse(erased.body);
+  assert.equal(body.redacted,true);assert.equal(body.original_digest,durable.digest);assert.equal(contentDigest(body),erased.digest);
+  assert.equal(erased.purchase_id,second.purchase_id);assert.equal(body.purchase_id,second.purchase_id);
+  assert.equal(body.void_operation_id,voidId);assert.equal(body.void_state,'unknown');assert.equal(body.state,'purchased');
+  assert.equal(body.amount_minor,'900');assert.equal(body.currency,'USD');assert.equal(body.native_charge_id,second.receipt.native_charge_id);
+  assert.notEqual(body.refund_state,'refunded');assert.equal(body.refund_amount_minor,'0');assert.equal(body.native_refund_id,null);
+  for(const key of ['command','receipt','void','proposer','approval_id','native_tracking_ref','private_note'])assert.equal(Object.hasOwn(body,key),false);
+  const approvals=f.db.prepare('SELECT * FROM commerce_shipping_label_approvals WHERE package_id=?').all('package-b') as Row[];
+  assert.equal(approvals.every(row=>row.revoked===1&&JSON.parse(row.body).redacted===true),true);
+  privacy.erase(f.owner,'customer-b');
+  const repeated=f.db.prepare('SELECT * FROM commerce_shipping_label_operations WHERE package_id=?').get('package-b') as Row;
+  assert.equal(repeated.purchase_id,second.purchase_id);assert.equal(repeated.body,erased.body);assert.equal(repeated.digest,erased.digest);
+  assert.throws(()=>f.labels.packageStatus(f.a.scope,'package-b'),/SUBJECT_ERASED/);
+  assert.deepEqual(f.labels.packageStatus(f.a.scope,'package-a'),end);assert.equal(f.source.calls.void.length,2);
 }));
 test('M08-G02-UNTRUSTED-RECEIPT-FAILS-CLOSED',()=>usingShipping(async f=>{
   const q=f.approved();f.source.setFault('purchase','package-a','malformed');await f.labels.purchase(f.a.scope,q);
