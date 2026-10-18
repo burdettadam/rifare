@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "fixture_kind": "independently_declared_inert_optional_provider_expectations",
+  "media_text": "rifare-fixture-media:v1:portrait-one",
+  "mime": "application/x-rifare-synthetic-media",
+  "product_id": "shirt-small",
+  "material": "cotton",
+  "generated": true,
+  "fit_guarantee": false,
+  "return_policy_change": false,
+  "identity_confidence": 0.5,
+  "identity_limitation": "Synthetic fixture result; no verified real-world identity.",
+  "qualification": "synthetic_local_preparation_only",
+  "external_qualified": false
+}
