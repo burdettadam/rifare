@@ -103,3 +103,16 @@ bind supported operations to real local adapter calls and independent source
 assertions, marking unsupported or unqualified operations explicitly. It does
 not edit existing adapter implementations, global registrations, capabilities,
 or protected fixtures. The author remains distinct from both final reviewers.
+
+## Prior G03 support qualification seam
+
+Integrated tests found that support-owned agent cases cannot propose the common
+return actions because the existing support qualification allowlist covers only
+the earlier diagnostic resolution action. Before changing that seam, root is
+assigned the narrow `support-qualification.mts` action binding for
+`diagnostic.return.submit` and `diagnostic.return.resolve`, plus new G03 tests.
+Both actions still require an exact, current, independently reviewed diagnostic
+qualification and mode, pinned case settings, amount/inspection limits, and a
+separate canonical action approval. The existing role permission map is unchanged;
+an agent remains unable to dispatch or reconcile financial effects. No unqualified
+model or connected provider is admitted by this local capability extension.
