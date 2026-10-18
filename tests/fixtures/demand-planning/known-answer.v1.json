@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "provenance": "Independently specified synthetic daily series and hand arithmetic; no forecasting implementation used to produce expectations.",
+  "units": "each",
+  "series": {
+    "alternating": [2, 4, 2, 4, 2, 4, 2, 4],
+    "zero": [0, 0, 0, 0, 0, 0, 0, 0],
+    "difficult": [0, 0, 6, 0, 0, 6, 0, 0]
+  },
+  "origins": [4, 6],
+  "horizons": [1, 2],
+  "cohort_members": 3,
+  "scored_per_horizon": 6,
+  "baseline_versions": ["last_value_v1", "seasonal_2_v1"],
+  "horizon_1": {
+    "actual_units": 4,
+    "last_value_v1": {"absolute_error": 10, "signed_error": 10, "under_units": 0, "over_units": 10},
+    "seasonal_2_v1": {"absolute_error": 6, "signed_error": 6, "under_units": 0, "over_units": 6},
+    "mean_2_v1": {"absolute_error": 8, "signed_error": 8, "under_units": 0, "over_units": 8}
+  },
+  "horizon_2": {
+    "actual_units": 18,
+    "last_value_v1": {"absolute_error": 22, "signed_error": 10, "under_units": 6, "over_units": 16},
+    "seasonal_2_v1": {"absolute_error": 6, "signed_error": 6, "under_units": 0, "over_units": 6},
+    "mean_2_v1": {"absolute_error": 6, "signed_error": 6, "under_units": 0, "over_units": 6}
+  },
+  "alternating_horizon_1": {"quantity": 2, "lower_units": 2, "upper_units": 2, "improvement_claim": false, "method": "seasonal_2_v1"},
+  "alternating_horizon_2": {"quantity": 6, "lower_units": 6, "upper_units": 6, "improvement_claim": false, "method": "seasonal_2_v1"},
+  "zero_denominator": {"wape": null, "relative_bias": null, "service_rate": null, "reason": "zero_actual_units"},
+  "temporal_correction": {"original_day_2": 4, "later_day_2": 99, "late_correction_day": 9},
+  "arithmetic": "Errors are prediction minus actual; absolute/signed/under/over sums retain 3 SKUs times 2 origins for each horizon. H2 last-value errors are +2,0,-6,+2,0,+12. Seasonal H2 errors are 0,0,0,0,0,+6. The candidate cannot claim improvement on a tie."
+}
