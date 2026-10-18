@@ -50,7 +50,7 @@ import { OperationReceipts } from '../../packages/commerce/operation-receipts.mt
 import { ActionGateway } from '../../packages/commerce/action-gateway.mts';
 import { ActionMcp } from '../../packages/agent/action-mcp.mts';
 import { SkillReleases } from '../../packages/commerce/skill-releases.mts';
-import { WEBHOOK_MAX_BYTES } from '../../packages/commerce/webhook-inbox.mts';
+import { WEBHOOK_MAX_BYTES,WebhookCapacityError } from '../../packages/commerce/webhook-inbox.mts';
 import type { WebhookInbox } from '../../packages/commerce/webhook-inbox.mts';
 import { ProfileEditor } from '../../packages/commerce/profile-editor.mts';
 import { Policies } from '../../packages/commerce/policies.mts';
@@ -137,7 +137,9 @@ export async function startCommerceServer(options:{support?:SupportService;gifts
         const chunks:Buffer[]=[];let length=0;
         if(Number(req.headers['content-length']??0)>WEBHOOK_MAX_BYTES)throw new Error('WEBHOOK_BODY_LIMIT');
         for await(const value of req){const b=Buffer.from(value);length+=b.length;if(length>WEBHOOK_MAX_BYTES)throw new Error('WEBHOOK_BODY_LIMIT');chunks.push(b);}
-        const result=options.inbox.receive(url.pathname.split('/')[2],req.rawHeaders,Buffer.concat(chunks));send(res,result.http_status,result);return;
+        try{const result=options.inbox.receive(url.pathname.split('/')[2],req.rawHeaders,Buffer.concat(chunks));send(res,result.http_status,result);return;}
+        catch(error){if(!(error instanceof WebhookCapacityError))throw error;
+          res.setHeader('retry-after',String(error.retry_after_seconds));send(res,429,{error:error.message,acknowledged:false,retry_after_seconds:error.retry_after_seconds});log(429,error.message);return;}
       }
       if(url.pathname==='/execution-mcp'){
         const authorization=req.headers.authorization;if(typeof authorization!=='string'||!authorization.startsWith('Bearer '))throw new Error('ACCESS_DENIED');

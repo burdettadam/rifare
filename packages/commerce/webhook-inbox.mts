@@ -1,12 +1,24 @@
-import { CommerceKernel,exact,id,token,digest } from './kernel.mts';
+import { CommerceKernel,exact,id,integer,token,digest } from './kernel.mts';
 import type { Scope,Row } from './kernel.mts';
 import { canonical,jsonValue } from './configuration-values.mts';
 import { uniqueHeaders,verifyShopifyWebhook,verifySyntheticWebhook,verifyWooCommerceWebhook } from '../adapters/webhooks/signatures.mts';
 
 export const WEBHOOK_MAX_BYTES=131072;
+export type WebhookIntakeLimits={max_pending_events:number;max_pending_bytes:number;retry_after_seconds:number};
+export class WebhookCapacityError extends Error {
+  readonly retry_after_seconds:number;
+  constructor(seconds:number){super('WEBHOOK_CAPACITY_EXCEEDED');integer(seconds,1);if(seconds>3600)throw new Error('INVALID_INPUT');this.retry_after_seconds=seconds;}
+}
 export class WebhookInbox {
-  #k:CommerceKernel;#keys:(keyRef:string)=>Buffer|undefined;
-  constructor(kernel:CommerceKernel,keys:(keyRef:string)=>Buffer|undefined){this.#k=kernel;this.#keys=keys;}
+  #k:CommerceKernel;#keys:(keyRef:string)=>Buffer|undefined;#limits:Readonly<WebhookIntakeLimits>|null;
+  constructor(kernel:CommerceKernel,keys:(keyRef:string)=>Buffer|undefined,limits?:WebhookIntakeLimits){
+    this.#k=kernel;this.#keys=keys;this.#limits=null;
+    if(limits!==undefined){exact(limits,['max_pending_events','max_pending_bytes','retry_after_seconds']);
+      integer(limits.max_pending_events,1);integer(limits.max_pending_bytes,1);integer(limits.retry_after_seconds,1);
+      if(limits.max_pending_events>100000||limits.max_pending_bytes>1024*1024*1024||limits.retry_after_seconds>3600)throw new Error('INVALID_INPUT');
+      this.#limits=Object.freeze({...limits});}
+  }
+  intakeLimits(){return this.#limits;}
   #key(ref:string,fingerprint?:string){
     let key:Buffer;try{const value=this.#keys(ref);if(!Buffer.isBuffer(value)||value.length<32||value.length>4096)throw new Error();key=Buffer.from(value);}catch{throw new Error('WEBHOOK_KEY_UNAVAILABLE');}
     if(fingerprint&&digest(key)!==fingerprint){key.fill(0);throw new Error('WEBHOOK_KEY_UNAVAILABLE');}return key;
@@ -44,12 +56,20 @@ export class WebhookInbox {
       if(!active||['tenant_id','store_id','provider','topic','shop_domain','api_version','key_ref','key_fingerprint'].some(field=>active[field]!==r[field]))throw new Error('WEBHOOK_ROUTE_UNAVAILABLE');
       const old=k.db.prepare('SELECT id,sha256,status FROM commerce_webhook_inbox WHERE route_id=? AND delivery_id=?').get(routeId,verified.delivery_id) as Row;
       if(old){if(old.sha256!==hash)throw new Error('WEBHOOK_DELIVERY_CONFLICT');return {acknowledged:true,id:old.id,duplicate:true,status:old.status,http_status:200};}
+      // Admission and persistence share BEGIN IMMEDIATE. The merchant-wide
+      // budget includes quarantined/unconsumed events across every route;
+      // a durable consumption row, not a process-local counter, frees capacity.
+      if(this.#limits){const pending=k.db.prepare(`SELECT count(*) n,coalesce(sum(length(i.body)),0) bytes FROM commerce_webhook_inbox i
+        WHERE i.tenant_id=? AND i.store_id=? AND NOT EXISTS(SELECT 1 FROM commerce_event_consumption c
+        WHERE c.tenant_id=i.tenant_id AND c.store_id=i.store_id AND c.inbox_id=i.id)`).get(r.tenant_id,r.store_id) as Row;
+        if(pending.n>=this.#limits.max_pending_events||pending.bytes+raw.length>this.#limits.max_pending_bytes)
+          throw new WebhookCapacityError(this.#limits.retry_after_seconds);}
       const ref='evt_'+token().slice(0,32),metadata={provider:r.provider,topic:r.topic,shop_domain:r.shop_domain,api_version:r.api_version,
         signature_contract:verified.signature_contract,routing_verified:verified.routing_verified,reason:verified.reason,key_ref:r.key_ref,
         raw_byte_length:raw.length,sha256:hash,raw_headers_retained:false};
       k.db.prepare('INSERT INTO commerce_webhook_inbox VALUES(?,?,?,?,?,?,?,?,?,?)').run(r.tenant_id,r.store_id,ref,routeId,verified.delivery_id,raw,hash,canonical(metadata),verified.status,k.clock());
       return {acknowledged:true,id:ref,duplicate:false,status:verified.status,http_status:202};
-    });}catch(error){if(error instanceof Error&&['WEBHOOK_ROUTE_UNAVAILABLE','WEBHOOK_DELIVERY_CONFLICT'].includes(error.message))throw error;throw new Error('WEBHOOK_PERSISTENCE_FAILED');}
+    });}catch(error){if(error instanceof WebhookCapacityError||error instanceof Error&&['WEBHOOK_ROUTE_UNAVAILABLE','WEBHOOK_DELIVERY_CONFLICT'].includes(error.message))throw error;throw new Error('WEBHOOK_PERSISTENCE_FAILED');}
   }
   read(scope:Scope,eventId:string){const s=this.#k.authorize(scope,'webhook.read');id(eventId);
     const r=this.#k.db.prepare('SELECT * FROM commerce_webhook_inbox WHERE tenant_id=? AND store_id=? AND id=?').get(s.tenant_id,s.store_id,eventId) as Row;

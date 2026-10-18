@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "id": "rifare-local-inbox-load-v1",
+  "seed": "fixed-ordered-case-events-v1",
+  "profile": "commerce-sqlite-diagnostic",
+  "capacity": {"max_pending_events": 8, "max_pending_bytes": 16384, "retry_after_seconds": 1},
+  "phases": [{"id": "normal", "events": 8, "batch_size": 1}, {"id": "burst", "events": 12, "batch_size": 12}],
+  "duplicate_every": 4,
+  "maximum_attempts_per_delivery": 3,
+  "regression_multiplier": 1.5,
+  "local_targets_ms": {"intake_ms": 100, "processing_ms": 100, "queue_lag_ms": 3000, "reconciliation_lag_ms": 3000},
+  "approved_hardware": null,
+  "external_dependency": null
+}
