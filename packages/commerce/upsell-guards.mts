@@ -1,6 +1,6 @@
 import type { CommerceKernel,Row } from './kernel.mts';
 import { contentDigest } from './configuration-values.mts';
-import { growthBody } from './growth-shopping-core.mts';
+import { growthBody,growthCustomerProof } from './growth-shopping-core.mts';
 
 /** An add-line quote is never an alternative route around explicit customer approval. */
 export function assertUpsellConfirmation(k:CommerceKernel,s:Row,quoteId:string,q:Row,afterCommit=false){
@@ -13,4 +13,5 @@ export function assertUpsellConfirmation(k:CommerceKernel,s:Row,quoteId:string,q
  if(afterCommit)return;
  const customer=k.db.prepare("SELECT * FROM commerce_sessions WHERE token_hash=? AND role='customer' AND revoked=0").get(row.session_hash) as Row|undefined;
  if(row.revoked||c.expires_at<=k.clock()||!customer||customer.expires_at<=k.clock()||customer.last_seen<=k.clock()-900000||customer.tenant_id!==s.tenant_id||customer.store_id!==s.store_id||customer.customer_id!==q.customer_id||customer.resource_id!==q.resource_id)throw new Error('UPSELL_CONFIRMATION_UNAVAILABLE');
+ growthCustomerProof(k,customer,q.resource_id,q.customer_id,'UPSELL_CONFIRMATION_UNAVAILABLE');
 }

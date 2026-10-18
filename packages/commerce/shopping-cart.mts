@@ -13,6 +13,10 @@ export class ShoppingCart {
  constructor(kernel:CommerceKernel,source?:ShoppingCatalogFixtureSource){this.kernel=kernel;this.source=source;if(source?.db===kernel.db)throw new Error('SEPARATE_FIXTURE_SOURCE_REQUIRED');}
  get available(){return !!this.source;}
  #source(s:Row){const source=this.source;if(!source)throw new Error('SHOPPING_SOURCE_UNAVAILABLE');if(source.tenant!==s.tenant_id||source.store!==s.store_id)throw new Error('SHOPPING_SOURCE_SCOPE_MISMATCH');return source;}
+ #unresolved(s:Row,resource:string,customer:string,cartId:string){
+  const other=this.kernel.db.prepare("SELECT cart_id FROM commerce_shopping_carts WHERE tenant_id=? AND store_id=? AND resource_id=? AND customer_id=? AND state='unknown' AND cart_id<>? LIMIT 1").get(s.tenant_id,s.store_id,resource,customer,cartId);
+  if(other)throw new Error('SHOPPING_RECONCILIATION_REQUIRED');
+ }
  #row(scope:Scope,cartId:string){const k=this.kernel,s=k.require(scope),row=k.db.prepare('SELECT * FROM commerce_shopping_carts WHERE tenant_id=? AND store_id=? AND cart_id=?').get(s.tenant_id,s.store_id,id(cartId)) as Row,b=growthBody(row);const {order}=growthScope(k,scope,row.resource_id);
   if(b.cart_id!==row.cart_id||b.resource_id!==row.resource_id||b.customer_id!==row.customer_id||order.customer_id!==row.customer_id)throw new Error('GROWTH_INTEGRITY');const source=this.#source(s);if(b.source_identity!==source.identity)throw new Error('SHOPPING_SOURCE_CHANGED');return {s,row,b,source};
  }
@@ -25,7 +29,7 @@ export class ShoppingCart {
   });return {items,source_identity:source.identity,cart_changed:false,checkout_supported:false,payment_authorized:false,qualification:'synthetic_only'};
  }
  propose(scope:Scope,input:unknown){const p=exact(jsonValue(input),['cart_id','resource_id','items']);id(p.cart_id);const k=this.kernel;
-  return k.transaction(()=>{const {s,order}=growthScope(k,scope,p.resource_id,'action.propose');assertRecoveryEgress(k);const control=assertExecution(k,s,EDIT_ACTION),source=this.#source(s),preview=source.cartPreview(order.id,p.items),digest=contentDigest(preview),old=k.db.prepare('SELECT * FROM commerce_shopping_carts WHERE tenant_id=? AND store_id=? AND cart_id=?').get(s.tenant_id,s.store_id,p.cart_id) as Row|undefined;
+  return k.transaction(()=>{const {s,order}=growthScope(k,scope,p.resource_id,'action.propose');assertRecoveryEgress(k);this.#unresolved(s,order.id,order.customer_id,p.cart_id);const control=assertExecution(k,s,EDIT_ACTION),source=this.#source(s),preview=source.cartPreview(order.id,p.items),digest=contentDigest(preview),old=k.db.prepare('SELECT * FROM commerce_shopping_carts WHERE tenant_id=? AND store_id=? AND cart_id=?').get(s.tenant_id,s.store_id,p.cart_id) as Row|undefined;
    if(old){const b=growthBody(old);if(b.resource_id!==p.resource_id||b.preview_digest!==digest)throw new Error('SHOPPING_CART_CONFLICT');return this.currentPreview(scope,p.cart_id);}
    const body={cart_id:p.cart_id,resource_id:order.id,customer_id:order.customer_id,source_identity:source.identity,preview,preview_digest:digest,operation_id:'cart_'+contentDigest([s.tenant_id,s.store_id,p.cart_id,digest]).slice(0,40),control_stamp:control.stamp,created_at:k.clock(),receipt:null};
    k.db.prepare("INSERT INTO commerce_shopping_carts VALUES(?,?,?,?,?,'proposed',?,?)").run(s.tenant_id,s.store_id,p.cart_id,order.id,order.customer_id,canonical(body),contentDigest(body));return this.currentPreview(scope,p.cart_id);
@@ -42,7 +46,7 @@ export class ShoppingCart {
  async confirm(scope:Scope,input:unknown){const p=exact(jsonValue(input),['cart_id','preview_digest']),k=this.kernel,{s,row,b,source}=this.#row(scope,p.cart_id);growthCustomer(k,scope,row.resource_id,row.customer_id);if(p.preview_digest!==b.preview_digest)throw new Error('SHOPPING_PREVIEW_CHANGED');assertRecoveryEgress(k);assertExecution(k,s,EDIT_ACTION,b.control_stamp);
   if(row.state==='committed')return this.readCart(scope,row.cart_id);
   if(row.state==='unknown'){const receipt=source.lookupCart(b.operation_id);if(receipt)k.transaction(()=>{growthCustomer(k,scope,row.resource_id,row.customer_id);this.#save(scope,row.cart_id,receipt);});return this.readCart(scope,row.cart_id);}
-  const guard=()=>{const current=this.#row(scope,row.cart_id);growthCustomer(k,scope,row.resource_id,row.customer_id);assertRecoveryEgress(k);assertExecution(k,current.s,EDIT_ACTION,b.control_stamp);if(current.b.preview_digest!==p.preview_digest||contentDigest(source.cartPreview(row.resource_id,this.#command(s,row,b).items))!==p.preview_digest)throw new Error('SHOPPING_PREVIEW_CHANGED');};
+  const guard=()=>{const current=this.#row(scope,row.cart_id);growthCustomer(k,scope,row.resource_id,row.customer_id);assertRecoveryEgress(k);assertExecution(k,current.s,EDIT_ACTION,b.control_stamp);this.#unresolved(current.s,row.resource_id,row.customer_id,row.cart_id);if(current.b.preview_digest!==p.preview_digest||contentDigest(source.cartPreview(row.resource_id,this.#command(s,row,b).items))!==p.preview_digest)throw new Error('SHOPPING_PREVIEW_CHANGED');};
   guard();k.transaction(()=>{guard();k.db.prepare("UPDATE commerce_shopping_carts SET state='unknown' WHERE tenant_id=? AND store_id=? AND cart_id=? AND state='proposed'").run(s.tenant_id,s.store_id,row.cart_id);});
   try{const receipt=await source.commitCart(this.#command(s,row,b),guard);k.transaction(()=>{growthCustomer(k,scope,row.resource_id,row.customer_id);this.#save(scope,row.cart_id,receipt);});}catch{return this.readCart(scope,row.cart_id);}return this.readCart(scope,row.cart_id);
  }

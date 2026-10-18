@@ -29,6 +29,16 @@ remains unknown until original operation lookup. Repeated confirmation never
 resends an unknown effect. Native cart commitment is not checkout, purchase,
 payment or stock reservation.
 
+An unknown cart also fences every other cart ID for the same tenant, store,
+resource and subject. The fence applies both to new proposals and to confirmation
+of a draft created earlier, and is rechecked in the final source callback.
+Reconcile the original cart identity; a replacement ID is not a repair path.
+
+Customer confirmation validates the original proof binding against the actual
+current customer resource, its source version and normalized email, and the
+order's current source system and customer ownership. A still-live session alone
+cannot authorize a cart after those source facts change.
+
 `readCart(scope, cart_id)` synchronously reads the original source cart. It returns
 resource and subject IDs, active/purchased status, revision, updated time, native
 order identity when observed, and commitment state. A draft has no native cart
@@ -57,6 +67,12 @@ separate native consent record bind the original edit identity. Creating an
 unlabelled `add` quote through the old order-edit methods does not bypass the
 confirmation guard. Current customer proof and terms are checked before native
 commit, including inside the original source transaction.
+
+The original confirming session's customer proof is checked again at each
+precommit source effect. Changed contact or source ownership blocks native add
+commit even after customer and merchant approval. The existing after-commit
+completion behavior is retained: an already committed order's payment/hold
+completion keeps its original identity and current merchant controls.
 
 The existing independent ActionGateway approval is still required. The existing
 OrderEdits dispatcher owns named edit/payment holds, source calculation/commit,
