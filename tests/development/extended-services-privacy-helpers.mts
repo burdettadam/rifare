@@ -72,7 +72,7 @@ function originalUnknowns(f:any,x:any,s:any) {
   return x.unknown_operations.map((operation:any)=>{
     const candidates=rows(f.db,operation.table,s),row=candidates.find((row:any)=>row.id===operation.id||row.operation_id===operation.id);
     assert.ok(row,operation.table+' original operation exists');
-    const body=JSON.parse(row.body),state=row.state??body.state;
+    const body=JSON.parse(row.body??row.command),state=row.state??body.state;
     assert.equal(state,'unknown',operation.table+' uncertainty is explicit');
     return {table:operation.table,keys:keyColumns(f.db,operation.table).map((key:string)=>[key,row[key]]),state,
       id:operation.operation_id??body.operation_id??body.original_operation_id??body.command?.operation_id??row.operation_id??row.id,
@@ -82,7 +82,7 @@ function originalUnknowns(f:any,x:any,s:any) {
 function assertOriginalUnknowns(db:any,s:any,unknowns:any[]) {
   for(const original of unknowns) {
     const row=rows(db,original.table,s).find((row:any)=>original.keys.every(([key,value]:any)=>row[key]===value));
-    assert.ok(row,'Keep the original unknown operation row');const body=JSON.parse(row.body);
+    assert.ok(row,'Keep the original unknown operation row');const body=JSON.parse(row.body??row.command);
     assert.equal(row.state??body.state,original.state,'Erasure and restore cannot resolve an unknown outcome');
     assert.ok(JSON.stringify(row).includes(original.id),'Retain the original operation ID');
     if(original.source_identity)assert.ok(JSON.stringify(row).includes(original.source_identity),'Retain the original source identity');
@@ -91,7 +91,8 @@ function assertOriginalUnknowns(db:any,s:any,unknowns:any[]) {
 function assertRevoked(db:any,s:any) {
   for(const row of rows(db,'commerce_partner_configurations',s))assert.equal(row.enabled,0);
   for(const row of rows(db,'commerce_partner_approvals',s))assert.equal(row.state,'revoked');
-  for(const table of ['commerce_claim_approvals','commerce_trial_term_approvals','commerce_trial_consents'])
+  for(const row of rows(db,'commerce_claim_approvals',s))assert.equal(row.state,'revoked','Claim approvals are revoked without erasure tombstones');
+  for(const table of ['commerce_trial_term_approvals','commerce_trial_consents'])
     for(const row of rows(db,table,s))assert.equal(row.revoked,1,table+' is revoked without requiring an erasure tombstone');
   for(const row of rows(db,'commerce_protection_confirmations',s))assert.notEqual(row.state,'confirmed');
 }
@@ -111,7 +112,9 @@ export async function extendedServicesPrivacy() {
     const exported=privacy.export(owner(f),x.customer_id),records=exported.extended_service_records;
     for(const table of x.tables)assert.ok(records[table].length,table+' belongs to the subject export');
     const serialized=JSON.stringify(records);
-    for(const key of ['token_hash','session_hash','verification_hash'])assert.equal(serialized.includes('"'+key+'"'),false,'Omit replay credentials '+key);
+    for(const key of ['token_hash','session_hash','verification_hash','claimant_session_hash','proposer_session_hash','customer_session_hash','issuer_session_hash'])assert.equal(serialized.includes('"'+key+'"'),false,'Omit replay credentials '+key);
+    const customerScope=f.customer?.scope??f.customer;
+    if(customerScope)assert.equal(serialized.includes(f.kernel.require(customerScope).token_hash),false,'Omit the actual current customer proof credential');
     for(const key of ['other_customer_id','other_resource_id'])if(x[key])assert.equal(serialized.includes(x[key]),false,'Omit another subject '+key);
     const beforeSources=sourceCopies(f),unknowns=originalUnknowns(f,x,s);
     assert.equal(privacy.erase(owner(f),x.customer_id).status,'logically_erased');
