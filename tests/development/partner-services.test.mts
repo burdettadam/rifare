@@ -57,8 +57,8 @@ test('M10-G07-PREP-03', async () => {
   await usingPartner(async f => {
     const p = f.protectionReady(), terms = f.source.configuration('protection')!.body.terms;
     f.configureSource('protection', {terms: {...terms, fee_minor: '900'}});
-    assert.throws(() => f.confirmProtection(p), /PARTNER_UNAVAILABLE|PREVIEW_CHANGED/);
-    await assert.rejects(f.protection.dispatch(f.a.scope, p.id), /PARTNER_UNAVAILABLE|PREVIEW_CHANGED/);
+    assert.throws(() => f.confirmProtection(p), /PARTNER_SOURCE_CONTEXT_CHANGED/);
+    await assert.rejects(f.protection.dispatch(f.a.scope, p.id), /PARTNER_SOURCE_CONTEXT_CHANGED/);
     assert.equal(f.source.coverageEffects().length, 0);
   });
   await changedPartnerModule('../../packages/commerce/protection-coverage.mts', 'ProtectionCoverage',
