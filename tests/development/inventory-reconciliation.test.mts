@@ -93,7 +93,7 @@ test('M08-G10-LOCAL-CORRECTED-DISPOSITION-RECONCILES-ONCE',()=>usingInventoryCyc
 }));
 test('M08-G10-LOCAL-SUBJECT-EXPORT-ERASURE-AND-SOURCE-COPIES',()=>usingInventoryCycle(async f=>{
   await f.complete();const privacy=new PrivacyLifecycle(f.kernel),before=f.effects();
-  const exported=privacy.exportSubject(f.owner.scope,f.order().customer_id);
+  const exported=privacy.export(f.owner.scope,f.order().customer_id);
   assert.ok(Object.values(exported.warehouse_inventory_records as Row).some((rows:any)=>rows.length>0));
   privacy.erase(f.owner.scope,f.order().customer_id);
   assert.throws(()=>f.reconciliation.inspect(f.a.scope,input(f)),/SUBJECT_ERASED|NOT_FOUND/);
