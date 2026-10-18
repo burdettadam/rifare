@@ -1012,6 +1012,81 @@
         "work/qualification/M06.json",
         "tests/fixtures/return-depth/milestone-values.v1.json"
       ]
+    },
+    {
+      "id": "FEATURE-M07-G01",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M07/M07-G01.md",
+        "packages/adapters/woocommerce/return-contract.mts",
+        "packages/adapters/woocommerce/return-source.mts",
+        "migrations/commerce/030_woocommerce_return_sources.sql",
+        "tests/fixtures/woocommerce/shared-lifecycle.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M07-G02",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M07/M07-G02.md",
+        "packages/adapters/woocommerce/refund-contract.mts",
+        "packages/adapters/woocommerce/refund-fixture-source.mts",
+        "packages/adapters/woocommerce/refund-gateway-fixture.mts",
+        "packages/commerce/refund-quotes.mts",
+        "packages/commerce/resolution-execution.mts",
+        "packages/commerce/resolution-ledger.mts",
+        "migrations/commerce/031_woocommerce_refund_state.sql",
+        "tests/fixtures/woocommerce/refund-ledger.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M07-G03",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M07/M07-G03.md",
+        "packages/adapters/woocommerce/events.mts",
+        "packages/commerce/refund-message-facts.mts",
+        "packages/commerce/return-portability-api.mts",
+        "packages/commerce/support-qualification.mts",
+        "packages/commerce/privacy-lifecycle.mts",
+        "packages/commerce/contracts/storage-woocommerce-extension.v1.json",
+        "apps/commerce-api/return-portability-client.js",
+        "tests/fixtures/woocommerce/agent-mode.v1.json",
+        "work/qualification/M07.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M07-G04",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M07/M07-G04.md",
+        "packages/commerce/worker-api.mts",
+        "packages/commerce/work-leases.mts",
+        "packages/commerce/contracts/return-worker.v1.json",
+        "clients/return_runtime.mts",
+        "clients/return_runtime.py",
+        "tests/fixtures/runtime-switch/expected.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M07-G05",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M07/M07-G05.md",
+        "packages/conformance/adapter-catalog.mts",
+        "packages/conformance/adapter-fixtures.mts",
+        "packages/conformance/catalog-fixtures.mts",
+        "packages/conformance/native-catalog-runner.mts",
+        "tests/fixtures/conformance/adapter-catalog.v1.json",
+        "tests/fixtures/conformance/contract-cases.v1.json",
+        "tests/fixtures/conformance/expected-coverage.v1.json",
+        "tests/fixtures/conformance/source-inputs.v1.json"
+      ]
     }
   ],
   "tests": [
@@ -17884,6 +17959,902 @@
       "runner_case_id": "M06-RISK-16",
       "source": "tests/development/risk-assistance.test.mts",
       "capability_id": "FEATURE-M06-G11"
+    },
+    {
+      "id": "runtime:CASE-M07-G05-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M07-G05-01",
+      "source": "tests/development/adapter-catalog.test.mts",
+      "capability_id": "FEATURE-M07-G05"
+    },
+    {
+      "id": "runtime:M07-G05-CATALOG-ADAPTER-REMOVAL-01",
+      "suite": "runtime",
+      "runner_case_id": "M07-G05-CATALOG-ADAPTER-REMOVAL-01",
+      "source": "tests/development/adapter-catalog.test.mts",
+      "capability_id": "FEATURE-M07-G05"
+    },
+    {
+      "id": "runtime:M07-G05-CATALOG-OPERATION-REMOVAL-01",
+      "suite": "runtime",
+      "runner_case_id": "M07-G05-CATALOG-OPERATION-REMOVAL-01",
+      "source": "tests/development/adapter-catalog.test.mts",
+      "capability_id": "FEATURE-M07-G05"
+    },
+    {
+      "id": "runtime:M07-G05-CATALOG-VERSION-DRIFT-01",
+      "suite": "runtime",
+      "runner_case_id": "M07-G05-CATALOG-VERSION-DRIFT-01",
+      "source": "tests/development/adapter-catalog.test.mts",
+      "capability_id": "FEATURE-M07-G05"
+    },
+    {
+      "id": "runtime:M07-G05-CATALOG-API-DRIFT-01",
+      "suite": "runtime",
+      "runner_case_id": "M07-G05-CATALOG-API-DRIFT-01",
+      "source": "tests/development/adapter-catalog.test.mts",
+      "capability_id": "FEATURE-M07-G05"
+    },
+    {
+      "id": "runtime:M07-G05-CATALOG-SCOPE-DRIFT-01",
+      "suite": "runtime",
+      "runner_case_id": "M07-G05-CATALOG-SCOPE-DRIFT-01",
+      "source": "tests/development/adapter-catalog.test.mts",
+      "capability_id": "FEATURE-M07-G05"
+    },
+    {
+      "id": "runtime:M07-G05-CATALOG-CAPABILITY-UPGRADE-01",
+      "suite": "runtime",
+      "runner_case_id": "M07-G05-CATALOG-CAPABILITY-UPGRADE-01",
+      "source": "tests/development/adapter-catalog.test.mts",
+      "capability_id": "FEATURE-M07-G05"
+    },
+    {
+      "id": "runtime:M07-G05-CATALOG-EXTERNAL-QUALIFICATION-01",
+      "suite": "runtime",
+      "runner_case_id": "M07-G05-CATALOG-EXTERNAL-QUALIFICATION-01",
+      "source": "tests/development/adapter-catalog.test.mts",
+      "capability_id": "FEATURE-M07-G05"
+    },
+    {
+      "id": "runtime:M07-G05-CATALOG-SOURCE-PIN-01",
+      "suite": "runtime",
+      "runner_case_id": "M07-G05-CATALOG-SOURCE-PIN-01",
+      "source": "tests/development/adapter-catalog.test.mts",
+      "capability_id": "FEATURE-M07-G05"
+    },
+    {
+      "id": "runtime:M07-G05-CATALOG-NATIVE-PIN-01",
+      "suite": "runtime",
+      "runner_case_id": "M07-G05-CATALOG-NATIVE-PIN-01",
+      "source": "tests/development/adapter-catalog.test.mts",
+      "capability_id": "FEATURE-M07-G05"
+    },
+    {
+      "id": "runtime:M07-G05-CATALOG-CASE-SET-01",
+      "suite": "runtime",
+      "runner_case_id": "M07-G05-CATALOG-CASE-SET-01",
+      "source": "tests/development/adapter-catalog.test.mts",
+      "capability_id": "FEATURE-M07-G05"
+    },
+    {
+      "id": "runtime:M07-G05-CATALOG-NATIVE-FIRST-TOKEN-01",
+      "suite": "runtime",
+      "runner_case_id": "M07-G05-CATALOG-NATIVE-FIRST-TOKEN-01",
+      "source": "tests/development/adapter-catalog.test.mts",
+      "capability_id": "FEATURE-M07-G05"
+    },
+    {
+      "id": "runtime:M07-G05-CATALOG-MISSING-BINDING-01",
+      "suite": "runtime",
+      "runner_case_id": "M07-G05-CATALOG-MISSING-BINDING-01",
+      "source": "tests/development/adapter-catalog.test.mts",
+      "capability_id": "FEATURE-M07-G05"
+    },
+    {
+      "id": "runtime:M07-G05-CATALOG-MISSING-FIXTURE-01",
+      "suite": "runtime",
+      "runner_case_id": "M07-G05-CATALOG-MISSING-FIXTURE-01",
+      "source": "tests/development/adapter-catalog.test.mts",
+      "capability_id": "FEATURE-M07-G05"
+    },
+    {
+      "id": "runtime:M07-G05-CATALOG-FIXTURE-CONTRACT-DRIFT-01",
+      "suite": "runtime",
+      "runner_case_id": "M07-G05-CATALOG-FIXTURE-CONTRACT-DRIFT-01",
+      "source": "tests/development/adapter-catalog.test.mts",
+      "capability_id": "FEATURE-M07-G05"
+    },
+    {
+      "id": "runtime:M07-G05-CATALOG-RESPONSE-ONLY-01",
+      "suite": "runtime",
+      "runner_case_id": "M07-G05-CATALOG-RESPONSE-ONLY-01",
+      "source": "tests/development/adapter-catalog.test.mts",
+      "capability_id": "FEATURE-M07-G05"
+    },
+    {
+      "id": "runtime:M07-G05-CATALOG-SOURCE-CORRELATION-01",
+      "suite": "runtime",
+      "runner_case_id": "M07-G05-CATALOG-SOURCE-CORRELATION-01",
+      "source": "tests/development/adapter-catalog.test.mts",
+      "capability_id": "FEATURE-M07-G05"
+    },
+    {
+      "id": "runtime:M07-G05-CATALOG-UNAVAILABLE-IS-EXECUTED-01",
+      "suite": "runtime",
+      "runner_case_id": "M07-G05-CATALOG-UNAVAILABLE-IS-EXECUTED-01",
+      "source": "tests/development/adapter-catalog.test.mts",
+      "capability_id": "FEATURE-M07-G05"
+    },
+    {
+      "id": "runtime:M07-G05-CATALOG-PROVIDER-TRANSCRIPTS-01",
+      "suite": "runtime",
+      "runner_case_id": "M07-G05-CATALOG-PROVIDER-TRANSCRIPTS-01",
+      "source": "tests/development/adapter-catalog.test.mts",
+      "capability_id": "FEATURE-M07-G05"
+    },
+    {
+      "id": "runtime:M07-G05-SOURCE-EFFECT-01",
+      "suite": "runtime",
+      "runner_case_id": "M07-G05-SOURCE-EFFECT-01",
+      "source": "tests/development/adapter-conformance.test.mts",
+      "capability_id": "FEATURE-M07-G05"
+    },
+    {
+      "id": "runtime:CASE-M07-G05-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M07-G05-02",
+      "source": "tests/development/adapter-conformance.test.mts",
+      "capability_id": "FEATURE-M07-G05"
+    },
+    {
+      "id": "runtime:CASE-M07-G05-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M07-G05-03",
+      "source": "tests/development/adapter-conformance.test.mts",
+      "capability_id": "FEATURE-M07-G05"
+    },
+    {
+      "id": "runtime:M07-G05-SCOPE-01",
+      "suite": "runtime",
+      "runner_case_id": "M07-G05-SCOPE-01",
+      "source": "tests/development/adapter-conformance.test.mts",
+      "capability_id": "FEATURE-M07-G05"
+    },
+    {
+      "id": "runtime:M07-G05-CAPABILITY-01",
+      "suite": "runtime",
+      "runner_case_id": "M07-G05-CAPABILITY-01",
+      "source": "tests/development/adapter-conformance.test.mts",
+      "capability_id": "FEATURE-M07-G05"
+    },
+    {
+      "id": "runtime:M07-G05-CAPABILITY-02",
+      "suite": "runtime",
+      "runner_case_id": "M07-G05-CAPABILITY-02",
+      "source": "tests/development/adapter-conformance.test.mts",
+      "capability_id": "FEATURE-M07-G05"
+    },
+    {
+      "id": "runtime:M07-G05-REFERENCE-01",
+      "suite": "runtime",
+      "runner_case_id": "M07-G05-REFERENCE-01",
+      "source": "tests/development/adapter-conformance.test.mts",
+      "capability_id": "FEATURE-M07-G05"
+    },
+    {
+      "id": "runtime:M07-G05-SOURCE-SCOPE-01",
+      "suite": "runtime",
+      "runner_case_id": "M07-G05-SOURCE-SCOPE-01",
+      "source": "tests/development/adapter-conformance.test.mts",
+      "capability_id": "FEATURE-M07-G05"
+    },
+    {
+      "id": "runtime:M07-G05-RESPONSE-01",
+      "suite": "runtime",
+      "runner_case_id": "M07-G05-RESPONSE-01",
+      "source": "tests/development/adapter-conformance.test.mts",
+      "capability_id": "FEATURE-M07-G05"
+    },
+    {
+      "id": "runtime:M07-G05-BINDING-01",
+      "suite": "runtime",
+      "runner_case_id": "M07-G05-BINDING-01",
+      "source": "tests/development/adapter-conformance.test.mts",
+      "capability_id": "FEATURE-M07-G05"
+    },
+    {
+      "id": "runtime:M07-G05-INDEPENDENT-01",
+      "suite": "runtime",
+      "runner_case_id": "M07-G05-INDEPENDENT-01",
+      "source": "tests/development/adapter-conformance.test.mts",
+      "capability_id": "FEATURE-M07-G05"
+    },
+    {
+      "id": "runtime:M07-G05-UNAVAILABLE-01",
+      "suite": "runtime",
+      "runner_case_id": "M07-G05-UNAVAILABLE-01",
+      "source": "tests/development/adapter-conformance.test.mts",
+      "capability_id": "FEATURE-M07-G05"
+    },
+    {
+      "id": "runtime:M07-G05-UNAVAILABLE-02",
+      "suite": "runtime",
+      "runner_case_id": "M07-G05-UNAVAILABLE-02",
+      "source": "tests/development/adapter-conformance.test.mts",
+      "capability_id": "FEATURE-M07-G05"
+    },
+    {
+      "id": "runtime:M07-G03-BROWSER-COMMON-RETURN-REFUND-AND-NOTIFICATION",
+      "suite": "runtime",
+      "runner_case_id": "M07-G03-BROWSER-COMMON-RETURN-REFUND-AND-NOTIFICATION",
+      "source": "tests/development/return-portability-browser.test.mts",
+      "capability_id": "FEATURE-M07-G03"
+    },
+    {
+      "id": "runtime:M07-G03-BROWSER-LATE-CONTEXT-CANNOT-REPOPULATE-A-CHANGED-CASE",
+      "suite": "runtime",
+      "runner_case_id": "M07-G03-BROWSER-LATE-CONTEXT-CANNOT-REPOPULATE-A-CHANGED-CASE",
+      "source": "tests/development/return-portability-browser.test.mts",
+      "capability_id": "FEATURE-M07-G03"
+    },
+    {
+      "id": "runtime:CASE-M07-G03-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M07-G03-01",
+      "source": "tests/development/return-portability.test.mts",
+      "capability_id": "FEATURE-M07-G03"
+    },
+    {
+      "id": "runtime:CASE-M07-G03-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M07-G03-02",
+      "source": "tests/development/return-portability.test.mts",
+      "capability_id": "FEATURE-M07-G03"
+    },
+    {
+      "id": "runtime:M07-G03-UNQUALIFIED-GATEWAY-BLOCKS-SHARED-LIFECYCLE",
+      "suite": "runtime",
+      "runner_case_id": "M07-G03-UNQUALIFIED-GATEWAY-BLOCKS-SHARED-LIFECYCLE",
+      "source": "tests/development/return-portability.test.mts",
+      "capability_id": "FEATURE-M07-G03"
+    },
+    {
+      "id": "runtime:CASE-M07-G03-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M07-G03-03",
+      "source": "tests/development/return-portability.test.mts",
+      "capability_id": "FEATURE-M07-G03"
+    },
+    {
+      "id": "runtime:M07-G03-PORT-018-RMA-CLOSURE-CANNOT-CONFIRM-MANUAL-REFUND",
+      "suite": "runtime",
+      "runner_case_id": "M07-G03-PORT-018-RMA-CLOSURE-CANNOT-CONFIRM-MANUAL-REFUND",
+      "source": "tests/development/return-portability.test.mts",
+      "capability_id": "FEATURE-M07-G03"
+    },
+    {
+      "id": "runtime:M07-G03-COMPLETION-REQUIRES-BOTH-STORE-AND-GATEWAY-EVIDENCE",
+      "suite": "runtime",
+      "runner_case_id": "M07-G03-COMPLETION-REQUIRES-BOTH-STORE-AND-GATEWAY-EVIDENCE",
+      "source": "tests/development/return-portability.test.mts",
+      "capability_id": "FEATURE-M07-G03"
+    },
+    {
+      "id": "runtime:M07-G03-REFUND-SOURCE-RECHECKED-IMMEDIATELY-BEFORE-SEND",
+      "suite": "runtime",
+      "runner_case_id": "M07-G03-REFUND-SOURCE-RECHECKED-IMMEDIATELY-BEFORE-SEND",
+      "source": "tests/development/return-portability.test.mts",
+      "capability_id": "FEATURE-M07-G03"
+    },
+    {
+      "id": "runtime:M07-G03-REFUND-MESSAGE-STALE-SOURCE-AND-CROSS-TENANT-BLOCKED",
+      "suite": "runtime",
+      "runner_case_id": "M07-G03-REFUND-MESSAGE-STALE-SOURCE-AND-CROSS-TENANT-BLOCKED",
+      "source": "tests/development/return-portability.test.mts",
+      "capability_id": "FEATURE-M07-G03"
+    },
+    {
+      "id": "runtime:M07-G03-CUSTOMER-CONTEXT-DOES-NOT-EXPORT-STAFF-AUTHORIZATION",
+      "suite": "runtime",
+      "runner_case_id": "M07-G03-CUSTOMER-CONTEXT-DOES-NOT-EXPORT-STAFF-AUTHORIZATION",
+      "source": "tests/development/return-portability.test.mts",
+      "capability_id": "FEATURE-M07-G03"
+    },
+    {
+      "id": "runtime:M07-G03-EXPLICIT-READ-RESTRICTIONS-APPLY-WITHOUT-AN-EXECUTOR",
+      "suite": "runtime",
+      "runner_case_id": "M07-G03-EXPLICIT-READ-RESTRICTIONS-APPLY-WITHOUT-AN-EXECUTOR",
+      "source": "tests/development/return-portability.test.mts",
+      "capability_id": "FEATURE-M07-G03"
+    },
+    {
+      "id": "runtime:M07-G03-AGENT-ACTIONS-REQUIRE-QUALIFICATION-MODE-AND-CURRENT-REVIEW",
+      "suite": "runtime",
+      "runner_case_id": "M07-G03-AGENT-ACTIONS-REQUIRE-QUALIFICATION-MODE-AND-CURRENT-REVIEW",
+      "source": "tests/development/return-portability.test.mts",
+      "capability_id": "FEATURE-M07-G03"
+    },
+    {
+      "id": "runtime:M07-G03-AGENT-COPILOT-AMOUNT-AND-WRONG-ACTION-REMAIN-BLOCKED",
+      "suite": "runtime",
+      "runner_case_id": "M07-G03-AGENT-COPILOT-AMOUNT-AND-WRONG-ACTION-REMAIN-BLOCKED",
+      "source": "tests/development/return-portability.test.mts",
+      "capability_id": "FEATURE-M07-G03"
+    },
+    {
+      "id": "runtime:M07-G03-INVENTORY-HTTP-REPORTS-CURRENT-SCHEMA-TO-AUTHORIZED-OWNER",
+      "suite": "runtime",
+      "runner_case_id": "M07-G03-INVENTORY-HTTP-REPORTS-CURRENT-SCHEMA-TO-AUTHORIZED-OWNER",
+      "source": "tests/development/return-portability.test.mts",
+      "capability_id": "FEATURE-M07-G03"
+    },
+    {
+      "id": "runtime:M07-G03-PRIVACY-CURRENT-INVENTORY-INCLUDES-ALL-170-TABLES",
+      "suite": "runtime",
+      "runner_case_id": "M07-G03-PRIVACY-CURRENT-INVENTORY-INCLUDES-ALL-170-TABLES",
+      "source": "tests/development/return-portability.test.mts",
+      "capability_id": "FEATURE-M07-G03"
+    },
+    {
+      "id": "runtime:M07-G03-PRIVACY-ERASES-WOO-CACHES-AND-REFUND-MESSAGE-COPIES",
+      "suite": "runtime",
+      "runner_case_id": "M07-G03-PRIVACY-ERASES-WOO-CACHES-AND-REFUND-MESSAGE-COPIES",
+      "source": "tests/development/return-portability.test.mts",
+      "capability_id": "FEATURE-M07-G03"
+    },
+    {
+      "id": "runtime:M07-G04-UNKNOWN-FINANCIAL-OPERATION-IN-HANDOVER",
+      "suite": "runtime",
+      "runner_case_id": "M07-G04-UNKNOWN-FINANCIAL-OPERATION-IN-HANDOVER",
+      "source": "tests/development/runtime-switch.test.mts",
+      "capability_id": "FEATURE-M07-G04"
+    },
+    {
+      "id": "runtime:CASE-M07-G04-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M07-G04-01",
+      "source": "tests/development/runtime-switch.test.mts",
+      "capability_id": "FEATURE-M07-G04"
+    },
+    {
+      "id": "runtime:CASE-M07-G04-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M07-G04-02",
+      "source": "tests/development/runtime-switch.test.mts",
+      "capability_id": "FEATURE-M07-G04"
+    },
+    {
+      "id": "runtime:CASE-M07-G04-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M07-G04-03",
+      "source": "tests/development/runtime-switch.test.mts",
+      "capability_id": "FEATURE-M07-G04"
+    },
+    {
+      "id": "runtime:M07-G04-TEST-027-PYTHON-TO-TYPESCRIPT",
+      "suite": "runtime",
+      "runner_case_id": "M07-G04-TEST-027-PYTHON-TO-TYPESCRIPT",
+      "source": "tests/development/runtime-switch.test.mts",
+      "capability_id": "FEATURE-M07-G04"
+    },
+    {
+      "id": "runtime:M07-G04-UNKNOWN-LOOKUP-DOES-NOT-SEND",
+      "suite": "runtime",
+      "runner_case_id": "M07-G04-UNKNOWN-LOOKUP-DOES-NOT-SEND",
+      "source": "tests/development/runtime-switch.test.mts",
+      "capability_id": "FEATURE-M07-G04"
+    },
+    {
+      "id": "runtime:M07-G04-UNKNOWN-REFUND-BLOCKS-NEW-APPROVED-WRITE",
+      "suite": "runtime",
+      "runner_case_id": "M07-G04-UNKNOWN-REFUND-BLOCKS-NEW-APPROVED-WRITE",
+      "source": "tests/development/runtime-switch.test.mts",
+      "capability_id": "FEATURE-M07-G04"
+    },
+    {
+      "id": "runtime:M07-G04-AGENT-ROLE-CANNOT-DISPATCH-OR-RECONCILE-MONEY",
+      "suite": "runtime",
+      "runner_case_id": "M07-G04-AGENT-ROLE-CANNOT-DISPATCH-OR-RECONCILE-MONEY",
+      "source": "tests/development/runtime-switch.test.mts",
+      "capability_id": "FEATURE-M07-G04"
+    },
+    {
+      "id": "runtime:M07-G04-LEGACY-WORK-SCOPE-NOT-EXPANDED",
+      "suite": "runtime",
+      "runner_case_id": "M07-G04-LEGACY-WORK-SCOPE-NOT-EXPANDED",
+      "source": "tests/development/runtime-switch.test.mts",
+      "capability_id": "FEATURE-M07-G04"
+    },
+    {
+      "id": "runtime:M07-G04-REVOKED-PARENT-AUTHORITY-BLOCKS-CONTINUATION",
+      "suite": "runtime",
+      "runner_case_id": "M07-G04-REVOKED-PARENT-AUTHORITY-BLOCKS-CONTINUATION",
+      "source": "tests/development/runtime-switch.test.mts",
+      "capability_id": "FEATURE-M07-G04"
+    },
+    {
+      "id": "runtime:M07-G04-APPROVER-REVOCATION-SURVIVES-RUNTIME-SWITCH",
+      "suite": "runtime",
+      "runner_case_id": "M07-G04-APPROVER-REVOCATION-SURVIVES-RUNTIME-SWITCH",
+      "source": "tests/development/runtime-switch.test.mts",
+      "capability_id": "FEATURE-M07-G04"
+    },
+    {
+      "id": "runtime:M07-G04-CROSS-CASE-REFERENCE-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M07-G04-CROSS-CASE-REFERENCE-REJECTED",
+      "source": "tests/development/runtime-switch.test.mts",
+      "capability_id": "FEATURE-M07-G04"
+    },
+    {
+      "id": "runtime:M07-G04-ENVELOPE-FORGERY-CANNOT-RESET-IDENTITY",
+      "suite": "runtime",
+      "runner_case_id": "M07-G04-ENVELOPE-FORGERY-CANNOT-RESET-IDENTITY",
+      "source": "tests/development/runtime-switch.test.mts",
+      "capability_id": "FEATURE-M07-G04"
+    },
+    {
+      "id": "runtime:M07-G04-SUBSET-CANNOT-EXECUTE-CREDIT-PREVIEW",
+      "suite": "runtime",
+      "runner_case_id": "M07-G04-SUBSET-CANNOT-EXECUTE-CREDIT-PREVIEW",
+      "source": "tests/development/runtime-switch.test.mts",
+      "capability_id": "FEATURE-M07-G04"
+    },
+    {
+      "id": "runtime:M07-G04-STOP-KEEPS-UNKNOWN-RECONCILIATION-AVAILABLE",
+      "suite": "runtime",
+      "runner_case_id": "M07-G04-STOP-KEEPS-UNKNOWN-RECONCILIATION-AVAILABLE",
+      "source": "tests/development/runtime-switch.test.mts",
+      "capability_id": "FEATURE-M07-G04"
+    },
+    {
+      "id": "runtime:M07-G04-LEASE-EXPIRY-CANNOT-REUSE-PARENT-SCOPE",
+      "suite": "runtime",
+      "runner_case_id": "M07-G04-LEASE-EXPIRY-CANNOT-REUSE-PARENT-SCOPE",
+      "source": "tests/development/runtime-switch.test.mts",
+      "capability_id": "FEATURE-M07-G04"
+    },
+    {
+      "id": "runtime:M07-G04-CONTEXT-OMITS-CUSTOMER-NOTES-AND-CREDENTIALS",
+      "suite": "runtime",
+      "runner_case_id": "M07-G04-CONTEXT-OMITS-CUSTOMER-NOTES-AND-CREDENTIALS",
+      "source": "tests/development/runtime-switch.test.mts",
+      "capability_id": "FEATURE-M07-G04"
+    },
+    {
+      "id": "runtime:M07-G04-CLIENTS-REJECT-REMOTE-AND-EXTRA-INSTRUCTIONS",
+      "suite": "runtime",
+      "runner_case_id": "M07-G04-CLIENTS-REJECT-REMOTE-AND-EXTRA-INSTRUCTIONS",
+      "source": "tests/development/runtime-switch.test.mts",
+      "capability_id": "FEATURE-M07-G04"
+    },
+    {
+      "id": "runtime:M07-G04-LATE-SOURCE-RESPONSE-FENCED-AFTER-HANDOVER",
+      "suite": "runtime",
+      "runner_case_id": "M07-G04-LATE-SOURCE-RESPONSE-FENCED-AFTER-HANDOVER",
+      "source": "tests/development/runtime-switch.test.mts",
+      "capability_id": "FEATURE-M07-G04"
+    },
+    {
+      "id": "runtime:M07-G04-RESTART-LOADS-SHARED-RECEIPTS-WITHOUT-PRIVATE-CHECKPOINT",
+      "suite": "runtime",
+      "runner_case_id": "M07-G04-RESTART-LOADS-SHARED-RECEIPTS-WITHOUT-PRIVATE-CHECKPOINT",
+      "source": "tests/development/runtime-switch.test.mts",
+      "capability_id": "FEATURE-M07-G04"
+    },
+    {
+      "id": "runtime:M07-G04-MIGRATION-REQUIRES-NEW-PREVIEW-AND-LEASE",
+      "suite": "runtime",
+      "runner_case_id": "M07-G04-MIGRATION-REQUIRES-NEW-PREVIEW-AND-LEASE",
+      "source": "tests/development/runtime-switch.test.mts",
+      "capability_id": "FEATURE-M07-G04"
+    },
+    {
+      "id": "runtime:M07-G04-REPLAY-WITH-DIFFERENT-APPROVAL-IS-NOT-A-NEW-RECEIPT",
+      "suite": "runtime",
+      "runner_case_id": "M07-G04-REPLAY-WITH-DIFFERENT-APPROVAL-IS-NOT-A-NEW-RECEIPT",
+      "source": "tests/development/runtime-switch.test.mts",
+      "capability_id": "FEATURE-M07-G04"
+    },
+    {
+      "id": "runtime:M07-G03-WOO-EVENT-CORROBORATES-NATIVE-UPDATE",
+      "suite": "runtime",
+      "runner_case_id": "M07-G03-WOO-EVENT-CORROBORATES-NATIVE-UPDATE",
+      "source": "tests/development/woocommerce-events.test.mts",
+      "capability_id": "FEATURE-M07-G03"
+    },
+    {
+      "id": "runtime:M07-G03-WOO-DUPLICATE-EVENT-AND-NEW-DELIVERY-NO-REPLAY",
+      "suite": "runtime",
+      "runner_case_id": "M07-G03-WOO-DUPLICATE-EVENT-AND-NEW-DELIVERY-NO-REPLAY",
+      "source": "tests/development/woocommerce-events.test.mts",
+      "capability_id": "FEATURE-M07-G03"
+    },
+    {
+      "id": "runtime:M07-G03-WOO-UNSIGNED-BODY-REJECTED-BEFORE-ACK",
+      "suite": "runtime",
+      "runner_case_id": "M07-G03-WOO-UNSIGNED-BODY-REJECTED-BEFORE-ACK",
+      "source": "tests/development/woocommerce-events.test.mts",
+      "capability_id": "FEATURE-M07-G03"
+    },
+    {
+      "id": "runtime:M07-G03-WOO-HEADERS-CANNOT-AUTHORIZE-FOREIGN-STATE",
+      "suite": "runtime",
+      "runner_case_id": "M07-G03-WOO-HEADERS-CANNOT-AUTHORIZE-FOREIGN-STATE",
+      "source": "tests/development/woocommerce-events.test.mts",
+      "capability_id": "FEATURE-M07-G03"
+    },
+    {
+      "id": "runtime:M07-G03-WOO-CROSS-TENANT-EVENT-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M07-G03-WOO-CROSS-TENANT-EVENT-REJECTED",
+      "source": "tests/development/woocommerce-events.test.mts",
+      "capability_id": "FEATURE-M07-G03"
+    },
+    {
+      "id": "runtime:M07-G03-WOO-CONFLICTING-DELIVERY-DOES-NOT-ACK",
+      "suite": "runtime",
+      "runner_case_id": "M07-G03-WOO-CONFLICTING-DELIVERY-DOES-NOT-ACK",
+      "source": "tests/development/woocommerce-events.test.mts",
+      "capability_id": "FEATURE-M07-G03"
+    },
+    {
+      "id": "runtime:M07-G03-WOO-DUPLICATE-HEADER-IS-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M07-G03-WOO-DUPLICATE-HEADER-IS-REJECTED",
+      "source": "tests/development/woocommerce-events.test.mts",
+      "capability_id": "FEATURE-M07-G03"
+    },
+    {
+      "id": "runtime:M07-G03-WOO-WRONG-TOPIC-OR-ORIGIN-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M07-G03-WOO-WRONG-TOPIC-OR-ORIGIN-REJECTED",
+      "source": "tests/development/woocommerce-events.test.mts",
+      "capability_id": "FEATURE-M07-G03"
+    },
+    {
+      "id": "runtime:M07-G03-WOO-API-AND-PRODUCTION-ORIGIN-UNQUALIFIED",
+      "suite": "runtime",
+      "runner_case_id": "M07-G03-WOO-API-AND-PRODUCTION-ORIGIN-UNQUALIFIED",
+      "source": "tests/development/woocommerce-events.test.mts",
+      "capability_id": "FEATURE-M07-G03"
+    },
+    {
+      "id": "runtime:M07-G03-WOO-OLD-EVENT-CANNOT-REGRESS-SOURCE",
+      "suite": "runtime",
+      "runner_case_id": "M07-G03-WOO-OLD-EVENT-CANNOT-REGRESS-SOURCE",
+      "source": "tests/development/woocommerce-events.test.mts",
+      "capability_id": "FEATURE-M07-G03"
+    },
+    {
+      "id": "runtime:M07-G03-WOO-DISABLED-ROUTE-NO-ACK",
+      "suite": "runtime",
+      "runner_case_id": "M07-G03-WOO-DISABLED-ROUTE-NO-ACK",
+      "source": "tests/development/woocommerce-events.test.mts",
+      "capability_id": "FEATURE-M07-G03"
+    },
+    {
+      "id": "runtime:M07-G02-TEST-001",
+      "suite": "runtime",
+      "runner_case_id": "M07-G02-TEST-001",
+      "source": "tests/development/woocommerce-refund-process.test.mts",
+      "capability_id": "FEATURE-M07-G02"
+    },
+    {
+      "id": "runtime:M07-G02-TWO-PROCESSES-ONE-ORIGINAL-OBLIGATION",
+      "suite": "runtime",
+      "runner_case_id": "M07-G02-TWO-PROCESSES-ONE-ORIGINAL-OBLIGATION",
+      "source": "tests/development/woocommerce-refund-process.test.mts",
+      "capability_id": "FEATURE-M07-G02"
+    },
+    {
+      "id": "runtime:CASE-M07-G02-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M07-G02-01",
+      "source": "tests/development/woocommerce-refunds.test.mts",
+      "capability_id": "FEATURE-M07-G02"
+    },
+    {
+      "id": "runtime:CASE-M07-G02-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M07-G02-02",
+      "source": "tests/development/woocommerce-refunds.test.mts",
+      "capability_id": "FEATURE-M07-G02"
+    },
+    {
+      "id": "runtime:CASE-M07-G02-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M07-G02-03",
+      "source": "tests/development/woocommerce-refunds.test.mts",
+      "capability_id": "FEATURE-M07-G02"
+    },
+    {
+      "id": "runtime:M07-G02-PORT-019",
+      "suite": "runtime",
+      "runner_case_id": "M07-G02-PORT-019",
+      "source": "tests/development/woocommerce-refunds.test.mts",
+      "capability_id": "FEATURE-M07-G02"
+    },
+    {
+      "id": "runtime:M07-G02-GATEWAY-BOOLEAN-IS-NOT-SETTLEMENT",
+      "suite": "runtime",
+      "runner_case_id": "M07-G02-GATEWAY-BOOLEAN-IS-NOT-SETTLEMENT",
+      "source": "tests/development/woocommerce-refunds.test.mts",
+      "capability_id": "FEATURE-M07-G02"
+    },
+    {
+      "id": "runtime:M07-G02-SOURCE-RESULT-CANNOT-INVENT-SETTLEMENT",
+      "suite": "runtime",
+      "runner_case_id": "M07-G02-SOURCE-RESULT-CANNOT-INVENT-SETTLEMENT",
+      "source": "tests/development/woocommerce-refunds.test.mts",
+      "capability_id": "FEATURE-M07-G02"
+    },
+    {
+      "id": "runtime:M07-G02-MANUAL-RECORD-FORGED-GATEWAY-FLAG-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M07-G02-MANUAL-RECORD-FORGED-GATEWAY-FLAG-REJECTED",
+      "source": "tests/development/woocommerce-refunds.test.mts",
+      "capability_id": "FEATURE-M07-G02"
+    },
+    {
+      "id": "runtime:M07-G02-GATEWAY-SETTLED-REQUIRES-INDEPENDENT-MOVEMENT",
+      "suite": "runtime",
+      "runner_case_id": "M07-G02-GATEWAY-SETTLED-REQUIRES-INDEPENDENT-MOVEMENT",
+      "source": "tests/development/woocommerce-refunds.test.mts",
+      "capability_id": "FEATURE-M07-G02"
+    },
+    {
+      "id": "runtime:M07-G02-NATIVE-BALANCE-REJECTS-OVERREFUND",
+      "suite": "runtime",
+      "runner_case_id": "M07-G02-NATIVE-BALANCE-REJECTS-OVERREFUND",
+      "source": "tests/development/woocommerce-refunds.test.mts",
+      "capability_id": "FEATURE-M07-G02"
+    },
+    {
+      "id": "runtime:M07-G02-PAYMENT-INSTRUMENT-AND-PINS-ARE-RECHECKED",
+      "suite": "runtime",
+      "runner_case_id": "M07-G02-PAYMENT-INSTRUMENT-AND-PINS-ARE-RECHECKED",
+      "source": "tests/development/woocommerce-refunds.test.mts",
+      "capability_id": "FEATURE-M07-G02"
+    },
+    {
+      "id": "runtime:M07-G02-MISSING-HISTORY-BLOCKS-BEFORE-AUTHORIZATION",
+      "suite": "runtime",
+      "runner_case_id": "M07-G02-MISSING-HISTORY-BLOCKS-BEFORE-AUTHORIZATION",
+      "source": "tests/development/woocommerce-refunds.test.mts",
+      "capability_id": "FEATURE-M07-G02"
+    },
+    {
+      "id": "runtime:M07-G02-SOURCE-UNKNOWN-WITH-NO-EFFECT-CANNOT-RETRY",
+      "suite": "runtime",
+      "runner_case_id": "M07-G02-SOURCE-UNKNOWN-WITH-NO-EFFECT-CANNOT-RETRY",
+      "source": "tests/development/woocommerce-refunds.test.mts",
+      "capability_id": "FEATURE-M07-G02"
+    },
+    {
+      "id": "runtime:M07-G02-GATEWAY-ACCEPTED-WITHOUT-WOO-RECORD-STAYS-UNSETTLED",
+      "suite": "runtime",
+      "runner_case_id": "M07-G02-GATEWAY-ACCEPTED-WITHOUT-WOO-RECORD-STAYS-UNSETTLED",
+      "source": "tests/development/woocommerce-refunds.test.mts",
+      "capability_id": "FEATURE-M07-G02"
+    },
+    {
+      "id": "runtime:M07-G02-REVOKED-APPROVAL-AND-STOP-BLOCK-SEND",
+      "suite": "runtime",
+      "runner_case_id": "M07-G02-REVOKED-APPROVAL-AND-STOP-BLOCK-SEND",
+      "source": "tests/development/woocommerce-refunds.test.mts",
+      "capability_id": "FEATURE-M07-G02"
+    },
+    {
+      "id": "runtime:M07-G02-TENANT-AND-CUSTOMER-AUTHORITY-PRESERVED",
+      "suite": "runtime",
+      "runner_case_id": "M07-G02-TENANT-AND-CUSTOMER-AUTHORITY-PRESERVED",
+      "source": "tests/development/woocommerce-refunds.test.mts",
+      "capability_id": "FEATURE-M07-G02"
+    },
+    {
+      "id": "runtime:M07-G02-THREE-INDEPENDENT-DATABASES-REQUIRED",
+      "suite": "runtime",
+      "runner_case_id": "M07-G02-THREE-INDEPENDENT-DATABASES-REQUIRED",
+      "source": "tests/development/woocommerce-refunds.test.mts",
+      "capability_id": "FEATURE-M07-G02"
+    },
+    {
+      "id": "runtime:M07-G02-SOURCE-FILE-ALIASES-ARE-NOT-INDEPENDENT",
+      "suite": "runtime",
+      "runner_case_id": "M07-G02-SOURCE-FILE-ALIASES-ARE-NOT-INDEPENDENT",
+      "source": "tests/development/woocommerce-refunds.test.mts",
+      "capability_id": "FEATURE-M07-G02"
+    },
+    {
+      "id": "runtime:M07-G02-MIGRATION-PRESERVES-ALL-PRIOR-OPERATION-STATES",
+      "suite": "runtime",
+      "runner_case_id": "M07-G02-MIGRATION-PRESERVES-ALL-PRIOR-OPERATION-STATES",
+      "source": "tests/development/woocommerce-refunds.test.mts",
+      "capability_id": "FEATURE-M07-G02"
+    },
+    {
+      "id": "runtime:CASE-M07-G01-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M07-G01-01",
+      "source": "tests/development/woocommerce-returns.test.mts",
+      "capability_id": "FEATURE-M07-G01"
+    },
+    {
+      "id": "runtime:CASE-M07-G01-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M07-G01-02",
+      "source": "tests/development/woocommerce-returns.test.mts",
+      "capability_id": "FEATURE-M07-G01"
+    },
+    {
+      "id": "runtime:CASE-M07-G01-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M07-G01-03",
+      "source": "tests/development/woocommerce-returns.test.mts",
+      "capability_id": "FEATURE-M07-G01"
+    },
+    {
+      "id": "runtime:M07-G01-EXISTING-SHOPIFY-INTAKE-RETAINED",
+      "suite": "runtime",
+      "runner_case_id": "M07-G01-EXISTING-SHOPIFY-INTAKE-RETAINED",
+      "source": "tests/development/woocommerce-returns.test.mts",
+      "capability_id": "FEATURE-M07-G01"
+    },
+    {
+      "id": "runtime:M07-G01-COMPLETE-READ-USES-ORIGINAL-WOO-LINEAGE",
+      "suite": "runtime",
+      "runner_case_id": "M07-G01-COMPLETE-READ-USES-ORIGINAL-WOO-LINEAGE",
+      "source": "tests/development/woocommerce-returns.test.mts",
+      "capability_id": "FEATURE-M07-G01"
+    },
+    {
+      "id": "runtime:M07-G01-UNBOUND-WOO-ORDER-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M07-G01-UNBOUND-WOO-ORDER-REJECTED",
+      "source": "tests/development/woocommerce-returns.test.mts",
+      "capability_id": "FEATURE-M07-G01"
+    },
+    {
+      "id": "runtime:M07-G01-CHANGED-CANONICAL-SNAPSHOT-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M07-G01-CHANGED-CANONICAL-SNAPSHOT-REJECTED",
+      "source": "tests/development/woocommerce-returns.test.mts",
+      "capability_id": "FEATURE-M07-G01"
+    },
+    {
+      "id": "runtime:M07-G01-NATIVE-CHANGE-BEFORE-APPROVAL-NO-RMA",
+      "suite": "runtime",
+      "runner_case_id": "M07-G01-NATIVE-CHANGE-BEFORE-APPROVAL-NO-RMA",
+      "source": "tests/development/woocommerce-returns.test.mts",
+      "capability_id": "FEATURE-M07-G01"
+    },
+    {
+      "id": "runtime:M07-G01-REFRESH-RETAINS-CASE-CONFIGURATION",
+      "suite": "runtime",
+      "runner_case_id": "M07-G01-REFRESH-RETAINS-CASE-CONFIGURATION",
+      "source": "tests/development/woocommerce-returns.test.mts",
+      "capability_id": "FEATURE-M07-G01"
+    },
+    {
+      "id": "runtime:M07-G01-REVOKED-APPROVAL-NO-RMA",
+      "suite": "runtime",
+      "runner_case_id": "M07-G01-REVOKED-APPROVAL-NO-RMA",
+      "source": "tests/development/woocommerce-returns.test.mts",
+      "capability_id": "FEATURE-M07-G01"
+    },
+    {
+      "id": "runtime:M07-G01-CROSS-TENANT-READ-AND-BIND-DENIED",
+      "suite": "runtime",
+      "runner_case_id": "M07-G01-CROSS-TENANT-READ-AND-BIND-DENIED",
+      "source": "tests/development/woocommerce-returns.test.mts",
+      "capability_id": "FEATURE-M07-G01"
+    },
+    {
+      "id": "runtime:M07-G01-LOCAL-RMA-RESERVES-QUANTITY",
+      "suite": "runtime",
+      "runner_case_id": "M07-G01-LOCAL-RMA-RESERVES-QUANTITY",
+      "source": "tests/development/woocommerce-returns.test.mts",
+      "capability_id": "FEATURE-M07-G01"
+    },
+    {
+      "id": "runtime:M07-G01-REPLAY-REQUEST-REUSES-CANONICAL-RECEIPT",
+      "suite": "runtime",
+      "runner_case_id": "M07-G01-REPLAY-REQUEST-REUSES-CANONICAL-RECEIPT",
+      "source": "tests/development/woocommerce-returns.test.mts",
+      "capability_id": "FEATURE-M07-G01"
+    },
+    {
+      "id": "runtime:M07-G01-RESTART-RETAINS-LOCAL-RMA-WITHOUT-NATIVE-ID",
+      "suite": "runtime",
+      "runner_case_id": "M07-G01-RESTART-RETAINS-LOCAL-RMA-WITHOUT-NATIVE-ID",
+      "source": "tests/development/woocommerce-returns.test.mts",
+      "capability_id": "FEATURE-M07-G01"
+    },
+    {
+      "id": "runtime:M07-G01-TAMPERED-RMA-CANNOT-PROVIDE-NATIVE-AUTHORITY",
+      "suite": "runtime",
+      "runner_case_id": "M07-G01-TAMPERED-RMA-CANNOT-PROVIDE-NATIVE-AUTHORITY",
+      "source": "tests/development/woocommerce-returns.test.mts",
+      "capability_id": "FEATURE-M07-G01"
+    },
+    {
+      "id": "runtime:M07-G01-MISSING-DELIVERY-IS-NOT-ORDER-COMPLETION",
+      "suite": "runtime",
+      "runner_case_id": "M07-G01-MISSING-DELIVERY-IS-NOT-ORDER-COMPLETION",
+      "source": "tests/development/woocommerce-returns.test.mts",
+      "capability_id": "FEATURE-M07-G01"
+    },
+    {
+      "id": "runtime:M07-G01-MISSING-PAID-HISTORY-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M07-G01-MISSING-PAID-HISTORY-REJECTED",
+      "source": "tests/development/woocommerce-returns.test.mts",
+      "capability_id": "FEATURE-M07-G01"
+    },
+    {
+      "id": "runtime:M07-G01-MISSING-OR-MISALLOCATED-ORIGINAL-UNIT-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M07-G01-MISSING-OR-MISALLOCATED-ORIGINAL-UNIT-REJECTED",
+      "source": "tests/development/woocommerce-returns.test.mts",
+      "capability_id": "FEATURE-M07-G01"
+    },
+    {
+      "id": "runtime:M07-G01-PARTIAL-ITEM-HISTORY-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M07-G01-PARTIAL-ITEM-HISTORY-REJECTED",
+      "source": "tests/development/woocommerce-returns.test.mts",
+      "capability_id": "FEATURE-M07-G01"
+    },
+    {
+      "id": "runtime:M07-G01-FOREIGN-PAYMENT-AND-OVERFULFILLMENT-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M07-G01-FOREIGN-PAYMENT-AND-OVERFULFILLMENT-REJECTED",
+      "source": "tests/development/woocommerce-returns.test.mts",
+      "capability_id": "FEATURE-M07-G01"
+    },
+    {
+      "id": "runtime:M07-G01-NATIVE-SOURCE-BYTES-ARE-INDEPENDENT-ORACLE",
+      "suite": "runtime",
+      "runner_case_id": "M07-G01-NATIVE-SOURCE-BYTES-ARE-INDEPENDENT-ORACLE",
+      "source": "tests/development/woocommerce-returns.test.mts",
+      "capability_id": "FEATURE-M07-G01"
+    },
+    {
+      "id": "runtime:M07-G01-EFFECT-ORACLE-COUNTS-ACTUAL-NATIVE-ROWS",
+      "suite": "runtime",
+      "runner_case_id": "M07-G01-EFFECT-ORACLE-COUNTS-ACTUAL-NATIVE-ROWS",
+      "source": "tests/development/woocommerce-returns.test.mts",
+      "capability_id": "FEATURE-M07-G01"
+    },
+    {
+      "id": "runtime:M07-G01-RESTORED-WRITES-REQUIRE-REATTACHED-SOURCE",
+      "suite": "runtime",
+      "runner_case_id": "M07-G01-RESTORED-WRITES-REQUIRE-REATTACHED-SOURCE",
+      "source": "tests/development/woocommerce-returns.test.mts",
+      "capability_id": "FEATURE-M07-G01"
+    },
+    {
+      "id": "runtime:M07-G01-NO-LIVE-SOURCE-OR-SHARED-DATABASE",
+      "suite": "runtime",
+      "runner_case_id": "M07-G01-NO-LIVE-SOURCE-OR-SHARED-DATABASE",
+      "source": "tests/development/woocommerce-returns.test.mts",
+      "capability_id": "FEATURE-M07-G01"
+    },
+    {
+      "id": "runtime:M07-G01-HARD-LINK-CORE-ALIAS-IS-NOT-INDEPENDENT",
+      "suite": "runtime",
+      "runner_case_id": "M07-G01-HARD-LINK-CORE-ALIAS-IS-NOT-INDEPENDENT",
+      "source": "tests/development/woocommerce-returns.test.mts",
+      "capability_id": "FEATURE-M07-G01"
+    },
+    {
+      "id": "runtime:M07-G01-SYMLINK-CORE-ALIAS-IS-NOT-INDEPENDENT",
+      "suite": "runtime",
+      "runner_case_id": "M07-G01-SYMLINK-CORE-ALIAS-IS-NOT-INDEPENDENT",
+      "source": "tests/development/woocommerce-returns.test.mts",
+      "capability_id": "FEATURE-M07-G01"
     }
   ],
   "protected_files": [
@@ -18342,7 +19313,33 @@
     "tests/fixtures/assistance/risk-golden.v1.json",
     "tests/fixtures/qualified-destinations/routing.v1.json",
     "tests/fixtures/return-depth/milestone-values.v1.json",
-    "tests/fixtures/return-policy-packs/scenarios.v1.json"
+    "tests/fixtures/return-policy-packs/scenarios.v1.json",
+    "clients/return_runtime.mts",
+    "clients/return_runtime.py",
+    "tests/browser/return_portability_component.py",
+    "tests/development/adapter-catalog-bindings.mts",
+    "tests/development/adapter-catalog.test.mts",
+    "tests/development/adapter-conformance.test.mts",
+    "tests/development/return-portability-browser.test.mts",
+    "tests/development/return-portability-helpers.mts",
+    "tests/development/return-portability.test.mts",
+    "tests/development/runtime-switch-helpers.mts",
+    "tests/development/runtime-switch.test.mts",
+    "tests/development/woocommerce-event-helpers.mts",
+    "tests/development/woocommerce-events.test.mts",
+    "tests/development/woocommerce-refund-helpers.mts",
+    "tests/development/woocommerce-refund-process.test.mts",
+    "tests/development/woocommerce-refunds.test.mts",
+    "tests/development/woocommerce-return-helpers.mts",
+    "tests/development/woocommerce-returns.test.mts",
+    "tests/fixtures/conformance/adapter-catalog.v1.json",
+    "tests/fixtures/conformance/contract-cases.v1.json",
+    "tests/fixtures/conformance/expected-coverage.v1.json",
+    "tests/fixtures/conformance/source-inputs.v1.json",
+    "tests/fixtures/runtime-switch/expected.v1.json",
+    "tests/fixtures/woocommerce/agent-mode.v1.json",
+    "tests/fixtures/woocommerce/refund-ledger.v1.json",
+    "tests/fixtures/woocommerce/shared-lifecycle.v1.json"
   ],
   "source_count_fixture": "tests/fixtures/licensing/artifact-oracle.v1.json",
   "source_inventory": "planning/component-inventory.json"
