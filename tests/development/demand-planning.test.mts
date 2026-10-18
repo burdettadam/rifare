@@ -102,8 +102,12 @@ test('M11-FORECAST-QUANTITY-01',()=>usingDemand(f=>{
   const difficult=f.forecast('intermittent',2,2);assert.equal(difficult.quantity,0);assert.equal(difficult.lower_units,0);assert.equal(difficult.upper_units,6);
   // A later observed correction may support retrospective analysis, but cannot
   // be relabeled as knowledge available at the earlier forecast origin.
-  f.lateCorrection();f.snapshot('later-knowledge',f.day(9));f.evaluate('later-evaluation','later-knowledge');
+  f.lateCorrection();const later=f.snapshot('later-knowledge',f.day(9)),laterEvaluation=f.evaluate('later-evaluation','later-knowledge');
   assert.throws(()=>f.forecast('backdated-forecast',0,2,'later-evaluation'),/FORECAST_CUTOFF_AFTER_ORIGIN/);
+  const priorBody=JSON.parse(f.db.prepare('SELECT body FROM commerce_inventory_forecasts WHERE id=?').get(zero.id).body);
+  const restored={...priorBody,dataset_id:later.id,dataset_digest:later.digest,backtest_id:laterEvaluation.id,backtest_digest:laterEvaluation.digest};
+  f.db.prepare('UPDATE commerce_inventory_forecasts SET body=?,digest=? WHERE id=?').run(JSON.stringify(restored),contentDigest(restored),zero.id);
+  assert.throws(()=>f.forecasts.approve(f.reviewer,{forecast_id:zero.id,expected_digest:contentDigest(restored),expires_at:f.now()+60000}),/FORECAST_CUTOFF_AFTER_ORIGIN/);
 }));
 test('M11-FORECAST-AUTHORITY-01',()=>usingDemand(f=>{
   f.snapshot();f.evaluate();const forecast=f.forecast();
