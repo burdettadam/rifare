@@ -12,6 +12,7 @@
   "missing_supplier_handle": "Deny new receipt/supplier effects and mark planning blocked. Original status, lookup and reconciliation remain available",
   "receipt_identity": "Native receipt observation ID and exact immutable PO version/digest; one scoped business key across all caller operation IDs",
   "unit_policy": "Observed receipt quantity uses the approved each/case purchase unit; an integer numerator over denominator one converts to base each units. Incompatible units, excess quantities and fractional minor-unit allocation reject",
+  "quantity_domains": {"maximum_base_units_per_line_or_operation": 1000000000, "observed_stock_positions": "Nonnegative safe integers, matching the original accumulated stock ledger; positions may exceed a single operation's quantity cap"},
   "summary": {
     "api": "summary(scope, {po_id, version, expected_digest})",
     "quantities": ["ordered", "cancelled", "received", "unknown", "outstanding", "returned"],

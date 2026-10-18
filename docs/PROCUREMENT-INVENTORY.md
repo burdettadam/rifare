@@ -13,6 +13,11 @@ fields. Its typed procurement additions write the same original
 `warehouse_inventory_movements` and `warehouse_inventory_commands` tables. The
 existing `LocationInventory` importer records original observations; it required
 no source change for these movement kinds.
+Observed stock positions retain the original ledger's nonnegative safe-integer
+domain. An accumulated balance may exceed the 1,000,000,000-unit cap on a single
+line or operation. Later bounded receipts, returns and production commands
+remain usable against that balance, with exact source-position equality and
+post-effect safe-integer checks retained.
 
 Three separate-source tables hold immutable synthetic observations, durable
 approved-command bindings, and production reservation/consumption state:
