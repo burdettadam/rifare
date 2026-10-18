@@ -8,6 +8,7 @@ import { Policies } from './policies.mts';
 import { SkillReleases } from './skill-releases.mts';
 import { Capabilities } from './capabilities.mts';
 import { verifiedGiftCase } from './gift-proof.mts';
+import {wooCaseCapability,WOO_RETURN_CONTRACT,WOO_RETURN_CONTRACT_DIGEST} from '../adapters/woocommerce/return-contract.mts';
 
 export const WRITE_CONTRACT=Object.freeze({id:'rifare-synthetic-resolution',version:'1.0.0',actions:['diagnostic.resolution.set'],effect:'local_case_plan_only',external_effects:false});
 export const WRITE_CONTRACT_DIGEST=contentDigest(WRITE_CONTRACT);
@@ -28,19 +29,19 @@ export class CaseConfigurations {
   }
   #capture(scope:Scope,p:Row,revision:number){
     const k=this.#k,s=k.require(scope),order=k.get(scope,p.resource_id);
-    if(order.kind!=='order'||order.source_system!=='synthetic'||!order.customer_id)throw new Error('CASE_CONTEXT_UNSUPPORTED');
+    if(order.kind!=='order'||!['synthetic','woocommerce'].includes(order.source_system)||!order.customer_id)throw new Error('CASE_CONTEXT_UNSUPPORTED');
     const profile=this.#profiles.get(scope,p.profile_id),policy=this.#policies.published(scope,p.policy_id);
     const selected=this.#releases.select(scope,profile.profile.skill_id,p.case_id,profile.profile.skill_digest);
-    const cap=new Capabilities(k).evaluate(scope,'order.read',order.id);if(!cap.available)throw new Error('CAPABILITY_UNAVAILABLE');
+    const woo=order.source_system==='woocommerce',cap=woo?wooCaseCapability(k,s,order):new Capabilities(k).evaluate(scope,'order.read',order.id);if(!cap.available)throw new Error('CAPABILITY_UNAVAILABLE');
     const layer={id:'published_configuration',kind:'store',revision:profile.profile.revision,tenant_id:s.tenant_id,store_id:s.store_id,
       source:{uri:'https://rifare.invalid/policies/'+policy.policy_id,revision:String(policy.version),sha256:policy.digest},values:{
         'returns.window_days':policy.body.rules.window_days,'returns.require_evidence':policy.body.rules.require_evidence,
         'returns.excluded_tags':policy.body.rules.excluded_tags,'returns.outcomes':policy.body.rules.outcomes,
         'presentation.tone':profile.profile.tone,'presentation.locale':profile.profile.locale}};
-    const composition=compileLayers([baseLayer(),layer],{tenant_id:s.tenant_id,store_id:s.store_id,platform:'simulator',capabilities:['order.read']});
+    const composition=compileLayers([baseLayer(),layer],{tenant_id:s.tenant_id,store_id:s.store_id,platform:woo?'woocommerce':'simulator',capabilities:['order.read']});
     return {schema_version:1,tenant_id:s.tenant_id,store_id:s.store_id,case_id:p.case_id,case_revision:revision,resource_id:order.id,customer_id:order.customer_id,
       profile:{...profile.profile,sha256:profile.sha256},policy,skill:{id:selected.bundle.id,version:selected.bundle.version,digest:selected.bundle.digest},
-      activation:selected.activation,composition,adapter:{...WRITE_CONTRACT,sha256:WRITE_CONTRACT_DIGEST,connection_revision:cap.connection_revision},captured_at:k.clock()};
+      activation:selected.activation,composition,adapter:woo?{...WOO_RETURN_CONTRACT,sha256:WOO_RETURN_CONTRACT_DIGEST,connection_revision:cap.connection_revision,source_identity:cap.source_identity,account_id:cap.account_id}:{...WRITE_CONTRACT,sha256:WRITE_CONTRACT_DIGEST,connection_revision:cap.connection_revision},captured_at:k.clock()};
   }
   create(scope:Scope,input:unknown){
     const k=this.#k,s=k.require(scope),p=exact(jsonValue(input),['case_id','resource_id','profile_id','policy_id']);
@@ -61,8 +62,10 @@ export class CaseConfigurations {
     const original=this.#policies.published(scope,p.policy.policy_id,p.policy.version),current=this.#policies.published(scope,p.policy.policy_id);
     if(original.digest!==p.policy.digest)throw new Error('CASE_PIN_INTEGRITY');
     if(p.policy.body.selection==='current_at_quote'&&current.digest!==original.digest)throw new Error('CONFIGURATION_REPREVIEW_REQUIRED');
-    if(p.adapter.sha256!==WRITE_CONTRACT_DIGEST)throw new Error('CONFIGURATION_REPREVIEW_REQUIRED');
-    const cap=new Capabilities(k).evaluate(scope,'order.read',result.resource_id);
+    const woo=result.order.source_system==='woocommerce';
+    if(p.adapter.sha256!==(woo?WOO_RETURN_CONTRACT_DIGEST:WRITE_CONTRACT_DIGEST))throw new Error('CONFIGURATION_REPREVIEW_REQUIRED');
+    const cap=woo?wooCaseCapability(k,k.require(scope),result.order):new Capabilities(k).evaluate(scope,'order.read',result.resource_id);
+    if(woo&&(p.adapter.source_identity!==cap.source_identity||p.adapter.account_id!==cap.account_id))throw new Error('CONFIGURATION_REPREVIEW_REQUIRED');
     if(!cap.available||cap.connection_revision!==p.adapter.connection_revision)throw new Error('CONFIGURATION_REPREVIEW_REQUIRED');
     return result;
   }

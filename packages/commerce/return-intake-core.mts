@@ -9,6 +9,7 @@ import { assertReady,DRAFT_ACTION } from './integration-readiness.mts';
 import { assertExecution } from './execution-stops.mts';
 import { money } from './money.mts';
 import { assertGiftOutcome } from './gift-proof.mts';
+import {assertWooReturnFacts,recordWooRma} from '../adapters/woocommerce/return-contract.mts';
 
 export function intakeSettings(k:CommerceKernel,s:Row) {
  const row=k.db.prepare('SELECT * FROM commerce_return_settings WHERE tenant_id=? AND store_id=?').get(s.tenant_id,s.store_id) as Row;
@@ -16,6 +17,7 @@ export function intakeSettings(k:CommerceKernel,s:Row) {
 }
 export function reservations(k:CommerceKernel,s:Row,order:Row) {
  const counted=order.payload.counted_return_ids??[];
+ if(order.source_system==='woocommerce'&&counted.length)throw new Error('WOO_NATIVE_RETURN_FORBIDDEN');
  if(!Array.isArray(counted)||counted.length>100||counted.some(x=>typeof x!=='string'||!/^gid:\/\/shopify\/Return\/[1-9][0-9]*$/.test(x)))throw new Error('RETURN_SOURCE_MISSING');
  const rows=k.db.prepare("SELECT r.*,n.native_id FROM commerce_return_requests r LEFT JOIN commerce_native_return_operations n ON n.tenant_id=r.tenant_id AND n.store_id=r.store_id AND n.request_id=r.id WHERE r.tenant_id=? AND r.store_id=? AND r.resource_id=? AND r.state!='awaiting_review' ORDER BY r.id").all(s.tenant_id,s.store_id,order.id) as Row[];
  const reserved:Record<string,number>={};const references:Row[]=[];
@@ -33,7 +35,9 @@ export function intakeEvaluation(k:CommerceKernel,scope:Scope,selection:unknown,
  const settings=intakeSettings(k,s),ready=assertReady(k,s,DRAFT_ACTION);assertExecution(k,s,INTAKE_ACTION);
  const execution=k.db.prepare('SELECT profile_id,policy_id FROM commerce_execution_settings WHERE tenant_id=? AND store_id=?').get(s.tenant_id,s.store_id) as Row;
  if(execution?.profile_id!==c.pins.profile.id||execution?.policy_id!==c.pins.policy.policy_id)throw new Error('CONFIGURATION_NOT_APPROVED');
- if(c.order.source_system!=='synthetic')throw new Error('INTEGRATION_NOT_READY');
+ if(c.order.source_system==='woocommerce'){
+  assertWooReturnFacts(k,s,c.order);if(p.outcome!=='refund')throw new Error('WOO_OUTCOME_UNSUPPORTED');
+ }else if(c.order.source_system!=='synthetic')throw new Error('INTEGRATION_NOT_READY');
  if(c.order.observed_at>k.clock()||k.clock()-c.order.observed_at>c.pins.composition.effective['data.max_age_seconds']*1000)throw new Error('SOURCE_STALE');
  const evidence=evidenceRows(k,s,c.id,p.evidence_ids),reserved=reservations(k,s,c.order);
  const decision=evaluateReturn({order:c.order,rules:c.pins.policy.body.rules,settings:settings.body,selection:p,now:at,reserved:reserved.quantities,evidenceClean:evidence.length>0&&evidence.every(e=>e.state==='clean'),windowOverride});
@@ -87,6 +91,7 @@ export function commitReturnRequest(k:CommerceKernel,s:Row,preview:Row,receiptId
  const request=k.db.prepare('SELECT * FROM commerce_return_requests WHERE tenant_id=? AND store_id=? AND case_id=?').get(s.tenant_id,s.store_id,preview.case_id) as Row;
  if(!request||request.preview_id!==preview.preview_id||request.state!=='awaiting_review')throw new Error('RETURN_REQUEST_CONFLICT');
  k.db.prepare("UPDATE commerce_return_requests SET state='submitted',receipt_id=? WHERE tenant_id=? AND store_id=? AND id=?").run(receiptId,s.tenant_id,s.store_id,request.id);
+ recordWooRma(k,s,request,body,receiptId);
  k.db.prepare('INSERT INTO commerce_return_review_events(tenant_id,store_id,case_id,actor_id,event,reason,observed_at) VALUES(?,?,?,?,?,?,?)').run(s.tenant_id,s.store_id,preview.case_id,s.actor_id,'submitted','approved_preview',k.clock());
  return request.id;
 }

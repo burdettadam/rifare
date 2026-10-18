@@ -5,6 +5,7 @@ import { ActionGateway } from './action-gateway.mts';
 import { CaseConfigurations } from './case-configurations.mts';
 import { returnSettings,returnSelection,sourceReturnLines,INTAKE_ACTION } from './return-eligibility.mts';
 import { intakeSettings,intakeEvaluation,quoteRow,quoteView,reservations } from './return-intake-core.mts';
+import {assertWooReturnFacts,wooReturnAuthority} from '../adapters/woocommerce/return-contract.mts';
 
 export class ReturnIntake {
  #k:CommerceKernel;readonly gateway:ActionGateway;readonly cases:CaseConfigurations;
@@ -15,9 +16,11 @@ export class ReturnIntake {
    k.db.prepare('INSERT INTO commerce_return_settings VALUES(?,?,?,?,?) ON CONFLICT(tenant_id,store_id) DO UPDATE SET revision=excluded.revision,body=excluded.body,digest=excluded.digest').run(s.tenant_id,s.store_id,p.expected_revision+1,canonical(settings),contentDigest(settings));
    return {revision:p.expected_revision+1,settings,digest:contentDigest(settings),financial_effect:false};});}
  form(scope:Scope,caseId:string){const c=this.cases.resume(scope,id(caseId)),s=this.#k.authorize(scope,'return.read',c.resource_id);this.cases.verified(scope,c.id);const settings=intakeSettings(this.#k,s),reserved=reservations(this.#k,s,c.order);
+  if(c.order.source_system==='woocommerce')assertWooReturnFacts(this.#k,s,c.order);
   return {case_id:c.id,configuration_digest:c.configuration_digest,settings_revision:settings.revision,brand:settings.body.brand,contact:settings.body.contact,time_zone:settings.body.time_zone,
    currency:settings.body.currency,lines:sourceReturnLines(c.order).map((l:Row)=>({id:l.id,remaining:Math.max(0,l.fulfilled-l.returned-(reserved.quantities[l.id]??0)),unit_minor:l.unit_minor})),
-   outcomes:c.pins.policy.body.rules.outcomes,fees:{shipping_minor:settings.body.shipping_minor,restocking_bps:settings.body.restocking_bps,estimated_only:true},photo_types:['image/png'],evidence_requires_scanner:true,financial_effect:false};}
+   outcomes:c.order.source_system==='woocommerce'?c.pins.policy.body.rules.outcomes.filter((x:string)=>x==='refund'):c.pins.policy.body.rules.outcomes,fees:{shipping_minor:settings.body.shipping_minor,restocking_bps:settings.body.restocking_bps,estimated_only:true},photo_types:['image/png'],evidence_requires_scanner:true,financial_effect:false,
+   ...(c.order.source_system==='woocommerce'?{return_semantics:'composed_local_rma',native_return_available:false}: {})};}
  evaluate(scope:Scope,input:unknown){const p=returnSelection(input),k=this.#k;return k.transaction(()=>{
   const c=this.cases.inspect(scope,p.case_id),s=k.authorize(scope,'return.request',c.resource_id),at=k.clock(),body={...intakeEvaluation(k,scope,p,at),evaluated_at:at};
   const ref='rq_'+token().slice(0,32),hash=contentDigest(body),expires=at+300000;
@@ -47,5 +50,6 @@ export class ReturnIntake {
   if(!r)return {case_id:c.id,state:'not_submitted',timeline,financial_effect:false};
   const body=JSON.parse(r.body);if(contentDigest(body)!==r.digest)throw new Error('RETURN_REQUEST_INTEGRITY');const p=k.db.prepare('SELECT * FROM commerce_action_previews WHERE tenant_id=? AND store_id=? AND id=?').get(s.tenant_id,s.store_id,r.preview_id) as Row;
   if(!p||contentDigest(JSON.parse(p.body))!==p.digest)throw new Error('PREVIEW_INTEGRITY');
-  return {id:r.id,case_id:c.id,state:r.state,quote_id:r.quote_id,preview_id:p.id,preview_digest:p.digest,preview:JSON.parse(p.body),request:body,receipt_id:r.receipt_id,timeline,financial_effect:false,execution_authorized:false};}
+  return {id:r.id,case_id:c.id,state:r.state,quote_id:r.quote_id,preview_id:p.id,preview_digest:p.digest,preview:JSON.parse(p.body),request:body,receipt_id:r.receipt_id,timeline,financial_effect:false,execution_authorized:false,
+   ...(c.order.source_system==='woocommerce'?{return_semantics:'composed_local_rma',native_return_id:null,return_authority:r.state==='submitted'?wooReturnAuthority(k,s,r.id):null}: {})};}
 }
