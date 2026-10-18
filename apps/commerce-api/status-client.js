@@ -2,7 +2,7 @@
 (() => {
   const el=id=>document.getElementById(id),result=el('result'),message=el('message');
   let session='',sequence=0,active,challenge=null,expiry;
-  function say(text,error=false){message.textContent=text;message.className=error?'error':'';message.focus();}
+  function say(text,error=false){if(window.RifareA11y)window.RifareA11y.announce(message,text,{error});else{message.textContent=text;message.className=error?'error':'';message.focus();}}
   function clear(){clearTimeout(expiry);result.replaceChildren();result.hidden=true;}
   function cancel(){sequence++;active?.abort();clear();}
   function line(parent,label,value){const dt=document.createElement('dt'),dd=document.createElement('dd');dt.textContent=label;dd.textContent=typeof value==='string'?value:JSON.stringify(value);parent.append(dt,dd);}
@@ -15,7 +15,7 @@
   }
   function render(facts){
     clear();if(!facts.order){say('Current source unavailable ('+String(facts.status)+'). No previous facts are displayed.',true);return;}
-    const heading=document.createElement('h2');heading.textContent='Order '+facts.order.number;result.append(heading);
+    const heading=document.createElement('h2');heading.id='result-heading';heading.tabIndex=-1;heading.textContent='Order '+facts.order.number;result.append(heading);
     const list=document.createElement('dl');result.append(list);
     line(list,'Source state',facts.status==='fixture_snapshot'?'Synthetic fixture snapshot — not live':facts.status);
     line(list,'Fulfillment status',facts.order.fulfillment_status??'Unavailable');
@@ -30,7 +30,7 @@
       if(shipment.source)line(details,'Shipment source',shipment.source);result.append(card);
     }
     if(!facts.order.shipments?.length){const note=document.createElement('p');note.textContent='No visible shipment data. This does not establish that nothing shipped.';result.append(note);}
-    result.hidden=false;say('Source facts loaded. No model was called.');
+    result.hidden=false;say('Source facts loaded. No model was called.');window.RifareA11y?.focus('result-heading');
     if(facts.status==='fresh'){
       const remaining=facts.source.observed_at+300000-Date.now();
       expiry=setTimeout(()=>{clear();say('Source snapshot expired. Reload to check current facts.',true);},Math.max(0,remaining));
@@ -47,7 +47,7 @@
   }
   el('lookup').addEventListener('submit',event=>{event.preventDefault();void load();});
   el('logout').addEventListener('click',async()=>{const old=session;session='';challenge=null;cancel();el('token').value='';el('proof').value='';el('order').value='';el('email').value='';
-    say('Local data cleared. Revoking session…');
+    window.RifareA11y?.clearErrors();window.RifareA11y?.focus('token');say('Local data cleared. Revoking session…');
     try{if(old)await request('/v1/session/logout','POST',{},old);say('Signed out. Local data cleared.');}
     catch{say('Local data cleared; server revocation could not be confirmed.',true);}
   });

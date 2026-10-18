@@ -1,0 +1,17 @@
+/* Shared presentation for the six critical diagnostic workflows. */
+.skip-link{position:absolute;top:0;left:12px;transform:translateY(-150%);padding:12px 18px;background:#fff;color:#123f39;z-index:10;font-weight:700}
+.skip-link:focus{transform:translateY(0)}
+:is(a,button,input,select,textarea,summary,[tabindex]):focus-visible{outline:3px solid #173e8f;outline-offset:3px}
+:is(h2,h3,p,main)[tabindex="-1"]:focus{outline:3px solid #173e8f;outline-offset:4px}
+input,select,textarea,button{min-height:44px;max-width:100%;font:inherit}
+input[type="checkbox"],input[type="radio"]{min-height:24px;min-width:24px}
+button,summary{touch-action:manipulation}
+.field-error{display:block;color:#942721;font-size:.95rem;overflow-wrap:anywhere}
+[aria-invalid="true"]{border:2px solid #942721}
+[role="alert"],.error{color:#942721}
+fieldset{min-width:0}
+main,section,article,form,pre{min-width:0;max-width:100%;box-sizing:border-box}
+pre,dd,p,li,label{overflow-wrap:anywhere}
+pre{white-space:pre-wrap}
+@media(max-width:420px){form{grid-template-columns:minmax(0,1fr)}main{padding-left:16px;padding-right:16px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
