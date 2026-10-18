@@ -1,7 +1,7 @@
 import { CommerceKernel, digest, exact, id, integer } from './kernel.mts';
 import type { Row, Scope } from './kernel.mts';
 import { jsonValue } from './configuration-values.mts';
-import { storageInventoryCurrent } from './privacy-lifecycle.mts';
+import { storageInventoryCurrent, suppressionCheckpoint, eraseSelected } from './privacy-lifecycle.mts';
 
 const LIMIT=64*1024*1024, MAX_ROWS=10000;
 const LOCAL_KINDS=new Set(['migration_binding','merchant_import','merchant_credential_binding']);
@@ -51,7 +51,9 @@ function inspect(value:any,scope:Row,refs:Set<string>,depth=0):void {
     if(SECRET_TEXT.test(value))throw new Error('PORTABILITY_SECRET_REJECTED');
     for(const ref of value.match(/sec_[A-Za-z0-9_-]{43}(?![A-Za-z0-9_-])/g)??[])refs.add(ref);
     if(/^[\s]*[\[{]/.test(value)){
-      let parsed:any;try{parsed=JSON.parse(value);}catch{throw new Error('PORTABILITY_JSON_INVALID');}
+      // Bracket-leading prose and Markdown are valid merchant text. Recurse only
+      // into a string that actually contains JSON, never reinterpret ordinary text.
+      let parsed:any;try{parsed=JSON.parse(value);}catch{return;}
       inspect(jsonValue(parsed,LIMIT),scope,refs,depth+1);
     }
   }else if(Array.isArray(value)){for(const item of value)inspect(item,scope,refs,depth+1);}
@@ -74,6 +76,47 @@ function receipt(k:CommerceKernel,s:Row):Row|undefined {
 function writeDocument(k:CommerceKernel,s:Row,kind:string,ref:string,body:Row){
   k.db.prepare('INSERT INTO commerce_support_documents VALUES(?,?,?,?,?,?,?,?,?,NULL,NULL,?,NULL)')
     .run(s.tenant_id,s.store_id,kind,ref,1,stable(body),merchantSnapshotDigest(body),s.actor_id,'recorded',k.clock());
+}
+
+/** Obtain after the transfer snapshot, through the source owner's current
+ * suppression channel. A checkpoint bundled only with an old snapshot is not
+ * proof of later erasures. Source quiescence and trusted delivery are caller duties. */
+export function exportMerchantSuppression(k:CommerceKernel,scope:Scope){
+  return k.transaction(()=>{const s=owner(k,scope),p=suppressionCheckpoint(k),same=(r:Row)=>r.tenant_id===s.tenant_id&&r.store_id===s.store_id;
+    return {version:1,tenant_id:s.tenant_id,store_id:s.store_id,generated_at:p.generated_at,subjects:p.subjects.filter(same),resources:p.resources.filter(same)};});
+}
+export type MerchantSuppression={suppression:unknown;suppression_sha256:string};
+function checkedSuppression(k:CommerceKernel,s:Row,input:MerchantSuppression|undefined,minimum:number){
+  if(!input)throw new Error('PORTABILITY_SUPPRESSION_REQUIRED');
+  try{exact(input,['suppression','suppression_sha256']);}catch{throw new Error('PORTABILITY_SUPPRESSION_INVALID');}
+  const p=jsonValue(input.suppression,LIMIT);
+  try{exact(p,['version','tenant_id','store_id','generated_at','subjects','resources']);integer(p.generated_at);}catch{throw new Error('PORTABILITY_SUPPRESSION_INVALID');}
+  if(p.tenant_id!==s.tenant_id||p.store_id!==s.store_id)throw new Error('PORTABILITY_SCOPE_MISMATCH');
+  if(p.version!==1||typeof input.suppression_sha256!=='string'||!/^[a-f0-9]{64}$/.test(input.suppression_sha256)||merchantSnapshotDigest(p)!==input.suppression_sha256)throw new Error('PORTABILITY_SUPPRESSION_INVALID');
+  if(p.generated_at<minimum||p.generated_at>k.clock())throw new Error('PORTABILITY_SUPPRESSION_STALE');
+  if(!Array.isArray(p.subjects)||!Array.isArray(p.resources)||p.subjects.length>MAX_ROWS||p.resources.length>MAX_ROWS)throw new Error('PORTABILITY_SUPPRESSION_INVALID');
+  const subjects=new Set<string>(),resources=new Set<string>();
+  for(const row of p.subjects){
+    try{exact(row,['tenant_id','store_id','subject_hash','erased_at']);integer(row.erased_at);}catch{throw new Error('PORTABILITY_SUPPRESSION_INVALID');}
+    if(row.tenant_id!==s.tenant_id||row.store_id!==s.store_id)throw new Error('PORTABILITY_SCOPE_MISMATCH');
+    if(!/^[a-f0-9]{64}$/.test(row.subject_hash)||row.erased_at>p.generated_at||subjects.has(row.subject_hash))throw new Error('PORTABILITY_SUPPRESSION_INVALID');subjects.add(row.subject_hash);
+  }
+  for(const row of p.resources){
+    try{exact(row,['tenant_id','store_id','resource_id','subject_hash','erased_at']);id(row.resource_id);integer(row.erased_at);}catch{throw new Error('PORTABILITY_SUPPRESSION_INVALID');}
+    if(row.tenant_id!==s.tenant_id||row.store_id!==s.store_id)throw new Error('PORTABILITY_SCOPE_MISMATCH');
+    if(resources.has(row.resource_id)||row.erased_at>p.generated_at||!p.subjects.some((subject:Row)=>subject.subject_hash===row.subject_hash&&subject.erased_at<=row.erased_at))throw new Error('PORTABILITY_SUPPRESSION_INVALID');resources.add(row.resource_id);
+  }
+  return {checkpoint:p,digest:input.suppression_sha256};
+}
+function applySuppression(k:CommerceKernel,s:Row,p:Row){
+  let applied=0;
+  for(const subject of p.subjects){
+    const resources=p.resources.filter((r:Row)=>r.subject_hash===subject.subject_hash);
+    const present=k.db.prepare('SELECT 1 FROM commerce_privacy_subjects WHERE tenant_id=? AND store_id=? AND subject_hash=?').get(s.tenant_id,s.store_id,subject.subject_hash);
+    const missing=resources.some((r:Row)=>!k.db.prepare('SELECT 1 FROM commerce_privacy_resources WHERE tenant_id=? AND store_id=? AND resource_id=? AND subject_hash=?').get(s.tenant_id,s.store_id,r.resource_id,subject.subject_hash));
+    if(!present||missing){eraseSelected(k,s,resources.map((r:Row)=>r.resource_id),subject.subject_hash,subject.erased_at);applied++;}
+  }
+  return applied;
 }
 
 /** Owner-authorized single-merchant transfer, never a database dump or activation. */
@@ -145,11 +188,14 @@ function validate(k:CommerceKernel,s:Row,value:unknown,expected:string){
 
 /** Import is atomic and always paused. No source identity, operation ID, financial
  * value, configuration body or content digest is rewritten to fit a destination. */
-export function importMerchant(k:CommerceKernel,scope:Scope,value:unknown,expected_digest:string){
+export function importMerchant(k:CommerceKernel,scope:Scope,value:unknown,expected_digest:string,suppression:MerchantSuppression){
   return k.transaction(()=>{
-    const s=owner(k,scope),{x,m,included}=validate(k,s,value,expected_digest),prior=receipt(k,s);
+    const s=owner(k,scope),{x,m,included}=validate(k,s,value,expected_digest),cp=checkedSuppression(k,s,suppression,m.created_at),prior=receipt(k,s);
     if(prior){const state=k.db.prepare('SELECT * FROM commerce_recovery_state WHERE id=1').get() as Row;
-      if(prior.snapshot_id!==m.snapshot_id||prior.digest!==expected_digest||!state||state.restore_id!==m.snapshot_id||state.source_digest!==expected_digest)throw new Error('PORTABILITY_IMPORT_CONFLICT');return prior;}
+      if(prior.snapshot_id!==m.snapshot_id||prior.digest!==expected_digest||!state||state.restore_id!==m.snapshot_id||state.source_digest!==expected_digest)throw new Error('PORTABILITY_IMPORT_CONFLICT');
+      applySuppression(k,s,cp.checkpoint);
+      k.db.prepare('UPDATE commerce_recovery_state SET suppression_digest=? WHERE id=1').run(cp.digest);
+      return {...prior,suppression_sha256:cp.digest};}
     if(Number((k.db.prepare('SELECT count(*) n FROM commerce_stores').get() as Row).n)!==1||k.db.prepare('SELECT 1 FROM commerce_recovery_state').get())throw new Error('PORTABILITY_TARGET_NOT_EMPTY');
     for(const table of included){
       const existing=k.db.prepare(`SELECT * FROM ${table.name}`).all() as Row[];
@@ -166,16 +212,18 @@ export function importMerchant(k:CommerceKernel,scope:Scope,value:unknown,expect
     if(k.db.prepare('PRAGMA foreign_key_check').all().length)throw new Error('PORTABILITY_FOREIGN_KEYS_INVALID');
     const erased=k.db.prepare(`SELECT r.payload,r.customer_id FROM commerce_resources r JOIN commerce_privacy_resources p USING(tenant_id,store_id) WHERE p.resource_id=r.id`).all() as Row[];
     if(erased.some(r=>r.payload!=='{"redacted":true}'||r.customer_id!==null))throw new Error('PORTABILITY_SUPPRESSION_INVALID');
-    k.db.prepare('INSERT INTO commerce_recovery_state VALUES(1,?,?,?,?,?)').run(m.snapshot_id,'quarantine',expected_digest,merchantSnapshotDigest(x.rows.commerce_privacy_subjects),k.clock());
+    applySuppression(k,s,cp.checkpoint);
+    if(k.db.prepare('PRAGMA foreign_key_check').all().length)throw new Error('PORTABILITY_FOREIGN_KEYS_INVALID');
+    k.db.prepare('INSERT INTO commerce_recovery_state VALUES(1,?,?,?,?,?)').run(m.snapshot_id,'quarantine',expected_digest,cp.digest,k.clock());
     for(const [table,clause] of Object.entries(PAUSE)){
-      const controlExclusion=table==='commerce_support_documents'?" AND kind!='migration_binding' AND kind NOT LIKE 'merchant_%'":'';
+      const controlExclusion=table==='commerce_support_documents'?" AND kind!='migration_binding' AND substr(kind,1,9)!='merchant_'":'';
       k.db.prepare(`UPDATE ${table} SET ${clause} WHERE tenant_id=? AND store_id=?${controlExclusion}`).run(s.tenant_id,s.store_id);
     }
     k.db.exec('INSERT OR IGNORE INTO commerce_restored_operations SELECT tenant_id,store_id,id FROM commerce_operations');
     k.db.exec("UPDATE commerce_operations SET state='unknown',revision=revision+1 WHERE state='sending'");
     k.db.exec("UPDATE commerce_operation_work SET state='unknown',lease_token=NULL,lease_until=NULL,last_code='merchant_import_uncertain' WHERE state IN ('sending','leased')");
     const counts=Object.fromEntries(included.map(table=>[table.name,x.rows[table.name].length]));
-    const result={snapshot_id:m.snapshot_id,digest:expected_digest,mode:'quarantine',counts,
+    const result={snapshot_id:m.snapshot_id,digest:expected_digest,suppression_sha256:cp.digest,mode:'quarantine',counts,
       credential_map:x.credentials.map((c:Row)=>({source_ref:c.ref,provider:c.provider,adapter:c.adapter,source_revoked:c.revoked===1,status:'requires_rebind',destination_ref:null})),
       transformations:{revoked_tables:Object.keys(PAUSE),uncertain_operations:'sending_to_unknown',old_operations:'replay_denied',authentication:'destination_only'},
       live_activation_supported:false};

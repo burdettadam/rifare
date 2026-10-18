@@ -8,7 +8,8 @@ same tenant, store, and market. It requires no model or connected provider.
 ## Transfer API
 
 ```ts
-import { exportMerchant, importMerchant, bindImportedCredential }
+import { exportMerchant, exportMerchantSuppression, importMerchant,
+  merchantSnapshotDigest, bindImportedCredential }
   from './packages/commerce/merchant-portability.mts';
 
 // sourceScope and destinationScope are authenticated owner scopes produced by
@@ -19,8 +20,12 @@ const snapshot = exportMerchant(sourceKernel, sourceScope, {
 
 // Transport the snapshot as private JSON. Retain and verify the expected digest
 // through the owner's trusted transfer channel before calling the importer.
+const currentSuppression = exportMerchantSuppression(sourceKernel, sourceScope);
 const receipt = importMerchant(destinationKernel, destinationScope,
-  receivedSnapshot, independentlyRetainedDigest);
+  receivedSnapshot, independentlyRetainedDigest, {
+    suppression: receivedCurrentSuppression,
+    suppression_sha256: independentlyRetainedSuppressionDigest,
+  });
 ```
 
 The receiving store and its local owner must already exist. The API does not
@@ -34,6 +39,16 @@ stored inside the package establishes consistency only. The importer also
 requires the expected digest as a separate argument; the caller owns its trusted
 delivery and verification. These APIs are local service primitives, not newly
 published HTTP endpoints.
+
+The suppression checkpoint is mandatory and comes from the source owner's
+current erasure-retention channel after the transfer snapshot. Retain its digest
+separately, using `merchantSnapshotDigest(currentSuppression)`. The caller must
+quiesce the source during final transfer and obtain its latest checkpoint; a
+checkpoint merely bundled with an old snapshot cannot prove later erasures.
+The importer validates its identity, fields, digest, and timestamp, then replays
+the existing erasure implementation before committing. Missing, tampered,
+cross-merchant, future, or pre-snapshot checkpoints fail. This preserves the
+existing restore boundary against resurrecting subsequently erased data.
 
 ## What is preserved
 
@@ -53,7 +68,8 @@ bytes. The default limits are 64 MiB and 10,000 included rows per snapshot.
 Import runs in one `CommerceKernel.transaction`. Foreign keys are deferred while
 the snapshot is loaded, then checked before commit. Redacted resource rows are
 inserted before their retained privacy tombstones; inconsistent suppression
-records fail the transaction. An insertion or validation failure leaves the
+records fail the transaction. Later erasures in the mandatory current checkpoint
+take precedence over the snapshot's old content. An insertion or validation failure leaves the
 destination business tables and import controls unchanged.
 
 ## Local authority and credentials
@@ -102,7 +118,10 @@ existing permanent restore replay-deny list.
 
 The receipt records the precise transformations and original imported counts.
 Its mode describes the import event. Repeating the identical snapshot and digest
-returns that same receipt without inserting rows or replaying work. Another
+returns that same receipt without reinserting business rows or replaying work.
+A newer suppression checkpoint may apply further erasures; already applied
+erasures do not add duplicate erasure events. The returned suppression digest
+identifies the checkpoint just applied. Another
 snapshot is rejected rather than replacing the first import. Local migration
 bindings and merchant import/rebinding receipts are excluded from exports and
 cannot be injected through an incoming package.
@@ -116,9 +135,9 @@ an import receipt nor an ownership transfer supplies production qualification.
 ## Focused evidence and limits
 
 `tests/development/merchant-portability.test.mts` covers the three M07-G07 cases,
-PORT-020, and nine supporting cases. It checks real SQLite relationships and
+PORT-020, and ten supporting cases. It checks real SQLite relationships and
 rollback, preserved configuration and monetary values, no implicit credential
-reuse, tenant/owner boundaries, tombstones, repeated imports, and paused work.
+reuse, tenant/owner boundaries, tombstones, later erasures, repeated imports, and paused work.
 The fuller fixture settles one synthetic Woo gateway refund and round-trips its
 native identity, observations, consent withdrawal, and actual evaluation record.
 Export/import does not add another source refund or gateway movement.
