@@ -128,13 +128,15 @@ test('M09-G13-PREP-04-NAMED-SUCCESS-IS-NOT-FIT-FAULT', () => usingOptional(async
 
 test('M09-G14-PREP-01-SCOPED-SYNTHETIC-IDENTITY-RECEIPT', () => usingOptional(async f => {
   f.identityReady(); f.identity.queue(f.a.scope, f.identityInput());
-  const result = await f.identity.dispatch(f.a.scope, 'identity-operation');
+  f.identitySource.loseNextResponse = true;
+  const unknown = await f.identity.dispatch(f.a.scope, 'identity-operation'); assert.equal(unknown.state, 'unknown');
+  const result = await f.identity.reconcile(f.a.scope, 'identity-operation');
   assert.equal(result.state, 'applied'); assert.equal(result.output.purpose, 'identity_resolution'); assert.equal(result.output.source_identity, 'identity-fixture');
   assert.equal(result.output.confidence, optionalExpected.identity_confidence); assert.equal(result.output.confidence_limitation, optionalExpected.identity_limitation);
   assert.equal(result.output.retention_until, f.now() + 60000); assert.equal(result.external_qualified, false);
   assert.equal(result.output.geography, 'US_TEST'); assert.equal(result.output.cross_merchant_join, false);
   const replay = await f.identity.dispatch(f.a.scope, 'identity-operation');
-  assert.equal(replay.native_id, result.native_id); assert.equal(f.identitySource.calls.apply, 1);
+  assert.equal(replay.native_id, result.native_id); assert.equal(f.identitySource.calls.apply, 1); assert.equal(f.identitySource.calls.lookup, 1);
 }));
 
 test('M09-G14-PREP-02-NO-PARTNER-NO-SHADOW-GRAPH', () => usingOptional(async f => {
