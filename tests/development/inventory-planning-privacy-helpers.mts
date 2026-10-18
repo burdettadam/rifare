@@ -93,6 +93,16 @@ function copied(value:any):any {
 function injectCopies(f:any,s:any,x:any) {
   for(const table of x.tables)for(const row of rows(f.db,table,s)) {
     const body=copied(JSON.parse(row.body)),keys=keyColumns(f.db,table);
+    // An allowed scalar key must not become a container for restored private
+    // data. Cover both a top-level field and the nested supplier-term projector.
+    if(table==='commerce_procurement_budgets') {
+      assert.ok(Object.hasOwn(body,'configured_by'));
+      body.configured_by={unexpected_private_copy:PRIVATE_COPY,nested:[PRIVATE_COPY]};
+    }
+    if(table==='commerce_procurement_suppliers') {
+      assert.ok(Object.hasOwn(body.terms,'currency_code'));
+      body.terms.currency_code={unexpected_private_copy:PRIVATE_COPY};
+    }
     f.db.prepare('UPDATE '+table+' SET body=?,digest=? WHERE '+keys.map((key:string)=>key+'=?').join(' AND '))
       .run(canonical(body),contentDigest(body),...keys.map((key:string)=>row[key]));
   }
