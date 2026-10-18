@@ -1,0 +1,28 @@
+{
+  "id": "rifare-carrier-quotes-v1",
+  "version": 1,
+  "goal_id": "M08-G01",
+  "state": "proposed_not_accepted",
+  "qualification": "synthetic_only",
+  "maximum_packages_per_batch": 32,
+  "maximum_quote_lifetime_ms": 300000,
+  "source_contract": "rifare-carrier-quote-fixture-v1",
+  "policy_authority": "Explicit server-local constructor configuration; no caller policy, account, price or approval fields.",
+  "package_request_fields": ["package_id", "resource_id", "rule_id"],
+  "package_states": ["eligible", "blocked", "stale"],
+  "required_pins": [
+    "tenant_id", "store_id", "source_identity", "resource_id", "resource_revision", "resource_digest",
+    "package_id", "package_revision", "address_revision", "parcel_digest", "account_id", "account_revision", "account_digest",
+    "carrier_id", "service", "rule_id", "rule_digest", "rate_id", "rate_revision", "rate_digest", "currency", "amount_minor", "expires_at"
+  ],
+  "amounts": "Canonical unsigned minor-unit strings validated with the existing money primitives; totals grouped by currency without conversion.",
+  "revalidation": "Re-read current scope, order, package, address, account, policy and rate. Only still-eligible rows contribute to totals. A blocked or stale row requires a new quote to become eligible.",
+  "snapshot_integrity": "A process-local HMAC covers the whole returned snapshot. Editing membership, prices, totals or claims invalidates it. Restart discards the key and requires a new quote. It authenticates no merchant, carrier, human approval or external observation.",
+  "storage": "No new database tables, files or durable quote registry. Synthetic source maps and the integrity key live only in memory. Returned snapshots contain opaque source/address references; caller retention is outside this component.",
+  "carrier_connected": false,
+  "label_purchase_supported": false,
+  "financial_effect": false,
+  "execution_authorized": false,
+  "formal_goal_accepted": false,
+  "blocked_prerequisites": ["M07-G99 acceptance", "connected carrier and merchant-account qualification", "target-stack qualification"]
+}
