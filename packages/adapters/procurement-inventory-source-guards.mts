@@ -101,6 +101,16 @@ export function procurementEffectPlan(source:Source,input:unknown){const c=procu
   if(c.kind==='production_reserve'||c.kind==='production_release'||c.kind==='production_consume'){for(const component of expected.components){const q=component.quantity,delta=c.kind==='production_reserve'?{available:-q,on_hand:0,reserved:q,in_transit:0}:c.kind==='production_release'?{available:q,on_hand:0,reserved:-q,in_transit:0}:{available:0,on_hand:-q,reserved:-q,in_transit:0};add(component.variant_id,c.job.location_id,delta);}}
   else{const q=c.observation.good_quantity;let linked:string|null=null;if(c.observation.correction_of){const original=nativeResults(source).find(result=>result.command.event_id===c.observation.correction_of&&result.command.production_id===c.production_id);linked=original?.movements.find((m:Row)=>m.variant_id===c.job.plan.output_material.variant_id)?.movement_id??null;if(!linked)throw new Error('PRODUCTION_CORRECTION_SOURCE_REQUIRED');}add(c.job.plan.output_material.variant_id,c.job.location_id,{...zero(),available:q,on_hand:q},linked);}
  }
- for(const m of movements)if(source.warehouse.stock(m.variant_id,m.location_id)===null||Number(source.warehouse.stock(m.variant_id,m.location_id))+m.delta.available<0)throw new Error('INSUFFICIENT_SOURCE_STOCK');
+ // Check the complete post-position before the original owner commits any effect.
+ // Several lines can affect the same position; exact sums must include them all.
+ const projected=new Map<string,Record<string,bigint>>(),maximum=BigInt(Number.MAX_SAFE_INTEGER);
+ for(const m of movements){const key=canonical([m.variant_id,m.location_id]);let position=projected.get(key);
+  if(!position){if(source.warehouse.stock(m.variant_id,m.location_id)===null)throw new Error('INSUFFICIENT_SOURCE_STOCK');const current=source.position({variant_id:m.variant_id,location_id:m.location_id});position=Object.fromEntries(fields.map(field=>[field,BigInt(current[field])]));projected.set(key,position);}
+  for(const field of fields)position[field]+=BigInt(m.delta[field]);
+ }
+ for(const position of projected.values()){
+  if(position.available<0n)throw new Error('INSUFFICIENT_SOURCE_STOCK');
+  if(fields.some(field=>position[field]<0n||position[field]>maximum)||position.on_hand!==position.available+position.reserved)throw new Error('STOCK_POSITION_INVALID');
+ }
  return {movements,receipt,event,production};
 }

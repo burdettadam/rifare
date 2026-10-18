@@ -16,8 +16,11 @@ no source change for these movement kinds.
 Observed stock positions retain the original ledger's nonnegative safe-integer
 domain. An accumulated balance may exceed the 1,000,000,000-unit cap on a single
 line or operation. Later bounded receipts, returns and production commands
-remain usable against that balance, with exact source-position equality and
-post-effect safe-integer checks retained.
+remain usable against that balance, with exact source-position equality.
+Before any effect, the plan aggregates all command deltas per SKU/location using
+BigInt and checks that all four resulting fields are nonnegative safe integers
+and that `on_hand = available + reserved`. An unsafe result rejects with
+`STOCK_POSITION_INVALID`, before stock or original movement history changes.
 
 Three separate-source tables hold immutable synthetic observations, durable
 approved-command bindings, and production reservation/consumption state:
@@ -200,6 +203,11 @@ authority/integrity/conservation cases. It includes genuine receipt correction
 and reservation release within the existing goal cases. The four named faults
 mutate actual isolated implementation sites and use fixed independent assertions;
 imports, syntax errors and empty test discovery are not fault evidence.
+The conservation case also uses an original-source adjustment and imported
+snapshot at the maximum safe integer, then the original transfer service to
+reserve one unit. A one-unit receipt must reject because total on-hand would
+overflow, although available would still fit; source and canonical balances,
+native commands and movement history must remain unchanged.
 
 The author executes no product suite, module, demo or test. Parser-only and static
 source checks are preparation, with actual behavioral results and two independent
