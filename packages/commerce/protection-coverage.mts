@@ -107,7 +107,7 @@ export class ProtectionCoverage {
     return this.k.transaction(() => this.#finish(scope, this.#operation(scope, ref), result));
   }
   read(scope: Scope, ref: string) {
-    const row = partnerRow(this.k, scope, 'commerce_protection_proposals', ref), p = row.body.preview;
+    const row = partnerRow(this.k, scope, 'commerce_protection_proposals', ref, 'resource.read'), p = row.body.preview;
     const op = this.k.db.prepare('SELECT * FROM commerce_protection_operations WHERE tenant_id=? AND store_id=? AND id=?')
       .get(row.tenant_id, row.store_id, ref) as Row | undefined, operation = op ? partnerBody(op) : null;
     return {id: row.id, resource_id: row.resource_id, state: operation?.state ?? row.state, preview_digest: row.body.preview_digest ?? null,

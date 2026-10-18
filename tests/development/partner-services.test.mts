@@ -39,6 +39,7 @@ test('CASE-M10-G01-03', async () => {
 });
 
 test('M10-G07-PREP-01', () => usingPartner(async f => {
+  assert.throws(() => f.kernel.authorize(f.customer, 'operation.read', f.resource_id), /ACCESS_DENIED/);
   const p = f.protectionReady(), result = await f.protection.dispatch(f.a.scope, p.id);
   assert.equal(result.state, 'issued'); assert.equal(result.fee_minor, '500'); assert.equal(result.loss_party, 'synthetic_insurer');
   assert.equal(result.reimbursement_guaranteed, false); assert.equal(result.financial_settlement, 'unobserved');
