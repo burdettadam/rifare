@@ -32,6 +32,21 @@ operation semantics, proof counts, expectations or acceptance thresholds change.
 Source inventory and registration additions are additive. Original tests,
 fixtures, prior control bytes and historical source remain recoverable.
 
+## Prior corrective assignment for migration consent fencing
+
+Focused nonauthor review found that verified-customer consent updates enter the
+existing support read path before writing consent. Before the correction is
+implemented, the delegated integration owner extends the operations writer's
+scope to `packages/commerce/support-consent.mts`: add the explicit migration
+write guard at `SupportConsent.record`, preserving existing customer verification,
+consent permissions and unbound behavior. The new migration comparison must also
+retain completed native-return identities and current consent, erasure and stop
+authority so stale mirrors cannot acquire effect ownership. These are repairs to
+the assigned single-writer outcome, not new product permissions or acceptance.
+The integration owner may refresh the exact reviewed consent source hash in the
+conformance declaration if present, under the same no-semantic-change restriction
+above. Keep behavioral coverage in the existing focused migration test file.
+
 ## Development feedback and completion
 
 Use the default 60-case/four-file/60-second development budget. Run each focused
