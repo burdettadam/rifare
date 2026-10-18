@@ -87,3 +87,19 @@ remote push, hosted publication or release tags are assigned. G05 publication
 means preparing a reusable local fixture package in this slice. Deliver reviewed
 local source, cumulative evidence, recovery artifacts and the remaining formal
 qualification gaps. M07-G06 and later goals are outside this batch.
+
+## Prior G05 catalog assignment
+
+After the G01 author handed off its committed source and evidence, the integration
+owner assigns `/root/m07_scope` as sole writer of a new
+`goal/M07-conformance-catalog` worktree. This assignment is recorded before the
+catalog implementation. Its concrete paths are new catalog/binding modules under
+`packages/conformance/`, new versioned catalog fixtures under
+`tests/fixtures/conformance/`, new `tests/development/adapter-catalog*.mts`,
+`docs/ADAPTER-CONFORMANCE.md` and `work/records/M07-G05.md`.
+The existing `adapter-fixtures.mts` engine and `adapter-conformance.test.mts`
+remain root-owned. The catalog writer must inspect every declared adapter and
+bind supported operations to real local adapter calls and independent source
+assertions, marking unsupported or unqualified operations explicitly. It does
+not edit existing adapter implementations, global registrations, capabilities,
+or protected fixtures. The author remains distinct from both final reviewers.
