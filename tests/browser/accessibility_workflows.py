@@ -4,6 +4,7 @@ This is neither a human screen-reader observation nor target-stack qualification
 """
 import json
 import os
+from datetime import datetime, timezone
 from pathlib import Path
 import re
 import urllib.error
@@ -73,6 +74,8 @@ with sync_playwright() as p:
                                 headless=True, args=['--no-sandbox'])
     page = browser.new_page(viewport={'width': 360, 'height': 800})
     page.set_default_timeout(5000)
+    if 'at' in cfg:
+        page.clock.set_fixed_time(datetime.fromtimestamp(cfg['at'] / 1000, tz=timezone.utc))
     page.route('**/*', lambda route: (network.append(route.request.url), route.abort()))
     page.route_web_socket('**/*', lambda route: (network.append('websocket'), route.close()))
     page.expose_function('localBridge', bridge)

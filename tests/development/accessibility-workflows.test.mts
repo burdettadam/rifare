@@ -27,7 +27,7 @@ async function browser(input:Record<string,unknown>) {
 async function withServer(f:any,input:Record<string,unknown>,extra:Record<string,unknown>={}) {
   const server=await startCommerceServer({kernel:f.kernel,caps:f.caps,customers:f.customers,
     simulator:f.simulator,reads:f.reads,...extra});
-  try{return await browser({...input,url:server.url});}finally{await server.close();}
+  try{return await browser({...input,url:server.url,at:f.kernel.clock()});}finally{await server.close();}
 }
 
 test('CASE-M07-G15-01',()=>usingExecution(async f=>{
