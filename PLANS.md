@@ -60,3 +60,13 @@ development. Durable package identity, current approval, allocation conservation
 separate carrier effect stages and observed warehouse semantics are mandatory.
 Formal prerequisite and connected qualification gates remain blocked. Development
 retains the 60-case/four-file/60-second defaults and independent focused review.
+
+## Assigned warehouse inventory and M08 assessment batch
+
+The next-five request assigns M08-G07, G08, G09, G10 and G99 under ADR-0037 from
+the saved 60bdc1f checkpoint. Warehouse return events, per-location movement
+ownership, conserved transfers and full-cycle reconciliation extend the existing
+canonical sources and services. G07/G10 connected qualification remains blocked;
+G99 is a blocked assessment and does not trigger a broad milestone campaign.
+Development retains the 60-case/four-file/60-second defaults, source-bound native
+evidence and independent focused review. M09 remains unassigned.
