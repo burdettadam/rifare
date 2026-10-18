@@ -50,3 +50,13 @@ artifact handling. The default 60-case/four-file/60-second limit is unchanged.
 G18 preparation has a distinct proposed capability; no synthetic case is
 registered as completed real-pilot collection. G99 is an assessment with the
 original formal cases unperformed, and counts as the fourth of these five entries.
+
+## Assigned shipping and warehouse development batch
+
+The owner's renewed next-five request assigns M08-G02 through M08-G06 under
+ADR-0036 from the saved c8d4d68 checkpoint. Batch labels, scan-to-pack, split
+shipments, manifests and a named warehouse fixture connector are bounded local
+development. Durable package identity, current approval, allocation conservation,
+separate carrier effect stages and observed warehouse semantics are mandatory.
+Formal prerequisite and connected qualification gates remain blocked. Development
+retains the 60-case/four-file/60-second defaults and independent focused review.
