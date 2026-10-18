@@ -2990,7 +2990,7 @@
     },
     {
       "path": "packages/commerce/data-guards.mts",
-      "sha256": "c566ee868fe8cc4fa308be3c2a9e8e569a102b3f6f8fddad0c40322f422c8f81"
+      "sha256": "e01d50bb34c6011a8198504610f89c0cd097eebf61bf946c7f41799f82be9020"
     },
     {
       "path": "packages/commerce/durable-work.mts",
@@ -3338,7 +3338,7 @@
     },
     {
       "path": "packages/commerce/support-consent.mts",
-      "sha256": "c35246bf9518a817481f926e7ad9683574d953b92c2abffa04a0b7ff548a6897"
+      "sha256": "6fb4968a3e089a563d01f6c36f239a149826636451d1b41009fb068ba641fb32"
     },
     {
       "path": "packages/commerce/support-conversations.mts",

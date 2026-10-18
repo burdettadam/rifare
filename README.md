@@ -2,43 +2,49 @@
 
 Merchant-owned commerce operations with tailorable skills and independently replaceable platforms, agents and models.
 
-## Current development checkpoint: M06 local return depth
+## Current development checkpoint: M07 portability and operations
 
-M06-G01 through M06-G14 now have bounded local diagnostic implementations: catalog
-exchanges, mixed resolution, original bundle money, gift choices, repeated-exchange
-history, paired refunds and final fees, instant-exchange obligations, reviewable
-risk assistance, qualified destinations, customer-confirmed prevention and versioned
-merchant policy packs. The M06-G99 assessment remains blocked for formal acceptance.
+M07-G01 through M07-G10 now have bounded local development implementations.
+The first five added Woo return/refund handling, the shared staff and agent
+workflow, independent runtime clients, and reusable adapter conformance. The next
+five add evidence-bound compatibility limits, merchant export and quarantined
+import, exclusive migration ownership, executable operator recovery drills, and
+offline installation/upgrade preparation.
 
-Read [M06 assessment](docs/M06-QUALIFICATION.md),
-[assistance operations](docs/RETURN-ASSISTANCE-OPERATIONS.md),
-[qualified destinations](docs/QUALIFIED-RETURN-DESTINATIONS.md) and
-[policy packs](docs/RETURN-POLICY-PACKS.md). Earlier support, return, edit and
-regression capabilities remain in the accumulated source.
+Read [the M07 assessment](docs/M07-QUALIFICATION.md),
+[compatibility limits](docs/COMPATIBILITY-LIMITS.md),
+[merchant transfer](docs/MERCHANT-PORTABILITY.md),
+[operator runbooks](docs/OPERATOR-RUNBOOKS.md), and
+[installation/upgrade](docs/INSTALL-UPGRADE.md). Earlier support, return, exchange,
+edit and regression capabilities remain in the accumulated source; the
+[M06 assessment](docs/M06-QUALIFICATION.md) retains their qualification limits.
+
+Routine development uses a small affected-file selection:
 
 ```sh
-python3 tools/verify.py --runtime --harness
-node --experimental-strip-types tools/demo-return-depth.mts
+make test-plan
+make test
+# An explicit full checkpoint remains available as make test-full.
 ```
 
-The headless command requires a clean committed checkout. It creates disposable
-synthetic source ledgers and prints the integrated journeys, original operation
-IDs, every relevant ledger entry and declared cost limits. It makes no provider
-calls. Final controller results and separate nonauthor reviews accompany the
-handoff; repository documentation does not replace that exact-candidate evidence.
+The default budget is 60 actual cases across four whole files with one 60-second
+deadline. A development pass does not claim full regression or goal acceptance.
+The five-goal development batch does not automatically trigger full, browser,
+nested catalog, or restoration-audit runs. See [development](DEVELOPMENT.md).
 
 The runtime remains a SQLite diagnostic with synthetic protocol sources.
-PostgreSQL/React, connected providers, merchant evaluation and formal milestone
-acceptance remain unqualified. M07 has not been started. The later sections retain
-earlier diagnostic commands.
+PostgreSQL/React, connected providers, live merchant migration, independent-machine
+installation and formal milestone acceptance remain unqualified. The previous
+full-test checkpoint and history remain recoverable. The later sections retain
+earlier explicit diagnostic commands.
 
 ## Start
 
 ```sh
 git status
 git log --graph --oneline --all -12
-python3 tools/verify.py
-python3 tools/check_workflow.py --root .
+python3 tools/dev_tests.py --plan
+python3 tools/dev_tests.py
 ```
 
 The planning commands above use Git and Python 3.10+ with the standard library.

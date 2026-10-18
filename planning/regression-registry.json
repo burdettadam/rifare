@@ -1087,6 +1087,63 @@
         "tests/fixtures/conformance/expected-coverage.v1.json",
         "tests/fixtures/conformance/source-inputs.v1.json"
       ]
+    },
+    {
+      "id": "FEATURE-M07-G06",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M07/M07-G06.md",
+        "packages/conformance/compatibility-matrix.mts",
+        "tools/compatibility-matrix.mts",
+        "docs/COMPATIBILITY-LIMITS.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M07-G07",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M07/M07-G07.md",
+        "packages/commerce/merchant-portability.mts",
+        "docs/MERCHANT-PORTABILITY.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M07-G08",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M07/M07-G08.md",
+        "packages/commerce/migration-fence.mts",
+        "packages/commerce/migration-cutover.mts",
+        "packages/commerce/data-guards.mts",
+        "packages/commerce/support-consent.mts",
+        "docs/OPERATOR-RUNBOOKS.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M07-G09",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M07/M07-G09.md",
+        "packages/commerce/operator-runbooks.mts",
+        "tools/operator-drill-fixtures.mts",
+        "tools/operator-drill.mts",
+        "docs/OPERATOR-RUNBOOKS.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M07-G10",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M07/M07-G10.md",
+        "packages/operations/installation-upgrade.mts",
+        "tools/install-upgrade.mts",
+        "docs/INSTALL-UPGRADE.md"
+      ]
     }
   ],
   "tests": [
@@ -18897,6 +18954,391 @@
       "runner_case_id": "test_dev_tests.DevelopmentTests.test_reverse_imports_follow_helpers_and_deleted_dependencies",
       "source": "tests/test_dev_tests.py",
       "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "runtime:CASE-M07-G06-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M07-G06-01",
+      "source": "tests/development/compatibility-matrix.test.mts",
+      "capability_id": "FEATURE-M07-G06"
+    },
+    {
+      "id": "runtime:CASE-M07-G06-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M07-G06-02",
+      "source": "tests/development/compatibility-matrix.test.mts",
+      "capability_id": "FEATURE-M07-G06"
+    },
+    {
+      "id": "runtime:CASE-M07-G06-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M07-G06-03",
+      "source": "tests/development/compatibility-matrix.test.mts",
+      "capability_id": "FEATURE-M07-G06"
+    },
+    {
+      "id": "runtime:PORT-021",
+      "suite": "runtime",
+      "runner_case_id": "PORT-021",
+      "source": "tests/development/compatibility-matrix.test.mts",
+      "capability_id": "FEATURE-M07-G06"
+    },
+    {
+      "id": "runtime:M07-G06-IDENTITY-PINS-01",
+      "suite": "runtime",
+      "runner_case_id": "M07-G06-IDENTITY-PINS-01",
+      "source": "tests/development/compatibility-matrix.test.mts",
+      "capability_id": "FEATURE-M07-G06"
+    },
+    {
+      "id": "runtime:M07-G06-SOURCE-RECORDS-01",
+      "suite": "runtime",
+      "runner_case_id": "M07-G06-SOURCE-RECORDS-01",
+      "source": "tests/development/compatibility-matrix.test.mts",
+      "capability_id": "FEATURE-M07-G06"
+    },
+    {
+      "id": "runtime:M07-G06-REVIEW-AND-THRESHOLD-01",
+      "suite": "runtime",
+      "runner_case_id": "M07-G06-REVIEW-AND-THRESHOLD-01",
+      "source": "tests/development/compatibility-matrix.test.mts",
+      "capability_id": "FEATURE-M07-G06"
+    },
+    {
+      "id": "runtime:M07-G06-CLAIMS-RECOMPUTED-01",
+      "suite": "runtime",
+      "runner_case_id": "M07-G06-CLAIMS-RECOMPUTED-01",
+      "source": "tests/development/compatibility-matrix.test.mts",
+      "capability_id": "FEATURE-M07-G06"
+    },
+    {
+      "id": "runtime:M07-G06-MISSING-PROOF-SCOPE-01",
+      "suite": "runtime",
+      "runner_case_id": "M07-G06-MISSING-PROOF-SCOPE-01",
+      "source": "tests/development/compatibility-matrix.test.mts",
+      "capability_id": "FEATURE-M07-G06"
+    },
+    {
+      "id": "runtime:M07-G06-RUNTIME-SOURCE-01",
+      "suite": "runtime",
+      "runner_case_id": "M07-G06-RUNTIME-SOURCE-01",
+      "source": "tests/development/compatibility-matrix.test.mts",
+      "capability_id": "FEATURE-M07-G06"
+    },
+    {
+      "id": "runtime:M07-G06-MINIMIZED-EXPORT-01",
+      "suite": "runtime",
+      "runner_case_id": "M07-G06-MINIMIZED-EXPORT-01",
+      "source": "tests/development/compatibility-matrix.test.mts",
+      "capability_id": "FEATURE-M07-G06"
+    },
+    {
+      "id": "runtime:CASE-M07-G07-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M07-G07-01",
+      "source": "tests/development/merchant-portability.test.mts",
+      "capability_id": "FEATURE-M07-G07"
+    },
+    {
+      "id": "runtime:CASE-M07-G07-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M07-G07-02",
+      "source": "tests/development/merchant-portability.test.mts",
+      "capability_id": "FEATURE-M07-G07"
+    },
+    {
+      "id": "runtime:CASE-M07-G07-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M07-G07-03",
+      "source": "tests/development/merchant-portability.test.mts",
+      "capability_id": "FEATURE-M07-G07"
+    },
+    {
+      "id": "runtime:PORT-020",
+      "suite": "runtime",
+      "runner_case_id": "PORT-020",
+      "source": "tests/development/merchant-portability.test.mts",
+      "capability_id": "FEATURE-M07-G07"
+    },
+    {
+      "id": "runtime:M07-G07-SECRETS-REFERENCES-REQUIRE-EXPLICIT-REBIND",
+      "suite": "runtime",
+      "runner_case_id": "M07-G07-SECRETS-REFERENCES-REQUIRE-EXPLICIT-REBIND",
+      "source": "tests/development/merchant-portability.test.mts",
+      "capability_id": "FEATURE-M07-G07"
+    },
+    {
+      "id": "runtime:M07-G07-INDEPENDENT-DIGEST-AND-EXACT-COVERAGE",
+      "suite": "runtime",
+      "runner_case_id": "M07-G07-INDEPENDENT-DIGEST-AND-EXACT-COVERAGE",
+      "source": "tests/development/merchant-portability.test.mts",
+      "capability_id": "FEATURE-M07-G07"
+    },
+    {
+      "id": "runtime:M07-G07-RELATIONSHIP-FAILURE-ROLLS-BACK-ALL-ROWS",
+      "suite": "runtime",
+      "runner_case_id": "M07-G07-RELATIONSHIP-FAILURE-ROLLS-BACK-ALL-ROWS",
+      "source": "tests/development/merchant-portability.test.mts",
+      "capability_id": "FEATURE-M07-G07"
+    },
+    {
+      "id": "runtime:M07-G07-NONEMPTY-AND-FOREIGN-DESTINATIONS-ARE-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M07-G07-NONEMPTY-AND-FOREIGN-DESTINATIONS-ARE-REJECTED",
+      "source": "tests/development/merchant-portability.test.mts",
+      "capability_id": "FEATURE-M07-G07"
+    },
+    {
+      "id": "runtime:M07-G07-ERASURE-SUPPRESSION-SURVIVES-IMPORT",
+      "suite": "runtime",
+      "runner_case_id": "M07-G07-ERASURE-SUPPRESSION-SURVIVES-IMPORT",
+      "source": "tests/development/merchant-portability.test.mts",
+      "capability_id": "FEATURE-M07-G07"
+    },
+    {
+      "id": "runtime:M07-G07-LOCAL-CONTROL-AND-DUPLICATE-ROWS-DENIED",
+      "suite": "runtime",
+      "runner_case_id": "M07-G07-LOCAL-CONTROL-AND-DUPLICATE-ROWS-DENIED",
+      "source": "tests/development/merchant-portability.test.mts",
+      "capability_id": "FEATURE-M07-G07"
+    },
+    {
+      "id": "runtime:M07-G07-ONLY-MERCHANT-OWNER-CAN-TRANSFER",
+      "suite": "runtime",
+      "runner_case_id": "M07-G07-ONLY-MERCHANT-OWNER-CAN-TRANSFER",
+      "source": "tests/development/merchant-portability.test.mts",
+      "capability_id": "FEATURE-M07-G07"
+    },
+    {
+      "id": "runtime:M07-G07-NO-IMPLICIT-CREDENTIAL-ALIAS-OR-SNAPSHOT-REPLACEMENT",
+      "suite": "runtime",
+      "runner_case_id": "M07-G07-NO-IMPLICIT-CREDENTIAL-ALIAS-OR-SNAPSHOT-REPLACEMENT",
+      "source": "tests/development/merchant-portability.test.mts",
+      "capability_id": "FEATURE-M07-G07"
+    },
+    {
+      "id": "runtime:M07-G07-CONSENT-EVALUATION-AND-SETTLED-SOURCE-ROUNDTRIP",
+      "suite": "runtime",
+      "runner_case_id": "M07-G07-CONSENT-EVALUATION-AND-SETTLED-SOURCE-ROUNDTRIP",
+      "source": "tests/development/merchant-portability.test.mts",
+      "capability_id": "FEATURE-M07-G07"
+    },
+    {
+      "id": "runtime:M07-G07-LATER-ERASURE-CHECKPOINT-PREVENTS-RESURRECTION",
+      "suite": "runtime",
+      "runner_case_id": "M07-G07-LATER-ERASURE-CHECKPOINT-PREVENTS-RESURRECTION",
+      "source": "tests/development/merchant-portability.test.mts",
+      "capability_id": "FEATURE-M07-G07"
+    },
+    {
+      "id": "runtime:CASE-M07-G08-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M07-G08-01",
+      "source": "tests/development/migration-operations.test.mts",
+      "capability_id": "FEATURE-M07-G08"
+    },
+    {
+      "id": "runtime:CASE-M07-G08-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M07-G08-02",
+      "source": "tests/development/migration-operations.test.mts",
+      "capability_id": "FEATURE-M07-G08"
+    },
+    {
+      "id": "runtime:CASE-M07-G08-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M07-G08-03",
+      "source": "tests/development/migration-operations.test.mts",
+      "capability_id": "FEATURE-M07-G08"
+    },
+    {
+      "id": "runtime:M07-G08-PORT-022",
+      "suite": "runtime",
+      "runner_case_id": "M07-G08-PORT-022",
+      "source": "tests/development/migration-operations.test.mts",
+      "capability_id": "FEATURE-M07-G08"
+    },
+    {
+      "id": "runtime:M07-G08-COORDINATOR-LOSS-AND-RESTART-FAIL-CLOSED",
+      "suite": "runtime",
+      "runner_case_id": "M07-G08-COORDINATOR-LOSS-AND-RESTART-FAIL-CLOSED",
+      "source": "tests/development/migration-operations.test.mts",
+      "capability_id": "FEATURE-M07-G08"
+    },
+    {
+      "id": "runtime:M07-G08-BINDING-CANNOT-BE-REMOVED-OR-COPIED",
+      "suite": "runtime",
+      "runner_case_id": "M07-G08-BINDING-CANNOT-BE-REMOVED-OR-COPIED",
+      "source": "tests/development/migration-operations.test.mts",
+      "capability_id": "FEATURE-M07-G08"
+    },
+    {
+      "id": "runtime:M07-G08-CUTOVER-CANNOT-RACE-INFLIGHT-WRITE",
+      "suite": "runtime",
+      "runner_case_id": "M07-G08-CUTOVER-CANNOT-RACE-INFLIGHT-WRITE",
+      "source": "tests/development/migration-operations.test.mts",
+      "capability_id": "FEATURE-M07-G08"
+    },
+    {
+      "id": "runtime:M07-G08-STALE-EPOCH-AND-RECONCILE-CONTEXT-CANNOT-WRITE",
+      "suite": "runtime",
+      "runner_case_id": "M07-G08-STALE-EPOCH-AND-RECONCILE-CONTEXT-CANNOT-WRITE",
+      "source": "tests/development/migration-operations.test.mts",
+      "capability_id": "FEATURE-M07-G08"
+    },
+    {
+      "id": "runtime:M07-G08-MERCHANT-IMPORT-STAYS-QUARANTINED-AFTER-CUTOVER",
+      "suite": "runtime",
+      "runner_case_id": "M07-G08-MERCHANT-IMPORT-STAYS-QUARANTINED-AFTER-CUTOVER",
+      "source": "tests/development/migration-operations.test.mts",
+      "capability_id": "FEATURE-M07-G08"
+    },
+    {
+      "id": "runtime:CASE-M07-G09-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M07-G09-01",
+      "source": "tests/development/migration-operations.test.mts",
+      "capability_id": "FEATURE-M07-G09"
+    },
+    {
+      "id": "runtime:CASE-M07-G09-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M07-G09-02",
+      "source": "tests/development/migration-operations.test.mts",
+      "capability_id": "FEATURE-M07-G09"
+    },
+    {
+      "id": "runtime:CASE-M07-G09-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M07-G09-03",
+      "source": "tests/development/migration-operations.test.mts",
+      "capability_id": "FEATURE-M07-G09"
+    },
+    {
+      "id": "runtime:M07-G09-LOST-WEBHOOK-RECOVERS-FROM-SOURCE-LEDGER",
+      "suite": "runtime",
+      "runner_case_id": "M07-G09-LOST-WEBHOOK-RECOVERS-FROM-SOURCE-LEDGER",
+      "source": "tests/development/migration-operations.test.mts",
+      "capability_id": "FEATURE-M07-G09"
+    },
+    {
+      "id": "runtime:M07-G09-EXPIRED-TOKEN-REQUIRES-NEW-LOCAL-SESSION",
+      "suite": "runtime",
+      "runner_case_id": "M07-G09-EXPIRED-TOKEN-REQUIRES-NEW-LOCAL-SESSION",
+      "source": "tests/development/migration-operations.test.mts",
+      "capability_id": "FEATURE-M07-G09"
+    },
+    {
+      "id": "runtime:M07-G09-STUCK-HOLD-KEEPS-FOREIGN-OWNER",
+      "suite": "runtime",
+      "runner_case_id": "M07-G09-STUCK-HOLD-KEEPS-FOREIGN-OWNER",
+      "source": "tests/development/migration-operations.test.mts",
+      "capability_id": "FEATURE-M07-G09"
+    },
+    {
+      "id": "runtime:M07-G09-PROVIDER-OUTAGE-DOES-NOT-GUESS-ABSENCE",
+      "suite": "runtime",
+      "runner_case_id": "M07-G09-PROVIDER-OUTAGE-DOES-NOT-GUESS-ABSENCE",
+      "source": "tests/development/migration-operations.test.mts",
+      "capability_id": "FEATURE-M07-G09"
+    },
+    {
+      "id": "runtime:M07-G09-RESTORE-PRESERVES-OLD-OPERATION-BLOCK",
+      "suite": "runtime",
+      "runner_case_id": "M07-G09-RESTORE-PRESERVES-OLD-OPERATION-BLOCK",
+      "source": "tests/development/migration-operations.test.mts",
+      "capability_id": "FEATURE-M07-G09"
+    },
+    {
+      "id": "runtime:M07-G09-AGENT-INCIDENT-REVOKES-OLD-LEASE",
+      "suite": "runtime",
+      "runner_case_id": "M07-G09-AGENT-INCIDENT-REVOKES-OLD-LEASE",
+      "source": "tests/development/migration-operations.test.mts",
+      "capability_id": "FEATURE-M07-G09"
+    },
+    {
+      "id": "runtime:CASE-M07-G10-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M07-G10-01",
+      "source": "tests/development/installation-upgrade.test.mts",
+      "capability_id": "FEATURE-M07-G10"
+    },
+    {
+      "id": "runtime:CASE-M07-G10-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M07-G10-02",
+      "source": "tests/development/installation-upgrade.test.mts",
+      "capability_id": "FEATURE-M07-G10"
+    },
+    {
+      "id": "runtime:CASE-M07-G10-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M07-G10-03",
+      "source": "tests/development/installation-upgrade.test.mts",
+      "capability_id": "FEATURE-M07-G10"
+    },
+    {
+      "id": "runtime:M07-G10-PORT-003",
+      "suite": "runtime",
+      "runner_case_id": "M07-G10-PORT-003",
+      "source": "tests/development/installation-upgrade.test.mts",
+      "capability_id": "FEATURE-M07-G10"
+    },
+    {
+      "id": "runtime:M07-G10-ARTIFACT-PINS",
+      "suite": "runtime",
+      "runner_case_id": "M07-G10-ARTIFACT-PINS",
+      "source": "tests/development/installation-upgrade.test.mts",
+      "capability_id": "FEATURE-M07-G10"
+    },
+    {
+      "id": "runtime:M07-G10-UNSAFE-DESTINATIONS",
+      "suite": "runtime",
+      "runner_case_id": "M07-G10-UNSAFE-DESTINATIONS",
+      "source": "tests/development/installation-upgrade.test.mts",
+      "capability_id": "FEATURE-M07-G10"
+    },
+    {
+      "id": "runtime:M07-G10-MIGRATION-GUARDS",
+      "suite": "runtime",
+      "runner_case_id": "M07-G10-MIGRATION-GUARDS",
+      "source": "tests/development/installation-upgrade.test.mts",
+      "capability_id": "FEATURE-M07-G10"
+    },
+    {
+      "id": "runtime:M07-G10-ROLLBACK-PINS",
+      "suite": "runtime",
+      "runner_case_id": "M07-G10-ROLLBACK-PINS",
+      "source": "tests/development/installation-upgrade.test.mts",
+      "capability_id": "FEATURE-M07-G10"
+    },
+    {
+      "id": "runtime:M07-G10-TRANSACTIONAL-MIGRATION",
+      "suite": "runtime",
+      "runner_case_id": "M07-G10-TRANSACTIONAL-MIGRATION",
+      "source": "tests/development/installation-upgrade.test.mts",
+      "capability_id": "FEATURE-M07-G10"
+    },
+    {
+      "id": "runtime:M07-G10-MERCHANT-IMPORT",
+      "suite": "runtime",
+      "runner_case_id": "M07-G10-MERCHANT-IMPORT",
+      "source": "tests/development/installation-upgrade.test.mts",
+      "capability_id": "FEATURE-M07-G10"
+    },
+    {
+      "id": "python:test_dev_tests.DevelopmentTests.test_unregistered_node_file_wrapper_cannot_pass_development",
+      "suite": "python",
+      "runner_case_id": "test_dev_tests.DevelopmentTests.test_unregistered_node_file_wrapper_cannot_pass_development",
+      "source": "tests/test_dev_tests.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "runtime:M07-G08-RETURN-AND-CURRENT-AUTHORITY-FAIL-CLOSED",
+      "suite": "runtime",
+      "runner_case_id": "M07-G08-RETURN-AND-CURRENT-AUTHORITY-FAIL-CLOSED",
+      "source": "tests/development/migration-operations.test.mts",
+      "capability_id": "FEATURE-M07-G08"
     }
   ],
   "protected_files": [

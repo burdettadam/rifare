@@ -1,13 +1,24 @@
 {
   "milestone": "M07",
-  "scope": "M07-G01 through M07-G05 bounded local development under ADR-0031",
+  "scope": "M07-G01 through M07-G10 bounded local development under ADR-0031 and ADR-0033",
   "state": "blocked",
   "local_integration": "authorized_after_verified_candidate",
   "full_milestone_accepted": false,
   "release_authorized": false,
   "base": "ad6c5105f3ce806230375833f69eb491a7b93d89",
-  "worker_goals": ["M07-G01", "M07-G02", "M07-G03", "M07-G04", "M07-G05"],
-  "observed_scope": "Bounded SQLite commerce with separate synthetic Woo, gateway and message ledgers; common HTTP lifecycle, independently implemented local runtime clients, and native adapter conformance fixtures.",
+  "worker_goals": [
+    "M07-G01",
+    "M07-G02",
+    "M07-G03",
+    "M07-G04",
+    "M07-G05",
+    "M07-G06",
+    "M07-G07",
+    "M07-G08",
+    "M07-G09",
+    "M07-G10"
+  ],
+  "observed_scope": "Bounded SQLite commerce with separate synthetic Woo, gateway and message ledgers; common HTTP lifecycle, independent local runtime clients, adapter conformance, evidence-bound compatibility, merchant transfer with current suppression and quarantine, shared migration ownership, executable operator drills, and offline installation/upgrade preparation.",
   "missing": [
     "formal M05-G99 and M06-G99 acceptance and accepted M07 prerequisites",
     "connected Woo account, complete source history, exact deployed versions and authorized scopes",
@@ -15,7 +26,9 @@
     "connected message account, consent, source acceptance and delivery observations",
     "model/provider intended-use and runtime qualification beyond deterministic local clients",
     "PostgreSQL and React target-stack plus direct served-browser qualification",
-    "human authorization for public fixture publication or a tagged release"
+    "human authorization for public fixture publication or a tagged release",
+    "independent clean-machine installation/upgrade observation against a released artifact",
+    "current full acceptance gate and separately authorized live migration/cutover qualification"
   ],
   "limits": [
     "All new capability objects remain proposed_not_accepted.",
@@ -24,9 +37,28 @@
     "No role permissions are expanded; qualified agent preview execution still requires separate approval and cannot dispatch money.",
     "Browser evidence is component-plus-real-local-HTTP with browser egress blocked.",
     "Both inventory views validate all 170 current tables; the old 167 projection is labelled legacy M06.",
-    "Logical erasure blocks further core use without claiming deletion of independent source or gateway retention."
+    "Logical erasure blocks further core use without claiming deletion of independent source or gateway retention.",
+    "Compatibility/readiness outputs are diagnostic and never authorize execution or production use.",
+    "Merchant import requires a separately verified current erasure checkpoint and keeps egress, old operations and credential references paused.",
+    "Migration binds a single-merchant installation and compares current effect authority; verified import normalization cannot activate a writable target, and rollback pauses both writers without resuming old work.",
+    "Installation tests use fresh directories on the same host; source preparation is not a released or tagged distribution.",
+    "The current development batch uses focused checks; previous full-gate evidence is historical and is not relabeled as a current full pass."
   ],
   "review_kind": "separate_nonauthor_assistant_sessions_same_runtime",
-  "later_m07_goals_started": false,
-  "evidence": "The cumulative handoff supplies exact candidate/tree identities, unchanged full-gate reports, targeted faults, source demonstrations, independent reviews and recovery checks. This record alone does not prove a passing run."
+  "later_m07_goals_started": true,
+  "evidence": "The prior first-five handoff retains its full-gate reports and history. The next-five handoff binds the current source to small native/helper reports, concrete issue corrections, focused nonauthor reviews, and a cumulative source/Git bundle. No full gate or multi-level restoration audit is inferred for this batch; this record alone does not prove a passing run.",
+  "current_batch": {
+    "goals": [
+      "M07-G06",
+      "M07-G07",
+      "M07-G08",
+      "M07-G09",
+      "M07-G10"
+    ],
+    "authority": "docs/decisions/0033-portability-and-operations-next-five.md",
+    "base": "45599f6ae4e23a342facae0a53798dec5986d725",
+    "test_profile": "focused_development",
+    "full_regression": false,
+    "formal_goal_acceptance": false
+  }
 }

@@ -12,9 +12,15 @@ M06-G06 through M06-G10 add funded replacement lineage, original paired-currency
 
 ## Current M07 development batch
 
-M07-G06 through M07-G10 are assigned under ADR-0033: evidence-bound compatibility,
+M07-G06 through M07-G10 have bounded local implementations under ADR-0033: evidence-bound compatibility,
 merchant export/import, single-writer migration, exercised operator runbooks and
 installation/upgrade preparation. Development uses the focused test defaults in
 DEVELOPMENT.md. The prior five M07 goals and their full-test handoff are retained.
 This local assignment does not accept the blocked M05/M06 prerequisites or grant
 connected, independent-machine or release qualification.
+
+The next-five checkpoint records the coherent 54-case development selection,
+the retained seven-case helper observation and focused nonauthor reviews. Formal
+acceptance remains separate; the integration record and accompanying source-bound
+reports provide the actual local outcome. No further goal is assigned by this
+status update.

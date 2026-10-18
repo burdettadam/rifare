@@ -1,6 +1,6 @@
 {
-  "source_file_count": 1173,
-  "source_count_reason": "Four additive development-profile source files: bounded selector, profile configuration, six focused helper tests and ADR-0032. All prior source paths, registration and capability objects, and non-count oracle values are retained.",
+  "source_file_count": 1198,
+  "source_count_reason": "Twenty-five additive M07-G06 through M07-G10 implementation, CLI, test, guide, assignment and integration-record files. All prior source paths, registration/capability objects and non-count oracle values are retained.",
   "component_ids": [
     "git-agent-adaptations",
     "rifare-developer-helpers",
