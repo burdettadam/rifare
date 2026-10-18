@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "contract": "rifare-location-inventory-v1",
+  "goal_ids": ["M08-G08"],
+  "qualification": "synthetic_only",
+  "formal_goal_accepted": false,
+  "physical_qualified": false,
+  "source": {
+    "adapter": "packages/adapters/warehouse-inventory-fixture-source.mts",
+    "warehouse": "packages/adapters/warehouse-fixture-source.mts",
+    "available_owner": "the existing warehouse_stock.available row, shared with return disposition and native return corrections",
+    "on_hand": "available plus this same source's active transfer reservations",
+    "reserved": "active source transfer reservations at the origin",
+    "in_transit": "dispatched less received and lost units, attributed to the origin",
+    "separate_fulfillment_source": "a replacement fulfillment source has distinct ownership; its absolute quantities cannot be added to this warehouse"
+  },
+  "identity": {
+    "stock_key": ["tenant_id", "store_id", "variant_id", "location_id"],
+    "field_owner_key": ["tenant_id", "store_id", "variant_id", "location_id", "field"],
+    "resource_id": "authorization and journey linkage, never an independent balance or anchor",
+    "movements": "immutable source-owned IDs; return-event, return-disposition and transfer namespaces derive stable IDs from original source operations and unit/location identity",
+    "snapshots": "immutable absolute observation ID with all covered movement IDs captured in the same native transaction",
+    "corrections": "retain a link to the actual ancestor movement for the same unit, including across native event stages without a stock effect"
+  },
+  "ledger": {
+    "fields": ["available", "on_hand", "reserved", "in_transit"],
+    "initial_anchor": "one absolute observation per physical stock key",
+    "later_absolute": "compare with movement history; never add as a delta or silently rebase",
+    "covered_movements": "retained as history but not applied again above an anchor that already includes them",
+    "replay": "same ID and original source digest preserve one movement across restart; conflicts fail closed",
+    "chain": "per stock key, monotonic ledger_seq and previous_digest link immutable nonpersonal stock cores",
+    "integrity_limit": "local digests detect inconsistent data; they do not authenticate an external warehouse or adversarial database administrator"
+  },
+  "authority": {
+    "ownership": ["action.configure", "resource.read"],
+    "import": ["operation.reconcile", "event.process", "resource.read"],
+    "read": ["operation.read", "resource.read"],
+    "conflicts": "append a scoped FIELD_OWNER_CONFLICT discrepancy and preserve the existing owner",
+    "source_adjustment": "recordMovement is trusted synthetic fixture administration, not a merchant-facing physical adjustment endpoint",
+    "recovery": "restore quarantine blocks imports and ownership changes; read-only source lookup and existing ledger views remain available"
+  },
+  "privacy": {
+    "subject_link": "tenant_id, store_id, resource_id on every commerce table",
+    "movement_minimum": "inventoryMovementCore plus tenant/store/resource and chain_digest; retain exact quantities and original source digest while removing personal journey/evidence details",
+    "snapshot_minimum": "inventorySnapshotCore plus tenant/store/resource and quantitative_digest",
+    "owners": "retain variant/location/field/source identity without personal metadata",
+    "read_after_erasure": "direct resource access is denied; another authorized resource may read shared aggregate quantities without seeing the erased journey",
+    "external_copies": "warehouse source databases and caller copies require separate operator handling"
+  },
+  "storage": {
+    "migration": "migrations/commerce/035_location_inventory.sql",
+    "tables": ["commerce_inventory_owners", "commerce_inventory_snapshots", "commerce_inventory_movements", "commerce_inventory_discrepancies"],
+    "rollback": "retain original source identities, anchors, covered IDs and chain cores; do not delete an observation to force reapplication"
+  },
+  "tests": {
+    "file": "tests/development/location-inventory.test.mts",
+    "native_cases_for_goal": 9,
+    "required_ids": ["CASE-M08-G08-01", "CASE-M08-G08-02", "CASE-M08-G08-03"],
+    "targeted_fault": "actual isolated location-inventory module adds a repeated absolute snapshot to the balance, violating the literal ten-unit oracle",
+    "shared_file_total": 22,
+    "author_execution": "none; integration owns the bounded native invocation and independent reviews"
+  }
+}

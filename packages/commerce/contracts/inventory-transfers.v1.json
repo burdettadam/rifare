@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "contract": "rifare-inventory-transfers-v1",
+  "goal_ids": ["M08-G09"],
+  "qualification": "synthetic_only",
+  "formal_goal_accepted": false,
+  "physical_qualified": false,
+  "source": "the existing warehouse source identity and stock store through WarehouseInventoryFixtureSource",
+  "quantities": ["quantity", "reserved", "released", "dispatched", "received", "lost", "in_transit"],
+  "transitions": {
+    "plan": "no source effect; one scoped transfer identity and original canonical resource digest",
+    "reserve": "reduce origin available, increase origin reserved, retain on_hand; destination unchanged",
+    "dispatch": "reduce origin reserved and on_hand, increase in_transit",
+    "receive": "reduce in_transit and add the same quantity to destination available/on_hand",
+    "lose": "reduce in_transit, preserve a source-linked lost-quantity record; do not add destination stock",
+    "correct_loss": "reduce the named original loss and add only its corrected quantity at the destination",
+    "release": "return only reserved, undispatched units to origin available"
+  },
+  "conservation": [
+    "reserved + released + dispatched <= quantity",
+    "received + lost + in_transit = dispatched",
+    "on_hand = available + reserved at each location",
+    "a unit cannot be available at origin and destination simultaneously"
+  ],
+  "authority": {
+    "proposal": "current action.propose and resource access, anchored source-reconciled balances, current transfer revision and canonical resource digest",
+    "approval": "current owner/reviewer with action.approve on the resource, different from the proposer, exact command digest, bounded expiry",
+    "execution": ["action.execute", "operation.dispatch", "resource.read"],
+    "named_stop": "diagnostic.warehouse.disposition",
+    "final_rechecks": ["authenticated tenant/store and resource scope", "source identity", "source positions", "canonical resource digest", "transfer revision", "approval digest and one use", "approval actor and authority revision", "expiry", "named/global execution stamp", "restore and migration egress fences"],
+    "final_boundary": "repeat rechecks in the actual source-call callback after durable unknown persistence; the used approval is valid only for that original send"
+  },
+  "unknown": {
+    "persist_before_send": true,
+    "retries": false,
+    "repair": "lookup original operation_id at original source identity and import the existing movement receipts",
+    "absent_or_timeout_lookup": "remain unknown; no replacement ID or automatically recreated command",
+    "other_transition": "blocked while the transfer has a proposed or unknown operation",
+    "restore_quarantine": "lookup can read; receipt import waits for write-enabled recovery state"
+  },
+  "storage": {
+    "migration": "migrations/commerce/035_location_inventory.sql",
+    "tables": ["commerce_inventory_transfers", "commerce_inventory_transfer_operations", "commerce_inventory_transfer_approvals"],
+    "stock_ledger_tables": ["commerce_inventory_owners", "commerce_inventory_snapshots", "commerce_inventory_movements", "commerce_inventory_discrepancies"],
+    "subject_link": "tenant_id, store_id, resource_id",
+    "minimization": "retain stable transfer/effect identity and stock audit; block reuse after erasure, never replay an uncertain effect from minimized data",
+    "rollback": "preserve pending/unknown operations and the native warehouse journal; restoration cannot turn an old transfer into new authority"
+  },
+  "limits": {"transfer_quantity": 1000000, "approval_lifetime_ms": 300000, "source_deadline_ms": {"default": 1000, "minimum": 5, "maximum": 30000}},
+  "tests": {
+    "file": "tests/development/location-inventory.test.mts",
+    "native_cases_for_goal": 13,
+    "required_ids": ["CASE-M08-G09-01", "CASE-M08-G09-02", "CASE-M08-G09-03"],
+    "later_port_extension": "PORT-025-M08-G09-DUPLICATE-PARTIAL",
+    "targeted_fault": "actual isolated source mutates destination available at reservation while leaving origin available unchanged; literal native-stock oracle rejects it",
+    "shared_file_total": 22,
+    "author_execution": "none; integration owns the bounded native invocation and independent reviews"
+  },
+  "remaining_limits": ["no connected warehouse or real physical observations", "stale proposed commands stay blocked and have no automatic reauthorization", "a loss correction targets one prior loss receipt at a time", "formal prerequisites and milestone acceptance remain blocked"]
+}
