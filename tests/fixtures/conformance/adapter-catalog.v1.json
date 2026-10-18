@@ -2642,7 +2642,7 @@
   "oracle_pins": [
     {
       "path": "apps/commerce-api/server.mts",
-      "sha256": "f93fba999a85081452587b551f2cda702532ffe180106dc47af92d4c3aafa3fe"
+      "sha256": "2fd7efbfc48f9a1a885316239e5cb46cfd55f7c89e7a1a1ce50397e766fb06a8"
     },
     {
       "path": "migrations/commerce/001-foundation.sql",
@@ -3106,7 +3106,7 @@
     },
     {
       "path": "packages/commerce/privacy-lifecycle.mts",
-      "sha256": "172a78cb6a4e4afae5d629e5e49f6c47403692bc2a5f28f03ec06331319f80f7"
+      "sha256": "3b2ba1101a11e9b8c292a2ef7f856503748ea549aac09db0e28f65fb3cbc85a3"
     },
     {
       "path": "packages/commerce/profile-editor.mts",
@@ -3382,7 +3382,7 @@
     },
     {
       "path": "packages/commerce/webhook-inbox.mts",
-      "sha256": "944fc83187003b7ca301b89b7eec4f017323be2880b87f05f070db9923625ef4"
+      "sha256": "606b72f77ee2991cd3e978a008fa3c7be9da3af0f097ed6cec0f49e064b75244"
     },
     {
       "path": "packages/commerce/work-leases.mts",

@@ -1144,6 +1144,66 @@
         "tools/install-upgrade.mts",
         "docs/INSTALL-UPGRADE.md"
       ]
+    },
+    {
+      "id": "FEATURE-M07-G11",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M07/M07-G11.md",
+        "packages/operations/recovery-rehearsal.mts",
+        "tools/rehearse-recovery.mts",
+        "docs/RECOVERY-LOAD.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M07-G12",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M07/M07-G12.md",
+        "packages/operations/load-envelope.mts",
+        "packages/operations/contracts/load-workload.v1.json",
+        "packages/commerce/webhook-inbox.mts",
+        "tools/measure-load.mts",
+        "docs/RECOVERY-LOAD.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M07-G13",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M07/M07-G13.md",
+        "packages/security/release-audit.mts",
+        "packages/security/release-audit.py",
+        "packages/security/contracts/release-audit.v1.json",
+        "tools/audit-release.mts",
+        "docs/RELEASE-SECURITY.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M07-G14",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M07/M07-G14.md",
+        "packages/commerce/privacy-coverage.mts",
+        "packages/commerce/contracts/privacy-storage-surfaces.v1.json",
+        "tools/audit-privacy.mts",
+        "docs/PRIVACY-COVERAGE.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M07-G15",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M07/M07-G15.md",
+        "apps/commerce-api/accessibility-client.js",
+        "apps/commerce-api/accessibility.css",
+        "docs/ACCESSIBLE-WORKFLOWS.md"
+      ]
     }
   ],
   "tests": [
@@ -19339,6 +19399,335 @@
       "runner_case_id": "M07-G08-RETURN-AND-CURRENT-AUTHORITY-FAIL-CLOSED",
       "source": "tests/development/migration-operations.test.mts",
       "capability_id": "FEATURE-M07-G08"
+    },
+    {
+      "id": "runtime:CASE-M07-G11-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M07-G11-01",
+      "source": "tests/development/recovery-load.test.mts",
+      "capability_id": "FEATURE-M07-G11"
+    },
+    {
+      "id": "runtime:CASE-M07-G11-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M07-G11-02",
+      "source": "tests/development/recovery-load.test.mts",
+      "capability_id": "FEATURE-M07-G11"
+    },
+    {
+      "id": "runtime:CASE-M07-G11-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M07-G11-03",
+      "source": "tests/development/recovery-load.test.mts",
+      "capability_id": "FEATURE-M07-G11"
+    },
+    {
+      "id": "runtime:M07-G11-SNAPSHOT-PIN-AND-NO-OVERWRITE",
+      "suite": "runtime",
+      "runner_case_id": "M07-G11-SNAPSHOT-PIN-AND-NO-OVERWRITE",
+      "source": "tests/development/recovery-load.test.mts",
+      "capability_id": "FEATURE-M07-G11"
+    },
+    {
+      "id": "runtime:M07-G11-CURRENT-ERASURE-BEFORE-ATTACHMENT-EXPOSURE",
+      "suite": "runtime",
+      "runner_case_id": "M07-G11-CURRENT-ERASURE-BEFORE-ATTACHMENT-EXPOSURE",
+      "source": "tests/development/recovery-load.test.mts",
+      "capability_id": "FEATURE-M07-G11"
+    },
+    {
+      "id": "runtime:M07-G11-STALE-CHECKPOINT-AND-MEASURED-TARGET-MISS",
+      "suite": "runtime",
+      "runner_case_id": "M07-G11-STALE-CHECKPOINT-AND-MEASURED-TARGET-MISS",
+      "source": "tests/development/recovery-load.test.mts",
+      "capability_id": "FEATURE-M07-G11"
+    },
+    {
+      "id": "runtime:M07-G11-WRAPPING-KEY-ABSENT-AND-CIPHERTEXT-PRESERVED",
+      "suite": "runtime",
+      "runner_case_id": "M07-G11-WRAPPING-KEY-ABSENT-AND-CIPHERTEXT-PRESERVED",
+      "source": "tests/development/recovery-load.test.mts",
+      "capability_id": "FEATURE-M07-G11"
+    },
+    {
+      "id": "runtime:CASE-M07-G12-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M07-G12-01",
+      "source": "tests/development/recovery-load.test.mts",
+      "capability_id": "FEATURE-M07-G12"
+    },
+    {
+      "id": "runtime:CASE-M07-G12-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M07-G12-02",
+      "source": "tests/development/recovery-load.test.mts",
+      "capability_id": "FEATURE-M07-G12"
+    },
+    {
+      "id": "runtime:CASE-M07-G12-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M07-G12-03",
+      "source": "tests/development/recovery-load.test.mts",
+      "capability_id": "FEATURE-M07-G12"
+    },
+    {
+      "id": "runtime:M07-G12-PERSISTENCE-FAILURE-NEVER-ACKNOWLEDGED",
+      "suite": "runtime",
+      "runner_case_id": "M07-G12-PERSISTENCE-FAILURE-NEVER-ACKNOWLEDGED",
+      "source": "tests/development/recovery-load.test.mts",
+      "capability_id": "FEATURE-M07-G12"
+    },
+    {
+      "id": "runtime:M07-G12-REOPEN-SHARES-TRANSACTIONAL-MERCHANT-CAPACITY",
+      "suite": "runtime",
+      "runner_case_id": "M07-G12-REOPEN-SHARES-TRANSACTIONAL-MERCHANT-CAPACITY",
+      "source": "tests/development/recovery-load.test.mts",
+      "capability_id": "FEATURE-M07-G12"
+    },
+    {
+      "id": "runtime:M07-G12-BYTE-CAPACITY-AND-SIGNATURE-PRIORITY",
+      "suite": "runtime",
+      "runner_case_id": "M07-G12-BYTE-CAPACITY-AND-SIGNATURE-PRIORITY",
+      "source": "tests/development/recovery-load.test.mts",
+      "capability_id": "FEATURE-M07-G12"
+    },
+    {
+      "id": "runtime:M07-G12-CAPACITY-ACROSS-ROUTES-AND-TENANT-ISOLATION",
+      "suite": "runtime",
+      "runner_case_id": "M07-G12-CAPACITY-ACROSS-ROUTES-AND-TENANT-ISOLATION",
+      "source": "tests/development/recovery-load.test.mts",
+      "capability_id": "FEATURE-M07-G12"
+    },
+    {
+      "id": "runtime:M07-G12-HTTP-429-RETRY-AFTER-AND-DUPLICATE-200",
+      "suite": "runtime",
+      "runner_case_id": "M07-G12-HTTP-429-RETRY-AFTER-AND-DUPLICATE-200",
+      "source": "tests/development/recovery-load.test.mts",
+      "capability_id": "FEATURE-M07-G12"
+    },
+    {
+      "id": "runtime:M07-G12-UNCONFIGURED-DEFAULT-RETAINED-AND-LIMITS-FROZEN",
+      "suite": "runtime",
+      "runner_case_id": "M07-G12-UNCONFIGURED-DEFAULT-RETAINED-AND-LIMITS-FROZEN",
+      "source": "tests/development/recovery-load.test.mts",
+      "capability_id": "FEATURE-M07-G12"
+    },
+    {
+      "id": "runtime:M07-G12-BOUNDED-RETRY-EXHAUSTION-IS-HONEST",
+      "suite": "runtime",
+      "runner_case_id": "M07-G12-BOUNDED-RETRY-EXHAUSTION-IS-HONEST",
+      "source": "tests/development/recovery-load.test.mts",
+      "capability_id": "FEATURE-M07-G12"
+    },
+    {
+      "id": "runtime:M07-RECOVERY-LOAD-CLI-CONTRACT",
+      "suite": "runtime",
+      "runner_case_id": "M07-RECOVERY-LOAD-CLI-CONTRACT",
+      "source": "tests/development/recovery-load.test.mts",
+      "capability_id": "FEATURE-M07-G12"
+    },
+    {
+      "id": "runtime:CASE-M07-G13-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M07-G13-01",
+      "source": "tests/development/release-security.test.mts",
+      "capability_id": "FEATURE-M07-G13"
+    },
+    {
+      "id": "runtime:M07-G13-CLI",
+      "suite": "runtime",
+      "runner_case_id": "M07-G13-CLI",
+      "source": "tests/development/release-security.test.mts",
+      "capability_id": "FEATURE-M07-G13"
+    },
+    {
+      "id": "runtime:CASE-M07-G13-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M07-G13-02",
+      "source": "tests/development/release-security.test.mts",
+      "capability_id": "FEATURE-M07-G13"
+    },
+    {
+      "id": "runtime:CASE-M07-G13-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M07-G13-03",
+      "source": "tests/development/release-security.test.mts",
+      "capability_id": "FEATURE-M07-G13"
+    },
+    {
+      "id": "runtime:M07-G13-ARTIFACT-PIN",
+      "suite": "runtime",
+      "runner_case_id": "M07-G13-ARTIFACT-PIN",
+      "source": "tests/development/release-security.test.mts",
+      "capability_id": "FEATURE-M07-G13"
+    },
+    {
+      "id": "runtime:M07-G13-DEPENDENCY-MISMATCH",
+      "suite": "runtime",
+      "runner_case_id": "M07-G13-DEPENDENCY-MISMATCH",
+      "source": "tests/development/release-security.test.mts",
+      "capability_id": "FEATURE-M07-G13"
+    },
+    {
+      "id": "runtime:M07-G13-LICENSE",
+      "suite": "runtime",
+      "runner_case_id": "M07-G13-LICENSE",
+      "source": "tests/development/release-security.test.mts",
+      "capability_id": "FEATURE-M07-G13"
+    },
+    {
+      "id": "runtime:M07-G13-SCAN-FRESHNESS",
+      "suite": "runtime",
+      "runner_case_id": "M07-G13-SCAN-FRESHNESS",
+      "source": "tests/development/release-security.test.mts",
+      "capability_id": "FEATURE-M07-G13"
+    },
+    {
+      "id": "runtime:M07-G13-SCAN-BINDINGS",
+      "suite": "runtime",
+      "runner_case_id": "M07-G13-SCAN-BINDINGS",
+      "source": "tests/development/release-security.test.mts",
+      "capability_id": "FEATURE-M07-G13"
+    },
+    {
+      "id": "runtime:M07-G13-SCAN-TRUST",
+      "suite": "runtime",
+      "runner_case_id": "M07-G13-SCAN-TRUST",
+      "source": "tests/development/release-security.test.mts",
+      "capability_id": "FEATURE-M07-G13"
+    },
+    {
+      "id": "runtime:M07-G13-LINKS",
+      "suite": "runtime",
+      "runner_case_id": "M07-G13-LINKS",
+      "source": "tests/development/release-security.test.mts",
+      "capability_id": "FEATURE-M07-G13"
+    },
+    {
+      "id": "runtime:M07-G13-INPUT-FENCE",
+      "suite": "runtime",
+      "runner_case_id": "M07-G13-INPUT-FENCE",
+      "source": "tests/development/release-security.test.mts",
+      "capability_id": "FEATURE-M07-G13"
+    },
+    {
+      "id": "runtime:CASE-M07-G14-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M07-G14-01",
+      "source": "tests/development/privacy-coverage.test.mts",
+      "capability_id": "FEATURE-M07-G14"
+    },
+    {
+      "id": "runtime:CASE-M07-G14-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M07-G14-02",
+      "source": "tests/development/privacy-coverage.test.mts",
+      "capability_id": "FEATURE-M07-G14"
+    },
+    {
+      "id": "runtime:CASE-M07-G14-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M07-G14-03",
+      "source": "tests/development/privacy-coverage.test.mts",
+      "capability_id": "FEATURE-M07-G14"
+    },
+    {
+      "id": "runtime:M07-G14-ALL-170-TABLES-HAVE-EXPLICIT-SURFACES",
+      "suite": "runtime",
+      "runner_case_id": "M07-G14-ALL-170-TABLES-HAVE-EXPLICIT-SURFACES",
+      "source": "tests/development/privacy-coverage.test.mts",
+      "capability_id": "FEATURE-M07-G14"
+    },
+    {
+      "id": "runtime:M07-G14-MISSING-AND-UNKNOWN-SURFACES-BLOCK",
+      "suite": "runtime",
+      "runner_case_id": "M07-G14-MISSING-AND-UNKNOWN-SURFACES-BLOCK",
+      "source": "tests/development/privacy-coverage.test.mts",
+      "capability_id": "FEATURE-M07-G14"
+    },
+    {
+      "id": "runtime:M07-G14-RUNTIME-CACHE-ADDITION-OR-DRIFT-REQUIRES-REVIEW",
+      "suite": "runtime",
+      "runner_case_id": "M07-G14-RUNTIME-CACHE-ADDITION-OR-DRIFT-REQUIRES-REVIEW",
+      "source": "tests/development/privacy-coverage.test.mts",
+      "capability_id": "FEATURE-M07-G14"
+    },
+    {
+      "id": "runtime:M07-G14-EXPORT-CONSENT-AND-ANALYTICS-ARE-SUBJECT-SCOPED",
+      "suite": "runtime",
+      "runner_case_id": "M07-G14-EXPORT-CONSENT-AND-ANALYTICS-ARE-SUBJECT-SCOPED",
+      "source": "tests/development/privacy-coverage.test.mts",
+      "capability_id": "FEATURE-M07-G14"
+    },
+    {
+      "id": "runtime:M07-G14-HELD-COPIES-ARE-RETAINED-AND-EXPORTED",
+      "suite": "runtime",
+      "runner_case_id": "M07-G14-HELD-COPIES-ARE-RETAINED-AND-EXPORTED",
+      "source": "tests/development/privacy-coverage.test.mts",
+      "capability_id": "FEATURE-M07-G14"
+    },
+    {
+      "id": "runtime:M07-G14-UNINSTALL-DISCONNECTS-AND-RETAINS-NAMED-LIMITS",
+      "suite": "runtime",
+      "runner_case_id": "M07-G14-UNINSTALL-DISCONNECTS-AND-RETAINS-NAMED-LIMITS",
+      "source": "tests/development/privacy-coverage.test.mts",
+      "capability_id": "FEATURE-M07-G14"
+    },
+    {
+      "id": "runtime:CASE-M07-G15-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M07-G15-01",
+      "source": "tests/development/accessibility-workflows.test.mts",
+      "capability_id": "FEATURE-M07-G15"
+    },
+    {
+      "id": "runtime:CASE-M07-G15-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M07-G15-02",
+      "source": "tests/development/accessibility-workflows.test.mts",
+      "capability_id": "FEATURE-M07-G15"
+    },
+    {
+      "id": "runtime:CASE-M07-G15-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M07-G15-03",
+      "source": "tests/development/accessibility-workflows.test.mts",
+      "capability_id": "FEATURE-M07-G15"
+    },
+    {
+      "id": "runtime:M07-G15-STATUS-KEYBOARD",
+      "suite": "runtime",
+      "runner_case_id": "M07-G15-STATUS-KEYBOARD",
+      "source": "tests/development/accessibility-workflows.test.mts",
+      "capability_id": "FEATURE-M07-G15"
+    },
+    {
+      "id": "runtime:M07-G15-RETURN-KEYBOARD",
+      "suite": "runtime",
+      "runner_case_id": "M07-G15-RETURN-KEYBOARD",
+      "source": "tests/development/accessibility-workflows.test.mts",
+      "capability_id": "FEATURE-M07-G15"
+    },
+    {
+      "id": "runtime:M07-G15-EDIT-KEYBOARD",
+      "suite": "runtime",
+      "runner_case_id": "M07-G15-EDIT-KEYBOARD",
+      "source": "tests/development/accessibility-workflows.test.mts",
+      "capability_id": "FEATURE-M07-G15"
+    },
+    {
+      "id": "runtime:M07-G15-SUPPORT-HANDOFF-KEYBOARD",
+      "suite": "runtime",
+      "runner_case_id": "M07-G15-SUPPORT-HANDOFF-KEYBOARD",
+      "source": "tests/development/accessibility-workflows.test.mts",
+      "capability_id": "FEATURE-M07-G15"
+    },
+    {
+      "id": "runtime:M07-G15-RECOVERY-KEYBOARD",
+      "suite": "runtime",
+      "runner_case_id": "M07-G15-RECOVERY-KEYBOARD",
+      "source": "tests/development/accessibility-workflows.test.mts",
+      "capability_id": "FEATURE-M07-G15"
     }
   ],
   "protected_files": [

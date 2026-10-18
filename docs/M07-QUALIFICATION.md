@@ -1,11 +1,11 @@
 # M07 portability and operations development assessment
 
 The owner assigned M07-G01 through M07-G05 in ADR-0031, then requested the next
-five goals, M07-G06 through M07-G10, in ADR-0033. **Formal acceptance of these connected-test
+five goals, M07-G06 through M07-G10, in ADR-0033 and G11–G15 in ADR-0034. **Formal acceptance of these connected-test
 goals remains blocked.** M05-G99 and M06-G99 have not been formally accepted, and
 no connected Woo store, gateway, provider account or endpoint scope was supplied.
 The original dependency, account, budget and qualification requirements remain
-unchanged. Work beyond M07-G10 is outside this development batch.
+unchanged. Work beyond M07-G15 is outside this development batch.
 
 | Goal | Local deliverable | Remaining formal proof |
 | --- | --- | --- |
@@ -19,6 +19,11 @@ unchanged. Work beyond M07-G10 is outside this development batch.
 | G08 | Shared SQLite ownership transaction across dispatch, dry-run history comparison, guarded cutover and rollback that pauses both writers | Target-host coordination durability and authorized live cutover/reconciliation evidence |
 | G09 | Seven executable recovery runbooks using existing permissions, methods and synthetic ledgers; stale/unsafe commands rejected | Independent live operator qualification for the actual deployment and providers |
 | G10 | Pinned offline source preparation, clean installation, actual migrations, seed/read workflow, interrupted upgrade and quarantine rollback | Independent clean-machine/released-artifact observation and target-stack qualification |
+| G11 | Measured local snapshot restoration, attachment/credential/operation comparison, restart and queued-write interlock checks | Approved deployment recovery points/times, actual external reconciliation and independent target-host evidence |
+| G12 | Transactional merchant-wide webhook capacity, durable acknowledgments, frozen normal/burst workload and measured latency/lag/retry counts | Approved hardware/workload limits and real provider backpressure/latency observation |
+| G13 | Offline artifact membership, dependency/license inventory, SBOM, source-bound provenance and release-blocking findings | Authenticated current vulnerability/security scans, independent review, licensing decisions and specific owner release authority |
+| G14 | All current tables plus explicit storage surfaces and executable-source drift check; scoped consent/cohort export coverage and retained erasure/suppression | Observed deployment caches/replicas, caller/provider copies, physical retention and applicable privacy qualification |
+| G15 | Native names, inline errors, focus and keyboard paths across six existing screens; explicit local browser/API checks | Human screen-reader and device/zoom observations, target-stack and comprehensive accessibility review |
 
 Each adapter operation must retain an honest native/composed/manual/unavailable
 classification and a separate local-fixture or external qualification status.
@@ -35,6 +40,12 @@ policy, the next-five batch uses four small native test files, the seven-case
 development helper check, and focused source review. Full regression, browser
 suites, nested catalog/controller campaigns, and multi-level restoration audits
 are not automatic batch steps.
+
+The G11–G15 batch uses a separate four-file focused selection for recovery/load,
+security, privacy and accessibility. Only its new small keyboard/browser file is
+explicitly selected. Actual source-bound reports and separate nonauthor reviews
+accompany its checkpoint. A local pass cannot supply any missing formal proof in
+the table above or relabel the historical full-gate results as current.
 
 The current review caught and corrected stale-snapshot erasure resurrection,
 bracket-leading merchant text being mistaken for JSON, migration binding that
@@ -58,6 +69,8 @@ See [common lifecycle](COMMON-RETURN-LIFECYCLE.md),
 [compatibility](COMPATIBILITY-LIMITS.md),
 [merchant transfer](MERCHANT-PORTABILITY.md),
 [operator runbooks](OPERATOR-RUNBOOKS.md), and
-[installation/upgrade](INSTALL-UPGRADE.md) for implementation boundaries.
+[installation/upgrade](INSTALL-UPGRADE.md), [recovery/load](RECOVERY-LOAD.md),
+[release security](RELEASE-SECURITY.md), [privacy coverage](PRIVACY-COVERAGE.md),
+and [accessible workflows](ACCESSIBLE-WORKFLOWS.md) for implementation boundaries.
 The source record [M07.json](../work/qualification/M07.json) lists the remaining
 qualification gaps; it is not a substitute for native or independent evidence.

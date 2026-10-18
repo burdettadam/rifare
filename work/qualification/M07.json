@@ -1,6 +1,6 @@
 {
   "milestone": "M07",
-  "scope": "M07-G01 through M07-G10 bounded local development under ADR-0031 and ADR-0033",
+  "scope": "M07-G01 through M07-G15 bounded local development under ADR-0031, ADR-0033 and ADR-0034",
   "state": "blocked",
   "local_integration": "authorized_after_verified_candidate",
   "full_milestone_accepted": false,
@@ -16,9 +16,14 @@
     "M07-G07",
     "M07-G08",
     "M07-G09",
-    "M07-G10"
+    "M07-G10",
+    "M07-G11",
+    "M07-G12",
+    "M07-G13",
+    "M07-G14",
+    "M07-G15"
   ],
-  "observed_scope": "Bounded SQLite commerce with separate synthetic Woo, gateway and message ledgers; common HTTP lifecycle, independent local runtime clients, adapter conformance, evidence-bound compatibility, merchant transfer with current suppression and quarantine, shared migration ownership, executable operator drills, and offline installation/upgrade preparation.",
+  "observed_scope": "Bounded SQLite commerce with separate synthetic Woo, gateway and message ledgers; common HTTP lifecycle, independent local runtime clients, adapter conformance, evidence-bound compatibility, merchant transfer with current suppression and quarantine, shared migration ownership, executable operator drills, and offline installation/upgrade preparation. G11\u2013G15 add measured local recovery and load/backpressure, offline release security/provenance, privacy storage/source coverage and scoped export additions, and accessible keyboard/error/focus workflows.",
   "missing": [
     "formal M05-G99 and M06-G99 acceptance and accepted M07 prerequisites",
     "connected Woo account, complete source history, exact deployed versions and authorized scopes",
@@ -28,7 +33,11 @@
     "PostgreSQL and React target-stack plus direct served-browser qualification",
     "human authorization for public fixture publication or a tagged release",
     "independent clean-machine installation/upgrade observation against a released artifact",
-    "current full acceptance gate and separately authorized live migration/cutover qualification"
+    "current full acceptance gate and separately authorized live migration/cutover qualification",
+    "approved deployment hardware/workload recovery and performance targets plus actual provider waiting/queue observations",
+    "authenticated current vulnerability/security scans, independently reviewed artifact provenance and licensing decisions",
+    "deployment-wide provider/caller/cache/backup retention and physical erasure observations",
+    "human screen-reader, touch device, zoom and target-stack accessibility qualification"
   ],
   "limits": [
     "All new capability objects remain proposed_not_accepted.",
@@ -42,21 +51,26 @@
     "Merchant import requires a separately verified current erasure checkpoint and keeps egress, old operations and credential references paused.",
     "Migration binds a single-merchant installation and compares current effect authority; verified import normalization cannot activate a writable target, and rollback pauses both writers without resuming old work.",
     "Installation tests use fresh directories on the same host; source preparation is not a released or tagged distribution.",
-    "The current development batch uses focused checks; previous full-gate evidence is historical and is not relabeled as a current full pass."
+    "The current development batch uses focused checks; previous full-gate evidence is historical and is not relabeled as a current full pass.",
+    "Webhook intake capacity is an explicit server-local option; existing unconfigured behavior remains unchanged. Acknowledgment still follows durable persistence.",
+    "Measured recovery and load outputs record this host and synthetic work only; source ages are not proof of actual data loss.",
+    "Release audit inventories actual artifact bytes and blocks missing/high findings; JSON pins do not authenticate a scanner, reviewer or release authority.",
+    "Privacy inventory checks all current SQLite tables and runtime source drift; it cannot discover arbitrary live caches or delete independent caller/provider copies.",
+    "Accessibility evidence covers automated rendered keyboard/DOM behavior with an explicit local API bridge; no human screen-reader observation is inferred."
   ],
   "review_kind": "separate_nonauthor_assistant_sessions_same_runtime",
   "later_m07_goals_started": true,
-  "evidence": "The prior first-five handoff retains its full-gate reports and history. The next-five handoff binds the current source to small native/helper reports, concrete issue corrections, focused nonauthor reviews, and a cumulative source/Git bundle. No full gate or multi-level restoration audit is inferred for this batch; this record alone does not prove a passing run.",
+  "evidence": "Historical first-five and next-five evidence is retained separately. The G11\u2013G15 checkpoint binds its exact source to one bounded four-file selection, targeted fault assertions, focused nonauthor reviews and cumulative native Git history. The source record alone proves no passing test or formal acceptance.",
   "current_batch": {
     "goals": [
-      "M07-G06",
-      "M07-G07",
-      "M07-G08",
-      "M07-G09",
-      "M07-G10"
+      "M07-G11",
+      "M07-G12",
+      "M07-G13",
+      "M07-G14",
+      "M07-G15"
     ],
-    "authority": "docs/decisions/0033-portability-and-operations-next-five.md",
-    "base": "45599f6ae4e23a342facae0a53798dec5986d725",
+    "authority": "docs/decisions/0034-recovery-security-privacy-accessibility.md",
+    "base": "6dfd50853525c707138e52673c32ce71707f9ad4",
     "test_profile": "focused_development",
     "full_regression": false,
     "formal_goal_acceptance": false

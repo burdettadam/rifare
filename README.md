@@ -4,18 +4,25 @@ Merchant-owned commerce operations with tailorable skills and independently repl
 
 ## Current development checkpoint: M07 portability and operations
 
-M07-G01 through M07-G10 now have bounded local development implementations.
+M07-G01 through M07-G15 now have bounded local development implementations.
 The first five added Woo return/refund handling, the shared staff and agent
 workflow, independent runtime clients, and reusable adapter conformance. The next
 five add evidence-bound compatibility limits, merchant export and quarantined
 import, exclusive migration ownership, executable operator recovery drills, and
-offline installation/upgrade preparation.
+offline installation/upgrade preparation. Goals G11–G15 add measured recovery
+interlocks and durable intake backpressure, offline artifact/SBOM provenance
+checks, complete current storage-surface review and scoped privacy exports, and
+keyboard/error/focus improvements across six existing workflows.
 
 Read [the M07 assessment](docs/M07-QUALIFICATION.md),
 [compatibility limits](docs/COMPATIBILITY-LIMITS.md),
 [merchant transfer](docs/MERCHANT-PORTABILITY.md),
 [operator runbooks](docs/OPERATOR-RUNBOOKS.md), and
-[installation/upgrade](docs/INSTALL-UPGRADE.md). Earlier support, return, exchange,
+[installation/upgrade](docs/INSTALL-UPGRADE.md),
+[recovery and load](docs/RECOVERY-LOAD.md),
+[release security](docs/RELEASE-SECURITY.md),
+[privacy coverage](docs/PRIVACY-COVERAGE.md), and
+[accessible workflows](docs/ACCESSIBLE-WORKFLOWS.md). Earlier support, return, exchange,
 edit and regression capabilities remain in the accumulated source; the
 [M06 assessment](docs/M06-QUALIFICATION.md) retains their qualification limits.
 
@@ -30,11 +37,13 @@ make test
 The default budget is 60 actual cases across four whole files with one 60-second
 deadline. A development pass does not claim full regression or goal acceptance.
 The five-goal development batch does not automatically trigger full, browser,
-nested catalog, or restoration-audit runs. See [development](DEVELOPMENT.md).
+nested catalog, or restoration-audit campaigns. This batch explicitly selects one
+small keyboard/browser file for the changed UI. See [development](DEVELOPMENT.md).
 
 The runtime remains a SQLite diagnostic with synthetic protocol sources.
 PostgreSQL/React, connected providers, live merchant migration, independent-machine
-installation and formal milestone acceptance remain unqualified. The previous
+installation, approved hardware load limits, authenticated release scans, human
+assistive-technology review and formal milestone acceptance remain unqualified. The previous
 full-test checkpoint and history remain recoverable. The later sections retain
 earlier explicit diagnostic commands.
 

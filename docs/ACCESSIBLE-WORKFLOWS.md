@@ -7,7 +7,7 @@ credential or browser storage, and cannot approve or execute an operation.
 
 ## Implemented behavior
 
-Each page has a named main landmark, one main heading, a keyboard skip link and
+Each page has a main landmark, one main heading, a keyboard skip link and
 an English document language. Inputs retain explicit or wrapping labels. Inline
 validation identifies the affected field, associates the error with
 `aria-describedby`, marks it invalid and moves focus to the first invalid field.

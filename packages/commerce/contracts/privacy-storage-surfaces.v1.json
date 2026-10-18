@@ -22,6 +22,10 @@
       "sha256": "6270a7a8b2101272bfa0747f93131d36d1e8e03d8331450d8766da75259394af"
     },
     {
+      "path": "apps/commerce-api/accessibility-client.js",
+      "sha256": "63dfcfe154ce9dccce9b588bb30626c1efe074370fb84db7881519e4102be873"
+    },
+    {
       "path": "apps/commerce-api/client.js",
       "sha256": "e1420048eef2ee68b89584bdc4158fd0a8e7b52df50baed79b3cc34db0f5ff4a"
     },
@@ -35,11 +39,11 @@
     },
     {
       "path": "apps/commerce-api/exceptions-client.js",
-      "sha256": "4b4492bf57e4c61526c5a12d2f5de51b9f5c17d365cae81f320c680174d4de35"
+      "sha256": "b7c2a2c89ffea80d5c32d9a0d33c86d192e01a05e2ab3754ab957a40c63289ab"
     },
     {
       "path": "apps/commerce-api/exceptions.html",
-      "sha256": "687fb8230809e4f960d10b3fa57028c0dc32a15ea44725057a4601e1075efc16"
+      "sha256": "55c9eece232a41bf6e74d40e7661b722204ecfa5751566644f02777441687c7c"
     },
     {
       "path": "apps/commerce-api/exchange-depth-client.js",
@@ -59,11 +63,11 @@
     },
     {
       "path": "apps/commerce-api/execution-client.js",
-      "sha256": "1ba51d0b72a5b15cb48e2d6792c7e9cb24700fd80cc1664af338917e980b290f"
+      "sha256": "4bfcb71516aa53a229223e9a5d4773fbd52c892f2b5e57167958310281861330"
     },
     {
       "path": "apps/commerce-api/execution.html",
-      "sha256": "2fa23f51cfca71477b6ad206e62104650a3db7d94978d6d0ccd9f27a793426b7"
+      "sha256": "510a951b779386c6a43bf41bfe4518bd5e45062909dfc2fbca948286d1d756cf"
     },
     {
       "path": "apps/commerce-api/gift-returns.html",
@@ -75,11 +79,11 @@
     },
     {
       "path": "apps/commerce-api/order-edits-client.js",
-      "sha256": "26d51da553a11d8ef145bbe5fd7a5818c277c26709d0d0f348ef46a12a55cd12"
+      "sha256": "1dd907862fd1f198b93c0364f81cfa6382c3adc0113da535f576af74c3abe7a5"
     },
     {
       "path": "apps/commerce-api/order-edits.html",
-      "sha256": "5e91cca639cb98d2190c1d00965310b5392d979d8dc9c7c9dae490ca27aa1efb"
+      "sha256": "7735808927989ccb26dcead2a1e008fb30c0b89cbc984d6897252717e01908dc"
     },
     {
       "path": "apps/commerce-api/return-assistance-client.js",
@@ -115,27 +119,27 @@
     },
     {
       "path": "apps/commerce-api/returns-client.js",
-      "sha256": "36ca4f25a01d360009b0e0f4631dd9cc1c8032944716a74e3448b262bcc2e1b0"
+      "sha256": "5006dfb20e2e2ce41fe521d9c78d2e18b17abb7b36ef32acca8ec6c94baf82fa"
     },
     {
       "path": "apps/commerce-api/returns.html",
-      "sha256": "cce9be73c75a8cb50b9daa66fdd2aa3383fcedad1bc4f0aa67e45e1afd6e4267"
+      "sha256": "bd49e649f0c6e9bd93a2e0ef2ec07636d8e0ef422dc81a1a60e1176dfb44f0c7"
     },
     {
       "path": "apps/commerce-api/server.mts",
-      "sha256": "f93fba999a85081452587b551f2cda702532ffe180106dc47af92d4c3aafa3fe"
+      "sha256": "2fd7efbfc48f9a1a885316239e5cb46cfd55f7c89e7a1a1ce50397e766fb06a8"
     },
     {
       "path": "apps/commerce-api/status-client.js",
-      "sha256": "cad4577857631a5808463d30d912dea29fcc3541a4c2bc23c9f27c0b577ded26"
+      "sha256": "80ac26b27de39aeff94753bfe044070bc0c6037701ff6f0de20527155589156f"
     },
     {
       "path": "apps/commerce-api/status.html",
-      "sha256": "4563f175fae1a2c57f66c416c9e5dace098fa1dde81eb282a3b078a2b52d9571"
+      "sha256": "e84393d01f983c6f97c9f6359edf94dbd2f6b59e187d1aea925fdf380df4b74b"
     },
     {
       "path": "apps/commerce-api/support-client.js",
-      "sha256": "e60903e846f36a68a1374714342838e294821b2fcb317adadaff95b2dc923a68"
+      "sha256": "0c90c1df056edc350334f9473169a07d812b06f93720be051200f616369580fa"
     },
     {
       "path": "apps/commerce-api/support-tracking.html",
@@ -143,7 +147,7 @@
     },
     {
       "path": "apps/commerce-api/support.html",
-      "sha256": "4f9e5d44747292e8bb0ab5a29bb7687d8322a3ec2d309b64dd1b44e67b184faa"
+      "sha256": "468df05ae23b171d80e8276e9aae0993356814fa40cd1445799c292815a3b792"
     },
     {
       "path": "apps/web/index.html",
@@ -711,7 +715,7 @@
     },
     {
       "path": "packages/commerce/webhook-inbox.mts",
-      "sha256": "944fc83187003b7ca301b89b7eec4f017323be2880b87f05f070db9923625ef4"
+      "sha256": "606b72f77ee2991cd3e978a008fa3c7be9da3af0f097ed6cec0f49e064b75244"
     },
     {
       "path": "packages/commerce/work-leases.mts",
@@ -776,6 +780,22 @@
     {
       "path": "packages/operations/installation-upgrade.mts",
       "sha256": "ade237cc0cef4f616d657514529d1e156a9b4c7f89b13de34cbdef81bf820797"
+    },
+    {
+      "path": "packages/operations/load-envelope.mts",
+      "sha256": "aca21dd46db1773b7fc2d1e7c81f2924ed87c90594d8c7ac1f766aada9b2f3a2"
+    },
+    {
+      "path": "packages/operations/recovery-rehearsal.mts",
+      "sha256": "1d197302db3238baf2f6ec2ac23f8941ed4a706fa1f7dfba8343d8033108d82e"
+    },
+    {
+      "path": "packages/security/release-audit.mts",
+      "sha256": "0eb46e7f97f74bfc1734938cdea632a1037bb7fa13f7ad63f469d8d9bebb5c2f"
+    },
+    {
+      "path": "packages/security/release-audit.py",
+      "sha256": "356ca9b8c4ed6d5fe358fd9928322da8971c29f0b8484f8c068674d44c232827"
     }
   ],
   "surfaces": [
