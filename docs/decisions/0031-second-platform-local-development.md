@@ -19,16 +19,23 @@ connected qualification or permission to represent a simulator as a live store.
 ## Writers and concrete ownership
 
 - `/root`, sole writer on `goal/M07-first-five`, owns G03 shared lifecycle and
-  notification integration, G04 portable worker/runtime switching, G05 reusable
+  notification integration, G05 reusable
   adapter conformance, API/staff UI hooks, migration 032 if needed, privacy/storage
   inventory, additive registration/capability proposals and source-count records,
   scoped documentation, decisions and integration work records.
 - `/root/m07_scope`, sole writer on `goal/M07-woo-returns`, owns G01 Woo source
   facts and composed return semantics: new modules under
   `packages/adapters/woocommerce/`, the narrow existing return eligibility,
-  intake-core and intake seams, migration 030 if needed, Woo event normalization
+  intake-core, intake and case-configuration source/capability seams, migration
+  030 if needed, Woo event normalization
   and signature/inbox hooks, new return/webhook fixtures and tests, and scoped
   return documentation and G01 work record.
+- `/root/m07_runtime`, sole writer on `goal/M07-runtime-switch`, owns G04
+  portable return context/actions in `worker-api.mts`, `work-leases.mts`, new
+  independently implemented TypeScript and Python runtime clients, their local
+  HTTP contract harness and permanent fixtures/tests, and scoped runtime
+  documentation and G04 work record. Root retains server routing and existing
+  support ownership; any necessary ownership seam is coordinated before writing.
 - `/root/woo_finance`, sole writer on `goal/M07-woo-finance`, owns G02 financial
   source and gateway fixture contracts, the narrow existing resolution-ledger,
   refund-quotes and resolution-execution seams, migration 031 if needed, new
@@ -36,6 +43,8 @@ connected qualification or permission to represent a simulator as a live store.
   documentation and G02 work record.
 
 All branches derive from the protected main through this prior scope record.
+The G04 writer assignment and G01 case-configuration seam were refined after
+read-only interface inspection and before either affected implementation began.
 Each writer uses a separate native Git worktree and isolated fixture databases,
 processes and ports. Shared files have one assigned writer; interface changes
 are coordinated with the integration owner before implementation. Existing
