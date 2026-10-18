@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "contract": "rifare-production-orders-v1",
+  "goal_ids": ["M11-G10"],
+  "qualification": "synthetic_local_only",
+  "formal_goal_accepted": false,
+  "physical_qualified": false,
+  "service": "ProductionOrders(k, inventory, originalWarehouseSource, {deadline_ms?})",
+  "methods": ["create", "approveJob", "propose", "approve", "dispatch", "reconcile", "read", "operation"],
+  "job_authority": "Original immutable BOM/material versions, declared exact expansion and resource/source identity; independent bounded job review plus a separate exact-step review using current kernel permissions",
+  "native_stock_owner": "Existing WarehouseFixtureSource warehouse_stock with WarehouseInventoryFixtureSource movement/command receipts",
+  "native_production_state": "warehouse_inventory_production records reservation/consumption and WIP, analogous to the original transfer reservation state; it does not own a second available-stock ledger",
+  "transitions": {
+    "reserve": "Reserve the complete expanded leaf quantities once; available decreases, reserved increases, on_hand unchanged",
+    "consume": "Only fully reserved component requirements can be consumed; reserved and on_hand decrease together, WIP gains the frozen component cost",
+    "release": "Only unconsumed reservations return to available; no finished output",
+    "complete": "Source-observed actual partial good/scrap quantities, after all required consumption is reconciled, bounded by planned good and gross output; only good units add finished stock",
+    "correct_output": "A source-observed linked negative good/positive scrap reclassification is bounded by the original output and remaining available finished stock; no implicit component rollback"
+  },
+  "conservation": ["on_hand = available + reserved", "good <= approved planned good", "good + scrap <= approved gross output", "component cost = WIP cost + good output cost + scrap cost", "output is forbidden before all components are consumed"],
+  "current_guard": "Current authenticated dispatcher, actual proposer and independent approver permissions/revisions, exact job and command digests, current source/canonical positions, original BOM plan, approval expiry and one-use status, both stock/warehouse execution stamps and recovery fences are rechecked in the original source transaction",
+  "idempotency": "Job-stage identity or original actual output event ID selects one operation regardless of caller key; native persistent binding plus original command journal prevents another output receipt",
+  "unknown": "Crash after commit retains original output operation and blocks later job transitions until source lookup and movement import reconcile it",
+  "tables": ["commerce_production_orders", "commerce_stock_operations", "commerce_stock_approvals"],
+  "privacy_restore": "Sanitize all business-body schemas; revoke every production/step review and effect authority even without customer tombstones; preserve original unknown command, source and BOM/cost lineage",
+  "native_cases": ["M11-G10-PREP-01", "M11-G10-PREP-02", "M11-G10-PREP-03", "M11-STOCK-CONSERVATION"],
+  "original_connected_cases_performed": false,
+  "targeted_fault": "Actual isolated productionCompletion omits its consumed-component guard and admits output from reserved-only native state; an independent zero-output assertion detects it",
+  "author_product_executions": 0,
+  "remaining_limits": ["No physical production qualification or automatic worker", "Consumption is complete per approved job, while output/scrap can be partial", "Output corrections support explicit good-to-scrap reclassification only", "No component unconsumption, replacement job, stock repair or unknown-operation retry is inferred", "Separate source/kernel databases do not constitute a distributed production transaction", "M07-G99 and M08-G99 formal prerequisites remain blocked"]
+}

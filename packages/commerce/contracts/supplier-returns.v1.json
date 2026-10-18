@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "contract": "rifare-supplier-returns-v1",
+  "goal_ids": ["M11-G08"],
+  "qualification": "synthetic_local_only",
+  "formal_goal_accepted": false,
+  "physical_qualified": false,
+  "service": "SupplierReturns(k, inventory, originalWarehouseSource, {orders, deadline_ms?})",
+  "ownership": "All stock adjustments and original command receipts remain in the existing warehouse owner; canonical supplier event rows are an additive reconciliation projection",
+  "events": {
+    "supplier_return": "Observed base-unit quantity no larger than received minus returned; reduce available/on-hand and freeze the exact return credit obligation at the reviewed receipt cost",
+    "receipt_correction": "Observed signed base-unit correction links to the original movement. Effective received cannot fall below returned or exceed ordered less source-observed cancellation. Keep original receipt rows unchanged",
+    "cost_correction": "Independently reviewed new minor-unit purchase price changes a receipt cost projection and exposes variance. It never edits immutable approved PO prices or original receipt history",
+    "credit": "Original source-observed credit is bounded by the linked supplier-return credit obligation, recorded once, and has no stock or payment effect"
+  },
+  "costs": {"arithmetic": "BigInt integer minor units", "purchase_conversion": "exact quantity times purchase price divided by approved integer units-per-purchase", "fractional_minor_units": "reject; no invented rounding", "later_cost_corrections": "Do not rewrite already frozen credit obligations", "invoice_and_payment": "unobserved"},
+  "identity": "One native supplier event ID and original receipt ID, protected across new caller operation IDs and response loss",
+  "current_authority": "The same receipt/proposer/reviewer/source/stops/recovery checks as purchase receiving are repeated at the original native transaction boundary; actual current supplier handle required for new effects",
+  "unknown": "Lookup only at original warehouse identity; retain original uncertain operation and any committed source receipt",
+  "table": "commerce_supplier_receipt_events",
+  "original_receipt_table": "commerce_purchase_receipts",
+  "shared_tables": ["commerce_stock_operations", "commerce_stock_approvals"],
+  "privacy_restore": "Explicit allowlists, no invented customer linkage, preserve original receipt/cost lineage and unknown command identity; revoke all current stock review/effect authority on import/restore/uninstall",
+  "native_cases": ["CASE-M11-G08-01", "CASE-M11-G08-02", "CASE-M11-G08-03"],
+  "targeted_fault": "Actual isolated recordSupplierReceiptEvent deletes the original purchase receipt; independent SQL count detects lost history",
+  "author_product_executions": 0,
+  "remaining_limits": ["No supplier payment, refund or settlement is executed or inferred", "Returns do not silently reopen incoming purchase quantity", "Source observations remain synthetic fixture administration", "Separate native stores and historical copies require separate authorized cleanup"]
+}

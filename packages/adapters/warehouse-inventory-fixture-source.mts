@@ -2,6 +2,7 @@ import { exact,id,integer } from '../commerce/kernel.mts';
 import type { Row } from '../commerce/kernel.mts';
 import { canonical,contentDigest,jsonValue } from '../commerce/configuration-values.mts';
 import { WarehouseFixtureSource } from './warehouse-fixture-source.mts';
+import { ensureProcurementSourceTables,procurementCommand,bindProcurementOperation,assertProcurementGuard,procurementEffectPlan,nativeProduction } from './procurement-inventory-source-guards.mts';
 
 export const INVENTORY_FIELDS=Object.freeze(['available','on_hand','reserved','in_transit']);
 const zero=()=>({available:0,on_hand:0,reserved:0,in_transit:0});
@@ -34,6 +35,7 @@ export class WarehouseInventoryFixtureSource {
       CREATE TABLE IF NOT EXISTS warehouse_inventory_snapshots(observation_id TEXT PRIMARY KEY,body TEXT NOT NULL,digest TEXT NOT NULL) STRICT;
       CREATE TABLE IF NOT EXISTS warehouse_inventory_transfers(transfer_id TEXT PRIMARY KEY,body TEXT NOT NULL,digest TEXT NOT NULL) STRICT;
       CREATE TABLE IF NOT EXISTS warehouse_inventory_commands(operation_id TEXT PRIMARY KEY,command_digest TEXT NOT NULL,body TEXT NOT NULL,digest TEXT NOT NULL) STRICT;`);
+    ensureProcurementSourceTables(this);
   }
   #body(row:Row|undefined):Row|null {if(!row)return null;let b:Row;try{b=JSON.parse(row.body);}catch{throw new Error('SOURCE_INTEGRITY');}if(b.redacted||contentDigest(b)!==row.digest)throw new Error('SOURCE_INTEGRITY');return b;}
   #envelope(body:Row){return {...body,digest:contentDigest(body)};}
@@ -64,8 +66,9 @@ export class WarehouseInventoryFixtureSource {
   movement(ref:string){return this.movements().find(m=>m.movement_id===id(ref))??null;}
   position(input:unknown){const p=exact(jsonValue(input),['variant_id','location_id']);id(p.variant_id);id(p.location_id);
     // A single SQLite statement observes available and reservation/transit rows at one source snapshot.
-    const rows=this.db.prepare("SELECT 'stock' AS kind,available,NULL AS transfer_id,NULL AS body,NULL AS digest FROM warehouse_stock WHERE variant=? AND location=? UNION ALL SELECT 'transfer' AS kind,NULL AS available,transfer_id,body,digest FROM warehouse_inventory_transfers").all(p.variant_id,p.location_id) as Row[],native=rows.find(row=>row.kind==='stock');if(!native)throw new Error('WAREHOUSE_MAPPING_REQUIRED');const available=native.available;let reserved=0,in_transit=0;
+    const rows=this.db.prepare("SELECT 'stock' AS kind,available,NULL AS transfer_id,NULL AS body,NULL AS digest FROM warehouse_stock WHERE variant=? AND location=? UNION ALL SELECT 'transfer' AS kind,NULL AS available,transfer_id,body,digest FROM warehouse_inventory_transfers UNION ALL SELECT 'production' AS kind,NULL AS available,production_id AS transfer_id,body,digest FROM warehouse_inventory_production").all(p.variant_id,p.location_id) as Row[],native=rows.find(row=>row.kind==='stock');if(!native)throw new Error('WAREHOUSE_MAPPING_REQUIRED');const available=native.available;let reserved=0,in_transit=0;
     for(const row of rows.filter(row=>row.kind==='transfer')){const t=this.#body(row)!;this.#scope(t);if(t.transfer_id!==row.transfer_id)throw new Error('SOURCE_INTEGRITY');if(t.variant_id===p.variant_id&&t.from_location===p.location_id){reserved=sum(reserved,t.reserved);in_transit=sum(in_transit,t.in_transit);}}
+    for(const row of rows.filter(row=>row.kind==='production')){const t=this.#body(row)!;this.#scope(t);if(t.production_id!==row.transfer_id||!Array.isArray(t.components))throw new Error('SOURCE_INTEGRITY');if(t.location_id===p.location_id)for(const component of t.components)if(component.variant_id===p.variant_id)reserved=sum(reserved,integer(component.reserved));}
     return {available:integer(available),on_hand:integer(sum(available,reserved)),reserved:integer(reserved),in_transit:integer(in_transit)};
   }
   snapshot(input:unknown){const p=exact(jsonValue(input),['observation_id','resource_id','variant_id','location_id']);for(const field of Object.keys(p))id(p[field]);this.db.exec('BEGIN IMMEDIATE');try{
@@ -112,4 +115,19 @@ export class WarehouseInventoryFixtureSource {
     }catch(error){this.db.exec('ROLLBACK');throw error;}if(this.fault==='after'){this.fault='none';throw new Error('LOST_SOURCE_RESPONSE');}return this.#envelope(result);
   }
   async lookup(ref:string){this.calls.lookup++;const row=this.db.prepare('SELECT * FROM warehouse_inventory_commands WHERE operation_id=?').get(id(ref)) as Row,b=this.#body(row);if(!b)return null;this.#scope(b);if(b.operation_id!==ref||b.command_digest!==row.command_digest||contentDigest(b.command)!==row.command_digest)throw new Error('SOURCE_INTEGRITY');return this.#envelope(b);}
+  production(ref:string){return nativeProduction(this,ref);}
+  bindProcurement(input:unknown){return bindProcurementOperation(this,input);}
+  /** Typed, currently guarded additions use the original stock, movement and command owner. */
+  async applyProcurement(input:unknown){this.calls.apply++;const c=procurementCommand(this,input);if(this.fault==='hang')return new Promise<never>(()=>{});if(this.fault==='before'){this.fault='none';throw new Error('SOURCE_UNAVAILABLE');}let result:Row;
+    this.db.exec('BEGIN IMMEDIATE');try{const row=this.db.prepare('SELECT * FROM warehouse_inventory_commands WHERE operation_id=?').get(c.operation_id) as Row;
+      if(row){if(row.command_digest!==contentDigest(c))throw new Error('OPERATION_CONFLICT');const old=this.#body(row)!;this.#scope(old);
+        result = old; // Original procurement replay has no stock effect.
+      }else{assertProcurementGuard(this,c);const plan=procurementEffectPlan(this,c),entries:Row[]=[];assertProcurementGuard(this,c);
+        for(const [index,movement] of plan.movements.entries()){this.#stock(movement.variant_id,movement.location_id,movement.delta.available);entries.push(this.#putMovement(this.#movement({movement_id:'inventory_'+contentDigest(['procurement',this.identity,c.operation_id,index]).slice(0,48),resource_id:c.resource_id,variant_id:movement.variant_id,location_id:movement.location_id,kind:c.kind,delta:movement.delta,reference_id:c.operation_id,linked_movement_id:movement.linked_movement_id,origin:{kind:'procurement_inventory',id:c.operation_id,unit_id:null,event_id:c.event_id??c.receipt_id},observed_at:integer(this.clock())})));}
+        if(plan.production)this.db.prepare('INSERT INTO warehouse_inventory_production VALUES(?,?,?) ON CONFLICT(production_id) DO UPDATE SET body=excluded.body,digest=excluded.digest').run(c.production_id,canonical(plan.production),contentDigest(plan.production));
+        result={version:1,operation_id:c.operation_id,source_identity:this.identity,tenant_id:this.tenant,store_id:this.store,resource_id:c.resource_id,command_digest:contentDigest(c),command:c,state:'applied',receipt:plan.receipt,event:plan.event,production:plan.production,movements:entries,qualification:'synthetic_only'};
+        this.db.prepare('INSERT INTO warehouse_inventory_commands VALUES(?,?,?,?)').run(c.operation_id,contentDigest(c),canonical(result),contentDigest(result));
+      }this.db.exec('COMMIT');
+    }catch(error){this.db.exec('ROLLBACK');throw error;}if(this.fault==='after'){this.fault='none';throw new Error('LOST_SOURCE_RESPONSE');}return this.#envelope(result);
+  }
 }

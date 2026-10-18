@@ -1,0 +1,53 @@
+import { DatabaseSync } from 'node:sqlite';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import type { Row } from '../../packages/commerce/kernel.mts';
+import { CommerceKernel } from '../../packages/commerce/kernel.mts';
+import { WarehouseFixtureSource } from '../../packages/adapters/warehouse-fixture-source.mts';
+import { WarehouseInventoryFixtureSource } from '../../packages/adapters/warehouse-inventory-fixture-source.mts';
+import { LocationInventory } from '../../packages/commerce/location-inventory.mts';
+import { PurchaseReceiving } from '../../packages/commerce/purchase-receiving.mts';
+import { SupplierReturns } from '../../packages/commerce/supplier-returns.mts';
+import { BillOfMaterials } from '../../packages/commerce/bill-of-materials.mts';
+import { ProductionOrders } from '../../packages/commerce/production-orders.mts';
+import { PROCUREMENT_INVENTORY_TABLES } from '../../packages/commerce/procurement-inventory-core.mts';
+import { commerceFixture } from './commerce-helpers.mts';
+import { installProcurementPO } from './procurement-planning-helpers.mts';
+
+export const oracle=JSON.parse(readFileSync(new URL('../fixtures/procurement-inventory/independent-values.json',import.meta.url),'utf8'));
+export async function procurementInventoryFixture(){const f=commerceFixture(),k=f.kernel;let installed:Awaited<ReturnType<typeof installProcurementPO>>|undefined;
+ const warehouseFile=join(f.directory,'stock-warehouse.sqlite'),warehouseDb=new DatabaseSync(warehouseFile);
+ try{for(const role of ['owner','reviewer'] as const)k.provisionMember(f.a.tenant,f.a.store,'stock_'+role,role);
+  const owner=k.authenticate(k.issueSession(f.a.tenant,f.a.store,'stock_owner')),reviewer=k.authenticate(k.issueSession(f.a.tenant,f.a.store,'stock_reviewer')),operator=f.a.scope;
+  const resource=k.ingest(operator,{kind:'catalog',source_system:'synthetic',external_id:'stock-catalog',source_version:1,source_updated_at:f.now(),customer_id:null,payload:{variants:[{id:'sku-a',base_unit:'each'},{id:'cotton',base_unit:'g'},{id:'buttons',base_unit:'each'},{id:'subassembly',base_unit:'each'},{id:'finished',base_unit:'each'}]}});
+  const warehouseOptions={mode:'fixture' as const,identity:'stock-warehouse',tenant:f.a.tenant,store:f.a.store},warehouse=new WarehouseFixtureSource(warehouseDb,warehouseOptions),source=new WarehouseInventoryFixtureSource(warehouse,{clock:f.now}),inventory=new LocationInventory(k,source);
+  for(const [variant_id,initial] of [['sku-a',10],['cotton',5000],['buttons',40],['subassembly',0],['finished',0]] as [string,number][]){warehouse.seed(variant_id,'location-a',initial);inventory.claim(owner,{resource_id:resource.id,variant_id,location_id:'location-a',source_identity:source.identity,fields:['available','on_hand','reserved','in_transit']});const snapshot=source.snapshot({observation_id:'initial-'+variant_id,resource_id:resource.id,variant_id,location_id:'location-a'});inventory.importSnapshot(operator,snapshot.observation_id);}
+  warehouse.seed('sku-a','location-b',0);inventory.claim(owner,{resource_id:resource.id,variant_id:'sku-a',location_id:'location-b',source_identity:source.identity,fields:['available','on_hand','reserved','in_transit']});source.snapshot({observation_id:'initial-sku-b',resource_id:resource.id,variant_id:'sku-a',location_id:'location-b'});inventory.importSnapshot(operator,'initial-sku-b');
+  installed=await installProcurementPO({kernel:k,inventory,owner,reviewer,operator,resource_id:resource.id,now:f.now},{po_id:'stock-po',quantity:10,unit_cost_minor:'100'});
+  const po_ref=installed.po_ref,po={...installed.po,body:installed.po},receiving=new PurchaseReceiving(k,inventory,source,{deadline_ms:25,orders:installed.orders}),returns=new SupplierReturns(k,inventory,source,{deadline_ms:25,orders:installed.orders}),boms=new BillOfMaterials(k),production=new ProductionOrders(k,inventory,source,{deadline_ms:25});
+  const materialRefs:Record<string,Row>={};for(const [variant_id,base_unit,unit_cost_minor] of [['cotton','g','1'],['buttons','each','10'],['subassembly','each','0'],['finished','each','0']]){const m=boms.material(owner,{material_id:'material-'+variant_id,expected_version:0,resource_id:resource.id,variant_id,base_unit,currency_code:'USD',unit_cost_minor});materialRefs[variant_id]={id:m.id,version:m.version,digest:m.digest};}
+  const nested=boms.define(owner,{bom_id:'nested-bom',expected_version:0,output:{material:materialRefs.subassembly,quantity:'1',unit:'each'},yield_numerator:1,yield_denominator:2,components:[{quantity:'0.25',unit:'kg',material:materialRefs.cotton,bom:null}]});
+  const bomInput={bom_id:'finished-bom',expected_version:0,output:{material:materialRefs.finished,quantity:'2',unit:'each'},yield_numerator:4,yield_denominator:5,components:[{quantity:'2',unit:'each',material:null,bom:{id:nested.id,version:nested.version,digest:nested.digest}},{quantity:'4',unit:'each',material:materialRefs.buttons,bom:null}]},bom=boms.define(owner,bomInput);
+  const balance=(variant_id:string,location_id='location-a')=>inventory.balance(operator,{resource_id:resource.id,variant_id,location_id}),position=(variant_id:string)=>source.position({variant_id,location_id:'location-a'});
+  const observeReceipt=(receipt_id:string,quantity:number,unit='each')=>{const input={receipt_id,po_id:po_ref.po_id,version:po_ref.version,po_digest:po_ref.expected_digest,lines:[{line_id:'line-a',quantity,unit}],observed_at:f.now(),evidence_ref:receipt_id+'-evidence'},observed=receiving.facts.recordReceipt(input);return {...observed,input};};
+  const prepareReceipt=(receipt_id:string,quantity:number)=>{observeReceipt(receipt_id,quantity);const op=receiving.propose(operator,{operation_id:receipt_id+'-operation',...po_ref,receipt_id});receiving.approve(reviewer,op.operation_id,{expected_digest:op.command_digest,expires_at:f.now()+60000});return op;};
+  const receive=async(receipt_id:string,quantity:number)=>{const op=prepareReceipt(receipt_id,quantity);return receiving.dispatch(operator,op.operation_id);};
+  const observeSupplier=(event_id:string,fields:Row)=>returns.facts.recordSupplierEvent({event_id,...fields,line_id:fields.line_id??'line-a',observed_at:f.now(),evidence_ref:event_id+'-evidence'});
+  const supplierEvent=async(event_id:string,fields:Row)=>{observeSupplier(event_id,fields);const op=returns.propose(operator,{operation_id:event_id+'-operation',event_id});returns.approve(reviewer,op.operation_id,{expected_digest:op.command_digest,expires_at:f.now()+60000});return returns.dispatch(operator,op.operation_id);};
+  const createJob=(production_id='production-a')=>production.create(operator,{production_id,resource_id:resource.id,location_id:'location-a',bom_id:bom.id,version:bom.version,expected_digest:bom.digest,quantity:4});
+  const approvedJob=(production_id='production-a')=>{const job=createJob(production_id);production.approveJob(reviewer,job.id,{expected_digest:job.digest,expires_at:f.now()+60000});return job;};
+  const prepareStep=(production_id:string,kind:string,event_id:string|null=null)=>{const op=production.propose(operator,{production_id,operation_id:event_id?event_id+'-operation':production_id+'-'+kind,kind,event_id});production.approve(reviewer,op.operation_id,{expected_digest:op.command_digest,expires_at:f.now()+60000});return op;};
+  const step=async(production_id:string,kind:string,event_id:string|null=null)=>{const op=prepareStep(production_id,kind,event_id);return production.dispatch(operator,op.operation_id);};
+  const observeOutput=(production_id:string,good_quantity:number,scrap_quantity:number,event_id:string,correction_of:string|null=null)=>production.facts.recordOutput({event_id,production_id,kind:correction_of?'correction':'output',good_quantity,scrap_quantity,correction_of,observed_at:f.now(),evidence_ref:event_id+'-evidence'});
+  const restart=()=>{const db=new DatabaseSync(f.filename),kernel=new CommerceKernel(db,f.now),sourceDb=new DatabaseSync(warehouseFile),native=new WarehouseFixtureSource(sourceDb,warehouseOptions),wrapped=new WarehouseInventoryFixtureSource(native,{clock:f.now}),ledger=new LocationInventory(kernel,wrapped),operator=kernel.authenticate(f.a.bearer);return {db,kernel,sourceDb,source:wrapped,inventory:ledger,operator,receiving:new PurchaseReceiving(kernel,ledger,wrapped,{deadline_ms:25}),production:new ProductionOrders(kernel,ledger,wrapped,{deadline_ms:25}),balance:(variant_id:string)=>ledger.balance(operator,{resource_id:resource.id,variant_id,location_id:'location-a'}),cleanup(){db.close();sourceDb.close();}};};
+  return {...f,k,owner,reviewer,operator,resource,warehouseFile,warehouseDb,sourceDb:warehouseDb,supplierDb:installed.sourceDb,supplierSource:installed.supplierSource,orders:installed.orders,procurementApprovals:installed.approvals,warehouseOptions,warehouse,source,inventory,po,po_ref,receiving,returns,boms,production,materialRefs,bom,bomInput,balance,position,observeReceipt,prepareReceipt,receive,observeSupplier,supplierEvent,createJob,approvedJob,prepareStep,step,observeOutput,restart,cleanup(){installed!.close();warehouseDb.close();f.cleanup();}};
+ }catch(error){installed?.close();warehouseDb.close();f.cleanup();throw error;}
+}
+export async function usingProcurementInventory(run:(f:Awaited<ReturnType<typeof procurementInventoryFixture>>)=>unknown){const f=await procurementInventoryFixture();try{return await run(f);}finally{f.cleanup();}}
+/** All business rows and an actual crash-after-native-commit identity, through services. */
+export async function populateProcurementInventoryPrivacy(f:Awaited<ReturnType<typeof procurementInventoryFixture>>){
+ await f.receive('privacy-stock-receipt',5);await f.supplierEvent('privacy-stock-return',{kind:'supplier_return',receipt_id:'privacy-stock-receipt',quantity:1});await f.supplierEvent('privacy-stock-cost',{kind:'cost_correction',receipt_id:'privacy-stock-receipt',unit_cost_minor:'120'});
+ const job=f.approvedJob('privacy-stock-production'),operation=f.prepareReceipt('privacy-stock-uncertain',2);f.source.fault='after';const unknown=await f.receiving.dispatch(f.operator,operation.operation_id);
+ return {tables:[...PROCUREMENT_INVENTORY_TABLES],subject_tables:[],resource_id:f.resource.id,customer_id:null,owner_scope:f.owner,reviewer_scope:f.reviewer,production_id:job.id,production_digest:job.digest,receipt_id:'privacy-stock-receipt',approval_id:f.production.read(f.operator,job.id).body.approval_id,stock_operation_id:operation.operation_id,kernel:f.kernel,source_db:f.warehouseDb,supplier_source_db:f.supplierDb,
+  unknown_operations:[{table:'commerce_stock_operations',id:unknown.operation_id,operation_id:unknown.operation_id,source_identity:f.source.identity}]};
+}
