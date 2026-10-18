@@ -183,7 +183,7 @@
     },
     {
       "path": "packages/adapters/delivery-trial-source-guards.mts",
-      "sha256": "df8560f8916aaa67ec01208e660810da3d621899a7ab79ceb06d7a4bcfe3ee6b"
+      "sha256": "2fc3a8b420cf27bd011f267f1e49cf2ecc7640f0ed277e23b862eced16bcef81"
     },
     {
       "path": "packages/adapters/exchange-lineage-fixture-source.mts",
@@ -527,7 +527,7 @@
     },
     {
       "path": "packages/commerce/instant-exchanges.mts",
-      "sha256": "58231f5ee1b98d716f1e9eaf45cadb0878af441408af87750ffc6eec629f4b1a"
+      "sha256": "454751c280dbf262b25e0bf21b0525ac159fbcfebf19191f08672b1b4fb56484"
     },
     {
       "path": "packages/commerce/integration-readiness.mts",

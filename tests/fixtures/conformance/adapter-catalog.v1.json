@@ -2597,7 +2597,7 @@
         },
         {
           "path": "packages/adapters/delivery-trial-source-guards.mts",
-          "sha256": "df8560f8916aaa67ec01208e660810da3d621899a7ab79ceb06d7a4bcfe3ee6b"
+          "sha256": "2fc3a8b420cf27bd011f267f1e49cf2ecc7640f0ed277e23b862eced16bcef81"
         },
         {
           "path": "packages/commerce/delivery-trials.mts",
@@ -2740,13 +2740,13 @@
               "id": "M10-G13-PREP-01",
               "name": "M10-G13-PREP-01",
               "path": "tests/development/trial-payments.test.mts",
-              "sha256": "3e6e6ca70dd68c88e2d1e0b1d8d578359cc49cf30eb7818c7a2aa0cb5c8c2726"
+              "sha256": "db44bdabca71c1a43655b04318c6d8c519ea5bd4b5c76c604a5f9faed7bedaf6"
             },
             {
               "id": "M10-G13-PREP-02",
               "name": "M10-G13-PREP-02",
               "path": "tests/development/trial-payments.test.mts",
-              "sha256": "3e6e6ca70dd68c88e2d1e0b1d8d578359cc49cf30eb7818c7a2aa0cb5c8c2726"
+              "sha256": "db44bdabca71c1a43655b04318c6d8c519ea5bd4b5c76c604a5f9faed7bedaf6"
             }
           ],
           "direct_fixtures": []
@@ -2762,7 +2762,7 @@
               "id": "M10-G14-PREP-01",
               "name": "M10-G14-PREP-01",
               "path": "tests/development/trial-payments.test.mts",
-              "sha256": "3e6e6ca70dd68c88e2d1e0b1d8d578359cc49cf30eb7818c7a2aa0cb5c8c2726"
+              "sha256": "db44bdabca71c1a43655b04318c6d8c519ea5bd4b5c76c604a5f9faed7bedaf6"
             }
           ],
           "direct_fixtures": []
@@ -2778,13 +2778,13 @@
               "id": "M10-G14-PREP-01",
               "name": "M10-G14-PREP-01",
               "path": "tests/development/trial-payments.test.mts",
-              "sha256": "3e6e6ca70dd68c88e2d1e0b1d8d578359cc49cf30eb7818c7a2aa0cb5c8c2726"
+              "sha256": "db44bdabca71c1a43655b04318c6d8c519ea5bd4b5c76c604a5f9faed7bedaf6"
             },
             {
               "id": "M10-G14-PREP-03",
               "name": "M10-G14-PREP-03",
               "path": "tests/development/trial-payments.test.mts",
-              "sha256": "3e6e6ca70dd68c88e2d1e0b1d8d578359cc49cf30eb7818c7a2aa0cb5c8c2726"
+              "sha256": "db44bdabca71c1a43655b04318c6d8c519ea5bd4b5c76c604a5f9faed7bedaf6"
             }
           ],
           "direct_fixtures": []
@@ -2800,7 +2800,7 @@
               "id": "M10-G14-PREP-01",
               "name": "M10-G14-PREP-01",
               "path": "tests/development/trial-payments.test.mts",
-              "sha256": "3e6e6ca70dd68c88e2d1e0b1d8d578359cc49cf30eb7818c7a2aa0cb5c8c2726"
+              "sha256": "db44bdabca71c1a43655b04318c6d8c519ea5bd4b5c76c604a5f9faed7bedaf6"
             }
           ],
           "direct_fixtures": []
@@ -4386,7 +4386,7 @@
     },
     {
       "path": "packages/commerce/instant-exchanges.mts",
-      "sha256": "58231f5ee1b98d716f1e9eaf45cadb0878af441408af87750ffc6eec629f4b1a"
+      "sha256": "454751c280dbf262b25e0bf21b0525ac159fbcfebf19191f08672b1b4fb56484"
     },
     {
       "path": "packages/commerce/integration-readiness.mts",
@@ -5018,7 +5018,7 @@
     },
     {
       "path": "tests/fixtures/conformance/expected-coverage.v1.json",
-      "sha256": "2b00b8dd4a94d4e9a75487f35301a4a500986542b217f77422bac3c83be7ca74"
+      "sha256": "ccf676d5444513c57fa3f5be48381bc8f8adab3debf05387f19fa82f66ff1159"
     },
     {
       "path": "tests/fixtures/conformance/source-inputs.v1.json",
@@ -5582,7 +5582,7 @@
     },
     {
       "path": "packages/adapters/delivery-trial-source-guards.mts",
-      "sha256": "df8560f8916aaa67ec01208e660810da3d621899a7ab79ceb06d7a4bcfe3ee6b"
+      "sha256": "2fc3a8b420cf27bd011f267f1e49cf2ecc7640f0ed277e23b862eced16bcef81"
     },
     {
       "path": "packages/adapters/partner-fixture-source.mts",
@@ -5639,6 +5639,10 @@
     {
       "path": "packages/commerce/contracts/shipping-claims.v1.json",
       "sha256": "83ade55e8451c02ac8cdf7f175a233b84a06831b1d65ac81a68a46146eeeccd9"
+    },
+    {
+      "path": "packages/commerce/contracts/storage-extended-services-extension.v1.json",
+      "sha256": "e35a1435c075a8a54dbad516df1ab3c8109bfba452d23d3299ad8b800ab4f28e"
     },
     {
       "path": "packages/commerce/contracts/trial-final-capture.v1.json",
@@ -5750,7 +5754,7 @@
     },
     {
       "path": "tests/development/trial-payments.test.mts",
-      "sha256": "3e6e6ca70dd68c88e2d1e0b1d8d578359cc49cf30eb7818c7a2aa0cb5c8c2726"
+      "sha256": "db44bdabca71c1a43655b04318c6d8c519ea5bd4b5c76c604a5f9faed7bedaf6"
     },
     {
       "path": "tests/fixtures/claims/known-answer.v1.json",
@@ -5763,10 +5767,6 @@
     {
       "path": "tests/fixtures/extended-services/storage-baseline.v1.json",
       "sha256": "ca2e558213b2824d1f1bb090a27e9c4096a936abfee92509d56dbe9e6423a01e"
-    },
-    {
-      "path": "packages/commerce/contracts/storage-extended-services-extension.v1.json",
-      "sha256": "e35a1435c075a8a54dbad516df1ab3c8109bfba452d23d3299ad8b800ab4f28e"
     }
   ]
 }
