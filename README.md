@@ -2,7 +2,32 @@
 
 Merchant-owned commerce operations with tailorable skills and independently replaceable platforms, agents and models.
 
-## Current development checkpoint: warehouse inventory and M08 assessment
+## Current development milestone: M09 growth and optional capabilities
+
+All fourteen M09 worker goals are assigned for bounded local development under
+[ADR-0038](docs/decisions/0038-m09-growth-development.md). They add grounded cart
+proposals and original-order upsells; frozen checkout experiments and separately
+reported attribution, holdout estimates and margin; reviewed segments, campaigns
+and cart recovery through the existing delivery boundary; authenticated email
+confirmation; catalog observations and reviewed description changes; and optional
+purpose-specific media, try-on qualification and identity-provider preparation.
+
+Canonical export, erasure and quarantined recovery cover the 23 new tables.
+Original uncertain effect identities and frozen experiment denominators survive
+minimization; consent, campaign approvals and processor enablement do not become
+restored execution authority. Separate source stores and caller copies still need
+their named cleanup. Optional providers are disabled by default and use only
+inert, invented local fixtures here.
+
+The development selection remains four whole files, at most 60 actual cases and
+one total 60-second deadline per invocation. Exact source-bound native reports,
+fresh independent reviews and the local integration decision accompany the
+cumulative checkpoint. Formal M09-G99 remains blocked, connected qualification
+is absent and M10 is unassigned. Read [the M09 integration record](work/records/M09-growth-integration.md),
+[the M09 assessment](docs/M09-QUALIFICATION.md), [shopping](docs/GROWTH-SHOPPING.md),
+[marketing](docs/GROWTH-MARKETING.md) and [optional capabilities](docs/GROWTH-OPTIONAL.md).
+
+### Retained preceding development
 
 M07-G01 through M07-G15 now have bounded local development implementations.
 The first five added Woo return/refund handling, the shared staff and agent
@@ -21,12 +46,13 @@ preparation, the blocked M07 acceptance assessment and per-package carrier quote
 previews. The real-observation register remains empty. Formal M07 acceptance and
 M08 entry remain blocked.
 
-The current five planning entries are M08-G07, G08, G09, G10 and G99.
+The preceding five planning entries were M08-G07, G08, G09, G10 and G99.
 They extend the retained shipping and packing services with warehouse return
 events and immutable corrections, shared per-location stock, conserved transfers,
 and shipment/partial-return reconciliation. G99 records the remaining milestone
 evidence gaps. The warehouse and carrier sources remain synthetic; original
-connected G07/G10 cases and formal M08 acceptance remain blocked. M09 is unassigned.
+connected G07/G10 cases and formal M08 acceptance remain blocked. M09 development
+is separately assigned by ADR-0038; it does not accept those prerequisites.
 Read [the inventory integration record](work/records/M08-inventory-five-integration.md)
 and [the M08 assessment](docs/M08-QUALIFICATION.md).
 
