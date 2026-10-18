@@ -48,7 +48,7 @@ export function procurementFixture(withForecast=false){
  const supplierFilename=join(f.directory,'procurement-supplier.sqlite'),supplierDb=new DatabaseSync(supplierFilename),supplierOptions={mode:'fixture' as const,identity:'procurement-supplier',tenant:f.a.tenant,store:f.a.store,clock:f.now},supplierSource=new ProcurementFixtureSource(supplierDb,supplierOptions),termsInput=supplierTerms('supplier-a',f.now()),terms=supplierSource.recordSupplierTerms(termsInput);
  const orders=new SupplierPurchaseOrders(k,supplierSource,inventory),approvals=new ProcurementApprovals(k,orders,{deadline_ms:25});orders.importSupplier(f.a.scope,{supplier_id:'supplier-a',resource_id:resource.id});
  approvals.configureBudget(owner,{budget_id:'procurement-budget',resource_id:resource.id,expected_revision:0,currency_code:'USD',limit_minor:'10000',approval_limit_minor:'10000',expires_at:f.now()+600000});
- const forecasts=new InventoryForecasts(k),receipts=new PurchaseReceiving(k,inventory,stockSource),planning=new ReplenishmentPlanning(k,forecasts,inventory,orders,receipts);
+ const forecasts=new InventoryForecasts(k),receipts=new PurchaseReceiving(k,inventory,stockSource,{orders}),planning=new ReplenishmentPlanning(k,forecasts,inventory,orders,receipts);
  let installed:ReturnType<typeof installReviewedForecast>|undefined;
  const ensureForecast=()=>{if(!installed)installed=installReviewedForecast(k,f.a.scope,reviewer,{resource_id:resource.id,variant_id:'sku-a',location_id:'location-a',forecast_id:'procurement-forecast',daily_units:4,horizon_days:5});return installed.forecast;};
  if(withForecast)ensureForecast();
