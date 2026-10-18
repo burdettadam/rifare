@@ -1,0 +1,358 @@
+{
+  "version": 1,
+  "base_schema_digest": "f0c045022c2d17646b536a8a0603376426b277a3ad4f92aa47a7b7044c823f0f",
+  "schema_digest": "580e13a9e01ca6ea702ea8f48f05670599439e40c10898b50bdbc523ae8498cb",
+  "tables": [
+    {
+      "name": "commerce_cart_recoveries",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "campaign_id",
+        "resource_id",
+        "customer_id",
+        "cart_id",
+        "body",
+        "digest"
+      ],
+      "handling": "subject_linked_recovery_proposal_cancel_minimize"
+    },
+    {
+      "name": "commerce_catalog_approvals",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "change_id",
+        "resource_id",
+        "customer_id",
+        "actor_id",
+        "authority_revision",
+        "expires_at",
+        "revoked",
+        "body",
+        "digest"
+      ],
+      "handling": "subject_linked_revoke_minimize_growth_authority"
+    },
+    {
+      "name": "commerce_catalog_changes",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "change_id",
+        "resource_id",
+        "customer_id",
+        "state",
+        "body",
+        "digest"
+      ],
+      "handling": "subject_linked_growth_minimized_original_effect_audit"
+    },
+    {
+      "name": "commerce_catalog_evaluations",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "evaluation_id",
+        "resource_id",
+        "customer_id",
+        "body",
+        "digest"
+      ],
+      "handling": "subject_linked_redact_text_retain_observation_digest_audit"
+    },
+    {
+      "name": "commerce_checkout_assignments",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "experiment_id",
+        "resource_id",
+        "customer_id",
+        "subject_hash",
+        "arm",
+        "body",
+        "digest"
+      ],
+      "handling": "subject_linked_growth_minimized_unavailable_frozen_denominator_audit"
+    },
+    {
+      "name": "commerce_checkout_experiments",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "version",
+        "body",
+        "digest",
+        "created_at"
+      ],
+      "handling": "merchant_configuration_frozen_experiment_denominators_retained"
+    },
+    {
+      "name": "commerce_checkout_exposures",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "experiment_id",
+        "resource_id",
+        "customer_id",
+        "subject_hash",
+        "channel",
+        "body",
+        "digest"
+      ],
+      "handling": "subject_linked_growth_minimized_unavailable_frozen_denominator_audit"
+    },
+    {
+      "name": "commerce_email_action_links",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "resource_id",
+        "customer_id",
+        "token_hash",
+        "state",
+        "body",
+        "digest",
+        "revoked"
+      ],
+      "handling": "subject_linked_revoke_email_token_minimize_original_edit_identity"
+    },
+    {
+      "name": "commerce_growth_campaign_approvals",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "campaign_id",
+        "id",
+        "body",
+        "digest",
+        "revoked"
+      ],
+      "handling": "merchant_scoped_growth_configuration_revoke_on_restore"
+    },
+    {
+      "name": "commerce_growth_campaign_recipients",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "campaign_id",
+        "resource_id",
+        "customer_id",
+        "case_id",
+        "operation_id",
+        "body",
+        "digest"
+      ],
+      "handling": "subject_linked_minimized_campaign_suppression_original_operation"
+    },
+    {
+      "name": "commerce_growth_campaigns",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "revision",
+        "author_id",
+        "state",
+        "body",
+        "digest"
+      ],
+      "handling": "merchant_scoped_growth_configuration_revoke_on_restore"
+    },
+    {
+      "name": "commerce_growth_observations",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "experiment_id",
+        "event_id",
+        "resource_id",
+        "customer_id",
+        "source_identity",
+        "body",
+        "digest"
+      ],
+      "handling": "subject_linked_growth_minimized_unavailable_frozen_denominator_audit"
+    },
+    {
+      "name": "commerce_marketing_segments",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "revision",
+        "body",
+        "digest",
+        "author_id",
+        "approval_body",
+        "approval_digest",
+        "revoked"
+      ],
+      "handling": "merchant_scoped_growth_configuration_revoke_on_restore"
+    },
+    {
+      "name": "commerce_marketing_sync_operations",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "segment_id",
+        "state",
+        "body",
+        "digest"
+      ],
+      "handling": "merchant_scoped_template_original_unknown_effect_audit"
+    },
+    {
+      "name": "commerce_optional_configurations",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "kind",
+        "revision",
+        "enabled",
+        "body",
+        "digest",
+        "expires_at"
+      ],
+      "handling": "merchant_scoped_optional_configuration_disabled_revoked_on_restore"
+    },
+    {
+      "name": "commerce_optional_consents",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "resource_id",
+        "subject_hash",
+        "kind",
+        "state",
+        "body",
+        "digest",
+        "created_at",
+        "expires_at"
+      ],
+      "handling": "subject_hash_bound_optional_purpose_consent_withdraw_minimize"
+    },
+    {
+      "name": "commerce_optional_deletions",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "resource_id",
+        "subject_hash",
+        "source_identity",
+        "original_operation_id",
+        "native_id",
+        "state",
+        "body",
+        "digest",
+        "created_at"
+      ],
+      "handling": "subject_hash_bound_optional_original_effect_deletion_audit"
+    },
+    {
+      "name": "commerce_optional_media",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "resource_id",
+        "subject_hash",
+        "consent_id",
+        "state",
+        "body",
+        "digest",
+        "created_at",
+        "expires_at"
+      ],
+      "handling": "subject_hash_bound_optional_media_erase_retention_bound"
+    },
+    {
+      "name": "commerce_optional_operations",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "resource_id",
+        "subject_hash",
+        "kind",
+        "consent_id",
+        "logical_key",
+        "source_identity",
+        "native_id",
+        "state",
+        "body",
+        "digest",
+        "created_at",
+        "expires_at"
+      ],
+      "handling": "subject_hash_bound_optional_original_effect_deletion_audit"
+    },
+    {
+      "name": "commerce_optional_quality",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "kind",
+        "configuration_digest",
+        "state",
+        "body",
+        "digest",
+        "expires_at"
+      ],
+      "handling": "merchant_scoped_optional_configuration_disabled_revoked_on_restore"
+    },
+    {
+      "name": "commerce_shopping_carts",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "cart_id",
+        "resource_id",
+        "customer_id",
+        "state",
+        "body",
+        "digest"
+      ],
+      "handling": "subject_linked_growth_allowlist_minimized_original_identity"
+    },
+    {
+      "name": "commerce_upsell_confirmations",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "quote_id",
+        "resource_id",
+        "customer_id",
+        "session_hash",
+        "revoked",
+        "body",
+        "digest"
+      ],
+      "handling": "subject_linked_revoke_minimize_growth_authority"
+    },
+    {
+      "name": "commerce_upsell_offers",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "offer_id",
+        "case_id",
+        "resource_id",
+        "customer_id",
+        "quote_id",
+        "body",
+        "digest"
+      ],
+      "handling": "subject_linked_growth_allowlist_minimized_original_identity"
+    }
+  ]
+}

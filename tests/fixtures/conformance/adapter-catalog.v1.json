@@ -24,7 +24,9 @@
     "packages/adapters/exchange-money-fixture-source.mts",
     "packages/adapters/fulfillment-fixture-source.mts",
     "packages/adapters/instant-exchange-fixture-source.mts",
+    "packages/adapters/marketing-fixture-source.mts",
     "packages/adapters/native-change-fixture-source.mts",
+    "packages/adapters/optional-provider-fixture-source.mts",
     "packages/adapters/order-edit-fixture-source.mts",
     "packages/adapters/prevention-source-guards.mts",
     "packages/adapters/reliability/synthetic-journal.mts",
@@ -33,10 +35,12 @@
     "packages/adapters/shipping-carrier-fixture-source.mts",
     "packages/adapters/shopify-return-fixture.mts",
     "packages/adapters/shopify/orders.mts",
+    "packages/adapters/shopping-catalog-fixture-source.mts",
     "packages/adapters/support-fixture-source.mts",
     "packages/adapters/support/chatwoot.mts",
     "packages/adapters/support/resend.mts",
     "packages/adapters/support/transport.mts",
+    "packages/adapters/upsell-source-guards.mts",
     "packages/adapters/warehouse-fixture-source.mts",
     "packages/adapters/warehouse-inventory-fixture-source.mts",
     "packages/adapters/webhooks/signatures.mts",
@@ -2030,14 +2034,14 @@
       "source_files": [
         {
           "path": "packages/adapters/order-edit-fixture-source.mts",
-          "sha256": "929bfcc7d530f2d3409a13eebbf528213dc861965c3a49629637902f5e6bb3b4"
+          "sha256": "fbbe1aaea56e70c59597571fb501e12f74c3e15ac83ed01faef94ff0abc7c4ba"
         },
         {
           "path": "packages/adapters/prevention-source-guards.mts",
           "sha256": "85fdc96d3cd2633c3ac0b4b79e6b78a177b83aeaf01c85f254617c1f387096f1"
         }
       ],
-      "version": "source-sha256:929bfcc7d530f2d3409a13eebbf528213dc861965c3a49629637902f5e6bb3b4",
+      "version": "source-sha256:fbbe1aaea56e70c59597571fb501e12f74c3e15ac83ed01faef94ff0abc7c4ba",
       "api_version": "local-order-edit-source",
       "external_version": null,
       "external_account": null,
@@ -2358,6 +2362,28 @@
               "name": "M08-G06-LOCAL-ERASED-RESOURCE-CANNOT-READ-WAREHOUSE-COPY",
               "path": "tests/development/warehouse-connector.test.mts",
               "sha256": "03ee15e984b09710020e13cf75a3bca5bdafdb5d6dcd6c4a5e2fb6b0144aa3a9"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "order.add",
+          "semantics": "composed",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M09-G02-PREP-01",
+              "name": "M09-G02-PREP-01",
+              "path": "tests/development/growth-shopping.test.mts",
+              "sha256": "d8238ff5694c46988a8f202bd8e171a7e820707567e6a5415f9bb1cc77eafd45"
+            },
+            {
+              "id": "M09-G02-PREP-03",
+              "name": "M09-G02-PREP-03",
+              "path": "tests/development/growth-shopping.test.mts",
+              "sha256": "d8238ff5694c46988a8f202bd8e171a7e820707567e6a5415f9bb1cc77eafd45"
             }
           ],
           "direct_fixtures": []
@@ -3149,6 +3175,350 @@
           "direct_fixtures": []
         }
       ]
+    },
+    {
+      "id": "shopping_catalog_source",
+      "kind": "diagnostic",
+      "source_files": [
+        {
+          "path": "packages/adapters/shopping-catalog-fixture-source.mts",
+          "sha256": "a125a8b3f9f508b686e74f820c0ff48326f92890f8c11712afb7ee63cbb0b286"
+        },
+        {
+          "path": "packages/adapters/upsell-source-guards.mts",
+          "sha256": "e31e0d430c6c0dbdf68d6cb5969bda7b84069d678bf9d447ed9db6b352ba0163"
+        }
+      ],
+      "version": "source-sha256:a125a8b3f9f508b686e74f820c0ff48326f92890f8c11712afb7ee63cbb0b286",
+      "api_version": "1.0.0",
+      "external_version": null,
+      "external_account": null,
+      "external_scopes_attested": false,
+      "source_oracle": "Same durable original OrderEdit fixture identity, catalog, stock and source database. Exact cart previews and description revisions; original native cart/catalog effect lookup and scoped upsell consent. Fixtures do not qualify checkout, payment or external publication.",
+      "operations": [
+        {
+          "id": "catalog.read",
+          "semantics": "composed",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M09-G01-01",
+              "name": "CASE-M09-G01-01",
+              "path": "tests/development/growth-shopping.test.mts",
+              "sha256": "d8238ff5694c46988a8f202bd8e171a7e820707567e6a5415f9bb1cc77eafd45"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "cart.commit",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M09-G01-01",
+              "name": "CASE-M09-G01-01",
+              "path": "tests/development/growth-shopping.test.mts",
+              "sha256": "d8238ff5694c46988a8f202bd8e171a7e820707567e6a5415f9bb1cc77eafd45"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "cart.lookup",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M09-G01-CART-UNKNOWN-SCOPE-AND-CURRENT-PURCHASE",
+              "name": "M09-G01-CART-UNKNOWN-SCOPE-AND-CURRENT-PURCHASE",
+              "path": "tests/development/growth-shopping.test.mts",
+              "sha256": "d8238ff5694c46988a8f202bd8e171a7e820707567e6a5415f9bb1cc77eafd45"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "upsell.consent",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M09-G02-PREP-01",
+              "name": "M09-G02-PREP-01",
+              "path": "tests/development/growth-shopping.test.mts",
+              "sha256": "d8238ff5694c46988a8f202bd8e171a7e820707567e6a5415f9bb1cc77eafd45"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "visibility.observe",
+          "semantics": "composed",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M09-G10-PREP-01",
+              "name": "M09-G10-PREP-01",
+              "path": "tests/development/growth-shopping.test.mts",
+              "sha256": "d8238ff5694c46988a8f202bd8e171a7e820707567e6a5415f9bb1cc77eafd45"
+            },
+            {
+              "id": "M09-G10-PREP-03",
+              "name": "M09-G10-PREP-03",
+              "path": "tests/development/growth-shopping.test.mts",
+              "sha256": "d8238ff5694c46988a8f202bd8e171a7e820707567e6a5415f9bb1cc77eafd45"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "catalog.apply",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M09-G11-PREP-01",
+              "name": "M09-G11-PREP-01",
+              "path": "tests/development/growth-shopping.test.mts",
+              "sha256": "d8238ff5694c46988a8f202bd8e171a7e820707567e6a5415f9bb1cc77eafd45"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "catalog.lookup",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M09-G11-CURRENT-AUTHORITY-UNKNOWN-STOP-AND-RESTORE",
+              "name": "M09-G11-CURRENT-AUTHORITY-UNKNOWN-STOP-AND-RESTORE",
+              "path": "tests/development/growth-shopping.test.mts",
+              "sha256": "d8238ff5694c46988a8f202bd8e171a7e820707567e6a5415f9bb1cc77eafd45"
+            }
+          ],
+          "direct_fixtures": []
+        }
+      ]
+    },
+    {
+      "id": "marketing_fixture_source",
+      "kind": "diagnostic",
+      "source_files": [
+        {
+          "path": "packages/adapters/marketing-fixture-source.mts",
+          "sha256": "dd2f8ca601a07b22161f45b52accb9b67cb8b6d1e3a9bbe21667e25aa3116e5f"
+        }
+      ],
+      "version": "source-sha256:dd2f8ca601a07b22161f45b52accb9b67cb8b6d1e3a9bbe21667e25aa3116e5f",
+      "api_version": "marketing_fixture_v1",
+      "external_version": null,
+      "external_account": null,
+      "external_scopes_attested": false,
+      "source_oracle": "Separate scoped native fixture facts, audience definitions, approved copy/offer facts, original template sync and event ledger. The original SupportDelivery provider remains the only message owner. Purchase attribution and holdout estimates use fixed synthetic observations, not real commercial lift.",
+      "operations": [
+        {
+          "id": "audience.read",
+          "semantics": "composed",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M09-G06-PREP-01",
+              "name": "M09-G06-PREP-01",
+              "path": "tests/development/growth-marketing.test.mts",
+              "sha256": "2c163d158e3e20da171edd425594fa2dca113345039f0be43e41492cbe3e20d5"
+            },
+            {
+              "id": "M09-G06-PREP-02",
+              "name": "M09-G06-PREP-02",
+              "path": "tests/development/growth-marketing.test.mts",
+              "sha256": "2c163d158e3e20da171edd425594fa2dca113345039f0be43e41492cbe3e20d5"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "template.sync",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M09-G06-PREP-01",
+              "name": "M09-G06-PREP-01",
+              "path": "tests/development/growth-marketing.test.mts",
+              "sha256": "2c163d158e3e20da171edd425594fa2dca113345039f0be43e41492cbe3e20d5"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "template.lookup",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M09-G06-PREP-03",
+              "name": "M09-G06-PREP-03",
+              "path": "tests/development/growth-marketing.test.mts",
+              "sha256": "2c163d158e3e20da171edd425594fa2dca113345039f0be43e41492cbe3e20d5"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "facts.read",
+          "semantics": "composed",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M09-G05-01",
+              "name": "CASE-M09-G05-01",
+              "path": "tests/development/growth-marketing.test.mts",
+              "sha256": "2c163d158e3e20da171edd425594fa2dca113345039f0be43e41492cbe3e20d5"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "event.read",
+          "semantics": "composed",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "TEST-034",
+              "name": "TEST-034",
+              "path": "tests/development/growth-marketing.test.mts",
+              "sha256": "2c163d158e3e20da171edd425594fa2dca113345039f0be43e41492cbe3e20d5"
+            },
+            {
+              "id": "PORT-027",
+              "name": "PORT-027",
+              "path": "tests/development/growth-marketing.test.mts",
+              "sha256": "2c163d158e3e20da171edd425594fa2dca113345039f0be43e41492cbe3e20d5"
+            }
+          ],
+          "direct_fixtures": []
+        }
+      ]
+    },
+    {
+      "id": "optional_provider_fixture_source",
+      "kind": "diagnostic",
+      "source_files": [
+        {
+          "path": "packages/adapters/optional-provider-fixture-source.mts",
+          "sha256": "d6f3db7f9fd98d1a9052b105600154e3c19561360c4c0d418afe16df4ef924c3"
+        }
+      ],
+      "version": "source-sha256:d6f3db7f9fd98d1a9052b105600154e3c19561360c4c0d418afe16df4ef924c3",
+      "api_version": "fixture-v1",
+      "external_version": null,
+      "external_account": null,
+      "external_scopes_attested": false,
+      "source_oracle": "Separate purpose-scoped synthetic processor ledgers, inert invented media and identifiers, immutable fixture evaluations, original operation lookup and deletion tombstones. Configuration, quality, consent and authority are rechecked before source effects. No real processor, fit evidence or identity partner is qualified.",
+      "operations": [
+        {
+          "id": "process.apply",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M09-G12-01",
+              "name": "CASE-M09-G12-01",
+              "path": "tests/development/growth-optional.test.mts",
+              "sha256": "0ab6e949de2041b9352eb4c350cc67ba5c8379e30cb5f5a36bab022d2bfaf426"
+            },
+            {
+              "id": "M09-G14-PREP-01-SCOPED-SYNTHETIC-IDENTITY-RECEIPT",
+              "name": "M09-G14-PREP-01-SCOPED-SYNTHETIC-IDENTITY-RECEIPT",
+              "path": "tests/development/growth-optional.test.mts",
+              "sha256": "0ab6e949de2041b9352eb4c350cc67ba5c8379e30cb5f5a36bab022d2bfaf426"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "process.lookup",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M09-G14-PREP-01-SCOPED-SYNTHETIC-IDENTITY-RECEIPT",
+              "name": "M09-G14-PREP-01-SCOPED-SYNTHETIC-IDENTITY-RECEIPT",
+              "path": "tests/development/growth-optional.test.mts",
+              "sha256": "0ab6e949de2041b9352eb4c350cc67ba5c8379e30cb5f5a36bab022d2bfaf426"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "process.delete",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M09-G12-03",
+              "name": "CASE-M09-G12-03",
+              "path": "tests/development/growth-optional.test.mts",
+              "sha256": "0ab6e949de2041b9352eb4c350cc67ba5c8379e30cb5f5a36bab022d2bfaf426"
+            },
+            {
+              "id": "M09-G14-PREP-03-REVOKED-READINESS-WITHDRAWAL-AND-UNKNOWN-DELETION",
+              "name": "M09-G14-PREP-03-REVOKED-READINESS-WITHDRAWAL-AND-UNKNOWN-DELETION",
+              "path": "tests/development/growth-optional.test.mts",
+              "sha256": "0ab6e949de2041b9352eb4c350cc67ba5c8379e30cb5f5a36bab022d2bfaf426"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "quality.read",
+          "semantics": "composed",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M09-G13-PREP-01-GENERATED-PRODUCT-AND-RETENTION-LIMITS",
+              "name": "M09-G13-PREP-01-GENERATED-PRODUCT-AND-RETENTION-LIMITS",
+              "path": "tests/development/growth-optional.test.mts",
+              "sha256": "0ab6e949de2041b9352eb4c350cc67ba5c8379e30cb5f5a36bab022d2bfaf426"
+            }
+          ],
+          "direct_fixtures": []
+        }
+      ]
     }
   ],
   "fixture_administration": "Seed, injected faults, and source observation setters are fixture administration, not remote provider operations. Unnamed real gateway/carrier/warehouse/ERP adapters are unavailable.",
@@ -3307,7 +3677,7 @@
     },
     {
       "path": "packages/adapters/order-edit-fixture-source.mts",
-      "sha256": "929bfcc7d530f2d3409a13eebbf528213dc861965c3a49629637902f5e6bb3b4"
+      "sha256": "fbbe1aaea56e70c59597571fb501e12f74c3e15ac83ed01faef94ff0abc7c4ba"
     },
     {
       "path": "packages/adapters/prevention-source-guards.mts",
@@ -3443,7 +3813,7 @@
     },
     {
       "path": "packages/commerce/contracts/order-editing.v1.json",
-      "sha256": "a63ba2f60cfb1a07d496054659da920cc1438f936e383762cd372974f83e8de0"
+      "sha256": "943a98a3de3b9b340b21ccfabc819b6b4f94ef9a3002526651727874bcba1f94"
     },
     {
       "path": "packages/commerce/contracts/read-api.openapi.json",
@@ -3599,15 +3969,15 @@
     },
     {
       "path": "packages/commerce/order-edit-core.mts",
-      "sha256": "3a36acafbffd0545485b1379ad21f069bbafc42d07198dee77c344107c284c36"
+      "sha256": "376a24451fbe7bed2eeea18660161cc04ca3885a404427f6ce28337de96bbd8c"
     },
     {
       "path": "packages/commerce/order-edit-execution.mts",
-      "sha256": "b71e257caf249f8e0b3075acd255ad6efb88190b940866819699883443c27520"
+      "sha256": "81272bb354dff6e15ccf83f7d6ab022397112a3e1153a2f4eec5c327623ef5b1"
     },
     {
       "path": "packages/commerce/order-edit-workflow.mts",
-      "sha256": "894b09c4a4eb6b02c69dd6486fa89bc6be496c574247f95278b8b59b69df98d1"
+      "sha256": "a0ba2632d546b56d3b16c7e56fc2f1c7ca5f3dc4306258bf62ad42a4c84c34ac"
     },
     {
       "path": "packages/commerce/policies.mts",
@@ -3619,7 +3989,7 @@
     },
     {
       "path": "packages/commerce/privacy-lifecycle.mts",
-      "sha256": "7bde3d99a89c17fecb81ac650bd44904403e068e9080556840f76ae203cb44d3"
+      "sha256": "a1bd069a9ac8011abc2bde6a38000a012159589460fd28005965c241891a8c0a"
     },
     {
       "path": "packages/commerce/profile-editor.mts",
@@ -3755,7 +4125,7 @@
     },
     {
       "path": "packages/commerce/safe-recovery.mts",
-      "sha256": "18ba00eafacc5abfef2c2cc1c120b8f8e432eeacb22f4307da4bb4da73a33858"
+      "sha256": "d82aacafee1e63d4bdd28779fb55cc5b7f574d1ffea8c15d602f2188b63349d3"
     },
     {
       "path": "packages/commerce/secrets.mts",
@@ -3863,7 +4233,7 @@
     },
     {
       "path": "packages/commerce/support-delivery.mts",
-      "sha256": "21c88acb0cb84873394424899e87579dd5bd259389598f5252d4a38996e76073"
+      "sha256": "a9f2a733fdc17f193b2b2f03099fb400114e3691f9ead7bf0dfaa3019250acb6"
     },
     {
       "path": "packages/commerce/support-errors.mts",
@@ -4183,11 +4553,11 @@
     },
     {
       "path": "tests/fixtures/conformance/contract-cases.v1.json",
-      "sha256": "6ba59b766c71efc6a6e4bf2ddcac094d4831ec9f839d5bc2c20b04092bf37dce"
+      "sha256": "8df62ecae867bbcf05876a80f61766a3ddae34f5d913d4c0214c5d91adc76864"
     },
     {
       "path": "tests/fixtures/conformance/expected-coverage.v1.json",
-      "sha256": "3b95aabe2b79b58f7353a3e529e8f8f16665a6e70256da19082737b253cb797d"
+      "sha256": "589e70ad78fefa6682563a2843038ee065917648a61005095ce0b90e26e0667d"
     },
     {
       "path": "tests/fixtures/conformance/source-inputs.v1.json",
@@ -4367,7 +4737,7 @@
     },
     {
       "path": "packages/commerce/merchant-portability.mts",
-      "sha256": "37d58389cc6a5af61b519f2ee735e0f729178ed8ccdab026e76e9fb6393d5857"
+      "sha256": "85cb42e215613394b6044dabcf67f2755bff0cc635fade59c5e7e0902be69382"
     },
     {
       "path": "packages/commerce/contracts/carrier-quotes.v1.json",
@@ -4504,6 +4874,230 @@
     {
       "path": "tests/fixtures/inventory-reconciliation/storage-baseline.v1.json",
       "sha256": "b7733158c7d2ea074874c0f0b909247fb058c4cd9180564584bd8043aec12fe0"
+    },
+    {
+      "path": "migrations/commerce/036_growth_shopping.sql",
+      "sha256": "de33559d9bd57fa702f732ad21b5bfbfd1ae47d9b8ffe9b2cc148c9cd7e28c81"
+    },
+    {
+      "path": "migrations/commerce/037_growth_marketing.sql",
+      "sha256": "45eab8da2bf2ab02a71f53ca77abf897e83dc8fb177fa4c105aa273433c4cf20"
+    },
+    {
+      "path": "migrations/commerce/038_growth_optional.sql",
+      "sha256": "3f98c2e3016bd3c71d04995cf8ad27d5325d9f2e43fc6e4b829bf96e262f8c73"
+    },
+    {
+      "path": "packages/adapters/marketing-fixture-source.mts",
+      "sha256": "dd2f8ca601a07b22161f45b52accb9b67cb8b6d1e3a9bbe21667e25aa3116e5f"
+    },
+    {
+      "path": "packages/adapters/optional-provider-fixture-source.mts",
+      "sha256": "d6f3db7f9fd98d1a9052b105600154e3c19561360c4c0d418afe16df4ef924c3"
+    },
+    {
+      "path": "packages/adapters/shopping-catalog-fixture-source.mts",
+      "sha256": "a125a8b3f9f508b686e74f820c0ff48326f92890f8c11712afb7ee63cbb0b286"
+    },
+    {
+      "path": "packages/adapters/upsell-source-guards.mts",
+      "sha256": "e31e0d430c6c0dbdf68d6cb5969bda7b84069d678bf9d447ed9db6b352ba0163"
+    },
+    {
+      "path": "packages/commerce/cart-recovery.mts",
+      "sha256": "ea3cc0f6f5e988bb73e7d695235b02a142d5529735c1d681f6563f5f8810049b"
+    },
+    {
+      "path": "packages/commerce/catalog-growth.mts",
+      "sha256": "061e5c9f35d42b7365fad44b28daff15b6726285315f33e2ff4483c1650dd9c0"
+    },
+    {
+      "path": "packages/commerce/checkout-experiments.mts",
+      "sha256": "b890f9c64f077f9b4dc5898284b38f750460cc4b03cd1bc9338eb864608c20c5"
+    },
+    {
+      "path": "packages/commerce/contracts/campaign-delivery.v1.json",
+      "sha256": "2c1e05faecc66e580a757daff22146bfa85d6ad1d1ef393194d2188d8fa0f8a1"
+    },
+    {
+      "path": "packages/commerce/contracts/cart-recovery.v1.json",
+      "sha256": "4f07493c698a8f67e44de79983bf86385d74bb8daaa66d8ab2261543ed1acdf6"
+    },
+    {
+      "path": "packages/commerce/contracts/catalog-visibility.v1.json",
+      "sha256": "195bf4b8c25d74fc78272a451db4a4d8d01d53d91347af8d571a1f733c3b087f"
+    },
+    {
+      "path": "packages/commerce/contracts/checkout-experiments.v1.json",
+      "sha256": "07c91203bce964d8f36df467fa58973e626b1958c13d32c73ecc71567230b172"
+    },
+    {
+      "path": "packages/commerce/contracts/email-action-links.v1.json",
+      "sha256": "48408bbd0f64bcf388420f05ca4a650c0385a2071b6781d365eb5fb0618a3dd1"
+    },
+    {
+      "path": "packages/commerce/contracts/growth-campaigns.v1.json",
+      "sha256": "62f26266efe7f26d25927bd118c7b141ecf7b440b658af11d67a1a0877b468d8"
+    },
+    {
+      "path": "packages/commerce/contracts/growth-measurement.v1.json",
+      "sha256": "89560fe1e792b12a27825dfa270109d87df16dc6f1981a10c54f3cc67f9196f5"
+    },
+    {
+      "path": "packages/commerce/contracts/identity-partner.v1.json",
+      "sha256": "17991ede984ef81716903e86aed5a283a98710c0f8efb9a02f5697f24ec3ff8a"
+    },
+    {
+      "path": "packages/commerce/contracts/marketing-segments.v1.json",
+      "sha256": "03dd642d1290577833ffca3825b809148531add965a493e63da4f363af5d1514"
+    },
+    {
+      "path": "packages/commerce/contracts/optional-media.v1.json",
+      "sha256": "c9f3f0af51b1b378bcf720d3eccecbbe542f5c0eb1ac3cd766f2bb9eb8421c67"
+    },
+    {
+      "path": "packages/commerce/contracts/pre-fulfillment-upsells.v1.json",
+      "sha256": "33a1ba4d7834f1f70735f38c8ea577c15b43df1b0f769a31fba2de4b0eaf78a7"
+    },
+    {
+      "path": "packages/commerce/contracts/reviewed-catalog-changes.v1.json",
+      "sha256": "108958634273e329d2f937f48fa0179f983af2c2dd61a5487ded07448f53fa0f"
+    },
+    {
+      "path": "packages/commerce/contracts/shopping-cart.v1.json",
+      "sha256": "276b4da8ba47a20db98bd25a2739507ac19f5defdd4bd6dc5ffefa0c1180bfc7"
+    },
+    {
+      "path": "packages/commerce/contracts/storage-growth-extension.v1.json",
+      "sha256": "8486310f2cc2b2befd3200c0683a70db770cd1adc0cd97ab1a126a78d7af7e00"
+    },
+    {
+      "path": "packages/commerce/contracts/tryon-qualification.v1.json",
+      "sha256": "6df0804dbfc3a9f62ce83945181c12276f2a5673763280e72119e856afa94b1a"
+    },
+    {
+      "path": "packages/commerce/email-action-links.mts",
+      "sha256": "4e1fa1c5ff3254dce833f7998ed72d56474da61a32641e12f12db7c0079b046f"
+    },
+    {
+      "path": "packages/commerce/growth-campaigns.mts",
+      "sha256": "991303f00f8c528f788efc0eca4ed005c369d858c024adada146db3d6e7ea7d1"
+    },
+    {
+      "path": "packages/commerce/growth-marketing-core.mts",
+      "sha256": "a6f1763eb3aaabe6d9a6b9478ceb8f62bbca3981cd3e1339db106aa2151c8448"
+    },
+    {
+      "path": "packages/commerce/growth-marketing-privacy.mts",
+      "sha256": "4dffdf7bd18d11e2e9a1eb73371e06dcdeb12005f1ce442a05ce7710f0dd8e44"
+    },
+    {
+      "path": "packages/commerce/growth-measurement.mts",
+      "sha256": "fd97793898a7fe887490fe8b80bd008521153a1b61816dac4b4c4a5139eee47b"
+    },
+    {
+      "path": "packages/commerce/growth-privacy.mts",
+      "sha256": "c8cbc97e37d2e789bcc5da7b4319a678a9a092c87e64679ec7848c6dc01c93b1"
+    },
+    {
+      "path": "packages/commerce/growth-shopping-core.mts",
+      "sha256": "f65b065bc7395d61fce4bb974391d8d94ee6db0d460aca00c8b2fbc0e2fe7480"
+    },
+    {
+      "path": "packages/commerce/identity-partner.mts",
+      "sha256": "3aa8a08fc79091edb1dccabbdaf6ef482b36e1a9935f5324635c637a8c401538"
+    },
+    {
+      "path": "packages/commerce/marketing-segments.mts",
+      "sha256": "22a6bd89adc16571186c969df532633d6bb74a01fa26e169079d986698f63c4a"
+    },
+    {
+      "path": "packages/commerce/optional-lifecycle-core.mts",
+      "sha256": "4f00d238b0cbe0d0134eb12475a74c7081a486d6d976936618a08c89b5244327"
+    },
+    {
+      "path": "packages/commerce/optional-media.mts",
+      "sha256": "888eb400b9de7e14005c011ce0d678686581b62e3a959088ba91125205a2dc8d"
+    },
+    {
+      "path": "packages/commerce/pre-fulfillment-upsells.mts",
+      "sha256": "d189023f32fa299f97e38f7af693d70471fe14ad2a2f07a090173a0e9701af0b"
+    },
+    {
+      "path": "packages/commerce/shopping-cart.mts",
+      "sha256": "d67f10f0fb15af9d5a5d0ce5412524e7fd51c7d60f6cdd218852c52cfeb4a0a2"
+    },
+    {
+      "path": "packages/commerce/skill-bundles/catalog-shopping/SKILL.md",
+      "sha256": "82e8660b2d67be2db0c58824aa8306124a1a74673ff160b53400069c03504d23"
+    },
+    {
+      "path": "packages/commerce/skill-bundles/catalog-shopping/commerce-manifest.json",
+      "sha256": "6f06e5850835999b87bc81354c093cdb2975f664bbf0b8c5cd25bc5418f6e593"
+    },
+    {
+      "path": "packages/commerce/skill-bundles/catalog-shopping/references/configuration.json",
+      "sha256": "2b5edcfb44ee0d4d3afe9fd02a38bee8642a520070782d3918ad37a775a664df"
+    },
+    {
+      "path": "packages/commerce/skill-bundles/catalog-shopping/references/input.json",
+      "sha256": "2676a57f65740042abec5a234e58f611956852cd5b5782c9301deb069174bb24"
+    },
+    {
+      "path": "packages/commerce/skill-bundles/catalog-shopping/references/output.json",
+      "sha256": "f09343dac5909aceca277b4b8b3b08854243af25982b9c8e498a103d3613a34e"
+    },
+    {
+      "path": "packages/commerce/skill-bundles/catalog-shopping/references/workflow.md",
+      "sha256": "c61c47d05d42df216a34baa5bf39da54505d5f8705b08c7d362ab5ec38d88eae"
+    },
+    {
+      "path": "packages/commerce/tryon-qualification.mts",
+      "sha256": "b4a3a1d33d0b09a925b0e4e9229e041e5e33b6c8aae2786ac9e53444569b1c53"
+    },
+    {
+      "path": "packages/commerce/upsell-guards.mts",
+      "sha256": "430bed23bfc9b53644f5b492ed440da523cff89ebadec34c8c52d012fc01397a"
+    },
+    {
+      "path": "tests/development/growth-marketing-helpers.mts",
+      "sha256": "f5ad5c2d7dfb18803d022a4e0fe3bc1cc28f46b3e6e954a59e9b668ebf3f6284"
+    },
+    {
+      "path": "tests/development/growth-marketing.test.mts",
+      "sha256": "2c163d158e3e20da171edd425594fa2dca113345039f0be43e41492cbe3e20d5"
+    },
+    {
+      "path": "tests/development/growth-optional-helpers.mts",
+      "sha256": "425d6daec0a5ffb0755e36c39e70bef76218b9c697d18e5ebc2b2960bb0f21c9"
+    },
+    {
+      "path": "tests/development/growth-optional.test.mts",
+      "sha256": "0ab6e949de2041b9352eb4c350cc67ba5c8379e30cb5f5a36bab022d2bfaf426"
+    },
+    {
+      "path": "tests/development/growth-shopping-helpers.mts",
+      "sha256": "58486aaf0ebd8ea7d425a84d2456fdb903cae7f5511fce19d5c2603e9688af83"
+    },
+    {
+      "path": "tests/development/growth-shopping.test.mts",
+      "sha256": "d8238ff5694c46988a8f202bd8e171a7e820707567e6a5415f9bb1cc77eafd45"
+    },
+    {
+      "path": "tests/fixtures/growth-marketing/known-answer.v1.json",
+      "sha256": "1603b6ffc2de0be01dc5dfb52015f780f24ed9759aa54534a9a8f28d73aa7080"
+    },
+    {
+      "path": "tests/fixtures/growth-optional/expected.v1.json",
+      "sha256": "9d804c1b6bbf93ec28f0df2c285db36ba6e8190737ce5b72ab135312eca6b7ea"
+    },
+    {
+      "path": "tests/fixtures/growth-shopping/known-answer.v1.json",
+      "sha256": "01c2c6be9780b072ed4537fd8f57df28012773b10d38a1609bbb70031d0a7dad"
+    },
+    {
+      "path": "tests/fixtures/growth/storage-baseline.v1.json",
+      "sha256": "4d48315f2ccc9281284f0dee5896e8211036a5efa821f3091211a0a8d3e473a6"
     }
   ]
 }

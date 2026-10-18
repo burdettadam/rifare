@@ -1299,7 +1299,7 @@
         "id": "catalog_order_edit",
         "adapter": {
           "id": "order_edit_source",
-          "version": "source-sha256:929bfcc7d530f2d3409a13eebbf528213dc861965c3a49629637902f5e6bb3b4",
+          "version": "source-sha256:fbbe1aaea56e70c59597571fb501e12f74c3e15ac83ed01faef94ff0abc7c4ba",
           "api_version": "local-order-edit-source",
           "required_scopes": [],
           "semantics": "native",

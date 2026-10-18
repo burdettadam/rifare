@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "schema_digest": "f0c045022c2d17646b536a8a0603376426b277a3ad4f92aa47a7b7044c823f0f",
+  "schema_digest": "580e13a9e01ca6ea702ea8f48f05670599439e40c10898b50bdbc523ae8498cb",
   "runtime_roots": [
     "apps",
     "packages"
@@ -194,12 +194,20 @@
       "sha256": "79888faef78231823392065853ac0823b66ea3024248de432b62cde2bbb28501"
     },
     {
+      "path": "packages/adapters/marketing-fixture-source.mts",
+      "sha256": "dd2f8ca601a07b22161f45b52accb9b67cb8b6d1e3a9bbe21667e25aa3116e5f"
+    },
+    {
       "path": "packages/adapters/native-change-fixture-source.mts",
       "sha256": "20d15c0030308715c982278377e50946e8ca1a4516f909d91cbf10679631d3d7"
     },
     {
+      "path": "packages/adapters/optional-provider-fixture-source.mts",
+      "sha256": "d6f3db7f9fd98d1a9052b105600154e3c19561360c4c0d418afe16df4ef924c3"
+    },
+    {
       "path": "packages/adapters/order-edit-fixture-source.mts",
-      "sha256": "929bfcc7d530f2d3409a13eebbf528213dc861965c3a49629637902f5e6bb3b4"
+      "sha256": "fbbe1aaea56e70c59597571fb501e12f74c3e15ac83ed01faef94ff0abc7c4ba"
     },
     {
       "path": "packages/adapters/prevention-source-guards.mts",
@@ -230,6 +238,10 @@
       "sha256": "cd5fd9fe73422d3e7005cee8a281c90de9c22603b848ef6dfdc3ca86b0e76832"
     },
     {
+      "path": "packages/adapters/shopping-catalog-fixture-source.mts",
+      "sha256": "a125a8b3f9f508b686e74f820c0ff48326f92890f8c11712afb7ee63cbb0b286"
+    },
+    {
       "path": "packages/adapters/support-fixture-source.mts",
       "sha256": "1e9921151382684620a39a6fc4744cdfce921e50ac77446704c17905ceed4e85"
     },
@@ -244,6 +256,10 @@
     {
       "path": "packages/adapters/support/transport.mts",
       "sha256": "2eefdeb256d944eb9956b0cf58fc2d5f95b9fc23bcb29517591d00ff1b4e9db3"
+    },
+    {
+      "path": "packages/adapters/upsell-source-guards.mts",
+      "sha256": "e31e0d430c6c0dbdf68d6cb5969bda7b84069d678bf9d447ed9db6b352ba0163"
     },
     {
       "path": "packages/adapters/warehouse-fixture-source.mts",
@@ -342,8 +358,20 @@
       "sha256": "820151338a9d7e902572540df5b1d658fd17e3d9af1094a693ab07e5dde5240d"
     },
     {
+      "path": "packages/commerce/cart-recovery.mts",
+      "sha256": "ea3cc0f6f5e988bb73e7d695235b02a142d5529735c1d681f6563f5f8810049b"
+    },
+    {
       "path": "packages/commerce/case-configurations.mts",
       "sha256": "8791a9dc4d79059553ff7c5d9198dc2d6845cebb1508933536f922c14481fa86"
+    },
+    {
+      "path": "packages/commerce/catalog-growth.mts",
+      "sha256": "061e5c9f35d42b7365fad44b28daff15b6726285315f33e2ff4483c1650dd9c0"
+    },
+    {
+      "path": "packages/commerce/checkout-experiments.mts",
+      "sha256": "b890f9c64f077f9b4dc5898284b38f750460cc4b03cd1bc9338eb864608c20c5"
     },
     {
       "path": "packages/commerce/configuration-values.mts",
@@ -364,6 +392,10 @@
     {
       "path": "packages/commerce/durable-work.mts",
       "sha256": "c898d3b826914663df493a60ce22eca32edceab38737be7b81f6c55cc47fa5a8"
+    },
+    {
+      "path": "packages/commerce/email-action-links.mts",
+      "sha256": "4e1fa1c5ff3254dce833f7998ed72d56474da61a32641e12f12db7c0079b046f"
     },
     {
       "path": "packages/commerce/event-processing.mts",
@@ -410,6 +442,34 @@
       "sha256": "8cfdb9a95343f6a850949609b4a70bbd4007efd08c7c093bfdd82689c433a041"
     },
     {
+      "path": "packages/commerce/growth-campaigns.mts",
+      "sha256": "991303f00f8c528f788efc0eca4ed005c369d858c024adada146db3d6e7ea7d1"
+    },
+    {
+      "path": "packages/commerce/growth-marketing-core.mts",
+      "sha256": "a6f1763eb3aaabe6d9a6b9478ceb8f62bbca3981cd3e1339db106aa2151c8448"
+    },
+    {
+      "path": "packages/commerce/growth-marketing-privacy.mts",
+      "sha256": "4dffdf7bd18d11e2e9a1eb73371e06dcdeb12005f1ce442a05ce7710f0dd8e44"
+    },
+    {
+      "path": "packages/commerce/growth-measurement.mts",
+      "sha256": "fd97793898a7fe887490fe8b80bd008521153a1b61816dac4b4c4a5139eee47b"
+    },
+    {
+      "path": "packages/commerce/growth-privacy.mts",
+      "sha256": "c8cbc97e37d2e789bcc5da7b4319a678a9a092c87e64679ec7848c6dc01c93b1"
+    },
+    {
+      "path": "packages/commerce/growth-shopping-core.mts",
+      "sha256": "f65b065bc7395d61fce4bb974391d8d94ee6db0d460aca00c8b2fbc0e2fe7480"
+    },
+    {
+      "path": "packages/commerce/identity-partner.mts",
+      "sha256": "3aa8a08fc79091edb1dccabbdaf6ef482b36e1a9935f5324635c637a8c401538"
+    },
+    {
       "path": "packages/commerce/instant-exchanges.mts",
       "sha256": "ccbb6c90130605b94b8efd7a0b5852b18ddbdbf84cc0ab449347e1f3dfbbf5f1"
     },
@@ -442,8 +502,12 @@
       "sha256": "75a33328aef5cd226c8e261347bb3e514abbae92a93d0448946382289e79c0b8"
     },
     {
+      "path": "packages/commerce/marketing-segments.mts",
+      "sha256": "22a6bd89adc16571186c969df532633d6bb74a01fa26e169079d986698f63c4a"
+    },
+    {
       "path": "packages/commerce/merchant-portability.mts",
-      "sha256": "37d58389cc6a5af61b519f2ee735e0f729178ed8ccdab026e76e9fb6393d5857"
+      "sha256": "85cb42e215613394b6044dabcf67f2755bff0cc635fade59c5e7e0902be69382"
     },
     {
       "path": "packages/commerce/migration-cutover.mts",
@@ -482,16 +546,24 @@
       "sha256": "fe835ab20481f7d8e3f35e48b12ea940dab4b14c9005af5bc68ec4068f3a6f26"
     },
     {
+      "path": "packages/commerce/optional-lifecycle-core.mts",
+      "sha256": "4f00d238b0cbe0d0134eb12475a74c7081a486d6d976936618a08c89b5244327"
+    },
+    {
+      "path": "packages/commerce/optional-media.mts",
+      "sha256": "888eb400b9de7e14005c011ce0d678686581b62e3a959088ba91125205a2dc8d"
+    },
+    {
       "path": "packages/commerce/order-edit-core.mts",
-      "sha256": "3a36acafbffd0545485b1379ad21f069bbafc42d07198dee77c344107c284c36"
+      "sha256": "376a24451fbe7bed2eeea18660161cc04ca3885a404427f6ce28337de96bbd8c"
     },
     {
       "path": "packages/commerce/order-edit-execution.mts",
-      "sha256": "b71e257caf249f8e0b3075acd255ad6efb88190b940866819699883443c27520"
+      "sha256": "81272bb354dff6e15ccf83f7d6ab022397112a3e1153a2f4eec5c327623ef5b1"
     },
     {
       "path": "packages/commerce/order-edit-workflow.mts",
-      "sha256": "894b09c4a4eb6b02c69dd6486fa89bc6be496c574247f95278b8b59b69df98d1"
+      "sha256": "a0ba2632d546b56d3b16c7e56fc2f1c7ca5f3dc4306258bf62ad42a4c84c34ac"
     },
     {
       "path": "packages/commerce/packing-sessions.mts",
@@ -500,6 +572,10 @@
     {
       "path": "packages/commerce/policies.mts",
       "sha256": "4e0434ea4209176861c66b32705ee432ce712b86eee42c5ed7e6f0f190bd7176"
+    },
+    {
+      "path": "packages/commerce/pre-fulfillment-upsells.mts",
+      "sha256": "d189023f32fa299f97e38f7af693d70471fe14ad2a2f07a090173a0e9701af0b"
     },
     {
       "path": "packages/commerce/prevention-experiments.mts",
@@ -511,7 +587,7 @@
     },
     {
       "path": "packages/commerce/privacy-lifecycle.mts",
-      "sha256": "7bde3d99a89c17fecb81ac650bd44904403e068e9080556840f76ae203cb44d3"
+      "sha256": "a1bd069a9ac8011abc2bde6a38000a012159589460fd28005965c241891a8c0a"
     },
     {
       "path": "packages/commerce/profile-editor.mts",
@@ -651,7 +727,7 @@
     },
     {
       "path": "packages/commerce/safe-recovery.mts",
-      "sha256": "18ba00eafacc5abfef2c2cc1c120b8f8e432eeacb22f4307da4bb4da73a33858"
+      "sha256": "d82aacafee1e63d4bdd28779fb55cc5b7f574d1ffea8c15d602f2188b63349d3"
     },
     {
       "path": "packages/commerce/secrets.mts",
@@ -664,6 +740,10 @@
     {
       "path": "packages/commerce/shipping-manifests.mts",
       "sha256": "1c102d935949afdb1ac79f2fbaea1fa84a48c95afeef1bd5450e05e694c6ab6d"
+    },
+    {
+      "path": "packages/commerce/shopping-cart.mts",
+      "sha256": "d67f10f0fb15af9d5a5d0ce5412524e7fd51c7d60f6cdd218852c52cfeb4a0a2"
     },
     {
       "path": "packages/commerce/simulator.mts",
@@ -707,7 +787,7 @@
     },
     {
       "path": "packages/commerce/support-delivery.mts",
-      "sha256": "21c88acb0cb84873394424899e87579dd5bd259389598f5252d4a38996e76073"
+      "sha256": "a9f2a733fdc17f193b2b2f03099fb400114e3691f9ead7bf0dfaa3019250acb6"
     },
     {
       "path": "packages/commerce/support-errors.mts",
@@ -754,6 +834,14 @@
       "sha256": "0a307331994ae19d49ec8481e678f2cb7f5419c1c85326d36f1d17d8313c1059"
     },
     {
+      "path": "packages/commerce/tryon-qualification.mts",
+      "sha256": "b4a3a1d33d0b09a925b0e4e9229e041e5e33b6c8aae2786ac9e53444569b1c53"
+    },
+    {
+      "path": "packages/commerce/upsell-guards.mts",
+      "sha256": "430bed23bfc9b53644f5b492ed440da523cff89ebadec34c8c52d012fc01397a"
+    },
+    {
       "path": "packages/commerce/variant-exchanges.mts",
       "sha256": "6cfbc2797e3db410f4f617e29e43646d2d74d9bed230fce9dd97b9a2b888f1eb"
     },
@@ -779,7 +867,7 @@
     },
     {
       "path": "packages/conformance/adapter-catalog.mts",
-      "sha256": "b0f880467682b00462919cec4f66d95953901992dea372338aa7d35e4f6a4f5f"
+      "sha256": "6c69d00dd9229f9260320e49f0da5730409eb54c62609600455d3ec2e19cfa2f"
     },
     {
       "path": "packages/conformance/adapter-fixtures.mts",
@@ -873,24 +961,31 @@
         "commerce_packing_scans",
         "commerce_packing_sessions",
         "commerce_resources",
-        "commerce_shipping_manifest_packages"
+        "commerce_shipping_manifest_packages",
+        "commerce_shopping_carts",
+        "commerce_upsell_offers"
       ],
       "implementation": [
         "packages/commerce/kernel.mts",
         "packages/commerce/privacy-lifecycle.mts",
         "packages/commerce/data-guards.mts",
         "packages/commerce/packing-sessions.mts",
-        "packages/commerce/shipping-manifests.mts"
+        "packages/commerce/shipping-manifests.mts",
+        "packages/commerce/growth-privacy.mts",
+        "packages/commerce/growth-marketing-privacy.mts",
+        "packages/commerce/shopping-cart.mts",
+        "packages/commerce/pre-fulfillment-upsells.mts"
       ],
-      "export": "Scoped customer resources, linked cases and downstream subject records through PrivacyLifecycle.export. Gift recipient export has a separate minimized projection. Subject-linked packing sessions, allocation and scan ledgers, confirmations and per-package manifest membership export by tenant, store and owning resource.",
-      "erasure": "Replace subject payload/identity with redaction and pseudonym; retain suppression hashes and refuse future reads or ingest. Packing operator, scanner, SKU, ordinal, return-link and source/parcel payloads and manifest copies are minimized; stable unit, scan, confirmation and package identities remain fenced.",
-      "retention": "Minimized resource/case identities remain for reconciliation. A configured active hold delays customer erasure.",
-      "observation_required": "Exercise actual linked resource rows, customer proof and cross-store denial. Populate the four packing tables and manifest membership, check subject-only exports and blocked qualification after erasure."
+      "export": "Scoped customer resources, linked cases and downstream subject records through PrivacyLifecycle.export. Gift recipient export has a separate minimized projection. Subject-linked packing sessions, allocation and scan ledgers, confirmations and per-package manifest membership export by tenant, store and owning resource. Growth carts and upsell offers are exported only for the requested scoped subject.",
+      "erasure": "Replace subject payload/identity with redaction and pseudonym; retain suppression hashes and refuse future reads or ingest. Packing operator, scanner, SKU, ordinal, return-link and source/parcel payloads and manifest copies are minimized; stable unit, scan, confirmation and package identities remain fenced. Rebuild allowlists including hash-only suppression replay; replace customer identifiers and retain original cart/effect identity.",
+      "retention": "Minimized resource/case identities remain for reconciliation. A configured active hold delays customer erasure. No retained cart body may grant checkout, payment, stock or customer approval.",
+      "observation_required": "Exercise actual linked resource rows, customer proof and cross-store denial. Populate the four packing tables and manifest membership, check subject-only exports and blocked qualification after erasure. Observe new cart/offer tables and actual separate source copies."
     },
     {
       "id": "support_conversations",
       "control": "local_sqlite",
       "tables": [
+        "commerce_growth_campaign_recipients",
         "commerce_support_attempts",
         "commerce_support_consent",
         "commerce_support_consent_events",
@@ -905,29 +1000,37 @@
         "packages/commerce/support-conversations.mts",
         "packages/commerce/support-consent.mts",
         "packages/commerce/support-delivery.mts",
-        "packages/commerce/privacy-lifecycle.mts"
+        "packages/commerce/privacy-lifecycle.mts",
+        "packages/commerce/growth-privacy.mts",
+        "packages/commerce/growth-marketing-privacy.mts",
+        "packages/commerce/growth-campaigns.mts"
       ],
-      "export": "Subject conversations, contacts, attempts/deliveries, current consent and consent events are scoped to the customer and cases.",
-      "erasure": "Redact messages and delivery bodies, null contacts, withdraw/pseudonymize consent, revoke session ownership and cancel rule jobs.",
-      "retention": "Delivery references and operational observations remain minimized; an already delivered provider copy cannot be recalled.",
-      "observation_required": "Exercise real conversation/contact/consent APIs and verify local copy fields and blocked subsequent access."
+      "export": "Subject conversations, contacts, attempts/deliveries, current consent and consent events are scoped to the customer and cases. Campaign recipients are subject scoped; canonical SupportDelivery remains the message owner.",
+      "erasure": "Redact messages and delivery bodies, null contacts, withdraw/pseudonymize consent, revoke session ownership and cancel rule jobs. Revoke affected campaign approvals and suppress recipient bodies, preserving original send IDs.",
+      "retention": "Delivery references and operational observations remain minimized; an already delivered provider copy cannot be recalled. Provider acceptance stays distinct from observed delivery; no new effect is created by minimization.",
+      "observation_required": "Exercise real conversation/contact/consent APIs and verify local copy fields and blocked subsequent access. Observe campaign copies plus existing delivery, consent, contact and source outbox records."
     },
     {
       "id": "attachment_media",
       "control": "local_sqlite",
       "tables": [
         "commerce_attachments",
+        "commerce_optional_media",
         "commerce_return_evidence"
       ],
       "implementation": [
         "packages/commerce/kernel.mts",
         "packages/commerce/return-evidence.mts",
-        "packages/commerce/privacy-lifecycle.mts"
+        "packages/commerce/privacy-lifecycle.mts",
+        "packages/commerce/growth-privacy.mts",
+        "packages/commerce/growth-marketing-privacy.mts",
+        "packages/commerce/optional-media.mts",
+        "packages/commerce/optional-lifecycle-core.mts"
       ],
-      "export": "Embedded attachments and base64 return evidence are included for scoped resources/cases.",
-      "erasure": "Delete attachment rows; clear evidence bytes, note and scanner. Existing expiry purger respects configured holds.",
-      "retention": "Evidence IDs, hashes, MIME and timestamps remain; SQLite free pages and caller downloads need separate handling.",
-      "observation_required": "Upload actual accepted image bytes and verify export plus null bytes after erasure."
+      "export": "Embedded attachments and base64 return evidence are included for scoped resources/cases. Purpose-specific optional media is exported only to its subject without authentication secrets.",
+      "erasure": "Delete attachment rows; clear evidence bytes, note and scanner. Existing expiry purger respects configured holds. Erase media bodies and withdraw grants; queue processor deletion under the original operation ID.",
+      "retention": "Evidence IDs, hashes, MIME and timestamps remain; SQLite free pages and caller downloads need separate handling. Only inert authorized fixture media is accepted; expiry and revocation prevent model reuse.",
+      "observation_required": "Upload actual accepted image bytes and verify export plus null bytes after erasure. Observe optional media bodies, queued input/output copies and both separate source stores."
     },
     {
       "id": "retrieval_index",
@@ -950,6 +1053,7 @@
       "control": "local_sqlite",
       "tables": [
         "commerce_assistance_receipts",
+        "commerce_cart_recoveries",
         "commerce_case_work",
         "commerce_context_tasks",
         "commerce_read_jobs",
@@ -961,17 +1065,25 @@
         "packages/commerce/read-context.mts",
         "packages/agent/runner.mts",
         "packages/commerce/worker-api.mts",
-        "packages/commerce/privacy-lifecycle.mts"
+        "packages/commerce/privacy-lifecycle.mts",
+        "packages/commerce/growth-privacy.mts",
+        "packages/commerce/growth-marketing-privacy.mts",
+        "packages/commerce/cart-recovery.mts"
       ],
-      "export": "Scoped tasks and assistance receipts are exported with relevant case configuration/proposals.",
-      "erasure": "Delete task/read-job/assistance rows; redact worker submission/completion/effect bodies and revoke work.",
-      "retention": "Authority/audit identities stay minimized. Caller memory and already sent provider inputs are outside these database mutations.",
-      "observation_required": "Exercise a real task and denied old task access, then inspect deployed process/provider copies separately."
+      "export": "Scoped tasks and assistance receipts are exported with relevant case configuration/proposals. Recovery proposal copies are subject scoped.",
+      "erasure": "Delete task/read-job/assistance rows; redact worker submission/completion/effect bodies and revoke work. Cancel and minimize recovery proposals on erasure and restore.",
+      "retention": "Authority/audit identities stay minimized. Caller memory and already sent provider inputs are outside these database mutations. Queued proposals grant no send authority; current cart purchase and consent are rechecked at final send.",
+      "observation_required": "Exercise a real task and denied old task access, then inspect deployed process/provider copies separately. Observe recovery proposal copies and their original cart/message references."
     },
     {
       "id": "analytics_readmodels",
       "control": "local_sqlite",
       "tables": [
+        "commerce_catalog_evaluations",
+        "commerce_checkout_assignments",
+        "commerce_checkout_experiments",
+        "commerce_checkout_exposures",
+        "commerce_growth_observations",
         "commerce_prevention_confirmations",
         "commerce_prevention_experiments",
         "commerce_prevention_exposures",
@@ -988,12 +1100,17 @@
         "packages/commerce/support-metrics.mts",
         "packages/commerce/support-insights.mts",
         "packages/commerce/prevention-experiments.mts",
-        "packages/commerce/privacy-lifecycle.mts"
+        "packages/commerce/privacy-lifecycle.mts",
+        "packages/commerce/growth-privacy.mts",
+        "packages/commerce/growth-marketing-privacy.mts",
+        "packages/commerce/checkout-experiments.mts",
+        "packages/commerce/growth-measurement.mts",
+        "packages/commerce/catalog-growth.mts"
       ],
-      "export": "Subject cost/completion and return assistance records export; mixed-customer metric documents expose only owned members. Other aggregate and unbound configuration text requires scope review.",
-      "erasure": "Support metrics recheck case access when rebuilt; erased members remain unavailable in the frozen denominator. Insight drafts revoke. Bound prevention/risk bodies and customer IDs redact.",
-      "retention": "The support_documents table also carries merchant configuration, qualification and migration/import control. Do not bulk-delete it. Frozen denominator and minimized financial facts remain; no legal retention duration is inferred.",
-      "observation_required": "Rebuild the actual metric report after erasure and current-checkpoint import; inspect unbound document data before claiming subject completeness."
+      "export": "Subject cost/completion and return assistance records export; mixed-customer metric documents expose only owned members. Other aggregate and unbound configuration text requires scope review. Project only the subject assignment, exposure and native observations plus relevant seed-free experiment metadata.",
+      "erasure": "Support metrics recheck case access when rebuilt; erased members remain unavailable in the frozen denominator. Insight drafts revoke. Bound prevention/risk bodies and customer IDs redact. Remove customer text and outcomes while retaining frozen assigned-arm denominators; missing/erased results remain unavailable.",
+      "retention": "The support_documents table also carries merchant configuration, qualification and migration/import control. Do not bulk-delete it. Frozen denominator and minimized financial facts remain; no legal retention duration is inferred. Experiment counts and immutable source/prompt/catalog/model digests are audit, not causal-lift or placement guarantees.",
+      "observation_required": "Rebuild the actual metric report after erasure and current-checkpoint import; inspect unbound document data before claiming subject completeness. Observe native event deduplication, cost coverage, erased unavailable units and catalog observation copies."
     },
     {
       "id": "integration_replicas",
@@ -1029,6 +1146,7 @@
       "tables": [
         "commerce_action_readiness",
         "commerce_audit",
+        "commerce_catalog_approvals",
         "commerce_challenge_rates",
         "commerce_challenges",
         "commerce_configuration_drafts",
@@ -1039,21 +1157,28 @@
         "commerce_customer_proof_bindings",
         "commerce_destination_policies",
         "commerce_edit_settings",
+        "commerce_email_action_links",
         "commerce_exchange_settings",
         "commerce_execution_settings",
         "commerce_execution_stops",
         "commerce_fulfillment_settings",
         "commerce_gift_challenges",
         "commerce_gift_sessions",
+        "commerce_growth_campaign_approvals",
+        "commerce_growth_campaigns",
         "commerce_instant_settings",
         "commerce_inventory_owners",
         "commerce_inventory_transfer_approvals",
+        "commerce_marketing_segments",
         "commerce_members",
         "commerce_migrations",
         "commerce_model_budgets",
         "commerce_model_circuits",
         "commerce_model_reservations",
         "commerce_native_change_settings",
+        "commerce_optional_configurations",
+        "commerce_optional_consents",
+        "commerce_optional_quality",
         "commerce_permissions",
         "commerce_policy_pins",
         "commerce_policy_versions",
@@ -1077,6 +1202,7 @@
         "commerce_skills",
         "commerce_stores",
         "commerce_support_ownership",
+        "commerce_upsell_confirmations",
         "commerce_warehouse_settings",
         "commerce_webhook_routes",
         "commerce_woocommerce_connections",
@@ -1089,12 +1215,19 @@
         "packages/commerce/privacy-lifecycle.mts",
         "packages/commerce/shipping-batch-labels.mts",
         "packages/commerce/location-inventory.mts",
-        "packages/commerce/inventory-transfers.mts"
+        "packages/commerce/inventory-transfers.mts",
+        "packages/commerce/growth-privacy.mts",
+        "packages/commerce/growth-marketing-privacy.mts",
+        "packages/commerce/optional-lifecycle-core.mts",
+        "packages/commerce/tryon-qualification.mts",
+        "packages/commerce/email-action-links.mts",
+        "packages/commerce/marketing-segments.mts",
+        "packages/commerce/growth-campaigns.mts"
       ],
-      "export": "Customer export excludes credentials, authentication tokens and unbound merchant/staff configuration. Subject-linked label approvals export as resource audit without credential or session token hashes. Inventory field ownership and transfer approvals export only through subject-resource mappings; approvals do not expose authentication tokens.",
-      "erasure": "Invalidate customer proof/session and gift grants; uninstall revokes/envelope-clears vault entries, routes, credentials, readiness and store access. Subject label approvals are revoked and their private bodies minimized; merchant import and snapshot restore also revoke these approvals before any diagnostic access. Transfer approvals are revoked and minimized on subject erasure. Merchant import and snapshot restore revoke transfer approvals and replay minimization for suppressed subjects. Field ownership keeps the minimum SKU, location, field and original source identity required to avoid a competing physical owner.",
-      "retention": "Staff/security/configuration and source provenance audits persist. Unbound arbitrary configuration text needs operator review; no blanket customer-data-free claim. A preserved field-owner row is quantitative stock control, not renewed approval for a transfer or erased journey.",
-      "observation_required": "Check exported bytes exclude bearer/credential material and actual uninstall disables store access and clears local vault envelopes."
+      "export": "Customer export excludes credentials, authentication tokens and unbound merchant/staff configuration. Subject-linked label approvals export as resource audit without credential or session token hashes. Inventory field ownership and transfer approvals export only through subject-resource mappings; approvals do not expose authentication tokens. Exports omit bearer/session/link hashes and contain only relevant merchant configurations.",
+      "erasure": "Invalidate customer proof/session and gift grants; uninstall revokes/envelope-clears vault entries, routes, credentials, readiness and store access. Subject label approvals are revoked and their private bodies minimized; merchant import and snapshot restore also revoke these approvals before any diagnostic access. Transfer approvals are revoked and minimized on subject erasure. Merchant import and snapshot restore revoke transfer approvals and replay minimization for suppressed subjects. Field ownership keeps the minimum SKU, location, field and original source identity required to avoid a competing physical owner. Revoke upsell/catalog/campaign/email/optional authority; remove customer consent payloads and active link tokens.",
+      "retention": "Staff/security/configuration and source provenance audits persist. Unbound arbitrary configuration text needs operator review; no blanket customer-data-free claim. A preserved field-owner row is quantitative stock control, not renewed approval for a transfer or erased journey. Restore and uninstall disable optional configurations and quality, pause campaigns and cancel recovery; structured audit is not permission.",
+      "observation_required": "Check exported bytes exclude bearer/credential material and actual uninstall disables store access and clears local vault envelopes. Observe all current new configurations, consents, approvals, scope bindings and expiration paths."
     },
     {
       "id": "operation_audit",
@@ -1106,6 +1239,7 @@
         "commerce_carrier_events",
         "commerce_case_configurations",
         "commerce_case_effects",
+        "commerce_catalog_changes",
         "commerce_control_events",
         "commerce_destination_bindings",
         "commerce_destination_selections",
@@ -1138,6 +1272,7 @@
         "commerce_inventory_transfers",
         "commerce_lifecycle_observations",
         "commerce_lifecycle_quotes",
+        "commerce_marketing_sync_operations",
         "commerce_native_change_snapshots",
         "commerce_native_completed_units",
         "commerce_native_receipts",
@@ -1148,6 +1283,8 @@
         "commerce_operation_targets",
         "commerce_operation_work",
         "commerce_operations",
+        "commerce_optional_deletions",
+        "commerce_optional_operations",
         "commerce_order_edits",
         "commerce_receipt_payloads",
         "commerce_received_units",
@@ -1186,12 +1323,17 @@
         "packages/commerce/shipping-manifests.mts",
         "packages/commerce/location-inventory.mts",
         "packages/commerce/inventory-transfers.mts",
-        "packages/commerce/inventory-reconciliation.mts"
+        "packages/commerce/inventory-reconciliation.mts",
+        "packages/commerce/growth-privacy.mts",
+        "packages/commerce/growth-marketing-privacy.mts",
+        "packages/commerce/optional-lifecycle-core.mts",
+        "packages/commerce/catalog-growth.mts",
+        "packages/commerce/marketing-segments.mts"
       ],
-      "export": "Scoped native financial/physical/return/edit history, receipts and associated subject payloads export through their existing projections. Outbound label purchase/void/refund records and carrier events export only for the subject resources. Subject inventory snapshots, append-linked movements, discrepancies, transfers and original operations export by tenant/store/resource while physical balances remain global per SKU and location.",
-      "erasure": "Redact privacy-bearing case/quote/plan/input bodies and delete receipt notes while retaining command/receipt/effect identities; subject reads remain guarded. Outbound label bodies are integrity-checked and reconstructed from an allowlist even when marked redacted; command, address, parcel, tracking and arbitrary private fields are removed. Inventory bodies are reconstructed from explicit allowlists even if already marked redacted; private journey, operator, evidence and arbitrary copied fields are removed. Snapshot quantitative cores and movement delta/chain cores remain so erasing one journey cannot silently remove shared stock.",
-      "retention": "Monetary amounts, currencies, original native identity and audit digests must not be deleted or replayed. Arbitrary external source identifiers are not certified anonymous. Original purchase/source/command identity, exact monetary amount and currency, native charge/label/refund references and separate void/refund states remain minimized and cannot authorize replay. Original source/effect identities, covered movement IDs, quantitative digests, stock deltas, chain links, transfer quantities and unknown states remain as minimized audit and cannot authorize replay. An effect erased before its movement was imported can leave shared stock unresolved; repair under privacy constraints remains an operator duty.",
-      "observation_required": "Verify representative retained receipts and subject access denial; qualify actual legal retention and source identifier policy separately. Inspect actual populated movement/snapshot/transfer rows, shared balances after subject minimization, revoked approvals and original-ID unknown outcomes; a stock checksum alone does not prove native physical movement."
+      "export": "Scoped native financial/physical/return/edit history, receipts and associated subject payloads export through their existing projections. Outbound label purchase/void/refund records and carrier events export only for the subject resources. Subject inventory snapshots, append-linked movements, discrepancies, transfers and original operations export by tenant/store/resource while physical balances remain global per SKU and location. Export only original subject effects or relevant merchant template operations.",
+      "erasure": "Redact privacy-bearing case/quote/plan/input bodies and delete receipt notes while retaining command/receipt/effect identities; subject reads remain guarded. Outbound label bodies are integrity-checked and reconstructed from an allowlist even when marked redacted; command, address, parcel, tracking and arbitrary private fields are removed. Inventory bodies are reconstructed from explicit allowlists even if already marked redacted; private journey, operator, evidence and arbitrary copied fields are removed. Snapshot quantitative cores and movement delta/chain cores remain so erasing one journey cannot silently remove shared stock. Minimize private command/output bodies while retaining original native operation IDs and uncertain states.",
+      "retention": "Monetary amounts, currencies, original native identity and audit digests must not be deleted or replayed. Arbitrary external source identifiers are not certified anonymous. Original purchase/source/command identity, exact monetary amount and currency, native charge/label/refund references and separate void/refund states remain minimized and cannot authorize replay. Original source/effect identities, covered movement IDs, quantitative digests, stock deltas, chain links, transfer quantities and unknown states remain as minimized audit and cannot authorize replay. An effect erased before its movement was imported can leave shared stock unresolved; repair under privacy constraints remains an operator duty. Erasure and restoration never rekey or resend unknown cart, catalog, campaign, cancellation or optional processor effects.",
+      "observation_required": "Verify representative retained receipts and subject access denial; qualify actual legal retention and source identifier policy separately. Inspect actual populated movement/snapshot/transfer rows, shared balances after subject minimization, revoked approvals and original-ID unknown outcomes; a stock checksum alone does not prove native physical movement. Observe original-source lookup and eligible deletion ledgers, without claiming physical deletion."
     },
     {
       "id": "privacy_and_restore_controls",
@@ -1208,12 +1350,15 @@
         "packages/commerce/privacy-lifecycle.mts",
         "packages/commerce/safe-recovery.mts",
         "packages/commerce/merchant-portability.mts",
-        "packages/commerce/migration-fence.mts"
+        "packages/commerce/migration-fence.mts",
+        "packages/commerce/growth-privacy.mts",
+        "packages/commerce/growth-marketing-privacy.mts",
+        "packages/commerce/optional-lifecycle-core.mts"
       ],
-      "export": "Merchant transfer includes scoped suppression controls; ordinary subject export does not disclose other subject hashes or installation-wide recovery rows.",
-      "erasure": "Retain subject/resource tombstones. Restore/import requires a separately retained current checkpoint, applies erasure before exposure and leaves execution quarantined. Current suppression also minimizes packing/shipping payloads and revokes label approvals while retaining original monetary and package identities. Current suppression preserves the minimum global inventory cores, minimizes warehouse event histories and revokes transfer approvals; quarantine blocks new observation imports and source effect dispatch.",
-      "retention": "Suppression hashes are linkable control data, not claimed anonymous; current checkpoint freshness and delivery remain explicit caller duties.",
-      "observation_required": "Use one old snapshot with a later independently retained suppression checkpoint; verify no restored active subject payloads or analytics exposure."
+      "export": "Merchant transfer includes scoped suppression controls; ordinary subject export does not disclose other subject hashes or installation-wide recovery rows. Canonical growth export obeys the same privacy authority and scope.",
+      "erasure": "Retain subject/resource tombstones. Restore/import requires a separately retained current checkpoint, applies erasure before exposure and leaves execution quarantined. Current suppression also minimizes packing/shipping payloads and revokes label approvals while retaining original monetary and package identities. Current suppression preserves the minimum global inventory cores, minimizes warehouse event histories and revokes transfer approvals; quarantine blocks new observation imports and source effect dispatch. Apply growth allowlists even for hash-only and already-redacted imported records.",
+      "retention": "Suppression hashes are linkable control data, not claimed anonymous; current checkpoint freshness and delivery remain explicit caller duties. All growth controls are revoked before restored data can be exposed; quarantine remains local and no source effect is performed.",
+      "observation_required": "Use one old snapshot with a later independently retained suppression checkpoint; verify no restored active subject payloads or analytics exposure. Observe canonical erasure, merchant import, snapshot restore and uninstall calls."
     },
     {
       "id": "provider_copies",
@@ -1222,12 +1367,16 @@
       "implementation": [
         "packages/agent/runner.mts",
         "packages/commerce/support-delivery.mts",
-        "packages/commerce/support-helpdesk.mts"
+        "packages/commerce/support-helpdesk.mts",
+        "packages/commerce/growth-privacy.mts",
+        "packages/adapters/shopping-catalog-fixture-source.mts",
+        "packages/adapters/marketing-fixture-source.mts",
+        "packages/adapters/optional-provider-fixture-source.mts"
       ],
-      "export": "Caller/partner retrieval is separately authorized; local export cannot query every external copy.",
-      "erasure": "Provider, sender, helpdesk, scanner and fulfillment replicas are not physically erased by local SQL.",
-      "retention": "Provider agreements, deletion confirmations and backup windows need actual current evidence.",
-      "observation_required": "Identify each connected account and data copy, obtain authorized deletion/retention outcomes, and independently retain relevant provider receipts."
+      "export": "Caller/partner retrieval is separately authorized; local export cannot query every external copy. Provider and publication copies require named operator handling; canonical export is not a source dump.",
+      "erasure": "Provider, sender, helpdesk, scanner and fulfillment replicas are not physically erased by local SQL. Optional eligible deletion uses original source identity; published catalog descriptions require reviewed source cleanup.",
+      "retention": "Provider agreements, deletion confirmations and backup windows need actual current evidence. No live processor, real contact, partner, publication or physical source erasure is qualified.",
+      "observation_required": "Identify each connected account and data copy, obtain authorized deletion/retention outcomes, and independently retain relevant provider receipts. Inventory separate cart/listing/visibility/upsell-consent, marketing-template/audience/event and optional-effect stores."
     },
     {
       "id": "process_and_browser_memory",
@@ -1249,12 +1398,16 @@
         "packages/commerce/warehouse-return-events.mts",
         "packages/commerce/location-inventory.mts",
         "packages/commerce/inventory-transfers.mts",
-        "packages/commerce/inventory-reconciliation.mts"
+        "packages/commerce/inventory-reconciliation.mts",
+        "packages/commerce/growth-privacy.mts",
+        "packages/commerce/growth-marketing-privacy.mts",
+        "packages/commerce/optional-media.mts",
+        "packages/commerce/growth-campaigns.mts"
       ],
-      "export": "Previously returned response bodies, clipboard, screenshots and tabs are caller copies. Ephemeral carrier quote snapshots and locale-formatted display values are also returned caller/process/browser copies. Returned packing scans/status, label and carrier receipts, manifest events and warehouse snapshots are also caller/process copies whose previously returned bytes cannot be recalled by local erasure. Warehouse return timelines, stock histories, transfer receipts and cycle reconciliation results also remain caller/process copies after they have been returned.",
-      "erasure": "Revocation blocks later server reads/completion; it cannot recall bytes already in an arbitrary process, plugin, scanner or browser.",
-      "retention": "No general heap, browser history, swap, core dump or log deletion is implemented.",
-      "observation_required": "Inventory actual deployed processes/plugins/logging and browser storage; observe their cleanup and retention separately. Source pins only flag code drift."
+      "export": "Previously returned response bodies, clipboard, screenshots and tabs are caller copies. Ephemeral carrier quote snapshots and locale-formatted display values are also returned caller/process/browser copies. Returned packing scans/status, label and carrier receipts, manifest events and warehouse snapshots are also caller/process copies whose previously returned bytes cannot be recalled by local erasure. Warehouse return timelines, stock histories, transfer receipts and cycle reconciliation results also remain caller/process copies after they have been returned. Caller-owned growth previews and media are outside automatic canonical export.",
+      "erasure": "Revocation blocks later server reads/completion; it cannot recall bytes already in an arbitrary process, plugin, scanner or browser. Callers discard copied previews, media, generated output and links after withdrawal/erasure.",
+      "retention": "No general heap, browser history, swap, core dump or log deletion is implemented. Canonical minimization does not erase caller memory.",
+      "observation_required": "Inventory actual deployed processes/plugins/logging and browser storage; observe their cleanup and retention separately. Source pins only flag code drift. Observe caller-retained growth drafts, media, templates, tokens and model outputs."
     },
     {
       "id": "caller_export_artifacts",
@@ -1298,12 +1451,16 @@
         "packages/adapters/order-edit-fixture-source.mts",
         "packages/commerce/warehouse-connector.mts",
         "packages/adapters/warehouse-fixture-source.mts",
-        "packages/adapters/warehouse-inventory-fixture-source.mts"
+        "packages/adapters/warehouse-inventory-fixture-source.mts",
+        "packages/adapters/shopping-catalog-fixture-source.mts",
+        "packages/adapters/upsell-source-guards.mts",
+        "packages/adapters/marketing-fixture-source.mts",
+        "packages/adapters/optional-provider-fixture-source.mts"
       ],
-      "export": "The legacy smoke SQLite/files and synthetic adapter ledgers are separate from commerce stores and do not contain authorized customer data. The carrier quote fixture holds bounded account, package and rate records only in its owning process memory. The shipping carrier fixture retains its original purchase/charge/void/refund, manifest and event ledgers in a separate synthetic SQLite database. Named warehouse configuration bindings and durable binding-requirement markers reside in two additional tables of the separate order-edit fixture database alongside its source orders, holds and effect history. Native warehouse return events and effective unit records plus inventory snapshot, movement, transfer and command journals share the existing warehouse fixture database and its sole available-stock owner.",
-      "erasure": "Commerce erasure cannot attest cleanup of independent fixture databases or filesystem attachments. Commerce erasure blocks reauthorized resource access but does not rewrite these independent source ledgers, warehouse binding records or source orders; only synthetic inputs are authorized. Commerce minimization cannot physically erase these source journals or invalidate caller-held native observations; the owning operator must retain or clean those synthetic copies independently.",
-      "retention": "Fixture cleanup belongs to its owning test/operator directory; no migration to a production storage backend is claimed.",
-      "observation_required": "Verify that only synthetic data is used and inventory/clean owned fixture directories separately; treating them as a real deployment blocks privacy qualification. Inspect and clean the owned carrier and warehouse fixture databases and their files independently; source identities and configuration are not claimed anonymous. Inspect native event/correction/transfer IDs and independently handle warehouse database files, pages and source copies; this declaration does not attest physical stock or provider cleanup."
+      "export": "The legacy smoke SQLite/files and synthetic adapter ledgers are separate from commerce stores and do not contain authorized customer data. The carrier quote fixture holds bounded account, package and rate records only in its owning process memory. The shipping carrier fixture retains its original purchase/charge/void/refund, manifest and event ledgers in a separate synthetic SQLite database. Named warehouse configuration bindings and durable binding-requirement markers reside in two additional tables of the separate order-edit fixture database alongside its source orders, holds and effect history. Native warehouse return events and effective unit records plus inventory snapshot, movement, transfer and command journals share the existing warehouse fixture database and its sole available-stock owner. Separate sources contain invented local facts and are not subject-export bundles.",
+      "erasure": "Commerce erasure cannot attest cleanup of independent fixture databases or filesystem attachments. Commerce erasure blocks reauthorized resource access but does not rewrite these independent source ledgers, warehouse binding records or source orders; only synthetic inputs are authorized. Commerce minimization cannot physically erase these source journals or invalidate caller-held native observations; the owning operator must retain or clean those synthetic copies independently. Operators own source-file cleanup; optional deletion queues address original effects and never replay processing.",
+      "retention": "Fixture cleanup belongs to its owning test/operator directory; no migration to a production storage backend is claimed. Separate fixture files and old checkpoints are not physically erased by canonical erasure.",
+      "observation_required": "Verify that only synthetic data is used and inventory/clean owned fixture directories separately; treating them as a real deployment blocks privacy qualification. Inspect and clean the owned carrier and warehouse fixture databases and their files independently; source identities and configuration are not claimed anonymous. Inspect native event/correction/transfer IDs and independently handle warehouse database files, pages and source copies; this declaration does not attest physical stock or provider cleanup. Observe every new separate source database, purpose scope and original native effect ledger."
     }
   ]
 }

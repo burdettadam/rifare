@@ -1,6 +1,6 @@
 {
-  "source_file_count": 1322,
-  "source_count_reason": "ADR-0037 reviewed additive warehouse return-event, source-owned inventory, transfer and reconciliation preparation source inventory; original licensing obligations, source members and accepted controls remain unchanged.",
+  "source_file_count": 1399,
+  "source_count_reason": "ADR-0038 reviewed additive M09 growth source; all 1322 prior source members retained.",
   "component_ids": [
     "git-agent-adaptations",
     "rifare-developer-helpers",

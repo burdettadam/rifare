@@ -1373,6 +1373,118 @@
         "docs/INVENTORY-RECONCILIATION.md",
         "work/records/M08-G10.md"
       ]
+    },
+    {
+      "id": "FEATURE-M09-G01",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/shopping-cart.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M09-G02-PREPARATION",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/pre-fulfillment-upsells.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M09-G03",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/checkout-experiments.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M09-G04",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/growth-measurement.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M09-G05",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/growth-campaigns.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M09-G06-PREPARATION",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/marketing-segments.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M09-G07-PREPARATION",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/campaign-delivery.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M09-G08",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/cart-recovery.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M09-G09",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/email-action-links.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M09-G10-PREPARATION",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/catalog-visibility.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M09-G11-PREPARATION",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/reviewed-catalog-changes.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M09-G12",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/optional-media.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M09-G13-PREPARATION",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/tryon-qualification.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M09-G14-PREPARATION",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/identity-partner.v1.json"
+      ]
     }
   ],
   "tests": [
@@ -20954,6 +21066,363 @@
       "runner_case_id": "M08-G10-LOCAL-NAMED-STOCK-DIFFERENCE-FAULT-IS-DETECTED",
       "source": "tests/development/inventory-reconciliation.test.mts",
       "capability_id": "FEATURE-M08-G10-PREPARATION"
+    },
+    {
+      "id": "runtime:CASE-M09-G01-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M09-G01-01",
+      "source": "tests/development/growth-shopping.test.mts",
+      "capability_id": "FEATURE-M09-G01"
+    },
+    {
+      "id": "runtime:CASE-M09-G01-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M09-G01-02",
+      "source": "tests/development/growth-shopping.test.mts",
+      "capability_id": "FEATURE-M09-G01"
+    },
+    {
+      "id": "runtime:CASE-M09-G01-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M09-G01-03",
+      "source": "tests/development/growth-shopping.test.mts",
+      "capability_id": "FEATURE-M09-G01"
+    },
+    {
+      "id": "runtime:M09-G01-CART-UNKNOWN-SCOPE-AND-CURRENT-PURCHASE",
+      "suite": "runtime",
+      "runner_case_id": "M09-G01-CART-UNKNOWN-SCOPE-AND-CURRENT-PURCHASE",
+      "source": "tests/development/growth-shopping.test.mts",
+      "capability_id": "FEATURE-M09-G01"
+    },
+    {
+      "id": "runtime:M09-G02-PREP-01",
+      "suite": "runtime",
+      "runner_case_id": "M09-G02-PREP-01",
+      "source": "tests/development/growth-shopping.test.mts",
+      "capability_id": "FEATURE-M09-G02-PREPARATION"
+    },
+    {
+      "id": "runtime:M09-G02-PREP-02",
+      "suite": "runtime",
+      "runner_case_id": "M09-G02-PREP-02",
+      "source": "tests/development/growth-shopping.test.mts",
+      "capability_id": "FEATURE-M09-G02-PREPARATION"
+    },
+    {
+      "id": "runtime:M09-G02-PREP-03",
+      "suite": "runtime",
+      "runner_case_id": "M09-G02-PREP-03",
+      "source": "tests/development/growth-shopping.test.mts",
+      "capability_id": "FEATURE-M09-G02-PREPARATION"
+    },
+    {
+      "id": "runtime:M09-G02-CURRENT-CUSTOMER-AUTHORITY-AND-STOCK",
+      "suite": "runtime",
+      "runner_case_id": "M09-G02-CURRENT-CUSTOMER-AUTHORITY-AND-STOCK",
+      "source": "tests/development/growth-shopping.test.mts",
+      "capability_id": "FEATURE-M09-G02-PREPARATION"
+    },
+    {
+      "id": "runtime:M09-G10-PREP-01",
+      "suite": "runtime",
+      "runner_case_id": "M09-G10-PREP-01",
+      "source": "tests/development/growth-shopping.test.mts",
+      "capability_id": "FEATURE-M09-G10-PREPARATION"
+    },
+    {
+      "id": "runtime:M09-G10-PREP-02",
+      "suite": "runtime",
+      "runner_case_id": "M09-G10-PREP-02",
+      "source": "tests/development/growth-shopping.test.mts",
+      "capability_id": "FEATURE-M09-G10-PREPARATION"
+    },
+    {
+      "id": "runtime:M09-G10-PREP-03",
+      "suite": "runtime",
+      "runner_case_id": "M09-G10-PREP-03",
+      "source": "tests/development/growth-shopping.test.mts",
+      "capability_id": "FEATURE-M09-G10-PREPARATION"
+    },
+    {
+      "id": "runtime:M09-G11-PREP-01",
+      "suite": "runtime",
+      "runner_case_id": "M09-G11-PREP-01",
+      "source": "tests/development/growth-shopping.test.mts",
+      "capability_id": "FEATURE-M09-G11-PREPARATION"
+    },
+    {
+      "id": "runtime:M09-G11-PREP-02",
+      "suite": "runtime",
+      "runner_case_id": "M09-G11-PREP-02",
+      "source": "tests/development/growth-shopping.test.mts",
+      "capability_id": "FEATURE-M09-G11-PREPARATION"
+    },
+    {
+      "id": "runtime:M09-G11-PREP-03",
+      "suite": "runtime",
+      "runner_case_id": "M09-G11-PREP-03",
+      "source": "tests/development/growth-shopping.test.mts",
+      "capability_id": "FEATURE-M09-G11-PREPARATION"
+    },
+    {
+      "id": "runtime:M09-G11-CURRENT-AUTHORITY-UNKNOWN-STOP-AND-RESTORE",
+      "suite": "runtime",
+      "runner_case_id": "M09-G11-CURRENT-AUTHORITY-UNKNOWN-STOP-AND-RESTORE",
+      "source": "tests/development/growth-shopping.test.mts",
+      "capability_id": "FEATURE-M09-G11-PREPARATION"
+    },
+    {
+      "id": "runtime:CASE-M09-G03-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M09-G03-01",
+      "source": "tests/development/growth-marketing.test.mts",
+      "capability_id": "FEATURE-M09-G03"
+    },
+    {
+      "id": "runtime:CASE-M09-G03-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M09-G03-02",
+      "source": "tests/development/growth-marketing.test.mts",
+      "capability_id": "FEATURE-M09-G03"
+    },
+    {
+      "id": "runtime:CASE-M09-G03-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M09-G03-03",
+      "source": "tests/development/growth-marketing.test.mts",
+      "capability_id": "FEATURE-M09-G03"
+    },
+    {
+      "id": "runtime:CASE-M09-G04-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M09-G04-01",
+      "source": "tests/development/growth-marketing.test.mts",
+      "capability_id": "FEATURE-M09-G04"
+    },
+    {
+      "id": "runtime:CASE-M09-G04-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M09-G04-02",
+      "source": "tests/development/growth-marketing.test.mts",
+      "capability_id": "FEATURE-M09-G04"
+    },
+    {
+      "id": "runtime:CASE-M09-G04-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M09-G04-03",
+      "source": "tests/development/growth-marketing.test.mts",
+      "capability_id": "FEATURE-M09-G04"
+    },
+    {
+      "id": "runtime:CASE-M09-G05-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M09-G05-01",
+      "source": "tests/development/growth-marketing.test.mts",
+      "capability_id": "FEATURE-M09-G05"
+    },
+    {
+      "id": "runtime:CASE-M09-G05-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M09-G05-02",
+      "source": "tests/development/growth-marketing.test.mts",
+      "capability_id": "FEATURE-M09-G05"
+    },
+    {
+      "id": "runtime:CASE-M09-G05-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M09-G05-03",
+      "source": "tests/development/growth-marketing.test.mts",
+      "capability_id": "FEATURE-M09-G05"
+    },
+    {
+      "id": "runtime:M09-G06-PREP-01",
+      "suite": "runtime",
+      "runner_case_id": "M09-G06-PREP-01",
+      "source": "tests/development/growth-marketing.test.mts",
+      "capability_id": "FEATURE-M09-G06-PREPARATION"
+    },
+    {
+      "id": "runtime:M09-G06-PREP-02",
+      "suite": "runtime",
+      "runner_case_id": "M09-G06-PREP-02",
+      "source": "tests/development/growth-marketing.test.mts",
+      "capability_id": "FEATURE-M09-G06-PREPARATION"
+    },
+    {
+      "id": "runtime:M09-G06-PREP-03",
+      "suite": "runtime",
+      "runner_case_id": "M09-G06-PREP-03",
+      "source": "tests/development/growth-marketing.test.mts",
+      "capability_id": "FEATURE-M09-G06-PREPARATION"
+    },
+    {
+      "id": "runtime:M09-G07-PREP-01",
+      "suite": "runtime",
+      "runner_case_id": "M09-G07-PREP-01",
+      "source": "tests/development/growth-marketing.test.mts",
+      "capability_id": "FEATURE-M09-G07-PREPARATION"
+    },
+    {
+      "id": "runtime:M09-G07-PREP-02",
+      "suite": "runtime",
+      "runner_case_id": "M09-G07-PREP-02",
+      "source": "tests/development/growth-marketing.test.mts",
+      "capability_id": "FEATURE-M09-G07-PREPARATION"
+    },
+    {
+      "id": "runtime:M09-G07-PREP-03",
+      "suite": "runtime",
+      "runner_case_id": "M09-G07-PREP-03",
+      "source": "tests/development/growth-marketing.test.mts",
+      "capability_id": "FEATURE-M09-G07-PREPARATION"
+    },
+    {
+      "id": "runtime:CASE-M09-G08-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M09-G08-01",
+      "source": "tests/development/growth-marketing.test.mts",
+      "capability_id": "FEATURE-M09-G08"
+    },
+    {
+      "id": "runtime:CASE-M09-G08-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M09-G08-02",
+      "source": "tests/development/growth-marketing.test.mts",
+      "capability_id": "FEATURE-M09-G08"
+    },
+    {
+      "id": "runtime:CASE-M09-G08-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M09-G08-03",
+      "source": "tests/development/growth-marketing.test.mts",
+      "capability_id": "FEATURE-M09-G08"
+    },
+    {
+      "id": "runtime:CASE-M09-G09-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M09-G09-01",
+      "source": "tests/development/growth-marketing.test.mts",
+      "capability_id": "FEATURE-M09-G09"
+    },
+    {
+      "id": "runtime:CASE-M09-G09-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M09-G09-02",
+      "source": "tests/development/growth-marketing.test.mts",
+      "capability_id": "FEATURE-M09-G09"
+    },
+    {
+      "id": "runtime:CASE-M09-G09-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M09-G09-03",
+      "source": "tests/development/growth-marketing.test.mts",
+      "capability_id": "FEATURE-M09-G09"
+    },
+    {
+      "id": "runtime:TEST-034",
+      "suite": "runtime",
+      "runner_case_id": "TEST-034",
+      "source": "tests/development/growth-marketing.test.mts",
+      "capability_id": "FEATURE-M09-G04"
+    },
+    {
+      "id": "runtime:PORT-027",
+      "suite": "runtime",
+      "runner_case_id": "PORT-027",
+      "source": "tests/development/growth-marketing.test.mts",
+      "capability_id": "FEATURE-M09-G04"
+    },
+    {
+      "id": "runtime:M09-PREP-PORT-026",
+      "suite": "runtime",
+      "runner_case_id": "M09-PREP-PORT-026",
+      "source": "tests/development/growth-marketing.test.mts",
+      "capability_id": "FEATURE-M09-G07-PREPARATION"
+    },
+    {
+      "id": "runtime:CASE-M09-G12-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M09-G12-01",
+      "source": "tests/development/growth-optional.test.mts",
+      "capability_id": "FEATURE-M09-G12"
+    },
+    {
+      "id": "runtime:CASE-M09-G12-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M09-G12-02",
+      "source": "tests/development/growth-optional.test.mts",
+      "capability_id": "FEATURE-M09-G12"
+    },
+    {
+      "id": "runtime:CASE-M09-G12-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M09-G12-03",
+      "source": "tests/development/growth-optional.test.mts",
+      "capability_id": "FEATURE-M09-G12"
+    },
+    {
+      "id": "runtime:M09-G12-LOCAL-NAMED-RETURN-EVIDENCE-REUSE-FAULT",
+      "suite": "runtime",
+      "runner_case_id": "M09-G12-LOCAL-NAMED-RETURN-EVIDENCE-REUSE-FAULT",
+      "source": "tests/development/growth-optional.test.mts",
+      "capability_id": "FEATURE-M09-G12"
+    },
+    {
+      "id": "runtime:M09-G13-PREP-01-GENERATED-PRODUCT-AND-RETENTION-LIMITS",
+      "suite": "runtime",
+      "runner_case_id": "M09-G13-PREP-01-GENERATED-PRODUCT-AND-RETENTION-LIMITS",
+      "source": "tests/development/growth-optional.test.mts",
+      "capability_id": "FEATURE-M09-G13-PREPARATION"
+    },
+    {
+      "id": "runtime:M09-G13-PREP-02-TEXT-UNSAFE-AND-UNSUPPORTED-FAIL-CLOSED",
+      "suite": "runtime",
+      "runner_case_id": "M09-G13-PREP-02-TEXT-UNSAFE-AND-UNSUPPORTED-FAIL-CLOSED",
+      "source": "tests/development/growth-optional.test.mts",
+      "capability_id": "FEATURE-M09-G13-PREPARATION"
+    },
+    {
+      "id": "runtime:M09-G13-PREP-03-CHANGED-QUALIFICATION-AND-FINAL-AUTHORITY",
+      "suite": "runtime",
+      "runner_case_id": "M09-G13-PREP-03-CHANGED-QUALIFICATION-AND-FINAL-AUTHORITY",
+      "source": "tests/development/growth-optional.test.mts",
+      "capability_id": "FEATURE-M09-G13-PREPARATION"
+    },
+    {
+      "id": "runtime:M09-G13-PREP-04-NAMED-SUCCESS-IS-NOT-FIT-FAULT",
+      "suite": "runtime",
+      "runner_case_id": "M09-G13-PREP-04-NAMED-SUCCESS-IS-NOT-FIT-FAULT",
+      "source": "tests/development/growth-optional.test.mts",
+      "capability_id": "FEATURE-M09-G13-PREPARATION"
+    },
+    {
+      "id": "runtime:M09-G14-PREP-01-SCOPED-SYNTHETIC-IDENTITY-RECEIPT",
+      "suite": "runtime",
+      "runner_case_id": "M09-G14-PREP-01-SCOPED-SYNTHETIC-IDENTITY-RECEIPT",
+      "source": "tests/development/growth-optional.test.mts",
+      "capability_id": "FEATURE-M09-G14-PREPARATION"
+    },
+    {
+      "id": "runtime:M09-G14-PREP-02-NO-PARTNER-NO-SHADOW-GRAPH",
+      "suite": "runtime",
+      "runner_case_id": "M09-G14-PREP-02-NO-PARTNER-NO-SHADOW-GRAPH",
+      "source": "tests/development/growth-optional.test.mts",
+      "capability_id": "FEATURE-M09-G14-PREPARATION"
+    },
+    {
+      "id": "runtime:M09-G14-PREP-03-REVOKED-READINESS-WITHDRAWAL-AND-UNKNOWN-DELETION",
+      "suite": "runtime",
+      "runner_case_id": "M09-G14-PREP-03-REVOKED-READINESS-WITHDRAWAL-AND-UNKNOWN-DELETION",
+      "source": "tests/development/growth-optional.test.mts",
+      "capability_id": "FEATURE-M09-G14-PREPARATION"
+    },
+    {
+      "id": "runtime:M09-G14-PREP-04-NAMED-PRIVATE-CROSS-MERCHANT-GRAPH-FAULT",
+      "suite": "runtime",
+      "runner_case_id": "M09-G14-PREP-04-NAMED-PRIVATE-CROSS-MERCHANT-GRAPH-FAULT",
+      "source": "tests/development/growth-optional.test.mts",
+      "capability_id": "FEATURE-M09-G14-PREPARATION"
     }
   ],
   "protected_files": [

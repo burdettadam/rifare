@@ -473,6 +473,10 @@
       "warehouse.connector.inspect": {
         "semantics": "composed",
         "qualification": "sandbox-only"
+      },
+      "order.add": {
+        "semantics": "composed",
+        "qualification": "sandbox-only"
       }
     },
     "exchange_lineage_source": {
@@ -620,6 +624,76 @@
         "semantics": "composed",
         "qualification": "sandbox-only"
       }
+    },
+    "shopping_catalog_source": {
+      "catalog.read": {
+        "semantics": "composed",
+        "qualification": "sandbox-only"
+      },
+      "cart.commit": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      },
+      "cart.lookup": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      },
+      "upsell.consent": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      },
+      "visibility.observe": {
+        "semantics": "composed",
+        "qualification": "sandbox-only"
+      },
+      "catalog.apply": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      },
+      "catalog.lookup": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      }
+    },
+    "marketing_fixture_source": {
+      "audience.read": {
+        "semantics": "composed",
+        "qualification": "sandbox-only"
+      },
+      "template.sync": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      },
+      "template.lookup": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      },
+      "facts.read": {
+        "semantics": "composed",
+        "qualification": "sandbox-only"
+      },
+      "event.read": {
+        "semantics": "composed",
+        "qualification": "sandbox-only"
+      }
+    },
+    "optional_provider_fixture_source": {
+      "process.apply": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      },
+      "process.lookup": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      },
+      "process.delete": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      },
+      "quality.read": {
+        "semantics": "composed",
+        "qualification": "sandbox-only"
+      }
     }
   },
   "declarations": [
@@ -629,7 +703,9 @@
     "packages/adapters/exchange-money-fixture-source.mts",
     "packages/adapters/fulfillment-fixture-source.mts",
     "packages/adapters/instant-exchange-fixture-source.mts",
+    "packages/adapters/marketing-fixture-source.mts",
     "packages/adapters/native-change-fixture-source.mts",
+    "packages/adapters/optional-provider-fixture-source.mts",
     "packages/adapters/order-edit-fixture-source.mts",
     "packages/adapters/prevention-source-guards.mts",
     "packages/adapters/reliability/synthetic-journal.mts",
@@ -638,10 +714,12 @@
     "packages/adapters/shipping-carrier-fixture-source.mts",
     "packages/adapters/shopify-return-fixture.mts",
     "packages/adapters/shopify/orders.mts",
+    "packages/adapters/shopping-catalog-fixture-source.mts",
     "packages/adapters/support-fixture-source.mts",
     "packages/adapters/support/chatwoot.mts",
     "packages/adapters/support/resend.mts",
     "packages/adapters/support/transport.mts",
+    "packages/adapters/upsell-source-guards.mts",
     "packages/adapters/warehouse-fixture-source.mts",
     "packages/adapters/warehouse-inventory-fixture-source.mts",
     "packages/adapters/webhooks/signatures.mts",
@@ -1202,7 +1280,7 @@
       }
     },
     "order_edit_source": {
-      "version": "source-sha256:929bfcc7d530f2d3409a13eebbf528213dc861965c3a49629637902f5e6bb3b4",
+      "version": "source-sha256:fbbe1aaea56e70c59597571fb501e12f74c3e15ac83ed01faef94ff0abc7c4ba",
       "api_version": "local-order-edit-source",
       "operations": {
         "order.snapshot": {
@@ -1266,6 +1344,10 @@
           "scope_kind": "server_local_fixture_only"
         },
         "warehouse.connector.inspect": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "order.add": {
           "required_scopes": [],
           "scope_kind": "server_local_fixture_only"
         }
@@ -1440,6 +1522,88 @@
           "scope_kind": "server_local_fixture_only"
         },
         "inventory.reconcile": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        }
+      }
+    },
+    "shopping_catalog_source": {
+      "version": "source-sha256:a125a8b3f9f508b686e74f820c0ff48326f92890f8c11712afb7ee63cbb0b286",
+      "api_version": "1.0.0",
+      "operations": {
+        "catalog.read": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "cart.commit": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "cart.lookup": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "upsell.consent": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "visibility.observe": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "catalog.apply": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "catalog.lookup": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        }
+      }
+    },
+    "marketing_fixture_source": {
+      "version": "source-sha256:dd2f8ca601a07b22161f45b52accb9b67cb8b6d1e3a9bbe21667e25aa3116e5f",
+      "api_version": "marketing_fixture_v1",
+      "operations": {
+        "audience.read": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "template.sync": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "template.lookup": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "facts.read": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "event.read": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        }
+      }
+    },
+    "optional_provider_fixture_source": {
+      "version": "source-sha256:d6f3db7f9fd98d1a9052b105600154e3c19561360c4c0d418afe16df4ef924c3",
+      "api_version": "fixture-v1",
+      "operations": {
+        "process.apply": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "process.lookup": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "process.delete": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "quality.read": {
           "required_scopes": [],
           "scope_kind": "server_local_fixture_only"
         }
@@ -1860,6 +2024,30 @@
       "name": "CASE-M08-G09-01",
       "path": "tests/development/location-inventory.test.mts",
       "sha256": "951eadba9a83f0de5e7acc5c640e9e4fe7d9918ed07426c47ed05198a3b423b0"
+    },
+    {
+      "id": "CASE-M09-G01-01",
+      "name": "CASE-M09-G01-01",
+      "path": "tests/development/growth-shopping.test.mts",
+      "sha256": "d8238ff5694c46988a8f202bd8e171a7e820707567e6a5415f9bb1cc77eafd45"
+    },
+    {
+      "id": "CASE-M09-G05-01",
+      "name": "CASE-M09-G05-01",
+      "path": "tests/development/growth-marketing.test.mts",
+      "sha256": "2c163d158e3e20da171edd425594fa2dca113345039f0be43e41492cbe3e20d5"
+    },
+    {
+      "id": "CASE-M09-G12-01",
+      "name": "CASE-M09-G12-01",
+      "path": "tests/development/growth-optional.test.mts",
+      "sha256": "0ab6e949de2041b9352eb4c350cc67ba5c8379e30cb5f5a36bab022d2bfaf426"
+    },
+    {
+      "id": "CASE-M09-G12-03",
+      "name": "CASE-M09-G12-03",
+      "path": "tests/development/growth-optional.test.mts",
+      "sha256": "0ab6e949de2041b9352eb4c350cc67ba5c8379e30cb5f5a36bab022d2bfaf426"
     },
     {
       "id": "M01-G04-01",
@@ -2322,6 +2510,96 @@
       "name": "M08-G10-LOCAL-NAMED-STOCK-DIFFERENCE-FAULT-IS-DETECTED",
       "path": "tests/development/inventory-reconciliation.test.mts",
       "sha256": "19e75585494ab55005d3e31cd56d9360614bc709fa65babd64483a9778a90693"
+    },
+    {
+      "id": "M09-G01-CART-UNKNOWN-SCOPE-AND-CURRENT-PURCHASE",
+      "name": "M09-G01-CART-UNKNOWN-SCOPE-AND-CURRENT-PURCHASE",
+      "path": "tests/development/growth-shopping.test.mts",
+      "sha256": "d8238ff5694c46988a8f202bd8e171a7e820707567e6a5415f9bb1cc77eafd45"
+    },
+    {
+      "id": "M09-G02-PREP-01",
+      "name": "M09-G02-PREP-01",
+      "path": "tests/development/growth-shopping.test.mts",
+      "sha256": "d8238ff5694c46988a8f202bd8e171a7e820707567e6a5415f9bb1cc77eafd45"
+    },
+    {
+      "id": "M09-G02-PREP-03",
+      "name": "M09-G02-PREP-03",
+      "path": "tests/development/growth-shopping.test.mts",
+      "sha256": "d8238ff5694c46988a8f202bd8e171a7e820707567e6a5415f9bb1cc77eafd45"
+    },
+    {
+      "id": "M09-G06-PREP-01",
+      "name": "M09-G06-PREP-01",
+      "path": "tests/development/growth-marketing.test.mts",
+      "sha256": "2c163d158e3e20da171edd425594fa2dca113345039f0be43e41492cbe3e20d5"
+    },
+    {
+      "id": "M09-G06-PREP-02",
+      "name": "M09-G06-PREP-02",
+      "path": "tests/development/growth-marketing.test.mts",
+      "sha256": "2c163d158e3e20da171edd425594fa2dca113345039f0be43e41492cbe3e20d5"
+    },
+    {
+      "id": "M09-G06-PREP-03",
+      "name": "M09-G06-PREP-03",
+      "path": "tests/development/growth-marketing.test.mts",
+      "sha256": "2c163d158e3e20da171edd425594fa2dca113345039f0be43e41492cbe3e20d5"
+    },
+    {
+      "id": "M09-G10-PREP-01",
+      "name": "M09-G10-PREP-01",
+      "path": "tests/development/growth-shopping.test.mts",
+      "sha256": "d8238ff5694c46988a8f202bd8e171a7e820707567e6a5415f9bb1cc77eafd45"
+    },
+    {
+      "id": "M09-G10-PREP-03",
+      "name": "M09-G10-PREP-03",
+      "path": "tests/development/growth-shopping.test.mts",
+      "sha256": "d8238ff5694c46988a8f202bd8e171a7e820707567e6a5415f9bb1cc77eafd45"
+    },
+    {
+      "id": "M09-G11-CURRENT-AUTHORITY-UNKNOWN-STOP-AND-RESTORE",
+      "name": "M09-G11-CURRENT-AUTHORITY-UNKNOWN-STOP-AND-RESTORE",
+      "path": "tests/development/growth-shopping.test.mts",
+      "sha256": "d8238ff5694c46988a8f202bd8e171a7e820707567e6a5415f9bb1cc77eafd45"
+    },
+    {
+      "id": "M09-G11-PREP-01",
+      "name": "M09-G11-PREP-01",
+      "path": "tests/development/growth-shopping.test.mts",
+      "sha256": "d8238ff5694c46988a8f202bd8e171a7e820707567e6a5415f9bb1cc77eafd45"
+    },
+    {
+      "id": "M09-G13-PREP-01-GENERATED-PRODUCT-AND-RETENTION-LIMITS",
+      "name": "M09-G13-PREP-01-GENERATED-PRODUCT-AND-RETENTION-LIMITS",
+      "path": "tests/development/growth-optional.test.mts",
+      "sha256": "0ab6e949de2041b9352eb4c350cc67ba5c8379e30cb5f5a36bab022d2bfaf426"
+    },
+    {
+      "id": "M09-G14-PREP-01-SCOPED-SYNTHETIC-IDENTITY-RECEIPT",
+      "name": "M09-G14-PREP-01-SCOPED-SYNTHETIC-IDENTITY-RECEIPT",
+      "path": "tests/development/growth-optional.test.mts",
+      "sha256": "0ab6e949de2041b9352eb4c350cc67ba5c8379e30cb5f5a36bab022d2bfaf426"
+    },
+    {
+      "id": "M09-G14-PREP-03-REVOKED-READINESS-WITHDRAWAL-AND-UNKNOWN-DELETION",
+      "name": "M09-G14-PREP-03-REVOKED-READINESS-WITHDRAWAL-AND-UNKNOWN-DELETION",
+      "path": "tests/development/growth-optional.test.mts",
+      "sha256": "0ab6e949de2041b9352eb4c350cc67ba5c8379e30cb5f5a36bab022d2bfaf426"
+    },
+    {
+      "id": "PORT-027",
+      "name": "PORT-027",
+      "path": "tests/development/growth-marketing.test.mts",
+      "sha256": "2c163d158e3e20da171edd425594fa2dca113345039f0be43e41492cbe3e20d5"
+    },
+    {
+      "id": "TEST-034",
+      "name": "TEST-034",
+      "path": "tests/development/growth-marketing.test.mts",
+      "sha256": "2c163d158e3e20da171edd425594fa2dca113345039f0be43e41492cbe3e20d5"
     }
   ]
 }
