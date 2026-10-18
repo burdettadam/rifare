@@ -2,30 +2,39 @@
 
 Merchant-owned commerce operations with tailorable skills and independently replaceable platforms, agents and models.
 
-## Current development milestone: M09 growth and optional capabilities
+## Current development milestone: M10 warranties, partners and delivery trials
 
-All fourteen M09 worker goals are assigned for bounded local development under
-[ADR-0038](docs/decisions/0038-m09-growth-development.md). They add grounded cart
-proposals and original-order upsells; frozen checkout experiments and separately
-reported attribution, holdout estimates and margin; reviewed segments, campaigns
-and cart recovery through the existing delivery boundary; authenticated email
-confirmation; catalog observations and reviewed description changes; and optional
-purpose-specific media, try-on qualification and identity-provider preparation.
+All fourteen M10 worker goals and the G99 assessment are assigned under
+[ADR-0039](docs/decisions/0039-m10-warranty-partners-trials.md). They add scoped
+partner readiness, purchase-bound warranty registration and claims, shipping
+claims, attributable dispute drafts and reviewed submission preparation,
+protection and duties records, reverse-hub and international custody observations,
+HSA/FSA eligibility references, network alerts, and delivery-started trials.
 
-Canonical export, erasure and quarantined recovery cover the 23 new tables.
-Original uncertain effect identities and frozen experiment denominators survive
-minimization; consent, campaign approvals and processor enablement do not become
-restored execution authority. Separate source stores and caller copies still need
-their named cleanup. Optional providers are disabled by default and use only
-inert, invented local fixtures here.
+Refunds and replacements use the existing resolution and fulfillment owners.
+Trial authorization and capture extend the existing InstantExchanges owner.
+Warehouse receipt and stock ownership remain canonical. Current approval,
+customer proof, source versions and partner readiness are checked again at the
+final effect boundary; uncertain operations retain their original native IDs.
 
-The development selection remains four whole files, at most 60 actual cases and
-one total 60-second deadline per invocation. Exact source-bound native reports,
-fresh independent reviews and the local integration decision accompany the
-cumulative checkpoint. Formal M09-G99 remains blocked, connected qualification
-is absent and M10 is unassigned. Read [the M09 integration record](work/records/M09-growth-integration.md),
-[the M09 assessment](docs/M09-QUALIFICATION.md), [shopping](docs/GROWTH-SHOPPING.md),
-[marketing](docs/GROWTH-MARKETING.md) and [optional capabilities](docs/GROWTH-OPTIONAL.md).
+Canonical privacy and quarantined recovery cover 25 new tables and preserve the
+209-table preceding schema. Export is subject scoped; erasure rebuilds explicit
+allowlists; import, restore and uninstall revoke readiness, approval and consent.
+Separate source stores and caller copies retain their named cleanup duties.
+All partner observations here are synthetic local preparation. Formal M10-G99
+and the earlier M07 prerequisite remain blocked; M11 is unassigned.
+
+The planned selection is 54 cases in four whole files, within the unchanged
+60-case/four-file/60-second development limit. Actual native results, independent
+reviews and the separate local integration decision accompany the cumulative
+checkpoint. Read [the M10 integration record](work/records/M10-extended-services-integration.md),
+[the M10 assessment](docs/M10-QUALIFICATION.md), [partner services](docs/PARTNER-SERVICES.md),
+[warranties and disputes](docs/WARRANTY-DISPUTES.md), and [delivery trials](docs/DELIVERY-TRIALS.md).
+
+The preceding [M09 growth integration](work/records/M09-growth-integration.md)
+retains shopping, upsells, experiments, campaigns, catalog and optional media
+capabilities. Its [qualification assessment](docs/M09-QUALIFICATION.md) remains
+historical evidence; the present assignment does not accept those prerequisites.
 
 ### Retained preceding development
 
@@ -81,10 +90,9 @@ make test
 
 The default budget is 60 actual cases across four whole files with one 60-second
 deadline. A development pass does not claim full regression or goal acceptance.
-The five-goal development batch does not automatically trigger full, browser,
-nested catalog, or restoration-audit campaigns. This batch uses a
-selection of warehouse return, location inventory/transfer, reconciliation and
-existing privacy cases. See [development](DEVELOPMENT.md).
+The all-goals M10 development assignment does not automatically trigger full,
+browser, nested catalog, or restoration-audit campaigns. It selects partner,
+claims, trial and the existing privacy cases. See [development](DEVELOPMENT.md).
 
 The runtime remains a SQLite diagnostic with synthetic protocol sources.
 PostgreSQL/React, connected providers, live merchant migration, independent-machine
