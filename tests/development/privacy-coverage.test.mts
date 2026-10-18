@@ -14,6 +14,8 @@ import { SupportMetrics } from '../../packages/commerce/support-metrics.mts';
 import { SupportConversations } from '../../packages/commerce/support-conversations.mts';
 import { WebhookInbox } from '../../packages/commerce/webhook-inbox.mts';
 import { SecretVault } from '../../packages/commerce/secrets.mts';
+import { activateDiagnosticRestore } from '../../packages/commerce/safe-recovery.mts';
+import { assertRecoveryEgress } from '../../packages/commerce/data-guards.mts';
 import { exportMerchant, exportMerchantSuppression, importMerchant, merchantSnapshotDigest } from '../../packages/commerce/merchant-portability.mts';
 
 const SENTINEL='SYNTHETIC_PRIVACY_CUSTOMER_NOTE';
@@ -88,6 +90,17 @@ test('CASE-M07-G14-03',()=>usingSupport(f=>{
     assertErased(db,f.a.tenant,f.a.store,x.order.id);
     assert.throws(()=>k.get(scope,x.order.id),/SUBJECT_ERASED/);
     assert.throws(()=>new SupportConversations(k).history(scope,'case_one'),/SUBJECT_ERASED/);
+    assert.throws(()=>new SupportMetrics(k).report(scope,'privacy_cohort'),/RESTORE_WRITE_BLOCKED/);
+    const restored=db.prepare('SELECT restore_id,mode,source_digest,suppression_digest FROM commerce_recovery_state WHERE id=1').get();
+    assert.equal(restored.restore_id,result.snapshot_id);assert.equal(restored.mode,'quarantine');
+    assert.equal(restored.source_digest,before.digest);assert.equal(restored.suppression_digest,merchantSnapshotDigest(cp));
+    // Respect the existing normal recovery lifecycle before rebuilding analytics.
+    assert.equal(db.prepare("SELECT count(*) n FROM commerce_operations WHERE state IN ('sending','unknown')").get().n,0);
+    const activation=activateDiagnosticRestore(k,scope,restored.restore_id);
+    assert.equal(activation.mode,'diagnostic_only');assert.equal(activation.egress_enabled,false);
+    assert.equal(activation.new_approval_required,true);assert.equal(activation.old_operations_replayable,false);
+    assert.equal(db.prepare('SELECT mode FROM commerce_recovery_state WHERE id=1').get().mode,'diagnostic_only');
+    assert.throws(()=>assertRecoveryEgress(k),/RESTORE_EGRESS_BLOCKED/);
     const rebuilt=new SupportMetrics(k).report(scope,'privacy_cohort');assert.equal(rebuilt.denominator,1);assert.equal(rebuilt.unavailable_cases,1);
     assert.equal(JSON.stringify(rebuilt).includes(SENTINEL),false);
     assert.deepEqual(db.prepare('PRAGMA foreign_key_check').all(),[]);
