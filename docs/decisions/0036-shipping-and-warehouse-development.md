@@ -101,3 +101,13 @@ be removed or relaxed. Other changes to existing tests remain outside scope.
 The new expectation must make omitted or unclassified new storage fail and must
 receive independent regression review. This is a prior additive schema update,
 not permission to rebaseline a failing behavioral oracle or conceal new storage.
+
+The same prior additive rule covers current migration totals in installation
+fixtures and current adapter/operation/native-case totals in conformance and
+compatibility fixtures. Retain every old migration, adapter, operation, fixture,
+case, pin target and classification. Only totals and exact membership for the
+new assigned paths may increase; legacy projections and rollback assertions stay
+unchanged. The affected retained test files are privacy coverage, return
+portability, installation/upgrade, adapter catalog and compatibility matrix.
+Their count-only maintenance is reviewed independently; this does not expand the
+four-file development selection or authorize another regression campaign.
