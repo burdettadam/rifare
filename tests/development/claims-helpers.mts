@@ -13,6 +13,7 @@ import { DisputeEvidence } from '../../packages/commerce/dispute-evidence.mts';
 import { DisputeSubmissions } from '../../packages/commerce/dispute-submissions.mts';
 import { PartnerReadiness } from '../../packages/commerce/partner-readiness.mts';
 import { contentDigest } from '../../packages/commerce/configuration-values.mts';
+import { CLAIMS_TABLES,CLAIMS_SUBJECT_TABLES } from '../../packages/commerce/claims-core.mts';
 import type { Row } from '../../packages/commerce/kernel.mts';
 
 export const claimsOracle=JSON.parse(readFileSync(new URL('../fixtures/claims/known-answer.v1.json',import.meta.url),'utf8'));
@@ -27,7 +28,7 @@ export async function claimsFixture(){
     }
     const registrations=new WarrantyRegistration(f.kernel,source),warranty=new WarrantyClaims(f.kernel,source,readiness,{resolution:f.executor,fulfillment:f.execution}),shipping=new ShippingClaims(f.kernel,source,readiness),packets=new DisputeEvidence(f.kernel,source),disputes=new DisputeSubmissions(f.kernel,source,readiness,packets);
     const original=f.order();
-    for(const [product_id,line_id,unit_index,paid_minor] of [['shirt','alpha',2,'1940'],['shoe','gamma',1,'1000'],['hat','beta',2,'950']] as [string,string,number,string][]){
+    for(const [product_id,line_id,unit_index,paid_minor] of [['shirt','alpha',2,'1940'],['shoe','gamma',1,'1000'],['hat','beta',2,'960']] as [string,string,number,string][]){
       source.publishTerms({product_id,version:1,valid_from:f.now()-86400000*10,valid_until:f.now()+86400000*10,warranty_days:365,allowed_outcomes:['repair','replacement','refund'],maximum_claims:1,region:'US_TEST',consent_purpose:'warranty_registration'});
       source.seedPurchase({purchase_id:'purchase-'+product_id,resource_id:original.id,customer_id:original.customer_id,order_version:original.source_version,line_id,unit_index,product_id,serial_number:'SERIAL-'+product_id.toUpperCase(),purchased_at:f.now()-86400000*3,payment_id:'payment-one',currency:'USD',paid_minor,version:1});
       registrations.publish(f.owner.scope,{product_id,version:1});
@@ -36,6 +37,7 @@ export async function claimsFixture(){
     source.seedShipment({shipment_id:'shipment-one',resource_id:original.id,customer_id:original.customer_id,shipment_resource_id:shipment.id,shipment_version:1,version:1,carrier:'fixture_carrier',coverage:'insured',eligible:true,policy_ref:'fixture-policy-one',deadline_at:f.now()+60000,amount_minor:'1940',currency:'USD'});
     source.seedDispute({dispute_id:'dispute-one',resource_id:original.id,customer_id:original.customer_id,version:1,reason:'product_not_received',amount_minor:'1940',currency:'USD',deadline_at:f.now()+60000,acknowledgement:null,purchase_consent:null,communication:null,untrusted_note:claimsOracle.hostile_note});
     const register=(product='shirt',extra:Row={})=>registrations.register(f.customer,{registration_id:'registration-'+product,resource_id:original.id,purchase_id:'purchase-'+product,terms_version:1,consent:true,...extra});
+    const resolutionEffects=()=>(f.sourceDb.prepare('SELECT body FROM fixture_resolution_effects ORDER BY operation_id').all() as Row[]).map(row=>JSON.parse(row.body));
     const refundOperation=()=>{const allocation=f.plan.allocations.find(a=>a.outcome==='refund')!;return f.authorize(f.quotes.quote(f.a.scope,{allocation_id:allocation.id}));};
     const claim=(outcome='refund',extra:Row={})=>{
       const product=outcome==='replacement'?'shoe':outcome==='repair'?'hat':'shirt';
@@ -49,7 +51,7 @@ export async function claimsFixture(){
     const packet=(extra:Row={})=>packets.draft(f.a.scope,{packet_id:'packet-one',expected_revision:0,case_id:'resolution_case',dispute_id:'dispute-one',evidence_ids:[],...extra});
     const approvePacket=(value:Row)=>disputes.approve(f.reviewer.scope,{packet_id:value.id,expected_digest:value.digest,expires_at:f.now()+50000});
     const attach=async()=>{const e=f.evidence.upload(f.customer,{case_id:'resolution_case',mime:'image/png',base64:photo,note:claimsOracle.hostile_note});await f.evidence.scan(f.reviewer.scope,e.id);return e;};
-    return {...f,claimsDb,claimsSource:source,readiness,registrations,warranty,shipping,packets,disputes,shipment,register,refundOperation,claim,approveClaim,shippingDraft,approveShipping,packet,approvePacket,attach,
+    return {...f,claimsDb,claimsSource:source,readiness,registrations,warranty,shipping,packets,disputes,shipment,register,resolutionEffects,refundOperation,claim,approveClaim,shippingDraft,approveShipping,packet,approvePacket,attach,
       cleanup:()=>{claimsDb.close();f.cleanup();}};
   }catch(error){claimsDb.close();f.cleanup();throw error;}
 }
@@ -70,5 +72,5 @@ export async function populateClaimsPrivacy(f:Awaited<ReturnType<typeof claimsFi
   const claim=f.claim();f.approveClaim(claim);const issue=f.source.issue.bind(f.source);f.source.issue=async(command:unknown)=>{await issue(command);throw new Error('SYNTHETIC_RESPONSE_LOST');};await f.warranty.dispatch(f.a.scope,claim.id);
   const shipping=f.shippingDraft();f.approveShipping(shipping);f.claimsSource.fault='after';await f.shipping.submit(f.a.scope,{claim_id:shipping.id,operation_id:'privacy-shipping-original'});
   const packet=f.packet();f.approvePacket(packet);f.claimsSource.fault='after';await f.disputes.submit(f.a.scope,{packet_id:packet.id,operation_id:'privacy-dispute-original'});
-  return {resource_id:f.order().id,customer_id:f.order().customer_id,registration_id:claim.registration_id,warranty_claim_id:claim.id,warranty_operation_id:claim.operation_id,shipping_claim_id:shipping.id,shipping_operation_id:'privacy-shipping-original',packet_id:packet.id,dispute_operation_id:'privacy-dispute-original',source_identity:f.claimsSource.identity,source_config_digest:f.claimsSource.configuration().digest};
+  return {tables:[...CLAIMS_TABLES],subject_tables:[...CLAIMS_SUBJECT_TABLES],unknown_operations:[{table:'commerce_warranty_claims',id:claim.id,operation_id:claim.operation_id,source_identity:f.source.identity,state:'unknown'},{table:'commerce_claim_submissions',id:'privacy-shipping-original',operation_id:'privacy-shipping-original',source_identity:f.claimsSource.identity,state:'unknown'},{table:'commerce_claim_submissions',id:'privacy-dispute-original',operation_id:'privacy-dispute-original',source_identity:f.claimsSource.identity,state:'unknown'}],resource_id:f.order().id,customer_id:f.order().customer_id,registration_id:claim.registration_id,warranty_claim_id:claim.id,warranty_operation_id:claim.operation_id,shipping_claim_id:shipping.id,shipping_operation_id:'privacy-shipping-original',packet_id:packet.id,dispute_operation_id:'privacy-dispute-original',source_identity:f.claimsSource.identity,source_config_digest:f.claimsSource.configuration().digest};
 }
