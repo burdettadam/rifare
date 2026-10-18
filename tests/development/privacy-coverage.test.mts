@@ -19,6 +19,8 @@ import { assertRecoveryEgress } from '../../packages/commerce/data-guards.mts';
 import { exportMerchant, exportMerchantSuppression, importMerchant, merchantSnapshotDigest } from '../../packages/commerce/merchant-portability.mts';
 import { jsonValue } from '../../packages/commerce/configuration-values.mts';
 import { readAdapterCatalog, validateAdapterCatalog } from '../../packages/conformance/adapter-catalog.mts';
+import { usingShopping, populateShoppingPrivacy } from './growth-shopping-helpers.mts';
+import { usingOptional, populateOptionalPrivacy } from './growth-optional-helpers.mts';
 
 const SENTINEL='SYNTHETIC_PRIVACY_CUSTOMER_NOTE';
 const PHOTO=JSON.parse(readFileSync(new URL('../fixtures/return-intake/photo.v1.json',import.meta.url),'utf8')).base64;
@@ -66,7 +68,91 @@ function assertErased(db:any,tenant:string,store:string,orderId:string){
   assert.equal(db.prepare('SELECT state FROM commerce_support_consent WHERE tenant_id=? AND store_id=?').get(tenant,store).state,'withdrawn');
 }
 
-test('CASE-M07-G14-01',()=>usingSupport(f=>{
+const SHOPPING_TABLES=GROWTH_TABLES.filter(table=>/shopping_|upsell_|catalog_/.test(table));
+const OPTIONAL_SUBJECT_TABLES=['commerce_optional_consents','commerce_optional_media','commerce_optional_operations','commerce_optional_deletions'];
+const growthRows=(f:any,table:string)=>f.db.prepare(`SELECT * FROM ${table} WHERE tenant_id=? AND store_id=?`).all(f.a.tenant,f.a.store);
+async function shoppingPrivacy(){await usingShopping(async f=>{
+  const x=await populateShoppingPrivacy(f),privacy=new PrivacyLifecycle(f.kernel),exported=privacy.export(f.owner.scope,x.customer_id);
+  for(const table of SHOPPING_TABLES)assert.ok(exported.growth_records[table].length,table+' subject export');
+  const serialized=JSON.stringify(exported.growth_records);
+  assert.equal(serialized.includes(f.kernel.require(f.customer).token_hash),false);
+  assert.equal(serialized.includes('session_hash'),false);
+  const originalCart=JSON.parse(growthRows(f,'commerce_shopping_carts')[0].body),originalChange=JSON.parse(growthRows(f,'commerce_catalog_changes')[0].body);
+  assert.equal(growthRows(f,'commerce_catalog_changes')[0].state,'unknown');
+  assert.equal(privacy.erase(f.owner.scope,x.customer_id).status,'logically_erased');
+  for(const table of SHOPPING_TABLES)for(const row of growthRows(f,table)){
+    assert.equal(JSON.parse(row.body).redacted,true,table+' body minimized');
+    assert.match(row.customer_id,/^erased_/);assert.equal(row.body.includes('Cotton shirt'),false);
+  }
+  const cart=JSON.parse(growthRows(f,'commerce_shopping_carts')[0].body),change=JSON.parse(growthRows(f,'commerce_catalog_changes')[0].body);
+  assert.equal(cart.operation_id,originalCart.operation_id);assert.equal(cart.native_id,originalCart.receipt.native_id);
+  assert.equal(change.operation_id,originalChange.command.operation_id);assert.equal(change.source_identity,originalChange.command.source_identity);
+  assert.equal(growthRows(f,'commerce_catalog_changes')[0].state,'unknown');
+  assert.equal(growthRows(f,'commerce_catalog_approvals')[0].revoked,1);
+  assert.equal(growthRows(f,'commerce_upsell_confirmations')[0].revoked,1);
+  assert.equal(growthRows(f,'commerce_upsell_confirmations')[0].session_hash,'erased');
+  assert.throws(()=>f.carts.readCart(f.a.scope,x.cart_id),/SUBJECT_ERASED|NOT_FOUND/);
+  assert.throws(()=>f.changes.read(f.a.scope,x.change_id),/SUBJECT_ERASED|NOT_FOUND/);
+  assert.equal(f.sourceDb.prepare('SELECT count(*) n FROM growth_source_catalog_effects').get().n,1);
+  assert.equal(f.catalogSource.item('basic').description,'Cotton shirt with a crew neck.','source publication requires its own reviewed cleanup');
+});}
+async function optionalPrivacy(){await usingOptional(async f=>{
+  const x=await populateOptionalPrivacy(f),privacy=new PrivacyLifecycle(f.kernel),exported=privacy.export(f.owner,x.customer_id);
+  for(const table of x.tables)assert.ok(exported.growth_records[table].length,table+' subject export');
+  assert.equal(JSON.stringify(exported).includes('PRIVATE-OTHER-MERCHANT'),false);
+  assert.ok(exported.growth_records.commerce_optional_media[0].body.includes(f.bytes.toString('base64')));
+  const unknown=growthRows(f,'commerce_optional_operations').find((row:any)=>row.id===x.unknown_operation_id);
+  assert.equal(unknown.state,'unknown');
+  assert.equal(privacy.erase(f.owner,x.customer_id).status,'logically_erased');
+  for(const table of OPTIONAL_SUBJECT_TABLES)for(const row of growthRows(f,table)){
+    assert.equal(JSON.parse(row.body).redacted,true,table+' body minimized');
+    assert.equal(row.body.includes(f.bytes.toString('base64')),false);assert.equal(row.body.includes('fixture-subject-one'),false);
+  }
+  const retained=growthRows(f,'commerce_optional_operations').find((row:any)=>row.id===x.unknown_operation_id);
+  assert.equal(retained.state,'unknown');assert.equal(retained.source_identity,unknown.source_identity);assert.equal(retained.native_id,unknown.native_id);
+  assert.ok(growthRows(f,'commerce_optional_consents').every((row:any)=>row.state==='withdrawn'));
+  assert.ok(growthRows(f,'commerce_optional_media').every((row:any)=>row.state==='erased'));
+  const deletion=growthRows(f,'commerce_optional_deletions').find((row:any)=>row.original_operation_id===x.unknown_operation_id);
+  assert.equal(deletion.source_identity,unknown.source_identity);assert.equal(deletion.state,'pending');
+  assert.equal(JSON.parse(deletion.body).replay_allowed,false);
+});}
+function importGrowth(f:any,owner:any,before:any,suppression:any,check:(k:CommerceKernel,scope:any,db:DatabaseSync)=>void){
+  const db=new DatabaseSync(':memory:');try{
+    const k=new CommerceKernel(db,f.now);k.provisionStore(f.a.tenant,f.a.store);k.provisionMember(f.a.tenant,f.a.store,'growth-import-owner','owner');
+    const scope=k.authenticate(k.issueSession(f.a.tenant,f.a.store,'growth-import-owner'));
+    const result=importMerchant(k,scope,before,before.digest,{suppression,suppression_sha256:merchantSnapshotDigest(suppression)});
+    assert.equal(result.mode,'quarantine');assert.equal(result.live_activation_supported,false);
+    assert.throws(()=>assertRecoveryEgress(k),/RESTORE_EGRESS_BLOCKED/);check(k,scope,db);assert.deepEqual(db.prepare('PRAGMA foreign_key_check').all(),[]);
+  }finally{db.close();}
+}
+async function growthRestore(){
+  await usingShopping(async f=>{
+    const x=await populateShoppingPrivacy(f),before=exportMerchant(f.kernel,f.owner.scope,{snapshot_id:'growth-shopping-before'});
+    f.advance(1);new PrivacyLifecycle(f.kernel).erase(f.owner.scope,x.customer_id);
+    importGrowth(f,f.owner.scope,before,exportMerchantSuppression(f.kernel,f.owner.scope),(_k,_scope,db)=>{
+      const changed=db.prepare('SELECT state,body FROM commerce_catalog_changes WHERE change_id=?').get(x.change_id);
+      assert.equal(changed.state,'unknown');assert.equal(JSON.parse(changed.body).redacted,true);assert.ok(JSON.parse(changed.body).operation_id);
+      assert.equal(db.prepare('SELECT revoked FROM commerce_catalog_approvals').get().revoked,1);
+      assert.equal(db.prepare('SELECT revoked,session_hash FROM commerce_upsell_confirmations').get().revoked,1);
+      assert.equal(db.prepare('SELECT revoked,session_hash FROM commerce_upsell_confirmations').get().session_hash,'erased');
+    });
+  });
+  await usingOptional(async f=>{
+    const x=await populateOptionalPrivacy(f),before=exportMerchant(f.kernel,f.owner,{snapshot_id:'growth-optional-before'});
+    // Even a subject with no erasure tombstone cannot import old processor authority.
+    importGrowth(f,f.owner,before,exportMerchantSuppression(f.kernel,f.owner),(_k,_scope,db)=>{
+      assert.equal(db.prepare('SELECT count(*) n FROM commerce_optional_configurations WHERE enabled=1').get().n,0);
+      assert.equal(db.prepare("SELECT count(*) n FROM commerce_optional_quality WHERE state='active'").get().n,0);
+      assert.equal(db.prepare("SELECT count(*) n FROM commerce_optional_consents WHERE state='granted'").get().n,0);
+      assert.equal(db.prepare("SELECT count(*) n FROM commerce_optional_media WHERE state='available'").get().n,0);
+      const unknown=db.prepare('SELECT state,body FROM commerce_optional_operations WHERE id=?').get(x.unknown_operation_id);
+      assert.equal(unknown.state,'unknown');assert.equal(JSON.parse(unknown.body).redacted,true);
+      assert.ok(db.prepare('SELECT 1 FROM commerce_optional_deletions WHERE original_operation_id=?').get(x.unknown_operation_id));
+    });
+  });
+}
+
+test('CASE-M07-G14-01',async()=>{await usingSupport(f=>{
   const x=populate(f),exported=x.privacy.export(f.owner.scope,x.order.customer_id);
   assert.equal(exported.support_records.commerce_support_consent.length,1);
   assert.equal(exported.support_records.commerce_support_consent_events[0].id,'privacy_consent');
@@ -81,7 +167,7 @@ test('CASE-M07-G14-01',()=>usingSupport(f=>{
   assert.throws(()=>x.evidence.inspect(f.a.scope,x.media.id),/SUBJECT_ERASED/);
   const rebuilt=x.metrics.report(f.a.scope,'privacy_cohort');assert.equal(rebuilt.denominator,1);assert.equal(rebuilt.unavailable_cases,1);
   assert.deepEqual(rebuilt.cases,[{case_id:'case_one',state:'unavailable_still_in_denominator'}]);
-}));
+});await shoppingPrivacy();await optionalPrivacy();});
 
 test('CASE-M07-G14-02',()=>usingSupport(f=>{
   f.db.exec('CREATE TABLE unregistered_agent_memory(customer_id TEXT, content TEXT)');
@@ -89,7 +175,7 @@ test('CASE-M07-G14-02',()=>usingSupport(f=>{
   assert.throws(()=>new PrivacyLifecycle(f.kernel).erase(f.owner.scope,f.order().customer_id),/STORAGE_INVENTORY_CHANGED/);
 }));
 
-test('CASE-M07-G14-03',()=>usingSupport(f=>{
+test('CASE-M07-G14-03',async()=>{await usingSupport(f=>{
   const x=populate(f),before=exportMerchant(f.kernel,f.owner.scope,{snapshot_id:'privacy_before_erasure'});
   f.advance(1);x.privacy.erase(f.owner.scope,x.order.customer_id);
   const cp=exportMerchantSuppression(f.kernel,f.owner.scope),db=new DatabaseSync(':memory:');
@@ -115,7 +201,7 @@ test('CASE-M07-G14-03',()=>usingSupport(f=>{
     assert.equal(JSON.stringify(rebuilt).includes(SENTINEL),false);
     assert.deepEqual(db.prepare('PRAGMA foreign_key_check').all(),[]);
   }finally{db.close();}
-}));
+});await growthRestore();});
 
 test('M07-G14-ALL-170-TABLES-HAVE-EXPLICIT-SURFACES',()=>usingSupport(f=>{
   const r=auditPrivacyCoverage(f.kernel,f.owner.scope),actual=f.db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name").all().map((x:any)=>x.name);
