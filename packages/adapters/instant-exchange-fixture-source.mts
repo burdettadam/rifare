@@ -79,7 +79,7 @@ export class InstantExchangeFixtureSource {
   if(trials.isDeliveryTrial(binding)&&contentDigest(order)!==binding.order_digest)throw new Error('INSTANT_TRIAL_ORDER_CHANGED');
   for(const key of ['resource_id','customer_id','native_original_order_id','currency'])if(order[key]!==binding[key])throw new Error('INSTANT_SOURCE_BINDING_INVALID');
   for(const u of binding.units){const original=order.units.find((v:Row)=>v.line_id===u.line_id&&v.unit_index===u.unit_index);if(!original||canonical(original)!==canonical(u))throw new Error('INSTANT_ORIGINAL_AMOUNT_CHANGED');}return order;}
- grantConsent(input:unknown){const raw=jsonValue(input),isTrial=trials.isDeliveryTrial(raw.binding),p=exact(raw,['id','account_id','terms_id','terms_digest','binding','maximum_minor','trial_deadline_at','mandate_expires_at','confirmed_at','consent_expires_at','proof_ref','reauthorization_of',...(isTrial?['extension_ms','window_digest','authorization_duration_ms']:[])]);
+ grantConsent(input:unknown){const raw=jsonValue(input),isTrial=trials.isDeliveryTrial(raw?.binding),p=exact(raw,['id','account_id','terms_id','terms_digest','binding','maximum_minor','trial_deadline_at','mandate_expires_at','confirmed_at','consent_expires_at','proof_ref','reauthorization_of',...(isTrial?['extension_ms','window_digest','authorization_duration_ms']:[])]);
   id(p.id);id(p.account_id);id(p.terms_id);id(p.proof_ref);hash(p.terms_digest);minor(p.maximum_minor);const b=nativeBinding(p.binding);this.#order(b);
   for(const key of ['trial_deadline_at','mandate_expires_at','confirmed_at','consent_expires_at'])if(!(isTrial&&key==='trial_deadline_at'&&p[key]===null))integer(p[key]);
   const terms=this.#terms(p.terms_id,p.terms_digest),account=this.account(p.account_id);

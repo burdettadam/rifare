@@ -38,7 +38,7 @@ function authorizationBinding(k:CommerceKernel,scope:Scope,intent:Row){if(Object
  return {...ctx,binding,q};
 }
 function instantValue(k:CommerceKernel,scope:Scope,kind:string,input:unknown,quotedAt:number){
- const raw=jsonValue(input),intent=exact(raw,kind==='authorize'?(Object.hasOwn(raw,'trial_id')?['trial_id','consent_id']:['exchange_quote_id','exchange_quote_digest','consent_id']):kind==='reauthorize'?['obligation_id','consent_id']:['obligation_id']);
+ const raw=jsonValue(input),intent=exact(raw,kind==='authorize'?(raw&&Object.hasOwn(raw,'trial_id')?['trial_id','consent_id']:['exchange_quote_id','exchange_quote_digest','consent_id']):kind==='reauthorize'?['obligation_id','consent_id']:['obligation_id']);
  let ctx:Row,plan:Row;const source=sourceFor(k);
  if(kind==='authorize'){ctx=authorizationBinding(k,scope,intent);plan=source.plan(kind,{binding:ctx.binding,consent_id:intent.consent_id});}
  else{ctx=obligationContext(k,scope,intent.obligation_id);k.authorize(scope,'return.read',ctx.c.resource_id);plan=source.plan(kind,intent);if(canonical(plan.binding)!==canonical(ctx.body.binding))throw new Error('INSTANT_BINDING_CHANGED');}
