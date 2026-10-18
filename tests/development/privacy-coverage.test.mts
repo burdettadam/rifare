@@ -6,7 +6,7 @@ import { usingSupport } from './support-helpers.mts';
 import { syntheticHeaders } from './execution-helpers.mts';
 import { CommerceKernel } from '../../packages/commerce/kernel.mts';
 import { CustomerAccess } from '../../packages/commerce/customer-access.mts';
-import { PrivacyLifecycle } from '../../packages/commerce/privacy-lifecycle.mts';
+import { PrivacyLifecycle,eraseSelected } from '../../packages/commerce/privacy-lifecycle.mts';
 import { auditPrivacyCoverage, privacySurfaceContract, checkPrivacyRuntimeSources } from '../../packages/commerce/privacy-coverage.mts';
 import { ReturnIntake } from '../../packages/commerce/return-intake.mts';
 import { ReturnEvidence } from '../../packages/commerce/return-evidence.mts';
@@ -17,7 +17,7 @@ import { SecretVault } from '../../packages/commerce/secrets.mts';
 import { activateDiagnosticRestore } from '../../packages/commerce/safe-recovery.mts';
 import { assertRecoveryEgress } from '../../packages/commerce/data-guards.mts';
 import { exportMerchant, exportMerchantSuppression, importMerchant, merchantSnapshotDigest } from '../../packages/commerce/merchant-portability.mts';
-import { jsonValue } from '../../packages/commerce/configuration-values.mts';
+import { jsonValue,canonical,contentDigest } from '../../packages/commerce/configuration-values.mts';
 import { readAdapterCatalog, validateAdapterCatalog } from '../../packages/conformance/adapter-catalog.mts';
 import { usingShopping, populateShoppingPrivacy } from './growth-shopping-helpers.mts';
 import { usingOptional, populateOptionalPrivacy } from './growth-optional-helpers.mts';
@@ -72,6 +72,16 @@ function assertErased(db:any,tenant:string,store:string,orderId:string){
 const SHOPPING_TABLES=GROWTH_TABLES.filter(table=>/shopping_|upsell_|catalog_/.test(table));
 const OPTIONAL_SUBJECT_TABLES=['commerce_optional_consents','commerce_optional_media','commerce_optional_operations','commerce_optional_deletions'];
 const growthRows=(f:any,table:string)=>f.db.prepare(`SELECT * FROM ${table} WHERE tenant_id=? AND store_id=?`).all(f.a.tenant,f.a.store);
+function replayGrowthWithoutResourceList(f:any,tables:string[],resourceId:string,hash:string){
+  // A restored copy can carry an old redacted flag plus a newly copied private
+  // field. The retained subject hash must be enough to rebuild each allowlist.
+  for(const table of tables)for(const row of growthRows(f,table).filter((row:any)=>row.resource_id===resourceId)){
+    const value={...JSON.parse(row.body),unexpected_private_copy:SENTINEL},pk=f.db.prepare('PRAGMA table_info('+table+')').all().filter((c:any)=>c.pk).sort((a:any,b:any)=>a.pk-b.pk).map((c:any)=>c.name);
+    f.db.prepare(`UPDATE ${table} SET body=?,digest=? WHERE ${pk.map((column:string)=>column+'=?').join(' AND ')}`).run(canonical(value),contentDigest(value),...pk.map((column:string)=>row[column]));
+  }
+  f.kernel.transaction(()=>eraseSelected(f.kernel,{tenant_id:f.a.tenant,store_id:f.a.store},[],hash,f.now()));
+  for(const table of tables)for(const row of growthRows(f,table).filter((row:any)=>row.resource_id===resourceId))assert.equal(row.body.includes(SENTINEL),false,table+' hash-only replay');
+}
 async function shoppingPrivacy(){await usingShopping(async f=>{
   const x=await populateShoppingPrivacy(f),privacy=new PrivacyLifecycle(f.kernel),exported=privacy.export(f.owner.scope,x.customer_id);
   for(const table of SHOPPING_TABLES)assert.ok(exported.growth_records[table].length,table+' subject export');
@@ -96,6 +106,7 @@ async function shoppingPrivacy(){await usingShopping(async f=>{
   assert.throws(()=>f.changes.read(f.a.scope,x.change_id),/SUBJECT_ERASED|NOT_FOUND/);
   assert.equal(f.sourceDb.prepare('SELECT count(*) n FROM growth_source_catalog_effects').get().n,1);
   assert.equal(f.catalogSource.item('basic').description,'Cotton shirt with a crew neck.','source publication requires its own reviewed cleanup');
+  replayGrowthWithoutResourceList(f,SHOPPING_TABLES,x.resource_id,exported.subject_ref);
 });}
 async function optionalPrivacy(){await usingOptional(async f=>{
   const x=await populateOptionalPrivacy(f),privacy=new PrivacyLifecycle(f.kernel),exported=privacy.export(f.owner,x.customer_id);
@@ -116,6 +127,7 @@ async function optionalPrivacy(){await usingOptional(async f=>{
   const deletion=growthRows(f,'commerce_optional_deletions').find((row:any)=>row.original_operation_id===x.unknown_operation_id);
   assert.equal(deletion.source_identity,unknown.source_identity);assert.equal(deletion.state,'pending');
   assert.equal(JSON.parse(deletion.body).replay_allowed,false);
+  replayGrowthWithoutResourceList(f,OPTIONAL_SUBJECT_TABLES,x.resource_id,exported.subject_ref);
 });}
 async function marketingPrivacy(){
   await usingMarketing(async f=>{
@@ -138,6 +150,7 @@ async function marketingPrivacy(){
       const recipient=JSON.parse(growthRows(f,'commerce_growth_campaign_recipients')[0].body);assert.equal(recipient.original_operation_id,x.operation_id);
       assert.equal(growthRows(f,'commerce_marketing_sync_operations')[0].id,x.sync_operation_id);assert.equal(growthRows(f,'commerce_marketing_sync_operations')[0].state,'unknown');
       assert.ok(growthRows(f,'commerce_growth_campaign_approvals').every((row:any)=>row.revoked===1));
+      replayGrowthWithoutResourceList(f,['commerce_checkout_assignments','commerce_checkout_exposures','commerce_growth_observations','commerce_growth_campaign_recipients','commerce_cart_recoveries'],x.resource_id,exported.subject_ref);
     }finally{x.cleanup();}
   });
   await usingCancellation(async f=>{
@@ -150,6 +163,7 @@ async function marketingPrivacy(){
     assert.equal(JSON.parse(link.body).original_edit_id,f.operation.id);
     assert.equal((await f.handler(f.request('POST',{intent:'confirm',token:f.issued.token,preview_digest:f.preview.digest,confirmed:true}))).status,403);
     assert.equal(f.sourceDb.prepare('SELECT count(*) n FROM edit_source_effects').get().n,originalEffects);
+    replayGrowthWithoutResourceList(f,['commerce_email_action_links'],f.original.id,exported.subject_ref);
   });
 }
 function importGrowth(f:any,owner:any,before:any,suppression:any,check:(k:CommerceKernel,scope:any,db:DatabaseSync)=>void){
