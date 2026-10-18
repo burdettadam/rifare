@@ -30,6 +30,10 @@ test('M11-G04-02',()=>usingProcurement(async f=>{
  assert.throws(()=>f.planning.propose(f.a.scope,{...f.planInput('forged'),forecast_id:'caller-forged',expected_forecast_digest:'0'.repeat(64)}),/NOT_FOUND|FORECAST/);
  const draft=f.plan('advisory-only');assert.equal(draft.state,'draft');assert.equal(nativeSendCount(f),0);
  await assert.rejects(f.approvals.send(f.a.scope,{po_id:draft.id,version:1,expected_digest:draft.digest,operation_id:'forecast-is-not-a-po'}),/NOT_FOUND|PURCHASE/);
+ const longerLead=f.supplierSource.recordSupplierTerms({...f.termsInput,version:2,lines:f.termsInput.lines.map((line:any)=>({...line,lead_time_days:5}))});
+ f.orders.importSupplier(f.a.scope,{supplier_id:'supplier-a',resource_id:f.resource.id});
+ assert.equal(f.forecast.horizon_days,5);assert.ok(f.forecast.valid_until<f.now()+5*86400000);
+ assert.throws(()=>f.planning.propose(f.a.scope,{...f.planInput('elapsed-forecast-window'),expected_terms_digest:longerLead.digest}),/REPLENISHMENT_HORIZON_OR_UNIT_UNSUPPORTED/);
  f.forecasts.revoke(f.reviewer,f.forecast.approval_id);
  assert.throws(()=>f.plan('revoked-forecast'),/FORECAST|APPROVAL|REVIEW/);assert.equal(nativeSendCount(f),0);
 },true));
@@ -40,6 +44,7 @@ test('M11-G04-03',async()=>{
   const partial=f.plan('after-partial');assert.equal(f.balance().on_hand,oracle.available_after_partial);
   assert.equal(partial.assumptions.incoming_units,oracle.outstanding_after_partial);assert.equal(partial.quantity,oracle.replenishment_after_partial);
   f.supplierSource.observeCancellation(po.operation_id,{event_id:'supplier-cancel-two',line_id:'line-a',quantity_base:2});
+  assert.throws(()=>f.plan('unreconciled-cancellation'),/SOURCE_RECONCILIATION_REQUIRED/);
   await f.approvals.reconcile(f.a.scope,{po_id:po.id,version:po.version,expected_digest:po.digest});
   const cancelled=f.plan('after-cancellation');assert.equal(cancelled.assumptions.incoming_units,oracle.outstanding_after_cancellation);
   assert.equal(cancelled.quantity,oracle.replenishment_after_cancellation);assert.equal(f.balance().on_hand,12);
@@ -125,7 +130,7 @@ test('PORT-031-M11',()=>usingProcurement(async f=>{
  await f.receive(po,2,'port-partial');await f.receipts.reconcile(f.a.scope,'port-partial-operation');
  const summary=f.receipts.summary(f.a.scope,{po_id:po.id,version:po.version,expected_digest:po.digest});
  assert.equal(summary.lines[0].received,2);assert.equal(summary.lines[0].outstanding,3);assert.equal(f.balance().on_hand,12);
- assert.equal(f.inventory.source.movements(f.resource.id).filter((row:any)=>row.reference_id==='port-partial').length,1);
+ assert.equal(f.inventory.source.movements(f.resource.id).filter((row:any)=>row.variant_id==='sku-a'&&row.location_id==='location-a'&&row.delta.on_hand===2).length,1);
 }));
 
 test('M11-PROCUREMENT-SOURCE-BOUNDARY',async()=>{

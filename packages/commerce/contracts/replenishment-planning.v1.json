@@ -1,0 +1,11 @@
+{
+ "schema_version":1,"contract":"rifare-replenishment-planning-v1","goal_ids":["M11-G04"],"qualification":"synthetic_local_only","formal_goal_accepted":false,
+ "service":"packages/commerce/replenishment-planning.mts",
+ "authority":"Actual InventoryForecasts.assertReviewed on the same CommerceKernel; exact stored ID/digest, current independent review, catalog/SKU/location/unit/horizon binding. A caller Boolean grants nothing.",
+ "arithmetic":"Target is the evaluated forecast upper bound. Subtract canonical available stock and source-acknowledged outstanding POs, then round up to the explicit each/case conversion and supplier minimum. No rounding down of fractional purchasing units.",
+ "incoming":"PurchaseReceiving.summary owns ordered/cancelled/received/unknown/outstanding quantities; confirmed receipts enter on-hand once and cease being incoming. Supplier cancellation requires original native event evidence. Unknown sends, unacknowledged POs, receipts, transfers or stock differences block confident arithmetic.",
+ "effect":"Explainable draft only; no approval, send, supplier acknowledgment or stock movement.",
+ "tests":{"file":"tests/development/procurement-planning.test.mts","cases":["M11-G04-01","M11-G04-02","M11-G04-03"],"targeted_fault":"Actual calculateReplenishment ignores existing incoming units; the independent 20-10-6=4 oracle catches it.","author_executions":0},
+ "storage":{"migration":"migrations/commerce/043_procurement.sql","tables":["commerce_replenishment_drafts"]},
+ "limits":["Catalog resources with no customer identity; exact integer each/case purchasing subset","Forecast horizons and actual local baseline qualification are retained; no real supplier/warehouse qualification","M07-G99, M08-G99 and formal M11 acceptance remain blocked"]
+}
