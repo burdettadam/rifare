@@ -5,13 +5,19 @@ import { canonical,contentDigest,jsonValue } from './configuration-values.mts';
 import { assertExecution,controlState,controlEvent } from './execution-stops.mts';
 
 const WORK_ACTIONS=Object.freeze(['work.claim','resource.read','case.read','skill.read','policy.read','profile.read','capability.read','operation.read','action.propose','action.execute']);
+// Separate opt-in scope for the shared return continuation API. Parent role and
+// current resource permissions still apply; this list never grants an action.
+const RETURN_WORK_ACTIONS=Object.freeze([...WORK_ACTIONS,'return.read','return.request','operation.dispatch','operation.reconcile']);
 export const WORK_MAX_DEADLINE_MS=60000;
 function duration(ms:number){integer(ms,10);if(ms>30000)throw new Error('INVALID_INPUT');return ms;}
 export function unresolvedEffects(k:CommerceKernel,s:Row,resource:string){
-  return k.db.prepare("SELECT id,state FROM commerce_operations WHERE tenant_id=? AND store_id=? AND resource_id=? AND state IN ('unknown','sending') ORDER BY created_at,id")
+  const diagnostic=k.db.prepare("SELECT id,state FROM commerce_operations WHERE tenant_id=? AND store_id=? AND resource_id=? AND state IN ('unknown','sending') ORDER BY created_at,id")
     .all(s.tenant_id,s.store_id,resource) as Row[];
+  const financial=k.db.prepare("SELECT id,state,kind AS operation_kind FROM commerce_resolution_operations WHERE tenant_id=? AND store_id=? AND resource_id=? AND state='unknown' ORDER BY observed_at,id")
+    .all(s.tenant_id,s.store_id,resource) as Row[];
+  return [...diagnostic,...financial.map(row=>({...row,kind:'resolution'}))];
 }
-export function assertCaseWorkerScope(k:CommerceKernel,scope:Scope,caseId:string){
+export function assertCaseWorkerScope(k:CommerceKernel,scope:Scope,caseId:string,permittedOperationId?:string){
   const s=k.require(scope),identity=k.workerIdentity(scope);
   if(identity?.kind==='external_work'&&identity.case_id!==caseId)throw new Error('WORK_FENCE_REJECTED');
   const managed=k.db.prepare('SELECT * FROM commerce_case_work WHERE tenant_id=? AND store_id=? AND case_id=?').get(s.tenant_id,s.store_id,caseId) as Row;
@@ -19,7 +25,9 @@ export function assertCaseWorkerScope(k:CommerceKernel,scope:Scope,caseId:string
     if(!identity||identity.kind!=='external_work'||identity.case_id!==caseId||identity.generation!==managed.generation
       ||identity.grant_hash!==managed.grant_hash||managed.state!=='active'||managed.expires_at<=k.clock()||managed.deadline_at<=k.clock())throw new Error('WORK_FENCE_REJECTED');
     assertExecution(k,s,'diagnostic.resolution.set',managed.control_stamp);
-    if(unresolvedEffects(k,s,managed.resource_id).length)throw new Error('RECONCILIATION_REQUIRED');
+    // An already persisted send may check its own exact operation after moving
+    // to unknown. Every other uncertain effect continues to block a new write.
+    if(unresolvedEffects(k,s,managed.resource_id).some(row=>row.kind!=='resolution'||row.id!==permittedOperationId))throw new Error('RECONCILIATION_REQUIRED');
   }
 }
 export class WorkLeases {
@@ -40,10 +48,10 @@ export class WorkLeases {
     const g=this.#k.db.prepare('SELECT * FROM commerce_worker_grants WHERE token_hash=?').get(digest(value)) as Row;
     if(!g||g.audience!==audience||g.revoked||g.expires_at<=this.#k.clock())throw new Error('WORK_ACCESS_DENIED');return g;
   }
-  #scope(g:Row,generation?:number){
+  #scope(g:Row,generation?:number,returnActions=false){
     const k=this.#k,c=k.db.prepare('SELECT resource_id FROM commerce_cases WHERE tenant_id=? AND store_id=? AND id=?').get(g.tenant_id,g.store_id,g.case_id) as Row;
     if(!c)throw new Error('WORK_ACCESS_DENIED');
-    return k.restrictedSession(g.parent_session_hash,c.resource_id,WORK_ACTIONS,()=>{
+    return k.restrictedSession(g.parent_session_hash,c.resource_id,returnActions?RETURN_WORK_ACTIONS:WORK_ACTIONS,()=>{
       const latest=k.db.prepare('SELECT revoked,expires_at FROM commerce_worker_grants WHERE token_hash=?').get(g.token_hash) as Row;
       if(!latest||latest.revoked||latest.expires_at<=k.clock())throw new Error('WORK_ACCESS_DENIED');
       if(generation!==undefined){
@@ -70,6 +78,7 @@ export class WorkLeases {
     });
   }
   scoped(value:unknown,audience:string,generation:number){integer(generation,1);const g=this.#grant(value,audience),scope=this.#scope(g,generation);this.#k.authorize(scope,'work.claim',this.#row(g).resource_id);return {scope,grant:g,lease:this.#view(this.#row(g))};}
+  returnScoped(value:unknown,audience:string,generation:number){integer(generation,1);const g=this.#grant(value,audience),scope=this.#scope(g,generation,true);this.#k.authorize(scope,'work.claim',this.#row(g).resource_id);return {scope,grant:g,lease:this.#view(this.#row(g))};}
   renew(value:unknown,audience:string,generation:number,leaseMs:number){duration(leaseMs);const k=this.#k;return k.transaction(()=>{
     const {scope,grant,lease}=this.scoped(value,audience,generation),s=k.require(scope),until=Math.min(k.clock()+leaseMs,lease.deadline_at);
     k.db.prepare('UPDATE commerce_case_work SET expires_at=? WHERE tenant_id=? AND store_id=? AND case_id=?').run(until,s.tenant_id,s.store_id,grant.case_id);

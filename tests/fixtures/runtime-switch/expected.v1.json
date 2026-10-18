@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "qualification": "synthetic local HTTP; not connected merchant or provider evidence",
+  "approved_return": {"before": "awaiting_review", "after": "submitted", "new_receipts": 1, "approval_uses": 1, "financial_effects": 0},
+  "original_refund": {"amount_minor": "1726", "currency": "USD", "payment_id": "payment-one", "source_effects": 1, "operations": 1, "approval_uses": 1},
+  "handover": {"first_generation": 1, "replacement_generation": 3, "configuration_revisions": 1, "new_preview_or_approval": false},
+  "runtime_ids": ["rifare-typescript-procedural-v1", "rifare-python-state-machine-v1"],
+  "required_unknown_first_action": "resolution.reconcile",
+  "known_pending_is_settled": false,
+  "provider_thread_used": false
+}
