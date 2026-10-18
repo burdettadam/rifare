@@ -32,3 +32,12 @@ privacy storage coverage and accessible workflows. Implementations use isolated
 worktrees and one bounded four-file development selection. Formal prerequisites,
 connected/target-host observations and human assistive-technology qualification
 remain separate and blocked until their actual evidence exists.
+
+## Assigned locale, pilot and carrier preparation batch
+
+The renewed next-five request assigns the next planning entries M07-G16, G17,
+G18, G99 and M08-G01 under ADR-0035. Locale presentation and pilot instrumentation
+are local development; G18 prepares evidence intake with no real observations,
+G99 remains a blocked assessment, and G01 adds local per-package carrier quotes.
+The explicit development assignment preserves all formal prerequisites and does
+not start a release or connected pilot. M08-G02 label purchasing is unassigned.
