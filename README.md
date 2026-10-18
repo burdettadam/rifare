@@ -2,34 +2,41 @@
 
 Merchant-owned commerce operations with tailorable skills and independently replaceable platforms, agents and models.
 
-## Current development milestone: M10 warranties, partners and delivery trials
+## Current development milestone: M11 inventory and procurement
 
-All fourteen M10 worker goals and the G99 assessment are assigned under
-[ADR-0039](docs/decisions/0039-m10-warranty-partners-trials.md). They add scoped
-partner readiness, purchase-bound warranty registration and claims, shipping
-claims, attributable dispute drafts and reviewed submission preparation,
-protection and duties records, reverse-hub and international custody observations,
-HSA/FSA eligibility references, network alerts, and delivery-started trials.
+All ten M11 worker goals and the G99 assessment are assigned under
+[ADR-0040](docs/decisions/0040-m11-inventory-procurement.md). They add historical
+demand, frozen temporal backtests, reviewed forecasts, explainable replenishment,
+supplier terms and versioned purchase orders, independent budget approval,
+partial receiving, additive supplier returns/corrections, nested BOMs and
+production preparation.
 
-Refunds and replacements use the existing resolution and fulfillment owners.
-Trial authorization and capture extend the existing InstantExchanges owner.
-Warehouse receipt and stock ownership remain canonical. Current approval,
-customer proof, source versions and partner readiness are checked again at the
-final effect boundary; uncertain operations retain their original native IDs.
+The existing warehouse stock and movement owners remain canonical. Purchasing
+and stock effects require current independent approval, source/quantity pins
+and final execution checks. Unknown outcomes retain their original operation
+identities. Forecasts use deterministic quantitative methods and named baselines;
+their empirical error envelope claims no statistical or real-world qualification.
 
-Canonical privacy and quarantined recovery cover 25 new tables and preserve the
-209-table preceding schema. Export is subject scoped; erasure rebuilds explicit
-allowlists; import, restore and uninstall revoke readiness, approval and consent.
-Separate source stores and caller copies retain their named cleanup duties.
-All partner observations here are synthetic local preparation. Formal M10-G99
-and the earlier M07 prerequisite remain blocked; M11 is unassigned.
+Canonical privacy and quarantined recovery cover 20 new merchant business tables
+while preserving all 234 preceding table obligations. Customer-free aggregate
+and catalog records are excluded from customer exports. Explicit nested
+allowlists remove unexpected copied facts; restore/import/uninstall revoke new
+authority even without customer tombstones. Separate source and historical
+copies retain their named cleanup duties.
 
-The planned selection is 54 cases in four whole files, within the unchanged
+The planned selection is 49 cases in four whole files, within the unchanged
 60-case/four-file/60-second development limit. Actual native results, independent
 reviews and the separate local integration decision accompany the cumulative
-checkpoint. Read [the M10 integration record](work/records/M10-extended-services-integration.md),
-[the M10 assessment](docs/M10-QUALIFICATION.md), [partner services](docs/PARTNER-SERVICES.md),
-[warranties and disputes](docs/WARRANTY-DISPUTES.md), and [delivery trials](docs/DELIVERY-TRIALS.md).
+checkpoint. Read [the M11 integration record](work/records/M11-inventory-procurement-integration.md),
+[the M11 assessment](docs/M11-QUALIFICATION.md), [demand planning](docs/DEMAND-PLANNING.md),
+[procurement](docs/PROCUREMENT.md), and [receiving and production](docs/PROCUREMENT-INVENTORY.md).
+Formal M07-G99, M08-G99 and M11 acceptance remain blocked. M12 is unassigned.
+
+The preceding [M10 integration](work/records/M10-extended-services-integration.md)
+retains partner readiness, warranties, claims, dispute drafts, custody and
+delivery-started trials. Read [its assessment](docs/M10-QUALIFICATION.md),
+[partner services](docs/PARTNER-SERVICES.md), [warranties and disputes](docs/WARRANTY-DISPUTES.md),
+and [delivery trials](docs/DELIVERY-TRIALS.md) for the preserved scope and limits.
 
 The preceding [M09 growth integration](work/records/M09-growth-integration.md)
 retains shopping, upsells, experiments, campaigns, catalog and optional media
@@ -90,9 +97,9 @@ make test
 
 The default budget is 60 actual cases across four whole files with one 60-second
 deadline. A development pass does not claim full regression or goal acceptance.
-The all-goals M10 development assignment does not automatically trigger full,
-browser, nested catalog, or restoration-audit campaigns. It selects partner,
-claims, trial and the existing privacy cases. See [development](DEVELOPMENT.md).
+The all-goals M11 development assignment does not automatically trigger full,
+browser, nested catalog, or restoration-audit campaigns. It selects the new
+forecast, procurement, stock and the existing privacy cases. See [development](DEVELOPMENT.md).
 
 The runtime remains a SQLite diagnostic with synthetic protocol sources.
 PostgreSQL/React, connected providers, live merchant migration, independent-machine

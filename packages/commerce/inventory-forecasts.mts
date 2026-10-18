@@ -21,6 +21,7 @@ export class InventoryForecasts {
       if(evaluation.state!=='evaluated'||evaluation.digest!==p.expected_digest)throw new Error('FORECAST_BACKTEST_CHANGED');
       if(!plan.horizons.includes(p.horizon_days)||!plan.cohort.some((item:Row)=>forecastMemberKey(item as any)===forecastMemberKey(member)))throw new Error('FORECAST_SCOPE_UNEVALUATED');
       const snapshot=new DemandHistory(k).read(scope,plan.dataset_id);if(snapshot.digest!==plan.dataset_digest)throw new Error('DEMAND_SNAPSHOT_CHANGED');
+      if(snapshot.cutoff>snapshot.window_end)throw new Error('FORECAST_CUTOFF_AFTER_ORIGIN');
       const key=forecastMemberKey(member),candidate=evaluation.metrics.find((m:Row)=>m.cohort_key===key&&m.horizon_days===p.horizon_days&&m.method===plan.method),baseline=evaluation.metrics.find((m:Row)=>m.cohort_key===key&&m.horizon_days===p.horizon_days&&m.method===plan.reference_baseline);
       if(!candidate||!baseline)throw new Error('FORECAST_SCOPE_UNEVALUATED');
       const train=buildDemandSeries(snapshot,member,snapshot.window_start,snapshot.window_end,snapshot.cutoff),known=train.filter(row=>!row.missing&&!row.stockout),censored=train.filter(row=>row.stockout).length;
@@ -64,6 +65,7 @@ export class InventoryForecasts {
     const s=this.k.require(scope),author=currentMember(this.k,s,forecast.proposed_by,'action.propose',forecast.resource_id);
     if(!author?.allowed||author.authority_revision!==forecast.proposer_authority_revision)throw new Error('FORECAST_AUTHOR_AUTHORITY_CHANGED');
     const data=new DemandHistory(this.k).read(scope,forecast.dataset_id),evaluation=new ForecastBacktests(this.k).read(scope,forecast.backtest_id);
+    if(data.cutoff>data.window_end)throw new Error('FORECAST_CUTOFF_AFTER_ORIGIN');
     if(data.digest!==forecast.dataset_digest||evaluation.digest!==forecast.backtest_digest)throw new Error('FORECAST_BACKTEST_CHANGED');return forecast;
   }
   approve(scope:Scope,value:unknown) {

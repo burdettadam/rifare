@@ -122,3 +122,32 @@ and actual partner agreement, coverage, tax, physical receipt, HSA/FSA and netwo
 qualification are not supplied by synthetic preparation. G99 retains the original
 demonstration and exit criteria as blocked formal obligations. All existing
 capabilities, tests, contracts and prior source checkpoints remain protected.
+
+## Assigned all-goals M11 inventory and procurement development
+
+The owner requested all goals for the next milestone after the reviewed M10
+checkpoint, then asked to correct the execution blocker or prepare a new-chat
+handoff. [ADR-0040](docs/decisions/0040-m11-inventory-procurement.md) assigns
+M11-G01 through G10 and the blocked G99 assessment from clean `8096abe`.
+Native execution recovered without a source or test-policy reset. The initial
+assignment handoff and full preceding M10 checkpoint remain recoverable.
+
+Three isolated authors cover demand/backtests/forecasts, replenishment/POs/
+approvals, and receipts/returns/BOMs/production. Root owns canonical privacy,
+recovery, shared metadata, the local demonstration, independent review and local
+nonrelease integration. The existing warehouse stock/movement owner remains
+canonical. No second stock counter or approval kernel is assigned.
+
+The planned selection is 12 forecasting, 12 procurement, 16 stock/production
+and nine retained privacy cases: 49 across four whole files. The unchanged
+60-case/four-file/60-second ceiling applies to every invocation. Only concrete
+failures or consequential corrections justify affected-file repeats; authors and
+reviewers execute no duplicate product suites or demos.
+
+The [M11 assessment](docs/M11-QUALIFICATION.md) retains all original exit criteria
+and formal blockers. M07-G99, M08-G99, worker acceptance and actual connected
+G07/G10 evidence remain open. Synthetic forecasts and physical source journals
+do not establish real merchant forecasting value, supplier orders or production
+qualification. All prior source, registrations, capabilities, storage contracts,
+migrations, fixtures and cumulative checkpoints remain protected. M12 remains
+unassigned.

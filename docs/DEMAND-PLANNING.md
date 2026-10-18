@@ -76,6 +76,13 @@ the current catalog version and content. The candidate is chosen only for strict
 lower per-SKU, per-horizon MAE on complete identical cells. Otherwise the selected
 method remains the named baseline. No model confidence value is accepted as input.
 
+The forecast origin is the last day in the declared demand window. Creation and
+current review reject a snapshot whose knowledge cutoff is later than that day;
+later-learned corrections cannot be relabeled as information available at the
+earlier origin. Such snapshots remain usable for explicitly retrospective demand
+analysis and temporal backtests. Replenishment must also check the actual
+`valid_until` date against the upcoming supplier lead time.
+
 At least four uncensored historical days and two fully scored cells for both
 methods are required by this bounded implementation. Missing historical days,
 at least half of history being censored, or an unavailable recent prediction

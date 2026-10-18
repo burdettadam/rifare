@@ -15,6 +15,7 @@
     "minimum_scored_backtest_cells_per_scope": 2,
     "incomplete_scoped_backtest": "unsupported",
     "missing_history_days": "unsupported",
+    "knowledge_cutoff_after_forecast_origin": "creation_and_current_review_rejected",
     "qualification_thresholds": "These are bounded implementation choices; formal acceptance thresholds are unchanged"
   },
   "selection": "Strictly lower per-SKU per-horizon MAE with identical complete declared cells selects the candidate; equality or underperformance retains the named baseline",
