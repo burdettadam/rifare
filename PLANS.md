@@ -22,5 +22,13 @@ connected, independent-machine or release qualification.
 The next-five checkpoint records the coherent 54-case development selection,
 the retained seven-case helper observation and focused nonauthor reviews. Formal
 acceptance remains separate; the integration record and accompanying source-bound
-reports provide the actual local outcome. No further goal is assigned by this
-status update.
+reports provide the actual local outcome.
+
+## Assigned M07 operations and assurance batch
+
+The owner's next-five request assigns M07-G11 through M07-G15 under ADR-0034:
+recovery interlocks, measured load/backpressure, release security/provenance,
+privacy storage coverage and accessible workflows. Implementations use isolated
+worktrees and one bounded four-file development selection. Formal prerequisites,
+connected/target-host observations and human assistive-technology qualification
+remain separate and blocked until their actual evidence exists.
