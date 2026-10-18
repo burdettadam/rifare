@@ -3646,7 +3646,7 @@
     },
     {
       "path": "tests/development/woocommerce-refund-helpers.mts",
-      "sha256": "b219e2a8ae4d878e8d5f359a9ac51813aaf95bb00e52929a12dff1f1a6b80042"
+      "sha256": "23c7024abc0972c710ee31d37b9a17bb6306b1f85a7179a5c133cc885f26f744"
     },
     {
       "path": "tests/development/woocommerce-refunds.test.mts",
