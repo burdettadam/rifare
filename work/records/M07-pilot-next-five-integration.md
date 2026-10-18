@@ -49,6 +49,15 @@ module that applies the first package's service and price before total
 calculation and sealing. The unchanged literal package oracle must accept the
 real module and reject the executed mutant. No case was added or removed.
 
+The first native locale run exposed a fixture-only mismatch: retained return
+policy normalization sorts outcomes, so the form initially selects exchange,
+while the strict browser bridge expects refund. Root explicitly selects refund
+in both affected fixture paths and preserves the original request assertion.
+The other three planned files passed 43 cases at `1e36072`; their source inputs
+are unchanged by this browser-fixture and work-record correction. The corrective
+native selection is only the fifteen-case locale file, with every initial
+failure retained in the checkpoint accounting.
+
 ## Preservation and review focus
 
 All 2,646 prior registrations and 134 prior capability objects remain unchanged.

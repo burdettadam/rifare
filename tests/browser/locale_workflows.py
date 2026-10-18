@@ -98,6 +98,7 @@ with sync_playwright() as playwright:
         page.locator('#case').fill('case_one')
         page.locator('#case').press('Enter')
         page.locator('#choose').wait_for(state='visible')
+        page.locator('#outcome').select_option('refund')
         page.locator('#qty-one').fill('1')
         page.locator('#calculate').click()
         page.locator('#quote-panel').wait_for(state='visible')
@@ -150,7 +151,7 @@ with sync_playwright() as playwright:
         for injected in ['localized-decimal', 'unsupported-currency']:
             mount('returns'); fault = injected
             page.locator('#session').fill(cfg['token']); page.locator('#case').fill('case_one'); page.locator('#case').press('Enter')
-            page.locator('#choose').wait_for(state='visible'); page.locator('#qty-one').fill('1'); page.locator('#calculate').click()
+            page.locator('#choose').wait_for(state='visible'); page.locator('#outcome').select_option('refund'); page.locator('#qty-one').fill('1'); page.locator('#calculate').click()
             page.wait_for_function('document.getElementById("notice").getAttribute("role")==="alert"')
             assert page.locator('#quote-panel').is_hidden() and page.locator('#submit').is_disabled()
             expected_error = 'integer minor units' if injected == 'localized-decimal' else 'currency is not supported'
