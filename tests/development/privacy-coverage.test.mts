@@ -23,7 +23,10 @@ function populate(f:any){
   f.conversations.ingest(f.a.scope,{link_id:f.link.id,external_id:'privacy_message',direction:'incoming',visibility:'public',text:SENTINEL,source_at:f.now()});
   f.consent.record(f.customer,f.grant({event_id:'privacy_consent'}));
   const attachment=f.kernel.attach(f.a.scope,order.id,{note:SENTINEL});
-  f.reads.knowledge.put(f.a.scope,f.source({resource_id:order.id,content:SENTINEL}));
+  // The support fixture's `source` is its provider ledger, not the read
+  // fixture's knowledge-input builder. Populate the real knowledge API directly.
+  f.reads.knowledge.put(f.a.scope,{id:'privacy_knowledge',revision:1,kind:'support',title:'Synthetic privacy note',content:SENTINEL,
+    source_uri:'https://merchant.example.invalid/privacy-note',source_updated_at:f.now(),expires_at:f.now()+60000,visibility:'store',resource_id:order.id});
   f.reads.profiles.put(f.a.scope,f.profile(f.a,{id:'privacy_task'}));
   const task=f.reads.createTask(f.a.scope,{order_id:order.id,profile_id:'privacy_task'});
   new ReturnIntake(f.kernel).configure(f.owner.scope,{expected_revision:0,settings:{currency:'USD',restocking_bps:0,shipping_minor:'0',time_zone:'America/Denver',brand:'Synthetic',contact:'support@example.invalid',override_days:7,retention_days:30}});
