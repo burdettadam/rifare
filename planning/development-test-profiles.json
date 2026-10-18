@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0",
+  "default_profile": "changed",
+  "max_tests": 60,
+  "max_files": 4,
+  "timeout_seconds": 60,
+  "smoke": [
+    "tests/development/money.test.mts",
+    "tests/development/skill-contract.test.mts",
+    "tests/test_runtime_intake.py"
+  ],
+  "automatic_exclude_globs": [
+    "tests/browser/*",
+    "tests/development/*browser*.test.mts",
+    "tests/development/adapter-catalog.test.mts",
+    "tests/test_regression_gate.py",
+    "tests/test_evidence_gate.py",
+    "tests/test_review_integrity.py",
+    "tests/test_native_harness.py"
+  ],
+  "path_mappings": [
+    {"paths": ["tools/dev_tests.py", "planning/development-test-profiles.json", "Makefile", ".vscode/tasks.json"], "tests": ["tests/test_dev_tests.py"]},
+    {"paths": ["package.json", "package-lock.json", ".npmrc", ".node-version", "tests/fixtures/development/command-manifests.v1.json"], "tests": ["tests/test_runtime_intake.py"]},
+    {"paths": ["planning/component-inventory.json", "tests/fixtures/licensing/*"], "tests": ["tests/test_distribution.py"]},
+    {"paths": ["planning/regression-registry.json"], "tests": ["tests/test_regression_gate.py"]},
+    {"paths": ["migrations/smoke/*"], "tests": ["tests/development/store.test.mts"]},
+    {"paths": ["migrations/commerce/*"], "tests": ["tests/development/commerce-resources.test.mts"]},
+    {"paths": ["apps/commerce-api/*return-portability*"], "tests": ["tests/development/return-portability.test.mts", "tests/development/return-portability-browser.test.mts"]},
+    {"paths": ["*.md", "docs/*"], "tests": ["tests/test_repository.py"]}
+  ]
+}

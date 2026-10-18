@@ -18855,6 +18855,48 @@
       "runner_case_id": "M07-G01-SYMLINK-CORE-ALIAS-IS-NOT-INDEPENDENT",
       "source": "tests/development/woocommerce-returns.test.mts",
       "capability_id": "FEATURE-M07-G01"
+    },
+    {
+      "id": "python:test_dev_tests.DevelopmentTests.test_budget_selects_whole_files_and_reports_deferred_scope",
+      "suite": "python",
+      "runner_case_id": "test_dev_tests.DevelopmentTests.test_budget_selects_whole_files_and_reports_deferred_scope",
+      "source": "tests/test_dev_tests.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_dev_tests.DevelopmentTests.test_changed_paths_include_index_worktree_untracked_and_since",
+      "suite": "python",
+      "runner_case_id": "test_dev_tests.DevelopmentTests.test_changed_paths_include_index_worktree_untracked_and_since",
+      "source": "tests/test_dev_tests.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_dev_tests.DevelopmentTests.test_fallback_is_explicit_and_expensive_tests_require_selection",
+      "suite": "python",
+      "runner_case_id": "test_dev_tests.DevelopmentTests.test_fallback_is_explicit_and_expensive_tests_require_selection",
+      "source": "tests/test_dev_tests.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_dev_tests.DevelopmentTests.test_native_failure_and_total_deadline_propagate_without_retry",
+      "suite": "python",
+      "runner_case_id": "test_dev_tests.DevelopmentTests.test_native_failure_and_total_deadline_propagate_without_retry",
+      "source": "tests/test_dev_tests.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_dev_tests.DevelopmentTests.test_native_results_require_expected_unique_complete_passing_ids",
+      "suite": "python",
+      "runner_case_id": "test_dev_tests.DevelopmentTests.test_native_results_require_expected_unique_complete_passing_ids",
+      "source": "tests/test_dev_tests.py",
+      "capability_id": "FEATURE-M00-G07"
+    },
+    {
+      "id": "python:test_dev_tests.DevelopmentTests.test_reverse_imports_follow_helpers_and_deleted_dependencies",
+      "suite": "python",
+      "runner_case_id": "test_dev_tests.DevelopmentTests.test_reverse_imports_follow_helpers_and_deleted_dependencies",
+      "source": "tests/test_dev_tests.py",
+      "capability_id": "FEATURE-M00-G07"
     }
   ],
   "protected_files": [

@@ -1,6 +1,6 @@
 {
-  "source_file_count": 1169,
-  "source_count_reason": "Additive M07-G01–G05 local Woo returns and independent refund records, shared lifecycle and verified notifications, portable TypeScript/Python clients and adapter conformance fixtures; all prior source members, native registrations, capability objects and non-count oracle values retained.",
+  "source_file_count": 1173,
+  "source_count_reason": "Four additive development-profile source files: bounded selector, profile configuration, six focused helper tests and ADR-0032. All prior source paths, registration and capability objects, and non-count oracle values are retained.",
   "component_ids": [
     "git-agent-adaptations",
     "rifare-developer-helpers",

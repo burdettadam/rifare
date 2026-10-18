@@ -1,6 +1,62 @@
 # Rifare development
 
-## Requirements and actual commands
+## Routine development: small checks by default
+
+The owner requested fewer regression tests during development. Use this workflow
+for ordinary edits and local batches of goals, as recorded in
+[ADR-0032](docs/decisions/0032-focused-development-tests.md).
+
+```sh
+make test                                      # default: affected whole test files
+make test-plan                                 # show selected and deferred scope; run nothing
+make test-smoke                                 # fixed 54-case core smoke
+python3 tools/dev_tests.py --files tests/development/money.test.mts
+python3 tools/dev_tests.py --since main         # also include committed branch changes
+make test-full                                 # explicitly requested full local diagnostic
+```
+
+`make` itself and the editor's default test task use the same changed-file
+profile. Without Make, use `python3 tools/dev_tests.py`; on Windows use
+`py -3 tools/dev_tests.py`. Run once after a coherent set of edits. Add another
+small check only to resolve a concrete remaining risk. Routine development uses
+focused review; full regression, repeat fault campaigns and restoration audits
+are explicit integration/milestone/release checkpoint activities. A local batch
+of five development goals does not automatically trigger those broad activities.
+Formal acceptance retains the required full evidence and independent reviews.
+
+The default plan selects at most **60 cases across four whole files**, with a
+**single 60-second deadline** for the invocation. Changed test files come first,
+then nearby importing tests and explicit path mappings. Selection includes staged,
+unstaged and nonignored untracked files. `--since REF` adds committed changes
+since the merge base. Browser wrappers, nested catalog runs and controller/harness
+self-tests are deferred until explicitly selected. A clean checkout, unmatched
+change or affected file that cannot fit the budget uses the labeled smoke fallback.
+The fixed smoke comprises 26 money, 20 skill-contract and eight dependency-intake
+cases. Missing registered test files fail rather than becoming a smoke pass.
+
+Inspect `--plan` when changing a shared helper or unfamiliar area. The report
+lists every selected file, its reason, deferred files and unmapped paths. Static
+imports and mappings are a feedback aid, not a proof of complete impact coverage.
+New tests can run before registration; their IDs are marked exploratory. Dynamic
+case expansion above the planned limit fails the development result and stops
+subsequent files. Use `--files`, `--max-tests`, `--max-files` or `--timeout` only
+for a deliberate larger scope; the default never escalates or retries itself.
+
+Native commands run sequentially. Unit/database tests retain the existing
+network-deny hook; runtime tests retain their established loopback-fixture access.
+Failures, missing/duplicate IDs, skipped or cancelled cases and timeouts cannot
+produce a passing development report. Timed-out process trees are stopped. Each
+run keeps fresh XML, logs and `report.json` under ignored `evidence/development/`.
+A selected pass always records `full_regression: false` and `goal_accepted: false`.
+
+Use an installed Node version supported by `package.json`. To select a local
+executable, use `--node /path/to/node`, `RIFARE_DEV_NODE`, or
+`git config rifare.devNode /path/to/node`; otherwise Node is found on `PATH`.
+Host-specific executable paths are not committed. The original native runners,
+registrations, fixtures, baselines and package scripts remain available. Full
+trusted acceptance follows [its guide](docs/TRUSTED-REGRESSION-GATE.md).
+
+## Requirements and explicit diagnostic commands
 
 The starter requires Git and Python 3.10+ (standard library only). Git Bash is recommended for shell examples on Windows. The explicit smoke profile additionally requires Node with its bundled npm; see the M00-G05 section below. No target-stack container runtime is qualified.
 
@@ -29,7 +85,7 @@ Set your own local Git identity; the bootstrap uses an explicitly nonpersonal id
 ```sh
 git worktree add ../Rifare-M00-G01 -b goal/M00-G01 main
 cd ../Rifare-M00-G01
-python3 tools/verify.py
+python3 tools/dev_tests.py
 ```
 
 Record ownership before starting. Code isolation is not runtime isolation: future instances need separate ports, databases, storage, queues, callback destinations and provider accounts. Qualify that behavior during the owning goal.
@@ -206,7 +262,8 @@ a host-policy failure is not a skip or passing component result.
 
 ## Return resolution diagnostics
 
-Use the existing native runtime and full verification commands. The new module
+Use the changed-file profile for routine edits and explicit native/full commands
+for the checkpoint being assessed. The module
 contract, golden original-payment fixtures, same-source recovery, bounded calls and
 headless demo are described in [RETURN-RESOLUTION.md](docs/RETURN-RESOLUTION.md).
 The financial source is a separate synthetic database, never a real account. No

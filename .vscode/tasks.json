@@ -2,6 +2,108 @@
   "version": "2.0.0",
   "tasks": [
     {
+      "label": "Rifare: test changed files (fast default)",
+      "type": "process",
+      "command": "python3",
+      "args": [
+        "tools/dev_tests.py"
+      ],
+      "windows": {
+        "command": "py",
+        "args": [
+          "-3",
+          "tools/dev_tests.py"
+        ]
+      },
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Rifare: test core smoke (54 cases)",
+      "type": "process",
+      "command": "python3",
+      "args": [
+        "tools/dev_tests.py",
+        "--profile",
+        "smoke"
+      ],
+      "windows": {
+        "command": "py",
+        "args": [
+          "-3",
+          "tools/dev_tests.py",
+          "--profile",
+          "smoke"
+        ]
+      },
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": {
+        "kind": "test",
+        "isDefault": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Rifare: plan development tests",
+      "type": "process",
+      "command": "python3",
+      "args": [
+        "tools/dev_tests.py",
+        "--plan"
+      ],
+      "windows": {
+        "command": "py",
+        "args": [
+          "-3",
+          "tools/dev_tests.py",
+          "--plan"
+        ]
+      },
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": {
+        "kind": "test",
+        "isDefault": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Rifare: full regression (explicit)",
+      "type": "process",
+      "command": "python3",
+      "args": [
+        "tools/verify.py",
+        "--runtime",
+        "--harness"
+      ],
+      "windows": {
+        "command": "py",
+        "args": [
+          "-3",
+          "tools/verify.py",
+          "--runtime",
+          "--harness"
+        ]
+      },
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": {
+        "kind": "test",
+        "isDefault": false
+      },
+      "problemMatcher": []
+    },
+    {
       "label": "Rifare: verify starter",
       "type": "process",
       "command": "python3",
@@ -17,7 +119,7 @@
       },
       "group": {
         "kind": "test",
-        "isDefault": true
+        "isDefault": false
       },
       "problemMatcher": []
     },

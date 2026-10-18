@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "id": "rifare-source-inventory",
-  "revision": 12,
+  "revision": 13,
   "status": "proposed",
   "components": [
     {
@@ -189,6 +189,7 @@
         "docs/decisions/0029-exchange-depth-next-five.md",
         "docs/decisions/0030-return-assistance-routing-and-m06-assessment.md",
         "docs/decisions/0031-second-platform-local-development.md",
+        "docs/decisions/0032-focused-development-tests.md",
         "docs/decisions/README.md",
         "docs/exchange-depth.md",
         "docs/exchange-money.md",
@@ -1073,6 +1074,7 @@
         "packages/development/egress.mts",
         "packages/development/http.mts",
         "packages/development/store.mts",
+        "planning/development-test-profiles.json",
         "templates/ADR.md",
         "templates/GOAL-WORK-RECORD.md",
         "templates/MILESTONE-DECISION.md",
@@ -1141,6 +1143,7 @@
         "tests/harness/fixtures.mts",
         "tests/harness/network-deny.mts",
         "tests/harness/unit.test.mts",
+        "tests/test_dev_tests.py",
         "tests/test_distribution.py",
         "tests/test_evidence_gate.py",
         "tests/test_m03_runtime_budget.py",
@@ -1168,6 +1171,7 @@
         "tools/dev-smoke.mts",
         "tools/dev-stop.mts",
         "tools/dev-target.mts",
+        "tools/dev_tests.py",
         "tools/evidence_gate.py",
         "tools/regression_gate.py",
         "tools/render_plan.py",
