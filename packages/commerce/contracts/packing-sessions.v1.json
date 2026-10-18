@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "contract": "rifare-packing-sessions-v1",
+  "goal_ids": ["M08-G03", "M08-G04"],
+  "qualification": "synthetic_only",
+  "formal_goal_accepted": false,
+  "physical_qualified": false,
+  "inventory_effect": false,
+  "financial_effect": false,
+  "source": {
+    "order_facts": "current canonical order payload.packing, through kernel.ingest",
+    "parcel_facts": "existing fixed CarrierQuoteFixtureSource, with source identity and package digest/revision",
+    "order_fields": ["cancelled", "lines"],
+    "line_fields": ["line_id", "sku", "quantity", "cancelled_ordinals", "backordered_ordinals", "shipped_ordinals", "return_links"],
+    "return_link_fields": ["ordinal", "return_id"],
+    "return_link_meaning": "retained canonical lineage references; no refund, stock movement or return eligibility is inferred"
+  },
+  "limits": {"lines_per_order": 32, "units_per_line": 512, "units_per_order": 1024, "units_per_package": 128, "scan_records_per_session": 2048},
+  "authority": {
+    "reads": ["resource.read", "operation.read"],
+    "mutations": ["resource.read", "operation.read", "warehouse.receive"],
+    "synthetic_shipment_observation_additional_action": "operation.dispatch",
+    "operator_identity": "authenticated kernel session; never a request field",
+    "confirmation": "all expected explicit line/ordinal units must have accepted scans, and the caller must supply current packing revision",
+    "current_rechecks": ["tenant/store", "resource and role permissions", "erasure", "restore quarantine", "source identity", "resource digest/revision", "parcel digest/revision", "current per-unit eligibility", "stored count/scan reconciliation"]
+  },
+  "identity": {
+    "unit": "SHA256 of versioned order resource, line ID and ordinal",
+    "scan": "SHA256 of tenant, store, scanner ID and scan ID, bound to an immutable command digest",
+    "package": "one durable session per tenant/store/package, including after cancellation",
+    "reservation": "one active or shipped allocation per scoped resource/unit enforced by partial unique index",
+    "replay": "same scan command returns its stored outcome without increasing packed count; conflicting use of that scan identity fails",
+    "confirmation": "one durable confirmation per session, with operator, expected counts and allocation/source/parcel digests"
+  },
+  "storage": {
+    "migration": "migrations/commerce/032_packing_sessions.sql",
+    "tables": ["commerce_packing_sessions", "commerce_packing_allocations", "commerce_packing_scans", "commerce_packing_confirmations"],
+    "subject_link": "tenant_id, store_id, resource_id on every row",
+    "private_payload": "body contains operator/scanner IDs, SKU/line/ordinal and return reference/source snapshot details; digest authenticates accidental integrity only",
+    "erasure": "integration-owned PrivacyLifecycle exports scoped records and redacts body while retaining stable operation/unit identities, state and counters",
+    "restore": "existing recovery quarantine blocks all packing mutations; retained allocations and scan IDs continue preventing reuse"
+  },
+  "cancellation": {
+    "shipped_package": "immutable; never release its allocations",
+    "manifested_package": "durable manifest membership, including unknown acknowledgment, blocks cancellation; withdrawal is unassigned",
+    "unshipped_package": "release only unshipped reservations; report only currently eligible released units as available",
+    "cancelled_or_backordered_source_units": "remain unavailable even when their local reservation is released",
+    "unknown_source_units": "retain reservation for manual reconciliation",
+    "return_links": "preserve original unit lineage on both old allocation and reallocated eligible unit"
+  },
+  "tests": {
+    "file": "tests/development/packing-sessions.test.mts",
+    "native_cases": 18,
+    "required_ids": ["CASE-M08-G03-01", "CASE-M08-G03-02", "CASE-M08-G03-03", "PORT-025", "CASE-M08-G04-01", "CASE-M08-G04-02", "CASE-M08-G04-03"],
+    "faults": ["executed isolated source increments the packed count before scan deduplication", "executed isolated source treats every original eligible unit as available for each package"],
+    "original_port_025_boundary": "local scanner observations and no inventory overstatement only; connected physical receipt and browser/scanner hardware remain unqualified"
+  }
+}
