@@ -32,6 +32,7 @@ export class SupplierPurchaseOrders {
    if(p.quantity>1000000||seen.has(p.line_id))throw new Error('PROCUREMENT_LINE_INVALID');seen.add(p.line_id);const term=terms.lines.find((line:Row)=>line.variant_id===p.variant_id&&line.order_unit===p.order_unit);
    if(!term||p.quantity<term.minimum_quantity)throw new Error('PROCUREMENT_UNIT_OR_MINIMUM_INVALID');
    const base=p.quantity*term.conversion.numerator;if(!Number.isSafeInteger(base)||term.conversion.denominator!==1)throw new Error('PROCUREMENT_UNIT_UNSUPPORTED');
+   if(base>1000000000)throw new Error('PROCUREMENT_QUANTITY_LIMIT');
    const amount=money(terms.currency_code,(BigInt(term.unit_cost_minor)*BigInt(p.quantity)).toString());total+=BigInt(amount.minor);
    return {...p,ordered_quantity:p.quantity,ordered_base_quantity:base,purchase_unit:p.order_unit,base_unit:term.base_unit,units_per_purchase:term.conversion.numerator,conversion:term.conversion,base_quantity:base,currency_code:terms.currency_code,unit_cost_minor:term.unit_cost_minor,line_total_minor:amount.minor};
   });money(terms.currency_code,total.toString());return {lines,total_minor:total.toString()};

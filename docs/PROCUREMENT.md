@@ -39,6 +39,11 @@ an immutable PO version. The supported unit subset is integer `each` and `case`
 with an explicit positive integer conversion to `each`. Minimum quantities,
 lead times, currency and exact minor-unit prices are source-bound. Unsupported
 dimensions, implicit conversions and changed prices reject before sending.
+Each line supports at most 1,000,000 purchase units and 1,000,000,000 converted
+base units. Drafting, revisions and the final supplier guard enforce these
+bounds before new supplier effects. The original obligation therefore fits the
+receiving domain even when only part of a large order is received. A historical
+oversized command remains identifiable but cannot create a new supplier effect.
 
 Each line retains its original line ID, SKU/location, ordered purchase quantity,
 base quantity, conversion, currency, unit cost and total. The PO separately pins

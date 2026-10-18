@@ -65,7 +65,8 @@ export class ProcurementFixtureSource {
    exact(line,['line_id','variant_id','location_id','quantity','ordered_quantity','ordered_base_quantity','order_unit','purchase_unit','base_unit','units_per_purchase','conversion','base_quantity','currency_code','unit_cost_minor','line_total_minor']);
    id(line.line_id);id(line.location_id);integer(line.quantity,1);const term=terms.lines.find((t:Row)=>t.variant_id===line.variant_id&&t.order_unit===line.order_unit);
    if(!term||seen.has(line.line_id)||line.quantity<term.minimum_quantity||line.quantity!==line.ordered_quantity||line.purchase_unit!==line.order_unit||line.base_unit!==term.base_unit||canonical(line.conversion)!==canonical(term.conversion)||line.units_per_purchase!==term.conversion.numerator)throw new Error('PROCUREMENT_UNIT_OR_TERMS_CHANGED');seen.add(line.line_id);
-   const base=line.quantity*term.conversion.numerator;if(!Number.isSafeInteger(base)||line.ordered_base_quantity!==base||line.base_quantity!==base||line.currency_code!==c.currency_code||line.unit_cost_minor!==term.unit_cost_minor)throw new Error('PROCUREMENT_LINE_MISMATCH');
+   const base=line.quantity*term.conversion.numerator;if(line.quantity>1000000||base>1000000000)throw new Error('PROCUREMENT_QUANTITY_LIMIT');
+   if(!Number.isSafeInteger(base)||line.ordered_base_quantity!==base||line.base_quantity!==base||line.currency_code!==c.currency_code||line.unit_cost_minor!==term.unit_cost_minor)throw new Error('PROCUREMENT_LINE_MISMATCH');
    const amount=BigInt(term.unit_cost_minor)*BigInt(line.quantity);if(line.line_total_minor!==amount.toString())throw new Error('PROCUREMENT_TOTAL_MISMATCH');total+=amount;
   }if(c.total_minor!==total.toString())throw new Error('PROCUREMENT_TOTAL_MISMATCH');
  }

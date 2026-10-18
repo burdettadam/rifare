@@ -3,6 +3,7 @@
  "service":"packages/commerce/supplier-purchase-orders.mts","source":"packages/adapters/procurement-fixture-source.mts",
  "identity":"Immutable scoped PO ID/version/digest, actual supplier terms source/version/digest, warehouse source identity, catalog pin and line IDs. A separately stored header tracks current version; old version history is retained.",
  "units":"Explicit each/case to integer each conversions, positive quantities, minimum order quantities, currency and exact minor-unit costs. Unsupported dimensions/fractional each, unknown units, stale quotes and changed prices reject.",
+ "quantity_limits":{"maximum_purchase_units_per_line":1000000,"maximum_converted_base_units_per_line":1000000000,"enforcement":"PO drafting/revision and the final native supplier guard; aligns the original obligation with receiving's supported quantity domain."},
  "states":["draft","approved","unknown","sent","acknowledged"],
  "state_rules":"Creating a draft creates no supplier-facing effect. Changes invalidate prior unused approvals and reservations. After a send attempt, preserve the original version and operation for reconciliation. Native acknowledgment and cancellation are explicit immutable observations; cancellation does not imply a payment refund or release budgets.",
  "receipt_getter":"procurementPo(k,scope,{po_id,version,expected_digest}); permission checked, immutable original terms/line costs, original source operation/native IDs, source stage/digest, per-line cancelled_quantity_base and authority_revoked. It does not own receipt counters.",
