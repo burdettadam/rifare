@@ -1,0 +1,8 @@
+{
+  "qualification": "synthetic_local_only",
+  "purchase": {"ordered":10,"unit_cost_minor":"100","initial_on_hand":10,"first_receipt":5,"first_outstanding":5,"complete_on_hand":20,"supplier_return":2,"after_supplier_return":13,"credit_obligation_minor":"200","corrected_unit_cost_minor":"120","corrected_receipt_cost_minor":"600","cost_variance_minor":"100"},
+  "bom": {"planned_good":4,"gross_output":5,"expected_scrap":1,"cotton_g":2500,"buttons_each":10,"component_cost_minor":"2600","output_cost_minor":"2080","scrap_cost_minor":"520","partial_good":2,"partial_wip_cost_minor":"1560"},
+  "initial_stock": {"cotton_g":5000,"buttons_each":40,"finished_each":0},
+  "source_effects": {"receipt_once":1,"completed_output_once":1},
+  "currency_code": "USD"
+}
