@@ -100,4 +100,25 @@ Read [the M09 assessment](docs/M09-QUALIFICATION.md). M07-G99 remains blocked;
 connected G02/G06/G07/G10/G11/G13 and external G14 evidence is not supplied by
 synthetic development. Optional capabilities remain default-disabled, not
 silently excluded or accepted. G99 records the missing formal evidence without
-an automatic full milestone campaign. M10 is unassigned.
+an automatic full milestone campaign. The following ADR-0039 assigns M10.
+
+## Assigned all-goals M10 warranty, partner and trial development
+
+The owner requested all goals for the next milestone after the reviewed M09
+checkpoint. [ADR-0039](docs/decisions/0039-m10-warranty-partners-trials.md)
+assigns M10-G01 through G14 and the G99 assessment from clean `221556c`.
+Three isolated authors cover partner readiness/services, warranties/disputes,
+and delivery-started trials. Root owns shared privacy, storage, metadata,
+the integrated local journey, independent review and nonrelease integration.
+
+The planned focused selection is 22 partner, 17 claims, six trial preparation
+and nine retained privacy cases: 54 cases across four whole files. The existing
+60-case/four-file/60-second invocation limits remain. Authors and reviewers run
+no duplicate product suites. Only concrete failures or consequential corrections
+justify repeating affected whole files.
+
+M07-G99 and formal M10 prerequisites remain open. Connected processor/carrier
+and actual partner agreement, coverage, tax, physical receipt, HSA/FSA and network
+qualification are not supplied by synthetic preparation. G99 retains the original
+demonstration and exit criteria as blocked formal obligations. All existing
+capabilities, tests, contracts and prior source checkpoints remain protected.

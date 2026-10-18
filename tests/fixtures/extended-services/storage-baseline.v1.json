@@ -1,0 +1,1052 @@
+{
+  "version": 1,
+  "protected_base": "221556c379f2ca878e94c50d49eb6fc587680b04",
+  "schema_digest": "580e13a9e01ca6ea702ea8f48f05670599439e40c10898b50bdbc523ae8498cb",
+  "tables": [
+    {
+      "name": "commerce_action_approvals",
+      "surface": "operation_audit",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_action_previews",
+      "surface": "operation_audit",
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_action_readiness",
+      "surface": "security_and_configuration",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_action_receipts",
+      "surface": "operation_audit",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_assistance_receipts",
+      "surface": "agent_task_state",
+      "handling": "customer_content_logical_erase"
+    },
+    {
+      "name": "commerce_attachments",
+      "surface": "attachment_media",
+      "handling": "customer_content_logical_erase"
+    },
+    {
+      "name": "commerce_audit",
+      "surface": "security_and_configuration",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_carrier_events",
+      "surface": "operation_audit",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_cart_recoveries",
+      "surface": "agent_task_state",
+      "handling": "subject_linked_recovery_proposal_cancel_minimize"
+    },
+    {
+      "name": "commerce_case_configurations",
+      "surface": "operation_audit",
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_case_effects",
+      "surface": "operation_audit",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_case_work",
+      "surface": "agent_task_state",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_cases",
+      "surface": "business_resources",
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_catalog_approvals",
+      "surface": "security_and_configuration",
+      "handling": "subject_linked_revoke_minimize_growth_authority"
+    },
+    {
+      "name": "commerce_catalog_changes",
+      "surface": "operation_audit",
+      "handling": "subject_linked_growth_minimized_original_effect_audit"
+    },
+    {
+      "name": "commerce_catalog_evaluations",
+      "surface": "analytics_readmodels",
+      "handling": "subject_linked_redact_text_retain_observation_digest_audit"
+    },
+    {
+      "name": "commerce_challenge_rates",
+      "surface": "security_and_configuration",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_challenges",
+      "surface": "security_and_configuration",
+      "handling": "customer_content_logical_erase"
+    },
+    {
+      "name": "commerce_checkout_assignments",
+      "surface": "analytics_readmodels",
+      "handling": "subject_linked_growth_minimized_unavailable_frozen_denominator_audit"
+    },
+    {
+      "name": "commerce_checkout_experiments",
+      "surface": "analytics_readmodels",
+      "handling": "merchant_configuration_frozen_experiment_denominators_retained"
+    },
+    {
+      "name": "commerce_checkout_exposures",
+      "surface": "analytics_readmodels",
+      "handling": "subject_linked_growth_minimized_unavailable_frozen_denominator_audit"
+    },
+    {
+      "name": "commerce_configuration_drafts",
+      "surface": "security_and_configuration",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_connections",
+      "surface": "security_and_configuration",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_context_tasks",
+      "surface": "agent_task_state",
+      "handling": "customer_content_logical_erase"
+    },
+    {
+      "name": "commerce_control_events",
+      "surface": "operation_audit",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_credential_calls",
+      "surface": "security_and_configuration",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_credential_slots",
+      "surface": "security_and_configuration",
+      "handling": "revocable_security_material"
+    },
+    {
+      "name": "commerce_credential_versions",
+      "surface": "security_and_configuration",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_customer_proof_bindings",
+      "surface": "security_and_configuration",
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_destination_bindings",
+      "surface": "operation_audit",
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_destination_policies",
+      "surface": "security_and_configuration",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_destination_selections",
+      "surface": "operation_audit",
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_disposition_operations",
+      "surface": "operation_audit",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_disposition_units",
+      "surface": "operation_audit",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_edit_events",
+      "surface": "operation_audit",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_edit_inputs",
+      "surface": "operation_audit",
+      "handling": "customer_content_logical_erase"
+    },
+    {
+      "name": "commerce_edit_quotes",
+      "surface": "operation_audit",
+      "handling": "customer_content_logical_erase"
+    },
+    {
+      "name": "commerce_edit_settings",
+      "surface": "security_and_configuration",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_edit_snapshots",
+      "surface": "operation_audit",
+      "handling": "customer_content_logical_erase"
+    },
+    {
+      "name": "commerce_edit_steps",
+      "surface": "operation_audit",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_edit_workflow_pins",
+      "surface": "operation_audit",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_email_action_links",
+      "surface": "security_and_configuration",
+      "handling": "subject_linked_revoke_email_token_minimize_original_edit_identity"
+    },
+    {
+      "name": "commerce_event_consumption",
+      "surface": "integration_replicas",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_event_identities",
+      "surface": "integration_replicas",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_event_projections",
+      "surface": "integration_replicas",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_exchange_currency_bindings",
+      "surface": "operation_audit",
+      "handling": "retained_minimized_business_audit"
+    },
+    {
+      "name": "commerce_exchange_fee_observations",
+      "surface": "operation_audit",
+      "handling": "retained_minimized_business_audit"
+    },
+    {
+      "name": "commerce_exchange_lineage_imports",
+      "surface": "operation_audit",
+      "handling": "retained_minimized_business_audit"
+    },
+    {
+      "name": "commerce_exchange_lineage_nodes",
+      "surface": "operation_audit",
+      "handling": "retained_minimized_business_audit"
+    },
+    {
+      "name": "commerce_exchange_quotes",
+      "surface": "operation_audit",
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_exchange_settings",
+      "surface": "security_and_configuration",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_execution_settings",
+      "surface": "security_and_configuration",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_execution_stops",
+      "surface": "security_and_configuration",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_fulfillment_observations",
+      "surface": "operation_audit",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_fulfillment_operations",
+      "surface": "operation_audit",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_fulfillment_quotes",
+      "surface": "operation_audit",
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_fulfillment_settings",
+      "surface": "security_and_configuration",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_gift_cases",
+      "surface": "operation_audit",
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_gift_challenges",
+      "surface": "security_and_configuration",
+      "handling": "revocable_security_material"
+    },
+    {
+      "name": "commerce_gift_sessions",
+      "surface": "security_and_configuration",
+      "handling": "revocable_security_material"
+    },
+    {
+      "name": "commerce_growth_campaign_approvals",
+      "surface": "security_and_configuration",
+      "handling": "merchant_scoped_growth_configuration_revoke_on_restore"
+    },
+    {
+      "name": "commerce_growth_campaign_recipients",
+      "surface": "support_conversations",
+      "handling": "subject_linked_minimized_campaign_suppression_original_operation"
+    },
+    {
+      "name": "commerce_growth_campaigns",
+      "surface": "security_and_configuration",
+      "handling": "merchant_scoped_growth_configuration_revoke_on_restore"
+    },
+    {
+      "name": "commerce_growth_observations",
+      "surface": "analytics_readmodels",
+      "handling": "subject_linked_growth_minimized_unavailable_frozen_denominator_audit"
+    },
+    {
+      "name": "commerce_instant_obligations",
+      "surface": "operation_audit",
+      "handling": "retained_minimized_business_audit"
+    },
+    {
+      "name": "commerce_instant_observations",
+      "surface": "operation_audit",
+      "handling": "retained_minimized_business_audit"
+    },
+    {
+      "name": "commerce_instant_operations",
+      "surface": "operation_audit",
+      "handling": "retained_minimized_business_audit"
+    },
+    {
+      "name": "commerce_instant_quotes",
+      "surface": "operation_audit",
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_instant_settings",
+      "surface": "security_and_configuration",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_inventory_discrepancies",
+      "surface": "operation_audit",
+      "handling": "subject_linked_redact_minimized_inventory_identity"
+    },
+    {
+      "name": "commerce_inventory_movements",
+      "surface": "operation_audit",
+      "handling": "subject_linked_minimized_inventory_quantitative_audit"
+    },
+    {
+      "name": "commerce_inventory_owners",
+      "surface": "security_and_configuration",
+      "handling": "subject_linked_minimized_inventory_quantitative_audit"
+    },
+    {
+      "name": "commerce_inventory_reservations",
+      "surface": "operation_audit",
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_inventory_snapshots",
+      "surface": "operation_audit",
+      "handling": "subject_linked_minimized_inventory_quantitative_audit"
+    },
+    {
+      "name": "commerce_inventory_transfer_approvals",
+      "surface": "security_and_configuration",
+      "handling": "subject_linked_revoke_minimized_inventory_approval"
+    },
+    {
+      "name": "commerce_inventory_transfer_operations",
+      "surface": "operation_audit",
+      "handling": "subject_linked_minimized_inventory_effect_audit"
+    },
+    {
+      "name": "commerce_inventory_transfers",
+      "surface": "operation_audit",
+      "handling": "subject_linked_minimized_inventory_effect_audit"
+    },
+    {
+      "name": "commerce_knowledge",
+      "surface": "retrieval_index",
+      "handling": "customer_content_logical_erase"
+    },
+    {
+      "name": "commerce_lifecycle_observations",
+      "surface": "operation_audit",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_lifecycle_quotes",
+      "surface": "operation_audit",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_marketing_segments",
+      "surface": "security_and_configuration",
+      "handling": "merchant_scoped_growth_configuration_revoke_on_restore"
+    },
+    {
+      "name": "commerce_marketing_sync_operations",
+      "surface": "operation_audit",
+      "handling": "merchant_scoped_template_original_unknown_effect_audit"
+    },
+    {
+      "name": "commerce_members",
+      "surface": "security_and_configuration",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_migrations",
+      "surface": "security_and_configuration",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_model_budgets",
+      "surface": "security_and_configuration",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_model_circuits",
+      "surface": "security_and_configuration",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_model_reservations",
+      "surface": "security_and_configuration",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_native_change_settings",
+      "surface": "security_and_configuration",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_native_change_snapshots",
+      "surface": "operation_audit",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_native_completed_units",
+      "surface": "operation_audit",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_native_receipts",
+      "surface": "operation_audit",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_native_return_operations",
+      "surface": "operation_audit",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_operation_controls",
+      "surface": "operation_audit",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_operation_keys",
+      "surface": "operation_audit",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_operation_receipts",
+      "surface": "operation_audit",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_operation_targets",
+      "surface": "operation_audit",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_operation_work",
+      "surface": "operation_audit",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_operations",
+      "surface": "operation_audit",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_optional_configurations",
+      "surface": "security_and_configuration",
+      "handling": "merchant_scoped_optional_configuration_disabled_revoked_on_restore"
+    },
+    {
+      "name": "commerce_optional_consents",
+      "surface": "security_and_configuration",
+      "handling": "subject_hash_bound_optional_purpose_consent_withdraw_minimize"
+    },
+    {
+      "name": "commerce_optional_deletions",
+      "surface": "operation_audit",
+      "handling": "subject_hash_bound_optional_original_effect_deletion_audit"
+    },
+    {
+      "name": "commerce_optional_media",
+      "surface": "attachment_media",
+      "handling": "subject_hash_bound_optional_media_erase_retention_bound"
+    },
+    {
+      "name": "commerce_optional_operations",
+      "surface": "operation_audit",
+      "handling": "subject_hash_bound_optional_original_effect_deletion_audit"
+    },
+    {
+      "name": "commerce_optional_quality",
+      "surface": "security_and_configuration",
+      "handling": "merchant_scoped_optional_configuration_disabled_revoked_on_restore"
+    },
+    {
+      "name": "commerce_order_edits",
+      "surface": "operation_audit",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_order_observations",
+      "surface": "integration_replicas",
+      "handling": "customer_content_logical_erase"
+    },
+    {
+      "name": "commerce_packing_allocations",
+      "surface": "business_resources",
+      "handling": "subject_linked_redact_minimized_package_identity"
+    },
+    {
+      "name": "commerce_packing_confirmations",
+      "surface": "business_resources",
+      "handling": "subject_linked_redact_minimized_package_identity"
+    },
+    {
+      "name": "commerce_packing_scans",
+      "surface": "business_resources",
+      "handling": "subject_linked_redact_minimized_package_identity"
+    },
+    {
+      "name": "commerce_packing_sessions",
+      "surface": "business_resources",
+      "handling": "subject_linked_redact_minimized_package_identity"
+    },
+    {
+      "name": "commerce_permissions",
+      "surface": "security_and_configuration",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_policy_pins",
+      "surface": "security_and_configuration",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_policy_versions",
+      "surface": "security_and_configuration",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_prevention_configurations",
+      "surface": "retrieval_index",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_prevention_confirmations",
+      "surface": "analytics_readmodels",
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_prevention_experiments",
+      "surface": "analytics_readmodels",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_prevention_exposures",
+      "surface": "analytics_readmodels",
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_prevention_members",
+      "surface": "analytics_readmodels",
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_prevention_outcomes",
+      "surface": "analytics_readmodels",
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_prevention_previews",
+      "surface": "analytics_readmodels",
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_privacy_events",
+      "surface": "privacy_and_restore_controls",
+      "handling": "suppression_or_restore_control"
+    },
+    {
+      "name": "commerce_privacy_holds",
+      "surface": "privacy_and_restore_controls",
+      "handling": "suppression_or_restore_control"
+    },
+    {
+      "name": "commerce_privacy_resources",
+      "surface": "privacy_and_restore_controls",
+      "handling": "suppression_or_restore_control"
+    },
+    {
+      "name": "commerce_privacy_subjects",
+      "surface": "privacy_and_restore_controls",
+      "handling": "suppression_or_restore_control"
+    },
+    {
+      "name": "commerce_profiles",
+      "surface": "security_and_configuration",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_read_jobs",
+      "surface": "agent_task_state",
+      "handling": "customer_content_logical_erase"
+    },
+    {
+      "name": "commerce_receipt_payloads",
+      "surface": "operation_audit",
+      "handling": "customer_content_logical_erase"
+    },
+    {
+      "name": "commerce_received_units",
+      "surface": "operation_audit",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_receiving_reviews",
+      "surface": "operation_audit",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_receiving_scans",
+      "surface": "operation_audit",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_receiving_sessions",
+      "surface": "operation_audit",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_reconciliation_drift",
+      "surface": "operation_audit",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_reconciliation_runs",
+      "surface": "operation_audit",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_recovery_state",
+      "surface": "privacy_and_restore_controls",
+      "handling": "suppression_or_restore_control"
+    },
+    {
+      "name": "commerce_replacement_orders",
+      "surface": "operation_audit",
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_resolution_allocations",
+      "surface": "operation_audit",
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_resolution_observations",
+      "surface": "operation_audit",
+      "handling": "minimized_financial_identifiers_retained_access_blocked_on_erasure"
+    },
+    {
+      "name": "commerce_resolution_operations",
+      "surface": "operation_audit",
+      "handling": "minimized_financial_identifiers_retained_access_blocked_on_erasure"
+    },
+    {
+      "name": "commerce_resolution_plans",
+      "surface": "operation_audit",
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_resolution_quotes",
+      "surface": "operation_audit",
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_resolution_settings",
+      "surface": "security_and_configuration",
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_resolution_units",
+      "surface": "operation_audit",
+      "handling": "minimized_financial_identifiers_retained_access_blocked_on_erasure"
+    },
+    {
+      "name": "commerce_resources",
+      "surface": "business_resources",
+      "handling": "customer_content_logical_erase"
+    },
+    {
+      "name": "commerce_restored_operations",
+      "surface": "privacy_and_restore_controls",
+      "handling": "suppression_or_restore_control"
+    },
+    {
+      "name": "commerce_return_closures",
+      "surface": "operation_audit",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_return_drafts",
+      "surface": "operation_audit",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_return_evidence",
+      "surface": "attachment_media",
+      "handling": "subject_linked_blob_erase_and_expire"
+    },
+    {
+      "name": "commerce_return_labels",
+      "surface": "operation_audit",
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_return_lifecycle_events",
+      "surface": "operation_audit",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_return_overrides",
+      "surface": "operation_audit",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_return_parcels",
+      "surface": "operation_audit",
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_return_policy_packs",
+      "surface": "security_and_configuration",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_return_quotes",
+      "surface": "operation_audit",
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_return_requests",
+      "surface": "operation_audit",
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_return_review_events",
+      "surface": "operation_audit",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_return_settings",
+      "surface": "security_and_configuration",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_return_shipments",
+      "surface": "operation_audit",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_return_workflow_pins",
+      "surface": "operation_audit",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_risk_assessments",
+      "surface": "analytics_readmodels",
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_risk_reviews",
+      "surface": "analytics_readmodels",
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_secrets",
+      "surface": "security_and_configuration",
+      "handling": "revocable_security_material"
+    },
+    {
+      "name": "commerce_security_events",
+      "surface": "security_and_configuration",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_sessions",
+      "surface": "security_and_configuration",
+      "handling": "revocable_security_material"
+    },
+    {
+      "name": "commerce_shipping_label_approvals",
+      "surface": "security_and_configuration",
+      "handling": "subject_linked_redact_minimized_package_identity"
+    },
+    {
+      "name": "commerce_shipping_label_operations",
+      "surface": "operation_audit",
+      "handling": "subject_linked_minimized_shipping_monetary_audit"
+    },
+    {
+      "name": "commerce_shipping_manifest_events",
+      "surface": "operation_audit",
+      "handling": "subject_linked_redact_minimized_package_identity"
+    },
+    {
+      "name": "commerce_shipping_manifest_packages",
+      "surface": "business_resources",
+      "handling": "subject_linked_redact_minimized_package_identity"
+    },
+    {
+      "name": "commerce_shopify_connections",
+      "surface": "security_and_configuration",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_shopping_carts",
+      "surface": "business_resources",
+      "handling": "subject_linked_growth_allowlist_minimized_original_identity"
+    },
+    {
+      "name": "commerce_simulator",
+      "surface": "security_and_configuration",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_simulator_receipts",
+      "surface": "integration_replicas",
+      "handling": "customer_content_logical_erase"
+    },
+    {
+      "name": "commerce_skill_activation",
+      "surface": "security_and_configuration",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_skill_activation_log",
+      "surface": "security_and_configuration",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_skill_approvals",
+      "surface": "security_and_configuration",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_skill_archive",
+      "surface": "security_and_configuration",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_skill_installations",
+      "surface": "security_and_configuration",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_skill_releases",
+      "surface": "security_and_configuration",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_skill_revocations",
+      "surface": "security_and_configuration",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_skills",
+      "surface": "security_and_configuration",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_stores",
+      "surface": "security_and_configuration",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_support_attempts",
+      "surface": "support_conversations",
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_support_completions",
+      "surface": "analytics_readmodels",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_support_consent",
+      "surface": "support_conversations",
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_support_consent_events",
+      "surface": "support_conversations",
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_support_contacts",
+      "surface": "support_conversations",
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_support_costs",
+      "surface": "analytics_readmodels",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_support_deliveries",
+      "surface": "support_conversations",
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_support_delivery_events",
+      "surface": "support_conversations",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_support_documents",
+      "surface": "analytics_readmodels",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_support_events",
+      "surface": "operation_audit",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_support_links",
+      "surface": "support_conversations",
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_support_messages",
+      "surface": "support_conversations",
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_support_ownership",
+      "surface": "security_and_configuration",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_support_rule_jobs",
+      "surface": "support_conversations",
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_upsell_confirmations",
+      "surface": "security_and_configuration",
+      "handling": "subject_linked_revoke_minimize_growth_authority"
+    },
+    {
+      "name": "commerce_upsell_offers",
+      "surface": "business_resources",
+      "handling": "subject_linked_growth_allowlist_minimized_original_identity"
+    },
+    {
+      "name": "commerce_warehouse_return_events",
+      "surface": "integration_replicas",
+      "handling": "subject_linked_redact_minimized_warehouse_event_identity"
+    },
+    {
+      "name": "commerce_warehouse_settings",
+      "surface": "security_and_configuration",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_webhook_inbox",
+      "surface": "integration_replicas",
+      "handling": "customer_content_logical_erase"
+    },
+    {
+      "name": "commerce_webhook_routes",
+      "surface": "security_and_configuration",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_woo_event_observations",
+      "surface": "integration_replicas",
+      "handling": "subject_linked_cache_delete"
+    },
+    {
+      "name": "commerce_woo_return_sources",
+      "surface": "integration_replicas",
+      "handling": "subject_linked_cache_delete"
+    },
+    {
+      "name": "commerce_woo_rma_bindings",
+      "surface": "integration_replicas",
+      "handling": "subject_linked_redact_minimized_receipt_identity"
+    },
+    {
+      "name": "commerce_woocommerce_connections",
+      "surface": "security_and_configuration",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_woocommerce_observations",
+      "surface": "integration_replicas",
+      "handling": "customer_content_logical_erase"
+    },
+    {
+      "name": "commerce_worker_completions",
+      "surface": "agent_task_state",
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_worker_effects",
+      "surface": "agent_task_state",
+      "handling": "subject_linked_pseudonymize_and_disable"
+    },
+    {
+      "name": "commerce_worker_grants",
+      "surface": "security_and_configuration",
+      "handling": "configuration_or_minimized_audit"
+    },
+    {
+      "name": "commerce_worker_submissions",
+      "surface": "agent_task_state",
+      "handling": "subject_linked_pseudonymize_and_disable"
+    }
+  ]
+}
