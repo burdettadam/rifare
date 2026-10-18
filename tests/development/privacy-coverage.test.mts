@@ -17,6 +17,8 @@ import { SecretVault } from '../../packages/commerce/secrets.mts';
 import { activateDiagnosticRestore } from '../../packages/commerce/safe-recovery.mts';
 import { assertRecoveryEgress } from '../../packages/commerce/data-guards.mts';
 import { exportMerchant, exportMerchantSuppression, importMerchant, merchantSnapshotDigest } from '../../packages/commerce/merchant-portability.mts';
+import { jsonValue } from '../../packages/commerce/configuration-values.mts';
+import { readAdapterCatalog, validateAdapterCatalog } from '../../packages/conformance/adapter-catalog.mts';
 
 const SENTINEL='SYNTHETIC_PRIVACY_CUSTOMER_NOTE';
 const PHOTO=JSON.parse(readFileSync(new URL('../fixtures/return-intake/photo.v1.json',import.meta.url),'utf8')).base64;
@@ -142,6 +144,12 @@ test('M07-G14-ALL-170-TABLES-HAVE-EXPLICIT-SURFACES',()=>usingSupport(f=>{
   assert.ok(r.tables.every((t:any)=>t.surface&&t.handling));assert.equal(r.local_inventory_current,true);
   assert.equal(r.deployment_coverage_verified,false);assert.equal(r.privacy_qualified,false);assert.equal(r.physical_erasure,false);
   assert.ok(r.outstanding.some((x:any)=>x.surface==='provider_copies'));assert.ok(r.outstanding.some((x:any)=>x.surface==='recovery_files_and_database_pages'));
+  // The additive catalog retains all prior obligations. Its dedicated bounded
+  // decoder must not widen the generic configuration-input limit.
+  const catalog=readAdapterCatalog(),checked=validateAdapterCatalog(catalog);
+  assert.equal(checked.external_qualification,false);assert.equal(checked.direct_fixture_count,47);
+  assert.throws(()=>jsonValue({value:'x'.repeat(131073)}),/CONFIGURATION_INVALID/);
+  assert.throws(()=>validateAdapterCatalog({...catalog,fixture_administration:'x'.repeat(262145)}),/CONFIGURATION_INVALID/);
 }));
 
 test('M07-G14-MISSING-AND-UNKNOWN-SURFACES-BLOCK',()=>usingSupport(f=>{
