@@ -50,7 +50,12 @@ test('CASE-M07-G03-03',()=>usingReturnPortability(async f=>{
  f.support.ownership.takeover(f.owner.scope,{case_id:f.caseId,expected_generation:1,reason:'provider_unavailable'});assert.throws(()=>worker.returnContext(grant.token,audience,lease.generation),/WORK_ACCESS_DENIED|WORK_FENCE_REJECTED/);
  const newGrant=worker.leases.issue(f.owner.scope,{case_id:f.caseId,lifetime_ms:100000},audience),newLease=worker.leases.claim(newGrant.token,audience,10000),context=worker.returnContext(newGrant.token,audience,newLease.generation);
  assert.equal(context.operations[0].id,op.id);assert.equal(context.operations[0].receipt_id,op.receipt.id);assert.ok(context.blockers.some((b:any)=>b.id===op.id));
- await f.executor.reconcile(f.owner.scope,op.id);f.advance(1);f.gatewaySource.settle(op.id);await f.executor.reconcile(f.owner.scope,op.id);
+ await f.executor.reconcile(f.owner.scope,op.id);
+ // An adversarial closed-RMA display remains unrelated to the accepted, unsettled
+ // payment. This is source-state test administration, not a cancellation approval.
+ const closure={state:'cancelled',reason:'adversarial_closed_rma_display'};f.db.prepare('INSERT INTO commerce_return_closures VALUES(?,?,?,?,?,?,?,?,?,?)').run(f.a.tenant,f.a.store,f.request!.id,f.caseId,f.order().id,1,'cancelled',f.intake.read(f.a.scope,f.caseId).receipt_id,canonical(closure),contentDigest(closure));
+ assert.throws(()=>f.refunds.render(f.owner.scope,f.caseId,op.id,'return_refund_completed_v1'),/REFUND_NOT_SETTLED/);f.db.prepare('DELETE FROM commerce_return_closures WHERE request_id=?').run(f.request!.id);
+ f.advance(1);f.gatewaySource.settle(op.id);await f.executor.reconcile(f.owner.scope,op.id);
  const queued=f.support.delivery.queue(f.owner.scope,f.message(op.id));f.mailSource.fault='after';assert.equal((await f.support.delivery.dispatch(f.owner.scope,queued.operation_id)).state,'unknown');
  f.support.ownership.takeover(f.a.scope,{case_id:f.caseId,expected_generation:2,reason:'operator_requested'});assert.equal(f.support.delivery.queue(f.a.scope,f.message(op.id)).operation_id,queued.operation_id);
  await f.support.delivery.reconcile(f.a.scope,queued.operation_id);await f.support.delivery.dispatch(f.a.scope,queued.operation_id);await f.executor.dispatch(f.a.scope,op.id);event.receive('second_delivery_same_order');
