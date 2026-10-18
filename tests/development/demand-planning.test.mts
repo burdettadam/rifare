@@ -100,6 +100,10 @@ test('M11-FORECAST-QUANTITY-01',()=>usingDemand(f=>{
   }
   const zero=f.forecast('zero-demand',1,2);assert.equal(zero.quantity,0);assert.equal(zero.lower_units,0);assert.equal(zero.upper_units,0);assert.equal(zero.uncertainty.confidence_level,null);
   const difficult=f.forecast('intermittent',2,2);assert.equal(difficult.quantity,0);assert.equal(difficult.lower_units,0);assert.equal(difficult.upper_units,6);
+  // A later observed correction may support retrospective analysis, but cannot
+  // be relabeled as knowledge available at the earlier forecast origin.
+  f.lateCorrection();f.snapshot('later-knowledge',f.day(9));f.evaluate('later-evaluation','later-knowledge');
+  assert.throws(()=>f.forecast('backdated-forecast',0,2,'later-evaluation'),/FORECAST_CUTOFF_AFTER_ORIGIN/);
 }));
 test('M11-FORECAST-AUTHORITY-01',()=>usingDemand(f=>{
   f.snapshot();f.evaluate();const forecast=f.forecast();
