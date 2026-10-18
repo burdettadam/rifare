@@ -134,8 +134,35 @@ const switched = coordinator.cutover(
 Comparison reads canonical source IDs/versions, case/configuration histories,
 operation commands, financial amounts/states, receipt digests, source-native
 references, support observations, inventory reservations, order-edit stages and
-fulfillment/instant-operation histories. It reports differences and unresolved
-work. It does not perform a provider request or treat local history agreement as
+fulfillment/instant-operation histories. Native return requests and operations
+include their original quote/preview/receipt bindings, exact source/request
+digests, native IDs, native-body digests and lifecycle states. The comparison
+reconstructs the approved native input and validates the recorded body separately.
+A completed native return missing from the mirror is a history conflict even
+when neither side reports pending work. A malformed body or identity fails
+closed; redacted original request evidence remains unresolved for cutover.
+
+The fixed current-authority projection also compares these existing final-effect
+inputs, including each table's current columns:
+
+| Authority class | Compared records |
+| --- | --- |
+| Actors and credentials | Active memberships and permissions, stable session authority, worker/gift grants, customer proof bindings, lease ownership, credential versions and revocation metadata; encrypted envelopes are represented only by their hash. |
+| Configuration and approval | Current profiles, policies/pins, skill installations/releases/activation/revocations, approval identity/uses/revocation/expiry, readiness, source connection capabilities, and return/resolution/fulfillment/edit/exchange/instant/warehouse settings. |
+| Return restrictions | Native snapshots/completed units/receipts, receiving and disposition records, return closures/workflow pins, destination and gift bindings, evidence scan/erasure state, risk/prevention authority and financial obligations. Evidence bytes have a deterministic hash and length in the projection. |
+| Contact and support authority | Nonlocal support documents, sender/channel/rule configuration, ownership, rule-job identity/state, contact binding/address digests, consent events and current consent, and model budget/circuit/reservation state. |
+| Stops and privacy | Merchant and deployment-wide execution stops/control events, erasure subjects/resource tombstones, privacy holds and privacy events. NULL-scoped deployment stops are included explicitly. |
+
+Consent events are checked against their body digests and current consent rows;
+erased consent remains withdrawn and bound to the current tombstone. Verified
+customer consent writes require the same live migration writer context as other
+mutations, while retaining the existing verified-customer permission rules.
+Erasure and hold methods retain their existing `privacy.manage` write checks.
+
+The projection excludes incidental access timestamps, audit bookkeeping and
+installation-control documents. It is a finite reviewed boundary; adding a new
+table that governs effects requires updating it. Comparison reports differences
+and unresolved work. It does not perform a provider request or treat local history agreement as
 independent proof of live settlement. The cutover repeats the comparison under
 the held coordinator lock, verifies the supplied history digest and current
 epoch, rejects unresolved effects/unfinished executions, and changes one owner.
@@ -154,6 +181,30 @@ quarantine. A coordinator cutover does not activate it, re-enable credentials,
 unrevoke approvals, dispatch old refunds or resume copied queues. The focused
 integration case exercises exactly this export/import/cutover sequence and
 observes the quarantine and egress denials.
+
+The result's `comparison_mode` makes the two supported comparisons explicit:
+
+- `exact_writable_authority` requires exact current authority and effect history
+  for the two writable diagnostic installations.
+- `quarantined_import_history_only` requires an actual recovery quarantine and
+  a valid import receipt bound to the same snapshot/source identity. It verifies
+  the destination's actual disabling fields, then normalizes only the importer's
+  named changes: disabled credential slots/webhook routes/execution, revoked
+  readiness/approvals/overrides/support documents, revoked prevention
+  confirmations, and revoked/expired copied work. Every other configuration
+  field, digest, stop, hold, consent/erasure row and effect identity remains exact.
+  The original receipt may precede an updated erasure checkpoint; current
+  tombstones are still checked and compared. Store bootstrap, local memberships,
+  permissions, sessions/proofs/grants and vault authority are destination-only
+  in this mode, as required by merchant import.
+
+A matched quarantine comparison grants no activation: the result always reports
+`live_activation_supported: false`. A cutover using this mode may designate only
+the imported quarantine, whose existing egress/write restrictions continue to
+apply. Transfer from a quarantined import to a writable installation is rejected
+with `MIGRATION_IMPORT_CANNOT_ACTIVATE`; rollback may still compare and pause both.
+Missing receipts, changed destination pause fields, unsupported recovery states
+or other authority differences fail closed.
 
 ### Rollback is a pause
 

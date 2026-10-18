@@ -3,6 +3,7 @@ import {id,integer,exact,digest} from './kernel.mts';
 import {canonical,contentDigest,jsonValue} from './configuration-values.mts';
 import {SupportConversations} from './support-conversations.mts';
 import {supportCase,checkedDocument,saveDocument} from './support-core.mts';
+import {assertMigrationAction} from './migration-fence.mts';
 
 export function emailAddress(input:unknown) {if(typeof input!=='string'||input.length>254||!/^[-A-Za-z0-9.!#$%&'*+/=?^_`{|}~]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(input))throw new Error('EMAIL_INVALID');return input.toLowerCase();}
 export class SupportConsent {
@@ -30,7 +31,7 @@ export class SupportConsent {
  record(scope:Scope,input:unknown) {const p=exact(jsonValue(input),['case_id','sender_id','channel','purpose','state','event_id','source_version','effective_at','source_ref']);
   id(p.sender_id);id(p.event_id);id(p.source_ref);integer(p.source_version,1);integer(p.effective_at);
   if(!['email','sms'].includes(p.channel)||!['transactional','marketing','*'].includes(p.purpose)||!['granted','withdrawn'].includes(p.state)||p.purpose==='*'&&p.state!=='withdrawn'||p.effective_at>this.k.clock())throw new Error('CONSENT_INPUT_INVALID');
-  return this.k.transaction(()=>{const {s,c}=supportCase(this.k,scope,p.case_id),customer=s.role==='customer';
+  return this.k.transaction(()=>{assertMigrationAction(this.k,'support.consent');const {s,c}=supportCase(this.k,scope,p.case_id),customer=s.role==='customer';
    if(!customer)this.k.authorize(scope,'support.consent',c.resource_id);
    if(p.state==='granted'&&!customer)throw new Error('CUSTOMER_CONSENT_REQUIRED');
    checkedDocument(this.k,s,'sender',p.sender_id);
