@@ -8,4 +8,13 @@ Read [implementation](docs/SUPPORT-OPERATIONS.md), [maintainer review](docs/SUPP
 
 Continue from accumulated `main` with native Git commands and the existing two development skills. Preserve original tests, branches, scope/policy pins, uncertain results, consent/erasure records and receipt identity. Neither new agents, request keys, route names nor elapsed provider idempotency windows authorize repeating an uncertain effect.
 
-M06-G06 through M06-G10 add funded replacement lineage, original paired-currency refunds, final-fee observations and bounded instant exchanges. M06-G11 through M06-G14 add reviewable risk indicators, qualified native destinations, customer-confirmed prevention and versioned merchant policy packs. This batch stops at the blocked M06-G99 integration assessment; M07 is untouched. Read [M06 qualification](docs/M06-QUALIFICATION.md) and [ADR-0030](docs/decisions/0030-return-assistance-routing-and-m06-assessment.md). Final native results, independent reviews and the local merge decision are in the accompanying handoff evidence. M03-G99, M04-G99, M05-G99 and formal M06/connected qualification remain open. No hosted publication, release tag, real sender, paid model, production deployment or external write was authorized.
+M06-G06 through M06-G10 add funded replacement lineage, original paired-currency refunds, final-fee observations and bounded instant exchanges. M06-G11 through M06-G14 add reviewable risk indicators, qualified native destinations, customer-confirmed prevention and versioned merchant policy packs. This batch stops at the blocked M06-G99 integration assessment; M07-G01 through M07-G05 are now locally integrated; see the current M07 qualification record. Read [M06 qualification](docs/M06-QUALIFICATION.md) and [ADR-0030](docs/decisions/0030-return-assistance-routing-and-m06-assessment.md). Final native results, independent reviews and the local merge decision are in the accompanying handoff evidence. M03-G99, M04-G99, M05-G99 and formal M06/connected qualification remain open. No hosted publication, release tag, real sender, paid model, production deployment or external write was authorized.
+
+## Current M07 development batch
+
+M07-G06 through M07-G10 are assigned under ADR-0033: evidence-bound compatibility,
+merchant export/import, single-writer migration, exercised operator runbooks and
+installation/upgrade preparation. Development uses the focused test defaults in
+DEVELOPMENT.md. The prior five M07 goals and their full-test handoff are retained.
+This local assignment does not accept the blocked M05/M06 prerequisites or grant
+connected, independent-machine or release qualification.
