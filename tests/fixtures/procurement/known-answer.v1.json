@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "qualification": "synthetic_known_answer_not_supplier_qualification",
+  "provenance": "Predeclared arithmetic before implementation: twenty expected units minus ten available and six outstanding equals four; receiving two moves them from outstanding to stock; cancelling two remaining units then requires six.",
+  "demand_units": 20,
+  "initial_available": 10,
+  "open_po_units": 6,
+  "initial_replenishment_units": 4,
+  "partial_received_units": 2,
+  "available_after_partial": 12,
+  "outstanding_after_partial": 4,
+  "replenishment_after_partial": 4,
+  "cancelled_units": 2,
+  "outstanding_after_cancellation": 2,
+  "replenishment_after_cancellation": 6,
+  "unit_cost_minor": "250",
+  "five_units_total_minor": "1250",
+  "six_units_total_minor": "1500",
+  "currency_code": "USD",
+  "race_budget_minor": "2000",
+  "race_approved_total_minor": "1250",
+  "race_remaining_minor": "750"
+}

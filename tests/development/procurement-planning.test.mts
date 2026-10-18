@@ -1,0 +1,150 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { DatabaseSync } from 'node:sqlite';
+import { mkdtempSync,readFileSync,rmSync,writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { pathToFileURL } from 'node:url';
+import { ProcurementFixtureSource } from '../../packages/adapters/procurement-fixture-source.mts';
+import { usingProcurement,oracle,nativeSendCount } from './procurement-planning-helpers.mts';
+
+async function mutant(file:string,marker:string,replacement:string,run:(module:any)=>unknown){
+ const directory=mkdtempSync(join(tmpdir(),'rifare-procurement-mutant-'));
+ try{const url=new URL('../../packages/commerce/'+file,import.meta.url),original=readFileSync(url,'utf8');assert.equal(original.split(marker).length,2);
+  const source=original.replace(marker,replacement).replace(/from '([.][^']+)'/g,(_all,path)=>"from '"+new URL(path,url).href+"'");
+  const target=join(directory,'mutant.mts');writeFileSync(target,source);await run(await import(pathToFileURL(target).href));
+ }finally{rmSync(directory,{recursive:true,force:true});}
+}
+
+test('M11-G04-01',()=>usingProcurement(async f=>{
+ await f.openPO('incoming',oracle.open_po_units);
+ const p=f.plan('replenishment-one');
+ assert.equal(p.quantity,oracle.initial_replenishment_units);assert.equal(p.base_quantity,4);
+ assert.equal(p.assumptions.available_units,oracle.initial_available);assert.equal(p.assumptions.incoming_units,6);
+ assert.equal(p.assumptions.target_units,20);assert.equal(p.state,'draft');assert.equal(p.purchasing_authorized,false);
+ assert.equal(p.forecast.digest,f.forecast.digest);assert.equal(p.assumptions.lead_time_days,2);assert.equal(nativeSendCount(f),1);
+ assert.throws(()=>f.planning.read(f.b.scope,p.id),/NOT_FOUND|ACCESS_DENIED/);
+},true));
+
+test('M11-G04-02',()=>usingProcurement(async f=>{
+ assert.throws(()=>f.planning.propose(f.a.scope,{...f.planInput('forged'),forecast_id:'caller-forged',expected_forecast_digest:'0'.repeat(64)}),/NOT_FOUND|FORECAST/);
+ const draft=f.plan('advisory-only');assert.equal(draft.state,'draft');assert.equal(nativeSendCount(f),0);
+ await assert.rejects(f.approvals.send(f.a.scope,{po_id:draft.id,version:1,expected_digest:draft.digest,operation_id:'forecast-is-not-a-po'}),/NOT_FOUND|PURCHASE/);
+ f.forecasts.revoke(f.reviewer,f.forecast.approval_id);
+ assert.throws(()=>f.plan('revoked-forecast'),/FORECAST|APPROVAL|REVIEW/);assert.equal(nativeSendCount(f),0);
+},true));
+
+test('M11-G04-03',async()=>{
+ await usingProcurement(async f=>{
+  const po=await f.openPO('partial-po',6);await f.receive(po,2,'receipt-partial');
+  const partial=f.plan('after-partial');assert.equal(f.balance().on_hand,oracle.available_after_partial);
+  assert.equal(partial.assumptions.incoming_units,oracle.outstanding_after_partial);assert.equal(partial.quantity,oracle.replenishment_after_partial);
+  f.supplierSource.observeCancellation(po.operation_id,{event_id:'supplier-cancel-two',line_id:'line-a',quantity_base:2});
+  await f.approvals.reconcile(f.a.scope,{po_id:po.id,version:po.version,expected_digest:po.digest});
+  const cancelled=f.plan('after-cancellation');assert.equal(cancelled.assumptions.incoming_units,oracle.outstanding_after_cancellation);
+  assert.equal(cancelled.quantity,oracle.replenishment_after_cancellation);assert.equal(f.balance().on_hand,12);
+  assert.equal(f.approvals.budget(f.owner,'procurement-budget').obligated_minor,'1500');
+ },true);
+ await mutant('replenishment-planning.mts','const incoming = integer(input.incoming_units);','const incoming = 0;',module=>{
+  const broken=module.calculateReplenishment({target_units:20,available_units:10,incoming_units:6,units_per_purchase:1,minimum_quantity:1});
+  assert.equal(broken.quantity,10);assert.throws(()=>assert.equal(broken.quantity,oracle.initial_replenishment_units,'Open POs must reduce a replenishment suggestion'),assert.AssertionError);
+ });
+});
+
+test('M11-G05-01',()=>usingProcurement(f=>{
+ const po=f.draft('five-units',5);assert.equal(po.state,'draft');assert.equal(po.source_stage,'not_sent');
+ assert.equal(po.total_minor,oracle.five_units_total_minor);assert.equal(po.currency_code,oracle.currency_code);
+ assert.equal(po.lines[0].ordered_base_quantity,5);assert.equal(po.lines[0].unit_cost_minor,'250');
+ assert.deepEqual(po.lines[0].conversion,{numerator:1,denominator:1});assert.equal(po.warehouse_source_identity,f.inventory.source.identity);
+ assert.equal(po.supplier_terms_digest,f.terms.digest);assert.equal(po.operation_id,null);assert.equal(po.native_id,null);
+ assert.equal(nativeSendCount(f),0);assert.equal(f.balance().on_hand,10);
+ assert.throws(()=>f.orders.current(f.b.scope,{po_id:po.id,version:po.version,expected_digest:po.digest}),/NOT_FOUND|ACCESS_DENIED/);
+}));
+
+test('M11-G05-02',()=>usingProcurement(f=>{
+ assert.throws(()=>f.orders.draft(f.a.scope,{...f.draftInput('unsupported',5),lines:[{line_id:'line-a',variant_id:'sku-a',location_id:'location-a',quantity:5,order_unit:'pallet'}]}),/UNIT|TERMS/);
+ assert.throws(()=>f.supplierSource.recordSupplierTerms({...f.termsInput,version:2,currency_code:'FAKE'}),/CURRENCY/);
+ f.supplierSource.recordSupplierTerms({...f.termsInput,version:2,lines:f.termsInput.lines.map((line:any)=>({...line,unit_cost_minor:'300'}))});
+ assert.throws(()=>f.draft('changed-price',5),/TERMS_CHANGED/);assert.equal(nativeSendCount(f),0);
+}));
+
+test('M11-G05-03',async()=>{
+ await usingProcurement(async f=>{
+  const po=f.draft('edited-po',5);f.approve(po);
+  const changed=f.orders.revise(f.a.scope,{po_id:po.id,expected_version:1,expected_terms_digest:f.terms.digest,lines:[{line_id:'line-a',variant_id:'sku-a',location_id:'location-a',quantity:6,order_unit:'each'}]});
+  assert.equal(changed.version,2);assert.notEqual(changed.digest,po.digest);assert.equal(changed.state,'draft');assert.equal(changed.total_minor,'1500');
+  await assert.rejects(f.approvals.send(f.a.scope,{po_id:changed.id,version:2,expected_digest:changed.digest,operation_id:'edited-unapproved'}),/APPROVAL/);
+  assert.equal(f.approvals.budget(f.owner,'procurement-budget').obligated_minor,'0');assert.equal(nativeSendCount(f),0);
+  assert.equal(f.orders.current(f.a.scope,{po_id:po.id,version:1,expected_digest:po.digest}).state,'superseded');
+ });
+ await mutant('procurement-core.mts',"return {state:'draft',source_stage:'not_sent'};","return {state:'acknowledged',source_stage:'acknowledged'};",module=>{
+  const broken=module.initialPurchaseOrderState();assert.throws(()=>assert.deepEqual(broken,{state:'draft',source_stage:'not_sent'},'Draft creation has no supplier acknowledgment'),assert.AssertionError);
+ });
+});
+
+test('M11-G06-01',()=>usingProcurement(async f=>{
+ const po=f.draft('approved-po',5);const approval=f.approve(po);assert.equal(approval.po_digest,po.digest);
+ const sent=await f.approvals.send(f.a.scope,{po_id:po.id,version:po.version,expected_digest:po.digest,operation_id:'original-send'});
+ assert.equal(sent.state,'sent');assert.equal(sent.source_stage,'sent');assert.equal(sent.payment_state,'unobserved');assert.equal(sent.invoice_state,'unobserved');
+ assert.equal(nativeSendCount(f),1);assert.equal(f.approvals.budget(f.owner,'procurement-budget').obligated_minor,'1250');
+ const again=await f.approvals.send(f.a.scope,{po_id:po.id,version:po.version,expected_digest:po.digest,operation_id:'original-send'});assert.equal(again.operation_id,'original-send');assert.equal(nativeSendCount(f),1);
+ f.supplierSource.acknowledge('original-send',{event_id:'supplier-acknowledged'});
+ const acknowledged=await f.approvals.reconcile(f.a.scope,{po_id:po.id,version:po.version,expected_digest:po.digest});
+ assert.equal(acknowledged.state,'acknowledged');assert.equal(acknowledged.native_id,sent.native_id);assert.equal(acknowledged.payment_state,'unobserved');
+}));
+
+test('M11-G06-02',async()=>{
+ await usingProcurement(f=>{
+  const own=f.orders.draft(f.owner,f.draftInput('owner-drafted',5));assert.throws(()=>f.approvals.approve(f.owner,{po_id:own.id,version:own.version,expected_digest:own.digest,budget_id:'procurement-budget',expires_at:f.now()+60000}),/SELF_APPROVAL/);
+  const expensive=f.draft('over-budget',50);assert.throws(()=>f.approve(expensive),/BUDGET/);assert.equal(nativeSendCount(f),0);
+ });
+ await usingProcurement(async f=>{
+  const po=f.draft('expired',5);f.approve(po);f.advance(60001);
+  await assert.rejects(f.approvals.send(f.a.scope,{po_id:po.id,version:po.version,expected_digest:po.digest,operation_id:'expired-send'}),/APPROVAL_EXPIRED/);assert.equal(nativeSendCount(f),0);
+ });
+});
+
+test('M11-G06-03',async()=>{
+ await usingProcurement(async f=>{
+  f.approvals.configureBudget(f.owner,{budget_id:'race-budget',resource_id:f.resource.id,expected_revision:0,currency_code:'USD',limit_minor:oracle.race_budget_minor,approval_limit_minor:'2000',expires_at:f.now()+600000});
+  const a=f.draft('race-a',5),b=f.draft('race-b',5);
+  const results=await Promise.allSettled([a,b].map(po=>Promise.resolve().then(()=>f.approve(po,'race-budget'))));
+  assert.equal(results.filter(r=>r.status==='fulfilled').length,1);assert.equal(results.filter(r=>r.status==='rejected').length,1);
+  const budget=f.approvals.budget(f.owner,'race-budget');assert.equal(budget.obligated_minor,oracle.race_approved_total_minor);assert.equal(budget.remaining_minor,oracle.race_remaining_minor);assert.equal(nativeSendCount(f),0);
+ });
+ await mutant('procurement-core.mts',"if (draftedBy === approvingActor) throw new Error('PROCUREMENT_SELF_APPROVAL_DENIED');","if (false && draftedBy === approvingActor) throw new Error('PROCUREMENT_SELF_APPROVAL_DENIED');",module=>{
+  assert.throws(()=>assert.throws(()=>module.assertProcurementSeparation('drafter','drafter'),/SELF_APPROVAL/),assert.AssertionError);
+ });
+});
+
+test('PORT-031-M11',()=>usingProcurement(async f=>{
+ const drafted=f.orders.draft(f.agent,f.draftInput('agent-drafted',5));
+ assert.throws(()=>f.approvals.approve(f.agent,{po_id:drafted.id,version:drafted.version,expected_digest:drafted.digest,budget_id:'procurement-budget',expires_at:f.now()+60000}),/ACCESS_DENIED|SELF_APPROVAL/);
+ f.approve(drafted);await f.approvals.send(f.a.scope,{po_id:drafted.id,version:drafted.version,expected_digest:drafted.digest,operation_id:'agent-approved-send'});
+ f.supplierSource.acknowledge('agent-approved-send',{event_id:'agent-po-ack'});const po=await f.approvals.reconcile(f.a.scope,{po_id:drafted.id,version:drafted.version,expected_digest:drafted.digest});
+ await f.receive(po,2,'port-partial');await f.receipts.reconcile(f.a.scope,'port-partial-operation');
+ const summary=f.receipts.summary(f.a.scope,{po_id:po.id,version:po.version,expected_digest:po.digest});
+ assert.equal(summary.lines[0].received,2);assert.equal(summary.lines[0].outstanding,3);assert.equal(f.balance().on_hand,12);
+ assert.equal(f.inventory.source.movements(f.resource.id).filter((row:any)=>row.reference_id==='port-partial').length,1);
+}));
+
+test('M11-PROCUREMENT-SOURCE-BOUNDARY',async()=>{
+ await usingProcurement(async f=>{
+  const po=f.draft('unknown-po',5);f.approve(po);f.supplierSource.fault='after';
+  const unknown=await f.approvals.send(f.a.scope,{po_id:po.id,version:po.version,expected_digest:po.digest,operation_id:'unknown-original'});
+  assert.equal(unknown.state,'unknown');assert.equal(nativeSendCount(f),1);assert.equal(f.approvals.budget(f.owner,'procurement-budget').obligated_minor,'1250');
+  await assert.rejects(f.approvals.send(f.a.scope,{po_id:po.id,version:po.version,expected_digest:po.digest,operation_id:'new-key-for-same-po'}),/ORIGINAL_SEND_REQUIRED/);
+  const original=await f.approvals.reconcile(f.a.scope,{po_id:po.id,version:po.version,expected_digest:po.digest});assert.equal(original.operation_id,'unknown-original');assert.equal(original.state,'sent');assert.equal(nativeSendCount(f),1);
+ });
+ await usingProcurement(async f=>{
+  const po=f.draft('late-price-change',5);f.approve(po);const send=f.supplierSource.send.bind(f.supplierSource);
+  f.supplierSource.send=async command=>{f.supplierSource.recordSupplierTerms({...f.termsInput,version:2,lines:f.termsInput.lines.map((line:any)=>({...line,unit_cost_minor:'300'}))});return send(command);};
+  const unknown=await f.approvals.send(f.a.scope,{po_id:po.id,version:po.version,expected_digest:po.digest,operation_id:'changed-at-boundary'});
+  assert.equal(unknown.state,'unknown');assert.equal(nativeSendCount(f),0);
+  const command=f.approvals.originalCommand(f.a.scope,'changed-at-boundary');
+  const db=new DatabaseSync(f.supplierFilename);try{const reopened=new ProcurementFixtureSource(db,f.supplierOptions);
+   await assert.rejects(reopened.send(command),/GUARD/);assert.equal(await reopened.lookup('changed-at-boundary'),null);
+  }finally{db.close();}
+  assert.equal(f.approvals.budget(f.owner,'procurement-budget').obligated_minor,'1250');
+ });
+});
