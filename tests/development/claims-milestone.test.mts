@@ -8,6 +8,37 @@ import { WarrantyClaims } from '../../packages/commerce/warranty-claims.mts';
 import { contentDigest } from '../../packages/commerce/configuration-values.mts';
 import { Permissions } from '../../packages/commerce/authorization.mts';
 import { ExecutionStops } from '../../packages/commerce/execution-stops.mts';
+import { PartnerFixtureSource } from '../../packages/adapters/partner-fixture-source.mts';
+import { InternationalHandoffs } from '../../packages/commerce/international-handoffs.mts';
+import { installPartnerReadiness,partnerTerms } from './partner-services-helpers.mts';
+
+test('M10-PREP-INTEGRATION-01',()=>usingClaims(f=>{
+  const claim=f.claim(),packet=f.packet(),order=f.order(),sourceDb=new DatabaseSync(':memory:');
+  try {
+    const source=new PartnerFixtureSource(sourceDb,{mode:'fixture',identity:'milestone-handoff',tenant:f.a.tenant,store:f.a.store},f.now);
+    const configuration=source.configure({service:'international_handoff',account_id:'milestone-handoff-account',revision:1,
+      regions:['US_TEST'],expires_at:f.now()+120000,terms:partnerTerms('international_handoff')});
+    const context={service:'international_handoff',account_id:'milestone-handoff-account',source_identity:source.identity,
+      source_config_digest:configuration.digest,region:'US_TEST',capability:'observe'};
+    const {readiness}=installPartnerReadiness(f.kernel,f.owner.scope,f.reviewer.scope,context);
+    const handoffs=new InternationalHandoffs(f.kernel,source),plan={journey_id:'milestone-journey',resource_id:order.id,region:'US_TEST',units:['purchased-unit'],
+      legs:[{leg_id:'first',from_site:'origin',to_site:'hub'},{leg_id:'second',from_site:'hub',to_site:'destination'}]};
+    const journey=handoffs.plan(f.a.scope,plan);
+    assert.equal(journey.all_completed,false);assert.deepEqual(packet.missing,claimsOracle.dispute.missing);
+    assert.equal(packet.assertions.some((fact:any)=>fact.key==='customer_acknowledgement'),false);
+    readiness.outage(f.owner.scope,{service:context.service,account_id:context.account_id,unavailable:true});
+    const unavailable=readiness.inspect(f.a.scope,context);
+    assert.equal(unavailable.ready,false);assert.ok(unavailable.reasons.includes('PARTNER_OUTAGE'));
+    assert.equal(unavailable.alternative,'merchant_review_without_partner_promise');
+    assert.throws(()=>handoffs.plan(f.a.scope,{...plan,journey_id:'replacement-journey'}),/PARTNER_UNAVAILABLE/);
+    assert.deepEqual(f.warranty.read(f.a.scope,claim.id),claim);assert.deepEqual(f.packets.read(f.a.scope,packet.id),packet);
+    const retained=handoffs.read(f.a.scope,plan.journey_id);
+    assert.deepEqual(retained.legs.map((leg:any)=>leg.state),['not_started','not_started']);
+    assert.equal(retained.all_completed,false);assert.equal(retained.final_cost_minor,'0');assert.equal(retained.stock_effects,0);
+    assert.equal(claim.cash_settled,false);assert.equal(claim.external_qualified,false);assert.equal(packet.external_qualified,false);
+    assert.equal(f.source.effects().length,0);assert.equal(claimsNativeCount(f),0);
+  } finally {sourceDb.close();}
+}));
 
 test('CASE-M10-G02-01',()=>usingClaims(f=>{const r=f.register();assert.equal(r.product_id,claimsOracle.warranty.product_id);assert.equal(r.line_id,claimsOracle.warranty.line_id);assert.equal(r.unit_index,2);assert.equal(r.terms.version,1);assert.equal(r.terms.warranty_days,365);assert.equal(r.proof.purchase_id,'purchase-shirt');assert.equal(r.proof.order_version,f.order().source_version);assert.equal(r.registration_consent,true);assert.equal(JSON.stringify(r).includes('shopper-apparel@'),false);assert.equal(JSON.stringify(r).includes('session_hash'),false);assert.throws(()=>f.registrations.read(f.b.scope,r.id),/NOT_FOUND|SOURCE_SCOPE/);}));
 test('CASE-M10-G02-02',()=>usingClaims(f=>{f.register();assert.throws(()=>f.register('shirt',{registration_id:'duplicate'}),/SERIAL_ALREADY_REGISTERED/);const purchase=f.claimsSource.purchase('purchase-shirt');f.claimsSource.seedPurchase({...purchase,purchase_id:'aliased-purchase',serial_number:'ALTERED-SERIAL'});assert.throws(()=>f.register('shirt',{registration_id:'aliased-unit',purchase_id:'aliased-purchase'}),/WARRANTY_UNIT_ALREADY_REGISTERED/);assert.throws(()=>f.register('shirt',{registration_id:'unknown',purchase_id:'unknown'}),/PURCHASE_UNVERIFIED/);assert.throws(()=>f.register('shirt',{registration_id:'terms',terms_version:9}),/WARRANTY_TERMS_UNSUPPORTED/);assert.throws(()=>f.register('hat',{consent:false}),/REGISTRATION_CONSENT_REQUIRED/);changeClaimCustomer(f);assert.throws(()=>f.register('shoe'),/CUSTOMER_VERIFICATION_REQUIRED/);assert.equal(f.db.prepare('SELECT count(*) n FROM commerce_warranty_registrations').get().n,1);}));

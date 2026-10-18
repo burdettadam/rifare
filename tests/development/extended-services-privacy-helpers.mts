@@ -97,12 +97,25 @@ function assertRevoked(db:any,s:any) {
   for(const row of rows(db,'commerce_protection_confirmations',s))assert.notEqual(row.state,'confirmed');
 }
 function repeatHashOnly(f:any,x:any,s:any,hash:string) {
+  const trialQuotes=x.obligation_id?rows(f.db,'commerce_instant_quotes',s).filter((row:any)=>row.obligation_id===x.obligation_id):[];
+  if(x.tables.includes('commerce_delivery_trials'))assert.ok(trialQuotes.length,'The real trial authorization produced a canonical quote');
+  for(const row of trialQuotes) {
+    const body={...JSON.parse(row.body),unexpected_private_copy:PRIVATE_COPY};
+    f.db.prepare('UPDATE commerce_instant_quotes SET body=?,digest=? WHERE tenant_id=? AND store_id=? AND id=?')
+      .run(canonical(body),contentDigest(body),s.tenant_id,s.store_id,row.id);
+  }
   for(const table of x.subject_tables)for(const row of rows(f.db,table,s).filter((row:any)=>row.resource_id===x.resource_id||row.subject_hash===hash)) {
     const body={...JSON.parse(row.body),unexpected_private_copy:PRIVATE_COPY},keys=keyColumns(f.db,table);
     f.db.prepare(`UPDATE ${table} SET body=?,digest=? WHERE ${keys.map((key:string)=>key+'=?').join(' AND ')}`)
       .run(canonical(body),contentDigest(body),...keys.map((key:string)=>row[key]));
   }
   f.kernel.transaction(()=>eraseSelected(f.kernel,s,[],hash,f.now()));assertMinimized(f.db,s,x,hash);
+  for(const original of trialQuotes) {
+    const row=rows(f.db,'commerce_instant_quotes',s).find((row:any)=>row.id===original.id);
+    assert.ok(row,'Retain the original trial quote identity');
+    assert.equal(row.body.includes(PRIVATE_COPY),false,'Hash-only replay minimizes a typed trial quote after its body binding was scrubbed');
+    assert.equal(contentDigest(JSON.parse(row.body)),row.digest);
+  }
 }
 
 /** Called inside the retained privacy case; no additional registered test. */
