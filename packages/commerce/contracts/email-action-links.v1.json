@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "id": "rifare-email-action-links",
+  "version": "1.0.0",
+  "goal": "M09-G09",
+  "qualification": "synthetic_local_development",
+  "connected_qualified": false,
+  "production_qualified": false,
+  "operations": [
+    "issue",
+    "preview",
+    "confirm",
+    "emailActionHandler"
+  ],
+  "authority": "current CommerceKernel permission, scoped resource, immutable reviewed state, recovery and original effect identity",
+  "tests": [
+    "CASE-M09-G09-01",
+    "CASE-M09-G09-02",
+    "CASE-M09-G09-03"
+  ],
+  "named_fault": "Cancel an order on scanner HTTP GET.",
+  "source_effects": "Only existing canonical SupportDelivery or OrderEdits may send messages or cancel orders. MarketingFixtureSource can sync a separate synthetic native template.",
+  "formal_goal_accepted": false,
+  "http": {
+    "GET": "generic read-only fallback, no link lookup or token consumption",
+    "HEAD": "same read-only response with empty body",
+    "POST": "existing authenticated customer session plus current proof binding, scoped unexpired link, exact preview, confirmed true",
+    "operation": "already independently approved canonical order.cancel only",
+    "idempotency": "customer confirmation retains original edit ID; repeats inspect original state; unknown source steps use existing operator reconciliation",
+    "unavailable": [
+      "arbitrary refund",
+      "consent grant",
+      "live provider cancellation",
+      "browser qualification"
+    ]
+  }
+}

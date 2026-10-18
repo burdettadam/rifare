@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "id": "rifare-campaign-delivery",
+  "version": "1.0.0",
+  "goal": "M09-G07",
+  "qualification": "synthetic_local_preparation",
+  "connected_qualified": false,
+  "production_qualified": false,
+  "operations": [
+    "SupportDelivery.queueCampaign",
+    "SupportDelivery.dispatch",
+    "SupportDelivery.reconcile",
+    "GrowthCampaigns.summary"
+  ],
+  "authority": "current CommerceKernel permission, scoped resource, immutable reviewed state, recovery and original effect identity",
+  "tests": [
+    "M09-G07-PREP-01",
+    "M09-G07-PREP-02",
+    "M09-G07-PREP-03",
+    "M09-PREP-PORT-026"
+  ],
+  "named_fault": "Freeze consent at approval instead of rechecking the final send.",
+  "source_effects": "Only existing canonical SupportDelivery or OrderEdits may send messages or cancel orders. MarketingFixtureSource can sync a separate synthetic native template.",
+  "formal_goal_accepted": false,
+  "delivery": {
+    "approval_fields": [
+      "copy",
+      "offer",
+      "audience definition and digest",
+      "sender revision",
+      "schedule",
+      "budget",
+      "unit estimate",
+      "experiment",
+      "recovery predicate"
+    ],
+    "final_checks": [
+      "consent and blanket suppression",
+      "contact version",
+      "current support owner and permissions",
+      "sender source identity",
+      "exact campaign and approval",
+      "current source facts",
+      "schedule",
+      "holdout",
+      "current cart purchase and abandonment",
+      "stops and recovery"
+    ],
+    "stage": "provider accepted is not delivered",
+    "cost": "approved synthetic unit estimate only; actual provider bill unavailable"
+  }
+}

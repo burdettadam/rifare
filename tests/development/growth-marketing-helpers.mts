@@ -44,20 +44,20 @@ export function marketingFixture(){
     const original=f.order();f.kernel.ingest(f.a.scope,{kind:'order',source_system:'synthetic',external_id:original.external_id,source_version:original.source_version+1,source_updated_at:f.now(),customer_id:original.customer_id,payload:{...original.payload,marketing_eligibility:{eligible:true,bot:false}}});
     const experiment=(extras:Row={})=>({experiment_id:'checkout-one',version:1,starts_at:f.now(),ends_at:f.now()+1000,attribution_window_ms:1000,followup_through_at:f.now()+2000,currency:'USD',variants:[{id:'treatment',weight:5000},{id:'holdout',weight:5000}],members:members.map(m=>m.case_id),...extras});
     const enroll=()=>{if(members.length===1){shopper(2);shopper(3);shopper(5);}return experiments.configure(f.owner.scope,experiment());};
-    const definition=(extras:Row={})=>({segment_id:'segment-one',expected_revision:0,definition:{country:'US_TEST',required_tag:'growth',minimum_spend_minor:'0',required_fields:['country','tags','spend_minor']},...extras});
+    const definition=(extras:Row={})=>({segment_id:'segment-one',expected_revision:0,definition:{country:'US_TEST',required_tag:'growth',minimum_spend_minor:'0',required_fields:['country','tags','spend_minor']},template:{headline_key:'welcome',body_key:'plain',offer_id:'offer-five'},...extras});
     function segment(){try{return segments.read(f.a.scope,'segment-one');}catch{const d=segments.define(f.a.scope,definition());segments.approve(f.reviewer.scope,{segment_id:d.id,expected_digest:d.digest,expires_at:f.now()+60000});return segments.read(f.a.scope,d.id);}}
-    const draftInput=(extras:Row={})=>({campaign_id:'campaign-one',expected_revision:0,segment_id:'segment-one',headline_key:'welcome',body_key:'plain',offer_id:'offer-five',sender_id:'sender_one',starts_at:f.now(),ends_at:f.now()+60000,budget_minor:'12',unit_cost_minor:'3',experiment_id:null,recovery_after_ms:null,...extras});
+    const draftInput=(extras:Row={})=>({campaign_id:'campaign-one',expected_revision:0,segment_id:'segment-one',headline_key:'welcome',body_key:'plain',offer_id:'offer-five',sender_id:'sender_one',starts_at:f.now(),ends_at:extras.experiment_id?experiments.inspect(f.a.scope,extras.experiment_id).ends_at:f.now()+60000,budget_minor:'12',unit_cost_minor:'3',experiment_id:null,recovery_after_ms:null,...extras});
     function draft(extras:Row={}){segment();return campaigns.draft(f.a.scope,draftInput(extras));}
-    function ready(extras:Row={}){const d=draft(extras);campaigns.approve(f.reviewer.scope,{campaign_id:d.id,expected_digest:d.digest,expires_at:f.now()+60000});campaigns.schedule(f.a.scope,d.id);return d;}
+    function ready(extras:Row={}){const d=draft(extras);campaigns.approve(f.reviewer.scope,{campaign_id:d.id,expected_digest:d.digest,expires_at:d.body.ends_at});campaigns.schedule(f.a.scope,d.id);return d;}
     function grant(m=first,state='granted',version=1){return f.consent.record(m.customer,{case_id:m.case_id,sender_id:'sender_one',channel:'email',purpose:'marketing',state,event_id:'growth_consent_'+m.case_id+'_'+version,source_version:version,effective_at:f.now(),source_ref:'verified_customer_click'});}
     const queue=(m=first,campaign_id='campaign-one')=>delivery.queueCampaign(f.a.scope,{campaign_id,case_id:m.case_id,link_id:m.link.id,expected_generation:f.ownership.inspect(f.a.scope,m.case_id)!.generation});
-    const event=(m:Row,extras:Row)=>marketingSource.observe({event_id:'event_'+m.case_id,resource_id:m.resource_id,customer_id:m.customer_id,kind:'purchase',purchase_id:'purchase_'+m.case_id,channel:'web',at:f.now(),amount_minor:'10000',category:null,through_at:null,complete:false,...extras});
-    function golden(contaminate=false){
+    const event=(m:Row,extras:Row)=>marketingSource.observe({event_id:'event_'+m.case_id,resource_id:m.resource_id,customer_id:m.customer_id,kind:'purchase',purchase_id:'purchase_'+m.case_id,channel:'web',at:f.now(),amount_minor:'10000',category:null,through_at:null,complete:false,cost_coverage:null,...extras});
+    function golden(contaminate=false,missingCosts=false){
       enroll();const began=f.now();for(const m of members.slice(0,2))experiments.expose(f.a.scope,{experiment_id:'checkout-one',case_id:m.case_id,channel:'email',offer_shown:true,event_id:'offer_'+m.case_id});
       if(contaminate)experiments.expose(f.a.scope,{experiment_id:'checkout-one',case_id:members[2].case_id,channel:'other_connected_fixture',offer_shown:true,event_id:'leak'});
       f.advance(100);const observations=[event(first,{event_id:'purchase_t'}),event(members[2],{event_id:'purchase_h'}),event(first,{event_id:'purchase_t_email',channel:'email'})];
       f.advance(1400);observations.push(event(first,{event_id:'refund_t',kind:'refund',at:f.now(),amount_minor:'3000'}),event(first,{event_id:'cost_t',kind:'cost',amount_minor:'2000',category:'goods'}),event(members[2],{event_id:'cost_h',kind:'cost',amount_minor:'1000',category:'goods'}));
-      f.advance(500);for(const m of members)observations.push(event(m,{event_id:'coverage_'+m.case_id,kind:'coverage',purchase_id:null,amount_minor:'0',through_at:began+2000,complete:true}));
+      f.advance(500);for(const m of members)observations.push(event(m,{event_id:'coverage_'+m.case_id,kind:'coverage',purchase_id:null,amount_minor:'0',through_at:began+2000,complete:true,cost_coverage:{goods:m===first?(missingCosts?null:'2000'):m===members[2]?'1000':'0',shipping:'0',payment:'0',marketing:'0'}}));
       for(const observation of observations)measurement.importEvent(f.a.scope,'checkout-one',observation.event_id);
       return measurement.report(f.a.scope,'checkout-one');
     }
@@ -85,4 +85,20 @@ export async function usingCancellation(fn:(f:Row)=>unknown){return usingEdits(a
 
 /** Root uses this on the integrated shopping source; no parallel cart owner. */
 export function attachMarketingRecovery(f:Row,carts:Row){const recovery=new CartRecovery(f.kernel,carts,f.campaigns);f.campaigns.attachRecovery(recovery);return recovery;}
+
+/** Populates every marketing table except email links; use usingCancellation for
+ * those against its existing approved cancellation. No private live data. */
+export async function populateMarketingPrivacy(f:ReturnType<typeof marketingFixture>){
+  const {installShoppingCart}=await import('./growth-shopping-helpers.mts');
+  const shop=await installShoppingCart(f);
+  try{
+    f.enroll();f.experiments.expose(f.a.scope,{experiment_id:'checkout-one',case_id:'case_one',channel:'checkout',offer_shown:true,event_id:'privacy-exposure'});
+    const event=f.event(f.first,{event_id:'privacy-purchase'});f.measurement.importEvent(f.a.scope,'checkout-one',event.event_id);
+    const segment=f.segment();f.marketingSource.fault='after';
+    await f.segments.sync(f.a.scope,{operation_id:'privacy-template-original',segment_id:segment.id,headline_key:'welcome',body_key:'plain',offer_id:'offer-five'});
+    f.grant();const campaign=f.ready({recovery_after_ms:100}),recovery=attachMarketingRecovery(f,shop.carts);f.advance(101);
+    const proposal=recovery.propose(f.a.scope,{cart_id:shop.cart_id,campaign_id:campaign.id}),queued=f.queue();f.source.fault='after';await f.delivery.dispatch(f.a.scope,queued.operation_id);
+    return {shop,recovery,recovery_id:proposal.id,operation_id:queued.operation_id,sync_operation_id:'privacy-template-original',experiment_id:'checkout-one',campaign_id:campaign.id,resource_id:f.first.resource_id,customer_id:f.first.customer_id,denominators:{treatment:2,holdout:2},cleanup:()=>shop.cleanup()};
+  }catch(error){shop.cleanup();throw error;}
+}
 

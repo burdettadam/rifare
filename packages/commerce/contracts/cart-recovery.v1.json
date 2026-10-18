@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "id": "rifare-cart-recovery",
+  "version": "1.0.0",
+  "goal": "M09-G08",
+  "qualification": "synthetic_local_development",
+  "connected_qualified": false,
+  "production_qualified": false,
+  "operations": [
+    "propose",
+    "inspect",
+    "final"
+  ],
+  "authority": "current CommerceKernel permission, scoped resource, immutable reviewed state, recovery and original effect identity",
+  "tests": [
+    "CASE-M09-G08-01",
+    "CASE-M09-G08-02",
+    "CASE-M09-G08-03"
+  ],
+  "named_fault": "Send recovery outreach without checking the current cart purchase and abandonment state.",
+  "source_effects": "Only existing canonical SupportDelivery or OrderEdits may send messages or cancel orders. MarketingFixtureSource can sync a separate synthetic native template.",
+  "formal_goal_accepted": false
+}

@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "id": "rifare-growth-campaigns",
+  "version": "1.0.0",
+  "goal": "M09-G05",
+  "qualification": "synthetic_local_development",
+  "connected_qualified": false,
+  "production_qualified": false,
+  "operations": [
+    "draft",
+    "approve",
+    "schedule",
+    "read"
+  ],
+  "authority": "current CommerceKernel permission, scoped resource, immutable reviewed state, recovery and original effect identity",
+  "tests": [
+    "CASE-M09-G05-01",
+    "CASE-M09-G05-02",
+    "CASE-M09-G05-03"
+  ],
+  "named_fault": "Schedule generated content without independent approval.",
+  "source_effects": "Only existing canonical SupportDelivery or OrderEdits may send messages or cancel orders. MarketingFixtureSource can sync a separate synthetic native template.",
+  "formal_goal_accepted": false
+}

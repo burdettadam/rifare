@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "id": "rifare-growth-measurement",
+  "version": "1.0.0",
+  "goal": "M09-G04",
+  "qualification": "synthetic_local_development",
+  "connected_qualified": false,
+  "production_qualified": false,
+  "operations": [
+    "importEvent",
+    "report"
+  ],
+  "authority": "current CommerceKernel permission, scoped resource, immutable reviewed state, recovery and original effect identity",
+  "tests": [
+    "CASE-M09-G04-01",
+    "CASE-M09-G04-02",
+    "CASE-M09-G04-03",
+    "TEST-034",
+    "PORT-027"
+  ],
+  "named_fault": "Count every post-email purchase as incremental revenue.",
+  "source_effects": "Only existing canonical SupportDelivery or OrderEdits may send messages or cancel orders. MarketingFixtureSource can sync a separate synthetic native template.",
+  "formal_goal_accepted": false,
+  "measurement": {
+    "denominator": "all frozen eligible assigned customers, including missing or erased outcomes",
+    "conversion_unit": "one original native purchase ID across channels",
+    "attribution": "last eligible offer touch within frozen attribution window",
+    "outcomes": "purchase during enrollment window; original refunds/costs through frozen followup end; source coverage required",
+    "money": "USD exact integer minor amounts with explicit half-even holdout scaling and retained rational residue",
+    "uncertainty": "conservative difference of Wilson conversion proportion intervals; margin uncertainty unavailable",
+    "promotion": "never automatic",
+    "cost_coverage": "Each source coverage record explicitly certifies goods/shipping/payment/marketing total amounts; null is unknown, and imported original event sums must equal those totals."
+  }
+}

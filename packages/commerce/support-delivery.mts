@@ -16,9 +16,14 @@ export interface RefundMessageReader {
  readonly k:CommerceKernel;
  render(scope:Scope,caseId:string,operationId:string,templateId:string):Row;
 }
+export interface CampaignMessageReader {
+ readonly k:CommerceKernel;
+ render(scope:Scope,campaignId:string,caseId:string,phase:'queue'|'send'):Row;
+ reserve(scope:Scope,campaignId:string,caseId:string,operationId:string):void;
+}
 export class SupportDelivery {
- readonly k:CommerceKernel;readonly consent:SupportConsent;readonly tracking:SupportTracking;readonly sources:ReadonlyMap<string,SupportSource>;readonly refunds:RefundMessageReader|null;
- constructor(k:CommerceKernel,tracking:SupportTracking,sources:SupportSource[]=[],refunds:RefundMessageReader|null=null){if(refunds&&refunds.k!==k)throw new Error('REFUND_MESSAGE_SOURCE_UNAVAILABLE');this.k=k;this.tracking=tracking;this.refunds=refunds;this.consent=new SupportConsent(k);const map=new Map<string,SupportSource>();for(const source of sources){if(map.has(source.identity))throw new Error('SOURCE_IDENTITY_CONFLICT');map.set(source.identity,source);}this.sources=map;}
+ readonly k:CommerceKernel;readonly consent:SupportConsent;readonly tracking:SupportTracking;readonly sources:ReadonlyMap<string,SupportSource>;readonly refunds:RefundMessageReader|null;readonly campaigns:CampaignMessageReader|null;
+ constructor(k:CommerceKernel,tracking:SupportTracking,sources:SupportSource[]=[],refunds:RefundMessageReader|null=null,campaigns:CampaignMessageReader|null=null){if(refunds&&refunds.k!==k)throw new Error('REFUND_MESSAGE_SOURCE_UNAVAILABLE');if(campaigns&&campaigns.k!==k)throw new Error('CAMPAIGN_MESSAGE_SOURCE_UNAVAILABLE');this.k=k;this.tracking=tracking;this.refunds=refunds;this.campaigns=campaigns;this.consent=new SupportConsent(k);const map=new Map<string,SupportSource>();for(const source of sources){if(map.has(source.identity))throw new Error('SOURCE_IDENTITY_CONFLICT');map.set(source.identity,source);}this.sources=map;}
  #refund(scope:Scope,caseId:string,operationId:string,templateId:string){if(!this.refunds)throw new Error('REFUND_MESSAGE_SOURCE_UNAVAILABLE');return this.refunds.render(scope,caseId,operationId,templateId);}
  #source(s:Row,row:Row) {const source=this.sources.get(row.source_identity);if(!source||source.tenant!==s.tenant_id||source.store!==s.store_id||source.account!==row.account_id||source.contract!==row.source_contract)throw new Error('SUPPORT_SOURCE_UNAVAILABLE');return source;}
  #row(scope:Scope,opId:string,action='support.read') {const k=this.k,s=k.require(scope);id(opId);const row=k.db.prepare('SELECT * FROM commerce_support_deliveries WHERE tenant_id=? AND store_id=? AND operation_id=?').get(s.tenant_id,s.store_id,opId) as Row;
@@ -41,6 +46,20 @@ export class SupportDelivery {
    const purpose=SUPPORT_TEMPLATES[p.template_id as keyof typeof SUPPORT_TEMPLATES].purpose;
    const payload={kind:'email',account_id:sender.body.account_id,from:sender.body.address,to:contact.address,subject:refund?view.subject:p.template_id==='marketing_test_v1'?'Synthetic offer':'Your order status',text,purpose,template_id:p.template_id,case_id:c.id,link_id:link.id,resource_id:c.resource_id,source_digest:view.source_digest,contact_revision:contact.revision,...(refund?{refund_operation_id:p.event_id,financial_stage:view.financial_stage,qualification:view.qualification}: {})};
    return this.#queue(s,c,owner,link,sender,payload,intentId);
+  });
+ }
+ queueCampaign(scope:Scope,input:unknown){const p=exact(jsonValue(input),['campaign_id','case_id','link_id','expected_generation']);id(p.campaign_id);integer(p.expected_generation,1);
+  if(!this.campaigns)throw new Error('CAMPAIGN_MESSAGE_SOURCE_UNAVAILABLE');
+  return this.k.transaction(()=>{const {s,c,owner}=assertSupportOwner(this.k,scope,p.case_id,p.expected_generation);this.k.authorize(scope,'support.send',c.resource_id);assertExecution(this.k,s,'customer.message');
+   const ref='campaign_'+contentDigest([s.tenant_id,s.store_id,p.campaign_id,c.resource_id]).slice(0,40),old=this.k.db.prepare("SELECT id FROM commerce_operations WHERE tenant_id=? AND store_id=? AND source_kind='event' AND source_id=?").get(s.tenant_id,s.store_id,ref) as Row;
+   if(old)return this.inspect(scope,old.id);
+   const view=this.campaigns!.render(scope,p.campaign_id,c.id,'queue'),link=new SupportConversations(this.k).linkRecord(scope,p.link_id);
+   if(link.case_id!==c.id||link.channel!=='email')throw new Error('SUPPORT_CHANNEL_MISMATCH');
+   const sender=checkedDocument(this.k,s,'sender',view.sender_id);this.#source(s,sender.body);
+   const contact=this.k.db.prepare('SELECT * FROM commerce_support_contacts WHERE tenant_id=? AND store_id=? AND link_id=? AND erased=0').get(s.tenant_id,s.store_id,link.id) as Row;
+   if(!contact||!contact.address||contentDigest(contact.address)!==contact.address_digest)throw new Error('CONTACT_VERIFICATION_REQUIRED');
+   const payload={kind:'email',account_id:sender.body.account_id,from:sender.body.address,to:contact.address,subject:view.subject,text:view.text,purpose:'marketing',template_id:'reviewed_campaign_v1',case_id:c.id,link_id:link.id,resource_id:c.resource_id,source_digest:view.source_digest,contact_revision:contact.revision,campaign_id:view.campaign_id,campaign_revision:view.campaign_revision,campaign_approval_id:view.campaign_approval_id};
+   const result=this.#queue(s,c,owner,link,sender,payload,ref);this.campaigns!.reserve(scope,p.campaign_id,c.id,result.operation_id);return result;
   });
  }
  queueHelpdesk(scope:Scope,input:unknown){const p=exact(jsonValue(input),['case_id','link_id','sender_id','kind','event_id','expected_generation','assignee_id']);id(p.event_id);integer(p.expected_generation,1);if(!['note','handoff'].includes(p.kind)||p.kind==='note'&&p.assignee_id!==null)throw new Error('SUPPORT_INPUT_INVALID');if(p.assignee_id!==null)id(p.assignee_id);
@@ -76,7 +95,8 @@ export class SupportDelivery {
    const eligibility=this.consent.eligibility(scope,row.case_id,row.sender_id,row.channel,row.purpose);if(!eligibility.allowed)throw new Error('DELIVERY_SUPPRESSED');
    const contact=k.db.prepare('SELECT * FROM commerce_support_contacts WHERE tenant_id=? AND store_id=? AND link_id=? AND erased=0').get(s.tenant_id,s.store_id,row.link_id) as Row;
    if(!contact||contact.revision!==payload.contact_revision||contact.address!==payload.to)throw new Error('CONTACT_CHANGED');
-   const current=payload.refund_operation_id?this.#refund(scope,row.case_id,payload.refund_operation_id,payload.template_id):this.tracking.read(scope,row.case_id);if(current.source_digest!==payload.source_digest||current.status!=='available')throw new Error('MESSAGE_FACTS_CHANGED');
+   if(payload.campaign_id&&!this.campaigns)throw new Error('CAMPAIGN_MESSAGE_SOURCE_UNAVAILABLE');
+   const current=payload.campaign_id?this.campaigns!.render(scope,payload.campaign_id,row.case_id,'send'):payload.refund_operation_id?this.#refund(scope,row.case_id,payload.refund_operation_id,payload.template_id):this.tracking.read(scope,row.case_id);if(current.source_digest!==payload.source_digest||current.status!=='available')throw new Error('MESSAGE_FACTS_CHANGED');
   }
   return {s,row,payload,op};
  }

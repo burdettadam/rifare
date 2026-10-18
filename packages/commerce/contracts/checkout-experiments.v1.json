@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "id": "rifare-checkout-experiments",
+  "version": "1.0.0",
+  "goal": "M09-G03",
+  "qualification": "synthetic_local_development",
+  "connected_qualified": false,
+  "production_qualified": false,
+  "operations": [
+    "configure",
+    "assign",
+    "expose",
+    "inspect"
+  ],
+  "authority": "current CommerceKernel permission, scoped resource, immutable reviewed state, recovery and original effect identity",
+  "tests": [
+    "CASE-M09-G03-01",
+    "CASE-M09-G03-02",
+    "CASE-M09-G03-03"
+  ],
+  "named_fault": "Draw a fresh assignment on every render.",
+  "source_effects": "Only existing canonical SupportDelivery or OrderEdits may send messages or cancel orders. MarketingFixtureSource can sync a separate synthetic native template.",
+  "formal_goal_accepted": false,
+  "assignment": {
+    "unit": "tenant/store/customer",
+    "seed": "server generated 256-bit random seed frozen at configuration",
+    "algorithm": "HMAC-SHA256 over tenant NUL store NUL experiment ID NUL version NUL customer ID, unsigned first32bits, treatment weighted threshold",
+    "reassignment": "Existing experiment ID is immutable; explicit new identity required",
+    "holdout": "Stored with frozen assignment; campaign delivery excludes it",
+    "eligibility": "Declared cohort and current known eligible/nonbot state; absent facts excluded"
+  }
+}

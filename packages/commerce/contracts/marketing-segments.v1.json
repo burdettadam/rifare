@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "id": "rifare-marketing-segments",
+  "version": "1.0.0",
+  "goal": "M09-G06",
+  "qualification": "synthetic_local_preparation",
+  "connected_qualified": false,
+  "production_qualified": false,
+  "operations": [
+    "preview",
+    "define",
+    "approve",
+    "sync",
+    "reconcile"
+  ],
+  "authority": "current CommerceKernel permission, scoped resource, immutable reviewed state, recovery and original effect identity",
+  "tests": [
+    "M09-G06-PREP-01",
+    "M09-G06-PREP-02",
+    "M09-G06-PREP-03"
+  ],
+  "named_fault": "Join audience records across tenants.",
+  "source_effects": "Only existing canonical SupportDelivery or OrderEdits may send messages or cancel orders. MarketingFixtureSource can sync a separate synthetic native template.",
+  "formal_goal_accepted": false,
+  "provider": {
+    "id": "marketing_fixture_v1",
+    "operations": [
+      "segment.preview",
+      "template.sync",
+      "template.lookup",
+      "outcome.read"
+    ],
+    "connected": "unavailable",
+    "template": "independent segment review pins exact template keys/rendered digest, audience definition/digest/count and source facts",
+    "unknown": "one original operation ID; lookup only, never resend"
+  }
+}
