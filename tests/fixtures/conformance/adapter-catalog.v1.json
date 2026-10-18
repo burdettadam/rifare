@@ -3180,7 +3180,7 @@
         },
         {
           "path": "packages/adapters/procurement-inventory-source-guards.mts",
-          "sha256": "e66612f32f9f91d35c70c5d02e4f12841083fe459d63576c43aeae7b4c408dbe"
+          "sha256": "ea9a565c96274543bb26a867ce015532239893f3a9f32f48e173c6e473dae54f"
         },
         {
           "path": "packages/commerce/procurement-inventory-core.mts",
@@ -4381,25 +4381,25 @@
               "id": "M11-G04-01",
               "name": "M11-G04-01",
               "path": "tests/development/procurement-planning.test.mts",
-              "sha256": "b9a16c2ff5499a4e504a393016ec21ff9737578a4d3fc5a900701c8bfbeb3cfd"
+              "sha256": "69228c7472b63563d6804cd6fbd5cdc6147bf2ceaecbeea215a395e77e6f6fc9"
             },
             {
               "id": "M11-G04-02",
               "name": "M11-G04-02",
               "path": "tests/development/procurement-planning.test.mts",
-              "sha256": "b9a16c2ff5499a4e504a393016ec21ff9737578a4d3fc5a900701c8bfbeb3cfd"
+              "sha256": "69228c7472b63563d6804cd6fbd5cdc6147bf2ceaecbeea215a395e77e6f6fc9"
             },
             {
               "id": "M11-G04-03",
               "name": "M11-G04-03",
               "path": "tests/development/procurement-planning.test.mts",
-              "sha256": "b9a16c2ff5499a4e504a393016ec21ff9737578a4d3fc5a900701c8bfbeb3cfd"
+              "sha256": "69228c7472b63563d6804cd6fbd5cdc6147bf2ceaecbeea215a395e77e6f6fc9"
             },
             {
               "id": "M11-PREP-INTEGRATION-01",
               "name": "M11-PREP-INTEGRATION-01",
               "path": "tests/development/procurement-planning.test.mts",
-              "sha256": "b9a16c2ff5499a4e504a393016ec21ff9737578a4d3fc5a900701c8bfbeb3cfd"
+              "sha256": "69228c7472b63563d6804cd6fbd5cdc6147bf2ceaecbeea215a395e77e6f6fc9"
             }
           ],
           "direct_fixtures": []
@@ -4415,19 +4415,19 @@
               "id": "M11-G05-01",
               "name": "M11-G05-01",
               "path": "tests/development/procurement-planning.test.mts",
-              "sha256": "b9a16c2ff5499a4e504a393016ec21ff9737578a4d3fc5a900701c8bfbeb3cfd"
+              "sha256": "69228c7472b63563d6804cd6fbd5cdc6147bf2ceaecbeea215a395e77e6f6fc9"
             },
             {
               "id": "M11-G05-02",
               "name": "M11-G05-02",
               "path": "tests/development/procurement-planning.test.mts",
-              "sha256": "b9a16c2ff5499a4e504a393016ec21ff9737578a4d3fc5a900701c8bfbeb3cfd"
+              "sha256": "69228c7472b63563d6804cd6fbd5cdc6147bf2ceaecbeea215a395e77e6f6fc9"
             },
             {
               "id": "M11-G05-03",
               "name": "M11-G05-03",
               "path": "tests/development/procurement-planning.test.mts",
-              "sha256": "b9a16c2ff5499a4e504a393016ec21ff9737578a4d3fc5a900701c8bfbeb3cfd"
+              "sha256": "69228c7472b63563d6804cd6fbd5cdc6147bf2ceaecbeea215a395e77e6f6fc9"
             }
           ],
           "direct_fixtures": []
@@ -4443,25 +4443,25 @@
               "id": "M11-G06-01",
               "name": "M11-G06-01",
               "path": "tests/development/procurement-planning.test.mts",
-              "sha256": "b9a16c2ff5499a4e504a393016ec21ff9737578a4d3fc5a900701c8bfbeb3cfd"
+              "sha256": "69228c7472b63563d6804cd6fbd5cdc6147bf2ceaecbeea215a395e77e6f6fc9"
             },
             {
               "id": "M11-G06-02",
               "name": "M11-G06-02",
               "path": "tests/development/procurement-planning.test.mts",
-              "sha256": "b9a16c2ff5499a4e504a393016ec21ff9737578a4d3fc5a900701c8bfbeb3cfd"
+              "sha256": "69228c7472b63563d6804cd6fbd5cdc6147bf2ceaecbeea215a395e77e6f6fc9"
             },
             {
               "id": "M11-G06-03",
               "name": "M11-G06-03",
               "path": "tests/development/procurement-planning.test.mts",
-              "sha256": "b9a16c2ff5499a4e504a393016ec21ff9737578a4d3fc5a900701c8bfbeb3cfd"
+              "sha256": "69228c7472b63563d6804cd6fbd5cdc6147bf2ceaecbeea215a395e77e6f6fc9"
             },
             {
               "id": "PORT-031-M11",
               "name": "PORT-031-M11",
               "path": "tests/development/procurement-planning.test.mts",
-              "sha256": "b9a16c2ff5499a4e504a393016ec21ff9737578a4d3fc5a900701c8bfbeb3cfd"
+              "sha256": "69228c7472b63563d6804cd6fbd5cdc6147bf2ceaecbeea215a395e77e6f6fc9"
             }
           ],
           "direct_fixtures": []
@@ -4477,13 +4477,13 @@
               "id": "M11-G06-01",
               "name": "M11-G06-01",
               "path": "tests/development/procurement-planning.test.mts",
-              "sha256": "b9a16c2ff5499a4e504a393016ec21ff9737578a4d3fc5a900701c8bfbeb3cfd"
+              "sha256": "69228c7472b63563d6804cd6fbd5cdc6147bf2ceaecbeea215a395e77e6f6fc9"
             },
             {
               "id": "M11-PROCUREMENT-SOURCE-BOUNDARY",
               "name": "M11-PROCUREMENT-SOURCE-BOUNDARY",
               "path": "tests/development/procurement-planning.test.mts",
-              "sha256": "b9a16c2ff5499a4e504a393016ec21ff9737578a4d3fc5a900701c8bfbeb3cfd"
+              "sha256": "69228c7472b63563d6804cd6fbd5cdc6147bf2ceaecbeea215a395e77e6f6fc9"
             }
           ],
           "direct_fixtures": []
@@ -4499,7 +4499,7 @@
               "id": "M11-G06-01",
               "name": "M11-G06-01",
               "path": "tests/development/procurement-planning.test.mts",
-              "sha256": "b9a16c2ff5499a4e504a393016ec21ff9737578a4d3fc5a900701c8bfbeb3cfd"
+              "sha256": "69228c7472b63563d6804cd6fbd5cdc6147bf2ceaecbeea215a395e77e6f6fc9"
             }
           ],
           "direct_fixtures": []
@@ -4515,7 +4515,7 @@
               "id": "M11-G04-02",
               "name": "M11-G04-02",
               "path": "tests/development/procurement-planning.test.mts",
-              "sha256": "b9a16c2ff5499a4e504a393016ec21ff9737578a4d3fc5a900701c8bfbeb3cfd"
+              "sha256": "69228c7472b63563d6804cd6fbd5cdc6147bf2ceaecbeea215a395e77e6f6fc9"
             }
           ],
           "direct_fixtures": []
@@ -5559,7 +5559,7 @@
     },
     {
       "path": "tests/fixtures/conformance/expected-coverage.v1.json",
-      "sha256": "4f8a1bd95a174e4de6f4acc090f9d37e896b998f109e0b7d033e1eb19672117b"
+      "sha256": "da968f746bbd76fff59d816052185af88d08ddbd81879ff73f09eb89727328ab"
     },
     {
       "path": "tests/fixtures/conformance/source-inputs.v1.json",
@@ -6331,7 +6331,7 @@
     },
     {
       "path": "packages/adapters/procurement-inventory-source-guards.mts",
-      "sha256": "e66612f32f9f91d35c70c5d02e4f12841083fe459d63576c43aeae7b4c408dbe"
+      "sha256": "ea9a565c96274543bb26a867ce015532239893f3a9f32f48e173c6e473dae54f"
     },
     {
       "path": "packages/adapters/procurement-source-guards.mts",
@@ -6367,7 +6367,7 @@
     },
     {
       "path": "packages/commerce/contracts/purchase-receiving.v1.json",
-      "sha256": "2d36860a869641f94e60f9fff17083c5f5575616bc26432b51c2a2291e17df1a"
+      "sha256": "bb3000f3eb74101a9c98086c222b89d6a2994f74c398faf31e6351197e639280"
     },
     {
       "path": "packages/commerce/contracts/replenishment-planning.v1.json",
@@ -6475,7 +6475,7 @@
     },
     {
       "path": "tests/development/procurement-planning.test.mts",
-      "sha256": "b9a16c2ff5499a4e504a393016ec21ff9737578a4d3fc5a900701c8bfbeb3cfd"
+      "sha256": "69228c7472b63563d6804cd6fbd5cdc6147bf2ceaecbeea215a395e77e6f6fc9"
     },
     {
       "path": "tests/fixtures/demand-planning/known-answer.v1.json",
