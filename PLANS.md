@@ -40,10 +40,11 @@ G18, G99 and M08-G01 under ADR-0035. Locale presentation and pilot instrumentati
 are local development; G18 prepares evidence intake with no real observations,
 G99 remains a blocked assessment, and G01 adds local per-package carrier quotes.
 The explicit development assignment preserves all formal prerequisites and does
-not start a release or connected pilot. M08-G02 label purchasing is unassigned.
+not start a release or connected pilot. The following ADR-0036 separately assigns
+M08-G02 label purchasing preparation.
 
 The implementation handoff is recorded in
-[the current integration record](work/records/M07-pilot-next-five-integration.md).
+[the locale/pilot integration record](work/records/M07-pilot-next-five-integration.md).
 The selected development scope is the new locale, pilot and carrier test files
 plus the existing nine-case privacy file for the actual new source and caller
 artifact handling. The default 60-case/four-file/60-second limit is unchanged.
@@ -70,3 +71,11 @@ canonical sources and services. G07/G10 connected qualification remains blocked;
 G99 is a blocked assessment and does not trigger a broad milestone campaign.
 Development retains the 60-case/four-file/60-second defaults, source-bound native
 evidence and independent focused review. M09 remains unassigned.
+
+The [inventory integration record](work/records/M08-inventory-five-integration.md)
+describes the five bounded outcomes and preserved source/effect identities.
+Exactly three new whole files (16 return-event, 22 inventory/transfer and 13
+reconciliation cases) plus the nine-case retained privacy file form the planned
+60-case selection. The checkpoint binds actual native results and independent
+review to its clean candidate. No original formal case or milestone campaign is
+substituted by this development evidence.

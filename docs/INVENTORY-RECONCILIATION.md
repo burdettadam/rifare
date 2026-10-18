@@ -24,6 +24,13 @@ All reads bind the tenant, store and order resource and enforce erasure. Repair
 also checks reconciliation, warehouse receiving and event-processing authority.
 Recovery quarantine prevents that write path. Unknown transfer, disposition or
 carrier effects retain their original identities in their owning service.
+An applied warehouse disposition is unresolved until its canonical operation,
+unit claims and original applied observation agree. Its owning
+`ReturnDisposition.reconcile` operation observes a lost response; this report
+cannot turn the source effect alone into a completed canonical operation.
+Every native return event and disposition is checked, including delivery and
+quarantine observations with no stock delta. An unknown request or mismatched
+native return blocks repair before any import.
 
 ## What a matched cycle means
 
@@ -53,6 +60,11 @@ are not interchangeable. Partial receipt may reconcile observed stock while
 other requested return units remain pending. The result's
 `partial_return_reconciled` state does not close the return or establish refund,
 full receipt or partner qualification.
+Requested quantities come from the canonical return selection even when no
+receiving session exists. A matched shipment with an unreceived requested return
+has state `return_pending`. Corrections that move a restocked unit have separate
+deduction and addition identities; incompatible canonical location or item
+mapping remains an explicit discrepancy.
 
 ## Evidence and operation
 
@@ -69,6 +81,14 @@ synthetic fixtures. It accepts no provider, credential or network options. Its
 output is a caller-owned copy; a later erasure cannot recall already copied
 reports. Stock and effect identities remain in minimized canonical audit,
 while separate fixture databases require independent cleanup.
+
+If a transfer commits but its response is lost, and the subject is erased before
+the movement is imported, the shared canonical balance may remain stale.
+Erased-resource guards block this batch's import and transfer-reconciliation
+APIs. This case requires operator reconciliation under the preserved privacy
+constraints; automatic post-erasure repair is not implemented. Keep the original
+effect identity and resolve the missing observation before another dependent
+transfer. Creating a replacement operation would risk repeating the stock effect.
 
 Original connected G10 evidence and formal prerequisites remain blocked. Read
 [the M08 assessment](M08-QUALIFICATION.md); a focused local pass does not replace

@@ -2,7 +2,7 @@
 
 Merchant-owned commerce operations with tailorable skills and independently replaceable platforms, agents and models.
 
-## Current development checkpoint: locale, pilot and carrier preparation
+## Current development checkpoint: warehouse inventory and M08 assessment
 
 M07-G01 through M07-G15 now have bounded local development implementations.
 The first five added Woo return/refund handling, the shared staff and agent
@@ -14,12 +14,21 @@ interlocks and durable intake backpressure, offline artifact/SBOM provenance
 checks, complete current storage-surface review and scoped privacy exports, and
 keyboard/error/focus improvements across six existing workflows.
 
-The current five planning entries are M07-G16, G17, G18, G99 and M08-G01.
-They add explicit locale/time-zone/currency presentation, frozen pilot
+The earlier M07-G16, G17, G18, G99 and M08-G01 checkpoint added
+explicit locale/time-zone/currency presentation, frozen pilot
 instrumentation using the retained benchmark, real-pilot evidence intake
 preparation, the blocked M07 acceptance assessment and per-package carrier quote
 previews. The real-observation register remains empty. Formal M07 acceptance and
-M08 entry remain blocked; M08-G02 label purchasing is unassigned.
+M08 entry remain blocked.
+
+The current five planning entries are M08-G07, G08, G09, G10 and G99.
+They extend the retained shipping and packing services with warehouse return
+events and immutable corrections, shared per-location stock, conserved transfers,
+and shipment/partial-return reconciliation. G99 records the remaining milestone
+evidence gaps. The warehouse and carrier sources remain synthetic; original
+connected G07/G10 cases and formal M08 acceptance remain blocked. M09 is unassigned.
+Read [the inventory integration record](work/records/M08-inventory-five-integration.md)
+and [the M08 assessment](docs/M08-QUALIFICATION.md).
 
 Read [the M07 assessment](docs/M07-QUALIFICATION.md),
 [compatibility limits](docs/COMPATIBILITY-LIMITS.md),
@@ -47,8 +56,8 @@ make test
 The default budget is 60 actual cases across four whole files with one 60-second
 deadline. A development pass does not claim full regression or goal acceptance.
 The five-goal development batch does not automatically trigger full, browser,
-nested catalog, or restoration-audit campaigns. This batch explicitly selects one
-small locale/browser file for the changed UI alongside pilot, carrier quote and
+nested catalog, or restoration-audit campaigns. This batch uses a
+selection of warehouse return, location inventory/transfer, reconciliation and
 existing privacy cases. See [development](DEVELOPMENT.md).
 
 The runtime remains a SQLite diagnostic with synthetic protocol sources.
@@ -266,7 +275,7 @@ node --experimental-strip-types tools/demo-return-fulfillment.mts
 
 ## Shipping and warehouse development
 
-The next five locally prepared goals are M08-G02 through M08-G06: per-package
+The preceding locally prepared goals are M08-G02 through M08-G06: per-package
 label obligations and repair, durable scan-to-pack, conserved split allocations,
 separate manifest/pickup/carrier stages, and a named warehouse fixture connector.
 Read [shipping batches](docs/SHIPPING-BATCHES.md), [packing sessions](docs/PACKING-SESSIONS.md)
@@ -274,3 +283,21 @@ and [warehouse connector preparation](docs/WAREHOUSE-CONNECTOR.md). New durable
 records participate in scoped export, minimization and restored execution
 quarantine. Formal and connected qualification remain blocked. The existing
 60-case/four-file/60-second development defaults are unchanged.
+
+## Warehouse inventory and cycle reconciliation
+
+Native warehouse events retain request, item, sequence, grade and correction
+lineage. Absolute inventory snapshots anchor quantities once; source movements
+explain available, on-hand, reserved and in-transit stock. Approved transfers
+conserve units through reserve, dispatch, partial receipt, loss and correction.
+Unknown operations are observed through their original identities.
+
+Reconciliation checks original packing, carrier acceptance, shipment deductions,
+return receipt and disposition records. Repair imports existing observations and
+leaves unexplained stock unresolved. Requested returns remain pending before
+receiving starts. Read [warehouse return events](docs/WAREHOUSE-RETURN-EVENTS.md),
+[location inventory and transfers](docs/LOCATION-INVENTORY.md), and
+[inventory reconciliation](docs/INVENTORY-RECONCILIATION.md), including the
+documented limitation when an unknown stock effect has not been imported before
+subject erasure. The blocked [M08 assessment](docs/M08-QUALIFICATION.md) preserves
+the original physical cycle and formal acceptance requirements.

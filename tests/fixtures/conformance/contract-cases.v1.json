@@ -1113,7 +1113,7 @@
         "id": "catalog_warehouse_restock",
         "adapter": {
           "id": "warehouse_source",
-          "version": "source-sha256:4e4f47d2c6f02a5a24f1dade3fe9112b0bb201af28423e6980422e8eae32fb6e",
+          "version": "source-sha256:1e9287ec1fcfbf5a9b604b91c45a31a8ee6b9e476fedb007d6f41be216a89af3",
           "api_version": "local-warehouse-source",
           "required_scopes": [],
           "semantics": "native",
@@ -1150,7 +1150,7 @@
         "id": "catalog_warehouse_quarantine",
         "adapter": {
           "id": "warehouse_source",
-          "version": "source-sha256:4e4f47d2c6f02a5a24f1dade3fe9112b0bb201af28423e6980422e8eae32fb6e",
+          "version": "source-sha256:1e9287ec1fcfbf5a9b604b91c45a31a8ee6b9e476fedb007d6f41be216a89af3",
           "api_version": "local-warehouse-source",
           "required_scopes": [],
           "semantics": "native",
@@ -1187,7 +1187,7 @@
         "id": "catalog_warehouse_dispose",
         "adapter": {
           "id": "warehouse_source",
-          "version": "source-sha256:4e4f47d2c6f02a5a24f1dade3fe9112b0bb201af28423e6980422e8eae32fb6e",
+          "version": "source-sha256:1e9287ec1fcfbf5a9b604b91c45a31a8ee6b9e476fedb007d6f41be216a89af3",
           "api_version": "local-warehouse-source",
           "required_scopes": [],
           "semantics": "native",
@@ -1224,7 +1224,7 @@
         "id": "catalog_warehouse_supplier_return",
         "adapter": {
           "id": "warehouse_source",
-          "version": "source-sha256:4e4f47d2c6f02a5a24f1dade3fe9112b0bb201af28423e6980422e8eae32fb6e",
+          "version": "source-sha256:1e9287ec1fcfbf5a9b604b91c45a31a8ee6b9e476fedb007d6f41be216a89af3",
           "api_version": "local-warehouse-source",
           "required_scopes": [],
           "semantics": "native",

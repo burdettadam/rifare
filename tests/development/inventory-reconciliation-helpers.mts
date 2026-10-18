@@ -24,8 +24,13 @@ export async function inventoryCycleFixture() {
   ]}});
   const inventorySource=new WarehouseInventoryFixtureSource(f.warehouse,{clock:f.now});
   const locationInventory=new LocationInventory(f.kernel,inventorySource),returns=new WarehouseReturnEvents(f.kernel,f.warehouse);
+  const externalStock=(variant_id:string,available:number)=>{
+    if(!Number.isSafeInteger(available)||available<0)throw new Error('INVALID_FIXTURE_STOCK');
+    const result=f.warehouseDb.prepare('UPDATE warehouse_stock SET available=? WHERE variant=? AND location=?').run(available,variant_id,'warehouse-one');
+    if(result.changes!==1)throw new Error('FIXTURE_STOCK_NOT_FOUND');
+  };
   for(const variant_id of ['hat-small','shoe-small']){
-    f.warehouse.seed(variant_id,'warehouse-one',10);
+    externalStock(variant_id,10);
     locationInventory.claim(f.owner.scope,{resource_id,variant_id,location_id:'warehouse-one',source_identity:f.warehouse.identity,fields:['available','on_hand','reserved','in_transit']});
     const observation=inventorySource.snapshot({observation_id:'opening-'+variant_id,resource_id,variant_id,location_id:'warehouse-one'});
     locationInventory.importSnapshot(f.a.scope,observation.observation_id);
@@ -74,7 +79,7 @@ export async function inventoryCycleFixture() {
   const effects=()=>({movements:inventorySource.movements(resource_id).length,warehouse_effects:f.warehouse.effects().length,warehouse_events:f.warehouse.returnEvents().length,
     carrier_purchases:carrier.ledger().purchases.length,carrier_manifests:carrier.ledger().manifests.length,carrier_events:carrier.ledger().events.length,
     available:['hat-small','shoe-small'].map(variant_id=>f.warehouse.stock(variant_id,'warehouse-one'))});
-  return {...f,resource_id,package_id,manifest_id,inventorySource,locationInventory,returns,quoteSource,quotes,carrier,carrierDb,shippingLabels,packing,manifests,reconciliation,pack,manifest,accept,ship,event,receive,complete,effects,
+  return {...f,resource_id,package_id,manifest_id,inventorySource,locationInventory,returns,quoteSource,quotes,carrier,carrierDb,shippingLabels,packing,manifests,reconciliation,externalStock,pack,manifest,accept,ship,event,receive,complete,effects,
     cleanup(){carrierDb.close();f.cleanup();}};
 }
 export async function usingInventoryCycle(run:(f:Awaited<ReturnType<typeof inventoryCycleFixture>>)=>unknown){const f=await inventoryCycleFixture();try{return await run(f);}finally{f.cleanup();}}

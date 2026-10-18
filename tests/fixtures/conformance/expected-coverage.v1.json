@@ -393,6 +393,10 @@
       "disposition.lookup": {
         "semantics": "native",
         "qualification": "sandbox-only"
+      },
+      "return.events": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
       }
     },
     "native_change_source": {
@@ -594,6 +598,28 @@
         "semantics": "native",
         "qualification": "sandbox-only"
       }
+    },
+    "warehouse_inventory_source": {
+      "stock.snapshot": {
+        "semantics": "composed",
+        "qualification": "sandbox-only"
+      },
+      "stock.movement": {
+        "semantics": "composed",
+        "qualification": "sandbox-only"
+      },
+      "transfer.apply": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      },
+      "transfer.lookup": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      },
+      "inventory.reconcile": {
+        "semantics": "composed",
+        "qualification": "sandbox-only"
+      }
     }
   },
   "declarations": [
@@ -617,6 +643,7 @@
     "packages/adapters/support/resend.mts",
     "packages/adapters/support/transport.mts",
     "packages/adapters/warehouse-fixture-source.mts",
+    "packages/adapters/warehouse-inventory-fixture-source.mts",
     "packages/adapters/webhooks/signatures.mts",
     "packages/adapters/woocommerce/events.mts",
     "packages/adapters/woocommerce/orders.mts",
@@ -1131,7 +1158,7 @@
       }
     },
     "warehouse_source": {
-      "version": "source-sha256:4e4f47d2c6f02a5a24f1dade3fe9112b0bb201af28423e6980422e8eae32fb6e",
+      "version": "source-sha256:1e9287ec1fcfbf5a9b604b91c45a31a8ee6b9e476fedb007d6f41be216a89af3",
       "api_version": "local-warehouse-source",
       "operations": {
         "disposition.restock": {
@@ -1151,6 +1178,10 @@
           "scope_kind": "server_local_fixture_only"
         },
         "disposition.lookup": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "return.events": {
           "required_scopes": [],
           "scope_kind": "server_local_fixture_only"
         }
@@ -1383,6 +1414,32 @@
           "scope_kind": "server_local_fixture_only"
         },
         "manifest.events": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        }
+      }
+    },
+    "warehouse_inventory_source": {
+      "version": "source-sha256:b148bcd10662364cb9c7843fcd5083fecfad54f46795965af155bf01a104bc88",
+      "api_version": "rifare-warehouse-inventory-fixture-v1",
+      "operations": {
+        "stock.snapshot": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "stock.movement": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "transfer.apply": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "transfer.lookup": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "inventory.reconcile": {
           "required_scopes": [],
           "scope_kind": "server_local_fixture_only"
         }
@@ -1785,6 +1842,24 @@
       "name": "CASE-M08-G05-03",
       "path": "tests/development/shipping-batches.test.mts",
       "sha256": "81ccb66ed58919fa659ce1289404fc1dd69f54ffd116dadcd99d66123e6f18ee"
+    },
+    {
+      "id": "CASE-M08-G08-01",
+      "name": "CASE-M08-G08-01",
+      "path": "tests/development/location-inventory.test.mts",
+      "sha256": "951eadba9a83f0de5e7acc5c640e9e4fe7d9918ed07426c47ed05198a3b423b0"
+    },
+    {
+      "id": "CASE-M08-G08-02",
+      "name": "CASE-M08-G08-02",
+      "path": "tests/development/location-inventory.test.mts",
+      "sha256": "951eadba9a83f0de5e7acc5c640e9e4fe7d9918ed07426c47ed05198a3b423b0"
+    },
+    {
+      "id": "CASE-M08-G09-01",
+      "name": "CASE-M08-G09-01",
+      "path": "tests/development/location-inventory.test.mts",
+      "sha256": "951eadba9a83f0de5e7acc5c640e9e4fe7d9918ed07426c47ed05198a3b423b0"
     },
     {
       "id": "M01-G04-01",
@@ -2205,6 +2280,48 @@
       "name": "M08-G06-LOCAL-WORKFLOW-CHANGE-INVALIDATES-APPROVED-EDIT",
       "path": "tests/development/warehouse-connector.test.mts",
       "sha256": "03ee15e984b09710020e13cf75a3bca5bdafdb5d6dcd6c4a5e2fb6b0144aa3a9"
+    },
+    {
+      "id": "M08-G07-LOCAL-LINKED-SOURCE-CORRECTION-REVERSES-STOCK-EXACTLY-ONCE",
+      "name": "M08-G07-LOCAL-LINKED-SOURCE-CORRECTION-REVERSES-STOCK-EXACTLY-ONCE",
+      "path": "tests/development/warehouse-return-events.test.mts",
+      "sha256": "b077cac720a3ae46ef18d07686dfb16697862ff6e65cf13a13a4a812f52cecd0"
+    },
+    {
+      "id": "M08-G07-LOCAL-NAMED-DELIVERY-RESTOCK-SOURCE-FAULT-IS-DETECTED",
+      "name": "M08-G07-LOCAL-NAMED-DELIVERY-RESTOCK-SOURCE-FAULT-IS-DETECTED",
+      "path": "tests/development/warehouse-return-events.test.mts",
+      "sha256": "b077cac720a3ae46ef18d07686dfb16697862ff6e65cf13a13a4a812f52cecd0"
+    },
+    {
+      "id": "M08-G08-ABSOLUTE-SNAPSHOT-FAULT",
+      "name": "M08-G08-ABSOLUTE-SNAPSHOT-FAULT",
+      "path": "tests/development/location-inventory.test.mts",
+      "sha256": "951eadba9a83f0de5e7acc5c640e9e4fe7d9918ed07426c47ed05198a3b423b0"
+    },
+    {
+      "id": "M08-G09-RESERVATION-FAULT",
+      "name": "M08-G09-RESERVATION-FAULT",
+      "path": "tests/development/location-inventory.test.mts",
+      "sha256": "951eadba9a83f0de5e7acc5c640e9e4fe7d9918ed07426c47ed05198a3b423b0"
+    },
+    {
+      "id": "M08-G09-UNKNOWN-ORIGINAL-LOOKUP",
+      "name": "M08-G09-UNKNOWN-ORIGINAL-LOOKUP",
+      "path": "tests/development/location-inventory.test.mts",
+      "sha256": "951eadba9a83f0de5e7acc5c640e9e4fe7d9918ed07426c47ed05198a3b423b0"
+    },
+    {
+      "id": "M08-G10-LOCAL-MISSING-MOVEMENT-IMPORT-REPAIRS-WITHOUT-EFFECT",
+      "name": "M08-G10-LOCAL-MISSING-MOVEMENT-IMPORT-REPAIRS-WITHOUT-EFFECT",
+      "path": "tests/development/inventory-reconciliation.test.mts",
+      "sha256": "19e75585494ab55005d3e31cd56d9360614bc709fa65babd64483a9778a90693"
+    },
+    {
+      "id": "M08-G10-LOCAL-NAMED-STOCK-DIFFERENCE-FAULT-IS-DETECTED",
+      "name": "M08-G10-LOCAL-NAMED-STOCK-DIFFERENCE-FAULT-IS-DETECTED",
+      "path": "tests/development/inventory-reconciliation.test.mts",
+      "sha256": "19e75585494ab55005d3e31cd56d9360614bc709fa65babd64483a9778a90693"
     }
   ]
 }

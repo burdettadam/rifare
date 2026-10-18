@@ -38,6 +38,7 @@
     "packages/adapters/support/resend.mts",
     "packages/adapters/support/transport.mts",
     "packages/adapters/warehouse-fixture-source.mts",
+    "packages/adapters/warehouse-inventory-fixture-source.mts",
     "packages/adapters/webhooks/signatures.mts",
     "packages/adapters/woocommerce/events.mts",
     "packages/adapters/woocommerce/orders.mts",
@@ -1870,10 +1871,10 @@
       "source_files": [
         {
           "path": "packages/adapters/warehouse-fixture-source.mts",
-          "sha256": "4e4f47d2c6f02a5a24f1dade3fe9112b0bb201af28423e6980422e8eae32fb6e"
+          "sha256": "1e9287ec1fcfbf5a9b604b91c45a31a8ee6b9e476fedb007d6f41be216a89af3"
         }
       ],
-      "version": "source-sha256:4e4f47d2c6f02a5a24f1dade3fe9112b0bb201af28423e6980422e8eae32fb6e",
+      "version": "source-sha256:1e9287ec1fcfbf5a9b604b91c45a31a8ee6b9e476fedb007d6f41be216a89af3",
       "api_version": "local-warehouse-source",
       "external_version": null,
       "external_account": null,
@@ -1943,6 +1944,28 @@
               "name": "CASE-M03-G17-03",
               "path": "tests/development/disposition-completion.test.mts",
               "sha256": "c06323a1c4770c99302b4574da5885b1dece1eec83bac58156fe423cb6abff3a"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "return.events",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M08-G07-LOCAL-LINKED-SOURCE-CORRECTION-REVERSES-STOCK-EXACTLY-ONCE",
+              "name": "M08-G07-LOCAL-LINKED-SOURCE-CORRECTION-REVERSES-STOCK-EXACTLY-ONCE",
+              "path": "tests/development/warehouse-return-events.test.mts",
+              "sha256": "b077cac720a3ae46ef18d07686dfb16697862ff6e65cf13a13a4a812f52cecd0"
+            },
+            {
+              "id": "M08-G07-LOCAL-NAMED-DELIVERY-RESTOCK-SOURCE-FAULT-IS-DETECTED",
+              "name": "M08-G07-LOCAL-NAMED-DELIVERY-RESTOCK-SOURCE-FAULT-IS-DETECTED",
+              "path": "tests/development/warehouse-return-events.test.mts",
+              "sha256": "b077cac720a3ae46ef18d07686dfb16697862ff6e65cf13a13a4a812f52cecd0"
             }
           ],
           "direct_fixtures": []
@@ -3010,6 +3033,122 @@
           "direct_fixtures": []
         }
       ]
+    },
+    {
+      "id": "warehouse_inventory_source",
+      "kind": "diagnostic",
+      "source_files": [
+        {
+          "path": "packages/adapters/warehouse-inventory-fixture-source.mts",
+          "sha256": "b148bcd10662364cb9c7843fcd5083fecfad54f46795965af155bf01a104bc88"
+        }
+      ],
+      "version": "source-sha256:b148bcd10662364cb9c7843fcd5083fecfad54f46795965af155bf01a104bc88",
+      "api_version": "rifare-warehouse-inventory-fixture-v1",
+      "external_version": null,
+      "external_account": null,
+      "external_scopes_attested": false,
+      "source_oracle": "Existing warehouse identity and stock owner; atomic absolute snapshots with covered movement IDs, original transfer commands and conserved native deltas. Reconciliation imports existing observations without another physical send; source copies remain synthetic.",
+      "operations": [
+        {
+          "id": "stock.snapshot",
+          "semantics": "composed",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M08-G08-ABSOLUTE-SNAPSHOT-FAULT",
+              "name": "M08-G08-ABSOLUTE-SNAPSHOT-FAULT",
+              "path": "tests/development/location-inventory.test.mts",
+              "sha256": "951eadba9a83f0de5e7acc5c640e9e4fe7d9918ed07426c47ed05198a3b423b0"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "stock.movement",
+          "semantics": "composed",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M08-G08-01",
+              "name": "CASE-M08-G08-01",
+              "path": "tests/development/location-inventory.test.mts",
+              "sha256": "951eadba9a83f0de5e7acc5c640e9e4fe7d9918ed07426c47ed05198a3b423b0"
+            },
+            {
+              "id": "CASE-M08-G08-02",
+              "name": "CASE-M08-G08-02",
+              "path": "tests/development/location-inventory.test.mts",
+              "sha256": "951eadba9a83f0de5e7acc5c640e9e4fe7d9918ed07426c47ed05198a3b423b0"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "transfer.apply",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M08-G09-01",
+              "name": "CASE-M08-G09-01",
+              "path": "tests/development/location-inventory.test.mts",
+              "sha256": "951eadba9a83f0de5e7acc5c640e9e4fe7d9918ed07426c47ed05198a3b423b0"
+            },
+            {
+              "id": "M08-G09-RESERVATION-FAULT",
+              "name": "M08-G09-RESERVATION-FAULT",
+              "path": "tests/development/location-inventory.test.mts",
+              "sha256": "951eadba9a83f0de5e7acc5c640e9e4fe7d9918ed07426c47ed05198a3b423b0"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "transfer.lookup",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M08-G09-UNKNOWN-ORIGINAL-LOOKUP",
+              "name": "M08-G09-UNKNOWN-ORIGINAL-LOOKUP",
+              "path": "tests/development/location-inventory.test.mts",
+              "sha256": "951eadba9a83f0de5e7acc5c640e9e4fe7d9918ed07426c47ed05198a3b423b0"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "inventory.reconcile",
+          "semantics": "composed",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M08-G10-LOCAL-MISSING-MOVEMENT-IMPORT-REPAIRS-WITHOUT-EFFECT",
+              "name": "M08-G10-LOCAL-MISSING-MOVEMENT-IMPORT-REPAIRS-WITHOUT-EFFECT",
+              "path": "tests/development/inventory-reconciliation.test.mts",
+              "sha256": "19e75585494ab55005d3e31cd56d9360614bc709fa65babd64483a9778a90693"
+            },
+            {
+              "id": "M08-G10-LOCAL-NAMED-STOCK-DIFFERENCE-FAULT-IS-DETECTED",
+              "name": "M08-G10-LOCAL-NAMED-STOCK-DIFFERENCE-FAULT-IS-DETECTED",
+              "path": "tests/development/inventory-reconciliation.test.mts",
+              "sha256": "19e75585494ab55005d3e31cd56d9360614bc709fa65babd64483a9778a90693"
+            }
+          ],
+          "direct_fixtures": []
+        }
+      ]
     }
   ],
   "fixture_administration": "Seed, injected faults, and source observation setters are fixture administration, not remote provider operations. Unnamed real gateway/carrier/warehouse/ERP adapters are unavailable.",
@@ -3212,7 +3351,7 @@
     },
     {
       "path": "packages/adapters/warehouse-fixture-source.mts",
-      "sha256": "4e4f47d2c6f02a5a24f1dade3fe9112b0bb201af28423e6980422e8eae32fb6e"
+      "sha256": "1e9287ec1fcfbf5a9b604b91c45a31a8ee6b9e476fedb007d6f41be216a89af3"
     },
     {
       "path": "packages/adapters/webhooks/signatures.mts",
@@ -3480,7 +3619,7 @@
     },
     {
       "path": "packages/commerce/privacy-lifecycle.mts",
-      "sha256": "4c0f25d0f920deda146a47bde0d12ea8f9a55e0140a2c2210723c2a8230f5806"
+      "sha256": "7bde3d99a89c17fecb81ac650bd44904403e068e9080556840f76ae203cb44d3"
     },
     {
       "path": "packages/commerce/profile-editor.mts",
@@ -3540,7 +3679,7 @@
     },
     {
       "path": "packages/commerce/return-disposition.mts",
-      "sha256": "9d65a199a2f7e98c45c1963ec6abc1d1b63f9bb5966eef504f3fb5f12ef09060"
+      "sha256": "c02c91b3d7f7f428afb818a23a20c2ce6a98df1a3bfee61ec91a2adbb27303de"
     },
     {
       "path": "packages/commerce/return-drafts.mts",
@@ -3576,7 +3715,7 @@
     },
     {
       "path": "packages/commerce/return-lifecycle-core.mts",
-      "sha256": "0b7b8e94597948f44fddcbc0a2f7646cd69bdcf196cf84b9bb9f350b5a4242ca"
+      "sha256": "5bd198c909e9d03f8da02aefd007e43d4e25858370dcd52d902060ac656d1bba"
     },
     {
       "path": "packages/commerce/return-policy-packs.mts",
@@ -3600,7 +3739,7 @@
     },
     {
       "path": "packages/commerce/return-receiving.mts",
-      "sha256": "cda7fe30fa2a4331af0d04bf3a4f3f9ac87f1b90c8856687d875bd94ab6ca26d"
+      "sha256": "6ed9f65a0bf4a01373edcf8608d3659fa0d634db549c309544fc7bac7ce99a15"
     },
     {
       "path": "packages/commerce/return-tracking.mts",
@@ -3616,7 +3755,7 @@
     },
     {
       "path": "packages/commerce/safe-recovery.mts",
-      "sha256": "b3b23f6a3d7826b527a46415e99273bf8a05c7ef1b720fa508afce62502f98ca"
+      "sha256": "18ba00eafacc5abfef2c2cc1c120b8f8e432eeacb22f4307da4bb4da73a33858"
     },
     {
       "path": "packages/commerce/secrets.mts",
@@ -4044,11 +4183,11 @@
     },
     {
       "path": "tests/fixtures/conformance/contract-cases.v1.json",
-      "sha256": "9875d74520c15c6c4872ebd6c16d80664b85be3a0181219abcd389895efc16b8"
+      "sha256": "6ba59b766c71efc6a6e4bf2ddcac094d4831ec9f839d5bc2c20b04092bf37dce"
     },
     {
       "path": "tests/fixtures/conformance/expected-coverage.v1.json",
-      "sha256": "6e0c0aa09b0c7c22b054765fe98f4724db949bbea661eac660e39ee007885957"
+      "sha256": "3b95aabe2b79b58f7353a3e529e8f8f16665a6e70256da19082737b253cb797d"
     },
     {
       "path": "tests/fixtures/conformance/source-inputs.v1.json",
@@ -4228,7 +4367,7 @@
     },
     {
       "path": "packages/commerce/merchant-portability.mts",
-      "sha256": "f73c0cbe8e35bba66f9530e22a50b7a4d099dc7465caf2188066b2d3fbc97476"
+      "sha256": "37d58389cc6a5af61b519f2ee735e0f729178ed8ccdab026e76e9fb6393d5857"
     },
     {
       "path": "packages/commerce/contracts/carrier-quotes.v1.json",
@@ -4285,6 +4424,86 @@
     {
       "path": "tests/fixtures/shipping/storage-baseline.v1.json",
       "sha256": "b11f3f1af408aec4629e4211879205c0096253a2fff24febdccf4a9b242a94c5"
+    },
+    {
+      "path": "packages/adapters/warehouse-inventory-fixture-source.mts",
+      "sha256": "b148bcd10662364cb9c7843fcd5083fecfad54f46795965af155bf01a104bc88"
+    },
+    {
+      "path": "packages/commerce/warehouse-return-events.mts",
+      "sha256": "913cd1e926a10df2ec6efeeb96129e02bfb9271ad8432a5c469ad2cf369e1743"
+    },
+    {
+      "path": "packages/commerce/location-inventory.mts",
+      "sha256": "75a33328aef5cd226c8e261347bb3e514abbae92a93d0448946382289e79c0b8"
+    },
+    {
+      "path": "packages/commerce/inventory-transfers.mts",
+      "sha256": "8ac1b7f1ca8ea5aa6510abaf9fcd26127b0ae53142889a7b76cbd9513af3aea5"
+    },
+    {
+      "path": "packages/commerce/inventory-reconciliation.mts",
+      "sha256": "5d2f8dd9cffa22cef735f9f12d52e1e72d296efc9f627f98adc9833f52c50e18"
+    },
+    {
+      "path": "packages/commerce/contracts/warehouse-return-events.v1.json",
+      "sha256": "de89b7e31f00e75e9a5cd5d3ca65bf8b1d572fb46704d2ba265b74985c7d1294"
+    },
+    {
+      "path": "packages/commerce/contracts/location-inventory.v1.json",
+      "sha256": "689fdce918fa1ad46206e728d963abe8dff8cfd9d589e0997909d53752f40619"
+    },
+    {
+      "path": "packages/commerce/contracts/inventory-transfers.v1.json",
+      "sha256": "441514b7de1f97cf9408bcef8eb976c9c1e8d6aad6df42b5070a8de5b9757874"
+    },
+    {
+      "path": "packages/commerce/contracts/inventory-reconciliation.v1.json",
+      "sha256": "5b6232a9a266e5833d2fa4f13a798bf4dd2d09acb0b6407ddf3ef3ac59604b37"
+    },
+    {
+      "path": "packages/commerce/contracts/storage-warehouse-inventory-extension.v1.json",
+      "sha256": "218ba3db338a44648880d1267f4ff4d5e6d2a36ccc44fc18de3d84866cbb567d"
+    },
+    {
+      "path": "migrations/commerce/034_warehouse_return_events.sql",
+      "sha256": "51916838ef6e2b21f0e7371d8aa095bb0fa1c466605fbd89b36a94b511cb9282"
+    },
+    {
+      "path": "migrations/commerce/035_location_inventory.sql",
+      "sha256": "dad639362df3bd53d89a1504e5eb53249f5d57b5ea590115f783ad84f5c9d90f"
+    },
+    {
+      "path": "tests/development/warehouse-return-events.test.mts",
+      "sha256": "b077cac720a3ae46ef18d07686dfb16697862ff6e65cf13a13a4a812f52cecd0"
+    },
+    {
+      "path": "tests/development/location-inventory.test.mts",
+      "sha256": "951eadba9a83f0de5e7acc5c640e9e4fe7d9918ed07426c47ed05198a3b423b0"
+    },
+    {
+      "path": "tests/development/inventory-reconciliation.test.mts",
+      "sha256": "19e75585494ab55005d3e31cd56d9360614bc709fa65babd64483a9778a90693"
+    },
+    {
+      "path": "tests/development/warehouse-return-events-helpers.mts",
+      "sha256": "d69e349ff43cf33f7736146047ade7f3e6a63993b9b61e88716bca945269b15f"
+    },
+    {
+      "path": "tests/development/location-inventory-helpers.mts",
+      "sha256": "0f96c66929e0c9a3ff9ef3fcf7db28a53d22584d060b6382626def5e2debf516"
+    },
+    {
+      "path": "tests/development/inventory-reconciliation-helpers.mts",
+      "sha256": "af0a59d91f70882f4a5a20ce8e1b8e228407be0b7ea431b3b88d76e4befd39b3"
+    },
+    {
+      "path": "tests/fixtures/inventory-reconciliation/partial-cycle.v1.json",
+      "sha256": "2b233e743d77a8b2fa9fffb00323da55f69f4bcc1cf2a067950544ac2411a3e3"
+    },
+    {
+      "path": "tests/fixtures/inventory-reconciliation/storage-baseline.v1.json",
+      "sha256": "b7733158c7d2ea074874c0f0b909247fb058c4cd9180564584bd8043aec12fe0"
     }
   ]
 }

@@ -4,10 +4,12 @@ import { exact,id,integer } from './kernel.mts';
 import { canonical,contentDigest } from './configuration-values.mts';
 import { subjectHash } from './data-guards.mts';
 import { eraseGiftRecipient } from './gift-proof.mts';
+import { inventoryMovementCore,inventorySnapshotCore,inventoryRow,INVENTORY_FIELDS } from './location-inventory.mts';
 
 const MAX_RECORDS=10000;
 const PACKING_TABLES=['commerce_packing_sessions','commerce_packing_allocations','commerce_packing_scans','commerce_packing_confirmations'];
 const SHIPPING_TABLES=['commerce_shipping_label_operations','commerce_shipping_label_approvals','commerce_shipping_manifest_packages','commerce_shipping_manifest_events'];
+const WAREHOUSE_INVENTORY_TABLES=['commerce_warehouse_return_events','commerce_inventory_owners','commerce_inventory_snapshots','commerce_inventory_movements','commerce_inventory_discrepancies','commerce_inventory_transfers','commerce_inventory_transfer_operations','commerce_inventory_transfer_approvals'];
 const all=(k:CommerceKernel,table:string,t:string,s:string)=>k.db.prepare(`SELECT * FROM ${table} WHERE tenant_id=? AND store_id=?`).all(t,s) as Row[];
 const where=(ids:string[])=>ids.map(()=>'?').join(',');
 function storageInventoryVersions(k:CommerceKernel) {
@@ -25,13 +27,16 @@ function storageInventoryVersions(k:CommerceKernel) {
   const wooCurrent=[...tables,...woo.tables].sort((a:Row,b:Row)=>a.name.localeCompare(b.name));
   const shipping=JSON.parse(readFileSync(new URL('./contracts/storage-shipping-extension.v1.json',import.meta.url),'utf8'));
   if(shipping.base_schema_digest!==woo.schema_digest||contentDigest(wooCurrent.map((r:Row)=>({name:r.name,columns:r.columns})))!==woo.schema_digest)throw new Error('STORAGE_INVENTORY_CHANGED');
-  const current=[...wooCurrent,...shipping.tables].sort((a:Row,b:Row)=>a.name.localeCompare(b.name));
+  const shippingCurrent=[...wooCurrent,...shipping.tables].sort((a:Row,b:Row)=>a.name.localeCompare(b.name));
+  const inventory=JSON.parse(readFileSync(new URL('./contracts/storage-warehouse-inventory-extension.v1.json',import.meta.url),'utf8'));
+  if(inventory.base_schema_digest!==shipping.schema_digest||contentDigest(shippingCurrent.map((r:Row)=>({name:r.name,columns:r.columns})))!==shipping.schema_digest)throw new Error('STORAGE_INVENTORY_CHANGED');
+  const current=[...shippingCurrent,...inventory.tables].sort((a:Row,b:Row)=>a.name.localeCompare(b.name));
   if(new Set(current.map((r:Row)=>r.name)).size!==current.length)throw new Error('STORAGE_INVENTORY_CHANGED');
   const actual=(k.db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name").all() as Row[])
     .map(r=>({name:r.name,columns:(k.db.prepare('PRAGMA table_info('+r.name+')').all() as Row[]).map(c=>c.name)}));
-  if(contentDigest(actual)!==shipping.schema_digest||contentDigest(current.map((r:Row)=>({name:r.name,columns:r.columns})))!==shipping.schema_digest||contentDigest(tables.map((r:Row)=>({name:r.name,columns:r.columns})))!==assistance.schema_digest)throw new Error('STORAGE_INVENTORY_CHANGED');
+  if(contentDigest(actual)!==inventory.schema_digest||contentDigest(current.map((r:Row)=>({name:r.name,columns:r.columns})))!==inventory.schema_digest||contentDigest(tables.map((r:Row)=>({name:r.name,columns:r.columns})))!==assistance.schema_digest)throw new Error('STORAGE_INVENTORY_CHANGED');
   const legacy={...declared,tables,schema_digest:assistance.schema_digest,base_schema_digest:declared.schema_digest};
-  return {legacy,current:{...declared,version:2,tables:current,schema_digest:shipping.schema_digest,base_schema_digest:assistance.schema_digest}};
+  return {legacy,current:{...declared,version:2,tables:current,schema_digest:inventory.schema_digest,base_schema_digest:assistance.schema_digest}};
 }
 // Preserve the established version-one projection and its immutable caller
 // expectations. Both views first validate the entire current database schema.
@@ -177,6 +182,48 @@ function eraseShippingAndPacking(k:CommerceKernel,s:Row,ids:string[]){
   }
 }
 
+function eraseWarehouseInventory(k:CommerceKernel,s:Row,ids:string[]){
+  if(!ids.length)return;
+  const t=s.tenant_id,st=s.store_id;
+  // Reconstruct an allowlist on every suppression pass, including imported
+  // bodies already carrying a redacted flag. Quantitative stock cores keep the
+  // shared ledger valid without returning the erased subject's journey data.
+  for(const table of WAREHOUSE_INVENTORY_TABLES)for(const row of all(k,table,t,st).filter(r=>ids.includes(r.resource_id))){
+    const original=JSON.parse(row.body);if(contentDigest(original)!==row.digest)throw new Error('INVENTORY_INTEGRITY');
+    const body:Row={redacted:true,original_digest:original.original_digest??row.digest,tenant_id:t,store_id:st,resource_id:row.resource_id};
+    for(const field of ['event_id','request_id','source_identity','sequence','variant_id','location_id','field','movement_id','observation_id','id','transfer_id','operation_id'])
+      if(Object.hasOwn(row,field))body[field]=row[field];
+    if(table==='commerce_inventory_movements'){
+      inventoryRow(row,true);const core=inventoryMovementCore(original);
+      if(contentDigest(core)!==original.chain_digest)throw new Error('INVENTORY_INTEGRITY');
+      exact(core.delta,[...INVENTORY_FIELDS]);if(INVENTORY_FIELDS.some(field=>!Number.isSafeInteger(core.delta[field])))throw new Error('INVENTORY_INTEGRITY');
+      Object.assign(body,core,{chain_digest:original.chain_digest});
+    }else if(table==='commerce_inventory_snapshots'){
+      inventoryRow(row,true);const core=inventorySnapshotCore(original);
+      if(contentDigest(core)!==original.quantitative_digest)throw new Error('INVENTORY_INTEGRITY');
+      exact(core.values,[...INVENTORY_FIELDS]);exact(core.field_owners,[...INVENTORY_FIELDS]);
+      for(const field of INVENTORY_FIELDS){integer(core.values[field]);id(core.field_owners[field]);}
+      if(!Array.isArray(core.covered_movement_ids)||core.covered_movement_ids.length>1024)throw new Error('INVENTORY_INTEGRITY');core.covered_movement_ids.forEach(id);
+      Object.assign(body,core,{quantitative_digest:original.quantitative_digest});
+    }else if(table==='commerce_warehouse_return_events'){
+      body.native_event_digest=original.event?.digest??original.native_event_digest??null;
+      body.kind=original.event?.kind??original.kind??null;
+    }else if(table==='commerce_inventory_transfers'||table==='commerce_inventory_transfer_operations'){
+      // Original operation identity, uncertainty and aggregate unit state remain;
+      // commands, actor/approval data, evidence and arbitrary copies do not.
+      const command=original.command??{},state=original.transfer??original.receipt?.transfer??original;
+      for(const field of ['source_identity','command_digest','state','kind','quantity','reserved','released','dispatched','received','lost','in_transit','revision','correction_of']){
+        const value=original[field]??state[field]??command[field]??null;
+        if(value===null||typeof value==='string'||typeof value==='number'||typeof value==='boolean')body[field]=value;
+      }
+      body.original_operation_id=row.operation_id??original.original_operation_id??null;
+    }else if(table==='commerce_inventory_discrepancies')body.code=original.code??null;
+    const pk=(k.db.prepare('PRAGMA table_info('+table+')').all() as Row[]).filter(c=>c.pk).sort((a,b)=>a.pk-b.pk).map(c=>c.name);
+    k.db.prepare(`UPDATE ${table} SET body=?,digest=? WHERE ${pk.map(c=>c+'=?').join(' AND ')}`).run(canonical(body),contentDigest(body),...pk.map(c=>row[c]));
+  }
+  k.db.prepare('UPDATE commerce_inventory_transfer_approvals SET revoked=1 WHERE tenant_id=? AND store_id=? AND resource_id IN ('+where(ids)+')').run(t,st,...ids);
+}
+
 // Requires caller-owned transaction and explicit resource identities. Also used to replay
 // an independently retained erasure checkpoint before a restored database is exposed.
 export function eraseSelected(k:CommerceKernel,s:Row,ids:string[],hash:string,at:number) {
@@ -191,6 +238,7 @@ export function eraseSelected(k:CommerceKernel,s:Row,ids:string[],hash:string,at
   if(ids.length) {
     const marks=where(ids),args=[t,st,...ids];
     eraseShippingAndPacking(k,s,ids);
+    eraseWarehouseInventory(k,s,ids);
     k.db.prepare(`DELETE FROM commerce_gift_challenges WHERE tenant_id=? AND store_id=? AND resource_id IN (${marks})`).run(...args);
     k.db.prepare(`DELETE FROM commerce_gift_sessions WHERE tenant_id=? AND store_id=? AND resource_id IN (${marks})`).run(...args);
     scrubRecord(k,'commerce_gift_cases',t,st,ids,'resource_id');
@@ -267,7 +315,8 @@ export class PrivacyLifecycle {
       const woocommerce_records=Object.fromEntries(['commerce_woo_return_sources','commerce_woo_rma_bindings','commerce_woo_event_observations'].map(table=>[table,all(k,table,s.tenant_id,s.store_id).filter(subjectRecord)]));
       const packing_records=Object.fromEntries(PACKING_TABLES.map(table=>[table,all(k,table,s.tenant_id,s.store_id).filter(subjectRecord)]));
       const shipping_records=Object.fromEntries(SHIPPING_TABLES.map(table=>[table,all(k,table,s.tenant_id,s.store_id).filter(subjectRecord)]));
-      const result={packing_records,shipping_records,woocommerce_records,return_assistance_records,exchange_history_records,support_records,analytics_records,order_edit_records,gift_returns:gifts,schema_version:1,tenant_id:s.tenant_id,store_id:s.store_id,subject_ref:subjectHash(s.tenant_id,s.store_id,customer),
+      const warehouse_inventory_records=Object.fromEntries(WAREHOUSE_INVENTORY_TABLES.map(table=>[table,all(k,table,s.tenant_id,s.store_id).filter(subjectRecord)]));
+      const result={warehouse_inventory_records,packing_records,shipping_records,woocommerce_records,return_assistance_records,exchange_history_records,support_records,analytics_records,order_edit_records,gift_returns:gifts,schema_version:1,tenant_id:s.tenant_id,store_id:s.store_id,subject_ref:subjectHash(s.tenant_id,s.store_id,customer),
         resources:rs.map(r=>k.project(r)),attachments:all(k,'commerce_attachments',s.tenant_id,s.store_id).filter(subjectRecord).map(r=>({id:r.id,resource_id:r.resource_id,content:JSON.parse(r.content)})),
         knowledge:all(k,'commerce_knowledge',s.tenant_id,s.store_id).filter(subjectRecord),
         tasks,assistance:all(k,'commerce_assistance_receipts',s.tenant_id,s.store_id).filter(r=>tasks.some(t=>t.id===r.task_id)),

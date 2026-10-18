@@ -2,6 +2,7 @@ import { exact,id } from './kernel.mts';
 import type { CommerceKernel,Row,Scope } from './kernel.mts';
 import { canonical,contentDigest,jsonValue } from './configuration-values.mts';
 import { assertNotErased } from './data-guards.mts';
+import { returnContext,lifecycleBody } from './return-lifecycle-core.mts';
 import { LocationInventory } from './location-inventory.mts';
 import { WarehouseReturnEvents } from './warehouse-return-events.mts';
 import { PackingSessions } from './packing-sessions.mts';
@@ -73,17 +74,19 @@ export class InventoryReconciliation {
     }
     const nativeIds=new Set(movements.map(m=>m.movement_id));
     for(const saved of history.movements)if(!nativeIds.has(saved.movement_id))problem('MOVEMENT_SOURCE_MISSING',{movement_id:saved.movement_id});
-    for(const discrepancy of history.discrepancies)problem('INVENTORY_DISCREPANCY',{discrepancy});
+    for(const discrepancy of history.discrepancies)if(!discrepancy.resolved)problem('INVENTORY_DISCREPANCY',{discrepancy});
 
-    const nativeSnapshots=indexed(source.snapshots(resource.id),'observation_id').map(o=>checkedNative(o,source.identity,s));
+    const nativeSnapshots=indexed(source.snapshots(resource.id),'observation_id').map(o=>{
+      checkedNative(o,source.identity,s);if(o.resource_id!==resource.id)throw new Error('INVENTORY_RECONCILIATION_INTEGRITY');return o;
+    });
     const positionKeys=new Map<string,Row>();
     for(const row of [...movements,...nativeSnapshots,...history.snapshots,...history.owners])
       if(row.variant_id&&row.location_id)positionKeys.set(key(row.variant_id,row.location_id),{variant_id:row.variant_id,location_id:row.location_id});
     const positions=[...positionKeys.values()].sort((a,b)=>key(a.variant_id,a.location_id).localeCompare(key(b.variant_id,b.location_id))).map(position=>{
       const balance=this.inventory.balance(scope,{resource_id:resource.id,...position}),expected=stock(balance),observed=stock(source.position(position));
       if(!balance.anchored)problem('INVENTORY_ANCHOR_MISSING',position);
-      if(FIELDS.some(field=>!Number.isSafeInteger(expected[field])||!Number.isSafeInteger(observed[field])))throw new Error('INVENTORY_RECONCILIATION_INTEGRITY');
-      if(!same(expected,observed))problem('UNEXPLAINED_STOCK_DIFFERENCE',{...position,expected,observed});
+      if(FIELDS.some(field=>balance.anchored&&!Number.isSafeInteger(expected[field])||!Number.isSafeInteger(observed[field])))throw new Error('INVENTORY_RECONCILIATION_INTEGRITY');
+      if(balance.anchored&&!same(expected,observed))problem('UNEXPLAINED_STOCK_DIFFERENCE',{...position,expected,observed});
       return {...position,source_identity:source.identity,anchor_id:balance.anchor_id,expected,observed};
     });
 
@@ -135,8 +138,50 @@ export class InventoryReconciliation {
     for(const movement of movements)if(movement.kind==='shipment'&&!acceptedRefs.has(movement.reference_id))problem('ORPHAN_SHIPMENT_MOVEMENT',{movement_id:movement.movement_id});
 
     const requests=k.db.prepare('SELECT id FROM commerce_return_requests WHERE tenant_id=? AND store_id=? AND resource_id=? ORDER BY id').all(s.tenant_id,s.store_id,resource.id) as Row[];
-    const nativeEvents=this.returns.source.returnEvents().filter((e:Row)=>e.resource_id===resource.id).map((e:Row)=>checkedNative(e,source.identity,s));
-    const nativeEffects=this.returns.source.effects().filter((e:Row)=>e.resource_id===resource.id);
+    const contexts=new Map(requests.map(request=>{
+      const ctx=returnContext(k,scope,request.id);
+      if(ctx.r.resource_id!==resource.id)throw new Error('RECONCILIATION_RETURN_BINDING_MISMATCH');
+      const operation=k.db.prepare('SELECT * FROM commerce_native_return_operations WHERE tenant_id=? AND store_id=? AND request_id=?').get(s.tenant_id,s.store_id,request.id) as Row|undefined;
+      const native=operation?.native_body?JSON.parse(operation.native_body):null;
+      if(native&&(contentDigest(native)!==operation!.native_digest||native.id!==operation!.native_id))throw new Error('RECONCILIATION_RETURN_BINDING_MISMATCH');
+      return [request.id,{...ctx,native_return_id:operation?.state==='created'&&native?native.id:null}];
+    }));
+    const nativeEvents=indexed(this.returns.source.returnEvents().filter((e:Row)=>e.resource_id===resource.id),'event_id').map((e:Row)=>checkedNative(e,source.identity,s));
+    const nativeEffects=indexed(this.returns.source.effects().filter((e:Row)=>e.resource_id===resource.id),'operation_id');
+    const linkedReturn=(value:Row)=>{
+      const nativeId=contexts.get(value.request_id)?.native_return_id;
+      return typeof nativeId==='string'&&nativeId.length>0&&nativeId===value.native_return_id;
+    };
+    for(const value of [...nativeEvents,...nativeEffects])if(!linkedReturn(value))problem('RETURN_SOURCE_LINK_MISSING',{
+      request_id:value.request_id,native_return_id:value.native_return_id,...(value.event_id?{event_id:value.event_id}:{operation_id:value.operation_id})});
+    const dispositionRows=k.db.prepare('SELECT d.* FROM commerce_disposition_operations d JOIN commerce_return_requests r ON r.tenant_id=d.tenant_id AND r.store_id=d.store_id AND r.id=d.request_id WHERE r.tenant_id=? AND r.store_id=? AND r.resource_id=? ORDER BY d.id').all(s.tenant_id,s.store_id,resource.id) as Row[];
+    const dispositionOperations=new Map(dispositionRows.map(op=>{
+      const command=JSON.parse(op.command);
+      if(contentDigest(command)!==op.digest||command.operation_id!==op.id||command.request_id!==op.request_id||command.resource_id!==resource.id||command.tenant_id!==s.tenant_id||command.store_id!==s.store_id||command.source_identity!==source.identity)
+        throw new Error('RECONCILIATION_RETURN_BINDING_MISMATCH');
+      if(!nativeEffects.some(effect=>effect.operation_id===op.id))problem('DISPOSITION_SOURCE_MISSING',{request_id:op.request_id,operation_id:op.id,state:op.state});
+      return [op.id,{op,command}];
+    }));
+    const observedDispositions=new Set<string>();
+    for(const effect of nativeEffects){
+      const saved=dispositionOperations.get(effect.operation_id);
+      if(!saved){problem('DISPOSITION_OPERATION_NOT_OBSERVED',{request_id:effect.request_id,operation_id:effect.operation_id,state:'missing'});continue;}
+      const {id:nativeId,state,adjustments,qualification,...nativeCommand}=effect,{op,command}=saved;
+      if(!same(command,nativeCommand))throw new Error('RECONCILIATION_RETURN_BINDING_MISMATCH');
+      const units=k.db.prepare('SELECT unit_id FROM commerce_disposition_units WHERE tenant_id=? AND store_id=? AND operation_id=? ORDER BY unit_id').all(s.tenant_id,s.store_id,op.id) as Row[];
+      const linkedUnits=same(units.map(u=>u.unit_id),command.units.map((u:Row)=>u.id).sort())&&command.units.every((unit:Row)=>{
+        const row=k.db.prepare('SELECT * FROM commerce_received_units WHERE tenant_id=? AND store_id=? AND id=?').get(s.tenant_id,s.store_id,unit.id) as Row|undefined;
+        if(!row)return false;const body=lifecycleBody(row);
+        return row.request_id===effect.request_id&&body.id===unit.id&&body.line_id===unit.line_id&&body.ordinal===unit.ordinal&&body.variant_id===unit.variant_id;
+      });
+      const observations=k.db.prepare("SELECT * FROM commerce_lifecycle_observations WHERE tenant_id=? AND store_id=? AND operation_id=? AND stage='applied' ORDER BY seq").all(s.tenant_id,s.store_id,op.id) as Row[];
+      const applied=observations.map(row=>{
+        const body=lifecycleBody(row);if(row.request_id!==effect.request_id||!same(body,effect))throw new Error('RECONCILIATION_RETURN_BINDING_MISMATCH');return body;
+      });
+      if(op.state!=='applied'||op.native_id!==nativeId||!linkedUnits||applied.length!==1||!linkedReturn(effect))
+        problem('DISPOSITION_OPERATION_NOT_OBSERVED',{request_id:effect.request_id,operation_id:effect.operation_id,state:op.state});
+      else observedDispositions.add(effect.operation_id);
+    }
     const returnReports:Row[]=[];
     for(const request of requests){
       const value=this.returns.read(scope,request.id),receipt=value.receipt,events=value.events.map((r:Row)=>r.event),ids=new Set(events.map((e:Row)=>e.event_id));
@@ -150,11 +195,14 @@ export class InventoryReconciliation {
         if(!native||!native.received||native.variant_id!==unit.variant_id||native.grade!==unit.grade){problem('RETURN_RECEIPT_SOURCE_MISMATCH',{request_id:request.id,unit_id:unit.id});continue;}
         const linked=shippedUnits.filter(u=>u.line_id===unit.line_id&&u.sku===unit.variant_id&&(u.return_links.includes(request.id)||u.return_links.includes(native.native_return_id))).sort((a,b)=>a.ordinal-b.ordinal);
         if(!linked[unit.ordinal-1])problem('RETURN_SHIPMENT_LINK_MISSING',{request_id:request.id,unit_id:unit.id});
-        const local=nativeEffects.filter((effect:Row)=>effect.request_id===request.id&&effect.units.some((u:Row)=>u.id===unit.id));
+        const local=nativeEffects.filter((effect:Row)=>observedDispositions.has(effect.operation_id)&&effect.request_id===request.id&&effect.units.some((u:Row)=>u.id===unit.id));
         if(native.disposition&&local.length)problem('RETURN_DISPOSITION_DUPLICATED',{request_id:request.id,unit_id:unit.id});
         if(!native.disposition&&!local.length)problem('RETURN_DISPOSITION_PENDING',{request_id:request.id,unit_id:unit.id});
       }
-      const pending=receipt.lines.reduce((sum:number,line:Row)=>sum+line.missing,0);
+      const selection=contexts.get(request.id)!.request.selection.lines as Row[];
+      if(!Array.isArray(selection)||selection.length>MAX_RECORDS||new Set(selection.map(line=>line.line_id)).size!==selection.length||selection.some(line=>!Number.isSafeInteger(line.quantity)||line.quantity<1))throw new Error('RECONCILIATION_RETURN_BINDING_MISMATCH');
+      const pending=selection.reduce((sum:number,line:Row)=>sum+Math.max(0,line.quantity-receipt.units.filter((unit:Row)=>unit.line_id===line.line_id).length),0);
+      if(!Number.isSafeInteger(pending))throw new Error('RECONCILIATION_LIMIT');
       if(observed.at(-1)?.completeness==='complete'&&pending>0)problem('RETURN_COMPLETENESS_CONFLICT',{request_id:request.id,pending_units:pending});
       returnReports.push({request_id:request.id,source_identity:value.source_identity,received_units:receipt.total_actual,pending_units:pending,
         inspection:receipt.inspection,completeness:observed.at(-1)?.completeness??'unobserved',event_ids:events.map((e:Row)=>e.event_id),receipt_digest:receipt.digest});
@@ -162,20 +210,20 @@ export class InventoryReconciliation {
     for(const movement of movements){
       if(movement.origin.kind==='return_event'){
         const event=nativeEvents.find((e:Row)=>e.event_id===(movement.origin.event_id??movement.origin.id));
-        const adjustment=event?.adjustments.find((a:Row)=>a.unit_id===movement.origin.unit_id);
-        if(!event||!requests.some(r=>r.id===event.request_id)||!adjustment||adjustment.variant_id!==movement.variant_id||adjustment.location_id!==movement.location_id||adjustment.available_delta!==movement.delta.available||movement.delta.on_hand!==movement.delta.available||movement.delta.reserved!==0||movement.delta.in_transit!==0)
+        const adjustments=event?.adjustments.filter((a:Row)=>a.unit_id===movement.origin.unit_id&&a.variant_id===movement.variant_id&&a.location_id===movement.location_id&&a.available_delta===movement.delta.available);
+        if(!event||!linkedReturn(event)||adjustments?.length!==1||movement.delta.on_hand!==movement.delta.available||movement.delta.reserved!==0||movement.delta.in_transit!==0)
           throw new Error('RECONCILIATION_RETURN_BINDING_MISMATCH');
       }
       if(movement.origin.kind==='return_disposition'){
         const effect=nativeEffects.find((e:Row)=>e.operation_id===movement.origin.id),adjustment=effect?.adjustments.find((a:Row)=>a.unit_id===movement.origin.unit_id);
-        if(!effect||!adjustment||adjustment.variant_id!==movement.variant_id||adjustment.location_id!==movement.location_id||adjustment.available_delta!==movement.delta.available)
+        if(!effect||!linkedReturn(effect)||!adjustment||adjustment.variant_id!==movement.variant_id||adjustment.location_id!==movement.location_id||adjustment.available_delta!==movement.delta.available||movement.delta.on_hand!==movement.delta.available||movement.delta.reserved!==0||movement.delta.in_transit!==0)
           throw new Error('RECONCILIATION_RETURN_BINDING_MISMATCH');
       }
     }
     discrepancies.sort((a,b)=>canonical(a).localeCompare(canonical(b)));
     const partial=returnReports.some(r=>r.pending_units>0),received=returnReports.some(r=>r.received_units>0);
     return jsonValue({version:1,resource_id:resource.id,warehouse_source_identity:source.identity,carrier_source_identity:this.carrier.identity,
-      reconciled: discrepancies.length === 0,cycle_state:discrepancies.length?'discrepancies':received&&partial?'partial_return_reconciled':received?'return_cycle_reconciled':'shipment_reconciled',
+      reconciled: discrepancies.length === 0,cycle_state:discrepancies.length?'discrepancies':received&&partial?'partial_return_reconciled':received?'return_cycle_reconciled':partial?'return_pending':'shipment_reconciled',
       positions,packages,returns:returnReports,movement_ids:movements.map(m=>m.movement_id),discrepancies,
       repair_policy:'import_existing_source_observations_only',inventory_effect:false,financial_effect:false,qualification:'synthetic_only',physical_qualified:false,connected_warehouse_qualified:false,carrier_connected:false,formal_goal_accepted:false});
   }
@@ -183,7 +231,8 @@ export class InventoryReconciliation {
     const {s,resource}=this.#context(scope,input,true),source=this.inventory.source;
     // Inspect first so tampered native/canonical lineage cannot be copied into a
     // fresh report. Missing observations and unexplained quantities stay data.
-    this.inspect(scope,input);
+    const initial=this.inspect(scope,input);
+    if(initial.discrepancies.some((d:Row)=>d.code==='RETURN_SOURCE_LINK_MISSING'))throw new Error('RECONCILIATION_RETURN_BINDING_MISMATCH');
     const requests=new Set((this.kernel.db.prepare('SELECT id FROM commerce_return_requests WHERE tenant_id=? AND store_id=? AND resource_id=?').all(s.tenant_id,s.store_id,resource.id) as Row[]).map(r=>r.id));
     const events=this.returns.source.returnEvents().filter((e:Row)=>e.resource_id===resource.id).sort((a:Row,b:Row)=>a.request_id.localeCompare(b.request_id)||a.sequence-b.sequence);
     for(const event of events){checkedNative(event,source.identity,s);if(!requests.has(event.request_id))throw new Error('RECONCILIATION_RETURN_BINDING_MISMATCH');

@@ -9,16 +9,16 @@ import {nativeCatalogFactories} from './adapter-catalog-bindings.mts';
 
 test('CASE-M07-G05-01',async t=>{
  const catalog=readAdapterCatalog(),fixtures=readCatalogFixtures(),checked=validateAdapterCatalog(catalog);
- assert.equal(checked.adapter_count,27);assert.equal(checked.operation_count,135);assert.equal(checked.direct_fixture_count,47);assert.equal(checked.native_case_count,136);
+ assert.equal(checked.adapter_count,28);assert.equal(checked.operation_count,141);assert.equal(checked.direct_fixture_count,47);assert.equal(checked.native_case_count,146);
  const direct=await runCatalogFixtures(catalog,fixtures,nativeCatalogFactories);
  assert.equal(direct.fixture_count,47);assert.equal(new Set(direct.results.map(r=>r.adapter.id)).size,25);
  for(const result of direct.results){assert.equal(result.outcome,'passed');assert.equal(result.source_observed,true);assert.equal(result.external_qualification,false);assert.equal(result.production_qualified,false);assert(['sandbox-only','unavailable'].includes(result.adapter.qualification));}
  const rma=direct.observations.find(r=>r.key==='woo_rma')!;assert.equal(rma.before.records.length,1);assert.equal(rma.after.records.length,2);assert.equal(rma.after.records[1].body.native_return_id,null);assert.deepEqual(rma.before.records[0],rma.after.records[0]);
  const manual=direct.observations.find(r=>r.key==='woo_manual')!;assert.equal(manual.after.records[0].body.refunded_payment,false);
  const gateway=direct.observations.find(r=>r.key==='woo_gateway')!;assert.equal(gateway.after.records[0].body.settled,false);
- const native=await runPinnedCatalogCases(catalog);assert.deepEqual(native.counts,{tests:136,pass:136,fail:0,cancelled:0,skipped:0,todo:0});assert.equal(native.cases.length,136);
+ const native=await runPinnedCatalogCases(catalog);assert.deepEqual(native.counts,{tests:146,pass:146,fail:0,cancelled:0,skipped:0,todo:0});assert.equal(native.cases.length,146);
  assert.deepEqual(native.cases.map(c=>c.id).sort(),catalogCases(catalog).map(c=>c.id).sort());
- t.diagnostic('27 declared adapters; 135 operations; 47 common-engine scenarios; 136 retained native cases executed; external qualification remains false.');
+ t.diagnostic('28 declared adapters; 141 operations; 47 common-engine scenarios; 146 retained native cases executed; external qualification remains false.');
  // Optional author capture keeps inspectable fixture records outside source.
  // The normal native gate neither requires this path nor reads a stored report.
  if(process.env.RIFARE_CATALOG_EVIDENCE){const path=resolve(process.env.RIFARE_CATALOG_EVIDENCE);mkdirSync(path,{recursive:true});

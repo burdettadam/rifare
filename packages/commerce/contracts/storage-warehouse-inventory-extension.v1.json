@@ -1,0 +1,124 @@
+{
+  "version": 1,
+  "base_schema_digest": "d3db27ee01179ab0b7dc38afdc890a5470b21ebae0b84ca1a72e645ad1948579",
+  "schema_digest": "f0c045022c2d17646b536a8a0603376426b277a3ad4f92aa47a7b7044c823f0f",
+  "tables": [
+    {
+      "name": "commerce_inventory_discrepancies",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "resource_id",
+        "id",
+        "variant_id",
+        "location_id",
+        "body",
+        "digest"
+      ],
+      "handling": "subject_linked_redact_minimized_inventory_identity"
+    },
+    {
+      "name": "commerce_inventory_movements",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "resource_id",
+        "movement_id",
+        "source_identity",
+        "variant_id",
+        "location_id",
+        "ledger_seq",
+        "previous_digest",
+        "chain_digest",
+        "body",
+        "digest"
+      ],
+      "handling": "subject_linked_minimized_inventory_quantitative_audit"
+    },
+    {
+      "name": "commerce_inventory_owners",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "resource_id",
+        "variant_id",
+        "location_id",
+        "field",
+        "source_identity",
+        "body",
+        "digest"
+      ],
+      "handling": "subject_linked_minimized_inventory_quantitative_audit"
+    },
+    {
+      "name": "commerce_inventory_snapshots",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "resource_id",
+        "observation_id",
+        "source_identity",
+        "variant_id",
+        "location_id",
+        "body",
+        "digest"
+      ],
+      "handling": "subject_linked_minimized_inventory_quantitative_audit"
+    },
+    {
+      "name": "commerce_inventory_transfer_approvals",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "resource_id",
+        "operation_id",
+        "id",
+        "body",
+        "digest",
+        "revoked"
+      ],
+      "handling": "subject_linked_revoke_minimized_inventory_approval"
+    },
+    {
+      "name": "commerce_inventory_transfer_operations",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "resource_id",
+        "transfer_id",
+        "operation_id",
+        "body",
+        "digest"
+      ],
+      "handling": "subject_linked_minimized_inventory_effect_audit"
+    },
+    {
+      "name": "commerce_inventory_transfers",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "resource_id",
+        "transfer_id",
+        "body",
+        "digest"
+      ],
+      "handling": "subject_linked_minimized_inventory_effect_audit"
+    },
+    {
+      "name": "commerce_warehouse_return_events",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "event_id",
+        "request_id",
+        "resource_id",
+        "source_identity",
+        "sequence",
+        "body",
+        "digest",
+        "observed_at"
+      ],
+      "handling": "subject_linked_redact_minimized_warehouse_event_identity"
+    }
+  ]
+}

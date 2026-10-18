@@ -112,6 +112,15 @@ covered IDs and quantitative audit cores when rolling back. Never clear an
 unknown operation or re-key a transfer to force execution. External fixture
 databases and caller copies require separate operator cleanup.
 
+If erasure occurs after a source transfer commits but before its movement is
+imported, the unresolved original movement is still tied to the erased resource.
+Current import and transfer-reconciliation APIs reject that resource, so the
+shared ledger can remain stale and block dependent transfers for other orders.
+Operator reconciliation under the preserved privacy constraints is required;
+this batch provides no automatic post-erasure repair API. Preserve the original
+operation and source effect identity. Reissuing the command under a new identity
+does not repair the missing observation.
+
 ## Focused development evidence
 
 The shared file has 22 native cases: nine for inventory and thirteen for transfers.

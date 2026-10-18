@@ -109,12 +109,20 @@ test('CASE-M07-G14-03',()=>usingSupport(f=>{
 
 test('M07-G14-ALL-170-TABLES-HAVE-EXPLICIT-SURFACES',()=>usingSupport(f=>{
   const r=auditPrivacyCoverage(f.kernel,f.owner.scope),actual=f.db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name").all().map((x:any)=>x.name);
-  assert.equal(r.tables.length,178);assert.deepEqual(r.tables.map((t:any)=>t.name).sort(),actual);
+  assert.equal(r.tables.length,186);assert.deepEqual(r.tables.map((t:any)=>t.name).sort(),actual);
   const baseline=JSON.parse(readFileSync(new URL('../fixtures/shipping/storage-baseline.v1.json',import.meta.url),'utf8'));
   assert.equal(baseline.tables.length,170);
   const originalNames=new Set(baseline.tables.map((t:any)=>t.name));
+  const original178=JSON.parse(readFileSync(new URL('../fixtures/inventory-reconciliation/storage-baseline.v1.json',import.meta.url),'utf8'));
+  assert.equal(original178.tables.length,178);assert.equal(original178.protected_base,'60bdc1fa1281ea165a4edbf815eb8a1b02004ecf');
+  const original178Names=new Set(original178.tables.map((t:any)=>t.name));
+  assert.deepEqual(r.tables.filter((t:any)=>original178Names.has(t.name)).map((t:any)=>({name:t.name,surface:t.surface,handling:t.handling})).sort((a:any,b:any)=>a.name.localeCompare(b.name)),original178.tables);
+  assert.deepEqual(r.tables.filter((t:any)=>!original178Names.has(t.name)).map((t:any)=>t.name).sort(),[
+    'commerce_inventory_discrepancies','commerce_inventory_movements','commerce_inventory_owners','commerce_inventory_snapshots',
+    'commerce_inventory_transfer_approvals','commerce_inventory_transfer_operations','commerce_inventory_transfers','commerce_warehouse_return_events',
+  ]);
   assert.deepEqual(r.tables.filter((t:any)=>originalNames.has(t.name)).map((t:any)=>({name:t.name,surface:t.surface,handling:t.handling})).sort((a:any,b:any)=>a.name.localeCompare(b.name)),baseline.tables);
-  assert.deepEqual(r.tables.filter((t:any)=>!originalNames.has(t.name)).map((t:any)=>t.name).sort(),[
+  assert.deepEqual(r.tables.filter((t:any)=>original178Names.has(t.name)&&!originalNames.has(t.name)).map((t:any)=>t.name).sort(),[
     'commerce_packing_allocations','commerce_packing_confirmations','commerce_packing_scans','commerce_packing_sessions',
     'commerce_shipping_label_approvals','commerce_shipping_label_operations','commerce_shipping_manifest_events','commerce_shipping_manifest_packages',
   ]);
