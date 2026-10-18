@@ -24,7 +24,12 @@ export function deliveryTrialBinding(input:unknown){
 
 /** Register only from the canonical operation dispatcher. A persisted trial
  * command never becomes executable merely because an adapter was reopened. */
-export function armDeliveryTrialGuard(source:Source,command:Row,check:()=>unknown){if(!isDeliveryTrial(command.binding))return;let entries=guards.get(source);if(!entries){entries=new Map();guards.set(source,entries);}entries.set(command.operation_id,{digest:contentDigest(command),check});}
+export function armDeliveryTrialGuard(source:Source,command:Row,check:()=>unknown){
+ if(!isDeliveryTrial(command.binding))return ()=>{};
+ let entries=guards.get(source);if(!entries){entries=new Map();guards.set(source,entries);}
+ const entry={digest:contentDigest(command),check};entries.set(command.operation_id,entry);
+ return ()=>{if(entries.get(command.operation_id)===entry)entries.delete(command.operation_id);};
+}
 export function hasDeliveryTrialGuard(source:Source,command:Row){return guards.get(source)?.get(command.operation_id)?.digest===contentDigest(command);}
 export function assertDeliveryTrialGuard(source:Source,command:Row){
  if(!isDeliveryTrial(command.binding))return;const guard=guards.get(source)?.get(command.operation_id);
