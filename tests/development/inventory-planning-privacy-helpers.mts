@@ -29,9 +29,13 @@ const GROUPS = [
 const PRIVATE_COPY = 'M11_UNEXPECTED_PRIVATE_RESTORED_COPY';
 const authorityTables = ['commerce_forecast_reviews','commerce_procurement_approvals','commerce_stock_approvals'];
 const owner = (f:any,x:any) => x.owner_scope ?? f.owner?.scope ?? f.owner;
+function keyColumns(db:any,table:string) {
+  assert.ok(/^commerce_[a-z_]+$/.test(table));
+  return db.prepare('PRAGMA table_info('+table+')').all().filter((column:any)=>column.pk).sort((a:any,b:any)=>a.pk-b.pk).map((column:any)=>column.name);
+}
 function rows(db:any,table:string,s:any) {
   assert.ok(/^commerce_[a-z_]+$/.test(table));
-  return db.prepare('SELECT * FROM '+table+' WHERE tenant_id=? AND store_id=? ORDER BY id').all(s.tenant_id,s.store_id);
+  return db.prepare('SELECT * FROM '+table+' WHERE tenant_id=? AND store_id=? ORDER BY '+keyColumns(db,table).join(',')).all(s.tenant_id,s.store_id);
 }
 function sourceCopies(f:any) {
   const seen=new Set<any>(),copies:any[]=[];
@@ -56,21 +60,21 @@ function populated(f:any,x:any,group:any) {
   return s;
 }
 function identities(db:any,s:any,x:any) {
-  return Object.fromEntries(x.tables.map((table:string)=>[table,rows(db,table,s).map((row:any)=>row.id)]));
+  return Object.fromEntries(x.tables.map((table:string)=>[table,rows(db,table,s).map((row:any)=>keyColumns(db,table).map((key:string)=>[key,row[key]]))]));
 }
 function unknowns(f:any,s:any,x:any) {
   return (x.unknown_operations??[]).map((operation:any)=>{
-    const row=rows(f.db,operation.table,s).find((row:any)=>row.id===operation.id);
+    const row=rows(f.db,operation.table,s).find((row:any)=>(row.id??row.operation_id)===operation.id);
     assert.ok(row);const body=JSON.parse(row.body);
     assert.equal(row.state??body.state,'unknown');
     const id=operation.operation_id??body.operation_id??body.command?.operation_id??row.id;
     assert.ok(JSON.stringify(row).includes(id));
-    return {table:operation.table,id:row.id,operation_id:id,source_identity:operation.source_identity??null};
+    return {table:operation.table,keys:keyColumns(f.db,operation.table).map((key:string)=>[key,row[key]]),operation_id:id,source_identity:operation.source_identity??null};
   });
 }
 function assertUnknowns(db:any,s:any,originals:any[]) {
   for(const original of originals) {
-    const row=rows(db,original.table,s).find((row:any)=>row.id===original.id);
+    const row=rows(db,original.table,s).find((row:any)=>original.keys.every(([key,value]:any)=>row[key]===value));
     assert.ok(row,'Original uncertain operation cannot be deleted');
     assert.equal(row.state??JSON.parse(row.body).state,'unknown','Privacy cannot resolve a native outcome');
     assert.ok(JSON.stringify(row).includes(original.operation_id),'Retain the original operation identity');
@@ -88,9 +92,9 @@ function copied(value:any):any {
 }
 function injectCopies(f:any,s:any,x:any) {
   for(const table of x.tables)for(const row of rows(f.db,table,s)) {
-    const body=copied(JSON.parse(row.body));
-    f.db.prepare('UPDATE '+table+' SET body=?,digest=? WHERE tenant_id=? AND store_id=? AND id=?')
-      .run(canonical(body),contentDigest(body),s.tenant_id,s.store_id,row.id);
+    const body=copied(JSON.parse(row.body)),keys=keyColumns(f.db,table);
+    f.db.prepare('UPDATE '+table+' SET body=?,digest=? WHERE '+keys.map((key:string)=>key+'=?').join(' AND '))
+      .run(canonical(body),contentDigest(body),...keys.map((key:string)=>row[key]));
   }
 }
 function assertAllowlisted(db:any,s:any,x:any) {
