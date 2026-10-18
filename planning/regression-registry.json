@@ -1204,6 +1204,57 @@
         "apps/commerce-api/accessibility.css",
         "docs/ACCESSIBLE-WORKFLOWS.md"
       ]
+    },
+    {
+      "id": "FEATURE-M07-G16",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M07/M07-G16.md",
+        "packages/presentation/locale-contract.v1.json",
+        "packages/presentation/locale-presentation.js",
+        "apps/commerce-api/locale-client.js",
+        "docs/LOCALE-PRESENTATION.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M07-G17",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M07/M07-G17.md",
+        "packages/pilot/contracts/protocol.v1.json",
+        "packages/pilot/protocol.mts",
+        "packages/pilot/protocol.py",
+        "planning/release-benchmark.json",
+        "tools/check_release_benchmark.py",
+        "docs/PILOT-PROTOCOL.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M07-G18-PREPARATION",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "docs/decisions/0035-locale-pilot-and-carrier-preparation.md",
+        "packages/pilot/contracts/protocol.v1.json",
+        "packages/pilot/protocol.py",
+        "work/qualification/M07-real-observations.json",
+        "work/records/M07-G18.md",
+        "docs/PILOT-PROTOCOL.md"
+      ]
+    },
+    {
+      "id": "FEATURE-M08-G01",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "goals/M08/M08-G01.md",
+        "packages/commerce/contracts/carrier-quotes.v1.json",
+        "packages/commerce/carrier-quotes.mts",
+        "packages/adapters/carrier-quote-fixture-source.mts",
+        "docs/CARRIER-QUOTES.md"
+      ]
     }
   ],
   "tests": [
@@ -19728,6 +19779,349 @@
       "runner_case_id": "M07-G15-RECOVERY-KEYBOARD",
       "source": "tests/development/accessibility-workflows.test.mts",
       "capability_id": "FEATURE-M07-G15"
+    },
+    {
+      "id": "runtime:CASE-M07-G16-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M07-G16-01",
+      "source": "tests/development/locale-presentation.test.mts",
+      "capability_id": "FEATURE-M07-G16"
+    },
+    {
+      "id": "runtime:CASE-M07-G16-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M07-G16-02",
+      "source": "tests/development/locale-presentation.test.mts",
+      "capability_id": "FEATURE-M07-G16"
+    },
+    {
+      "id": "runtime:CASE-M07-G16-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M07-G16-03",
+      "source": "tests/development/locale-presentation.test.mts",
+      "capability_id": "FEATURE-M07-G16"
+    },
+    {
+      "id": "runtime:M07-G16-CURRENCY-GOLDENS",
+      "suite": "runtime",
+      "runner_case_id": "M07-G16-CURRENCY-GOLDENS",
+      "source": "tests/development/locale-presentation.test.mts",
+      "capability_id": "FEATURE-M07-G16"
+    },
+    {
+      "id": "runtime:M07-G16-LARGE-AND-NEGATIVE-EXACT",
+      "suite": "runtime",
+      "runner_case_id": "M07-G16-LARGE-AND-NEGATIVE-EXACT",
+      "source": "tests/development/locale-presentation.test.mts",
+      "capability_id": "FEATURE-M07-G16"
+    },
+    {
+      "id": "runtime:M07-G16-EXISTING-CURRENCY-MODEL",
+      "suite": "runtime",
+      "runner_case_id": "M07-G16-EXISTING-CURRENCY-MODEL",
+      "source": "tests/development/locale-presentation.test.mts",
+      "capability_id": "FEATURE-M07-G16"
+    },
+    {
+      "id": "runtime:M07-G16-SOURCE-TOTALS-STRICT",
+      "suite": "runtime",
+      "runner_case_id": "M07-G16-SOURCE-TOTALS-STRICT",
+      "source": "tests/development/locale-presentation.test.mts",
+      "capability_id": "FEATURE-M07-G16"
+    },
+    {
+      "id": "runtime:M07-G16-INSTANT-GOLDENS",
+      "suite": "runtime",
+      "runner_case_id": "M07-G16-INSTANT-GOLDENS",
+      "source": "tests/development/locale-presentation.test.mts",
+      "capability_id": "FEATURE-M07-G16"
+    },
+    {
+      "id": "runtime:M07-G16-INVALID-INSTANTS",
+      "suite": "runtime",
+      "runner_case_id": "M07-G16-INVALID-INSTANTS",
+      "source": "tests/development/locale-presentation.test.mts",
+      "capability_id": "FEATURE-M07-G16"
+    },
+    {
+      "id": "runtime:M07-G16-EXPLICIT-LOCALE-AND-ZONE",
+      "suite": "runtime",
+      "runner_case_id": "M07-G16-EXPLICIT-LOCALE-AND-ZONE",
+      "source": "tests/development/locale-presentation.test.mts",
+      "capability_id": "FEATURE-M07-G16"
+    },
+    {
+      "id": "runtime:M07-G16-FALL-BACK-DEADLINE",
+      "suite": "runtime",
+      "runner_case_id": "M07-G16-FALL-BACK-DEADLINE",
+      "source": "tests/development/locale-presentation.test.mts",
+      "capability_id": "FEATURE-M07-G16"
+    },
+    {
+      "id": "runtime:M07-G16-UTC-DATE-BOUNDARY",
+      "suite": "runtime",
+      "runner_case_id": "M07-G16-UTC-DATE-BOUNDARY",
+      "source": "tests/development/locale-presentation.test.mts",
+      "capability_id": "FEATURE-M07-G16"
+    },
+    {
+      "id": "runtime:M07-G16-DEADLINE-CANONICAL-FENCE",
+      "suite": "runtime",
+      "runner_case_id": "M07-G16-DEADLINE-CANONICAL-FENCE",
+      "source": "tests/development/locale-presentation.test.mts",
+      "capability_id": "FEATURE-M07-G16"
+    },
+    {
+      "id": "runtime:M07-G16-FORMATTED-TEXT-NEVER-SUBMITTED",
+      "suite": "runtime",
+      "runner_case_id": "M07-G16-FORMATTED-TEXT-NEVER-SUBMITTED",
+      "source": "tests/development/locale-presentation.test.mts",
+      "capability_id": "FEATURE-M07-G16"
+    },
+    {
+      "id": "runtime:M07-G16-STATIC-ASSETS-AND-OPTIONAL-FALLBACK",
+      "suite": "runtime",
+      "runner_case_id": "M07-G16-STATIC-ASSETS-AND-OPTIONAL-FALLBACK",
+      "source": "tests/development/locale-presentation.test.mts",
+      "capability_id": "FEATURE-M07-G16"
+    },
+    {
+      "id": "runtime:CASE-M07-G17-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M07-G17-01",
+      "source": "tests/development/pilot-protocol.test.mts",
+      "capability_id": "FEATURE-M07-G17"
+    },
+    {
+      "id": "runtime:CASE-M07-G17-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M07-G17-02",
+      "source": "tests/development/pilot-protocol.test.mts",
+      "capability_id": "FEATURE-M07-G17"
+    },
+    {
+      "id": "runtime:CASE-M07-G17-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M07-G17-03",
+      "source": "tests/development/pilot-protocol.test.mts",
+      "capability_id": "FEATURE-M07-G17"
+    },
+    {
+      "id": "runtime:M07-G17-ENROLLMENT-AND-CONFIGURATION-PINS",
+      "suite": "runtime",
+      "runner_case_id": "M07-G17-ENROLLMENT-AND-CONFIGURATION-PINS",
+      "source": "tests/development/pilot-protocol.test.mts",
+      "capability_id": "FEATURE-M07-G17"
+    },
+    {
+      "id": "runtime:M07-G17-FROZEN-DENOMINATOR",
+      "suite": "runtime",
+      "runner_case_id": "M07-G17-FROZEN-DENOMINATOR",
+      "source": "tests/development/pilot-protocol.test.mts",
+      "capability_id": "FEATURE-M07-G17"
+    },
+    {
+      "id": "runtime:M07-G17-APPEND-INTEGRITY",
+      "suite": "runtime",
+      "runner_case_id": "M07-G17-APPEND-INTEGRITY",
+      "source": "tests/development/pilot-protocol.test.mts",
+      "capability_id": "FEATURE-M07-G17"
+    },
+    {
+      "id": "runtime:M07-G17-CONCURRENT-APPEND",
+      "suite": "runtime",
+      "runner_case_id": "M07-G17-CONCURRENT-APPEND",
+      "source": "tests/development/pilot-protocol.test.mts",
+      "capability_id": "FEATURE-M07-G17"
+    },
+    {
+      "id": "runtime:M07-G17-ADJUDICATION-LINEAGE",
+      "suite": "runtime",
+      "runner_case_id": "M07-G17-ADJUDICATION-LINEAGE",
+      "source": "tests/development/pilot-protocol.test.mts",
+      "capability_id": "FEATURE-M07-G17"
+    },
+    {
+      "id": "runtime:M07-G17-FOLLOWUP-WINDOW",
+      "suite": "runtime",
+      "runner_case_id": "M07-G17-FOLLOWUP-WINDOW",
+      "source": "tests/development/pilot-protocol.test.mts",
+      "capability_id": "FEATURE-M07-G17"
+    },
+    {
+      "id": "runtime:M07-G17-MISSING-COST",
+      "suite": "runtime",
+      "runner_case_id": "M07-G17-MISSING-COST",
+      "source": "tests/development/pilot-protocol.test.mts",
+      "capability_id": "FEATURE-M07-G17"
+    },
+    {
+      "id": "runtime:M07-G17-EXCEPTIONS",
+      "suite": "runtime",
+      "runner_case_id": "M07-G17-EXCEPTIONS",
+      "source": "tests/development/pilot-protocol.test.mts",
+      "capability_id": "FEATURE-M07-G17"
+    },
+    {
+      "id": "runtime:M07-G17-SOURCE-AND-MODE-SEPARATION",
+      "suite": "runtime",
+      "runner_case_id": "M07-G17-SOURCE-AND-MODE-SEPARATION",
+      "source": "tests/development/pilot-protocol.test.mts",
+      "capability_id": "FEATURE-M07-G17"
+    },
+    {
+      "id": "runtime:M07-G17-INPUT-BOUNDS",
+      "suite": "runtime",
+      "runner_case_id": "M07-G17-INPUT-BOUNDS",
+      "source": "tests/development/pilot-protocol.test.mts",
+      "capability_id": "FEATURE-M07-G17"
+    },
+    {
+      "id": "runtime:M07-G17-ARTIFACT-PATHS",
+      "suite": "runtime",
+      "runner_case_id": "M07-G17-ARTIFACT-PATHS",
+      "source": "tests/development/pilot-protocol.test.mts",
+      "capability_id": "FEATURE-M07-G17"
+    },
+    {
+      "id": "runtime:M07-G17-CLI",
+      "suite": "runtime",
+      "runner_case_id": "M07-G17-CLI",
+      "source": "tests/development/pilot-protocol.test.mts",
+      "capability_id": "FEATURE-M07-G17"
+    },
+    {
+      "id": "runtime:M07-G18-PREP-EMPTY-REGISTER",
+      "suite": "runtime",
+      "runner_case_id": "M07-G18-PREP-EMPTY-REGISTER",
+      "source": "tests/development/pilot-protocol.test.mts",
+      "capability_id": "FEATURE-M07-G18-PREPARATION"
+    },
+    {
+      "id": "runtime:M07-G18-PREP-SIMULATED-SUBSTITUTION",
+      "suite": "runtime",
+      "runner_case_id": "M07-G18-PREP-SIMULATED-SUBSTITUTION",
+      "source": "tests/development/pilot-protocol.test.mts",
+      "capability_id": "FEATURE-M07-G18-PREPARATION"
+    },
+    {
+      "id": "runtime:M07-G18-PREP-MISSING-EVIDENCE",
+      "suite": "runtime",
+      "runner_case_id": "M07-G18-PREP-MISSING-EVIDENCE",
+      "source": "tests/development/pilot-protocol.test.mts",
+      "capability_id": "FEATURE-M07-G18-PREPARATION"
+    },
+    {
+      "id": "runtime:M07-G18-PREP-REPRODUCIBILITY",
+      "suite": "runtime",
+      "runner_case_id": "M07-G18-PREP-REPRODUCIBILITY",
+      "source": "tests/development/pilot-protocol.test.mts",
+      "capability_id": "FEATURE-M07-G18-PREPARATION"
+    },
+    {
+      "id": "runtime:M07-G17-RETAINED-CONTROLS",
+      "suite": "runtime",
+      "runner_case_id": "M07-G17-RETAINED-CONTROLS",
+      "source": "tests/development/pilot-protocol.test.mts",
+      "capability_id": "FEATURE-M07-G17"
+    },
+    {
+      "id": "runtime:CASE-M08-G01-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M08-G01-01",
+      "source": "tests/development/carrier-quotes.test.mts",
+      "capability_id": "FEATURE-M08-G01"
+    },
+    {
+      "id": "runtime:CASE-M08-G01-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M08-G01-02",
+      "source": "tests/development/carrier-quotes.test.mts",
+      "capability_id": "FEATURE-M08-G01"
+    },
+    {
+      "id": "runtime:CASE-M08-G01-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M08-G01-03",
+      "source": "tests/development/carrier-quotes.test.mts",
+      "capability_id": "FEATURE-M08-G01"
+    },
+    {
+      "id": "runtime:M08-G01-ADDRESS-PARCEL-AND-RESOURCE-FENCES",
+      "suite": "runtime",
+      "runner_case_id": "M08-G01-ADDRESS-PARCEL-AND-RESOURCE-FENCES",
+      "source": "tests/development/carrier-quotes.test.mts",
+      "capability_id": "FEATURE-M08-G01"
+    },
+    {
+      "id": "runtime:M08-G01-ACCOUNT-AND-SERVICE-POLICY",
+      "suite": "runtime",
+      "runner_case_id": "M08-G01-ACCOUNT-AND-SERVICE-POLICY",
+      "source": "tests/development/carrier-quotes.test.mts",
+      "capability_id": "FEATURE-M08-G01"
+    },
+    {
+      "id": "runtime:M08-G01-EXPIRY-IS-PACKAGE-SPECIFIC",
+      "suite": "runtime",
+      "runner_case_id": "M08-G01-EXPIRY-IS-PACKAGE-SPECIFIC",
+      "source": "tests/development/carrier-quotes.test.mts",
+      "capability_id": "FEATURE-M08-G01"
+    },
+    {
+      "id": "runtime:M08-G01-MIXED-CURRENCIES-STAY-SEPARATE",
+      "suite": "runtime",
+      "runner_case_id": "M08-G01-MIXED-CURRENCIES-STAY-SEPARATE",
+      "source": "tests/development/carrier-quotes.test.mts",
+      "capability_id": "FEATURE-M08-G01"
+    },
+    {
+      "id": "runtime:M08-G01-EXACT-LARGE-AMOUNTS-AND-PRICE-LIMIT",
+      "suite": "runtime",
+      "runner_case_id": "M08-G01-EXACT-LARGE-AMOUNTS-AND-PRICE-LIMIT",
+      "source": "tests/development/carrier-quotes.test.mts",
+      "capability_id": "FEATURE-M08-G01"
+    },
+    {
+      "id": "runtime:M08-G01-SNAPSHOT-TAMPER-CANNOT-CHANGE-PRICE-OR-MEMBERSHIP",
+      "suite": "runtime",
+      "runner_case_id": "M08-G01-SNAPSHOT-TAMPER-CANNOT-CHANGE-PRICE-OR-MEMBERSHIP",
+      "source": "tests/development/carrier-quotes.test.mts",
+      "capability_id": "FEATURE-M08-G01"
+    },
+    {
+      "id": "runtime:M08-G01-RESTART-REVOCATION-AND-SCOPE",
+      "suite": "runtime",
+      "runner_case_id": "M08-G01-RESTART-REVOCATION-AND-SCOPE",
+      "source": "tests/development/carrier-quotes.test.mts",
+      "capability_id": "FEATURE-M08-G01"
+    },
+    {
+      "id": "runtime:M08-G01-READ-ONLY-PREPARATION-HAS-NO-LABEL-EFFECT",
+      "suite": "runtime",
+      "runner_case_id": "M08-G01-READ-ONLY-PREPARATION-HAS-NO-LABEL-EFFECT",
+      "source": "tests/development/carrier-quotes.test.mts",
+      "capability_id": "FEATURE-M08-G01"
+    },
+    {
+      "id": "runtime:M08-G01-DUPLICATE-PACKAGE-AND-EXTRA-FIELDS-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "M08-G01-DUPLICATE-PACKAGE-AND-EXTRA-FIELDS-REJECTED",
+      "source": "tests/development/carrier-quotes.test.mts",
+      "capability_id": "FEATURE-M08-G01"
+    },
+    {
+      "id": "runtime:M08-G01-SOURCE-PINS-ARE-RECHECKED",
+      "suite": "runtime",
+      "runner_case_id": "M08-G01-SOURCE-PINS-ARE-RECHECKED",
+      "source": "tests/development/carrier-quotes.test.mts",
+      "capability_id": "FEATURE-M08-G01"
+    },
+    {
+      "id": "runtime:M08-G01-CLI-CONTRACT",
+      "suite": "runtime",
+      "runner_case_id": "M08-G01-CLI-CONTRACT",
+      "source": "tests/development/carrier-quotes.test.mts",
+      "capability_id": "FEATURE-M08-G01"
     }
   ],
   "protected_files": [

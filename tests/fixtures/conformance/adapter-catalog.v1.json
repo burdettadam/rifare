@@ -2642,7 +2642,7 @@
   "oracle_pins": [
     {
       "path": "apps/commerce-api/server.mts",
-      "sha256": "2fd7efbfc48f9a1a885316239e5cb46cfd55f7c89e7a1a1ce50397e766fb06a8"
+      "sha256": "73ff170e8c819823cb447d5b6838fb109fe8c499a878fa4a43437e55091a93e0"
     },
     {
       "path": "migrations/commerce/001-foundation.sql",

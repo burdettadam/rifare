@@ -1,6 +1,6 @@
 {
-  "source_file_count": 1229,
-  "source_count_reason": "ADR-0034 reviewed additive M07-G11\u2013G15 recovery/load, security/provenance, privacy and accessibility source inventory; original licensing obligations remain unchanged.",
+  "source_file_count": 1257,
+  "source_count_reason": "ADR-0035 reviewed additive locale, pilot instrumentation/readiness, blocked M07 assessment and carrier quote preparation source inventory; original licensing obligations remain unchanged.",
   "component_ids": [
     "git-agent-adaptations",
     "rifare-developer-helpers",

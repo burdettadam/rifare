@@ -112,7 +112,10 @@ receipts and uncertain-outcome reconciliation.
 three M08-G01 scenario IDs, literal package prices and totals, individual stale
 rows, merchant/account/service constraints, expiry, source pins, exact and mixed
 currencies, snapshot tampering, authority revocation and the disposable CLI.
-The deliberately substituted first-package price is checked against separately
+The deliberately substituted first-package service and price execute inside a
+temporary copy of the quote module, before total calculation and snapshot
+sealing. The same oracle first accepts the real module and then rejects that
+mutant's returned rows; the real source is never edited by the test. It uses separately
 written expected values. Existing purchasing and lifecycle tests are retained.
 
 The author writes these cases before implementation. The integration owner runs

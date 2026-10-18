@@ -2,7 +2,7 @@
 
 Merchant-owned commerce operations with tailorable skills and independently replaceable platforms, agents and models.
 
-## Current development checkpoint: M07 portability and operations
+## Current development checkpoint: locale, pilot and carrier preparation
 
 M07-G01 through M07-G15 now have bounded local development implementations.
 The first five added Woo return/refund handling, the shared staff and agent
@@ -14,6 +14,13 @@ interlocks and durable intake backpressure, offline artifact/SBOM provenance
 checks, complete current storage-surface review and scoped privacy exports, and
 keyboard/error/focus improvements across six existing workflows.
 
+The current five planning entries are M07-G16, G17, G18, G99 and M08-G01.
+They add explicit locale/time-zone/currency presentation, frozen pilot
+instrumentation using the retained benchmark, real-pilot evidence intake
+preparation, the blocked M07 acceptance assessment and per-package carrier quote
+previews. The real-observation register remains empty. Formal M07 acceptance and
+M08 entry remain blocked; M08-G02 label purchasing is unassigned.
+
 Read [the M07 assessment](docs/M07-QUALIFICATION.md),
 [compatibility limits](docs/COMPATIBILITY-LIMITS.md),
 [merchant transfer](docs/MERCHANT-PORTABILITY.md),
@@ -22,7 +29,10 @@ Read [the M07 assessment](docs/M07-QUALIFICATION.md),
 [recovery and load](docs/RECOVERY-LOAD.md),
 [release security](docs/RELEASE-SECURITY.md),
 [privacy coverage](docs/PRIVACY-COVERAGE.md), and
-[accessible workflows](docs/ACCESSIBLE-WORKFLOWS.md). Earlier support, return, exchange,
+[accessible workflows](docs/ACCESSIBLE-WORKFLOWS.md),
+[locale presentation](docs/LOCALE-PRESENTATION.md),
+[pilot protocol](docs/PILOT-PROTOCOL.md), and
+[carrier quotes](docs/CARRIER-QUOTES.md). Earlier support, return, exchange,
 edit and regression capabilities remain in the accumulated source; the
 [M06 assessment](docs/M06-QUALIFICATION.md) retains their qualification limits.
 
@@ -38,7 +48,8 @@ The default budget is 60 actual cases across four whole files with one 60-second
 deadline. A development pass does not claim full regression or goal acceptance.
 The five-goal development batch does not automatically trigger full, browser,
 nested catalog, or restoration-audit campaigns. This batch explicitly selects one
-small keyboard/browser file for the changed UI. See [development](DEVELOPMENT.md).
+small locale/browser file for the changed UI alongside pilot, carrier quote and
+existing privacy cases. See [development](DEVELOPMENT.md).
 
 The runtime remains a SQLite diagnostic with synthetic protocol sources.
 PostgreSQL/React, connected providers, live merchant migration, independent-machine

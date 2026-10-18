@@ -41,3 +41,12 @@ are local development; G18 prepares evidence intake with no real observations,
 G99 remains a blocked assessment, and G01 adds local per-package carrier quotes.
 The explicit development assignment preserves all formal prerequisites and does
 not start a release or connected pilot. M08-G02 label purchasing is unassigned.
+
+The implementation handoff is recorded in
+[the current integration record](work/records/M07-pilot-next-five-integration.md).
+The selected development scope is the new locale, pilot and carrier test files
+plus the existing nine-case privacy file for the actual new source and caller
+artifact handling. The default 60-case/four-file/60-second limit is unchanged.
+G18 preparation has a distinct proposed capability; no synthetic case is
+registered as completed real-pilot collection. G99 is an assessment with the
+original formal cases unperformed, and counts as the fourth of these five entries.

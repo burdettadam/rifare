@@ -67,7 +67,7 @@ storage inventory and its schema extensions are unchanged.
 | `privacy_and_restore_controls` | Holds, tombstones and recovery/import fences; retain current suppression and replay it before restored data becomes readable. |
 | `provider_copies` | Sender/helpdesk/model/scanner/fulfillment copies outside local SQL control; require independently observed provider outcomes. |
 | `process_and_browser_memory` | Already returned values, temporary buffers, tabs, plugins, logs, clipboard and screenshots; a server revocation cannot recall these copies. |
-| `caller_export_artifacts` | Customer/merchant JSON exports and downloaded media; destination-specific inventory, access control and retention remain operator work. |
+| `caller_export_artifacts` | Customer/merchant JSON exports, downloaded media and caller-owned pilot enrollment/event/report artifacts; destination-specific inventory, access control and retention remain operator work. |
 | `recovery_files_and_database_pages` | Old backups, staged upgrades, database free pages/journals/WAL, replicas and wrapping keys; logical suppression does not physically delete these artifacts. |
 | `synthetic_fixture_storage` | Independent smoke databases/files and adapter fixture ledgers; commerce privacy operations do not erase another fixture's storage. Only synthetic data is qualified here. |
 
@@ -77,6 +77,25 @@ mapping is reviewed source metadata, not an inference that every column labeled
 as audit is anonymous. Arbitrary external identifiers and unbound configuration
 text can remain personal data. Subject exports retain
 `unbound_text_requires_manual_scope_review: true`.
+
+ADR-0035 extends this existing classification for the pilot protocol's separate
+caller-owned directory and reports. Enrollment, case IDs, event references and
+adjudication/cost evidence references can identify people even when raw customer
+messages are absent. The protocol uses bounded artifacts, owner-only local
+permissions, fixed file names, link rejection and separately retained integrity
+pins. Those controls do not authenticate consent or establish a retention
+period. Commerce customer erasure does not discover or rewrite these journals,
+their input files, printed reports or copied evidence. The operator must record
+the actual destinations and every required deletion or retention decision; an
+old artifact remains private after commerce erasure. Current fixtures contain
+only synthetic data and do not authorize a live pilot.
+
+The same assignment adds ephemeral carrier quote snapshots and display-only
+locale helpers. Returned quote/display values belong to the existing process
+and browser-memory surface. The independent carrier fixture's bounded in-memory
+package/account/rate records belong to synthetic fixture storage. No commerce
+table is added and the original fifteen surface IDs and prior handling clauses
+remain intact.
 
 ## Subject export changes
 

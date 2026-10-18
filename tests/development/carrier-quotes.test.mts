@@ -1,6 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { pathToFileURL } from 'node:url';
 import { commerceFixture } from './commerce-helpers.mts';
 import { CarrierQuotes } from '../../packages/commerce/carrier-quotes.mts';
 import { CarrierQuoteFixtureSource } from '../../packages/adapters/carrier-quote-fixture-source.mts';
@@ -55,7 +59,9 @@ test('CASE-M08-G01-02',()=>usingQuotes(f=>{
   assert.deepEqual(q.totals,[{currency:'USD',amount_minor:'500',package_ids:['package-a']}]);
   for(const p of q.packages.filter((p:Row)=>p.status==='blocked'))assert.equal(p.quote,null);
 }));
-test('CASE-M08-G01-03',()=>usingQuotes(f=>{
+test('CASE-M08-G01-03',async()=>{
+  const f=quoteFixture(),temporary=mkdtempSync(join(tmpdir(),'rifare-carrier-mutant-'));
+  try{
   const q=f.quote(),unchanged=contentDigest(row(q,'package-b').quote);
   f.source.setRate({package_id:'package-a',account_id:'account-ground',service:'ground',rate_id:'rate-a',revision:2,amount_minor:'650',currency:'USD',expires_at:f.now()+60000});
   const checked=f.service.revalidate(f.a.scope,q);
@@ -63,10 +69,23 @@ test('CASE-M08-G01-03',()=>usingQuotes(f=>{
   assert.equal(contentDigest(row(checked,'package-b').quote),unchanged);assert.equal(row(checked,'package-b').status,'eligible');
   assert.deepEqual(checked.totals,[{currency:'USD',amount_minor:'900',package_ids:['package-b']}]);
   const fresh=f.quote();assert.deepEqual(fresh.totals,[{currency:'USD',amount_minor:'1550',package_ids:['package-a','package-b']}]);
-  // Literal expected package prices catch the goal's first-package-price substitution fault.
-  const broken=JSON.parse(JSON.stringify(fresh));row(broken,'package-b').quote.amount_minor='650';
-  assert.throws(()=>assert.deepEqual(broken.packages.map((p:Row)=>p.quote.amount_minor),['650','900']));
-}));
+  const packageOracle=(value:Row)=>assert.deepEqual(value.packages.map((p:Row)=>[p.quote.service,p.quote.amount_minor]),[['ground','650'],['express','900']]);
+  packageOracle(fresh);
+  // Execute the named fault in an isolated source copy before totals and HMAC sealing.
+  const sourceURL=new URL('../../packages/commerce/carrier-quotes.mts',import.meta.url);
+  const source=readFileSync(sourceURL,'utf8');
+  const marker='  #seal(batchId:string,createdAt:number,checkedAt:number,packages:Row[]):Row {';
+  assert.equal(source.split(marker).length,2);
+  const injected=marker+"\n    const first=packages.find(p=>p.status==='eligible');\n    if(first)packages=packages.map(p=>p.status==='eligible'?{...p,quote:{...p.quote,service:first.quote.service,amount_minor:first.quote.amount_minor}}:p);";
+  const mutant=source.replace(marker,injected).replace(/from '(\.[^']+)'/g,(_match,path)=>"from '"+new URL(path,sourceURL).href+"'");
+  const modulePath=join(temporary,'carrier-quotes.mts');writeFileSync(modulePath,mutant);
+  const {CarrierQuotes:BrokenCarrierQuotes}=await import(pathToFileURL(modulePath).href);
+  const broken=new BrokenCarrierQuotes(f.kernel,f.source,f.policy).quote(f.a.scope,f.input);
+  assert.deepEqual(broken.packages.map((p:Row)=>[p.quote.service,p.quote.amount_minor]),[['ground','650'],['ground','650']]);
+  assert.throws(()=>packageOracle(broken),{code:'ERR_ASSERTION'});
+  packageOracle(f.quote());
+  }finally{f.cleanup();rmSync(temporary,{recursive:true,force:true});}
+});
 test('M08-G01-ADDRESS-PARCEL-AND-RESOURCE-FENCES',()=>usingQuotes(f=>{
   const q=f.quote();f.source.setPackage({...f.source.package('package-a')!,revision:2,address_revision:2,to_address_ref:'corrected-destination',weight_g:450});
   const checked=f.service.revalidate(f.a.scope,q);assert.deepEqual(row(checked,'package-a').reasons,['PACKAGE_CHANGED']);assert.equal(row(checked,'package-b').status,'eligible');

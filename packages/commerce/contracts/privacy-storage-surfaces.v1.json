@@ -78,6 +78,10 @@
       "sha256": "cbef42f2097d0958886eca96a3593947a6ed13b63e519e8ffa2d21d01a9a4d62"
     },
     {
+      "path": "apps/commerce-api/locale-client.js",
+      "sha256": "5f863947179ee5ee8819b76cf554aa4233f2bd5d4d1cfd8085100260fc3e7a19"
+    },
+    {
       "path": "apps/commerce-api/order-edits-client.js",
       "sha256": "1dd907862fd1f198b93c0364f81cfa6382c3adc0113da535f576af74c3abe7a5"
     },
@@ -119,23 +123,23 @@
     },
     {
       "path": "apps/commerce-api/returns-client.js",
-      "sha256": "5006dfb20e2e2ce41fe521d9c78d2e18b17abb7b36ef32acca8ec6c94baf82fa"
+      "sha256": "5f25fd3f1676d85f3baf36c6c65c8883c171e0d37ddeb39c32ca00838d19cf9a"
     },
     {
       "path": "apps/commerce-api/returns.html",
-      "sha256": "bd49e649f0c6e9bd93a2e0ef2ec07636d8e0ef422dc81a1a60e1176dfb44f0c7"
+      "sha256": "7f6178c0a7d5aab059fccabe2fa3cca11aeee8fec3fee7765b3383b33eaa9ffc"
     },
     {
       "path": "apps/commerce-api/server.mts",
-      "sha256": "2fd7efbfc48f9a1a885316239e5cb46cfd55f7c89e7a1a1ce50397e766fb06a8"
+      "sha256": "73ff170e8c819823cb447d5b6838fb109fe8c499a878fa4a43437e55091a93e0"
     },
     {
       "path": "apps/commerce-api/status-client.js",
-      "sha256": "80ac26b27de39aeff94753bfe044070bc0c6037701ff6f0de20527155589156f"
+      "sha256": "0619e13a76706fb4f51cd986c64ca192eb3f0d4bfab44465f804dc8c7662f3a0"
     },
     {
       "path": "apps/commerce-api/status.html",
-      "sha256": "e84393d01f983c6f97c9f6359edf94dbd2f6b59e187d1aea925fdf380df4b74b"
+      "sha256": "e4cefbc9506525f0f42310bf01c82dba84bc8198d0f7c367c5ac99b74db5761e"
     },
     {
       "path": "apps/commerce-api/support-client.js",
@@ -164,6 +168,10 @@
     {
       "path": "apps/worker/main.mts",
       "sha256": "9c56ee878bb6d7abfe86c597a01d335eb73deda831026922023577431a62422a"
+    },
+    {
+      "path": "packages/adapters/carrier-quote-fixture-source.mts",
+      "sha256": "07697f3b4b65ee69c82b1a6ca170f1ebce695b4cbd8eb920baf9ce5c45c07f5f"
     },
     {
       "path": "packages/adapters/exchange-lineage-fixture-source.mts",
@@ -320,6 +328,10 @@
     {
       "path": "packages/commerce/capabilities.mts",
       "sha256": "110491efcde69a2a80e24ef8f321138eb89059078893e9352cc00095f310a445"
+    },
+    {
+      "path": "packages/commerce/carrier-quotes.mts",
+      "sha256": "820151338a9d7e902572540df5b1d658fd17e3d9af1094a693ab07e5dde5240d"
     },
     {
       "path": "packages/commerce/case-configurations.mts",
@@ -790,6 +802,18 @@
       "sha256": "1d197302db3238baf2f6ec2ac23f8941ed4a706fa1f7dfba8343d8033108d82e"
     },
     {
+      "path": "packages/pilot/protocol.mts",
+      "sha256": "e164ec6371ab37c117493d138dadc6b3aba28a826a432d2088f25b883cb05e87"
+    },
+    {
+      "path": "packages/pilot/protocol.py",
+      "sha256": "dc077986f982a1b0af9e72336cce6a8980a0844fdb5938f277673642b4ec4522"
+    },
+    {
+      "path": "packages/presentation/locale-presentation.js",
+      "sha256": "7a258ac13532f35cf2e83405897f754046452b0e73ecb8bc73f5430ebda6d7cb"
+    },
+    {
       "path": "packages/security/release-audit.mts",
       "sha256": "0eb46e7f97f74bfc1734938cdea632a1037bb7fa13f7ad63f469d8d9bebb5c2f"
     },
@@ -1145,9 +1169,13 @@
         "packages/agent/runner.mts",
         "packages/commerce/return-evidence.mts",
         "apps/commerce-api/support-client.js",
-        "apps/commerce-api/status-client.js"
+        "apps/commerce-api/status-client.js",
+        "apps/commerce-api/returns-client.js",
+        "apps/commerce-api/locale-client.js",
+        "packages/presentation/locale-presentation.js",
+        "packages/commerce/carrier-quotes.mts"
       ],
-      "export": "Previously returned response bodies, clipboard, screenshots and tabs are caller copies.",
+      "export": "Previously returned response bodies, clipboard, screenshots and tabs are caller copies. Ephemeral carrier quote snapshots and locale-formatted display values are also returned caller/process/browser copies.",
       "erasure": "Revocation blocks later server reads/completion; it cannot recall bytes already in an arbitrary process, plugin, scanner or browser.",
       "retention": "No general heap, browser history, swap, core dump or log deletion is implemented.",
       "observation_required": "Inventory actual deployed processes/plugins/logging and browser storage; observe their cleanup and retention separately. Source pins only flag code drift."
@@ -1158,12 +1186,14 @@
       "tables": [],
       "implementation": [
         "packages/commerce/privacy-lifecycle.mts",
-        "packages/commerce/merchant-portability.mts"
+        "packages/commerce/merchant-portability.mts",
+        "packages/pilot/protocol.mts",
+        "packages/pilot/protocol.py"
       ],
-      "export": "Customer export and owner transfer return scoped caller-owned data; transfer excludes vault envelopes and secrets.",
-      "erasure": "Exported JSON, downloaded media and derived spreadsheets remain outside the running kernel.",
-      "retention": "An old export remains private even when the live store is erased. No filesystem scan discovers every copy.",
-      "observation_required": "Identify controlled export destinations, permissions, copies and retention; record actual deletion or retention decision."
+      "export": "Customer export and owner transfer return scoped caller-owned data; transfer excludes vault envelopes and secrets. Pilot enrollment, hash-linked event batches, evidence references and projected reports are caller-owned artifacts and may contain personal identifiers.",
+      "erasure": "Exported JSON, downloaded media and derived spreadsheets remain outside the running kernel. Commerce erasure does not discover or rewrite separate pilot input files, protocol journals, reports or referenced evidence.",
+      "retention": "An old export remains private even when the live store is erased. No filesystem scan discovers every copy. Pilot artifact retention and deletion apply to the operator-controlled originals and copies; a hash chain does not establish a retention period or consent.",
+      "observation_required": "Identify controlled export destinations, permissions, copies and retention; record actual deletion or retention decision. Record actual pilot artifact destinations, owner-only permissions, all copies and the authorized whole-artifact deletion or retention decision; current synthetic artifacts do not authorize real collection."
     },
     {
       "id": "recovery_files_and_database_pages",
@@ -1186,9 +1216,10 @@
       "implementation": [
         "packages/development/store.mts",
         "packages/development/support-demo.mts",
-        "packages/adapters/support-fixture-source.mts"
+        "packages/adapters/support-fixture-source.mts",
+        "packages/adapters/carrier-quote-fixture-source.mts"
       ],
-      "export": "The legacy smoke SQLite/files and synthetic adapter ledgers are separate from commerce stores and do not contain authorized customer data.",
+      "export": "The legacy smoke SQLite/files and synthetic adapter ledgers are separate from commerce stores and do not contain authorized customer data. The carrier quote fixture holds bounded account, package and rate records only in its owning process memory.",
       "erasure": "Commerce erasure cannot attest cleanup of independent fixture databases or filesystem attachments.",
       "retention": "Fixture cleanup belongs to its owning test/operator directory; no migration to a production storage backend is claimed.",
       "observation_required": "Verify that only synthetic data is used and inventory/clean owned fixture directories separately; treating them as a real deployment blocks privacy qualification."
