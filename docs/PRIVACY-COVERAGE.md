@@ -103,9 +103,12 @@ membership and a signed raw webhook. It exports the scoped data, erases it, chec
 the real fields/read APIs, and rebuilds the metric report. A separate case takes
 one old owner-scoped merchant snapshot before erasure, then imports it with the
 later separately retained suppression checkpoint. The receiving installation
-remains quarantined; image/message/knowledge/task copies are removed or redacted
-before exposure, and the rebuilt metric report keeps an unavailable member in
-its original denominator.
+is first checked in quarantine: image/message/knowledge/task copies are removed
+or redacted before exposure, and analytics rebuilding is denied. After the
+existing restore identity and reconciliation checks, explicit diagnostic-only
+activation permits rebuilding the metric report, which keeps an unavailable
+member in its original denominator. External egress and old-operation replay
+remain blocked.
 
 These are same-runtime synthetic observations. They do not prove fresh delivery
 of a real external checkpoint, delete the original snapshot, inspect a provider

@@ -72,15 +72,20 @@ def audit(page, name):
 with sync_playwright() as p:
     browser = p.chromium.launch(executable_path=os.environ.get('RIFARE_TEST_BROWSER', '/usr/bin/chromium'),
                                 headless=True, args=['--no-sandbox'])
-    page = browser.new_page(viewport={'width': 360, 'height': 800})
-    page.set_default_timeout(5000)
-    if 'at' in cfg:
-        page.clock.set_fixed_time(datetime.fromtimestamp(cfg['at'] / 1000, tz=timezone.utc))
-    page.route('**/*', lambda route: (network.append(route.request.url), route.abort()))
-    page.route_web_socket('**/*', lambda route: (network.append('websocket'), route.close()))
-    page.expose_function('localBridge', bridge)
+    page = None
 
     def mount(name, client=True):
+        global page
+        # Each screen starts in a fresh document, including its Tab navigation origin.
+        if page is not None:
+            page.close()
+        page = browser.new_page(viewport={'width': 360, 'height': 800})
+        page.set_default_timeout(5000)
+        if 'at' in cfg:
+            page.clock.set_fixed_time(datetime.fromtimestamp(cfg['at'] / 1000, tz=timezone.utc))
+        page.route('**/*', lambda route: (network.append(route.request.url), route.abort()))
+        page.route_web_socket('**/*', lambda route: (network.append('websocket'), route.close()))
+        page.expose_function('localBridge', bridge)
         html = (assets / (name + '.html')).read_text()
         styles = re.findall(r'<link[^>]+href="/([^"]+\.css)"[^>]*>', html)
         assert '/accessibility-client.js' in html and 'accessibility.css' in styles
