@@ -53,7 +53,7 @@ export function eraseGrowthSubject(k:CommerceKernel,tenant:string,store:string,r
   const pseudonym='erased_'+hash.slice(0,32);
   for(const table of SHOPPING_TABLES){
     const pk=(k.db.prepare('PRAGMA table_info('+table+')').all() as Row[]).filter(column=>column.pk).sort((a,b)=>a.pk-b.pk).map(column=>column.name);
-    for(const row of rows(k,table,tenant,store).filter(row=>resourceIds.includes(row.resource_id)||subjectHash(tenant,store,row.customer_id)===hash)){
+    for(const row of rows(k,table,tenant,store).filter(row=>resourceIds.includes(row.resource_id)||row.customer_id===pseudonym||subjectHash(tenant,store,row.customer_id)===hash)){
       const minimized=shoppingAudit(table,row,body(row));
       const extra=table==='commerce_upsell_confirmations'?",revoked=1,session_hash='erased'":table==='commerce_catalog_approvals'?',revoked=1,actor_id=?':'';
       k.db.prepare(`UPDATE ${table} SET body=?,digest=?,customer_id=?${extra} WHERE ${pk.map(column=>column+'=?').join(' AND ')}`)
