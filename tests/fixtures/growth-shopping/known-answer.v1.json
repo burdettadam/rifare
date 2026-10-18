@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "qualification": "synthetic_only",
+  "cart": {"variant_id": "basic", "unit_minor": "2000", "quantity": 2, "total_minor": "4000", "terms_id": "standard"},
+  "upsell": {"original_lines": 1, "final_lines": 2, "original_total_minor": "2000", "added_minor": "3000", "final_total_minor": "5000", "fulfillments": 1, "invoices": 1},
+  "visibility": {"questions": 1, "observed_questions": 1, "mentions": 1, "citations": 1, "correct_claims": 1, "incorrect_claims": 0, "unsupported_questions": 0, "future_placement_guaranteed": false},
+  "catalog": {"before": "Cotton shirt.", "after": "Cotton shirt with a crew neck.", "protected_unit_minor": "2000"}
+}
