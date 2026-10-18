@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "id": "rifare-common-return-worker",
+  "version": "1.0.0",
+  "qualification": "local_fixture_only",
+  "authorization": "existing parent permissions intersected with case-scoped opaque work grant",
+  "ownership": "commerce_case_work generation; current support ownership remains authoritative when present",
+  "identity_owner": "server",
+  "endpoints": [
+    {"method": "POST", "path": "/v1/worker/return-context", "required": ["generation"]},
+    {"method": "POST", "path": "/v1/worker/return-action", "required": ["generation", "envelope", "action", "arguments"]}
+  ],
+  "actions": [
+    {"id": "approved-preview.execute", "arguments": ["preview_id", "preview_digest", "approval_id"], "permission": "action.execute", "effect": "existing canonical return request or refund authorization receipt"},
+    {"id": "resolution.dispatch", "arguments": ["operation_id"], "permission": "operation.dispatch", "effect": "original authorized synthetic refund operation"},
+    {"id": "resolution.reconcile", "arguments": ["operation_id"], "permission": "operation.reconcile", "effect": "read original source effect and append verified observation"}
+  ],
+  "return_scope": "existing return-submit previews and non-exchange original-payment refund previews/operations",
+  "unknown_fields": "rejected",
+  "replay": "existing canonical receipt, same preview and approval; no new identity",
+  "unknown_outcome": "original operation lookup before another write; null lookup never authorizes retry",
+  "case_pins": ["configuration_digest", "skill_digest", "policy_digest", "profile_digest"],
+  "implementations": [
+    {"path": "clients/return_runtime.mts", "id": "rifare-typescript-procedural-v1", "runtime": "Node.js", "transport": "node:http", "control_flow": "procedural bounded loop"},
+    {"path": "clients/return_runtime.py", "id": "rifare-python-state-machine-v1", "runtime": "Python", "transport": "urllib.request", "control_flow": "explicit independent state machine"}
+  ],
+  "shared_client_orchestrator": false,
+  "shared_business_authority": "canonical Rifare commerce service",
+  "new_dependencies": [],
+  "provider_required": false,
+  "live_financial_effect": false,
+  "production_qualified": false
+}

@@ -2,6 +2,7 @@ import { exact,id,integer } from './kernel.mts';
 import type { Row } from './kernel.mts';
 import { contentDigest,jsonValue,returnRules,stringSet } from './configuration-values.mts';
 import { money,CURRENCIES } from './money.mts';
+import {WOO_RETURN_CONTRACT_DIGEST} from '../adapters/woocommerce/return-contract.mts';
 
 export const INTAKE_ACTION='diagnostic.return.submit';
 export const RETURN_REASONS=Object.freeze(['size','damaged','not_as_described','other']);
@@ -28,16 +29,17 @@ export function returnSelection(input:unknown) {
 }
 export function sourceReturnLines(order:Row) {
  const b=order.payload??order;
+ const woo=order.source_system==='woocommerce'&&b.woo_return_contract===WOO_RETURN_CONTRACT_DIGEST;
  if(!Array.isArray(b.return_lines)||!b.return_lines.length||b.return_lines.length>100)throw new Error('RETURN_SOURCE_MISSING');
  const rows=b.return_lines.map((l:Row)=>{
   exact(l,['id','fulfillment_line_id','ordered','fulfilled','returned','unit_minor','tags']);id(l.id);
-  if(typeof l.fulfillment_line_id!=='string'||!/^gid:\/\/shopify\/FulfillmentLineItem\/[1-9][0-9]*$/.test(l.fulfillment_line_id))throw new Error('RETURN_SOURCE_MISSING');
+  if(woo?l.fulfillment_line_id!==null||! /^[1-9][0-9]{0,14}$/.test(l.id):typeof l.fulfillment_line_id!=='string'||!/^gid:\/\/shopify\/FulfillmentLineItem\/[1-9][0-9]*$/.test(l.fulfillment_line_id))throw new Error('RETURN_SOURCE_MISSING');
   for(const n of [l.ordered,l.fulfilled,l.returned]){integer(n);if(n>1000000)throw new Error('RETURN_SOURCE_MISSING');}
   if(l.fulfilled>l.ordered||l.returned>l.fulfilled)throw new Error('RETURN_SOURCE_MISSING');
   money(b.currency,l.unit_minor);if(BigInt(l.unit_minor)<0n)throw new Error('RETURN_SOURCE_MISSING');
   return {...l,tags:stringSet(l.tags,'line.tags')};
  });
- if(new Set(rows.map((r:Row)=>r.id)).size!==rows.length||new Set(rows.map((r:Row)=>r.fulfillment_line_id)).size!==rows.length)throw new Error('RETURN_SOURCE_MISSING');
+ if(new Set(rows.map((r:Row)=>r.id)).size!==rows.length||!woo&&new Set(rows.map((r:Row)=>r.fulfillment_line_id)).size!==rows.length)throw new Error('RETURN_SOURCE_MISSING');
  return rows;
 }
 // All cutoffs are elapsed UTC milliseconds from a trusted delivery instant. The IANA

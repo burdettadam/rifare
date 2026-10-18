@@ -11,15 +11,19 @@ import { assertCaseWorkerScope } from './work-leases.mts';
 import { assertRecoveryEgress } from './data-guards.mts';
 import { bindLineageResolution } from '../adapters/exchange-lineage-source-guards.mts';
 import { feeHistory } from './exchange-fees.mts';
+import { WooRefundFixtureSource } from '../adapters/woocommerce/refund-fixture-source.mts';
+import { assertSeparateWooDatabases } from '../adapters/woocommerce/refund-gateway-fixture.mts';
+import { WOO_MANUAL_PENDING } from '../adapters/woocommerce/refund-contract.mts';
 
 export class ResolutionExecution {
- readonly kernel:CommerceKernel;readonly source:ResolutionFixtureSource;readonly deadlineMs:number;
- constructor(k:CommerceKernel,source:ResolutionFixtureSource,options:{deadline_ms?:number}={}){
+ readonly kernel:CommerceKernel;readonly source:ResolutionFixtureSource|WooRefundFixtureSource;readonly deadlineMs:number;
+ constructor(k:CommerceKernel,source:ResolutionFixtureSource|WooRefundFixtureSource,options:{deadline_ms?:number}={}){
   if(Object.keys(options).some(key=>key!=='deadline_ms')||!Number.isInteger(options.deadline_ms??1000)||(options.deadline_ms??1000)<5||(options.deadline_ms??1000)>30000)throw new Error('RESOLUTION_DEADLINE_INVALID');
   this.deadlineMs=options.deadline_ms??1000;
-  if(!(source instanceof ResolutionFixtureSource)||source.db===k.db)throw new Error('SEPARATE_FIXTURE_SOURCE_REQUIRED');
+  if(!(source instanceof ResolutionFixtureSource)&&!(source instanceof WooRefundFixtureSource)||source.db===k.db)throw new Error('SEPARATE_FIXTURE_SOURCE_REQUIRED');
   const path=(db:any)=>db.prepare('PRAGMA database_list').all().find((r:Row)=>r.name==='main')?.file;
   if(path(source.db)&&path(source.db)===path(k.db))throw new Error('SEPARATE_FIXTURE_SOURCE_REQUIRED');
+  if(source instanceof WooRefundFixtureSource){assertSeparateWooDatabases(k.db,source.db);assertSeparateWooDatabases(k.db,source.gateway.db);}
   this.kernel=k;this.source=source;
  }
  async #bounded<T>(call:()=>Promise<T>):Promise<T>{
@@ -31,10 +35,11 @@ export class ResolutionExecution {
   if(!op)throw new Error('NOT_FOUND');const c=allocationContext(k,scope,op.allocation_id,false);k.authorize(scope,action,op.resource_id);
   if(op.source_identity!==this.source.identity||s.tenant_id!==this.source.tenant||s.store_id!==this.source.store)throw new Error('RESOLUTION_SOURCE_MISMATCH');
   const command=JSON.parse(op.command);if(contentDigest(command)!==op.digest||command.operation_id!==op.id||command.allocation_id!==op.allocation_id||command.resource_id!==c.c.resource_id||command.customer_id!==c.c.customer_id||command.amount_minor!==op.amount_minor||command.currency!==op.currency||command.kind!==op.kind)throw new Error('RESOLUTION_INTEGRITY');
+  if((this.source instanceof WooRefundFixtureSource)!==Object.hasOwn(command,'woo_refund')||(this.source instanceof WooRefundFixtureSource)&&c.c.order.source_system!=='woocommerce')throw new Error('WOO_FINANCIAL_SOURCE_MISMATCH');
   return {...c,op,command};
  }
  #beforeSend(scope:Scope,opId:string){const ctx=this.#context(scope,opId,'operation.dispatch'),{op,s}=ctx,k=this.kernel;
-  assertCaseWorkerScope(k,scope,op.case_id);assertRecoveryEgress(k);
+  assertCaseWorkerScope(k,scope,op.case_id,op.id);assertRecoveryEgress(k);
   const receipt=new ActionGateway(k).receipt(scope,op.receipt_id);if(receipt.resolution_operation_id!==op.id||receipt.effect!=='synthetic_resolution_authorized')throw new Error('RESOLUTION_APPROVAL_REQUIRED');
   const approval=k.db.prepare('SELECT * FROM commerce_action_approvals WHERE tenant_id=? AND store_id=? AND id=?').get(s.tenant_id,s.store_id,receipt.approval_id) as Row;
   const member=approval&&k.db.prepare('SELECT * FROM commerce_members WHERE tenant_id=? AND store_id=? AND actor_id=? AND active=1').get(s.tenant_id,s.store_id,approval.approver) as Row;
@@ -53,15 +58,21 @@ export class ResolutionExecution {
   return {id:op.id,allocation_id:op.allocation_id,kind:op.kind,state:op.state,amount_minor:op.amount_minor,currency:op.currency,native_id:op.native_id,observations,
    retry_allowed:false,cash_settled:op.kind==='refund'&&op.state==='settled',credit_issued:op.kind==='store_credit'&&op.state==='issued',
    ...(op.kind==='additional_payment'?{payment_settled:op.state==='settled',payment:observations.filter(r=>r.body.payment).at(-1)?.body.payment??null}:{}),
-   ...(command.money_terms?{money_terms:command.money_terms,fee_history:feeHistory(k,s,op.case_id).obligations.find((r:Row)=>r.allocation_id===op.allocation_id)??null}:{}),qualification:'synthetic_only',live_financial_effect:false};
+   ...(command.money_terms?{money_terms:command.money_terms,fee_history:feeHistory(k,s,op.case_id).obligations.find((r:Row)=>r.allocation_id===op.allocation_id)??null}:{}),
+   ...(command.woo_refund?{source_system:'woocommerce',native_id_kind:'woocommerce_refund_record',native_return_id:null,manual_external_settlement_pending:op.state===WOO_MANUAL_PENDING,
+    financial_stage:observations.filter(r=>r.body.woo_evidence).at(-1)?.body.woo_evidence.financial_stage??op.state,woo_evidence:observations.filter(r=>r.body.woo_evidence).at(-1)?.body.woo_evidence??null,
+    refund_mode:command.woo_refund.refund_mode,source_contract:command.woo_refund.contract_id}:{}),qualification:'synthetic_only',live_financial_effect:false};
  }
  #record(ctx:Row,input:unknown){const b=jsonValue(input),{op,s,command}=ctx,k=this.kernel;
-  if(!b||typeof b!=='object'||Object.keys(b).sort().join(',')!==[...Object.keys(command),'id','state','instrument','qualification',...(op.kind==='additional_payment'?['payment']:[])].sort().join(','))throw new Error('RESOLUTION_RESULT_INVALID');
+  const woo=this.source instanceof WooRefundFixtureSource;
+  if(!b||typeof b!=='object'||Object.keys(b).sort().join(',')!==[...Object.keys(command),'id','state','instrument','qualification',...(op.kind==='additional_payment'?['payment']:[]),...(woo?['woo_evidence']:[])].sort().join(','))throw new Error('RESOLUTION_RESULT_INVALID');
   for(const key of Object.keys(command))if(canonical(b[key])!==canonical(command[key]))throw new Error('RESOLUTION_RESULT_MISMATCH');
-  id(b.id);if(b.qualification!=='synthetic_only'||!(op.kind==='refund'?['accepted','settled','rejected']:op.kind==='additional_payment'?['unpaid','partial','failed','expired','settled','rejected']:['issued','rejected']).includes(b.state))throw new Error('RESOLUTION_STAGE_INVALID');
-  if(op.native_id&&op.native_id!==b.id)throw new Error('RESOLUTION_RESULT_MISMATCH');
+  id(b.id);if(b.qualification!=='synthetic_only'||!(op.kind==='refund'?['accepted','settled','rejected',...(woo?['unknown',WOO_MANUAL_PENDING]:[])]:op.kind==='additional_payment'?['unpaid','partial','failed','expired','settled','rejected']:['issued','rejected']).includes(b.state))throw new Error('RESOLUTION_STAGE_INVALID');
+  const nativeId=woo?(this.source as WooRefundFixtureSource).assertResult(command,b):b.id;
+  if(op.native_id&&op.native_id!==nativeId)throw new Error('RESOLUTION_RESULT_MISMATCH');
   if(['settled','issued','rejected'].includes(op.state)&&op.state!==b.state)throw new Error('RESOLUTION_STAGE_REGRESSION');
   if(b.state==='rejected'&&op.state==='accepted')throw new Error('RESOLUTION_STAGE_REGRESSION');
+  if(woo&&(op.state==='accepted'&&['unknown',WOO_MANUAL_PENDING].includes(b.state)||op.state===WOO_MANUAL_PENDING&&b.state!==WOO_MANUAL_PENDING))throw new Error('RESOLUTION_STAGE_REGRESSION');
   if(op.kind==='additional_payment'){
    const payment=b.payment;if(!payment||Object.keys(payment).sort().join(',')!=='amount_minor,currency,customer_id,expires_at,obligation_id,paid_minor,settled,state'||payment.obligation_id!==op.id||payment.amount_minor!==op.amount_minor||payment.currency!==op.currency||payment.customer_id!==command.customer_id||payment.expires_at!==command.payment_expires_at||payment.state!==b.state||payment.settled!==(b.state==='settled'))throw new Error('EXCHANGE_PAYMENT_MISMATCH');
    const received=minor(payment.paid_minor),amount=minor(op.amount_minor);if(received>amount||b.state==='settled'&&received!==amount||b.state==='partial'&&(received===0n||received===amount)||['unpaid','rejected'].includes(b.state)&&received!==0n)throw new Error('EXCHANGE_PAYMENT_MISMATCH');
@@ -75,7 +86,7 @@ export class ResolutionExecution {
   const prev=k.db.prepare('SELECT body,digest FROM commerce_resolution_observations WHERE tenant_id=? AND store_id=? AND operation_id=? AND stage=? ORDER BY seq DESC LIMIT 1').get(s.tenant_id,s.store_id,op.id,b.state) as Row;
   if(prev&&op.kind==='store_credit'&&b.state==='issued'&&checkedBody(prev).instrument.account_id!==b.instrument.account_id)throw new Error('CREDIT_INSTRUMENT_CHANGED');
   if(prev&&prev.digest===contentDigest(b))return;
-  k.db.prepare('UPDATE commerce_resolution_operations SET state=?,native_id=?,observed_at=? WHERE tenant_id=? AND store_id=? AND id=?').run(b.state,b.id,k.clock(),s.tenant_id,s.store_id,op.id);
+  k.db.prepare('UPDATE commerce_resolution_operations SET state=?,native_id=?,observed_at=? WHERE tenant_id=? AND store_id=? AND id=?').run(b.state,nativeId,k.clock(),s.tenant_id,s.store_id,op.id);
   recordResolutionObservation(k,s,op.id,op.resource_id,b.state,b);
  }
  async dispatch(scope:Scope,operationId:string){const k=this.kernel,prepared=k.transaction(()=>{
@@ -87,11 +98,13 @@ export class ResolutionExecution {
   if(!prepared)return this.read(scope,operationId);
   try{
    const latest=this.#beforeSend(scope,operationId);
-   if(Object.hasOwn(latest.command,'gift_source_digest'))this.source.bindGiftResolution(latest.command);
-   bindLineageResolution(this.source.db,latest.command,{line_id:latest.b.line_id,units:latest.b.units});
-   this.source.money.bindCommand(latest.command);
+   if(this.source instanceof ResolutionFixtureSource){
+    if(Object.hasOwn(latest.command,'gift_source_digest'))this.source.bindGiftResolution(latest.command);
+    bindLineageResolution(this.source.db,latest.command,{line_id:latest.b.line_id,units:latest.b.units});
+    this.source.money.bindCommand(latest.command);
+   }
    const response=await this.#bounded(()=>this.source.issue(latest.command));
-   k.transaction(()=>{const current=this.#context(scope,operationId,'operation.dispatch');assertCaseWorkerScope(k,scope,current.op.case_id);assertExecution(k,current.s,RESOLVE_ACTION);this.#record(current,response);});
+   k.transaction(()=>{const current=this.#context(scope,operationId,'operation.dispatch');assertCaseWorkerScope(k,scope,current.op.case_id,current.op.id);assertExecution(k,current.s,RESOLVE_ACTION);this.#record(current,response);});
   }catch{ /* A timeout or permission change never establishes that nothing happened. */ }
   return this.read(scope,operationId);
  }

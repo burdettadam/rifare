@@ -1,0 +1,3828 @@
+{
+  "schema_version": 1,
+  "catalog_version": "rifare-adapter-catalog-v1",
+  "scope": "local_reusable_fixture_package",
+  "qualification": "external_qualification_blocked",
+  "declaration_pins": [
+    {
+      "path": "planning/support-envelope.json",
+      "sha256": "4fd68cf7a8879d445e417a0778b370f74a2783a792160313bd1384f74e7465da"
+    },
+    {
+      "path": "examples/platforms/shopify.json",
+      "sha256": "b5e86dde93a8ec65f2158246107a631a8e6fa907a7920014af4a537ac9964266"
+    },
+    {
+      "path": "examples/platforms/woocommerce.json",
+      "sha256": "121607432b7be48c2379e7ec42cd6c4fbb4f8d2e3a04fd5e60cc0dce4531f74e"
+    }
+  ],
+  "source_files": [
+    "packages/adapters/exchange-lineage-fixture-source.mts",
+    "packages/adapters/exchange-lineage-source-guards.mts",
+    "packages/adapters/exchange-money-fixture-source.mts",
+    "packages/adapters/fulfillment-fixture-source.mts",
+    "packages/adapters/instant-exchange-fixture-source.mts",
+    "packages/adapters/native-change-fixture-source.mts",
+    "packages/adapters/order-edit-fixture-source.mts",
+    "packages/adapters/prevention-source-guards.mts",
+    "packages/adapters/reliability/synthetic-journal.mts",
+    "packages/adapters/resolution-fixture-source.mts",
+    "packages/adapters/return-destination-fixture-source.mts",
+    "packages/adapters/shopify-return-fixture.mts",
+    "packages/adapters/shopify/orders.mts",
+    "packages/adapters/support-fixture-source.mts",
+    "packages/adapters/support/chatwoot.mts",
+    "packages/adapters/support/resend.mts",
+    "packages/adapters/support/transport.mts",
+    "packages/adapters/warehouse-fixture-source.mts",
+    "packages/adapters/webhooks/signatures.mts",
+    "packages/adapters/woocommerce/events.mts",
+    "packages/adapters/woocommerce/orders.mts",
+    "packages/adapters/woocommerce/refund-contract.mts",
+    "packages/adapters/woocommerce/refund-fixture-source.mts",
+    "packages/adapters/woocommerce/refund-gateway-fixture.mts",
+    "packages/adapters/woocommerce/return-contract.mts",
+    "packages/adapters/woocommerce/return-source.mts",
+    "packages/agent/local-model.mts",
+    "packages/agent/providers.mts",
+    "packages/commerce/capabilities.mts",
+    "packages/commerce/simulator.mts"
+  ],
+  "adapters": [
+    {
+      "id": "simulator",
+      "kind": "diagnostic",
+      "source_files": [
+        {
+          "path": "packages/commerce/simulator.mts",
+          "sha256": "2d05c796b01d92f2a52efc37043945430a39c3433a9d30d8d611fa3ba3eb2fdc"
+        },
+        {
+          "path": "packages/commerce/capabilities.mts",
+          "sha256": "110491efcde69a2a80e24ef8f321138eb89059078893e9352cc00095f310a445"
+        }
+      ],
+      "version": "simulator-read-v1",
+      "api_version": "local-read-v1",
+      "external_version": null,
+      "external_account": null,
+      "external_scopes_attested": false,
+      "source_oracle": "Frozen synthetic resource fixtures and independently read canonical resources, never live commerce.",
+      "operations": [
+        {
+          "id": "order.read",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [
+            "read_orders"
+          ],
+          "scope_kind": "configured_fixture_read_scopes",
+          "native_cases": [
+            {
+              "id": "M01-G04-01",
+              "name": "M01-G04-01",
+              "path": "tests/development/commerce-capabilities.test.mts",
+              "sha256": "c96f05d664bd6025c309df3980eef6cb20a6e177a67891b0befa37fc5c7ee0bb"
+            },
+            {
+              "id": "M01-G05-01",
+              "name": "M01-G05-01",
+              "path": "tests/development/commerce-simulator.test.mts",
+              "sha256": "5f39f99b8ab785d62f7e727b8515086ad7f3d5865132ffa60c33117bc92159de"
+            }
+          ],
+          "direct_fixtures": [
+            "order.read:simulator"
+          ]
+        },
+        {
+          "id": "customer.read",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [
+            "read_customers"
+          ],
+          "scope_kind": "configured_fixture_read_scopes",
+          "native_cases": [],
+          "direct_fixtures": [
+            "customer.read:simulator_customer"
+          ]
+        },
+        {
+          "id": "shipment.read",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [
+            "read_shipments"
+          ],
+          "scope_kind": "configured_fixture_read_scopes",
+          "native_cases": [],
+          "direct_fixtures": [
+            "shipment.read:simulator_shipment"
+          ]
+        },
+        {
+          "id": "catalog.read",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [
+            "read_catalog"
+          ],
+          "scope_kind": "configured_fixture_read_scopes",
+          "native_cases": [],
+          "direct_fixtures": [
+            "catalog.read:simulator_catalog"
+          ]
+        },
+        {
+          "id": "payment.read",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [
+            "read_payments"
+          ],
+          "scope_kind": "configured_fixture_read_scopes",
+          "native_cases": [],
+          "direct_fixtures": [
+            "payment.read:simulator_payment"
+          ]
+        },
+        {
+          "id": "order.refund",
+          "semantics": "unavailable",
+          "qualification": "unavailable",
+          "required_scopes": [],
+          "scope_kind": "configured_fixture_read_scopes",
+          "native_cases": [
+            {
+              "id": "M01-G04-02",
+              "name": "M01-G04-02",
+              "path": "tests/development/commerce-capabilities.test.mts",
+              "sha256": "c96f05d664bd6025c309df3980eef6cb20a6e177a67891b0befa37fc5c7ee0bb"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "order.edit",
+          "semantics": "unavailable",
+          "qualification": "unavailable",
+          "required_scopes": [],
+          "scope_kind": "configured_fixture_read_scopes",
+          "native_cases": [
+            {
+              "id": "M01-G04-02",
+              "name": "M01-G04-02",
+              "path": "tests/development/commerce-capabilities.test.mts",
+              "sha256": "c96f05d664bd6025c309df3980eef6cb20a6e177a67891b0befa37fc5c7ee0bb"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "history.read",
+          "semantics": "unavailable",
+          "qualification": "unavailable",
+          "required_scopes": [],
+          "scope_kind": "configured_fixture_read_scopes",
+          "native_cases": [
+            {
+              "id": "M01-G04-02",
+              "name": "M01-G04-02",
+              "path": "tests/development/commerce-capabilities.test.mts",
+              "sha256": "c96f05d664bd6025c309df3980eef6cb20a6e177a67891b0befa37fc5c7ee0bb"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "support.handoff",
+          "semantics": "unavailable",
+          "qualification": "unavailable",
+          "required_scopes": [],
+          "scope_kind": "configured_fixture_read_scopes",
+          "native_cases": [
+            {
+              "id": "M01-G04-11",
+              "name": "M01-G04-11",
+              "path": "tests/development/commerce-capabilities.test.mts",
+              "sha256": "c96f05d664bd6025c309df3980eef6cb20a6e177a67891b0befa37fc5c7ee0bb"
+            }
+          ],
+          "direct_fixtures": []
+        }
+      ]
+    },
+    {
+      "id": "shopify_orders",
+      "kind": "platform",
+      "source_files": [
+        {
+          "path": "packages/adapters/shopify/orders.mts",
+          "sha256": "cd5fd9fe73422d3e7005cee8a281c90de9c22603b848ef6dfdc3ca86b0e76832"
+        }
+      ],
+      "version": "shopify-order-read",
+      "api_version": "2026-10",
+      "external_version": null,
+      "external_account": null,
+      "external_scopes_attested": false,
+      "source_oracle": "Predeclared Shopify GraphQL order/shipment wire fixture; canonical snapshot compared to fixture fields.",
+      "operations": [
+        {
+          "id": "orders.get",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [
+            "read_orders"
+          ],
+          "scope_kind": "declared_read_scope_fixture_grant",
+          "native_cases": [
+            {
+              "id": "CASE-M01-G06-01",
+              "name": "CASE-M01-G06-01",
+              "path": "tests/development/read-shopify.test.mts",
+              "sha256": "4add0382a2c02d13ba8327a860d9777ad44f09a9403962ee70a47a790a4dff11"
+            },
+            {
+              "id": "M01-G06-UNCHANGED-REFRESH",
+              "name": "M01-G06-UNCHANGED-REFRESH",
+              "path": "tests/development/read-shopify.test.mts",
+              "sha256": "4add0382a2c02d13ba8327a860d9777ad44f09a9403962ee70a47a790a4dff11"
+            }
+          ],
+          "direct_fixtures": [
+            "orders.get:shopify_read"
+          ]
+        },
+        {
+          "id": "orders.cached",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [
+            "read_orders"
+          ],
+          "scope_kind": "declared_read_scope_fixture_grant",
+          "native_cases": [],
+          "direct_fixtures": [
+            "orders.cached:shopify_cached"
+          ]
+        },
+        {
+          "id": "refunds.execute",
+          "semantics": "unavailable",
+          "qualification": "unavailable",
+          "required_scopes": [
+            "read_orders"
+          ],
+          "scope_kind": "declared_read_scope_fixture_grant",
+          "native_cases": [
+            {
+              "id": "M01-G06-WRITE-SCOPES",
+              "name": "M01-G06-WRITE-SCOPES",
+              "path": "tests/development/read-shopify.test.mts",
+              "sha256": "4add0382a2c02d13ba8327a860d9777ad44f09a9403962ee70a47a790a4dff11"
+            },
+            {
+              "id": "M01-G06-PINNED-READ-ONLY",
+              "name": "M01-G06-PINNED-READ-ONLY",
+              "path": "tests/development/read-shopify.test.mts",
+              "sha256": "4add0382a2c02d13ba8327a860d9777ad44f09a9403962ee70a47a790a4dff11"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "orders.commit-edit",
+          "semantics": "unavailable",
+          "qualification": "unavailable",
+          "required_scopes": [
+            "read_orders"
+          ],
+          "scope_kind": "declared_read_scope_fixture_grant",
+          "native_cases": [
+            {
+              "id": "M01-G06-WRITE-SCOPES",
+              "name": "M01-G06-WRITE-SCOPES",
+              "path": "tests/development/read-shopify.test.mts",
+              "sha256": "4add0382a2c02d13ba8327a860d9777ad44f09a9403962ee70a47a790a4dff11"
+            },
+            {
+              "id": "M01-G06-PINNED-READ-ONLY",
+              "name": "M01-G06-PINNED-READ-ONLY",
+              "path": "tests/development/read-shopify.test.mts",
+              "sha256": "4add0382a2c02d13ba8327a860d9777ad44f09a9403962ee70a47a790a4dff11"
+            }
+          ],
+          "direct_fixtures": []
+        }
+      ]
+    },
+    {
+      "id": "shopify_returns",
+      "kind": "platform",
+      "source_files": [
+        {
+          "path": "packages/adapters/shopify-return-fixture.mts",
+          "sha256": "9cb01b29082cc41e6176fd2d282dd3e6c396282b849f46274268917a9839c803"
+        }
+      ],
+      "version": "source-sha256:9cb01b29082cc41e6176fd2d282dd3e6c396282b849f46274268917a9839c803",
+      "api_version": "2026-10",
+      "external_version": null,
+      "external_account": null,
+      "external_scopes_attested": false,
+      "source_oracle": "Native return record stored separately by injected GraphQL fixture transport; selection, quantities, native IDs and zero replay assertions.",
+      "operations": [
+        {
+          "id": "returns.create-request",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M03-G05-01",
+              "name": "CASE-M03-G05-01",
+              "path": "tests/development/native-returns.test.mts",
+              "sha256": "ac92e26d580429ab4802f098fa78d1c81918110963615c793602b89dc7df94d0"
+            }
+          ],
+          "direct_fixtures": [
+            "returns.create-request:shopify_return"
+          ]
+        },
+        {
+          "id": "returns.lookup",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M03-G05-03",
+              "name": "CASE-M03-G05-03",
+              "path": "tests/development/native-returns.test.mts",
+              "sha256": "ac92e26d580429ab4802f098fa78d1c81918110963615c793602b89dc7df94d0"
+            },
+            {
+              "id": "M03-G05-UNKNOWN-LOOKUP-NOT-RESEND",
+              "name": "M03-G05-UNKNOWN-LOOKUP-NOT-RESEND",
+              "path": "tests/development/native-returns.test.mts",
+              "sha256": "ac92e26d580429ab4802f098fa78d1c81918110963615c793602b89dc7df94d0"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "returns.live-create",
+          "semantics": "unavailable",
+          "qualification": "unavailable",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M03-G05-LIVE-MODE-UNAVAILABLE",
+              "name": "M03-G05-LIVE-MODE-UNAVAILABLE",
+              "path": "tests/development/native-returns.test.mts",
+              "sha256": "ac92e26d580429ab4802f098fa78d1c81918110963615c793602b89dc7df94d0"
+            }
+          ],
+          "direct_fixtures": []
+        }
+      ]
+    },
+    {
+      "id": "woocommerce_orders",
+      "kind": "platform",
+      "source_files": [
+        {
+          "path": "packages/adapters/woocommerce/orders.mts",
+          "sha256": "fb6ae120fc7440567f9226207709b65ebe1be913fd60a86e52fbaa24c06166aa"
+        }
+      ],
+      "version": "woocommerce-v3-read-v1",
+      "api_version": "wc/v3",
+      "external_version": null,
+      "external_account": null,
+      "external_scopes_attested": false,
+      "source_oracle": "Predeclared order/refund JSON fixtures and exact normalized source identity, decimal money and manual settlement flags.",
+      "operations": [
+        {
+          "id": "orders.get",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [
+            "read"
+          ],
+          "scope_kind": "configured_fixture_read_scopes",
+          "native_cases": [
+            {
+              "id": "CASE-M02-G26-01",
+              "name": "CASE-M02-G26-01",
+              "path": "tests/development/read-woocommerce.test.mts",
+              "sha256": "8b3f85c0e069b5118fab5161ead055fecb4b3fce10a02b06ca8e0ca5cf3e3518"
+            }
+          ],
+          "direct_fixtures": [
+            "orders.get:woo_read"
+          ]
+        },
+        {
+          "id": "refunds.get",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [
+            "read"
+          ],
+          "scope_kind": "configured_fixture_read_scopes",
+          "native_cases": [
+            {
+              "id": "CASE-M02-G26-03",
+              "name": "CASE-M02-G26-03",
+              "path": "tests/development/read-woocommerce.test.mts",
+              "sha256": "8b3f85c0e069b5118fab5161ead055fecb4b3fce10a02b06ca8e0ca5cf3e3518"
+            },
+            {
+              "id": "M02-G26-API-REFUND-NOT-SETTLEMENT",
+              "name": "M02-G26-API-REFUND-NOT-SETTLEMENT",
+              "path": "tests/development/read-woocommerce.test.mts",
+              "sha256": "8b3f85c0e069b5118fab5161ead055fecb4b3fce10a02b06ca8e0ca5cf3e3518"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "orders.cached",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [
+            "read"
+          ],
+          "scope_kind": "configured_fixture_read_scopes",
+          "native_cases": [
+            {
+              "id": "M02-G26-CONNECTION-CHANGE-DENIES-CACHE",
+              "name": "M02-G26-CONNECTION-CHANGE-DENIES-CACHE",
+              "path": "tests/development/read-woocommerce.test.mts",
+              "sha256": "8b3f85c0e069b5118fab5161ead055fecb4b3fce10a02b06ca8e0ca5cf3e3518"
+            }
+          ],
+          "direct_fixtures": [
+            "orders.cached:woo_cached"
+          ]
+        },
+        {
+          "id": "orders.commit-edit",
+          "semantics": "unavailable",
+          "qualification": "unavailable",
+          "required_scopes": [
+            "read"
+          ],
+          "scope_kind": "configured_fixture_read_scopes",
+          "native_cases": [
+            {
+              "id": "CASE-M02-G26-02",
+              "name": "CASE-M02-G26-02",
+              "path": "tests/development/read-woocommerce.test.mts",
+              "sha256": "8b3f85c0e069b5118fab5161ead055fecb4b3fce10a02b06ca8e0ca5cf3e3518"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "tracking.extension",
+          "semantics": "unavailable",
+          "qualification": "unavailable",
+          "required_scopes": [
+            "read"
+          ],
+          "scope_kind": "configured_fixture_read_scopes",
+          "native_cases": [
+            {
+              "id": "M02-G26-COMPLETED-NOT-DELIVERED",
+              "name": "M02-G26-COMPLETED-NOT-DELIVERED",
+              "path": "tests/development/read-woocommerce.test.mts",
+              "sha256": "8b3f85c0e069b5118fab5161ead055fecb4b3fce10a02b06ca8e0ca5cf3e3518"
+            }
+          ],
+          "direct_fixtures": []
+        }
+      ]
+    },
+    {
+      "id": "woocommerce_rma",
+      "kind": "platform",
+      "source_files": [
+        {
+          "path": "packages/adapters/woocommerce/return-source.mts",
+          "sha256": "8fed2831ba21c23c259e8027b843d46be231595b5a8ccc34af58933ec759ad59"
+        },
+        {
+          "path": "packages/adapters/woocommerce/return-contract.mts",
+          "sha256": "bc3708e6c43f62dea3884bde3c92fae25c4a61c8b8e9aaab613e88c23302e103"
+        }
+      ],
+      "version": "woocommerce-rma-fixture-v1",
+      "api_version": "wc/v3",
+      "external_version": null,
+      "external_account": null,
+      "external_scopes_attested": false,
+      "source_oracle": "Separate woo_fixture_order_versions and woo_fixture_effect_records plus canonical local-RMA/receipt rows; native reference remains null.",
+      "operations": [
+        {
+          "id": "orders.bind-complete",
+          "semantics": "composed",
+          "qualification": "sandbox-only",
+          "required_scopes": [
+            "read"
+          ],
+          "scope_kind": "configured_fixture_read_scopes",
+          "native_cases": [
+            {
+              "id": "M07-G01-COMPLETE-READ-USES-ORIGINAL-WOO-LINEAGE",
+              "name": "M07-G01-COMPLETE-READ-USES-ORIGINAL-WOO-LINEAGE",
+              "path": "tests/development/woocommerce-returns.test.mts",
+              "sha256": "37b12d319e49ea71fdc36372a4204357f69b65425d0e9579d1becfc77a8ad499"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "returns.create-request",
+          "semantics": "composed",
+          "qualification": "sandbox-only",
+          "required_scopes": [
+            "read"
+          ],
+          "scope_kind": "configured_fixture_read_scopes",
+          "native_cases": [
+            {
+              "id": "CASE-M07-G01-01",
+              "name": "CASE-M07-G01-01",
+              "path": "tests/development/woocommerce-returns.test.mts",
+              "sha256": "37b12d319e49ea71fdc36372a4204357f69b65425d0e9579d1becfc77a8ad499"
+            },
+            {
+              "id": "CASE-M07-G01-03",
+              "name": "CASE-M07-G01-03",
+              "path": "tests/development/woocommerce-returns.test.mts",
+              "sha256": "37b12d319e49ea71fdc36372a4204357f69b65425d0e9579d1becfc77a8ad499"
+            }
+          ],
+          "direct_fixtures": [
+            "returns.create-request:woo_rma"
+          ]
+        },
+        {
+          "id": "returns.read",
+          "semantics": "composed",
+          "qualification": "sandbox-only",
+          "required_scopes": [
+            "read"
+          ],
+          "scope_kind": "configured_fixture_read_scopes",
+          "native_cases": [
+            {
+              "id": "M07-G01-RESTART-RETAINS-LOCAL-RMA-WITHOUT-NATIVE-ID",
+              "name": "M07-G01-RESTART-RETAINS-LOCAL-RMA-WITHOUT-NATIVE-ID",
+              "path": "tests/development/woocommerce-returns.test.mts",
+              "sha256": "37b12d319e49ea71fdc36372a4204357f69b65425d0e9579d1becfc77a8ad499"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "returns.native-create",
+          "semantics": "unavailable",
+          "qualification": "unavailable",
+          "required_scopes": [
+            "read"
+          ],
+          "scope_kind": "configured_fixture_read_scopes",
+          "native_cases": [
+            {
+              "id": "CASE-M07-G01-02",
+              "name": "CASE-M07-G01-02",
+              "path": "tests/development/woocommerce-returns.test.mts",
+              "sha256": "37b12d319e49ea71fdc36372a4204357f69b65425d0e9579d1becfc77a8ad499"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "returns.exchange",
+          "semantics": "unavailable",
+          "qualification": "unavailable",
+          "required_scopes": [
+            "read"
+          ],
+          "scope_kind": "configured_fixture_read_scopes",
+          "native_cases": [
+            {
+              "id": "CASE-M07-G01-02",
+              "name": "CASE-M07-G01-02",
+              "path": "tests/development/woocommerce-returns.test.mts",
+              "sha256": "37b12d319e49ea71fdc36372a4204357f69b65425d0e9579d1becfc77a8ad499"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "returns.store-credit",
+          "semantics": "unavailable",
+          "qualification": "unavailable",
+          "required_scopes": [
+            "read"
+          ],
+          "scope_kind": "configured_fixture_read_scopes",
+          "native_cases": [
+            {
+              "id": "CASE-M07-G01-02",
+              "name": "CASE-M07-G01-02",
+              "path": "tests/development/woocommerce-returns.test.mts",
+              "sha256": "37b12d319e49ea71fdc36372a4204357f69b65425d0e9579d1becfc77a8ad499"
+            }
+          ],
+          "direct_fixtures": []
+        }
+      ]
+    },
+    {
+      "id": "woocommerce_events",
+      "kind": "platform",
+      "source_files": [
+        {
+          "path": "packages/adapters/woocommerce/events.mts",
+          "sha256": "5d89104f80aeba204cd2ff5831629ac5d0720dcb4dffcb1ba3ab7a797242a395"
+        }
+      ],
+      "version": "source-sha256:5d89104f80aeba204cd2ff5831629ac5d0720dcb4dffcb1ba3ab7a797242a395",
+      "api_version": "wc/v3",
+      "external_version": null,
+      "external_account": null,
+      "external_scopes_attested": false,
+      "source_oracle": "Independent native order snapshot digest, immutable inbox bytes and commerce_woo_event_observations; no financial effect.",
+      "operations": [
+        {
+          "id": "order.created",
+          "semantics": "composed",
+          "qualification": "sandbox-only",
+          "required_scopes": [
+            "read"
+          ],
+          "scope_kind": "configured_fixture_read_scopes",
+          "native_cases": [],
+          "direct_fixtures": [
+            "order.created:woo_event_created"
+          ]
+        },
+        {
+          "id": "order.updated",
+          "semantics": "composed",
+          "qualification": "sandbox-only",
+          "required_scopes": [
+            "read"
+          ],
+          "scope_kind": "configured_fixture_read_scopes",
+          "native_cases": [
+            {
+              "id": "M07-G03-WOO-EVENT-CORROBORATES-NATIVE-UPDATE",
+              "name": "M07-G03-WOO-EVENT-CORROBORATES-NATIVE-UPDATE",
+              "path": "tests/development/woocommerce-events.test.mts",
+              "sha256": "b47cefe37f697a9fc8b78bd1c49d35f14fda0e3890be4d04dac0cdde085a7656"
+            }
+          ],
+          "direct_fixtures": [
+            "order.updated:woo_event"
+          ]
+        },
+        {
+          "id": "order.replay",
+          "semantics": "composed",
+          "qualification": "sandbox-only",
+          "required_scopes": [
+            "read"
+          ],
+          "scope_kind": "configured_fixture_read_scopes",
+          "native_cases": [
+            {
+              "id": "M07-G03-WOO-DUPLICATE-EVENT-AND-NEW-DELIVERY-NO-REPLAY",
+              "name": "M07-G03-WOO-DUPLICATE-EVENT-AND-NEW-DELIVERY-NO-REPLAY",
+              "path": "tests/development/woocommerce-events.test.mts",
+              "sha256": "b47cefe37f697a9fc8b78bd1c49d35f14fda0e3890be4d04dac0cdde085a7656"
+            }
+          ],
+          "direct_fixtures": []
+        }
+      ]
+    },
+    {
+      "id": "woocommerce_refunds",
+      "kind": "platform",
+      "source_files": [
+        {
+          "path": "packages/adapters/woocommerce/refund-fixture-source.mts",
+          "sha256": "44f229486f5db0daabeae3d201d7d51074a7fa547dad7e7f848746395db46b01"
+        },
+        {
+          "path": "packages/adapters/woocommerce/refund-contract.mts",
+          "sha256": "2220229fe198f1f1f588bbb24d5916cbee8e373d036d092fc7890e2b443f0257"
+        }
+      ],
+      "version": "rifare-woocommerce-refund-fixture-v1",
+      "api_version": "wc/v3",
+      "external_version": null,
+      "external_account": null,
+      "external_scopes_attested": false,
+      "source_oracle": "Independent Woo refund records are checked alongside separate gateway refund effects and settlement movement rows.",
+      "operations": [
+        {
+          "id": "refunds.execute",
+          "semantics": "composed",
+          "qualification": "sandbox-only",
+          "required_scopes": [
+            "read",
+            "write"
+          ],
+          "scope_kind": "configured_fixture_read_write_scopes",
+          "native_cases": [
+            {
+              "id": "CASE-M07-G02-01",
+              "name": "CASE-M07-G02-01",
+              "path": "tests/development/woocommerce-refunds.test.mts",
+              "sha256": "644e8cdbe920fa8eb214d83a00bc96d5deaf3fa875207ace5cd26144bb34625c"
+            }
+          ],
+          "direct_fixtures": [
+            "refunds.execute:woo_refund"
+          ]
+        },
+        {
+          "id": "refunds.lookup",
+          "semantics": "composed",
+          "qualification": "sandbox-only",
+          "required_scopes": [
+            "read",
+            "write"
+          ],
+          "scope_kind": "configured_fixture_read_write_scopes",
+          "native_cases": [
+            {
+              "id": "CASE-M07-G02-03",
+              "name": "CASE-M07-G02-03",
+              "path": "tests/development/woocommerce-refunds.test.mts",
+              "sha256": "644e8cdbe920fa8eb214d83a00bc96d5deaf3fa875207ace5cd26144bb34625c"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "refunds.manual-record",
+          "semantics": "manual",
+          "qualification": "sandbox-only",
+          "required_scopes": [
+            "read",
+            "write"
+          ],
+          "scope_kind": "configured_fixture_read_write_scopes",
+          "native_cases": [
+            {
+              "id": "CASE-M07-G02-02",
+              "name": "CASE-M07-G02-02",
+              "path": "tests/development/woocommerce-refunds.test.mts",
+              "sha256": "644e8cdbe920fa8eb214d83a00bc96d5deaf3fa875207ace5cd26144bb34625c"
+            }
+          ],
+          "direct_fixtures": [
+            "refunds.manual-record:woo_manual"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "woocommerce_gateway",
+      "kind": "diagnostic",
+      "source_files": [
+        {
+          "path": "packages/adapters/woocommerce/refund-gateway-fixture.mts",
+          "sha256": "5761fcf35ca6dbeb692f7a4ec3a3e8cc08e8ebc194165f1281a6aea9ac3b6bef"
+        }
+      ],
+      "version": "rifare-fixture-card-refund-v1",
+      "api_version": "local-original-payment-v1",
+      "external_version": null,
+      "external_account": null,
+      "external_scopes_attested": false,
+      "source_oracle": "fixture_woo_gateway_charges, fixture_woo_gateway_refunds and fixture_woo_gateway_movements in a physically separate database.",
+      "operations": [
+        {
+          "id": "refund.issue",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M07-G02-01",
+              "name": "CASE-M07-G02-01",
+              "path": "tests/development/woocommerce-refunds.test.mts",
+              "sha256": "644e8cdbe920fa8eb214d83a00bc96d5deaf3fa875207ace5cd26144bb34625c"
+            }
+          ],
+          "direct_fixtures": [
+            "refund.issue:woo_gateway"
+          ]
+        },
+        {
+          "id": "refund.lookup",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M07-G02-03",
+              "name": "CASE-M07-G02-03",
+              "path": "tests/development/woocommerce-refunds.test.mts",
+              "sha256": "644e8cdbe920fa8eb214d83a00bc96d5deaf3fa875207ace5cd26144bb34625c"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "refund.settle-observation",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M07-G02-GATEWAY-SETTLED-REQUIRES-INDEPENDENT-MOVEMENT",
+              "name": "M07-G02-GATEWAY-SETTLED-REQUIRES-INDEPENDENT-MOVEMENT",
+              "path": "tests/development/woocommerce-refunds.test.mts",
+              "sha256": "644e8cdbe920fa8eb214d83a00bc96d5deaf3fa875207ace5cd26144bb34625c"
+            },
+            {
+              "id": "CASE-M07-G02-01",
+              "name": "CASE-M07-G02-01",
+              "path": "tests/development/woocommerce-refunds.test.mts",
+              "sha256": "644e8cdbe920fa8eb214d83a00bc96d5deaf3fa875207ace5cd26144bb34625c"
+            }
+          ],
+          "direct_fixtures": []
+        }
+      ]
+    },
+    {
+      "id": "webhook_signatures",
+      "kind": "diagnostic",
+      "source_files": [
+        {
+          "path": "packages/adapters/webhooks/signatures.mts",
+          "sha256": "6d67ed85137766a21bd6624b9042609fa0098ce615067c1c068be1e6f93db64b"
+        }
+      ],
+      "version": "source-sha256:6d67ed85137766a21bd6624b9042609fa0098ce615067c1c068be1e6f93db64b",
+      "api_version": "provider-specific-fixture",
+      "external_version": null,
+      "external_account": null,
+      "external_scopes_attested": false,
+      "source_oracle": "Exact raw body and predeclared HMAC headers; durable inbox rows remain quarantined where routing is unsigned.",
+      "operations": [
+        {
+          "id": "synthetic.verify",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M02-G12-SYNTHETIC-ROUTE-BOUND-SIGNATURE",
+              "name": "M02-G12-SYNTHETIC-ROUTE-BOUND-SIGNATURE",
+              "path": "tests/development/webhook-inbox.test.mts",
+              "sha256": "27888b26246de994b437cc3ed133568951fcff89be6a300a5db5d776ad452f7f"
+            }
+          ],
+          "direct_fixtures": [
+            "synthetic.verify:signature_synthetic"
+          ]
+        },
+        {
+          "id": "shopify.verify",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M02-G12-SHOPIFY-UNSIGNED-TENANCY-QUARANTINED",
+              "name": "M02-G12-SHOPIFY-UNSIGNED-TENANCY-QUARANTINED",
+              "path": "tests/development/webhook-inbox.test.mts",
+              "sha256": "27888b26246de994b437cc3ed133568951fcff89be6a300a5db5d776ad452f7f"
+            }
+          ],
+          "direct_fixtures": [
+            "shopify.verify:signature_shopify"
+          ]
+        },
+        {
+          "id": "woocommerce.verify",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M07-G03-WOO-UNSIGNED-BODY-REJECTED-BEFORE-ACK",
+              "name": "M07-G03-WOO-UNSIGNED-BODY-REJECTED-BEFORE-ACK",
+              "path": "tests/development/woocommerce-events.test.mts",
+              "sha256": "b47cefe37f697a9fc8b78bd1c49d35f14fda0e3890be4d04dac0cdde085a7656"
+            },
+            {
+              "id": "M07-G03-WOO-WRONG-TOPIC-OR-ORIGIN-REJECTED",
+              "name": "M07-G03-WOO-WRONG-TOPIC-OR-ORIGIN-REJECTED",
+              "path": "tests/development/woocommerce-events.test.mts",
+              "sha256": "b47cefe37f697a9fc8b78bd1c49d35f14fda0e3890be4d04dac0cdde085a7656"
+            }
+          ],
+          "direct_fixtures": [
+            "woocommerce.verify:signature_woocommerce"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "support_fixture",
+      "kind": "diagnostic",
+      "source_files": [
+        {
+          "path": "packages/adapters/support-fixture-source.mts",
+          "sha256": "1e9921151382684620a39a6fc4744cdfce921e50ac77446704c17905ceed4e85"
+        }
+      ],
+      "version": "support_fixture_v1",
+      "api_version": "local_v1",
+      "external_version": null,
+      "external_account": null,
+      "external_scopes_attested": false,
+      "source_oracle": "Independent support_source_effects, operation identity, stage, and customer_delivered false until an explicit fixture observation.",
+      "operations": [
+        {
+          "id": "email.send",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M05-G04-01",
+              "name": "CASE-M05-G04-01",
+              "path": "tests/development/support-delivery.test.mts",
+              "sha256": "63ff19ed8b4cf15774b59c8a8d60911d0a92ae3329c0e300a780938c43e13eef"
+            }
+          ],
+          "direct_fixtures": [
+            "email.send:support_email"
+          ]
+        },
+        {
+          "id": "note.send",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [],
+          "direct_fixtures": [
+            "note.send:support_note"
+          ]
+        },
+        {
+          "id": "handoff.assign",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [],
+          "direct_fixtures": [
+            "handoff.assign:support_handoff"
+          ]
+        },
+        {
+          "id": "message.lookup",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M05-G04-03",
+              "name": "CASE-M05-G04-03",
+              "path": "tests/development/support-delivery.test.mts",
+              "sha256": "63ff19ed8b4cf15774b59c8a8d60911d0a92ae3329c0e300a780938c43e13eef"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "message.observe",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M05-G04-01",
+              "name": "CASE-M05-G04-01",
+              "path": "tests/development/support-delivery.test.mts",
+              "sha256": "63ff19ed8b4cf15774b59c8a8d60911d0a92ae3329c0e300a780938c43e13eef"
+            }
+          ],
+          "direct_fixtures": []
+        }
+      ]
+    },
+    {
+      "id": "chatwoot",
+      "kind": "support",
+      "source_files": [
+        {
+          "path": "packages/adapters/support/chatwoot.mts",
+          "sha256": "8838a8bc5457039830d79344e3baa26720ca24f296976503732471e6196d3e43"
+        },
+        {
+          "path": "packages/adapters/support/transport.mts",
+          "sha256": "2eefdeb256d944eb9956b0cf58fc2d5f95b9fc23bcb29517591d00ff1b4e9db3"
+        }
+      ],
+      "version": "chatwoot_support_v419_snapshot",
+      "api_version": "api/v1",
+      "external_version": null,
+      "external_account": null,
+      "external_scopes_attested": false,
+      "source_oracle": "Injected helpdesk service records (separate wire fixture), scoped account/conversation, private note marker and assignment response; no real delivery.",
+      "operations": [
+        {
+          "id": "history.page",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M05-G02-07",
+              "name": "M05-G02-07",
+              "path": "tests/development/support-adapters.test.mts",
+              "sha256": "45bdce2bc5a05b0d5bcff8ebdc606f4f4b378575774fde698dad2f8103dc7de7"
+            }
+          ],
+          "direct_fixtures": [
+            "history.page:chatwoot_history"
+          ]
+        },
+        {
+          "id": "note.send",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M05-G02-01",
+              "name": "CASE-M05-G02-01",
+              "path": "tests/development/support-adapters.test.mts",
+              "sha256": "45bdce2bc5a05b0d5bcff8ebdc606f4f4b378575774fde698dad2f8103dc7de7"
+            }
+          ],
+          "direct_fixtures": [
+            "note.send:chatwoot_note"
+          ]
+        },
+        {
+          "id": "handoff.assign",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M05-G02-04",
+              "name": "M05-G02-04",
+              "path": "tests/development/support-adapters.test.mts",
+              "sha256": "45bdce2bc5a05b0d5bcff8ebdc606f4f4b378575774fde698dad2f8103dc7de7"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "note.lookup",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M05-G02-03",
+              "name": "CASE-M05-G02-03",
+              "path": "tests/development/support-adapters.test.mts",
+              "sha256": "45bdce2bc5a05b0d5bcff8ebdc606f4f4b378575774fde698dad2f8103dc7de7"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "customer.send",
+          "semantics": "unavailable",
+          "qualification": "unavailable",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [],
+          "direct_fixtures": [
+            "customer.send:chatwoot_customer"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "resend",
+      "kind": "support",
+      "source_files": [
+        {
+          "path": "packages/adapters/support/resend.mts",
+          "sha256": "998fed5126bc88ae4e8fb64a0522ae3e5353b2cedcb4e14dd0b3a4be4ba15bce"
+        },
+        {
+          "path": "packages/adapters/support/transport.mts",
+          "sha256": "2eefdeb256d944eb9956b0cf58fc2d5f95b9fc23bcb29517591d00ff1b4e9db3"
+        }
+      ],
+      "version": "resend_email_v1_snapshot",
+      "api_version": "unversioned-email-api-snapshot",
+      "external_version": null,
+      "external_account": null,
+      "external_scopes_attested": false,
+      "source_oracle": "Injected sender service records, idempotency key, exact recipient/content and later native delivery status; accepted is not delivered.",
+      "operations": [
+        {
+          "id": "email.send",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M05-G04-09",
+              "name": "M05-G04-09",
+              "path": "tests/development/support-adapters.test.mts",
+              "sha256": "45bdce2bc5a05b0d5bcff8ebdc606f4f4b378575774fde698dad2f8103dc7de7"
+            }
+          ],
+          "direct_fixtures": [
+            "email.send:resend_email"
+          ]
+        },
+        {
+          "id": "email.lookup",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M05-G04-09",
+              "name": "M05-G04-09",
+              "path": "tests/development/support-adapters.test.mts",
+              "sha256": "45bdce2bc5a05b0d5bcff8ebdc606f4f4b378575774fde698dad2f8103dc7de7"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "unknown.retry-without-native-id",
+          "semantics": "unavailable",
+          "qualification": "unavailable",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M05-G04-10",
+              "name": "M05-G04-10",
+              "path": "tests/development/support-adapters.test.mts",
+              "sha256": "45bdce2bc5a05b0d5bcff8ebdc606f4f4b378575774fde698dad2f8103dc7de7"
+            }
+          ],
+          "direct_fixtures": []
+        }
+      ]
+    },
+    {
+      "id": "openai",
+      "kind": "model",
+      "source_files": [
+        {
+          "path": "packages/agent/providers.mts",
+          "sha256": "2a1e2ca504133ae467efc351118e04fe6713db9d25bae09dfc91689daef54dd4"
+        }
+      ],
+      "version": "openai-status-v1",
+      "api_version": "responses/v1-unversioned",
+      "external_version": null,
+      "external_account": null,
+      "external_scopes_attested": false,
+      "source_oracle": "Independent fixed provider wire/tool-response fixture plus sanitized request ledger; no model truth, quality or external account attested.",
+      "operations": [
+        {
+          "id": "model.tool-turn",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M01-G14-01",
+              "name": "CASE-M01-G14-01",
+              "path": "tests/development/agent-second-provider.test.mts",
+              "sha256": "9af551e4c5f2cb766c054b910c4af0a74aad1496222693acdb8b4c91e38a67ee"
+            },
+            {
+              "id": "M01-G14-DISTINCT-WIRE-FORMATS",
+              "name": "M01-G14-DISTINCT-WIRE-FORMATS",
+              "path": "tests/development/agent-second-provider.test.mts",
+              "sha256": "9af551e4c5f2cb766c054b910c4af0a74aad1496222693acdb8b4c91e38a67ee"
+            }
+          ],
+          "direct_fixtures": [
+            "model.tool-turn:openai"
+          ]
+        },
+        {
+          "id": "model.stateless-context",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [],
+          "direct_fixtures": [
+            "model.stateless-context:openai_stateless"
+          ]
+        },
+        {
+          "id": "model.unapproved",
+          "semantics": "unavailable",
+          "qualification": "unavailable",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [],
+          "direct_fixtures": [
+            "model.unapproved:openai_unapproved"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "anthropic",
+      "kind": "model",
+      "source_files": [
+        {
+          "path": "packages/agent/providers.mts",
+          "sha256": "2a1e2ca504133ae467efc351118e04fe6713db9d25bae09dfc91689daef54dd4"
+        }
+      ],
+      "version": "anthropic-status-v1",
+      "api_version": "2023-06-01",
+      "external_version": null,
+      "external_account": null,
+      "external_scopes_attested": false,
+      "source_oracle": "Independent fixed provider wire/tool-response fixture plus sanitized request ledger; no model truth, quality or external account attested.",
+      "operations": [
+        {
+          "id": "model.tool-turn",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M01-G14-01",
+              "name": "CASE-M01-G14-01",
+              "path": "tests/development/agent-second-provider.test.mts",
+              "sha256": "9af551e4c5f2cb766c054b910c4af0a74aad1496222693acdb8b4c91e38a67ee"
+            },
+            {
+              "id": "M01-G14-DISTINCT-WIRE-FORMATS",
+              "name": "M01-G14-DISTINCT-WIRE-FORMATS",
+              "path": "tests/development/agent-second-provider.test.mts",
+              "sha256": "9af551e4c5f2cb766c054b910c4af0a74aad1496222693acdb8b4c91e38a67ee"
+            }
+          ],
+          "direct_fixtures": [
+            "model.tool-turn:anthropic"
+          ]
+        },
+        {
+          "id": "model.stateless-context",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M01-G14-STATELESS-TRANSCRIPT",
+              "name": "M01-G14-STATELESS-TRANSCRIPT",
+              "path": "tests/development/agent-second-provider.test.mts",
+              "sha256": "9af551e4c5f2cb766c054b910c4af0a74aad1496222693acdb8b4c91e38a67ee"
+            }
+          ],
+          "direct_fixtures": [
+            "model.stateless-context:anthropic_stateless"
+          ]
+        },
+        {
+          "id": "model.unapproved",
+          "semantics": "unavailable",
+          "qualification": "unavailable",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M01-G14-UNSUPPORTED-MODEL",
+              "name": "M01-G14-UNSUPPORTED-MODEL",
+              "path": "tests/development/agent-second-provider.test.mts",
+              "sha256": "9af551e4c5f2cb766c054b910c4af0a74aad1496222693acdb8b4c91e38a67ee"
+            }
+          ],
+          "direct_fixtures": [
+            "model.unapproved:anthropic_unapproved"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ollama_local",
+      "kind": "model",
+      "source_files": [
+        {
+          "path": "packages/agent/local-model.mts",
+          "sha256": "eaa6988cd176dce8f6a7402d1cb99a5ed054ec4c72f9407e6a1c940efc1a4d42"
+        }
+      ],
+      "version": "source-sha256:eaa6988cd176dce8f6a7402d1cb99a5ed054ec4c72f9407e6a1c940efc1a4d42",
+      "api_version": "api-tags-chat-snapshot",
+      "external_version": null,
+      "external_account": null,
+      "external_scopes_attested": false,
+      "source_oracle": "Literal loopback fixture daemon request/response records, exact configured model digest before and after request, no cloud or installed model quality claim.",
+      "operations": [
+        {
+          "id": "model.probe",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M01-G16-01",
+              "name": "CASE-M01-G16-01",
+              "path": "tests/development/local-model.test.mts",
+              "sha256": "b8b89e760c75976f69d43139393d2ac16e134543d8e9723ee78ef97d454d8577"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "model.tool-turn",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M01-G16-01",
+              "name": "CASE-M01-G16-01",
+              "path": "tests/development/local-model.test.mts",
+              "sha256": "b8b89e760c75976f69d43139393d2ac16e134543d8e9723ee78ef97d454d8577"
+            }
+          ],
+          "direct_fixtures": [
+            "model.tool-turn:local_model"
+          ]
+        },
+        {
+          "id": "model.remote",
+          "semantics": "unavailable",
+          "qualification": "unavailable",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M01-G16-REMOTE-MODEL-REFUSED",
+              "name": "M01-G16-REMOTE-MODEL-REFUSED",
+              "path": "tests/development/local-model.test.mts",
+              "sha256": "b8b89e760c75976f69d43139393d2ac16e134543d8e9723ee78ef97d454d8577"
+            }
+          ],
+          "direct_fixtures": []
+        }
+      ]
+    },
+    {
+      "id": "synthetic_journal",
+      "kind": "diagnostic",
+      "source_files": [
+        {
+          "path": "packages/adapters/reliability/synthetic-journal.mts",
+          "sha256": "ab29608ff2bd79b6f7c7e51711bed1a1a6b8b7b58a108b183f49590c17f29ac6"
+        }
+      ],
+      "version": "synthetic-journal-v1",
+      "api_version": "local-journal-v1",
+      "external_version": null,
+      "external_account": null,
+      "external_scopes_attested": false,
+      "source_oracle": "Separate immutable journal_effects rows and fixed-high-water pages; response loss cannot create another effect.",
+      "operations": [
+        {
+          "id": "diagnostic.case.record",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M02-G14-01",
+              "name": "CASE-M02-G14-01",
+              "path": "tests/development/durable-work.test.mts",
+              "sha256": "7de0d0ce5aeba3d024e09dabd81d608c2c46bb939dc711e88708df4590d81bb8"
+            }
+          ],
+          "direct_fixtures": [
+            "diagnostic.case.record:journal"
+          ]
+        },
+        {
+          "id": "diagnostic.projection.record",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M02-G16-01",
+              "name": "CASE-M02-G16-01",
+              "path": "tests/development/reconciliation.test.mts",
+              "sha256": "e41e314628aa5d651eb1d862e1b0d1539c1c396f499edd3a0d3d813d55725170"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "operation.lookup",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M02-G15-03",
+              "name": "CASE-M02-G15-03",
+              "path": "tests/development/business-operations.test.mts",
+              "sha256": "bb746e6dc7dabfb02195d59cc627bd510d4f23577930b68ac613bf202ab967c4"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "operation.page",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M02-G16-FIXED-HIGH-WATER-NO-SKIP",
+              "name": "M02-G16-FIXED-HIGH-WATER-NO-SKIP",
+              "path": "tests/development/reconciliation.test.mts",
+              "sha256": "e41e314628aa5d651eb1d862e1b0d1539c1c396f499edd3a0d3d813d55725170"
+            }
+          ],
+          "direct_fixtures": []
+        }
+      ]
+    },
+    {
+      "id": "resolution_source",
+      "kind": "diagnostic",
+      "source_files": [
+        {
+          "path": "packages/adapters/resolution-fixture-source.mts",
+          "sha256": "b03ff40c566e6118467173965af71f0694d9d8e9aa61c5e9b69ce36e5a0625b3"
+        }
+      ],
+      "version": "source-sha256:b03ff40c566e6118467173965af71f0694d9d8e9aa61c5e9b69ce36e5a0625b3",
+      "api_version": "local-resolution-source",
+      "external_version": null,
+      "external_account": null,
+      "external_scopes_attested": false,
+      "source_oracle": "fixture_resolution_effects/accounts, original instruments and credit records in an independent database; accepted, issued and settled are distinct.",
+      "operations": [
+        {
+          "id": "refund.issue",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M03-G08-01",
+              "name": "CASE-M03-G08-01",
+              "path": "tests/development/refund-execution.test.mts",
+              "sha256": "e24d4df14b30d630ded2ae96a54651082cf39f50a640e2c4e2c12dede18cb870"
+            }
+          ],
+          "direct_fixtures": [
+            "refund.issue:resolution"
+          ]
+        },
+        {
+          "id": "refund.lookup",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M03-G08-ORIGINAL-PAYMENT-REFERENCE-PRESERVED",
+              "name": "M03-G08-ORIGINAL-PAYMENT-REFERENCE-PRESERVED",
+              "path": "tests/development/refund-execution.test.mts",
+              "sha256": "e24d4df14b30d630ded2ae96a54651082cf39f50a640e2c4e2c12dede18cb870"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "refund.settle",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M03-G08-01",
+              "name": "CASE-M03-G08-01",
+              "path": "tests/development/refund-execution.test.mts",
+              "sha256": "e24d4df14b30d630ded2ae96a54651082cf39f50a640e2c4e2c12dede18cb870"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "credit.issue",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M03-G09-01",
+              "name": "CASE-M03-G09-01",
+              "path": "tests/development/store-credit.test.mts",
+              "sha256": "faa10a8f216f36f3d508a5398c76f43c9dbb8b971ce6f9de2f0640bea1f79cea"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "credit.redeem",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M03-G09-REDEEMED-BALANCE-NOT-REISSUED",
+              "name": "M03-G09-REDEEMED-BALANCE-NOT-REISSUED",
+              "path": "tests/development/store-credit.test.mts",
+              "sha256": "faa10a8f216f36f3d508a5398c76f43c9dbb8b971ce6f9de2f0640bea1f79cea"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "payment-obligation.issue",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M06-G02-01",
+              "name": "CASE-M06-G02-01",
+              "path": "tests/development/exchange-payments.test.mts",
+              "sha256": "97d79b21cdca776e23486e41cd9cbbd1a8c070fad2aaae4e0aa184c503303dbd"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "payment-obligation.settle",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M06-G02-01",
+              "name": "CASE-M06-G02-01",
+              "path": "tests/development/exchange-payments.test.mts",
+              "sha256": "97d79b21cdca776e23486e41cd9cbbd1a8c070fad2aaae4e0aa184c503303dbd"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "refund.original-instrument-routing",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M06-TEST-014-MIXED-INSTRUMENT-RESIDUAL",
+              "name": "M06-TEST-014-MIXED-INSTRUMENT-RESIDUAL",
+              "path": "tests/development/exchange-residuals.test.mts",
+              "sha256": "800d2f7a5baa5be3d46fa942e189175dcf96146522b288ace58871522c2d5874"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "gift.credit",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M06-G05-01",
+              "name": "CASE-M06-G05-01",
+              "path": "tests/development/gift-returns.test.mts",
+              "sha256": "de4432f313fd0f53448f422a0bb4cbd04a2d463a07327861b63d5fdbeded946f"
+            }
+          ],
+          "direct_fixtures": []
+        }
+      ]
+    },
+    {
+      "id": "fulfillment_source",
+      "kind": "diagnostic",
+      "source_files": [
+        {
+          "path": "packages/adapters/fulfillment-fixture-source.mts",
+          "sha256": "097a6b7b7963e50362a9f0c2633d8b63213eca29441409787b9c940b887fe551"
+        }
+      ],
+      "version": "source-sha256:097a6b7b7963e50362a9f0c2633d8b63213eca29441409787b9c940b887fe551",
+      "api_version": "local-fulfillment-source",
+      "external_version": null,
+      "external_account": null,
+      "external_scopes_attested": false,
+      "source_oracle": "Independent stock/reservation/replacement/label/carrier event tables and charge/void/reimbursement records, without physical or carrier qualification.",
+      "operations": [
+        {
+          "id": "inventory.reserve",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M03-G11-01",
+              "name": "CASE-M03-G11-01",
+              "path": "tests/development/replacement-inventory.test.mts",
+              "sha256": "f023ba4061f174c1b096593e09ff392e996a399f93af6875a349ed23b60476e4"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "inventory.release",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M03-G11-RELEASE-ALLOWS-NEW-GENERATION",
+              "name": "M03-G11-RELEASE-ALLOWS-NEW-GENERATION",
+              "path": "tests/development/replacement-inventory.test.mts",
+              "sha256": "f023ba4061f174c1b096593e09ff392e996a399f93af6875a349ed23b60476e4"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "replacement.create",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M03-G12-01",
+              "name": "CASE-M03-G12-01",
+              "path": "tests/development/replacement-orders.test.mts",
+              "sha256": "559964500b125d060c0053861df4b79113b66bc8f2228b9096de583884b806b4"
+            }
+          ],
+          "direct_fixtures": [
+            "replacement.create:fulfillment_replacement"
+          ]
+        },
+        {
+          "id": "replacement.fulfill",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M03-G12-NO-SHIPMENT-FROM-CREATION",
+              "name": "M03-G12-NO-SHIPMENT-FROM-CREATION",
+              "path": "tests/development/replacement-orders.test.mts",
+              "sha256": "559964500b125d060c0053861df4b79113b66bc8f2228b9096de583884b806b4"
+            },
+            {
+              "id": "M06-G06-NATIVE-DELIVERY-REQUIRED",
+              "name": "M06-G06-NATIVE-DELIVERY-REQUIRED",
+              "path": "tests/development/exchange-lineage.test.mts",
+              "sha256": "9cfef36e0385af2ccf6625b7455a46491d1279ca3b5cd89d01deacaa555986b4"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "replacement.deliver",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M06-G06-NATIVE-DELIVERY-REQUIRED",
+              "name": "M06-G06-NATIVE-DELIVERY-REQUIRED",
+              "path": "tests/development/exchange-lineage.test.mts",
+              "sha256": "9cfef36e0385af2ccf6625b7455a46491d1279ca3b5cd89d01deacaa555986b4"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "label.purchase",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M03-G13-01",
+              "name": "CASE-M03-G13-01",
+              "path": "tests/development/return-labels.test.mts",
+              "sha256": "da5e817d7294304af6210eb5a81fca32189b8db78d5fb996422ba8fde720837f"
+            }
+          ],
+          "direct_fixtures": [
+            "label.purchase:fulfillment_label"
+          ]
+        },
+        {
+          "id": "label.void",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M03-G14-01",
+              "name": "CASE-M03-G14-01",
+              "path": "tests/development/label-lifecycle.test.mts",
+              "sha256": "68bab55cee83d248cb1ea55a86b252cafe8e17b4edc0be43d1cebd4adfdcad39"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "label.reimburse",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M03-G14-03",
+              "name": "CASE-M03-G14-03",
+              "path": "tests/development/label-lifecycle.test.mts",
+              "sha256": "68bab55cee83d248cb1ea55a86b252cafe8e17b4edc0be43d1cebd4adfdcad39"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "carrier.event",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M03-G15-01",
+              "name": "CASE-M03-G15-01",
+              "path": "tests/development/return-tracking.test.mts",
+              "sha256": "dcffd01e37bbf149dd1ebb59a07b558f566c499c43b0f0b3d08d9fad907d3e39"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "gift.replacement",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M06-G05-EXCHANGE-PRESERVES-PURCHASER-AND-RECIPIENT-LINEAGE",
+              "name": "M06-G05-EXCHANGE-PRESERVES-PURCHASER-AND-RECIPIENT-LINEAGE",
+              "path": "tests/development/gift-fulfillment.test.mts",
+              "sha256": "ccc668c4a0d687c51d942f1e835a68fec6391e9df259ea33d4a5f6ed87441354"
+            }
+          ],
+          "direct_fixtures": []
+        }
+      ]
+    },
+    {
+      "id": "warehouse_source",
+      "kind": "diagnostic",
+      "source_files": [
+        {
+          "path": "packages/adapters/warehouse-fixture-source.mts",
+          "sha256": "4e4f47d2c6f02a5a24f1dade3fe9112b0bb201af28423e6980422e8eae32fb6e"
+        }
+      ],
+      "version": "source-sha256:4e4f47d2c6f02a5a24f1dade3fe9112b0bb201af28423e6980422e8eae32fb6e",
+      "api_version": "local-warehouse-source",
+      "external_version": null,
+      "external_account": null,
+      "external_scopes_attested": false,
+      "source_oracle": "Independent warehouse_stock/effects/units; only sellable restock changes available stock; other dispositions preserve stock.",
+      "operations": [
+        {
+          "id": "disposition.restock",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M03-G17-01",
+              "name": "CASE-M03-G17-01",
+              "path": "tests/development/disposition-completion.test.mts",
+              "sha256": "c06323a1c4770c99302b4574da5885b1dece1eec83bac58156fe423cb6abff3a"
+            }
+          ],
+          "direct_fixtures": [
+            "disposition.restock:warehouse_restock"
+          ]
+        },
+        {
+          "id": "disposition.quarantine",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [],
+          "direct_fixtures": [
+            "disposition.quarantine:warehouse_quarantine"
+          ]
+        },
+        {
+          "id": "disposition.dispose",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [],
+          "direct_fixtures": [
+            "disposition.dispose:warehouse_dispose"
+          ]
+        },
+        {
+          "id": "disposition.supplier-return",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [],
+          "direct_fixtures": [
+            "disposition.supplier-return:warehouse_supplier_return"
+          ]
+        },
+        {
+          "id": "disposition.lookup",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M03-G17-03",
+              "name": "CASE-M03-G17-03",
+              "path": "tests/development/disposition-completion.test.mts",
+              "sha256": "c06323a1c4770c99302b4574da5885b1dece1eec83bac58156fe423cb6abff3a"
+            }
+          ],
+          "direct_fixtures": []
+        }
+      ]
+    },
+    {
+      "id": "native_change_source",
+      "kind": "diagnostic",
+      "source_files": [
+        {
+          "path": "packages/adapters/native-change-fixture-source.mts",
+          "sha256": "20d15c0030308715c982278377e50946e8ca1a4516f909d91cbf10679631d3d7"
+        }
+      ],
+      "version": "source-sha256:20d15c0030308715c982278377e50946e8ca1a4516f909d91cbf10679631d3d7",
+      "api_version": "local-native-change-feed",
+      "external_version": null,
+      "external_account": null,
+      "external_scopes_attested": false,
+      "source_oracle": "Independent native_change_feed snapshots and server decision ledger retain source/version/payment identity and prevent regression.",
+      "operations": [
+        {
+          "id": "return.snapshot.lookup",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M03-G21-01",
+              "name": "CASE-M03-G21-01",
+              "path": "tests/development/native-change-completion.test.mts",
+              "sha256": "9e9e088f20d944add390966fb0b99dd1c52ff0433b31f44cacc6c2573eb3e31b"
+            }
+          ],
+          "direct_fixtures": [
+            "return.snapshot.lookup:native_change"
+          ]
+        },
+        {
+          "id": "return.snapshot.reconcile",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M03-G21-03",
+              "name": "CASE-M03-G21-03",
+              "path": "tests/development/native-change-completion.test.mts",
+              "sha256": "9e9e088f20d944add390966fb0b99dd1c52ff0433b31f44cacc6c2573eb3e31b"
+            }
+          ],
+          "direct_fixtures": []
+        }
+      ]
+    },
+    {
+      "id": "order_edit_source",
+      "kind": "diagnostic",
+      "source_files": [
+        {
+          "path": "packages/adapters/order-edit-fixture-source.mts",
+          "sha256": "5a17151bb888a069288f284f46852b6169fb4dea7975bc361e940701229f0dd2"
+        },
+        {
+          "path": "packages/adapters/prevention-source-guards.mts",
+          "sha256": "85fdc96d3cd2633c3ac0b4b79e6b78a177b83aeaf01c85f254617c1f387096f1"
+        }
+      ],
+      "version": "source-sha256:5a17151bb888a069288f284f46852b6169fb4dea7975bc361e940701229f0dd2",
+      "api_version": "local-order-edit-source",
+      "external_version": null,
+      "external_account": null,
+      "external_scopes_attested": false,
+      "source_oracle": "Independent native edit order/catalog/warehouse/hold/effect/finance tables; exact paid delta, physical picking guards and customer prevention consent.",
+      "operations": [
+        {
+          "id": "order.snapshot",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M04-G01-01",
+              "name": "CASE-M04-G01-01 split fulfillment allows only the unshipped line",
+              "path": "tests/development/order-edit-eligibility.test.mts",
+              "sha256": "376ebcecc5500d227138e95ebdf9a035a0f0d1653e12632724fc178da94b4f6e"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "warehouse.probe",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M04-G02-01",
+              "name": "CASE-M04-G02-01 synthetic probe exercises picking inhibition and update acknowledgment",
+              "path": "tests/development/order-edit-holds.test.mts",
+              "sha256": "697ea6edc0310b715c48901ed303607265d1c4413bde2b42bcf592e53efc314b"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "hold.acquire",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M04-G03-01",
+              "name": "CASE-M04-G03-01 payment and foreign holds remain independently owned",
+              "path": "tests/development/order-edit-holds.test.mts",
+              "sha256": "697ea6edc0310b715c48901ed303607265d1c4413bde2b42bcf592e53efc314b"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "hold.release",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M04-G10-01",
+              "name": "CASE-M04-G10-01 only final acknowledged paid order releases owned holds",
+              "path": "tests/development/order-edit-holds.test.mts",
+              "sha256": "697ea6edc0310b715c48901ed303607265d1c4413bde2b42bcf592e53efc314b"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "order.address",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M04-G04-01",
+              "name": "CASE-M04-G04-01 approved address within qualified region reaches final source version",
+              "path": "tests/development/order-edit-eligibility.test.mts",
+              "sha256": "376ebcecc5500d227138e95ebdf9a035a0f0d1653e12632724fc178da94b4f6e"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "order.begin-calculate-commit",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M04-G05-01",
+              "name": "CASE-M04-G05-01 native begin calculate commit preserve line mapping and stock",
+              "path": "tests/development/order-edit-commit.test.mts",
+              "sha256": "a8a68a36713b7d4c928021dc7503464dac7bb52f7d2d1a3bdf625e0fd4cec8b8"
+            }
+          ],
+          "direct_fixtures": [
+            "order.begin-calculate-commit:order_edit"
+          ]
+        },
+        {
+          "id": "order.cancel",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M04-G09-01",
+              "name": "CASE-M04-G09-01 cancellation confirms all eligible fulfillment endpoints",
+              "path": "tests/development/order-edit-commit.test.mts",
+              "sha256": "a8a68a36713b7d4c928021dc7503464dac7bb52f7d2d1a3bdf625e0fd4cec8b8"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "refund.issue",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M04-G06-01",
+              "name": "CASE-M04-G06-01 cheaper edit creates exact separately visible refund obligation",
+              "path": "tests/development/order-edit-payments.test.mts",
+              "sha256": "780e4c292196892fc5e5e7b89d4da7dcbf3bd0e2243b478fba87d3d11c75ea08"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "invoice.issue",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M04-G07-01",
+              "name": "CASE-M04-G07-01 higher-price edit creates one exact invoice and separate payment hold",
+              "path": "tests/development/order-edit-payments.test.mts",
+              "sha256": "780e4c292196892fc5e5e7b89d4da7dcbf3bd0e2243b478fba87d3d11c75ea08"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "payment.settle",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M04-G08-01",
+              "name": "CASE-M04-G08-01 exact settled payment is necessary but warehouse sync remains separate",
+              "path": "tests/development/order-edit-payments.test.mts",
+              "sha256": "780e4c292196892fc5e5e7b89d4da7dcbf3bd0e2243b478fba87d3d11c75ea08"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "operation.lookup",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M04-G05-03",
+              "name": "CASE-M04-G05-03 lost commit response reconciles original edit without a second stock decrement",
+              "path": "tests/development/order-edit-commit.test.mts",
+              "sha256": "a8a68a36713b7d4c928021dc7503464dac7bb52f7d2d1a3bdf625e0fd4cec8b8"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "prevention.customer-consent",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M06-G13-01",
+              "name": "CASE-M06-G13-01 approved multi-size suggestion preserves paid goods until customer-confirmed qualified edit",
+              "path": "tests/development/return-prevention.test.mts",
+              "sha256": "c5703d31242d4487661bb783d36a9a9e1ebc4affcff121adc3104abd5085e1e1"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "prevention.native-guard",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M06-PREVENTION-14",
+              "name": "M06-PREVENTION-14 native consent binds the exact action, original money and one operation identity",
+              "path": "tests/development/return-prevention.test.mts",
+              "sha256": "c5703d31242d4487661bb783d36a9a9e1ebc4affcff121adc3104abd5085e1e1"
+            }
+          ],
+          "direct_fixtures": []
+        }
+      ]
+    },
+    {
+      "id": "exchange_lineage_source",
+      "kind": "diagnostic",
+      "source_files": [
+        {
+          "path": "packages/adapters/exchange-lineage-fixture-source.mts",
+          "sha256": "dc3b32b3633fbc76176aeb27b6476326525af4f3fbfa721e429806e841df381e"
+        },
+        {
+          "path": "packages/adapters/exchange-lineage-source-guards.mts",
+          "sha256": "277c1d729f1baafa2b1f0873bd15b1416212327a249268604afac1d50a56b7bb"
+        }
+      ],
+      "version": "source-sha256:dc3b32b3633fbc76176aeb27b6476326525af4f3fbfa721e429806e841df381e",
+      "api_version": "local-funded-lineage-source",
+      "external_version": null,
+      "external_account": null,
+      "external_scopes_attested": false,
+      "source_oracle": "Independent fixture_exchange_lineage_nodes and original payment slices; child retail price never becomes paid principal.",
+      "operations": [
+        {
+          "id": "lineage.transfer",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M06-G06-01",
+              "name": "CASE-M06-G06-01",
+              "path": "tests/development/exchange-lineage.test.mts",
+              "sha256": "9cfef36e0385af2ccf6625b7455a46491d1279ca3b5cd89d01deacaa555986b4"
+            }
+          ],
+          "direct_fixtures": [
+            "lineage.transfer:lineage"
+          ]
+        },
+        {
+          "id": "lineage.lookup",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M06-G06-LOST-TRANSFER-RESPONSE-LOOKS-UP-SAME-CHILD",
+              "name": "M06-G06-LOST-TRANSFER-RESPONSE-LOOKS-UP-SAME-CHILD",
+              "path": "tests/development/exchange-lineage.test.mts",
+              "sha256": "9cfef36e0385af2ccf6625b7455a46491d1279ca3b5cd89d01deacaa555986b4"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "lineage.bind-resolution",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M06-G06-02",
+              "name": "CASE-M06-G06-02",
+              "path": "tests/development/exchange-lineage.test.mts",
+              "sha256": "9cfef36e0385af2ccf6625b7455a46491d1279ca3b5cd89d01deacaa555986b4"
+            },
+            {
+              "id": "CASE-M06-G06-01",
+              "name": "CASE-M06-G06-01",
+              "path": "tests/development/exchange-lineage.test.mts",
+              "sha256": "9cfef36e0385af2ccf6625b7455a46491d1279ca3b5cd89d01deacaa555986b4"
+            }
+          ],
+          "direct_fixtures": []
+        }
+      ]
+    },
+    {
+      "id": "exchange_money_source",
+      "kind": "diagnostic",
+      "source_files": [
+        {
+          "path": "packages/adapters/exchange-money-fixture-source.mts",
+          "sha256": "a4f37fbf7ed1d577a64f0e4750f3a860ebddb983617d81b1b4847836761b8fda"
+        }
+      ],
+      "version": "source-sha256:a4f37fbf7ed1d577a64f0e4750f3a860ebddb983617d81b1b4847836761b8fda",
+      "api_version": "local-original-money-source",
+      "external_version": null,
+      "external_account": null,
+      "external_scopes_attested": false,
+      "source_oracle": "Independent original shop/presentment unit allocations, append-only estimate/final fee events and version-bound financial commands.",
+      "operations": [
+        {
+          "id": "money.original-pair",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M06-G07-01",
+              "name": "CASE-M06-G07-01",
+              "path": "tests/development/exchange-currency.test.mts",
+              "sha256": "f4d5af65fdeb32307ec820c840d3189dfdb297b4be992aa14a16f49845c65700"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "money.bind-allocation",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M06-G07-ORIGINAL-UNIT-NATIVE-REUSE-REJECTED",
+              "name": "M06-G07-ORIGINAL-UNIT-NATIVE-REUSE-REJECTED",
+              "path": "tests/development/exchange-currency.test.mts",
+              "sha256": "f4d5af65fdeb32307ec820c840d3189dfdb297b4be992aa14a16f49845c65700"
+            },
+            {
+              "id": "CASE-M06-G07-01",
+              "name": "CASE-M06-G07-01",
+              "path": "tests/development/exchange-currency.test.mts",
+              "sha256": "f4d5af65fdeb32307ec820c840d3189dfdb297b4be992aa14a16f49845c65700"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "fees.record",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M06-G08-01",
+              "name": "CASE-M06-G08-01",
+              "path": "tests/development/exchange-fees.test.mts",
+              "sha256": "d9095b4ce4d1d84ccad4ba0e99304e22a1d11ec6bef15a81cb6961accb7f5020"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "fees.events",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M06-G08-03",
+              "name": "CASE-M06-G08-03",
+              "path": "tests/development/exchange-fees.test.mts",
+              "sha256": "d9095b4ce4d1d84ccad4ba0e99304e22a1d11ec6bef15a81cb6961accb7f5020"
+            }
+          ],
+          "direct_fixtures": [
+            "fees.events:money"
+          ]
+        },
+        {
+          "id": "money.bind-command",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M06-G08-DROPPED-FINAL-BINDING-NO-NATIVE-EFFECT",
+              "name": "M06-G08-DROPPED-FINAL-BINDING-NO-NATIVE-EFFECT",
+              "path": "tests/development/exchange-fees.test.mts",
+              "sha256": "d9095b4ce4d1d84ccad4ba0e99304e22a1d11ec6bef15a81cb6961accb7f5020"
+            },
+            {
+              "id": "CASE-M06-G08-01",
+              "name": "CASE-M06-G08-01",
+              "path": "tests/development/exchange-fees.test.mts",
+              "sha256": "d9095b4ce4d1d84ccad4ba0e99304e22a1d11ec6bef15a81cb6961accb7f5020"
+            }
+          ],
+          "direct_fixtures": []
+        }
+      ]
+    },
+    {
+      "id": "instant_exchange_source",
+      "kind": "diagnostic",
+      "source_files": [
+        {
+          "path": "packages/adapters/instant-exchange-fixture-source.mts",
+          "sha256": "79888faef78231823392065853ac0823b66ea3024248de432b62cde2bbb28501"
+        }
+      ],
+      "version": "source-sha256:79888faef78231823392065853ac0823b66ea3024248de432b62cde2bbb28501",
+      "api_version": "local-consent-mandate-source",
+      "external_version": null,
+      "external_account": null,
+      "external_scopes_attested": false,
+      "source_oracle": "Independent consent/mandate/obligation/release/return/capture rows; no saved-card, invoice or timeout implies charge authority.",
+      "operations": [
+        {
+          "id": "mandate.authorize",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M06-G09-01",
+              "name": "CASE-M06-G09-01",
+              "path": "tests/development/instant-mandates.test.mts",
+              "sha256": "cb1cdcaa8f245b29e27b3136ad4e79c9a0c90b76a298f2bb2dbaad9f132cd709"
+            }
+          ],
+          "direct_fixtures": [
+            "mandate.authorize:instant"
+          ]
+        },
+        {
+          "id": "mandate.reauthorize",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M06-G10-02",
+              "name": "CASE-M06-G10-02",
+              "path": "tests/development/instant-lifecycle.test.mts",
+              "sha256": "352fdc5e55e92c37836ee58f44c25d2fd39ef4be69a814a19825c214e7d07328"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "mandate.cancel",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M06-G10-CANCEL-BEFORE-RELEASE-WAIVES-OBLIGATION",
+              "name": "M06-G10-CANCEL-BEFORE-RELEASE-WAIVES-OBLIGATION",
+              "path": "tests/development/instant-lifecycle.test.mts",
+              "sha256": "352fdc5e55e92c37836ee58f44c25d2fd39ef4be69a814a19825c214e7d07328"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "replacement.reserve-confirm",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M06-G09-01",
+              "name": "CASE-M06-G09-01",
+              "path": "tests/development/instant-mandates.test.mts",
+              "sha256": "cb1cdcaa8f245b29e27b3136ad4e79c9a0c90b76a298f2bb2dbaad9f132cd709"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "return.receive",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M06-G10-01",
+              "name": "CASE-M06-G10-01",
+              "path": "tests/development/instant-lifecycle.test.mts",
+              "sha256": "352fdc5e55e92c37836ee58f44c25d2fd39ef4be69a814a19825c214e7d07328"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "obligation.capture",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M06-G10-01",
+              "name": "CASE-M06-G10-01",
+              "path": "tests/development/instant-lifecycle.test.mts",
+              "sha256": "352fdc5e55e92c37836ee58f44c25d2fd39ef4be69a814a19825c214e7d07328"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "operation.lookup",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M06-G10-03",
+              "name": "CASE-M06-G10-03",
+              "path": "tests/development/instant-lifecycle.test.mts",
+              "sha256": "352fdc5e55e92c37836ee58f44c25d2fd39ef4be69a814a19825c214e7d07328"
+            }
+          ],
+          "direct_fixtures": []
+        }
+      ]
+    },
+    {
+      "id": "return_destination_source",
+      "kind": "diagnostic",
+      "source_files": [
+        {
+          "path": "packages/adapters/return-destination-fixture-source.mts",
+          "sha256": "b1207f123a954b32262f4dc989db32563bcacf4f18bed4def8510f7043302cd1"
+        }
+      ],
+      "version": "source-sha256:b1207f123a954b32262f4dc989db32563bcacf4f18bed4def8510f7043302cd1",
+      "api_version": "local-qualified-destination-source",
+      "external_version": null,
+      "external_account": null,
+      "external_scopes_attested": false,
+      "source_oracle": "Independent destination qualification, item/source request, policy, selected destination and capacity admission records; labels recheck before charge.",
+      "operations": [
+        {
+          "id": "destination.evaluate",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M06-G12-01",
+              "name": "CASE-M06-G12-01",
+              "path": "tests/development/qualified-destinations.test.mts",
+              "sha256": "71253481036f9f39ec0eb740a817eb6e2ca3ff35fd35f6e3826bd119d889e58c"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "destination.select",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M06-G12-01",
+              "name": "CASE-M06-G12-01",
+              "path": "tests/development/qualified-destinations.test.mts",
+              "sha256": "71253481036f9f39ec0eb740a817eb6e2ca3ff35fd35f6e3826bd119d889e58c"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "destination.admit",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M06-G12-01",
+              "name": "CASE-M06-G12-01",
+              "path": "tests/development/qualified-destinations.test.mts",
+              "sha256": "71253481036f9f39ec0eb740a817eb6e2ca3ff35fd35f6e3826bd119d889e58c"
+            }
+          ],
+          "direct_fixtures": [
+            "destination.admit:destination"
+          ]
+        },
+        {
+          "id": "destination.lookup",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M06-G12-LOST-SELECTION-RESPONSE-RECOVERS-TO-QUALIFIED-ALTERNATIVE",
+              "name": "M06-G12-LOST-SELECTION-RESPONSE-RECOVERS-TO-QUALIFIED-ALTERNATIVE",
+              "path": "tests/development/qualified-destinations-recovery.test.mts",
+              "sha256": "1a1e405e8436ef0339c4c054cdf8b9e5b31ee4e87ca152c6f9e8b00ceb8e5d16"
+            }
+          ],
+          "direct_fixtures": []
+        }
+      ]
+    }
+  ],
+  "fixture_administration": "Seed, injected faults, and source observation setters are fixture administration, not remote provider operations. Unnamed real gateway/carrier/warehouse/ERP adapters are unavailable.",
+  "oracle_pins": [
+    {
+      "path": "apps/commerce-api/server.mts",
+      "sha256": "f93fba999a85081452587b551f2cda702532ffe180106dc47af92d4c3aafa3fe"
+    },
+    {
+      "path": "migrations/commerce/001-foundation.sql",
+      "sha256": "adf71ba9c726b4b9ce4b90ec2f3c1ff9727cc8ff3ae305dc0eb4daadd478b08c"
+    },
+    {
+      "path": "migrations/commerce/002-customer-access.sql",
+      "sha256": "67c169532788e9f9e9b034dd9721fdd29979ebc912c6ae79d69751229650fff1"
+    },
+    {
+      "path": "migrations/commerce/003-secret-handles.sql",
+      "sha256": "e3fec0885d8cfb39632188d2a4a9243fb9f6a9704022afe3b215c6a67c981634"
+    },
+    {
+      "path": "migrations/commerce/004-capabilities.sql",
+      "sha256": "6734c25b16b4749a9181e8f24bc3834b089a2574e3a7a05284af8c044af41ff5"
+    },
+    {
+      "path": "migrations/commerce/005-simulator.sql",
+      "sha256": "70032c45cb597c2efe61d63f3048a3ee87ed4ad4f3f879a90c36c73b17757a9e"
+    },
+    {
+      "path": "migrations/commerce/006-read-workflows.sql",
+      "sha256": "c03ad5ea057418d80a561ecba1c8d091efdec3f061fa740e424c0f90b5a06438"
+    },
+    {
+      "path": "migrations/commerce/007-read-assistance.sql",
+      "sha256": "d72afc4eef0d720cb2b5231e38bc7d3e68feb4078c34bb9cb1417d36e1bca0a7"
+    },
+    {
+      "path": "migrations/commerce/008-authority.sql",
+      "sha256": "e02f38a8da9ffc8f28c49a3ac931b0fbcef73bc4962ee387237a697affe8ee2b"
+    },
+    {
+      "path": "migrations/commerce/009-customization.sql",
+      "sha256": "924bbfd34280a2c7d8c69bb0ac630e884d2138710a38c0e9bd219934204d8a2d"
+    },
+    {
+      "path": "migrations/commerce/010_case_execution.sql",
+      "sha256": "622057ce23b8e1304bb2314637b1d3057afdfd2d5750d8c748a3a64d366ca276"
+    },
+    {
+      "path": "migrations/commerce/011_operation_reliability.sql",
+      "sha256": "0669afa79fa6b7ae7f6a9857ae2ac9bfeac83a2224f649e41959d8066be57a18"
+    },
+    {
+      "path": "migrations/commerce/012_worker_controls.sql",
+      "sha256": "ba8fe223c7975e2d23672fa26e1153d4da3b546e1465a516045d451ff90d46f2"
+    },
+    {
+      "path": "migrations/commerce/013-assurance.sql",
+      "sha256": "3a3d19fd5f31ba7c9831b799307e1e62dd4b5035938d44b02704d40baaca73ee"
+    },
+    {
+      "path": "migrations/commerce/014_return_intake.sql",
+      "sha256": "c4b618410d81cea9eaabb47df59b975af2d59baaf3dd0d04a126ad6681be30b9"
+    },
+    {
+      "path": "migrations/commerce/015_return_resolution.sql",
+      "sha256": "09cb514ac27bc1f517b76167ebcd2e943aaceff7e7c53fd4e38783c93a2929e8"
+    },
+    {
+      "path": "migrations/commerce/016_return_fulfillment.sql",
+      "sha256": "1d6155b953e4a20912b35adfe35c49b8f76df3e691fef9c1520f898318c8ac94"
+    },
+    {
+      "path": "migrations/commerce/017_return_completion.sql",
+      "sha256": "21e16e73832235d39c5a206a2bb57be8cd7251241fac1c5f485b62a0fd88441d"
+    },
+    {
+      "path": "migrations/commerce/018_order_edits.sql",
+      "sha256": "9a4666be40f131aa567e146f83c3c9c839f7d3ee5ff8a5b9f6c0a77bd1da46e8"
+    },
+    {
+      "path": "migrations/commerce/019_edit_workflow.sql",
+      "sha256": "74e47bf3cd0c9133d72c381bf652f32864e01afecef6a4daaeaa2fa7091765ff"
+    },
+    {
+      "path": "migrations/commerce/020_support_operations.sql",
+      "sha256": "0ed434ebce5a74004727e75f80ae33eb997b2aa951f0c9692af3f5c7ae7c0038"
+    },
+    {
+      "path": "migrations/commerce/021_exchange_finance.sql",
+      "sha256": "d42de4bc5bc6e793c0c156805f02a89449ba09766af53d7939aea37d1e8d75b0"
+    },
+    {
+      "path": "migrations/commerce/022_catalog_and_gift_returns.sql",
+      "sha256": "27870a39abd153864df681a9586b577c017dbb078d45b49b010b385f33ce0826"
+    },
+    {
+      "path": "migrations/commerce/023_gift_recipient_proofs.sql",
+      "sha256": "8b941378db1aa959bfa3a1c826ed6396c44a42e33a701f87f55ac128edc053af"
+    },
+    {
+      "path": "migrations/commerce/024_exchange_lineage.sql",
+      "sha256": "bd51eb475a30c4a2f823ec8441e28e94cdb9c6f5ee132b110363985ce09b5b02"
+    },
+    {
+      "path": "migrations/commerce/025_exchange_money.sql",
+      "sha256": "9adfa71c76a6ce7778aa5d7407a2e56eda39b4ad23325cbe2be6459921a1661e"
+    },
+    {
+      "path": "migrations/commerce/026_instant_exchanges.sql",
+      "sha256": "4943b7cf692307d0ce7c412d8661ad238699f5b742b3b6becab09a18b38dca24"
+    },
+    {
+      "path": "migrations/commerce/027_qualified_return_destinations.sql",
+      "sha256": "8eff3e5d69ec6a77655f72c7f47560e28d3b5b7d3474d79169b1595fca2d6a65"
+    },
+    {
+      "path": "migrations/commerce/028_risk_prevention.sql",
+      "sha256": "02349aa5e8731f8b1c8b1393784c49c6c267ef08819f5e40983dba8ede04cc34"
+    },
+    {
+      "path": "migrations/commerce/029_return_policy_packs.sql",
+      "sha256": "6ce7ad90ae2a3015844dbc489548cf2c5cf1471bbcda2f101d3f0383117488b2"
+    },
+    {
+      "path": "migrations/commerce/030_woocommerce_return_sources.sql",
+      "sha256": "2e52d363fd543b8a13611652c67981a2b1c9b585cdb6678066f20d7b6533b85c"
+    },
+    {
+      "path": "migrations/commerce/031_woocommerce_refund_state.sql",
+      "sha256": "c74ad1c3c5dcd03b6cee06a786a1fe88d964ec8868e950666eda9d26b1d2fdac"
+    },
+    {
+      "path": "packages/adapters/exchange-lineage-fixture-source.mts",
+      "sha256": "dc3b32b3633fbc76176aeb27b6476326525af4f3fbfa721e429806e841df381e"
+    },
+    {
+      "path": "packages/adapters/exchange-lineage-source-guards.mts",
+      "sha256": "277c1d729f1baafa2b1f0873bd15b1416212327a249268604afac1d50a56b7bb"
+    },
+    {
+      "path": "packages/adapters/exchange-money-fixture-source.mts",
+      "sha256": "a4f37fbf7ed1d577a64f0e4750f3a860ebddb983617d81b1b4847836761b8fda"
+    },
+    {
+      "path": "packages/adapters/fulfillment-fixture-source.mts",
+      "sha256": "097a6b7b7963e50362a9f0c2633d8b63213eca29441409787b9c940b887fe551"
+    },
+    {
+      "path": "packages/adapters/instant-exchange-fixture-source.mts",
+      "sha256": "79888faef78231823392065853ac0823b66ea3024248de432b62cde2bbb28501"
+    },
+    {
+      "path": "packages/adapters/native-change-fixture-source.mts",
+      "sha256": "20d15c0030308715c982278377e50946e8ca1a4516f909d91cbf10679631d3d7"
+    },
+    {
+      "path": "packages/adapters/order-edit-fixture-source.mts",
+      "sha256": "5a17151bb888a069288f284f46852b6169fb4dea7975bc361e940701229f0dd2"
+    },
+    {
+      "path": "packages/adapters/prevention-source-guards.mts",
+      "sha256": "85fdc96d3cd2633c3ac0b4b79e6b78a177b83aeaf01c85f254617c1f387096f1"
+    },
+    {
+      "path": "packages/adapters/reliability/synthetic-journal.mts",
+      "sha256": "ab29608ff2bd79b6f7c7e51711bed1a1a6b8b7b58a108b183f49590c17f29ac6"
+    },
+    {
+      "path": "packages/adapters/resolution-fixture-source.mts",
+      "sha256": "b03ff40c566e6118467173965af71f0694d9d8e9aa61c5e9b69ce36e5a0625b3"
+    },
+    {
+      "path": "packages/adapters/return-destination-fixture-source.mts",
+      "sha256": "b1207f123a954b32262f4dc989db32563bcacf4f18bed4def8510f7043302cd1"
+    },
+    {
+      "path": "packages/adapters/shopify-return-fixture.mts",
+      "sha256": "9cb01b29082cc41e6176fd2d282dd3e6c396282b849f46274268917a9839c803"
+    },
+    {
+      "path": "packages/adapters/shopify/orders.mts",
+      "sha256": "cd5fd9fe73422d3e7005cee8a281c90de9c22603b848ef6dfdc3ca86b0e76832"
+    },
+    {
+      "path": "packages/adapters/support-fixture-source.mts",
+      "sha256": "1e9921151382684620a39a6fc4744cdfce921e50ac77446704c17905ceed4e85"
+    },
+    {
+      "path": "packages/adapters/support/chatwoot.mts",
+      "sha256": "8838a8bc5457039830d79344e3baa26720ca24f296976503732471e6196d3e43"
+    },
+    {
+      "path": "packages/adapters/support/resend.mts",
+      "sha256": "998fed5126bc88ae4e8fb64a0522ae3e5353b2cedcb4e14dd0b3a4be4ba15bce"
+    },
+    {
+      "path": "packages/adapters/support/transport.mts",
+      "sha256": "2eefdeb256d944eb9956b0cf58fc2d5f95b9fc23bcb29517591d00ff1b4e9db3"
+    },
+    {
+      "path": "packages/adapters/warehouse-fixture-source.mts",
+      "sha256": "4e4f47d2c6f02a5a24f1dade3fe9112b0bb201af28423e6980422e8eae32fb6e"
+    },
+    {
+      "path": "packages/adapters/webhooks/signatures.mts",
+      "sha256": "6d67ed85137766a21bd6624b9042609fa0098ce615067c1c068be1e6f93db64b"
+    },
+    {
+      "path": "packages/adapters/woocommerce/events.mts",
+      "sha256": "5d89104f80aeba204cd2ff5831629ac5d0720dcb4dffcb1ba3ab7a797242a395"
+    },
+    {
+      "path": "packages/adapters/woocommerce/orders.mts",
+      "sha256": "fb6ae120fc7440567f9226207709b65ebe1be913fd60a86e52fbaa24c06166aa"
+    },
+    {
+      "path": "packages/adapters/woocommerce/refund-contract.mts",
+      "sha256": "2220229fe198f1f1f588bbb24d5916cbee8e373d036d092fc7890e2b443f0257"
+    },
+    {
+      "path": "packages/adapters/woocommerce/refund-fixture-source.mts",
+      "sha256": "44f229486f5db0daabeae3d201d7d51074a7fa547dad7e7f848746395db46b01"
+    },
+    {
+      "path": "packages/adapters/woocommerce/refund-gateway-fixture.mts",
+      "sha256": "5761fcf35ca6dbeb692f7a4ec3a3e8cc08e8ebc194165f1281a6aea9ac3b6bef"
+    },
+    {
+      "path": "packages/adapters/woocommerce/return-contract.mts",
+      "sha256": "bc3708e6c43f62dea3884bde3c92fae25c4a61c8b8e9aaab613e88c23302e103"
+    },
+    {
+      "path": "packages/adapters/woocommerce/return-source.mts",
+      "sha256": "8fed2831ba21c23c259e8027b843d46be231595b5a8ccc34af58933ec759ad59"
+    },
+    {
+      "path": "packages/agent/action-mcp.mts",
+      "sha256": "2c4d5abe073c3c916da8fdf78cbe28014c865d44b0958281aa423b3133dcbeac"
+    },
+    {
+      "path": "packages/agent/facts.mts",
+      "sha256": "15b8137cb555ff4076e71333d73d43ec4ff343d9077825aa84d09c2088941314"
+    },
+    {
+      "path": "packages/agent/local-model.mts",
+      "sha256": "eaa6988cd176dce8f6a7402d1cb99a5ed054ec4c72f9407e6a1c940efc1a4d42"
+    },
+    {
+      "path": "packages/agent/mcp.mts",
+      "sha256": "a54bb3bc31441e8c2cac5d6c2d5938e1d23f2a10f3fd040d25289b168b8c49b5"
+    },
+    {
+      "path": "packages/agent/providers.mts",
+      "sha256": "2a1e2ca504133ae467efc351118e04fe6713db9d25bae09dfc91689daef54dd4"
+    },
+    {
+      "path": "packages/agent/runner.mts",
+      "sha256": "c084a2b647b8f685ef346e60bebb4f35233adac7f087583ce622ed6a4cc20225"
+    },
+    {
+      "path": "packages/agent/untrusted.mts",
+      "sha256": "43619ba490cf51afe7e7bcf7ae22870592b56014b4b3774461cca6f72ee85e56"
+    },
+    {
+      "path": "packages/commerce/action-gateway.mts",
+      "sha256": "af5944ee783f8679ad114e7b613f9783812714e7cff0b429194747ad850b6ae7"
+    },
+    {
+      "path": "packages/commerce/authorization.mts",
+      "sha256": "9811f1692f9dc57545b907fcf1c5982dc2cb61c5b9b54d3bd2e001823f87ec75"
+    },
+    {
+      "path": "packages/commerce/capabilities.mts",
+      "sha256": "110491efcde69a2a80e24ef8f321138eb89059078893e9352cc00095f310a445"
+    },
+    {
+      "path": "packages/commerce/case-configurations.mts",
+      "sha256": "8791a9dc4d79059553ff7c5d9198dc2d6845cebb1508933536f922c14481fa86"
+    },
+    {
+      "path": "packages/commerce/configuration-values.mts",
+      "sha256": "81c9e69b56a2c288d2a09770651ce2c6ef9dcbcf605dc3291b99bc693992a5da"
+    },
+    {
+      "path": "packages/commerce/contracts/commerce-manifest.v2.schema.json",
+      "sha256": "267a210bed2fc8a6885d5d7643fb826c9de087eb8c7b3183712d40ec22aec56f"
+    },
+    {
+      "path": "packages/commerce/contracts/execution-api.openapi.json",
+      "sha256": "8da722816cdce58b91d299d647935e93879df0b64b1da09c9b980cfff1dd9e36"
+    },
+    {
+      "path": "packages/commerce/contracts/order-editing.v1.json",
+      "sha256": "a63ba2f60cfb1a07d496054659da920cc1438f936e383762cd372974f83e8de0"
+    },
+    {
+      "path": "packages/commerce/contracts/read-api.openapi.json",
+      "sha256": "9253ada5b351a2981619289be35319eafc090693411d00297a3c20aa3d825b4e"
+    },
+    {
+      "path": "packages/commerce/contracts/return-completion.v1.json",
+      "sha256": "ee004d6de8b11d8ceee71bb0c235f2de892ca217c3ea1f83d1b677304a0973f1"
+    },
+    {
+      "path": "packages/commerce/contracts/return-fulfillment.v1.json",
+      "sha256": "183de5f417f93133347d31bc020621876f40e32e2d72db9e1b8986c5b24f5e40"
+    },
+    {
+      "path": "packages/commerce/contracts/return-intake.v1.json",
+      "sha256": "830f8fc7946b2ce6ae362cdd4055e94ab11e36fb481b6e8bea2f095accf33be6"
+    },
+    {
+      "path": "packages/commerce/contracts/return-resolution.v1.json",
+      "sha256": "48dcf3486062b65be40b82d7a19953a207b2871326213768964575faa5711218"
+    },
+    {
+      "path": "packages/commerce/contracts/return-worker.v1.json",
+      "sha256": "c0ba93686c5ee01f66d44461c2402ff42024d9df9698973402a617c859433049"
+    },
+    {
+      "path": "packages/commerce/contracts/storage-exchange-extension.v1.json",
+      "sha256": "d7758721d885f003e1861313019dff4b786241289fc4980b621e989681d890fe"
+    },
+    {
+      "path": "packages/commerce/contracts/storage-exchange-history-extension.v1.json",
+      "sha256": "9d12eaf36c80824c0f2fffa715bd8fa29f75a46f2a733f9d6072828a932c447c"
+    },
+    {
+      "path": "packages/commerce/contracts/storage-inventory.v1.json",
+      "sha256": "c66d01fd233811fb2a1a973a4066cafcc60d34f4506811e52136a963eb991cf4"
+    },
+    {
+      "path": "packages/commerce/contracts/storage-return-assistance-extension.v1.json",
+      "sha256": "7a83b924b4a99daa85953b2891bdc8ffb1185a6de1ad20a4872578d574cb978b"
+    },
+    {
+      "path": "packages/commerce/contracts/storage-woocommerce-extension.v1.json",
+      "sha256": "50576dcc52562f81341b957a705f86b9e5b51693c0c4adc6d8c2ed90beff6ce9"
+    },
+    {
+      "path": "packages/commerce/contracts/support-api.v1.json",
+      "sha256": "4942c7806c3405fb7ccaa73378fab238228e1130dd2ccd06e6ca9fc9a1ded24c"
+    },
+    {
+      "path": "packages/commerce/contracts/worker-api.v1.json",
+      "sha256": "0569bedea8adc161e4251fa27e1eed2fe9dc3c0dc8119dc1ae390621d832d56b"
+    },
+    {
+      "path": "packages/commerce/customer-access.mts",
+      "sha256": "1a92cebb026ea5a584178dfdf205e913f76b4a319574fd00e6636db9cb3b74a7"
+    },
+    {
+      "path": "packages/commerce/data-guards.mts",
+      "sha256": "c566ee868fe8cc4fa308be3c2a9e8e569a102b3f6f8fddad0c40322f422c8f81"
+    },
+    {
+      "path": "packages/commerce/durable-work.mts",
+      "sha256": "c898d3b826914663df493a60ce22eca32edceab38737be7b81f6c55cc47fa5a8"
+    },
+    {
+      "path": "packages/commerce/event-processing.mts",
+      "sha256": "b4a4b190ec964d764b4510394526d3b3c6404c26fc23c54cdc0276e984aacfae"
+    },
+    {
+      "path": "packages/commerce/exception-queue.mts",
+      "sha256": "c9194323b59adf225930467609f74e9d518c69557be29ee7db711a3030e20b98"
+    },
+    {
+      "path": "packages/commerce/exchange-currency.mts",
+      "sha256": "58d5aca19d90f8bfeeb230406995b11415321700c4271ccc42541141f6a27cd4"
+    },
+    {
+      "path": "packages/commerce/exchange-fees.mts",
+      "sha256": "2fa60332e02fb31894ff4594dc8a453141b919d5bbe1e0e077e6bb1b517abd9c"
+    },
+    {
+      "path": "packages/commerce/exchange-finance.mts",
+      "sha256": "36315a9a3d6da58b7e4bf844c6018dc8f6727f829578af16ac7b51d12ee3bb99"
+    },
+    {
+      "path": "packages/commerce/exchange-lineage-guards.mts",
+      "sha256": "6b6eabaaa2e77dd17dad1975572aa40816fecaf82e7e0af59c4c43f7702da562"
+    },
+    {
+      "path": "packages/commerce/exchange-lineage.mts",
+      "sha256": "8ebdfcf058bf4967294d4d9fd699a5a58f6ed1d5c6cbaf13554df746bf3e1250"
+    },
+    {
+      "path": "packages/commerce/execution-stops.mts",
+      "sha256": "aee02a4d9828bf9a08ef33d720d3c382ce89907fb43eb2f4f22291a602e1b436"
+    },
+    {
+      "path": "packages/commerce/fulfillment-execution.mts",
+      "sha256": "6105a8933c4b22b14ddaeece6f334997da39ba2702386afa40ceb035456a09ac"
+    },
+    {
+      "path": "packages/commerce/gift-proof.mts",
+      "sha256": "4cf5e48c5b7e097acb487dae47ea3bbbf3538eab7037a95199162c1afd0827aa"
+    },
+    {
+      "path": "packages/commerce/gift-returns.mts",
+      "sha256": "8cfdb9a95343f6a850949609b4a70bbd4007efd08c7c093bfdd82689c433a041"
+    },
+    {
+      "path": "packages/commerce/instant-exchanges.mts",
+      "sha256": "ccbb6c90130605b94b8efd7a0b5852b18ddbdbf84cc0ab449347e1f3dfbbf5f1"
+    },
+    {
+      "path": "packages/commerce/integration-readiness.mts",
+      "sha256": "4cf6235d15b2721b8350a53191778e20ff81b768b2e5246600557b218489830d"
+    },
+    {
+      "path": "packages/commerce/kernel.mts",
+      "sha256": "f462705e27b2848decee85168381f90d0f89b4840f8bebe2e30605ce6717a58c"
+    },
+    {
+      "path": "packages/commerce/knowledge.mts",
+      "sha256": "cd21eaac93b7152056947fe3e294cb51bb8af890b2bd82b72761a167837b21f0"
+    },
+    {
+      "path": "packages/commerce/lifecycle-gateway.mts",
+      "sha256": "cd56a2675323af867634e87f91f9efad6c99d0f3020737ef814cdb85cd8f1ffb"
+    },
+    {
+      "path": "packages/commerce/model-budgets.mts",
+      "sha256": "01b30f9f11b10ad5499733e5bda63dcd57bea09258761aeed62ec222fb2183ce"
+    },
+    {
+      "path": "packages/commerce/money.mts",
+      "sha256": "8cfe47175d6cf4f2b87235ed7bf5231e54ca5dfb12a9c19ef71dfab5fccac4e1"
+    },
+    {
+      "path": "packages/commerce/native-change-reconciliation.mts",
+      "sha256": "1d0735940869604d11052e9de3d71db42f76efcb2f08f79960e79c1d1891799b"
+    },
+    {
+      "path": "packages/commerce/native-returns.mts",
+      "sha256": "2c3c446a9bba63adeb119b1765917014d49ec1f8d654caa669e61ed87afa2494"
+    },
+    {
+      "path": "packages/commerce/operation-receipts.mts",
+      "sha256": "2d101161d4636d1af89db8fa698dafcb28e063578ab780d9ae0d3281812fff01"
+    },
+    {
+      "path": "packages/commerce/operation-store.mts",
+      "sha256": "c7ff7f2ee9da036fff8f310f110e2d52f31a439024f20f77f7b3a1fd98304924"
+    },
+    {
+      "path": "packages/commerce/order-edit-core.mts",
+      "sha256": "3a36acafbffd0545485b1379ad21f069bbafc42d07198dee77c344107c284c36"
+    },
+    {
+      "path": "packages/commerce/order-edit-execution.mts",
+      "sha256": "072e9fe6e3589cdd73d4b8c591039c86076176cf65692812464ccb969677d46d"
+    },
+    {
+      "path": "packages/commerce/order-edit-workflow.mts",
+      "sha256": "894b09c4a4eb6b02c69dd6486fa89bc6be496c574247f95278b8b59b69df98d1"
+    },
+    {
+      "path": "packages/commerce/policies.mts",
+      "sha256": "4e0434ea4209176861c66b32705ee432ce712b86eee42c5ed7e6f0f190bd7176"
+    },
+    {
+      "path": "packages/commerce/prevention-experiments.mts",
+      "sha256": "7862d686ad50efe843676bc9d85de8aa8076e8bb131e3aa045ea94adbc8843e5"
+    },
+    {
+      "path": "packages/commerce/privacy-lifecycle.mts",
+      "sha256": "172a78cb6a4e4afae5d629e5e49f6c47403692bc2a5f28f03ec06331319f80f7"
+    },
+    {
+      "path": "packages/commerce/profile-editor.mts",
+      "sha256": "9386558226833a7fb75ed7adb5d6e322d4bc9859142340bbd03bd9addfd0391d"
+    },
+    {
+      "path": "packages/commerce/profile-layers.mts",
+      "sha256": "5bee292e131236fe55424ab4387f802e647fbf8908cdaa4e346423c2814c12e0"
+    },
+    {
+      "path": "packages/commerce/profiles.mts",
+      "sha256": "6922a8959a3d571f6a435ba05b436303d8274ffc393becd9082e4f4894e25b51"
+    },
+    {
+      "path": "packages/commerce/qualified-return-destinations.mts",
+      "sha256": "6e51ff2819b8f9691ea8792201cee7875a4ee0a54e4ca95e0b53949a2d83dbf8"
+    },
+    {
+      "path": "packages/commerce/read-context.mts",
+      "sha256": "3c2c6e48a565230eec4536751a36d0cb404d66dc5e24a4171c2ba0d9f9436753"
+    },
+    {
+      "path": "packages/commerce/reconciliation.mts",
+      "sha256": "5e9401c20bdd38d1bdd825af1b225e9f80af3e195d77e04c6211d4bd961de9b5"
+    },
+    {
+      "path": "packages/commerce/refund-quotes.mts",
+      "sha256": "5b472a7d2fa06f32c28a098ffbaee97f00b64cc778a85f62db12e3674fa48158"
+    },
+    {
+      "path": "packages/commerce/replacement-inventory.mts",
+      "sha256": "24079a549fa4df6f425bbce1c44aeb9e52fde254cefb7b9c02d2cafeeefadf14"
+    },
+    {
+      "path": "packages/commerce/replacement-orders.mts",
+      "sha256": "9032d17c7db47634c2c704a359a707b90d2d42517fa6998efa1cbc94df09e528"
+    },
+    {
+      "path": "packages/commerce/resolution-execution.mts",
+      "sha256": "047688506a94a2d3f22c50dd4f4c274ed99b31f65c97bf80825f7b2cf990e24e"
+    },
+    {
+      "path": "packages/commerce/resolution-ledger.mts",
+      "sha256": "b8ac65f6793f47a6cb1b6d604ca6b8b146b0c08d2dce191174b174ad4b41a8f9"
+    },
+    {
+      "path": "packages/commerce/return-cancellation.mts",
+      "sha256": "b490d9b86954d53336fb00fe750925e3e4eed6fdcc24330922c951706fbae0d0"
+    },
+    {
+      "path": "packages/commerce/return-depth-api.mts",
+      "sha256": "ed36927974e5ffe8816ad784294c80a8520085297941d03c2e4478ded57c941c"
+    },
+    {
+      "path": "packages/commerce/return-depth-errors.mts",
+      "sha256": "4c1df6e73e0ed52981e56415019920d81ba0576708d147fff6ea2779215afd59"
+    },
+    {
+      "path": "packages/commerce/return-disposition.mts",
+      "sha256": "9d65a199a2f7e98c45c1963ec6abc1d1b63f9bb5966eef504f3fb5f12ef09060"
+    },
+    {
+      "path": "packages/commerce/return-drafts.mts",
+      "sha256": "189f515f4c7017a22c3f434bef810683202950de86406d2b03331b0d3ed327a2"
+    },
+    {
+      "path": "packages/commerce/return-economics.mts",
+      "sha256": "d86bd497a1ff720dc2daa3b53b42f0c2645caf50166e350e08776fc628612842"
+    },
+    {
+      "path": "packages/commerce/return-eligibility.mts",
+      "sha256": "a2dd42ad47b7aaa587834e231b62dd20fac80e7e8d176d064a1d7f758d0fdefd"
+    },
+    {
+      "path": "packages/commerce/return-evidence.mts",
+      "sha256": "9136b6982d9a76359400ee022bfde1aba2575e5084ebf05bd6ef77cfcec80d37"
+    },
+    {
+      "path": "packages/commerce/return-fulfillment-core.mts",
+      "sha256": "3d23e40243e1d32cd41bf1f8fe734ce3e56f17faae37fdf1d12278a4f1e65bc0"
+    },
+    {
+      "path": "packages/commerce/return-intake-core.mts",
+      "sha256": "25b785d7ed91ae458d146fd868764da9058a61d3aa978fb0573a106819a491a4"
+    },
+    {
+      "path": "packages/commerce/return-intake.mts",
+      "sha256": "40815c2ee06227962bb2db1b3b74137ca8adb00cd7c0727beaf96f556c5cec51"
+    },
+    {
+      "path": "packages/commerce/return-labels.mts",
+      "sha256": "d6d071d26cc7bf99113ffdf5f840a9c15562c1d194ae2feb45f81479bda9da05"
+    },
+    {
+      "path": "packages/commerce/return-lifecycle-core.mts",
+      "sha256": "0b7b8e94597948f44fddcbc0a2f7646cd69bdcf196cf84b9bb9f350b5a4242ca"
+    },
+    {
+      "path": "packages/commerce/return-policy-packs.mts",
+      "sha256": "f082763b025954460a3ccbb80921aca3b018051b6dc7ffc684767f482438a7f8"
+    },
+    {
+      "path": "packages/commerce/return-portability-api.mts",
+      "sha256": "5f4b5368edea20fdcbb008b2b20894b79c94992712ef84ff7fe6f9ecebc7e903"
+    },
+    {
+      "path": "packages/commerce/return-portability-errors.mts",
+      "sha256": "84690897d983045263780bd11b4fa512a79af0d911dc06a068152f02a5dcbec9"
+    },
+    {
+      "path": "packages/commerce/return-prevention-guards.mts",
+      "sha256": "d19bd5985ac3699d93a4435d7baf2e61b7ce6637970e608dabe931bfdb778206"
+    },
+    {
+      "path": "packages/commerce/return-prevention.mts",
+      "sha256": "72df01b2158cee3e3f4caf6623b1ed38469f54709661612dd004da179a7232da"
+    },
+    {
+      "path": "packages/commerce/return-receiving.mts",
+      "sha256": "cda7fe30fa2a4331af0d04bf3a4f3f9ac87f1b90c8856687d875bd94ab6ca26d"
+    },
+    {
+      "path": "packages/commerce/return-tracking.mts",
+      "sha256": "a4278d3f1be3baad514f6b54f337457232335fc5ecc72c982111382fdb9e3553"
+    },
+    {
+      "path": "packages/commerce/return-workflows.mts",
+      "sha256": "6624713dacff239f727d8d9d0a68b84cb1e83f5db2ba42a0f65e366e8de3ca84"
+    },
+    {
+      "path": "packages/commerce/risk-assistance.mts",
+      "sha256": "b333c200f8be98306ef37044b547a5b14cbfca261e84375006727c6f12e352d8"
+    },
+    {
+      "path": "packages/commerce/safe-recovery.mts",
+      "sha256": "22606d93365c08712996042aec36611553fbc337d6a2bb09ea15aec24f82c8a5"
+    },
+    {
+      "path": "packages/commerce/secrets.mts",
+      "sha256": "a777cfb21160f37c1d1470ec6d9cbe8af90e9b8ce780d1566e207b9beaad177c"
+    },
+    {
+      "path": "packages/commerce/simulator.mts",
+      "sha256": "2d05c796b01d92f2a52efc37043945430a39c3433a9d30d8d611fa3ba3eb2fdc"
+    },
+    {
+      "path": "packages/commerce/skill-bundles/handle-return/SKILL.md",
+      "sha256": "b8d0d5574b59b89d68762141d5b651e14791b21b3c1c15d4efec009e178d5f62"
+    },
+    {
+      "path": "packages/commerce/skill-bundles/handle-return/commerce-manifest.json",
+      "sha256": "6b916ceba20ea06468b52f39fe5534ba7696f2b493d5a57763727b6245e5f52e"
+    },
+    {
+      "path": "packages/commerce/skill-bundles/handle-return/references/configuration.json",
+      "sha256": "76f3e970e5faa034cb7fda1528002c38b9d115bc837434cce72f9054a2dcbc76"
+    },
+    {
+      "path": "packages/commerce/skill-bundles/handle-return/references/input.json",
+      "sha256": "6f19b85ca8686ebc56d9788b944ad58f5f17b9f2d7ff00996ab723bc15ac8e12"
+    },
+    {
+      "path": "packages/commerce/skill-bundles/handle-return/references/output.json",
+      "sha256": "c2451fec651d5b9a6d12747fb9ba58b426f49283f748a13aa458fd5f757988d8"
+    },
+    {
+      "path": "packages/commerce/skill-bundles/handle-return/references/workflow.md",
+      "sha256": "3a66bc65c46045077736cedd291bbcc597b5710d525e5a83e1facd5138d15149"
+    },
+    {
+      "path": "packages/commerce/skill-bundles/order-status/SKILL.md",
+      "sha256": "b9e32bfc0253b4906836aee2cad7df854e98bcb545401de3769a165c6df0d53e"
+    },
+    {
+      "path": "packages/commerce/skill-bundles/order-status/commerce-manifest.json",
+      "sha256": "4589107d71ace587986d3bf72239c4d003d56b6336cdc647e4ac3a8941754271"
+    },
+    {
+      "path": "packages/commerce/skill-bundles/order-status/references/read-contract.md",
+      "sha256": "c719f1491b695e8e26e8ac6ebc888f9c225060fcae981e43a852748db7db3105"
+    },
+    {
+      "path": "packages/commerce/skill-bundles/safe-order-edit/SKILL.md",
+      "sha256": "69ccfd3437fc123890480386a72ce7b321d57a0d5aae78a60140d2f2c544dcc6"
+    },
+    {
+      "path": "packages/commerce/skill-bundles/safe-order-edit/commerce-manifest.json",
+      "sha256": "b7878f3f4779b8b0b3ba2dbf3ed91d5e5c134aa96d7cd7526c6f16349c6fef54"
+    },
+    {
+      "path": "packages/commerce/skill-bundles/safe-order-edit/references/configuration.json",
+      "sha256": "adc191eb61dc3f9d88e46095615c7cbb089ae8ac80926ade41f993243554a4e8"
+    },
+    {
+      "path": "packages/commerce/skill-bundles/safe-order-edit/references/input.json",
+      "sha256": "470a5f7164c61dde719470ddaf7affd4c30a5583a15b86fde37ea3b6f94fccf6"
+    },
+    {
+      "path": "packages/commerce/skill-bundles/safe-order-edit/references/output.json",
+      "sha256": "b0cb9d3eb0c6ca24b825d4a212823e30e3f0aa25fd4a5a32624daa7a78603380"
+    },
+    {
+      "path": "packages/commerce/skill-bundles/safe-order-edit/references/workflow.md",
+      "sha256": "0881feead7c38a2858fa6d86151fd900c84a37f1ac51cd0dfe5a52d9a05f325c"
+    },
+    {
+      "path": "packages/commerce/skill-contract.mts",
+      "sha256": "a187d8cc9d0580b1ca8f505967cea8e6780d2b5b25d7cc0c6d01709deb55a501"
+    },
+    {
+      "path": "packages/commerce/skill-installer.mts",
+      "sha256": "8656d37a78878154a80bc888c9c0998d44157137ead41522f2906e12875efacd"
+    },
+    {
+      "path": "packages/commerce/skill-releases.mts",
+      "sha256": "740e8b1dd1686251854db277ada76735bffd474e3438492878341e3c483fe668"
+    },
+    {
+      "path": "packages/commerce/skills.mts",
+      "sha256": "6665660dc2c53b4692b9cb04522b9d892870755aba7da702e4c7831cc864a2ce"
+    },
+    {
+      "path": "packages/commerce/store-credit.mts",
+      "sha256": "cc39005a0760a77e5bd45cacac01e29b700b5363ab02e46c1c4938fb04d91f52"
+    },
+    {
+      "path": "packages/commerce/support-branding.mts",
+      "sha256": "fd253d5e9818946d5ad96b23f18337b3208827195350124cf628f43c53b0f6d9"
+    },
+    {
+      "path": "packages/commerce/support-consent.mts",
+      "sha256": "c35246bf9518a817481f926e7ad9683574d953b92c2abffa04a0b7ff548a6897"
+    },
+    {
+      "path": "packages/commerce/support-conversations.mts",
+      "sha256": "a25462a44ff5477ebe16bb419b9c121a07f8b52c5845f72594d6de8005be0b06"
+    },
+    {
+      "path": "packages/commerce/support-core.mts",
+      "sha256": "270cc210a75ec8f3ae756cd53f1cc67268a9a6f16e335fbd8f46b89b783d60ab"
+    },
+    {
+      "path": "packages/commerce/support-delivery.mts",
+      "sha256": "21c88acb0cb84873394424899e87579dd5bd259389598f5252d4a38996e76073"
+    },
+    {
+      "path": "packages/commerce/support-errors.mts",
+      "sha256": "301c010d0591a23a5ef96a2e622aebd88353b8ef068ccda1a8432bab2249d590"
+    },
+    {
+      "path": "packages/commerce/support-fence.mts",
+      "sha256": "9be6041c61d3c9c2de6d228f679d78750421b60172e2dd9caf49d8dce168ecf4"
+    },
+    {
+      "path": "packages/commerce/support-metrics.mts",
+      "sha256": "2b6f540a73e5ff154aa21ad3c6a1cc1e1a2c4556acca2427e2a30a1fee7575f5"
+    },
+    {
+      "path": "packages/commerce/support-qualification.mts",
+      "sha256": "4ece10a02446c09b18036529f14079cf6126a37b27ed26832489af1d038c4fe9"
+    },
+    {
+      "path": "packages/commerce/support-service.mts",
+      "sha256": "83f551c2b76a548366021ef7c49d59f8129e05ded6425436f052ac64ebefb792"
+    },
+    {
+      "path": "packages/commerce/support-tracking.mts",
+      "sha256": "b5ffae67af98084c80a104a2921eab62c6493df9c811567278fc1a495f68ed6e"
+    },
+    {
+      "path": "packages/commerce/variant-exchanges.mts",
+      "sha256": "6cfbc2797e3db410f4f617e29e43646d2d74d9bed230fce9dd97b9a2b888f1eb"
+    },
+    {
+      "path": "packages/commerce/webhook-inbox.mts",
+      "sha256": "944fc83187003b7ca301b89b7eec4f017323be2880b87f05f070db9923625ef4"
+    },
+    {
+      "path": "packages/commerce/work-leases.mts",
+      "sha256": "d0eb3555dec59fd051b73e7a6b06de22e8df85d399b8e726e71755c700aa6b4c"
+    },
+    {
+      "path": "packages/commerce/worker-api.mts",
+      "sha256": "7f5e982921b91dce5123eefc6a321e2b9b40eb377c5836d448c25f8b397353ba"
+    },
+    {
+      "path": "packages/development/http.mts",
+      "sha256": "ae40c862caa9d796c7122a630d4085432a673204b2fe4065361559e9162a28ad"
+    },
+    {
+      "path": "tests/development/adapter-catalog-bindings.mts",
+      "sha256": "c7581ec62c72e7ce01bc51940b7ef582b0060641d85f1cd606f9a43f9e5ea2dd"
+    },
+    {
+      "path": "tests/development/agent-provider-helpers.mts",
+      "sha256": "2f6a59dc079f64695bfae8f026130ceb35bbb1595e0164e5db87b3565e2949a2"
+    },
+    {
+      "path": "tests/development/agent-second-provider.test.mts",
+      "sha256": "9af551e4c5f2cb766c054b910c4af0a74aad1496222693acdb8b4c91e38a67ee"
+    },
+    {
+      "path": "tests/development/business-operations.test.mts",
+      "sha256": "bb746e6dc7dabfb02195d59cc627bd510d4f23577930b68ac613bf202ab967c4"
+    },
+    {
+      "path": "tests/development/commerce-capabilities.test.mts",
+      "sha256": "c96f05d664bd6025c309df3980eef6cb20a6e177a67891b0befa37fc5c7ee0bb"
+    },
+    {
+      "path": "tests/development/commerce-helpers.mts",
+      "sha256": "155128d846dc4bb0983bc973a48d071b190fd1f5b09f2522069a5c1115083216"
+    },
+    {
+      "path": "tests/development/commerce-simulator.test.mts",
+      "sha256": "5f39f99b8ab785d62f7e727b8515086ad7f3d5865132ffa60c33117bc92159de"
+    },
+    {
+      "path": "tests/development/completion-helpers.mts",
+      "sha256": "e07a7d41ed678e37fd0e6de311b4ef4a78af3fe285aace25dbba6648ff5e4062"
+    },
+    {
+      "path": "tests/development/customization-helpers.mts",
+      "sha256": "0a403b48ca58f4a4cc829ffd0e2d98afc57516600c7f32924cd0482bdd40b5de"
+    },
+    {
+      "path": "tests/development/disposition-completion.test.mts",
+      "sha256": "c06323a1c4770c99302b4574da5885b1dece1eec83bac58156fe423cb6abff3a"
+    },
+    {
+      "path": "tests/development/durable-work.test.mts",
+      "sha256": "7de0d0ce5aeba3d024e09dabd81d608c2c46bb939dc711e88708df4590d81bb8"
+    },
+    {
+      "path": "tests/development/exchange-currency.test.mts",
+      "sha256": "f4d5af65fdeb32307ec820c840d3189dfdb297b4be992aa14a16f49845c65700"
+    },
+    {
+      "path": "tests/development/exchange-fees.test.mts",
+      "sha256": "d9095b4ce4d1d84ccad4ba0e99304e22a1d11ec6bef15a81cb6961accb7f5020"
+    },
+    {
+      "path": "tests/development/exchange-finance-helpers.mts",
+      "sha256": "c5d0810d8e368f12fb99e91d052d86c8134554fe7a3a4c97b8d929b9e4552cd7"
+    },
+    {
+      "path": "tests/development/exchange-lineage-helpers.mts",
+      "sha256": "44070714ed43382289523f392c3d36134efe39434f388c4b8167d11822081af0"
+    },
+    {
+      "path": "tests/development/exchange-lineage.test.mts",
+      "sha256": "9cfef36e0385af2ccf6625b7455a46491d1279ca3b5cd89d01deacaa555986b4"
+    },
+    {
+      "path": "tests/development/exchange-money-helpers.mts",
+      "sha256": "05f977a8cff866729be974c04e4c0dd0c4fd1afb977049c557268daffb861768"
+    },
+    {
+      "path": "tests/development/exchange-payments.test.mts",
+      "sha256": "97d79b21cdca776e23486e41cd9cbbd1a8c070fad2aaae4e0aa184c503303dbd"
+    },
+    {
+      "path": "tests/development/exchange-residuals.test.mts",
+      "sha256": "800d2f7a5baa5be3d46fa942e189175dcf96146522b288ace58871522c2d5874"
+    },
+    {
+      "path": "tests/development/execution-helpers.mts",
+      "sha256": "82dad3fb320495a39595e88fedf62534ca4cddb2befc20a63550f5be5ce694d4"
+    },
+    {
+      "path": "tests/development/fulfillment-helpers.mts",
+      "sha256": "594a1ad0fdf5b510a72c336cc4e0c16dcb5ac0ab31a125db27e5595d61d5c7cf"
+    },
+    {
+      "path": "tests/development/gift-fulfillment.test.mts",
+      "sha256": "ccc668c4a0d687c51d942f1e835a68fec6391e9df259ea33d4a5f6ed87441354"
+    },
+    {
+      "path": "tests/development/gift-helpers.mts",
+      "sha256": "c14851515c935b3a78f64e50683bd33db043c193430ce776a64771c1e49b25a5"
+    },
+    {
+      "path": "tests/development/gift-returns.test.mts",
+      "sha256": "de4432f313fd0f53448f422a0bb4cbd04a2d463a07327861b63d5fdbeded946f"
+    },
+    {
+      "path": "tests/development/instant-helpers.mts",
+      "sha256": "a9f0b5e113eb922cd0e32314922599d1d9a4d9b7a847f025ae226f0b278d1ed1"
+    },
+    {
+      "path": "tests/development/instant-lifecycle.test.mts",
+      "sha256": "352fdc5e55e92c37836ee58f44c25d2fd39ef4be69a814a19825c214e7d07328"
+    },
+    {
+      "path": "tests/development/instant-mandates.test.mts",
+      "sha256": "cb1cdcaa8f245b29e27b3136ad4e79c9a0c90b76a298f2bb2dbaad9f132cd709"
+    },
+    {
+      "path": "tests/development/label-lifecycle.test.mts",
+      "sha256": "68bab55cee83d248cb1ea55a86b252cafe8e17b4edc0be43d1cebd4adfdcad39"
+    },
+    {
+      "path": "tests/development/local-model-helpers.mts",
+      "sha256": "56c0b5171af5eb3f02074bdd3afde3d6bf64a5f1ace6ef891d7dab71b0d95912"
+    },
+    {
+      "path": "tests/development/local-model.test.mts",
+      "sha256": "b8b89e760c75976f69d43139393d2ac16e134543d8e9723ee78ef97d454d8577"
+    },
+    {
+      "path": "tests/development/native-change-completion.test.mts",
+      "sha256": "9e9e088f20d944add390966fb0b99dd1c52ff0433b31f44cacc6c2573eb3e31b"
+    },
+    {
+      "path": "tests/development/native-returns.test.mts",
+      "sha256": "ac92e26d580429ab4802f098fa78d1c81918110963615c793602b89dc7df94d0"
+    },
+    {
+      "path": "tests/development/order-edit-commit.test.mts",
+      "sha256": "a8a68a36713b7d4c928021dc7503464dac7bb52f7d2d1a3bdf625e0fd4cec8b8"
+    },
+    {
+      "path": "tests/development/order-edit-eligibility.test.mts",
+      "sha256": "376ebcecc5500d227138e95ebdf9a035a0f0d1653e12632724fc178da94b4f6e"
+    },
+    {
+      "path": "tests/development/order-edit-helpers.mts",
+      "sha256": "3b752538e7f789294fca9b5231bf41ce873f94b3640fc642bf5980c29e1b2aa9"
+    },
+    {
+      "path": "tests/development/order-edit-holds.test.mts",
+      "sha256": "697ea6edc0310b715c48901ed303607265d1c4413bde2b42bcf592e53efc314b"
+    },
+    {
+      "path": "tests/development/order-edit-payments.test.mts",
+      "sha256": "780e4c292196892fc5e5e7b89d4da7dcbf3bd0e2243b478fba87d3d11c75ea08"
+    },
+    {
+      "path": "tests/development/prevention-helpers.mts",
+      "sha256": "be11dff677444efbd6f072598494735070547f0395520657426ed91791cd36c7"
+    },
+    {
+      "path": "tests/development/qualified-destinations-helpers.mts",
+      "sha256": "2852e7eda9e4427df7f8366a83910037a4ae526f5e9773671b8346f274b39bc6"
+    },
+    {
+      "path": "tests/development/qualified-destinations-recovery.test.mts",
+      "sha256": "1a1e405e8436ef0339c4c054cdf8b9e5b31ee4e87ca152c6f9e8b00ceb8e5d16"
+    },
+    {
+      "path": "tests/development/qualified-destinations.test.mts",
+      "sha256": "71253481036f9f39ec0eb740a817eb6e2ca3ff35fd35f6e3826bd119d889e58c"
+    },
+    {
+      "path": "tests/development/read-shopify.test.mts",
+      "sha256": "4add0382a2c02d13ba8327a860d9777ad44f09a9403962ee70a47a790a4dff11"
+    },
+    {
+      "path": "tests/development/read-woocommerce.test.mts",
+      "sha256": "8b3f85c0e069b5118fab5161ead055fecb4b3fce10a02b06ca8e0ca5cf3e3518"
+    },
+    {
+      "path": "tests/development/read-workflow-helpers.mts",
+      "sha256": "5b96acf7fd4a822beafb50e9b01d2defff2b29545df16ed2c45e6f9686bd4136"
+    },
+    {
+      "path": "tests/development/reconciliation.test.mts",
+      "sha256": "e41e314628aa5d651eb1d862e1b0d1539c1c396f499edd3a0d3d813d55725170"
+    },
+    {
+      "path": "tests/development/refund-execution.test.mts",
+      "sha256": "e24d4df14b30d630ded2ae96a54651082cf39f50a640e2c4e2c12dede18cb870"
+    },
+    {
+      "path": "tests/development/reliability-helpers.mts",
+      "sha256": "5e74182c3406c10ed8ccf56e50b3256af0a723e3b8002d4aca40b18ea2df1898"
+    },
+    {
+      "path": "tests/development/replacement-inventory.test.mts",
+      "sha256": "f023ba4061f174c1b096593e09ff392e996a399f93af6875a349ed23b60476e4"
+    },
+    {
+      "path": "tests/development/replacement-orders.test.mts",
+      "sha256": "559964500b125d060c0053861df4b79113b66bc8f2228b9096de583884b806b4"
+    },
+    {
+      "path": "tests/development/resolution-helpers.mts",
+      "sha256": "1a14066c02babd4593c17d0cbb95906c2c58b5f9b8a978f81c5d1455b37874bd"
+    },
+    {
+      "path": "tests/development/return-intake-helpers.mts",
+      "sha256": "d45ee9e62c2c010901887d4f2f9c7cfb3edea5ab5b34a84e0946636281863ea7"
+    },
+    {
+      "path": "tests/development/return-labels.test.mts",
+      "sha256": "da5e817d7294304af6210eb5a81fca32189b8db78d5fb996422ba8fde720837f"
+    },
+    {
+      "path": "tests/development/return-policy-pack-helpers.mts",
+      "sha256": "3f45613b7613725f9baf3fcbcf456eb1158dcd3b4004c95a7ec20170a8a6d148"
+    },
+    {
+      "path": "tests/development/return-prevention.test.mts",
+      "sha256": "c5703d31242d4487661bb783d36a9a9e1ebc4affcff121adc3104abd5085e1e1"
+    },
+    {
+      "path": "tests/development/return-tracking.test.mts",
+      "sha256": "dcffd01e37bbf149dd1ebb59a07b558f566c499c43b0f0b3d08d9fad907d3e39"
+    },
+    {
+      "path": "tests/development/store-credit.test.mts",
+      "sha256": "faa10a8f216f36f3d508a5398c76f43c9dbb8b971ce6f9de2f0640bea1f79cea"
+    },
+    {
+      "path": "tests/development/support-adapters.test.mts",
+      "sha256": "45bdce2bc5a05b0d5bcff8ebdc606f4f4b378575774fde698dad2f8103dc7de7"
+    },
+    {
+      "path": "tests/development/support-delivery.test.mts",
+      "sha256": "63ff19ed8b4cf15774b59c8a8d60911d0a92ae3329c0e300a780938c43e13eef"
+    },
+    {
+      "path": "tests/development/support-helpers.mts",
+      "sha256": "26048e0121874f30deb446a939d3d50e2a667b9cd2f93f73b87d458cc762bc55"
+    },
+    {
+      "path": "tests/development/webhook-inbox.test.mts",
+      "sha256": "27888b26246de994b437cc3ed133568951fcff89be6a300a5db5d776ad452f7f"
+    },
+    {
+      "path": "tests/development/woocommerce-event-helpers.mts",
+      "sha256": "1f056e7c22c6e4b2f5a01cc6ac87c1772e87acc63e49e58abbf659206b6e82c2"
+    },
+    {
+      "path": "tests/development/woocommerce-events.test.mts",
+      "sha256": "b47cefe37f697a9fc8b78bd1c49d35f14fda0e3890be4d04dac0cdde085a7656"
+    },
+    {
+      "path": "tests/development/woocommerce-refund-helpers.mts",
+      "sha256": "23c7024abc0972c710ee31d37b9a17bb6306b1f85a7179a5c133cc885f26f744"
+    },
+    {
+      "path": "tests/development/woocommerce-refunds.test.mts",
+      "sha256": "644e8cdbe920fa8eb214d83a00bc96d5deaf3fa875207ace5cd26144bb34625c"
+    },
+    {
+      "path": "tests/development/woocommerce-return-helpers.mts",
+      "sha256": "4e2b20bbf169c679cc124723be6495c8f527ffab8eb10099e1cd8ef03b413aba"
+    },
+    {
+      "path": "tests/development/woocommerce-returns.test.mts",
+      "sha256": "37b12d319e49ea71fdc36372a4204357f69b65425d0e9579d1becfc77a8ad499"
+    },
+    {
+      "path": "tests/fixtures/assistance/prevention-golden.v1.json",
+      "sha256": "2ef8cbd1071c16caf17248142990393c4229ccb0f2d35c8d265370c401f68f5e"
+    },
+    {
+      "path": "tests/fixtures/assistance/risk-golden.v1.json",
+      "sha256": "b0fc772fffcac4beef0e670380e14295ed7e027ac36ca9742b0862febff186dd"
+    },
+    {
+      "path": "tests/fixtures/conformance/contract-cases.v1.json",
+      "sha256": "2ff248c8472c40e2d985fe916f3dfe73062e272500ca3ef49c4bb755d7f9f058"
+    },
+    {
+      "path": "tests/fixtures/conformance/expected-coverage.v1.json",
+      "sha256": "5b72f7b62f8cb4c38f676e69d8ec5745a05d0c5c56c96653adcfc3506cf9afc4"
+    },
+    {
+      "path": "tests/fixtures/conformance/source-inputs.v1.json",
+      "sha256": "b58d264ef4a504d1b6940925344694bfc951f57ba7d9a17f9c00c5051a5757cd"
+    },
+    {
+      "path": "tests/fixtures/development/command-manifests.v1.json",
+      "sha256": "79e54714f969fe4ee77daf85965748cdf3e856e6a03d4a5fc498b3a4d216bc21"
+    },
+    {
+      "path": "tests/fixtures/exchange-finance/independent-values.json",
+      "sha256": "042b0778f14193f8e6d5d1ac4e6fe497a8295827a47e20ed370b5e25e0e53fc3"
+    },
+    {
+      "path": "tests/fixtures/exchange-lineage/independent-values.json",
+      "sha256": "8d4664b68caaeb16c9ce5e7d7da80c9d604ed45aa5ef405673bab442ef34ee9d"
+    },
+    {
+      "path": "tests/fixtures/exchange-money/golden.v1.json",
+      "sha256": "f1b1ef3b631220b9ba4388cf54619685b4cc20f5f34eb76d8520beee01f85629"
+    },
+    {
+      "path": "tests/fixtures/harness/expected.v1.json",
+      "sha256": "05e9da9ff9fa28fa26f10f5bb9f467a9634acebe4acf0958b0d45522ca72de7d"
+    },
+    {
+      "path": "tests/fixtures/harness/seed.v1.json",
+      "sha256": "9778a57c1c4f4d3c766c35ebc93e0507a0c46bed4d569521ad3f4d9e363faeb6"
+    },
+    {
+      "path": "tests/fixtures/harness/test-manifest.v1.json",
+      "sha256": "15e234baf11deccce851533cf191420bb5ffee4a1598a25d5d38520641eaa4f2"
+    },
+    {
+      "path": "tests/fixtures/instant-exchanges/independent-values.json",
+      "sha256": "21fe2d22aec7fb67545688c741b08e69cdb70d0af800a2c95664352fc4c6b64b"
+    },
+    {
+      "path": "tests/fixtures/licensing/expected-policy.v1.json",
+      "sha256": "7d187d0ca4a2bca57d323c3db81c956f084c63fcb4e3da28a01b485d9e54f9c7"
+    },
+    {
+      "path": "tests/fixtures/licensing/retained-obligations.v1.json",
+      "sha256": "aacf4df0617b70017da30a1c73f47e6f12e74bd7c33bb1c17abd8798ed7ff63a"
+    },
+    {
+      "path": "tests/fixtures/model-policy/evaluation-configuration.json",
+      "sha256": "7319c8c0044d84615ce6ea855d7abb1ce2b29e88fb64f74f7cf94bfb4944642f"
+    },
+    {
+      "path": "tests/fixtures/model-policy/evaluation-expected.json",
+      "sha256": "b2ddf0f23b36c9bff28c314108d912880eba95ee5d6f4f308df101321522095a"
+    },
+    {
+      "path": "tests/fixtures/model-policy/evaluation-observations.json",
+      "sha256": "6a12ed3b1f69508e7278586a66085af001cf0bce39fbf279aea63cbce1c6b4ab"
+    },
+    {
+      "path": "tests/fixtures/model-policy/evaluation-suite.json",
+      "sha256": "a065ec7e679774108b37af81c88842c4303d14f500518be25abbdcac7756c71d"
+    },
+    {
+      "path": "tests/fixtures/model-policy/money-golden.json",
+      "sha256": "e8f79c3e5195dc6b66d938fbcbb8b900cb72a59c5532e4c29a8ce9e2f942794e"
+    },
+    {
+      "path": "tests/fixtures/qualified-destinations/routing.v1.json",
+      "sha256": "0d6098964f18a8fbb7cfa87a79b959fa777915327b8a69ad811a5d060bd38d70"
+    },
+    {
+      "path": "tests/fixtures/read-workflows/presentations.json",
+      "sha256": "5c6818136728f700c73bed54c13c4a6199692e259b40a090ac8f52b5f5adda25"
+    },
+    {
+      "path": "tests/fixtures/read-workflows/shopify-order.json",
+      "sha256": "2c264e7b330d278d64e71cdef34d94777af5158fd10bf48794b6b4502876080c"
+    },
+    {
+      "path": "tests/fixtures/release-benchmark/cohort.manifest.SYNTHETIC.json",
+      "sha256": "8e710c8f1efd5bab3c6b2d48906a8874456922078738d5536b37a00dfc11de83"
+    },
+    {
+      "path": "tests/fixtures/release-benchmark/cohort.results.SYNTHETIC.json",
+      "sha256": "94ade31f48809c8c3447c126109e41c3051a4803da6e0be39fbce0a69f04985d"
+    },
+    {
+      "path": "tests/fixtures/release-benchmark/expected-benchmark.v1.json",
+      "sha256": "4b53de08f4af8b915eead29394fa0467d257beb30047347f8fd793648fd9d5ed"
+    },
+    {
+      "path": "tests/fixtures/release-benchmark/expected-cohort.v1.json",
+      "sha256": "9d12dbf1ce60319531fbadc7eb19c7a6c22c75b440f5ba7aa6e30226d42497a8"
+    },
+    {
+      "path": "tests/fixtures/return-depth/milestone-values.v1.json",
+      "sha256": "23ce0585e1f2d173076349e595ece812526808dec60d27e39e75a7e5612f5427"
+    },
+    {
+      "path": "tests/fixtures/return-intake/photo.v1.json",
+      "sha256": "0406e7059303231c59473832d25a38054768e23e17a4c78ae0379d552854dfd5"
+    },
+    {
+      "path": "tests/fixtures/return-policy-packs/scenarios.v1.json",
+      "sha256": "17373c2d55ce54803d8408e27d3f8b17734086882c82c40725a470a87d1dee54"
+    },
+    {
+      "path": "tests/fixtures/runtime-switch/expected.v1.json",
+      "sha256": "f77b3e777a380e51bc9aa4a5faca6bbdca17454f60cc23319186da37be379ee9"
+    },
+    {
+      "path": "tests/fixtures/support-envelope/baseline.SYNTHETIC.json",
+      "sha256": "3b234e9950034e01883364506a0a87206d7dc5501e7242e634f0eb66a553572c"
+    },
+    {
+      "path": "tests/fixtures/support-envelope/expected-proposal.v1.json",
+      "sha256": "4fd68cf7a8879d445e417a0778b370f74a2783a792160313bd1384f74e7465da"
+    },
+    {
+      "path": "tests/fixtures/support-envelope/query-order-status.json",
+      "sha256": "158a0d93e7dedaab213f6a7c072d9fe1a8ab34635af2f039da26279e3c0dec5a"
+    },
+    {
+      "path": "tests/fixtures/support-envelope/query-unlisted-payment.json",
+      "sha256": "2e7009747c0fbf5350916380749eb246f17f1bcc3a347a867f0b843eaf2f56cb"
+    },
+    {
+      "path": "tests/fixtures/support-envelope/query-unverified-warehouse.json",
+      "sha256": "85e7e83b27d15c8fc03f17a1dce2dfe87d20f663f4e610d97b2a6a9e5570cc99"
+    },
+    {
+      "path": "tests/fixtures/support-envelope/scenarios.json",
+      "sha256": "70def490128471bcb4e2097a8215dc3bf3728b5f4e60ef0f82255616783ab89e"
+    },
+    {
+      "path": "tests/fixtures/woocommerce/order.v1.json",
+      "sha256": "c2afa36721b8015a82a91cced23080c5ebbafeb693113ba326f4cdb2b499ae94"
+    },
+    {
+      "path": "tests/fixtures/woocommerce/refund-ledger.v1.json",
+      "sha256": "92b7ee37aec5c1150d495aac2d7d0b50bc6bebb47a13b075b66cd87f4cdda87a"
+    },
+    {
+      "path": "tests/fixtures/woocommerce/refunds.v1.json",
+      "sha256": "aaebb6fa10eb8786080fe689d651d1b1b731aed1b06a12bff75f4936ebf6d0d6"
+    },
+    {
+      "path": "tests/fixtures/workflow/scenarios.SYNTHETIC.json",
+      "sha256": "7ece36d3763119655eacf5a70b41c6f430c876458dcaa13dd8c73d4091abff6c"
+    }
+  ]
+}

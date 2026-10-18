@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "qualification": "local_fixture_only",
+  "case_id": "woo_case",
+  "platform": "woocommerce",
+  "native_return_id": null,
+  "return_semantics": "composed_local_rma",
+  "skill_id": "handle-return",
+  "refund_minor": "1000",
+  "currency": "USD",
+  "completed": {
+    "return_requests": 1,
+    "action_receipts": 2,
+    "refund_operations": 1,
+    "woo_refund_records": 1,
+    "gateway_refunds": 1,
+    "gateway_movements": 1,
+    "notification_effects": 1,
+    "native_return_operations": 0,
+    "customer_delivered": false
+  },
+  "manual": {
+    "state": "manual_external_settlement_pending",
+    "gateway_refunds": 0,
+    "gateway_movements": 0,
+    "completion_messages": 0
+  }
+}

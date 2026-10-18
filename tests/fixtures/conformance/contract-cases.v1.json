@@ -1,0 +1,1858 @@
+{
+  "schema_version": 1,
+  "fixture_package": "rifare_catalog_contracts_v1",
+  "external_qualification": false,
+  "fixtures": [
+    {
+      "key": "simulator",
+      "fixture": {
+        "schema_version": 1,
+        "id": "catalog_simulator",
+        "adapter": {
+          "id": "simulator",
+          "version": "simulator-read-v1",
+          "api_version": "local-read-v1",
+          "required_scopes": [
+            "read_orders"
+          ],
+          "semantics": "native",
+          "qualification": "sandbox-only"
+        },
+        "action": "order.read",
+        "resource_state": "seeded_readable_original",
+        "source_ledger": "source_simulator",
+        "before_count": 1,
+        "after_count": 1,
+        "response_status": 200,
+        "response_fields": {
+          "kind": "order",
+          "source_system": "synthetic",
+          "payload.total_minor": 12500,
+          "payload.status": "shipped"
+        },
+        "source_fields": {
+          "records.0.body.external_id": "ORD-1001",
+          "records.0.body.total_minor": 12500,
+          "records.0.body.status": "shipped"
+        },
+        "correlations": [
+          {
+            "response": "payload.total_minor",
+            "source": "records.0.body.total_minor"
+          },
+          {
+            "response": "payload.status",
+            "source": "records.0.body.status"
+          }
+        ]
+      }
+    },
+    {
+      "key": "simulator_customer",
+      "fixture": {
+        "schema_version": 1,
+        "id": "catalog_simulator_customer",
+        "adapter": {
+          "id": "simulator",
+          "version": "simulator-read-v1",
+          "api_version": "local-read-v1",
+          "required_scopes": [
+            "read_customers"
+          ],
+          "semantics": "native",
+          "qualification": "sandbox-only"
+        },
+        "action": "customer.read",
+        "resource_state": "seeded_readable_original",
+        "source_ledger": "source_simulator_customer",
+        "before_count": 1,
+        "after_count": 1,
+        "response_status": 200,
+        "response_fields": {
+          "kind": "customer",
+          "source_system": "synthetic",
+          "payload.name": "Synthetic shopper",
+          "payload.email": "shopper-apparel@example.invalid"
+        },
+        "source_fields": {
+          "records.0.body.external_id": "C-1001",
+          "records.0.body.name": "Synthetic shopper",
+          "records.0.body.email": "shopper-apparel@example.invalid"
+        },
+        "correlations": [
+          {
+            "response": "payload.name",
+            "source": "records.0.body.name"
+          },
+          {
+            "response": "payload.email",
+            "source": "records.0.body.email"
+          }
+        ]
+      }
+    },
+    {
+      "key": "simulator_catalog",
+      "fixture": {
+        "schema_version": 1,
+        "id": "catalog_simulator_catalog",
+        "adapter": {
+          "id": "simulator",
+          "version": "simulator-read-v1",
+          "api_version": "local-read-v1",
+          "required_scopes": [
+            "read_catalog"
+          ],
+          "semantics": "native",
+          "qualification": "sandbox-only"
+        },
+        "action": "catalog.read",
+        "resource_state": "seeded_readable_original",
+        "source_ledger": "source_simulator_catalog",
+        "before_count": 1,
+        "after_count": 1,
+        "response_status": 200,
+        "response_fields": {
+          "kind": "catalog",
+          "source_system": "synthetic",
+          "payload.title": "Sample shirt",
+          "payload.price_minor": 2500,
+          "payload.available_quantity": 10
+        },
+        "source_fields": {
+          "records.0.body.external_id": "SKU-1",
+          "records.0.body.title": "Sample shirt",
+          "records.0.body.price_minor": 2500,
+          "records.0.body.available_quantity": 10
+        },
+        "correlations": [
+          {
+            "response": "payload.title",
+            "source": "records.0.body.title"
+          },
+          {
+            "response": "payload.price_minor",
+            "source": "records.0.body.price_minor"
+          },
+          {
+            "response": "payload.available_quantity",
+            "source": "records.0.body.available_quantity"
+          }
+        ]
+      }
+    },
+    {
+      "key": "simulator_shipment",
+      "fixture": {
+        "schema_version": 1,
+        "id": "catalog_simulator_shipment",
+        "adapter": {
+          "id": "simulator",
+          "version": "simulator-read-v1",
+          "api_version": "local-read-v1",
+          "required_scopes": [
+            "read_shipments"
+          ],
+          "semantics": "native",
+          "qualification": "sandbox-only"
+        },
+        "action": "shipment.read",
+        "resource_state": "seeded_readable_original",
+        "source_ledger": "source_simulator_shipment",
+        "before_count": 1,
+        "after_count": 1,
+        "response_status": 200,
+        "response_fields": {
+          "kind": "shipment",
+          "source_system": "synthetic",
+          "payload.status": "in_transit",
+          "payload.carrier": "synthetic",
+          "payload.tracking": "SIM-TRACK-1"
+        },
+        "source_fields": {
+          "records.0.body.external_id": "SHIP-1001",
+          "records.0.body.status": "in_transit",
+          "records.0.body.carrier": "synthetic",
+          "records.0.body.tracking": "SIM-TRACK-1"
+        },
+        "correlations": [
+          {
+            "response": "payload.status",
+            "source": "records.0.body.status"
+          },
+          {
+            "response": "payload.carrier",
+            "source": "records.0.body.carrier"
+          },
+          {
+            "response": "payload.tracking",
+            "source": "records.0.body.tracking"
+          }
+        ]
+      }
+    },
+    {
+      "key": "simulator_payment",
+      "fixture": {
+        "schema_version": 1,
+        "id": "catalog_simulator_payment",
+        "adapter": {
+          "id": "simulator",
+          "version": "simulator-read-v1",
+          "api_version": "local-read-v1",
+          "required_scopes": [
+            "read_payments"
+          ],
+          "semantics": "native",
+          "qualification": "sandbox-only"
+        },
+        "action": "payment.read",
+        "resource_state": "seeded_readable_original",
+        "source_ledger": "source_simulator_payment",
+        "before_count": 1,
+        "after_count": 1,
+        "response_status": 200,
+        "response_fields": {
+          "kind": "payment",
+          "source_system": "synthetic",
+          "payload.state": "simulated_captured",
+          "payload.amount_minor": 12500,
+          "payload.simulated": true
+        },
+        "source_fields": {
+          "records.0.body.external_id": "PAY-1001",
+          "records.0.body.state": "simulated_captured",
+          "records.0.body.amount_minor": 12500,
+          "records.0.body.simulated": true
+        },
+        "correlations": [
+          {
+            "response": "payload.state",
+            "source": "records.0.body.state"
+          },
+          {
+            "response": "payload.amount_minor",
+            "source": "records.0.body.amount_minor"
+          },
+          {
+            "response": "payload.simulated",
+            "source": "records.0.body.simulated"
+          }
+        ]
+      }
+    },
+    {
+      "key": "shopify_read",
+      "fixture": {
+        "schema_version": 1,
+        "id": "catalog_shopify_read",
+        "adapter": {
+          "id": "shopify_orders",
+          "version": "shopify-order-read",
+          "api_version": "2026-10",
+          "required_scopes": [
+            "read_orders"
+          ],
+          "semantics": "native",
+          "qualification": "sandbox-only"
+        },
+        "action": "orders.get",
+        "resource_state": "complete_wire_order",
+        "source_ledger": "source_shopify_read",
+        "before_count": 1,
+        "after_count": 2,
+        "response_status": 200,
+        "response_fields": {
+          "status": "fresh",
+          "order.totals.shop.amount": "125.00",
+          "production_qualified": false
+        },
+        "source_fields": {
+          "records.0.body.data.order.id": "gid://shopify/Order/1001",
+          "records.0.body.data.order.currentTotalPriceSet.shopMoney.amount": "125.00",
+          "records.1.body.method": "POST",
+          "records.1.body.url": "https://rifare-fixture.myshopify.com/admin/api/2026-10/graphql.json"
+        },
+        "correlations": [
+          {
+            "response": "source.native_id",
+            "source": "records.0.body.data.order.id"
+          },
+          {
+            "response": "order.totals.shop.amount",
+            "source": "records.0.body.data.order.currentTotalPriceSet.shopMoney.amount"
+          }
+        ]
+      }
+    },
+    {
+      "key": "woo_read",
+      "fixture": {
+        "schema_version": 1,
+        "id": "catalog_woo_read",
+        "adapter": {
+          "id": "woocommerce_orders",
+          "version": "woocommerce-v3-read-v1",
+          "api_version": "wc/v3",
+          "required_scopes": [
+            "read"
+          ],
+          "semantics": "native",
+          "qualification": "sandbox-only"
+        },
+        "action": "orders.get",
+        "resource_state": "read_order_and_manual_refund",
+        "source_ledger": "source_woo_read",
+        "before_count": 2,
+        "after_count": 4,
+        "response_status": 200,
+        "response_fields": {
+          "status": "fresh",
+          "order.number": "W-17",
+          "order.refunds.0.settlement_verified": false
+        },
+        "source_fields": {
+          "records.0.body.id": 17,
+          "records.0.body.total": "45.67",
+          "records.1.body.items.0.refunded_payment": false,
+          "records.2.body.method": "GET",
+          "records.3.body.method": "GET"
+        },
+        "correlations": [
+          {
+            "response": "order.totals.shop.amount",
+            "source": "records.0.body.total"
+          }
+        ]
+      }
+    },
+    {
+      "key": "shopify_return",
+      "fixture": {
+        "schema_version": 1,
+        "id": "catalog_shopify_return",
+        "adapter": {
+          "id": "shopify_returns",
+          "version": "source-sha256:9cb01b29082cc41e6176fd2d282dd3e6c396282b849f46274268917a9839c803",
+          "api_version": "2026-10",
+          "required_scopes": [],
+          "semantics": "native",
+          "qualification": "sandbox-only"
+        },
+        "action": "returns.create-request",
+        "resource_state": "fulfilled_original_line",
+        "source_ledger": "source_shopify_return",
+        "before_count": 0,
+        "after_count": 1,
+        "response_status": 200,
+        "response_fields": {
+          "rejected": false,
+          "record.id": "gid://shopify/Return/900",
+          "record.financial_effect": false
+        },
+        "source_fields": {
+          "records.0.body.record.status": "OPEN",
+          "records.0.body.request.orderId": "gid://shopify/Order/1001",
+          "records.0.body.record.returnLineItems.nodes.0.quantity": 1
+        },
+        "correlations": [
+          {
+            "response": "record.id",
+            "source": "records.0.body.record.id"
+          },
+          {
+            "response": "record.order_id",
+            "source": "records.0.body.record.order.id"
+          }
+        ]
+      }
+    },
+    {
+      "key": "woo_rma",
+      "fixture": {
+        "schema_version": 1,
+        "id": "catalog_woo_rma",
+        "adapter": {
+          "id": "woocommerce_rma",
+          "version": "woocommerce-rma-fixture-v1",
+          "api_version": "wc/v3",
+          "required_scopes": [
+            "read"
+          ],
+          "semantics": "composed",
+          "qualification": "sandbox-only"
+        },
+        "action": "returns.create-request",
+        "resource_state": "complete_woo_source_and_existing_approval",
+        "source_ledger": "source_woo_rma",
+        "before_count": 1,
+        "after_count": 2,
+        "response_status": 200,
+        "response_fields": {
+          "state": "submitted",
+          "return_semantics": "composed_local_rma",
+          "native_return_id": null
+        },
+        "source_fields": {
+          "records.0.body.order.id": 17,
+          "records.0.body.fulfillment.complete": true,
+          "records.1.body.native_return_id": null,
+          "records.1.body.native_order_id": "17",
+          "records.1.body.kind": "composed_local_rma"
+        },
+        "correlations": [
+          {
+            "response": "id",
+            "source": "records.1.body.request_id"
+          }
+        ]
+      }
+    },
+    {
+      "key": "woo_event",
+      "fixture": {
+        "schema_version": 1,
+        "id": "catalog_woo_event",
+        "adapter": {
+          "id": "woocommerce_events",
+          "version": "source-sha256:5d89104f80aeba204cd2ff5831629ac5d0720dcb4dffcb1ba3ab7a797242a395",
+          "api_version": "wc/v3",
+          "required_scopes": [
+            "read"
+          ],
+          "semantics": "composed",
+          "qualification": "sandbox-only"
+        },
+        "action": "order.updated",
+        "resource_state": "signed_and_source_corroborated",
+        "source_ledger": "source_woo_event",
+        "before_count": 1,
+        "after_count": 1,
+        "response_status": 200,
+        "response_fields": {
+          "topic": "order.updated",
+          "native_order_id": "17",
+          "financial_authority": false,
+          "new_write_authorized": false,
+          "corroboration": "independent_fixture_source_snapshot"
+        },
+        "source_fields": {
+          "records.0.body.order.id": 17,
+          "records.0.body.revision": 1,
+          "records.0.body.financial_contract.history_complete": true
+        },
+        "correlations": []
+      }
+    },
+    {
+      "key": "woo_event_created",
+      "fixture": {
+        "schema_version": 1,
+        "id": "catalog_woo_event_created",
+        "adapter": {
+          "id": "woocommerce_events",
+          "version": "source-sha256:5d89104f80aeba204cd2ff5831629ac5d0720dcb4dffcb1ba3ab7a797242a395",
+          "api_version": "wc/v3",
+          "required_scopes": [
+            "read"
+          ],
+          "semantics": "composed",
+          "qualification": "sandbox-only"
+        },
+        "action": "order.created",
+        "resource_state": "signed_and_source_corroborated",
+        "source_ledger": "source_woo_event_created",
+        "before_count": 1,
+        "after_count": 1,
+        "response_status": 200,
+        "response_fields": {
+          "topic": "order.created",
+          "native_order_id": "17",
+          "financial_authority": false,
+          "new_write_authorized": false,
+          "corroboration": "independent_fixture_source_snapshot"
+        },
+        "source_fields": {
+          "records.0.body.order.id": 17,
+          "records.0.body.revision": 1,
+          "records.0.body.financial_contract.history_complete": true
+        },
+        "correlations": []
+      }
+    },
+    {
+      "key": "woo_refund",
+      "fixture": {
+        "schema_version": 1,
+        "id": "catalog_woo_refund",
+        "adapter": {
+          "id": "woocommerce_refunds",
+          "version": "rifare-woocommerce-refund-fixture-v1",
+          "api_version": "wc/v3",
+          "required_scopes": [
+            "read",
+            "write"
+          ],
+          "semantics": "composed",
+          "qualification": "sandbox-only"
+        },
+        "action": "refunds.execute",
+        "resource_state": "approved_original_card_refund",
+        "source_ledger": "source_woo_refund",
+        "before_count": 0,
+        "after_count": 1,
+        "response_status": 200,
+        "response_fields": {
+          "state": "accepted",
+          "cash_settled": false,
+          "woo_evidence.refunded_payment": true
+        },
+        "source_fields": {
+          "records.0.body.parent_id": 17,
+          "records.0.body.amount": "10.00",
+          "records.0.body.refunded_payment": true,
+          "records.0.body.api_restock": false,
+          "records.0.body.line_items.0.id": 71,
+          "records.0.body.source_account_id": "woo_store_account",
+          "records.0.body.api_version": "wc/v3"
+        },
+        "correlations": [
+          {
+            "response": "id",
+            "source": "records.0.body.operation_id"
+          }
+        ]
+      }
+    },
+    {
+      "key": "woo_manual",
+      "fixture": {
+        "schema_version": 1,
+        "id": "catalog_woo_manual",
+        "adapter": {
+          "id": "woocommerce_refunds",
+          "version": "rifare-woocommerce-refund-fixture-v1",
+          "api_version": "wc/v3",
+          "required_scopes": [
+            "read",
+            "write"
+          ],
+          "semantics": "manual",
+          "qualification": "sandbox-only"
+        },
+        "action": "refunds.manual-record",
+        "resource_state": "approved_original_card_refund",
+        "source_ledger": "source_woo_manual",
+        "before_count": 0,
+        "after_count": 1,
+        "response_status": 200,
+        "response_fields": {
+          "state": "manual_external_settlement_pending",
+          "cash_settled": false,
+          "woo_evidence.refunded_payment": false
+        },
+        "source_fields": {
+          "records.0.body.parent_id": 17,
+          "records.0.body.amount": "10.00",
+          "records.0.body.refunded_payment": false,
+          "records.0.body.api_restock": false,
+          "records.0.body.line_items.0.id": 71,
+          "records.0.body.source_account_id": "woo_store_account",
+          "records.0.body.api_version": "wc/v3"
+        },
+        "correlations": [
+          {
+            "response": "id",
+            "source": "records.0.body.operation_id"
+          }
+        ]
+      }
+    },
+    {
+      "key": "woo_gateway",
+      "fixture": {
+        "schema_version": 1,
+        "id": "catalog_woo_gateway",
+        "adapter": {
+          "id": "woocommerce_gateway",
+          "version": "rifare-fixture-card-refund-v1",
+          "api_version": "local-original-payment-v1",
+          "required_scopes": [],
+          "semantics": "native",
+          "qualification": "sandbox-only"
+        },
+        "action": "refund.issue",
+        "resource_state": "original_payment_bound",
+        "source_ledger": "source_woo_gateway",
+        "before_count": 0,
+        "after_count": 1,
+        "response_status": 200,
+        "response_fields": {
+          "state": "accepted",
+          "settled": false,
+          "live_financial_effect": false,
+          "amount_minor": "1000"
+        },
+        "source_fields": {
+          "records.0.body.transaction_id": "woo_txn_17",
+          "records.0.body.payment_id": "woo_payment_17",
+          "records.0.body.instrument_id": "woo_card_17",
+          "records.0.body.currency": "USD",
+          "records.0.body.state": "accepted",
+          "records.0.body.settled": false
+        },
+        "correlations": [
+          {
+            "response": "id",
+            "source": "records.0.body.id"
+          },
+          {
+            "response": "operation_id",
+            "source": "records.0.body.operation_id"
+          }
+        ]
+      }
+    },
+    {
+      "key": "support_email",
+      "fixture": {
+        "schema_version": 1,
+        "id": "catalog_support_email",
+        "adapter": {
+          "id": "support_fixture",
+          "version": "support_fixture_v1",
+          "api_version": "local_v1",
+          "required_scopes": [],
+          "semantics": "native",
+          "qualification": "sandbox-only"
+        },
+        "action": "email.send",
+        "resource_state": "fixed_fixture_account",
+        "source_ledger": "source_support_email",
+        "before_count": 0,
+        "after_count": 1,
+        "response_status": 200,
+        "response_fields": {
+          "kind": "accepted",
+          "stage": "accepted",
+          "customer_delivered": false
+        },
+        "source_fields": {
+          "records.0.body.stage": "accepted",
+          "records.0.body.account_id": "mail",
+          "records.0.body.operation_id": "catalog_operation",
+          "records.0.body.customer_delivered": false
+        },
+        "correlations": [
+          {
+            "response": "native_id",
+            "source": "records.0.body.native_id"
+          }
+        ]
+      }
+    },
+    {
+      "key": "support_note",
+      "fixture": {
+        "schema_version": 1,
+        "id": "catalog_support_note",
+        "adapter": {
+          "id": "support_fixture",
+          "version": "support_fixture_v1",
+          "api_version": "local_v1",
+          "required_scopes": [],
+          "semantics": "native",
+          "qualification": "sandbox-only"
+        },
+        "action": "note.send",
+        "resource_state": "fixed_fixture_account",
+        "source_ledger": "source_support_note",
+        "before_count": 0,
+        "after_count": 1,
+        "response_status": 200,
+        "response_fields": {
+          "kind": "accepted",
+          "stage": "internal_note",
+          "customer_delivered": false
+        },
+        "source_fields": {
+          "records.0.body.stage": "internal_note",
+          "records.0.body.account_id": "mail",
+          "records.0.body.operation_id": "catalog_operation",
+          "records.0.body.customer_delivered": false
+        },
+        "correlations": [
+          {
+            "response": "native_id",
+            "source": "records.0.body.native_id"
+          }
+        ]
+      }
+    },
+    {
+      "key": "support_handoff",
+      "fixture": {
+        "schema_version": 1,
+        "id": "catalog_support_handoff",
+        "adapter": {
+          "id": "support_fixture",
+          "version": "support_fixture_v1",
+          "api_version": "local_v1",
+          "required_scopes": [],
+          "semantics": "native",
+          "qualification": "sandbox-only"
+        },
+        "action": "handoff.assign",
+        "resource_state": "fixed_fixture_account",
+        "source_ledger": "source_support_handoff",
+        "before_count": 0,
+        "after_count": 1,
+        "response_status": 200,
+        "response_fields": {
+          "kind": "accepted",
+          "stage": "assigned",
+          "customer_delivered": false
+        },
+        "source_fields": {
+          "records.0.body.stage": "assigned",
+          "records.0.body.account_id": "mail",
+          "records.0.body.operation_id": "catalog_operation",
+          "records.0.body.customer_delivered": false
+        },
+        "correlations": [
+          {
+            "response": "native_id",
+            "source": "records.0.body.native_id"
+          }
+        ]
+      }
+    },
+    {
+      "key": "chatwoot_note",
+      "fixture": {
+        "schema_version": 1,
+        "id": "catalog_chatwoot_note",
+        "adapter": {
+          "id": "chatwoot",
+          "version": "chatwoot_support_v419_snapshot",
+          "api_version": "api/v1",
+          "required_scopes": [],
+          "semantics": "native",
+          "qualification": "sandbox-only"
+        },
+        "action": "note.send",
+        "resource_state": "internal_note_only",
+        "source_ledger": "source_chatwoot_note",
+        "before_count": 0,
+        "after_count": 1,
+        "response_status": 200,
+        "response_fields": {
+          "stage": "internal_note",
+          "native_id": "501",
+          "customer_delivered": false
+        },
+        "source_fields": {
+          "records.0.body.method": "POST",
+          "records.0.body.request.private": true,
+          "records.0.body.response.id": 501,
+          "records.0.body.response.private": true,
+          "records.0.body.response.account_id": 7
+        },
+        "correlations": []
+      }
+    },
+    {
+      "key": "chatwoot_history",
+      "fixture": {
+        "schema_version": 1,
+        "id": "catalog_chatwoot_history",
+        "adapter": {
+          "id": "chatwoot",
+          "version": "chatwoot_support_v419_snapshot",
+          "api_version": "api/v1",
+          "required_scopes": [],
+          "semantics": "native",
+          "qualification": "sandbox-only"
+        },
+        "action": "history.page",
+        "resource_state": "one_scoped_history_page",
+        "source_ledger": "source_chatwoot_history",
+        "before_count": 1,
+        "after_count": 2,
+        "response_status": 200,
+        "response_fields": {
+          "messages.0.external_id": "501",
+          "messages.0.visibility": "staff",
+          "history": "partial",
+          "absence_proves_no_reply": false,
+          "customer_sending": false
+        },
+        "source_fields": {
+          "records.0.body.payload.0.id": 501,
+          "records.0.body.payload.0.private": true,
+          "records.1.body.method": "GET"
+        },
+        "correlations": [
+          {
+            "response": "messages.0.text",
+            "source": "records.0.body.payload.0.content"
+          }
+        ]
+      }
+    },
+    {
+      "key": "resend_email",
+      "fixture": {
+        "schema_version": 1,
+        "id": "catalog_resend_email",
+        "adapter": {
+          "id": "resend",
+          "version": "resend_email_v1_snapshot",
+          "api_version": "unversioned-email-api-snapshot",
+          "required_scopes": [],
+          "semantics": "native",
+          "qualification": "sandbox-only"
+        },
+        "action": "email.send",
+        "resource_state": "accepted_without_delivery_claim",
+        "source_ledger": "source_resend_email",
+        "before_count": 0,
+        "after_count": 1,
+        "response_status": 200,
+        "response_fields": {
+          "stage": "accepted",
+          "native_id": "email_501",
+          "customer_delivered": false
+        },
+        "source_fields": {
+          "records.0.body.method": "POST",
+          "records.0.body.request.to": [
+            "shopper@example.invalid"
+          ],
+          "records.0.body.request.subject": "Fixture status",
+          "records.0.body.request.tags.0.value": "catalog_operation",
+          "records.0.body.response.id": "email_501"
+        },
+        "correlations": [
+          {
+            "response": "native_id",
+            "source": "records.0.body.response.id"
+          }
+        ]
+      }
+    },
+    {
+      "key": "openai",
+      "fixture": {
+        "schema_version": 1,
+        "id": "catalog_openai",
+        "adapter": {
+          "id": "openai",
+          "version": "openai-status-v1",
+          "api_version": "responses/v1-unversioned",
+          "required_scopes": [],
+          "semantics": "native",
+          "qualification": "sandbox-only"
+        },
+        "action": "model.tool-turn",
+        "resource_state": "approved_synthetic_wire_model",
+        "source_ledger": "source_openai",
+        "before_count": 1,
+        "after_count": 2,
+        "response_status": 200,
+        "response_fields": {
+          "stop": "tools",
+          "calls.0.name": "read_order_status",
+          "calls.0.arguments": {},
+          "usage.input_tokens": 10
+        },
+        "source_fields": {
+          "records.0.body.method": "POST",
+          "records.0.body.request.model": "fixture-model",
+          "records.0.body.api_version": "unversioned",
+          "records.1.body.output.0.name": "read_order_status",
+          "records.0.body.request.store": false
+        },
+        "correlations": [
+          {
+            "response": "calls.0.name",
+            "source": "records.1.body.output.0.name"
+          }
+        ]
+      }
+    },
+    {
+      "key": "anthropic",
+      "fixture": {
+        "schema_version": 1,
+        "id": "catalog_anthropic",
+        "adapter": {
+          "id": "anthropic",
+          "version": "anthropic-status-v1",
+          "api_version": "2023-06-01",
+          "required_scopes": [],
+          "semantics": "native",
+          "qualification": "sandbox-only"
+        },
+        "action": "model.tool-turn",
+        "resource_state": "approved_synthetic_wire_model",
+        "source_ledger": "source_anthropic",
+        "before_count": 1,
+        "after_count": 2,
+        "response_status": 200,
+        "response_fields": {
+          "stop": "tools",
+          "calls.0.name": "read_order_status",
+          "calls.0.arguments": {},
+          "usage.input_tokens": 10
+        },
+        "source_fields": {
+          "records.0.body.method": "POST",
+          "records.0.body.request.model": "fixture-model",
+          "records.0.body.api_version": "2023-06-01",
+          "records.1.body.content.0.name": "read_order_status"
+        },
+        "correlations": [
+          {
+            "response": "calls.0.name",
+            "source": "records.1.body.content.0.name"
+          }
+        ]
+      }
+    },
+    {
+      "key": "local_model",
+      "fixture": {
+        "schema_version": 1,
+        "id": "catalog_local_model",
+        "adapter": {
+          "id": "ollama_local",
+          "version": "source-sha256:eaa6988cd176dce8f6a7402d1cb99a5ed054ec4c72f9407e6a1c940efc1a4d42",
+          "api_version": "api-tags-chat-snapshot",
+          "required_scopes": [],
+          "semantics": "native",
+          "qualification": "sandbox-only"
+        },
+        "action": "model.tool-turn",
+        "resource_state": "loopback_model_digest_bound",
+        "source_ledger": "source_local_model",
+        "before_count": 0,
+        "after_count": 3,
+        "response_status": 200,
+        "response_fields": {
+          "stop": "tools",
+          "calls.0.name": "read_order_status"
+        },
+        "source_fields": {
+          "records.0.body.path": "/api/tags",
+          "records.0.body.response.models.0.digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "records.1.body.path": "/api/chat",
+          "records.1.body.response.model": "fixture-local:1",
+          "records.1.body.response.done": true,
+          "records.2.body.path": "/api/tags",
+          "records.2.body.response.models.0.digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "correlations": [
+          {
+            "response": "calls.0.name",
+            "source": "records.1.body.response.message.tool_calls.0.function.name"
+          }
+        ]
+      }
+    },
+    {
+      "key": "journal",
+      "fixture": {
+        "schema_version": 1,
+        "id": "catalog_journal",
+        "adapter": {
+          "id": "synthetic_journal",
+          "version": "synthetic-journal-v1",
+          "api_version": "local-journal-v1",
+          "required_scopes": [],
+          "semantics": "native",
+          "qualification": "sandbox-only"
+        },
+        "action": "diagnostic.case.record",
+        "resource_state": "nonfinancial_diagnostic_command",
+        "source_ledger": "source_journal",
+        "before_count": 0,
+        "after_count": 1,
+        "response_status": 200,
+        "response_fields": {
+          "kind": "applied",
+          "outcome": "synthetic_recorded"
+        },
+        "source_fields": {
+          "records.0.body.operation_id": "catalog_operation",
+          "records.0.body.outcome": "synthetic_recorded"
+        },
+        "correlations": [
+          {
+            "response": "provider_ref",
+            "source": "records.0.body.provider_ref"
+          }
+        ]
+      }
+    },
+    {
+      "key": "resolution",
+      "fixture": {
+        "schema_version": 1,
+        "id": "catalog_resolution",
+        "adapter": {
+          "id": "resolution_source",
+          "version": "source-sha256:b03ff40c566e6118467173965af71f0694d9d8e9aa61c5e9b69ce36e5a0625b3",
+          "api_version": "local-resolution-source",
+          "required_scopes": [],
+          "semantics": "native",
+          "qualification": "sandbox-only"
+        },
+        "action": "refund.issue",
+        "resource_state": "approved_original_unit_allocation",
+        "source_ledger": "source_resolution",
+        "before_count": 0,
+        "after_count": 1,
+        "response_status": 200,
+        "response_fields": {
+          "state": "accepted",
+          "cash_settled": false,
+          "amount_minor": "1940"
+        },
+        "source_fields": {
+          "records.0.body.kind": "refund",
+          "records.0.body.amount_minor": "1940",
+          "records.0.body.currency": "USD",
+          "records.0.body.payment_id": "payment-one",
+          "records.0.body.state": "accepted"
+        },
+        "correlations": [
+          {
+            "response": "id",
+            "source": "records.0.body.operation_id"
+          }
+        ]
+      }
+    },
+    {
+      "key": "fulfillment_label",
+      "fixture": {
+        "schema_version": 1,
+        "id": "catalog_fulfillment_label",
+        "adapter": {
+          "id": "fulfillment_source",
+          "version": "source-sha256:097a6b7b7963e50362a9f0c2633d8b63213eca29441409787b9c940b887fe551",
+          "api_version": "local-fulfillment-source",
+          "required_scopes": [],
+          "semantics": "native",
+          "qualification": "sandbox-only"
+        },
+        "action": "label.purchase",
+        "resource_state": "approved_live_fixture_rate",
+        "source_ledger": "source_fulfillment_label",
+        "before_count": 0,
+        "after_count": 1,
+        "response_status": 200,
+        "response_fields": {
+          "state": "purchased"
+        },
+        "source_fields": {
+          "records.0.body.command.kind": "label",
+          "records.0.body.result.state": "purchased",
+          "records.0.body.result.amount_minor": "500",
+          "records.0.body.result.tracking_state": "label_created"
+        },
+        "correlations": [
+          {
+            "response": "native_id",
+            "source": "records.0.body.result.id"
+          }
+        ]
+      }
+    },
+    {
+      "key": "fulfillment_replacement",
+      "fixture": {
+        "schema_version": 1,
+        "id": "catalog_fulfillment_replacement",
+        "adapter": {
+          "id": "fulfillment_source",
+          "version": "source-sha256:097a6b7b7963e50362a9f0c2633d8b63213eca29441409787b9c940b887fe551",
+          "api_version": "local-fulfillment-source",
+          "required_scopes": [],
+          "semantics": "native",
+          "qualification": "sandbox-only"
+        },
+        "action": "replacement.create",
+        "resource_state": "reserved_fixture_stock",
+        "source_ledger": "source_fulfillment_replacement",
+        "before_count": 0,
+        "after_count": 1,
+        "response_status": 200,
+        "response_fields": {
+          "state": "created"
+        },
+        "source_fields": {
+          "records.0.body.command.kind": "replacement",
+          "records.0.body.result.state": "created",
+          "records.0.body.result.inventory_committed": true,
+          "records.0.body.result.fulfillment_state": "unfulfilled"
+        },
+        "correlations": [
+          {
+            "response": "native_id",
+            "source": "records.0.body.result.id"
+          }
+        ]
+      }
+    },
+    {
+      "key": "warehouse_restock",
+      "fixture": {
+        "schema_version": 1,
+        "id": "catalog_warehouse_restock",
+        "adapter": {
+          "id": "warehouse_source",
+          "version": "source-sha256:4e4f47d2c6f02a5a24f1dade3fe9112b0bb201af28423e6980422e8eae32fb6e",
+          "api_version": "local-warehouse-source",
+          "required_scopes": [],
+          "semantics": "native",
+          "qualification": "sandbox-only"
+        },
+        "action": "disposition.restock",
+        "resource_state": "received_original_unit",
+        "source_ledger": "source_warehouse_restock",
+        "before_count": 0,
+        "after_count": 1,
+        "response_status": 200,
+        "response_fields": {
+          "state": "applied",
+          "disposition": "restock"
+        },
+        "source_fields": {
+          "records.0.body.disposition": "restock",
+          "records.0.body.adjustments.0.available_delta": 1,
+          "records.0.body.stock": 1,
+          "records.0.body.units.0.ordinal": 1
+        },
+        "correlations": [
+          {
+            "response": "id",
+            "source": "records.0.body.id"
+          }
+        ]
+      }
+    },
+    {
+      "key": "warehouse_quarantine",
+      "fixture": {
+        "schema_version": 1,
+        "id": "catalog_warehouse_quarantine",
+        "adapter": {
+          "id": "warehouse_source",
+          "version": "source-sha256:4e4f47d2c6f02a5a24f1dade3fe9112b0bb201af28423e6980422e8eae32fb6e",
+          "api_version": "local-warehouse-source",
+          "required_scopes": [],
+          "semantics": "native",
+          "qualification": "sandbox-only"
+        },
+        "action": "disposition.quarantine",
+        "resource_state": "received_original_unit",
+        "source_ledger": "source_warehouse_quarantine",
+        "before_count": 0,
+        "after_count": 1,
+        "response_status": 200,
+        "response_fields": {
+          "state": "applied",
+          "disposition": "quarantine"
+        },
+        "source_fields": {
+          "records.0.body.disposition": "quarantine",
+          "records.0.body.adjustments.0.available_delta": 0,
+          "records.0.body.stock": 0,
+          "records.0.body.units.0.ordinal": 1
+        },
+        "correlations": [
+          {
+            "response": "id",
+            "source": "records.0.body.id"
+          }
+        ]
+      }
+    },
+    {
+      "key": "warehouse_dispose",
+      "fixture": {
+        "schema_version": 1,
+        "id": "catalog_warehouse_dispose",
+        "adapter": {
+          "id": "warehouse_source",
+          "version": "source-sha256:4e4f47d2c6f02a5a24f1dade3fe9112b0bb201af28423e6980422e8eae32fb6e",
+          "api_version": "local-warehouse-source",
+          "required_scopes": [],
+          "semantics": "native",
+          "qualification": "sandbox-only"
+        },
+        "action": "disposition.dispose",
+        "resource_state": "received_original_unit",
+        "source_ledger": "source_warehouse_dispose",
+        "before_count": 0,
+        "after_count": 1,
+        "response_status": 200,
+        "response_fields": {
+          "state": "applied",
+          "disposition": "dispose"
+        },
+        "source_fields": {
+          "records.0.body.disposition": "dispose",
+          "records.0.body.adjustments.0.available_delta": 0,
+          "records.0.body.stock": 0,
+          "records.0.body.units.0.ordinal": 1
+        },
+        "correlations": [
+          {
+            "response": "id",
+            "source": "records.0.body.id"
+          }
+        ]
+      }
+    },
+    {
+      "key": "warehouse_supplier_return",
+      "fixture": {
+        "schema_version": 1,
+        "id": "catalog_warehouse_supplier_return",
+        "adapter": {
+          "id": "warehouse_source",
+          "version": "source-sha256:4e4f47d2c6f02a5a24f1dade3fe9112b0bb201af28423e6980422e8eae32fb6e",
+          "api_version": "local-warehouse-source",
+          "required_scopes": [],
+          "semantics": "native",
+          "qualification": "sandbox-only"
+        },
+        "action": "disposition.supplier-return",
+        "resource_state": "received_original_unit",
+        "source_ledger": "source_warehouse_supplier_return",
+        "before_count": 0,
+        "after_count": 1,
+        "response_status": 200,
+        "response_fields": {
+          "state": "applied",
+          "disposition": "supplier_return"
+        },
+        "source_fields": {
+          "records.0.body.disposition": "supplier_return",
+          "records.0.body.adjustments.0.available_delta": 0,
+          "records.0.body.stock": 0,
+          "records.0.body.units.0.ordinal": 1
+        },
+        "correlations": [
+          {
+            "response": "id",
+            "source": "records.0.body.id"
+          }
+        ]
+      }
+    },
+    {
+      "key": "native_change",
+      "fixture": {
+        "schema_version": 1,
+        "id": "catalog_native_change",
+        "adapter": {
+          "id": "native_change_source",
+          "version": "source-sha256:20d15c0030308715c982278377e50946e8ca1a4516f909d91cbf10679631d3d7",
+          "api_version": "local-native-change-feed",
+          "required_scopes": [],
+          "semantics": "native",
+          "qualification": "sandbox-only"
+        },
+        "action": "return.snapshot.lookup",
+        "resource_state": "recorded_native_snapshot",
+        "source_ledger": "source_native_change",
+        "before_count": 1,
+        "after_count": 1,
+        "response_status": 200,
+        "response_fields": {
+          "tenant_id": "tenant",
+          "store_id": "store",
+          "snapshot.source_version": 1,
+          "snapshot.financial_settled": false
+        },
+        "source_fields": {
+          "records.0.body.request_id": "request",
+          "records.0.body.return_status": "OPEN",
+          "records.0.body.exists": true
+        },
+        "correlations": [
+          {
+            "response": "snapshot.request_id",
+            "source": "records.0.body.request_id"
+          }
+        ]
+      }
+    },
+    {
+      "key": "order_edit",
+      "fixture": {
+        "schema_version": 1,
+        "id": "catalog_order_edit",
+        "adapter": {
+          "id": "order_edit_source",
+          "version": "source-sha256:5a17151bb888a069288f284f46852b6169fb4dea7975bc361e940701229f0dd2",
+          "api_version": "local-order-edit-source",
+          "required_scopes": [],
+          "semantics": "native",
+          "qualification": "sandbox-only"
+        },
+        "action": "order.begin-calculate-commit",
+        "resource_state": "approved_equal_price_swap",
+        "source_ledger": "source_order_edit",
+        "before_count": 1,
+        "after_count": 1,
+        "response_status": 200,
+        "response_fields": {
+          "state": "ready_for_release",
+          "source.total_minor": "2000"
+        },
+        "source_fields": {
+          "records.0.body.version": 2,
+          "records.0.body.lines.0.variant_id": "equal",
+          "records.0.body.total_minor": "2000"
+        },
+        "correlations": [
+          {
+            "response": "source.total_minor",
+            "source": "records.0.body.total_minor"
+          }
+        ]
+      }
+    },
+    {
+      "key": "lineage",
+      "fixture": {
+        "schema_version": 1,
+        "id": "catalog_lineage",
+        "adapter": {
+          "id": "exchange_lineage_source",
+          "version": "source-sha256:dc3b32b3633fbc76176aeb27b6476326525af4f3fbfa721e429806e841df381e",
+          "api_version": "local-funded-lineage-source",
+          "required_scopes": [],
+          "semantics": "native",
+          "qualification": "sandbox-only"
+        },
+        "action": "lineage.transfer",
+        "resource_state": "delivered_funded_replacement",
+        "source_ledger": "source_lineage",
+        "before_count": 0,
+        "after_count": 1,
+        "response_status": 200,
+        "response_fields": {
+          "generation": 1,
+          "carried_minor": "1200",
+          "additional_paid_minor": "200",
+          "qualification": "synthetic_only"
+        },
+        "source_fields": {
+          "records.0.body.generation": 1,
+          "records.0.body.carried_minor": "1200",
+          "records.0.body.parent_paid_minor": "1000",
+          "records.0.body.additional_paid_minor": "200",
+          "records.0.body.quantity": 1
+        },
+        "correlations": [
+          {
+            "response": "id",
+            "source": "records.0.body.id"
+          },
+          {
+            "response": "resource_id",
+            "source": "records.0.body.resource_id"
+          }
+        ]
+      }
+    },
+    {
+      "key": "money",
+      "fixture": {
+        "schema_version": 1,
+        "id": "catalog_money",
+        "adapter": {
+          "id": "exchange_money_source",
+          "version": "source-sha256:a4f37fbf7ed1d577a64f0e4750f3a860ebddb983617d81b1b4847836761b8fda",
+          "api_version": "local-original-money-source",
+          "required_scopes": [],
+          "semantics": "native",
+          "qualification": "sandbox-only"
+        },
+        "action": "fees.events",
+        "resource_state": "recorded_native_fee_estimate",
+        "source_ledger": "source_money",
+        "before_count": 1,
+        "after_count": 1,
+        "response_status": 200,
+        "response_fields": {
+          "events.0.phase": "estimated",
+          "events.0.api_version": "2026-10"
+        },
+        "source_fields": {
+          "records.0.body.phase": "estimated",
+          "records.0.body.source_fields.tax": "taxAmountSet",
+          "records.0.body.shop_currency": "USD",
+          "records.0.body.presentment_currency": "EUR"
+        },
+        "correlations": [
+          {
+            "response": "events.0.native_digest",
+            "source": "records.0.body.native_digest"
+          }
+        ]
+      }
+    },
+    {
+      "key": "instant",
+      "fixture": {
+        "schema_version": 1,
+        "id": "catalog_instant",
+        "adapter": {
+          "id": "instant_exchange_source",
+          "version": "source-sha256:79888faef78231823392065853ac0823b66ea3024248de432b62cde2bbb28501",
+          "api_version": "local-consent-mandate-source",
+          "required_scopes": [],
+          "semantics": "native",
+          "qualification": "sandbox-only"
+        },
+        "action": "mandate.authorize",
+        "resource_state": "explicit_fixture_terms_and_consent",
+        "source_ledger": "source_instant",
+        "before_count": 0,
+        "after_count": 1,
+        "response_status": 200,
+        "response_fields": {
+          "state": "mandate_active"
+        },
+        "source_fields": {
+          "records.0.body.kind": "authorize",
+          "records.0.body.state": "mandate_active",
+          "records.0.body.captured_minor": "0",
+          "records.0.body.currency": "USD"
+        },
+        "correlations": [
+          {
+            "response": "id",
+            "source": "records.0.body.operation_id"
+          }
+        ]
+      }
+    },
+    {
+      "key": "destination",
+      "fixture": {
+        "schema_version": 1,
+        "id": "catalog_destination",
+        "adapter": {
+          "id": "return_destination_source",
+          "version": "source-sha256:b1207f123a954b32262f4dc989db32563bcacf4f18bed4def8510f7043302cd1",
+          "api_version": "local-qualified-destination-source",
+          "required_scopes": [],
+          "semantics": "native",
+          "qualification": "sandbox-only"
+        },
+        "action": "destination.admit",
+        "resource_state": "qualified_fixture_destination_capacity",
+        "source_ledger": "source_destination",
+        "before_count": 0,
+        "after_count": 1,
+        "response_status": 200,
+        "response_fields": {
+          "state": "purchased"
+        },
+        "source_fields": {
+          "records.0.body.destination_id": "fragile-destination",
+          "records.0.body.quantity": 3,
+          "records.0.body.generation": 1,
+          "records.0.body.qualification": "synthetic_only"
+        },
+        "correlations": [
+          {
+            "response": "native_id",
+            "source": "records.0.body.label_id"
+          }
+        ]
+      }
+    },
+    {
+      "key": "signature_synthetic",
+      "fixture": {
+        "schema_version": 1,
+        "id": "catalog_signature_synthetic",
+        "adapter": {
+          "id": "webhook_signatures",
+          "version": "source-sha256:6d67ed85137766a21bd6624b9042609fa0098ce615067c1c068be1e6f93db64b",
+          "api_version": "provider-specific-fixture",
+          "required_scopes": [],
+          "semantics": "native",
+          "qualification": "sandbox-only"
+        },
+        "action": "synthetic.verify",
+        "resource_state": "independently_signed_fixture_body",
+        "source_ledger": "source_signature_synthetic",
+        "before_count": 1,
+        "after_count": 1,
+        "response_status": 200,
+        "response_fields": {
+          "status": "pending",
+          "routing_verified": true,
+          "signature_contract": "rifare-synthetic-route-body-hmac-v1"
+        },
+        "source_fields": {
+          "records.0.body.raw": "{\"id\":17}",
+          "records.0.body.delivery_id": "catalog_delivery",
+          "records.0.body.signature_contract": "rifare-synthetic-route-body-hmac-v1"
+        },
+        "correlations": [
+          {
+            "response": "delivery_id",
+            "source": "records.0.body.delivery_id"
+          },
+          {
+            "response": "signature_contract",
+            "source": "records.0.body.signature_contract"
+          }
+        ]
+      }
+    },
+    {
+      "key": "signature_shopify",
+      "fixture": {
+        "schema_version": 1,
+        "id": "catalog_signature_shopify",
+        "adapter": {
+          "id": "webhook_signatures",
+          "version": "source-sha256:6d67ed85137766a21bd6624b9042609fa0098ce615067c1c068be1e6f93db64b",
+          "api_version": "provider-specific-fixture",
+          "required_scopes": [],
+          "semantics": "native",
+          "qualification": "sandbox-only"
+        },
+        "action": "shopify.verify",
+        "resource_state": "independently_signed_fixture_body",
+        "source_ledger": "source_signature_shopify",
+        "before_count": 1,
+        "after_count": 1,
+        "response_status": 200,
+        "response_fields": {
+          "status": "quarantined",
+          "routing_verified": false,
+          "signature_contract": "shopify-raw-body-hmac-sha256"
+        },
+        "source_fields": {
+          "records.0.body.raw": "{\"id\":17}",
+          "records.0.body.delivery_id": "catalog_delivery",
+          "records.0.body.signature_contract": "shopify-raw-body-hmac-sha256"
+        },
+        "correlations": [
+          {
+            "response": "delivery_id",
+            "source": "records.0.body.delivery_id"
+          },
+          {
+            "response": "signature_contract",
+            "source": "records.0.body.signature_contract"
+          }
+        ]
+      }
+    },
+    {
+      "key": "signature_woocommerce",
+      "fixture": {
+        "schema_version": 1,
+        "id": "catalog_signature_woocommerce",
+        "adapter": {
+          "id": "webhook_signatures",
+          "version": "source-sha256:6d67ed85137766a21bd6624b9042609fa0098ce615067c1c068be1e6f93db64b",
+          "api_version": "provider-specific-fixture",
+          "required_scopes": [],
+          "semantics": "native",
+          "qualification": "sandbox-only"
+        },
+        "action": "woocommerce.verify",
+        "resource_state": "independently_signed_fixture_body",
+        "source_ledger": "source_signature_woocommerce",
+        "before_count": 1,
+        "after_count": 1,
+        "response_status": 200,
+        "response_fields": {
+          "status": "quarantined",
+          "routing_verified": false,
+          "signature_contract": "woocommerce-raw-body-hmac-sha256"
+        },
+        "source_fields": {
+          "records.0.body.raw": "{\"id\":17}",
+          "records.0.body.delivery_id": "catalog_delivery",
+          "records.0.body.signature_contract": "woocommerce-raw-body-hmac-sha256"
+        },
+        "correlations": [
+          {
+            "response": "delivery_id",
+            "source": "records.0.body.delivery_id"
+          },
+          {
+            "response": "signature_contract",
+            "source": "records.0.body.signature_contract"
+          }
+        ]
+      }
+    },
+    {
+      "key": "chatwoot_customer",
+      "fixture": {
+        "schema_version": 1,
+        "id": "catalog_chatwoot_customer",
+        "adapter": {
+          "id": "chatwoot",
+          "version": "chatwoot_support_v419_snapshot",
+          "api_version": "api/v1",
+          "required_scopes": [],
+          "semantics": "unavailable",
+          "qualification": "unavailable"
+        },
+        "action": "customer.send",
+        "resource_state": "outbound_customer_send_unavailable",
+        "source_ledger": "source_chatwoot_customer",
+        "before_count": 0,
+        "after_count": 0,
+        "response_status": 400,
+        "response_fields": {
+          "error": "SOURCE_SCOPE_MISMATCH"
+        },
+        "source_fields": {},
+        "correlations": []
+      }
+    },
+    {
+      "key": "shopify_cached",
+      "fixture": {
+        "schema_version": 1,
+        "id": "catalog_shopify_cached",
+        "adapter": {
+          "id": "shopify_orders",
+          "version": "shopify-order-read",
+          "api_version": "2026-10",
+          "required_scopes": [
+            "read_orders"
+          ],
+          "semantics": "native",
+          "qualification": "sandbox-only"
+        },
+        "action": "orders.cached",
+        "resource_state": "fresh_cached_complete_source",
+        "source_ledger": "source_shopify_cached",
+        "before_count": 2,
+        "after_count": 2,
+        "response_status": 200,
+        "response_fields": {
+          "status": "fresh",
+          "order.totals.shop.amount": "125.00",
+          "production_qualified": false
+        },
+        "source_fields": {
+          "records.0.body.data.order.id": "gid://shopify/Order/1001",
+          "records.0.body.data.order.currentTotalPriceSet.shopMoney.amount": "125.00",
+          "records.1.body.method": "POST",
+          "records.1.body.url": "https://rifare-fixture.myshopify.com/admin/api/2026-10/graphql.json"
+        },
+        "correlations": [
+          {
+            "response": "source.native_id",
+            "source": "records.0.body.data.order.id"
+          },
+          {
+            "response": "order.totals.shop.amount",
+            "source": "records.0.body.data.order.currentTotalPriceSet.shopMoney.amount"
+          }
+        ]
+      }
+    },
+    {
+      "key": "woo_cached",
+      "fixture": {
+        "schema_version": 1,
+        "id": "catalog_woo_cached",
+        "adapter": {
+          "id": "woocommerce_orders",
+          "version": "woocommerce-v3-read-v1",
+          "api_version": "wc/v3",
+          "required_scopes": [
+            "read"
+          ],
+          "semantics": "native",
+          "qualification": "sandbox-only"
+        },
+        "action": "orders.cached",
+        "resource_state": "fresh_cached_complete_source",
+        "source_ledger": "source_woo_cached",
+        "before_count": 4,
+        "after_count": 4,
+        "response_status": 200,
+        "response_fields": {
+          "status": "fresh",
+          "order.number": "W-17",
+          "order.refunds.0.settlement_verified": false
+        },
+        "source_fields": {
+          "records.0.body.id": 17,
+          "records.0.body.total": "45.67",
+          "records.1.body.items.0.refunded_payment": false,
+          "records.2.body.method": "GET",
+          "records.3.body.method": "GET"
+        },
+        "correlations": [
+          {
+            "response": "order.totals.shop.amount",
+            "source": "records.0.body.total"
+          }
+        ]
+      }
+    },
+    {
+      "key": "openai_stateless",
+      "fixture": {
+        "schema_version": 1,
+        "id": "catalog_openai_stateless",
+        "adapter": {
+          "id": "openai",
+          "version": "openai-status-v1",
+          "api_version": "responses/v1-unversioned",
+          "required_scopes": [],
+          "semantics": "native",
+          "qualification": "sandbox-only"
+        },
+        "action": "model.stateless-context",
+        "resource_state": "explicit_local_transcript",
+        "source_ledger": "source_openai_stateless",
+        "before_count": 1,
+        "after_count": 2,
+        "response_status": 200,
+        "response_fields": {
+          "stop": "tools",
+          "calls.0.name": "read_order_status",
+          "calls.0.arguments": {},
+          "usage.input_tokens": 10
+        },
+        "source_fields": {
+          "records.0.body.method": "POST",
+          "records.0.body.request.model": "fixture-model",
+          "records.0.body.api_version": "unversioned",
+          "records.1.body.output.0.name": "read_order_status",
+          "records.0.body.request.store": false,
+          "records.0.body.request.input.1.type": "function_call",
+          "records.0.body.request.input.2.type": "function_call_output",
+          "records.0.body.request.input.2.call_id": "previous_call",
+          "records.0.body.request.input.2.output": "{\"fixture_source\":\"original_order\",\"state\":\"shipped\"}"
+        },
+        "correlations": [
+          {
+            "response": "calls.0.name",
+            "source": "records.1.body.output.0.name"
+          }
+        ]
+      }
+    },
+    {
+      "key": "openai_unapproved",
+      "fixture": {
+        "schema_version": 1,
+        "id": "catalog_openai_unapproved",
+        "adapter": {
+          "id": "openai",
+          "version": "openai-status-v1",
+          "api_version": "responses/v1-unversioned",
+          "required_scopes": [],
+          "semantics": "unavailable",
+          "qualification": "unavailable"
+        },
+        "action": "model.unapproved",
+        "resource_state": "unapproved_model_refused_before_transport",
+        "source_ledger": "source_openai_unapproved",
+        "before_count": 1,
+        "after_count": 1,
+        "response_status": 400,
+        "response_fields": {
+          "error": "MODEL_NOT_APPROVED"
+        },
+        "source_fields": {},
+        "correlations": []
+      }
+    },
+    {
+      "key": "anthropic_stateless",
+      "fixture": {
+        "schema_version": 1,
+        "id": "catalog_anthropic_stateless",
+        "adapter": {
+          "id": "anthropic",
+          "version": "anthropic-status-v1",
+          "api_version": "2023-06-01",
+          "required_scopes": [],
+          "semantics": "native",
+          "qualification": "sandbox-only"
+        },
+        "action": "model.stateless-context",
+        "resource_state": "explicit_local_transcript",
+        "source_ledger": "source_anthropic_stateless",
+        "before_count": 1,
+        "after_count": 2,
+        "response_status": 200,
+        "response_fields": {
+          "stop": "tools",
+          "calls.0.name": "read_order_status",
+          "calls.0.arguments": {},
+          "usage.input_tokens": 10
+        },
+        "source_fields": {
+          "records.0.body.method": "POST",
+          "records.0.body.request.model": "fixture-model",
+          "records.0.body.api_version": "2023-06-01",
+          "records.1.body.content.0.name": "read_order_status",
+          "records.0.body.request.messages.1.content.0.type": "tool_use",
+          "records.0.body.request.messages.2.content.0.type": "tool_result",
+          "records.0.body.request.messages.2.content.0.tool_use_id": "previous_call",
+          "records.0.body.request.messages.2.content.0.content": "{\"fixture_source\":\"original_order\",\"state\":\"shipped\"}"
+        },
+        "correlations": [
+          {
+            "response": "calls.0.name",
+            "source": "records.1.body.content.0.name"
+          }
+        ]
+      }
+    },
+    {
+      "key": "anthropic_unapproved",
+      "fixture": {
+        "schema_version": 1,
+        "id": "catalog_anthropic_unapproved",
+        "adapter": {
+          "id": "anthropic",
+          "version": "anthropic-status-v1",
+          "api_version": "2023-06-01",
+          "required_scopes": [],
+          "semantics": "unavailable",
+          "qualification": "unavailable"
+        },
+        "action": "model.unapproved",
+        "resource_state": "unapproved_model_refused_before_transport",
+        "source_ledger": "source_anthropic_unapproved",
+        "before_count": 1,
+        "after_count": 1,
+        "response_status": 400,
+        "response_fields": {
+          "error": "MODEL_NOT_APPROVED"
+        },
+        "source_fields": {},
+        "correlations": []
+      }
+    }
+  ]
+}

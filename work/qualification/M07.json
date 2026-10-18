@@ -1,0 +1,32 @@
+{
+  "milestone": "M07",
+  "scope": "M07-G01 through M07-G05 bounded local development under ADR-0031",
+  "state": "blocked",
+  "local_integration": "authorized_after_verified_candidate",
+  "full_milestone_accepted": false,
+  "release_authorized": false,
+  "base": "ad6c5105f3ce806230375833f69eb491a7b93d89",
+  "worker_goals": ["M07-G01", "M07-G02", "M07-G03", "M07-G04", "M07-G05"],
+  "observed_scope": "Bounded SQLite commerce with separate synthetic Woo, gateway and message ledgers; common HTTP lifecycle, independently implemented local runtime clients, and native adapter conformance fixtures.",
+  "missing": [
+    "formal M05-G99 and M06-G99 acceptance and accepted M07 prerequisites",
+    "connected Woo account, complete source history, exact deployed versions and authorized scopes",
+    "connected original gateway payment/refund records and verified financial stages",
+    "connected message account, consent, source acceptance and delivery observations",
+    "model/provider intended-use and runtime qualification beyond deterministic local clients",
+    "PostgreSQL and React target-stack plus direct served-browser qualification",
+    "human authorization for public fixture publication or a tagged release"
+  ],
+  "limits": [
+    "All new capability objects remain proposed_not_accepted.",
+    "A composed Woo RMA retains native_return_id:null and creates no native return operation.",
+    "Manual refund records remain external-settlement pending. Gateway acceptance alone is not settlement.",
+    "No role permissions are expanded; qualified agent preview execution still requires separate approval and cannot dispatch money.",
+    "Browser evidence is component-plus-real-local-HTTP with browser egress blocked.",
+    "Both inventory views validate all 170 current tables; the old 167 projection is labelled legacy M06.",
+    "Logical erasure blocks further core use without claiming deletion of independent source or gateway retention."
+  ],
+  "review_kind": "separate_nonauthor_assistant_sessions_same_runtime",
+  "later_m07_goals_started": false,
+  "evidence": "The cumulative handoff supplies exact candidate/tree identities, unchanged full-gate reports, targeted faults, source demonstrations, independent reviews and recovery checks. This record alone does not prove a passing run."
+}

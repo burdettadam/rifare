@@ -11,10 +11,15 @@ import {assertExecution,assertOperationExecution} from './execution-stops.mts';
 import {assertRecoveryEgress} from './data-guards.mts';
 import type {SupportSource} from '../adapters/support-fixture-source.mts';
 
-export const SUPPORT_TEMPLATES=Object.freeze({tracking_status_v1:{purpose:'transactional'},support_status_v1:{purpose:'transactional'},marketing_test_v1:{purpose:'marketing'}});
+export const SUPPORT_TEMPLATES=Object.freeze({tracking_status_v1:{purpose:'transactional'},support_status_v1:{purpose:'transactional'},marketing_test_v1:{purpose:'marketing'},return_refund_pending_v1:{purpose:'transactional'},return_refund_completed_v1:{purpose:'transactional'}});
+export interface RefundMessageReader {
+ readonly k:CommerceKernel;
+ render(scope:Scope,caseId:string,operationId:string,templateId:string):Row;
+}
 export class SupportDelivery {
- readonly k:CommerceKernel;readonly consent:SupportConsent;readonly tracking:SupportTracking;readonly sources:ReadonlyMap<string,SupportSource>;
- constructor(k:CommerceKernel,tracking:SupportTracking,sources:SupportSource[]=[]){this.k=k;this.tracking=tracking;this.consent=new SupportConsent(k);const map=new Map<string,SupportSource>();for(const source of sources){if(map.has(source.identity))throw new Error('SOURCE_IDENTITY_CONFLICT');map.set(source.identity,source);}this.sources=map;}
+ readonly k:CommerceKernel;readonly consent:SupportConsent;readonly tracking:SupportTracking;readonly sources:ReadonlyMap<string,SupportSource>;readonly refunds:RefundMessageReader|null;
+ constructor(k:CommerceKernel,tracking:SupportTracking,sources:SupportSource[]=[],refunds:RefundMessageReader|null=null){if(refunds&&refunds.k!==k)throw new Error('REFUND_MESSAGE_SOURCE_UNAVAILABLE');this.k=k;this.tracking=tracking;this.refunds=refunds;this.consent=new SupportConsent(k);const map=new Map<string,SupportSource>();for(const source of sources){if(map.has(source.identity))throw new Error('SOURCE_IDENTITY_CONFLICT');map.set(source.identity,source);}this.sources=map;}
+ #refund(scope:Scope,caseId:string,operationId:string,templateId:string){if(!this.refunds)throw new Error('REFUND_MESSAGE_SOURCE_UNAVAILABLE');return this.refunds.render(scope,caseId,operationId,templateId);}
  #source(s:Row,row:Row) {const source=this.sources.get(row.source_identity);if(!source||source.tenant!==s.tenant_id||source.store!==s.store_id||source.account!==row.account_id||source.contract!==row.source_contract)throw new Error('SUPPORT_SOURCE_UNAVAILABLE');return source;}
  #row(scope:Scope,opId:string,action='support.read') {const k=this.k,s=k.require(scope);id(opId);const row=k.db.prepare('SELECT * FROM commerce_support_deliveries WHERE tenant_id=? AND store_id=? AND operation_id=?').get(s.tenant_id,s.store_id,opId) as Row;
   if(!row||row.erased)throw new Error('NOT_FOUND');supportCase(k,scope,row.case_id,action);if(contentDigest(JSON.parse(row.body))!==row.digest)throw new Error('SUPPORT_DELIVERY_INTEGRITY');return {s,row,payload:JSON.parse(row.body),op:operationRow(k,s,opId)};}
@@ -23,15 +28,18 @@ export class SupportDelivery {
   return this.k.transaction(()=>{const {s,c,owner}=assertSupportOwner(this.k,scope,p.case_id,p.expected_generation);this.k.authorize(scope,'support.send',c.resource_id);assertExecution(this.k,s,'customer.message');
    const link=new SupportConversations(this.k).linkRecord(scope,p.link_id);if(link.case_id!==c.id||link.channel!=='email')throw new Error('SUPPORT_CHANNEL_MISMATCH');
    const sender=checkedDocument(this.k,s,'sender',p.sender_id);this.#source(s,sender.body);
-   const intentId='notify_'+contentDigest([s.tenant_id,s.store_id,c.id,p.link_id,p.sender_id,p.template_id,p.event_id]).slice(0,40);
+   const refund=['return_refund_pending_v1','return_refund_completed_v1'].includes(p.template_id);
+   // A financial event has one notification identity across sender/link and owner
+   // changes. Its event_id is the existing canonical refund operation, not a new key.
+   const intentId='notify_'+contentDigest(refund?[s.tenant_id,s.store_id,c.id,p.template_id,p.event_id]:[s.tenant_id,s.store_id,c.id,p.link_id,p.sender_id,p.template_id,p.event_id]).slice(0,40);
    const existing=this.k.db.prepare("SELECT id FROM commerce_operations WHERE tenant_id=? AND store_id=? AND source_kind='event' AND source_id=?").get(s.tenant_id,s.store_id,intentId) as Row;
    if(existing)return this.inspect(scope,existing.id);
    const contact=this.k.db.prepare('SELECT * FROM commerce_support_contacts WHERE tenant_id=? AND store_id=? AND link_id=? AND erased=0').get(s.tenant_id,s.store_id,link.id) as Row;
    if(!contact||!contact.address||contentDigest(contact.address)!==contact.address_digest)throw new Error('CONTACT_VERIFICATION_REQUIRED');
-   const view=this.tracking.read(scope,c.id);if(view.status!=='available')throw new Error('TRACKING_UNAVAILABLE');
-   const text=p.template_id==='marketing_test_v1'?'Synthetic marketing test. No live campaign is configured.':view.shipments.map((r:any)=>`Package ${r.id}: ${r.status}. Source observed ${r.source.observed_at}.`).join('\n')||'Shipment status is unavailable. Please contact support.';
+   const view=refund?this.#refund(scope,c.id,p.event_id,p.template_id):this.tracking.read(scope,c.id);if(view.status!=='available')throw new Error(refund?'REFUND_MESSAGE_UNAVAILABLE':'TRACKING_UNAVAILABLE');
+   const text=refund?view.text:p.template_id==='marketing_test_v1'?'Synthetic marketing test. No live campaign is configured.':view.shipments.map((r:any)=>`Package ${r.id}: ${r.status}. Source observed ${r.source.observed_at}.`).join('\n')||'Shipment status is unavailable. Please contact support.';
    const purpose=SUPPORT_TEMPLATES[p.template_id as keyof typeof SUPPORT_TEMPLATES].purpose;
-   const payload={kind:'email',account_id:sender.body.account_id,from:sender.body.address,to:contact.address,subject:p.template_id==='marketing_test_v1'?'Synthetic offer':'Your order status',text,purpose,template_id:p.template_id,case_id:c.id,link_id:link.id,resource_id:c.resource_id,source_digest:view.source_digest,contact_revision:contact.revision};
+   const payload={kind:'email',account_id:sender.body.account_id,from:sender.body.address,to:contact.address,subject:refund?view.subject:p.template_id==='marketing_test_v1'?'Synthetic offer':'Your order status',text,purpose,template_id:p.template_id,case_id:c.id,link_id:link.id,resource_id:c.resource_id,source_digest:view.source_digest,contact_revision:contact.revision,...(refund?{refund_operation_id:p.event_id,financial_stage:view.financial_stage,qualification:view.qualification}: {})};
    return this.#queue(s,c,owner,link,sender,payload,intentId);
   });
  }
@@ -68,7 +76,7 @@ export class SupportDelivery {
    const eligibility=this.consent.eligibility(scope,row.case_id,row.sender_id,row.channel,row.purpose);if(!eligibility.allowed)throw new Error('DELIVERY_SUPPRESSED');
    const contact=k.db.prepare('SELECT * FROM commerce_support_contacts WHERE tenant_id=? AND store_id=? AND link_id=? AND erased=0').get(s.tenant_id,s.store_id,row.link_id) as Row;
    if(!contact||contact.revision!==payload.contact_revision||contact.address!==payload.to)throw new Error('CONTACT_CHANGED');
-   const current=this.tracking.read(scope,row.case_id);if(current.source_digest!==payload.source_digest||current.status!=='available')throw new Error('MESSAGE_FACTS_CHANGED');
+   const current=payload.refund_operation_id?this.#refund(scope,row.case_id,payload.refund_operation_id,payload.template_id):this.tracking.read(scope,row.case_id);if(current.source_digest!==payload.source_digest||current.status!=='available')throw new Error('MESSAGE_FACTS_CHANGED');
   }
   return {s,row,payload,op};
  }

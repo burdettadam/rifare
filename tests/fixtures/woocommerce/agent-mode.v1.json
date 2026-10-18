@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "evidence_kind": "synthetic_fixture",
+  "meaning": "Local deterministic agent-client configuration facts; no model or provider qualification",
+  "expected_values": {
+    "platform": "woocommerce",
+    "skill": "handle-return",
+    "api": "wc/v3",
+    "order": "17",
+    "currency": "USD",
+    "paid": "2000",
+    "gateway": "rifare-fixture-card",
+    "read_scopes": ["read"],
+    "native_returns": 0,
+    "production": false
+  }
+}

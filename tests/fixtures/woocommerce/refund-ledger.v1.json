@@ -1,0 +1,17 @@
+{
+  "fixture_version": "rifare-woo-refund-independent-ledger-v1",
+  "qualification": "synthetic_only",
+  "original_order_id": "17",
+  "original_line_id": "71",
+  "original_transaction_id": "woo_txn_17",
+  "original_instrument_id": "woo_card_17",
+  "original_paid_minor": "2000",
+  "one_unit_refund_minor": "1000",
+  "currency": "USD",
+  "manual": {"record_count": 1, "gateway_refunds": 0, "gateway_movements": 0, "state": "manual_external_settlement_pending", "cash_settled": false},
+  "accepted": {"record_count": 1, "gateway_refunds": 1, "gateway_movements": 0, "state": "accepted", "cash_settled": false},
+  "settled": {"record_count": 1, "gateway_refunds": 1, "gateway_movements": 1, "state": "settled", "cash_settled": true},
+  "timeout": {"business_operations": 1, "gateway_refunds": 1, "reissue_allowed": false},
+  "live_gateway_qualified": false,
+  "live_settlement_observed": false
+}

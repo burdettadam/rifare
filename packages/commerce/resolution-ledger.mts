@@ -10,6 +10,7 @@ import { assertCaseWorkerScope } from './work-leases.mts';
 import { assertReady,DRAFT_ACTION } from './integration-readiness.mts';
 import { assertExecution } from './execution-stops.mts';
 import { intakeSettings } from './return-intake-core.mts';
+import { assertWooFinancialFacts,checkedWooConfig } from '../adapters/woocommerce/refund-contract.mts';
 
 export const RESOLVE_ACTION='diagnostic.return.resolve';
 export const RESOLUTION_CONTRACT={id:'rifare-resolution-fixture-v1',version:1,qualification:'synthetic_only',live_transport:false};
@@ -20,7 +21,7 @@ export function financialFacts(k:CommerceKernel,c:Row) {
  assertLineageFacts(k,c);const input=jsonValue(c.order.payload.resolution_facts),extensions=['instrument_allocations','bundle_allocations','lineage_digest'].filter(key=>input&&Object.hasOwn(input,key));
  const f=exact(input,['revision','observed_at','currency','payment_id','original_paid_minor','prior_refunded_minor','accounted_operations','paid_lines',...extensions]);
  integer(f.revision,1);integer(f.observed_at);id(f.payment_id);money(f.currency,'0');
- if(c.order.source_system!=='synthetic'||c.order.payload.currency!==f.currency)throw new Error('RESOLUTION_SOURCE_UNQUALIFIED');
+ if(!['synthetic','woocommerce'].includes(c.order.source_system)||c.order.payload.currency!==f.currency)throw new Error('RESOLUTION_SOURCE_UNQUALIFIED');
  const age=c.pins.composition.effective['data.max_age_seconds']*1000;
  if(f.observed_at>k.clock()||k.clock()-f.observed_at>age||k.clock()-c.order.observed_at>age)throw new Error('FINANCIAL_SOURCE_STALE');
  if(!Array.isArray(f.paid_lines)||!f.paid_lines.length||f.paid_lines.length>100||new Set(f.paid_lines.map((l:Row)=>l.id)).size!==f.paid_lines.length)throw new Error('PAID_ALLOCATIONS_INVALID');
@@ -37,6 +38,7 @@ export function financialFacts(k:CommerceKernel,c:Row) {
  if(total!==minor(f.original_paid_minor)||minor(f.prior_refunded_minor)>total)throw new Error('PAID_TOTAL_MISMATCH');
  if(Object.hasOwn(f,'instrument_allocations'))validateInstruments(f);
  if(Object.hasOwn(f,'bundle_allocations'))validateBundles(f,c.order.payload.return_lines);
+ if(c.order.source_system==='woocommerce')assertWooFinancialFacts(k,{tenant_id:c.order.tenant_id,store_id:c.order.store_id},c,f);
  return f;
 }
 function validateInstruments(f:Row){
@@ -102,7 +104,8 @@ export function unitComponents(f:Row,l:Row,units:number[]) {
 }
 export class ResolutionLedger {
  readonly kernel:CommerceKernel;constructor(k:CommerceKernel){this.kernel=k;}
- configure(scope:Scope,input:unknown){const raw=jsonValue(input),p=exact(raw,['expected_revision','enabled','source_identity','credit_instrument','expires_at','inventory_buffer',...(Object.hasOwn(raw,'bundle_policy')?['bundle_policy']:[])]);integer(p.expected_revision);integer(p.expires_at);integer(p.inventory_buffer);id(p.source_identity);
+ configure(scope:Scope,input:unknown){const raw=jsonValue(input),p=exact(raw,['expected_revision','enabled','source_identity','credit_instrument','expires_at','inventory_buffer',...['bundle_policy','woo_refund'].filter(key=>Object.hasOwn(raw,key))]);integer(p.expected_revision);integer(p.expires_at);integer(p.inventory_buffer);id(p.source_identity);
+  if(Object.hasOwn(p,'woo_refund')){checkedWooConfig(p.woo_refund);if(p.credit_instrument!=='none')throw new Error('WOO_REFUND_UNQUALIFIED');}
   if(p.bundle_policy!==undefined&&p.bundle_policy!=='preserve_original_paid')throw new Error('BUNDLE_POLICY_UNSUPPORTED');
   if(typeof p.enabled!=='boolean'||!['none','native_store_credit'].includes(p.credit_instrument)||p.inventory_buffer>1000)throw new Error('INVALID_INPUT');
   const k=this.kernel;return k.transaction(()=>{const s=k.authorize(scope,'action.configure');assertReady(k,s,DRAFT_ACTION);
@@ -124,6 +127,7 @@ export class ResolutionLedger {
    assertReturnWritable(k,s,r.id);
    if(!r.receipt_id||!['submitted','native_created'].includes(r.state))throw new Error('RETURN_APPROVAL_REQUIRED');
    const settings=resolutionSettings(k,s),f=financialFacts(k,c),fees=intakeSettings(k,s),old=k.db.prepare('SELECT * FROM commerce_resolution_plans WHERE tenant_id=? AND store_id=? AND (request_id=? OR request_key=?)').get(s.tenant_id,s.store_id,r.id,p.request_key) as Row;
+   if(c.order.source_system==='woocommerce'&&p.lines.some((l:Row)=>l.outcome!=='refund'))throw new Error('WOO_REFUND_UNQUALIFIED');
    if(f.bundle_allocations&&settings.bundle_policy!=='preserve_original_paid')throw new Error('BUNDLE_POLICY_UNAPPROVED');
    if(old){const value=checkedBody(old);if(contentDigest(value.intent)!==contentDigest(p))throw new Error('RESOLUTION_CONFLICT');return this.read(scope,old.id);}
    const expected=request.selection.lines.map((l:Row)=>[l.line_id,l.quantity]).sort(),actual=[...new Set(p.lines.map((l:Row)=>l.line_id))].map(l=>[l,p.lines.filter((x:Row)=>x.line_id===l).reduce((n:number,x:Row)=>n+x.units.length,0)]).sort();

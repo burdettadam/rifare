@@ -23,6 +23,16 @@ export function verifyShopifyWebhook(route:WebhookRoute,headers:Record<string,st
   return {delivery_id:delivery,signature_contract:'shopify-raw-body-hmac-sha256',routing_verified:false,
     status:'quarantined',reason:'SHOP_OWNERSHIP_CONFIRMATION_REQUIRED'} as const;
 }
+export function verifyWooCommerceWebhook(route:WebhookRoute,h:Record<string,string>,raw:Buffer,key:Buffer){
+  signature(h['x-wc-webhook-signature'],raw,key);
+  const source=h['x-wc-webhook-source'];let parsed:URL;try{parsed=new URL(source);}catch{throw new Error('WEBHOOK_ROUTE_MISMATCH');}
+  if(parsed.protocol!=='https:'||parsed.username||parsed.password||parsed.port||parsed.pathname!=='/'||parsed.search||parsed.hash||parsed.hostname!==route.shop_domain||h['x-wc-webhook-topic']!==route.topic||h['x-wc-webhook-resource']!=='order'||h['x-wc-webhook-event']!==route.topic.split('.')[1])throw new Error('WEBHOOK_ROUTE_MISMATCH');
+  const delivery=h['x-wc-webhook-delivery-id'],webhook=h['x-wc-webhook-id'];
+  if(!delivery||! /^[A-Za-z0-9_-]{1,128}$/.test(delivery)||!webhook||! /^[1-9][0-9]{0,14}$/.test(webhook))throw new Error('WEBHOOK_HEADERS_INVALID');
+  // Woo HMAC authenticates raw body only, not routing or delivery headers. An
+  // attached account/source must independently corroborate a quarantined event.
+  return {delivery_id:delivery,signature_contract:'woocommerce-raw-body-hmac-sha256',routing_verified:false,status:'quarantined',reason:'WOO_SOURCE_CORROBORATION_REQUIRED'} as const;
+}
 export function verifySyntheticWebhook(route:WebhookRoute,h:Record<string,string>,raw:Buffer,key:Buffer,now:number){
   const delivery=h['x-rifare-delivery'],at=h['x-rifare-timestamp'];
   if(!delivery||!(/^[A-Za-z0-9_-]{1,128}$/).test(delivery)||!at||!/^\d{10,13}$/.test(at)||!Number.isSafeInteger(Number(at)))throw new Error('WEBHOOK_HEADERS_INVALID');

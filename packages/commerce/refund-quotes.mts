@@ -10,6 +10,7 @@ import { exchangeFinanceQuote } from './exchange-finance.mts';
 import { assertGiftOutcome } from './gift-proof.mts';
 import { currencyQuote } from './exchange-currency.mts';
 import { resolutionFeeValues } from './exchange-fees.mts';
+import { wooRefundTerms,WOO_REFUND_CONTRACT_DIGEST } from '../adapters/woocommerce/refund-contract.mts';
 
 function operationCommand(r:Row){const c=JSON.parse(r.command);if(contentDigest(c)!==r.digest||c.operation_id!==r.id||c.amount_minor!==r.amount_minor||c.currency!==r.currency)throw new Error('RESOLUTION_INTEGRITY');return c;}
 function reservedValue(r:Row){const command=operationCommand(r);return minor(command.exchange_quote_id?command.original_value_minor:r.amount_minor);}
@@ -66,9 +67,11 @@ export function resolutionQuote(k:CommerceKernel,scope:Scope,allocationId:string
  assertAllocationSource(f,b);if(f.bundle_allocations&&settings.bundle_policy!=='preserve_original_paid')throw new Error('BUNDLE_POLICY_UNAPPROVED');
  if(b.units.some((u:number)=>original.resolved_units.includes(u)))throw new Error('UNIT_ALREADY_RESOLVED');
  if(intakeSettings(k,s).digest!==b.fee_settings_digest)throw new Error('REFUND_FEES_CHANGED');
- const native=k.db.prepare("SELECT * FROM commerce_native_return_operations WHERE tenant_id=? AND store_id=? AND request_id=? AND state='created'").get(s.tenant_id,s.store_id,plan.request_id) as Row;
- if(!native)throw new Error('NATIVE_RETURN_REQUIRED');const nativeBody=JSON.parse(native.native_body);if(contentDigest(nativeBody)!==native.native_digest)throw new Error('NATIVE_RETURN_INTEGRITY');
- if(!['OPEN','CLOSED'].includes(nativeBody.status))throw new Error('NATIVE_RETURN_UNAVAILABLE');
+ const woo=c.order.source_system==='woocommerce'?wooRefundTerms(k,s,c,settings,plan.request_id,f):null;
+ let native:Row;if(woo){if(a.outcome!=='refund')throw new Error('WOO_REFUND_UNQUALIFIED');native={native_id:null,native_digest:woo.return_authority.authority_digest};}
+ else{native=k.db.prepare("SELECT * FROM commerce_native_return_operations WHERE tenant_id=? AND store_id=? AND request_id=? AND state='created'").get(s.tenant_id,s.store_id,plan.request_id) as Row;
+  if(!native)throw new Error('NATIVE_RETURN_REQUIRED');const nativeBody=JSON.parse(native.native_body);if(contentDigest(nativeBody)!==native.native_digest)throw new Error('NATIVE_RETURN_INTEGRITY');
+  if(!['OPEN','CLOSED'].includes(nativeBody.status))throw new Error('NATIVE_RETURN_UNAVAILABLE');}
  const old=k.db.prepare('SELECT * FROM commerce_resolution_operations WHERE tenant_id=? AND store_id=? AND allocation_id=?').get(s.tenant_id,s.store_id,a.id) as Row;
  if(old&&old.id!==exclude)throw new Error('ALLOCATION_ALREADY_AUTHORIZED');
  const part=b.components,fees=resolutionFeeValues(k,s,a.id,{restocking_minor:((minor(part.gross_minor)-minor(part.discount_minor))*BigInt(b.restocking_bps)/10000n).toString(),return_shipping_minor:b.return_shipping_minor}),restock=minor(fees.restocking_minor),
@@ -80,7 +83,7 @@ export function resolutionQuote(k:CommerceKernel,scope:Scope,allocationId:string
  return currencyQuote(k,s,{schema_version:1,allocation_id:a.id,allocation_digest:a.digest,case_id:c.id,case_revision:c.revision,resource_id:c.resource_id,customer_id:verified.customer_id,
   tenant_id:s.tenant_id,store_id:s.store_id,configuration_digest:c.configuration_digest,policy_digest:c.pins.policy.digest,
   source_version:c.order.source_version,source_digest:contentDigest(c.order),financial_revision:f.revision,native_return_id:native.native_id,native_return_digest:native.native_digest,
-  payment_id:f.payment_id,kind:a.outcome,currency:f.currency,amount_minor:amount.toString(),...(gift?{credit_beneficiary_id:gift.recipient_customer_id,gift_source_digest:gift.source_digest}:{}),...(routes?{routes,value_routes:routes,line_id:b.line_id,units:b.units}:{}),components:{...part,restocking_minor:restock.toString(),return_shipping_minor:fees.return_shipping_minor,...(fees.fee_snapshot?{fee_tax_minor:fees.tax_minor}:{})},
+  payment_id:f.payment_id,kind:a.outcome,currency:f.currency,amount_minor:amount.toString(),...(woo?{woo_refund:woo}:{}),...(gift?{credit_beneficiary_id:gift.recipient_customer_id,gift_source_digest:gift.source_digest}:{}),...(routes?{routes,value_routes:routes,line_id:b.line_id,units:b.units}:{}),components:{...part,restocking_minor:restock.toString(),return_shipping_minor:fees.return_shipping_minor,...(fees.fee_snapshot?{fee_tax_minor:fees.tax_minor}:{})},
   remaining_before_minor:remaining.toString(),settings_digest:settings.digest,settings_revision:settings.revision,source_identity:settings.source_identity,
   credit_instrument:a.outcome==='store_credit'?'native_store_credit':null,control_stamp:control.stamp,review_revision:evidenceReviewState(k,s,c.id)?.seq??0,
   quoted_at:quotedAt,expires_at:expiry,qualification:'synthetic_only',tax_treatment:'original_paid_allocations_only',live_financial_authority:false});
@@ -106,13 +109,13 @@ export function resolutionGatewayQuote(k:CommerceKernel,scope:Scope,p:Row,quoted
  return {schema_version:1,tenant_id:q.tenant_id,store_id:q.store_id,case_id:q.case_id,case_revision:q.case_revision,configuration_digest:q.configuration_digest,
   resource_id:q.resource_id,resource_version:q.source_version,source_digest:q.source_digest,customer_id:q.customer_id,action:RESOLVE_ACTION,arguments:args,
   amount:money(q.currency,q.amount_minor),amount_ceiling:money(q.currency,q.amount_minor),readiness_digest:q.settings_digest,control_stamp:q.control_stamp,capability_revision:q.settings_revision,
-  adapter_contract_digest:contentDigest(RESOLUTION_CONTRACT),policy_digest:q.policy_digest,decision:{eligible:true,reasons:['SYNTHETIC_RESOLUTION_ONLY']},
+  adapter_contract_digest:q.woo_refund?WOO_REFUND_CONTRACT_DIGEST:contentDigest(RESOLUTION_CONTRACT),policy_digest:q.policy_digest,decision:{eligible:true,reasons:[q.woo_refund?'WOOCOMMERCE_FIXTURE_REFUND_ONLY':'SYNTHETIC_RESOLUTION_ONLY']},
   effect_version:0,quoted_at:quotedAt,expires_at:Math.min(quotedAt+300000,q.expires_at),max_uses:1,financial_effect:false,...(q.money_terms?{money_terms:q.money_terms}:{})};}
 export function commitResolution(k:CommerceKernel,s:Row,preview:Row,receiptId:string){const r=k.db.prepare('SELECT * FROM commerce_resolution_quotes WHERE tenant_id=? AND store_id=? AND id=?').get(s.tenant_id,s.store_id,preview.arguments.quote_id) as Row,
  q=checkedBody(r),op='resolution_'+contentDigest([s.tenant_id,s.store_id,q.allocation_id]).slice(0,40);
  const command:Row={operation_id:op,tenant_id:s.tenant_id,store_id:s.store_id,resource_id:q.resource_id,customer_id:q.customer_id,allocation_id:q.allocation_id,
   kind:q.kind,currency:q.currency,amount_minor:q.amount_minor,payment_id:q.payment_id,native_return_id:q.native_return_id,source_identity:q.source_identity,credit_instrument:q.credit_instrument};
- for(const field of ['exchange_quote_id','exchange_quote_digest','original_value_minor','replacement_variant','replacement_minor','quantity','routes','value_routes','payment_expires_at','credit_beneficiary_id','gift_source_digest','line_id','units','money_terms'])if(Object.hasOwn(q,field))command[field]=q[field];
+ for(const field of ['exchange_quote_id','exchange_quote_digest','original_value_minor','replacement_variant','replacement_minor','quantity','routes','value_routes','payment_expires_at','credit_beneficiary_id','gift_source_digest','line_id','units','money_terms','woo_refund'])if(Object.hasOwn(q,field))command[field]=q[field];
  k.db.prepare("INSERT INTO commerce_resolution_operations VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,'authorized',NULL,?)").run(s.tenant_id,s.store_id,op,q.allocation_id,q.case_id,q.resource_id,receiptId,r.id,q.kind,q.amount_minor,q.currency,q.source_identity,canonical(command),contentDigest(command),k.clock());
  recordResolutionObservation(k,s,op,q.resource_id,'authorized',{quote_digest:r.digest,receipt_id:receiptId,amount_minor:q.amount_minor,currency:q.currency});return op;}
 export function recordResolutionObservation(k:CommerceKernel,s:Row,op:string,resource:string,stage:string,body:Row){k.db.prepare('INSERT INTO commerce_resolution_observations(tenant_id,store_id,operation_id,resource_id,stage,body,digest,observed_at) VALUES(?,?,?,?,?,?,?,?)').run(s.tenant_id,s.store_id,op,resource,stage,canonical(body),contentDigest(body),k.clock());}
