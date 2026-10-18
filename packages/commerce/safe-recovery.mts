@@ -5,6 +5,7 @@ import { CommerceKernel,exact,id,integer,token,digest } from './kernel.mts';
 import type { Scope,Row } from './kernel.mts';
 import { canonical,contentDigest } from './configuration-values.mts';
 import { eraseSelected,storageInventory,suppressionCheckpoint } from './privacy-lifecycle.mts';
+import { revokeGrowthForRestore } from './growth-privacy.mts';
 
 const LIMIT=64*1024*1024;
 function pathCheck(path:string,mustExist=false) {
@@ -60,6 +61,7 @@ export function restoreRecoverySnapshot(input:{snapshot:string;destination:strin
       db!.prepare('INSERT OR REPLACE INTO commerce_recovery_state VALUES(1,?,?,?,?,?)').run(restoreId,'quarantine',m.database_sha256,input.suppression_sha256,clock());
       for(const [table,clause] of [['commerce_sessions','revoked=1'],['commerce_worker_grants','revoked=1'],['commerce_secrets','revoked=1'],['commerce_credential_slots','active=0'],['commerce_webhook_routes','enabled=0'],['commerce_execution_settings','enabled=0'],['commerce_action_readiness','revoked=1'],['commerce_action_approvals','revoked=1'],['commerce_shipping_label_approvals','revoked=1'],['commerce_inventory_transfer_approvals','revoked=1'],['commerce_case_work',"state='revoked',expires_at=0"]])db!.exec(`UPDATE ${table} SET ${clause}`);
       db!.exec('UPDATE commerce_gift_sessions SET revoked=1; UPDATE commerce_gift_challenges SET consumed=1;');
+      revokeGrowthForRestore(k);
       db!.exec('INSERT OR IGNORE INTO commerce_restored_operations SELECT tenant_id,store_id,id FROM commerce_operations');
       db!.exec("UPDATE commerce_operations SET state='unknown',revision=revision+1 WHERE state='sending'");
       db!.exec("UPDATE commerce_operation_work SET state='unknown',lease_token=NULL,lease_until=NULL,last_code='restore_uncertain' WHERE state IN ('sending','leased')");

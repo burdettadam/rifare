@@ -5,6 +5,7 @@ import { canonical,contentDigest } from './configuration-values.mts';
 import { subjectHash } from './data-guards.mts';
 import { eraseGiftRecipient } from './gift-proof.mts';
 import { inventoryMovementCore,inventorySnapshotCore,inventoryRow,INVENTORY_FIELDS } from './location-inventory.mts';
+import { exportGrowthSubject,eraseGrowthSubject,revokeGrowthForRestore } from './growth-privacy.mts';
 
 const MAX_RECORDS=10000;
 const PACKING_TABLES=['commerce_packing_sessions','commerce_packing_allocations','commerce_packing_scans','commerce_packing_confirmations'];
@@ -238,6 +239,7 @@ export function eraseSelected(k:CommerceKernel,s:Row,ids:string[],hash:string,at
   const giftCases=all(k,'commerce_gift_cases',t,st),recipients=new Set([...all(k,'commerce_resources',t,st).filter(r=>r.kind==='order').map(r=>JSON.parse(r.payload).gift_facts?.recipient_customer_id),...giftCases.map(r=>JSON.parse(r.body).recipient_customer_id)].filter((c:unknown)=>typeof c==='string'&&subjectHash(t,st,c)===hash));
   for(const customer of recipients){eraseGiftCaseData(k,s,giftCases.filter(r=>JSON.parse(r.body).recipient_customer_id===customer).map(r=>r.case_id),hash);eraseGiftRecipient(k,s,String(customer));}
   for(const resource of ids)k.db.prepare('INSERT OR IGNORE INTO commerce_privacy_resources VALUES(?,?,?,?,?)').run(t,st,resource,hash,at);
+  eraseGrowthSubject(k,t,st,ids,hash);
   if(ids.length) {
     const marks=where(ids),args=[t,st,...ids];
     eraseShippingAndPacking(k,s,ids);
@@ -319,7 +321,8 @@ export class PrivacyLifecycle {
       const packing_records=Object.fromEntries(PACKING_TABLES.map(table=>[table,all(k,table,s.tenant_id,s.store_id).filter(subjectRecord)]));
       const shipping_records=Object.fromEntries(SHIPPING_TABLES.map(table=>[table,all(k,table,s.tenant_id,s.store_id).filter(subjectRecord)]));
       const warehouse_inventory_records=Object.fromEntries(WAREHOUSE_INVENTORY_TABLES.map(table=>[table,all(k,table,s.tenant_id,s.store_id).filter(subjectRecord)]));
-      const result={warehouse_inventory_records,packing_records,shipping_records,woocommerce_records,return_assistance_records,exchange_history_records,support_records,analytics_records,order_edit_records,gift_returns:gifts,schema_version:1,tenant_id:s.tenant_id,store_id:s.store_id,subject_ref:subjectHash(s.tenant_id,s.store_id,customer),
+      const growth_records=exportGrowthSubject(k,s.tenant_id,s.store_id,ids,customer,subjectHash(s.tenant_id,s.store_id,customer));
+      const result={growth_records,warehouse_inventory_records,packing_records,shipping_records,woocommerce_records,return_assistance_records,exchange_history_records,support_records,analytics_records,order_edit_records,gift_returns:gifts,schema_version:1,tenant_id:s.tenant_id,store_id:s.store_id,subject_ref:subjectHash(s.tenant_id,s.store_id,customer),
         resources:rs.map(r=>k.project(r)),attachments:all(k,'commerce_attachments',s.tenant_id,s.store_id).filter(subjectRecord).map(r=>({id:r.id,resource_id:r.resource_id,content:JSON.parse(r.content)})),
         knowledge:all(k,'commerce_knowledge',s.tenant_id,s.store_id).filter(subjectRecord),
         tasks,assistance:all(k,'commerce_assistance_receipts',s.tenant_id,s.store_id).filter(r=>tasks.some(t=>t.id===r.task_id)),
@@ -359,6 +362,7 @@ export class PrivacyLifecycle {
     const k=this.#k;return k.transaction(()=>{const s=k.authorize(scope,'privacy.manage');storageInventoryCurrent(k);
       const rs=all(k,'commerce_resources',s.tenant_id,s.store_id);const customers=[...new Set(rs.flatMap(r=>r.customer_id?[r.customer_id]:r.kind==='customer'?[r.external_id]:[]))];
       const results=customers.map(c=>this.erase(scope,c));
+      revokeGrowthForRestore(k,s.tenant_id,s.store_id);
       k.db.prepare('UPDATE commerce_secrets SET revoked=1,envelope=? WHERE tenant_id=? AND store_id=?').run('{}',s.tenant_id,s.store_id);
       for(const [table,clause] of [['commerce_sessions','revoked=1'],['commerce_worker_grants','revoked=1'],['commerce_credential_slots','active=0'],['commerce_webhook_routes','enabled=0'],['commerce_execution_settings','enabled=0'],['commerce_action_readiness','revoked=1']])
         k.db.prepare(`UPDATE ${table} SET ${clause} WHERE tenant_id=? AND store_id=?`).run(s.tenant_id,s.store_id);
