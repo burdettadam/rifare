@@ -147,7 +147,7 @@ async function marketingPrivacy(){
       assert.equal(growthRows(f,'commerce_checkout_experiments')[0].body,before,'frozen experiment is not rewritten by erasure');
       const rebuilt=f.measurement.report(f.owner.scope,x.experiment_id);assert.deepEqual(rebuilt.denominators,x.denominators);
       assert.equal(rebuilt.unavailable_units,1);assert.equal(rebuilt.metrics_complete,false);assert.equal(rebuilt.incremental_margin_minor,null);
-      const recipient=JSON.parse(growthRows(f,'commerce_growth_campaign_recipients')[0].body);assert.equal(recipient.original_operation_id,x.operation_id);
+      const recipient=JSON.parse(growthRows(f,'commerce_growth_campaign_recipients').find((row:any)=>row.resource_id===x.resource_id).body);assert.equal(recipient.original_operation_id,x.operation_id);
       assert.equal(growthRows(f,'commerce_marketing_sync_operations')[0].id,x.sync_operation_id);assert.equal(growthRows(f,'commerce_marketing_sync_operations')[0].state,'unknown');
       assert.ok(growthRows(f,'commerce_growth_campaign_approvals').every((row:any)=>row.revoked===1));
       replayGrowthWithoutResourceList(f,['commerce_checkout_assignments','commerce_checkout_exposures','commerce_growth_observations','commerce_growth_campaign_recipients','commerce_cart_recoveries'],x.resource_id,exported.subject_ref);
