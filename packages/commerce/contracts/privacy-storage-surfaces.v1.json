@@ -235,7 +235,7 @@
     },
     {
       "path": "packages/adapters/procurement-fixture-source.mts",
-      "sha256": "a56448fe926a184225c9f47131726cdcb893b11fac6899843e797460ae5efc90"
+      "sha256": "fa5620ff5a4b8d6004d8994727547b0b06a74e936049f3c1d39bab7cf5b13a0e"
     },
     {
       "path": "packages/adapters/procurement-inventory-source-guards.mts",
@@ -935,7 +935,7 @@
     },
     {
       "path": "packages/commerce/supplier-purchase-orders.mts",
-      "sha256": "f908bbf38a5edb3b9df56e205d56869cc331810507d3ddf8c2c5104dd354e45c"
+      "sha256": "c49839951b577a92b6120e91a55dfbbef215c81adac8c171d7ffad6a2738da18"
     },
     {
       "path": "packages/commerce/supplier-returns.mts",

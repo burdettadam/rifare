@@ -1938,7 +1938,7 @@
       }
     },
     "procurement_fixture_source": {
-      "version": "source-sha256:a56448fe926a184225c9f47131726cdcb893b11fac6899843e797460ae5efc90",
+      "version": "source-sha256:fa5620ff5a4b8d6004d8994727547b0b06a74e936049f3c1d39bab7cf5b13a0e",
       "api_version": "procurement_fixture_v1",
       "operations": {
         "replenishment.propose": {
@@ -3203,55 +3203,55 @@
       "id": "M11-G04-01",
       "name": "M11-G04-01",
       "path": "tests/development/procurement-planning.test.mts",
-      "sha256": "0fd30c518771dbbc7bf4f964ebd0aa847805cd6547a7f37dae6fa0c55cd37c01"
+      "sha256": "b9a16c2ff5499a4e504a393016ec21ff9737578a4d3fc5a900701c8bfbeb3cfd"
     },
     {
       "id": "M11-G04-02",
       "name": "M11-G04-02",
       "path": "tests/development/procurement-planning.test.mts",
-      "sha256": "0fd30c518771dbbc7bf4f964ebd0aa847805cd6547a7f37dae6fa0c55cd37c01"
+      "sha256": "b9a16c2ff5499a4e504a393016ec21ff9737578a4d3fc5a900701c8bfbeb3cfd"
     },
     {
       "id": "M11-G04-03",
       "name": "M11-G04-03",
       "path": "tests/development/procurement-planning.test.mts",
-      "sha256": "0fd30c518771dbbc7bf4f964ebd0aa847805cd6547a7f37dae6fa0c55cd37c01"
+      "sha256": "b9a16c2ff5499a4e504a393016ec21ff9737578a4d3fc5a900701c8bfbeb3cfd"
     },
     {
       "id": "M11-G05-01",
       "name": "M11-G05-01",
       "path": "tests/development/procurement-planning.test.mts",
-      "sha256": "0fd30c518771dbbc7bf4f964ebd0aa847805cd6547a7f37dae6fa0c55cd37c01"
+      "sha256": "b9a16c2ff5499a4e504a393016ec21ff9737578a4d3fc5a900701c8bfbeb3cfd"
     },
     {
       "id": "M11-G05-02",
       "name": "M11-G05-02",
       "path": "tests/development/procurement-planning.test.mts",
-      "sha256": "0fd30c518771dbbc7bf4f964ebd0aa847805cd6547a7f37dae6fa0c55cd37c01"
+      "sha256": "b9a16c2ff5499a4e504a393016ec21ff9737578a4d3fc5a900701c8bfbeb3cfd"
     },
     {
       "id": "M11-G05-03",
       "name": "M11-G05-03",
       "path": "tests/development/procurement-planning.test.mts",
-      "sha256": "0fd30c518771dbbc7bf4f964ebd0aa847805cd6547a7f37dae6fa0c55cd37c01"
+      "sha256": "b9a16c2ff5499a4e504a393016ec21ff9737578a4d3fc5a900701c8bfbeb3cfd"
     },
     {
       "id": "M11-G06-01",
       "name": "M11-G06-01",
       "path": "tests/development/procurement-planning.test.mts",
-      "sha256": "0fd30c518771dbbc7bf4f964ebd0aa847805cd6547a7f37dae6fa0c55cd37c01"
+      "sha256": "b9a16c2ff5499a4e504a393016ec21ff9737578a4d3fc5a900701c8bfbeb3cfd"
     },
     {
       "id": "M11-G06-02",
       "name": "M11-G06-02",
       "path": "tests/development/procurement-planning.test.mts",
-      "sha256": "0fd30c518771dbbc7bf4f964ebd0aa847805cd6547a7f37dae6fa0c55cd37c01"
+      "sha256": "b9a16c2ff5499a4e504a393016ec21ff9737578a4d3fc5a900701c8bfbeb3cfd"
     },
     {
       "id": "M11-G06-03",
       "name": "M11-G06-03",
       "path": "tests/development/procurement-planning.test.mts",
-      "sha256": "0fd30c518771dbbc7bf4f964ebd0aa847805cd6547a7f37dae6fa0c55cd37c01"
+      "sha256": "b9a16c2ff5499a4e504a393016ec21ff9737578a4d3fc5a900701c8bfbeb3cfd"
     },
     {
       "id": "M11-G07-PREP-01",
@@ -3299,13 +3299,13 @@
       "id": "M11-PREP-INTEGRATION-01",
       "name": "M11-PREP-INTEGRATION-01",
       "path": "tests/development/procurement-planning.test.mts",
-      "sha256": "0fd30c518771dbbc7bf4f964ebd0aa847805cd6547a7f37dae6fa0c55cd37c01"
+      "sha256": "b9a16c2ff5499a4e504a393016ec21ff9737578a4d3fc5a900701c8bfbeb3cfd"
     },
     {
       "id": "M11-PROCUREMENT-SOURCE-BOUNDARY",
       "name": "M11-PROCUREMENT-SOURCE-BOUNDARY",
       "path": "tests/development/procurement-planning.test.mts",
-      "sha256": "0fd30c518771dbbc7bf4f964ebd0aa847805cd6547a7f37dae6fa0c55cd37c01"
+      "sha256": "b9a16c2ff5499a4e504a393016ec21ff9737578a4d3fc5a900701c8bfbeb3cfd"
     },
     {
       "id": "M11-STOCK-CONSERVATION",
@@ -3347,7 +3347,7 @@
       "id": "PORT-031-M11",
       "name": "PORT-031-M11",
       "path": "tests/development/procurement-planning.test.mts",
-      "sha256": "0fd30c518771dbbc7bf4f964ebd0aa847805cd6547a7f37dae6fa0c55cd37c01"
+      "sha256": "b9a16c2ff5499a4e504a393016ec21ff9737578a4d3fc5a900701c8bfbeb3cfd"
     },
     {
       "id": "TEST-034",
