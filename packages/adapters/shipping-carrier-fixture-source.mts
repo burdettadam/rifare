@@ -44,6 +44,10 @@ export class ShippingCarrierFixtureSource {
     if(fault==='before')throw new Error('FIXTURE_RESPONSE_UNKNOWN');if(fault==='hang')return new Promise(()=>{});
     const r=fn();if(fault==='after')throw new Error('FIXTURE_RESPONSE_LOST');return fault==='malformed'?{success:true}:r;}
   currentParcel(packageId:string){return this.#quotes?.package(id(packageId))??null;}
+  accountCurrent(quote:Row){const account=this.#quotes?.account(id(quote.account_id));
+    return !!account&&account.enabled===true&&this.#quotes!.identity===quote.source_identity&&quote.tenant_id===this.tenant_id&&quote.store_id===this.store_id
+      &&account.revision===quote.account_revision&&contentDigest(account)===quote.account_digest&&account.carrier_id===quote.carrier_id
+      &&account.services.includes(quote.service)&&account.currencies.includes(quote.currency);}
   #quote(command:Row){const q=command.quote;this.#bound(command);
     exact(command,['version','kind','tenant_id','store_id','resource_id','package_id','purchase_id','source_identity','quote_source_identity','quote']);
     if(command.version!==1||command.kind!=='outbound_label'||!this.#quotes||command.quote_source_identity!==this.#quotes.identity||q.source_identity!==this.#quotes.identity)throw new Error('QUOTE_SOURCE_REQUIRED');
@@ -90,6 +94,7 @@ export class ShippingCarrierFixtureSource {
         for(const key of ['package_id','resource_id','purchase_id','native_label_id','packing_confirmation_id'])id(m[key]);integer(m.packing_revision,1);integer(m.package_revision,1);
         if(seen.has(m.package_id))throw new Error('INVALID_MANIFEST');seen.add(m.package_id);
         const p=this.#purchase(m.purchase_id),r=p?.receipt;if(!p||r.package_id!==m.package_id||r.resource_id!==m.resource_id||r.native_label_id!==m.native_label_id||r.void_state!=='not_requested'||r.valid_until<=this.#clock())throw new Error('LABEL_UNQUALIFIED');
+        if(!this.accountCurrent(p.command.quote))throw new Error('ACCOUNT_CHANGED');
         const parcel=this.currentParcel(m.package_id);if(!parcel||contentDigest(parcel)!==p.command.quote.parcel_digest||m.package_revision!==parcel.revision)throw new Error('PACKAGE_CHANGED');
         if(this.db.prepare('SELECT 1 FROM fixture_shipping_members WHERE package_id=?').get(m.package_id))throw new Error('PACKAGE_ALREADY_MANIFESTED');accounts.add(p.command.quote.account_id+':'+p.command.quote.carrier_id);
       }

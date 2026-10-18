@@ -52,6 +52,11 @@ the two canonical services directly. `create(scope, {manifest_id, package_ids})`
 requires current confirmed packing allocations, the same package/resource,
 usable native label, unchanged parcel and resource facts, and a current
 warehouse operator. Caller-provided packed or labelled booleans are rejected.
+Current carrier-account enablement, revision/digest, carrier, service and currency
+must still match the original purchase. The separate source checks the account
+again during admission, so a disable/change after the local check yields an
+uncertain local acknowledgment with no admitted manifest. Existing label receipts
+and original-identity reconciliation remain readable after an account changes.
 One manifest contains at most 32 packages from one carrier account. Its sorted
 membership is fixed before dispatch; repeated requests reconcile the original
 identity. A package cannot belong to another manifest, including when its first

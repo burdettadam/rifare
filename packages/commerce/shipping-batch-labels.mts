@@ -160,12 +160,13 @@ export class ShippingBatchLabels {
   }
   packageStatus(scope:Scope,packageId:string){const op=this.#operation(scope,packageId)!,r=op.receipt,k=this.#k;
     const parcel=this.#source.currentParcel(packageId),current=k.get(scope,op.resource_id),parcelCurrent=!!parcel&&contentDigest(parcel)===op.command.quote.parcel_digest;
+    const accountCurrent=this.#source.accountCurrent(op.command.quote);
     const voidState=op.void?.state==='proposed'?'not_requested':op.void?.state??r?.void_state??'not_requested';
     return jsonValue({package_id:op.package_id,resource_id:op.resource_id,purchase_id:op.purchase_id,state:op.state,command_digest:op.command_digest,approval_id:op.approval_id,
       source_identity:op.source_identity,quote_source_identity:op.command.quote_source_identity,package_revision:op.command.quote.package_revision,parcel_digest:op.command.quote.parcel_digest,
-      resource_current:resourceDigest(current)===op.command.quote.resource_digest,parcel_current:parcelCurrent,receipt:r,void_operation_id:op.void?.command.void_id??null,void_state:voidState,
+      resource_current:resourceDigest(current)===op.command.quote.resource_digest,parcel_current:parcelCurrent,account_current:accountCurrent,receipt:r,void_operation_id:op.void?.command.void_id??null,void_state:voidState,
       refund_state:r?.refund_state??'not_requested',refund_amount_minor:r?.refund_amount_minor??'0',native_refund_id:r?.native_refund_id??null,
-      label_usable:op.state==='purchased'&&!!r&&r.valid_until>k.clock()&&voidState==='not_requested'&&parcelCurrent&&resourceDigest(current)===op.command.quote.resource_digest,
+      label_usable:op.state==='purchased'&&!!r&&r.valid_until>k.clock()&&voidState==='not_requested'&&parcelCurrent&&accountCurrent&&resourceDigest(current)===op.command.quote.resource_digest,
       retry_allowed:false,qualification:'synthetic_only',financial_effect:false,carrier_connected:false,formal_goal_accepted:false});
   }
 }

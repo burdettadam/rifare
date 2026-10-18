@@ -172,6 +172,24 @@ test('M08-G05-CURRENT-PACKING-AND-LABEL-QUALIFICATION',()=>usingShipping(async f
   f.labels.approveVoid(f.reviewer,'package-a',{expected_receipt_digest:contentDigest(status.receipt),expires_at:f.now()+60000});await f.labels.requestVoid(f.a.scope,'package-a');
   await assert.rejects(()=>f.manifests.create(f.a.scope,manifestInput),/LABEL_UNQUALIFIED/);assert.equal(f.source.ledger().manifests.length,0);
   assert.equal(f.db.prepare('SELECT count(*) AS n FROM commerce_shipping_manifest_packages').get()!.n,0);
+  await usingShipping(async changed=>{
+    await ready(changed);changed.quoteSource.setAccount({account_id:'account-one',carrier_id:'carrier-one',revision:2,enabled:false,currencies:['USD','JPY'],services:['ground']});
+    assert.equal(changed.labels.packageStatus(changed.a.scope,'package-a').account_current,false);
+    await assert.rejects(()=>changed.manifests.create(changed.a.scope,manifestInput),/LABEL_UNQUALIFIED/);assert.equal(changed.source.calls.manifest.length,0);
+    changed.quoteSource.setAccount({account_id:'account-one',carrier_id:'carrier-one',revision:3,enabled:true,currencies:['USD','JPY'],services:['ground']});
+    await assert.rejects(()=>changed.manifests.create(changed.a.scope,manifestInput),/LABEL_UNQUALIFIED/);assert.equal(changed.source.calls.manifest.length,0);
+    assert.equal((await changed.labels.reconcile(changed.a.scope,'package-a')).state,'purchased');
+  });
+  await usingShipping(async raced=>{
+    await ready(raced);const dispatch=raced.source.manifest.bind(raced.source);
+    // Change the independent account after the local final check, before the real source admission.
+    raced.source.manifest=async command=>{raced.quoteSource.setAccount({account_id:'account-one',carrier_id:'carrier-one',revision:2,enabled:false,currencies:['USD','JPY'],services:['ground']});return dispatch(command);};
+    const unknown=await raced.manifests.create(raced.a.scope,manifestInput);
+    assert.equal(unknown.packages.every((p:Row)=>p.state==='unknown'&&!p.manifest_acknowledged),true);
+    assert.equal(raced.source.ledger().manifests.length,0);assert.equal(raced.source.calls.manifest.length,1);
+    await raced.manifests.observe(raced.a.scope,'manifest-one');assert.equal(raced.source.calls.manifest.length,1);
+    assert.equal((await raced.labels.reconcile(raced.a.scope,'package-a')).state,'purchased');
+  });
 }));
 test('M08-G05-UNKNOWN-MANIFEST-USES-ORIGINAL-IDENTITY',()=>usingShipping(async f=>{
   await ready(f);f.source.setFault('manifest','manifest-one','after');const unknown=await f.manifests.create(f.a.scope,manifestInput);
