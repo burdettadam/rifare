@@ -93,8 +93,13 @@ test('M07-G17-FROZEN-DENOMINATOR no events still yields all pending cases and ex
   f.register(); const p = f.project(); assert.equal(aggregate(p).counts.enrolled, 12); assert.equal(aggregate(p).counts.dispositions.pending, 10);
   assert.deepEqual(aggregate(p).metrics.correct_handling, { numerator: 0, denominator: 10, ratio: '0.000000' });
   assert.throws(() => f.append([event('observation', 'NEW-CASE', { disposition: 'pending', actor: 'none', agent_attempted: false, completed_at: null })]), /PILOT_UNKNOWN_CASE/);
+  f.append(events());
+  const manifestPath = join(f.request.directory, 'manifest.json'), originalBytes = readFileSync(manifestPath);
   const mutant = f.manifest; mutant.cases = mutant.cases.filter((x: any) => x.id !== 'CASE-004');
-  writeFileSync(join(f.request.directory, 'manifest.json'), JSON.stringify(mutant)); assert.throws(() => f.project(), /PILOT_FILE_PIN/);
+  writeFileSync(manifestPath, JSON.stringify(mutant)); assert.throws(() => f.project(), /PILOT_FILE_PIN/);
+  writeFileSync(manifestPath, originalBytes); const retained = aggregate(f.project());
+  assert.equal(retained.counts.enrolled, 12); assert.equal(retained.counts.in_scope, 10);
+  assert.equal(retained.counts.dispositions.failed, 1); assert.equal(retained.counts.dispositions.pending, 1);
 }));
 
 test('M07-G17-APPEND-INTEGRITY altered or truncated event history cannot satisfy a retained head pin', () => using(f => {

@@ -1,0 +1,73 @@
+{
+  "version": 1,
+  "project": "Rifare",
+  "status": "proposed_development_preparation",
+  "benchmark_sha256": "4b53de08f4af8b915eead29394fa0467d257beb30047347f8fd793648fd9d5ed",
+  "controls": [
+    {
+      "path": "planning/release-benchmark.json",
+      "sha256": "4b53de08f4af8b915eead29394fa0467d257beb30047347f8fd793648fd9d5ed"
+    },
+    {
+      "path": "planning/support-envelope.json",
+      "sha256": "4fd68cf7a8879d445e417a0778b370f74a2783a792160313bd1384f74e7465da"
+    },
+    {
+      "path": "planning/benchmark-scenarios.json",
+      "sha256": "002ab95ae2a9da90a55af77fd4434a0b8cccf407d40d749e28c8bda9a65b342d"
+    },
+    {
+      "path": "tools/check_release_benchmark.py",
+      "sha256": "bd15ac8019e8c8c76707e74b5db02594fdf2b07a967c966e9602fd78c987d832"
+    },
+    {
+      "path": "tools/check_support_envelope.py",
+      "sha256": "95fbfa3f74fc690340daa9730e63890a8b147637cde5b05390f05d3cb509486a"
+    },
+    {
+      "path": "tests/fixtures/release-benchmark/expected-benchmark.v1.json",
+      "sha256": "4b53de08f4af8b915eead29394fa0467d257beb30047347f8fd793648fd9d5ed"
+    },
+    {
+      "path": "tests/fixtures/release-benchmark/cohort.manifest.SYNTHETIC.json",
+      "sha256": "8e710c8f1efd5bab3c6b2d48906a8874456922078738d5536b37a00dfc11de83"
+    },
+    {
+      "path": "tests/fixtures/release-benchmark/cohort.results.SYNTHETIC.json",
+      "sha256": "94ade31f48809c8c3447c126109e41c3051a4803da6e0be39fbce0a69f04985d"
+    },
+    {
+      "path": "tests/fixtures/release-benchmark/expected-cohort.v1.json",
+      "sha256": "9d12dbf1ce60319531fbadc7eb19c7a6c22c75b440f5ba7aa6e30226d42497a8"
+    },
+    {
+      "path": "tests/fixtures/release-benchmark/HAND-CALCULATION.md",
+      "sha256": "04f3386ac8628942bd5564e8092e219248dbc39af62c37d17ab096cd24bce99b"
+    }
+  ],
+  "limits": {
+    "request_bytes": 1048576,
+    "manifest_bytes": 1048576,
+    "event_batch_bytes": 524288,
+    "artifact_bytes": 16777216,
+    "cases": 1000,
+    "events_per_batch": 100,
+    "event_batches": 256,
+    "events": 10000,
+    "readiness_protocols": 10,
+    "register_rows_per_collection": 1000
+  },
+  "privacy": {
+    "storage_surface": "caller_export_artifacts",
+    "case_references_may_be_personal_data": true,
+    "automatic_commerce_erasure": false,
+    "caller_owns_retention_and_deletion": true,
+    "approval_authentication": false
+  },
+  "qualification": {
+    "live_pilot_started": false,
+    "pilot_authorized": false,
+    "verified_live_observations": 0,
+    "release_authorized": false
+  }
+}
