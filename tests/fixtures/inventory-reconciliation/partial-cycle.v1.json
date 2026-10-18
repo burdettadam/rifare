@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "qualification": "synthetic_only",
+  "initial": {"hat-small": 10, "shoe-small": 10},
+  "shipped": {"hat-small": 1, "shoe-small": 1},
+  "received": {"hat-small": 1, "shoe-small": 0},
+  "restocked": {"hat-small": 1, "shoe-small": 0},
+  "final_available": {"hat-small": 10, "shoe-small": 9},
+  "packed_units": 2,
+  "received_units": 1,
+  "requested_return_units_pending": 2,
+  "packages": 1,
+  "native_carrier_purchases": 1,
+  "native_carrier_manifests": 1,
+  "native_warehouse_movements": 3
+}
