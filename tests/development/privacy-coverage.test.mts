@@ -69,7 +69,7 @@ function assertErased(db:any,tenant:string,store:string,orderId:string){
   assert.equal(db.prepare('SELECT state FROM commerce_support_consent WHERE tenant_id=? AND store_id=?').get(tenant,store).state,'withdrawn');
 }
 
-const SHOPPING_TABLES=GROWTH_TABLES.filter(table=>/shopping_|upsell_|catalog_/.test(table));
+const SHOPPING_TABLES=GROWTH_TABLES.filter(table=>table.includes('shopping_')||table.includes('upsell_')||table.includes('catalog_'));
 const OPTIONAL_SUBJECT_TABLES=['commerce_optional_consents','commerce_optional_media','commerce_optional_operations','commerce_optional_deletions'];
 const growthRows=(f:any,table:string)=>f.db.prepare(`SELECT * FROM ${table} WHERE tenant_id=? AND store_id=?`).all(f.a.tenant,f.a.store);
 function replayGrowthWithoutResourceList(f:any,tables:string[],resourceId:string,hash:string){
