@@ -53,6 +53,9 @@ node --experimental-strip-types --test --test-concurrency=1 tests/development/wo
 The source has no default network client, live mode or credentials. Restoring a
 core database does not authorize writes: its server-owned source must be attached,
 with matching identity and account, and current facts must validate again.
+Core/source separation checks both SQLite paths and filesystem device/inode
+identity. A differently named hard link or symbolic link to the core database
+does not qualify as independent source storage.
 
 ## Woo order events
 

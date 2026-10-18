@@ -1,4 +1,5 @@
 import {DatabaseSync} from 'node:sqlite';
+import {statSync} from 'node:fs';
 import {exact,id,integer,resourceKey} from '../../commerce/kernel.mts';
 import type {CommerceKernel,Scope,Row} from '../../commerce/kernel.mts';
 import {canonical,contentDigest,jsonValue} from '../../commerce/configuration-values.mts';
@@ -75,7 +76,10 @@ export class WooReturnSources {
  constructor(k:CommerceKernel,source:WooReturnFixtureSource){
   if(!(source instanceof WooReturnFixtureSource)||source.db===k.db)throw new Error('SEPARATE_WOO_SOURCE_REQUIRED');
   const file=(db:DatabaseSync)=>(db.prepare('PRAGMA database_list').all() as Row[]).find(r=>r.name==='main')?.file;
-  if(file(source.db)&&file(source.db)===file(k.db))throw new Error('SEPARATE_WOO_SOURCE_REQUIRED');this.k=k;this.source=source;attachWooReturnSource(k,source);}
+  const sourceFile=file(source.db),coreFile=file(k.db);
+  if(sourceFile&&sourceFile===coreFile)throw new Error('SEPARATE_WOO_SOURCE_REQUIRED');
+  if(sourceFile&&coreFile){const a=statSync(sourceFile,{bigint:true}),b=statSync(coreFile,{bigint:true});if(a.dev===b.dev&&a.ino===b.ino)throw new Error('SEPARATE_WOO_SOURCE_REQUIRED');}
+  this.k=k;this.source=source;attachWooReturnSource(k,source);}
  bind(scope:Scope,input:unknown){const p=exact(input,['native_order_id','expected_revision']);native(p.native_order_id);integer(p.expected_revision);const k=this.k,s=k.authorize(scope,'connection.manage'),source=this.source;
   if(s.tenant_id!==source.tenant||s.store_id!==source.store)throw new Error('WOO_SOURCE_TENANT_MISMATCH');const observed=source.snapshot(p.native_order_id);
   return k.transaction(()=>{k.authorize(scope,'connection.manage');const resource=resourceKey(s.tenant_id,s.store_id,'order','woocommerce',p.native_order_id),old=k.db.prepare('SELECT * FROM commerce_woo_return_sources WHERE tenant_id=? AND store_id=? AND resource_id=?').get(s.tenant_id,s.store_id,resource) as Row;

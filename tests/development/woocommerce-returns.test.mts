@@ -1,6 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {DatabaseSync} from 'node:sqlite';
+import {linkSync,symlinkSync} from 'node:fs';
+import {join} from 'node:path';
 import {usingWooReturns,wooSourceFixtureInput} from './woocommerce-return-helpers.mts';
 import {usingReturns} from './return-intake-helpers.mts';
 import {WooReturnFixtureSource,WooReturnSources} from '../../packages/adapters/woocommerce/return-source.mts';
@@ -38,3 +40,12 @@ test('M07-G01-NATIVE-SOURCE-BYTES-ARE-INDEPENDENT-ORACLE',()=>usingWooReturns(f=
 test('M07-G01-EFFECT-ORACLE-COUNTS-ACTUAL-NATIVE-ROWS',()=>usingWooReturns(f=>{const body={fixture_effect:'sentinel',native_return_id:'unqualified_fixture_sentinel'};f.sourceDb.prepare('INSERT INTO woo_fixture_effect_records VALUES(?,?,?,?)').run('sentinel','return.create',JSON.stringify(body),contentDigest(body));const records=f.source.records();assert.equal(records.native_return_create_effects,1);assert.equal(records.native_return_records[0].body.native_return_id,body.native_return_id);assert.equal(f.db.prepare('SELECT count(*) n FROM commerce_native_return_operations').get().n,0);}));
 test('M07-G01-RESTORED-WRITES-REQUIRE-REATTACHED-SOURCE',()=>usingWooReturns(f=>{const db=new DatabaseSync(f.filename);try{const k=new CommerceKernel(db,f.now);assert.throws(()=>new ReturnIntake(k).evaluate(k.authenticate(f.customerBearer),f.selection()),/WOO_SOURCE_UNAVAILABLE/);}finally{db.close();}}));
 test('M07-G01-NO-LIVE-SOURCE-OR-SHARED-DATABASE',()=>usingWooReturns(f=>{assert.throws(()=>new WooReturnSources(f.kernel,new WooReturnFixtureSource(f.db,{mode:'fixture',identity:'bad',tenant:f.a.tenant,store:f.a.store,account_id:'same',origin:'https://same.example.invalid'},f.now)),/SEPARATE_WOO_SOURCE_REQUIRED/);assert.throws(()=>new WooReturnFixtureSource(f.sourceDb,{mode:'live' as any,identity:'bad',tenant:f.a.tenant,store:f.a.store,account_id:'same',origin:'https://real.example.com'},f.now),/WOO_SOURCE_UNQUALIFIED/);}));
+function rejectsCoreFileAlias(f:any,link:(target:string,path:string)=>void){const options={mode:'fixture' as const,identity:'alias_source',tenant:f.a.tenant,store:f.a.store,account_id:'alias_account',origin:'https://alias.example.invalid'};
+ // Precreate only fixture tables and checkpoint before opening the same file by
+ // another name, so separate SQLite WAL names cannot obscure the alias test.
+ new WooReturnFixtureSource(f.db,options,f.now);f.db.exec('PRAGMA wal_checkpoint(TRUNCATE)');
+ const alias=join(f.directory,'core-file-alias.sqlite');link(f.filename,alias);const db=new DatabaseSync(alias);
+ try{const source=new WooReturnFixtureSource(db,options,f.now);assert.throws(()=>new WooReturnSources(f.kernel,source),/SEPARATE_WOO_SOURCE_REQUIRED/);assert.equal(f.db.prepare('SELECT count(*) n FROM commerce_woo_rma_bindings').get().n,0);}
+ finally{db.close();}}
+test('M07-G01-HARD-LINK-CORE-ALIAS-IS-NOT-INDEPENDENT',()=>usingWooReturns(f=>rejectsCoreFileAlias(f,linkSync)));
+test('M07-G01-SYMLINK-CORE-ALIAS-IS-NOT-INDEPENDENT',()=>usingWooReturns(f=>rejectsCoreFileAlias(f,(target,path)=>symlinkSync(target,path,'file'))));
