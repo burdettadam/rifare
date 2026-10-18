@@ -34,7 +34,7 @@ export class ResolutionExecution {
   return {...c,op,command};
  }
  #beforeSend(scope:Scope,opId:string){const ctx=this.#context(scope,opId,'operation.dispatch'),{op,s}=ctx,k=this.kernel;
-  assertCaseWorkerScope(k,scope,op.case_id);assertRecoveryEgress(k);
+  assertCaseWorkerScope(k,scope,op.case_id,op.id);assertRecoveryEgress(k);
   const receipt=new ActionGateway(k).receipt(scope,op.receipt_id);if(receipt.resolution_operation_id!==op.id||receipt.effect!=='synthetic_resolution_authorized')throw new Error('RESOLUTION_APPROVAL_REQUIRED');
   const approval=k.db.prepare('SELECT * FROM commerce_action_approvals WHERE tenant_id=? AND store_id=? AND id=?').get(s.tenant_id,s.store_id,receipt.approval_id) as Row;
   const member=approval&&k.db.prepare('SELECT * FROM commerce_members WHERE tenant_id=? AND store_id=? AND actor_id=? AND active=1').get(s.tenant_id,s.store_id,approval.approver) as Row;
@@ -91,7 +91,7 @@ export class ResolutionExecution {
    bindLineageResolution(this.source.db,latest.command,{line_id:latest.b.line_id,units:latest.b.units});
    this.source.money.bindCommand(latest.command);
    const response=await this.#bounded(()=>this.source.issue(latest.command));
-   k.transaction(()=>{const current=this.#context(scope,operationId,'operation.dispatch');assertCaseWorkerScope(k,scope,current.op.case_id);assertExecution(k,current.s,RESOLVE_ACTION);this.#record(current,response);});
+   k.transaction(()=>{const current=this.#context(scope,operationId,'operation.dispatch');assertCaseWorkerScope(k,scope,current.op.case_id,current.op.id);assertExecution(k,current.s,RESOLVE_ACTION);this.#record(current,response);});
   }catch{ /* A timeout or permission change never establishes that nothing happened. */ }
   return this.read(scope,operationId);
  }
