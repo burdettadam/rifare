@@ -5,6 +5,7 @@ import { exact,id,integer } from '../commerce/kernel.mts';
 import type { Row } from '../commerce/kernel.mts';
 import { canonical,contentDigest,jsonValue } from '../commerce/configuration-values.mts';
 import { minor } from '../commerce/resolution-ledger.mts';
+import * as trials from './delivery-trial-source-guards.mts';
 
 const hash=(x:unknown)=>{if(typeof x!=='string'||!/^[a-f0-9]{64}$/.test(x))throw new Error('INVALID_INPUT');return x;};
 const minimum=(a:bigint,b:bigint)=>a<b?a:b;
@@ -16,6 +17,7 @@ function units(value:unknown){
  return value as Row[];
 }
 function nativeBinding(value:unknown){
+ if(trials.isDeliveryTrial(value))return trials.deliveryTrialBinding(value);
  const b=exact(jsonValue(value),bindingFields);
  for(const key of ['obligation_id','allocation_id','case_id','resource_id','customer_id','exchange_quote_id','replacement_variant'])id(b[key]);
  hash(b.exchange_quote_digest);integer(b.quantity,1);minor(b.original_paid_minor);units(b.units);
@@ -74,14 +76,16 @@ export class InstantExchangeFixtureSource {
  seedOrder(input:unknown){const p=exact(jsonValue(input),['resource_id','customer_id','native_original_order_id','currency','units']);id(p.resource_id);id(p.customer_id);units(p.units);
   if(p.currency!=='USD'||!/^gid:\/\/shopify\/Order\/[1-9][0-9]*$/.test(p.native_original_order_id))throw new Error('INSTANT_COMBINATION_UNQUALIFIED');this.db.prepare('INSERT INTO fixture_instant_orders VALUES(?,?,?)').run(p.resource_id,canonical(p),contentDigest(p));}
  #order(binding:Row){const order=this.#read(this.db.prepare('SELECT * FROM fixture_instant_orders WHERE id=?').get(binding.resource_id) as Row);
+  if(trials.isDeliveryTrial(binding)&&contentDigest(order)!==binding.order_digest)throw new Error('INSTANT_TRIAL_ORDER_CHANGED');
   for(const key of ['resource_id','customer_id','native_original_order_id','currency'])if(order[key]!==binding[key])throw new Error('INSTANT_SOURCE_BINDING_INVALID');
   for(const u of binding.units){const original=order.units.find((v:Row)=>v.line_id===u.line_id&&v.unit_index===u.unit_index);if(!original||canonical(original)!==canonical(u))throw new Error('INSTANT_ORIGINAL_AMOUNT_CHANGED');}return order;}
- grantConsent(input:unknown){const p=exact(jsonValue(input),['id','account_id','terms_id','terms_digest','binding','maximum_minor','trial_deadline_at','mandate_expires_at','confirmed_at','consent_expires_at','proof_ref','reauthorization_of']);
+ grantConsent(input:unknown){const raw=jsonValue(input),isTrial=trials.isDeliveryTrial(raw.binding),p=exact(raw,['id','account_id','terms_id','terms_digest','binding','maximum_minor','trial_deadline_at','mandate_expires_at','confirmed_at','consent_expires_at','proof_ref','reauthorization_of',...(isTrial?['extension_ms','window_digest','authorization_duration_ms']:[])]);
   id(p.id);id(p.account_id);id(p.terms_id);id(p.proof_ref);hash(p.terms_digest);minor(p.maximum_minor);const b=nativeBinding(p.binding);this.#order(b);
-  for(const key of ['trial_deadline_at','mandate_expires_at','confirmed_at','consent_expires_at'])integer(p[key]);
+  for(const key of ['trial_deadline_at','mandate_expires_at','confirmed_at','consent_expires_at'])if(!(isTrial&&key==='trial_deadline_at'&&p[key]===null))integer(p[key]);
   const terms=this.#terms(p.terms_id,p.terms_digest),account=this.account(p.account_id);
-  if(terms.account_id!==p.account_id||p.confirmed_at>this.clock()||p.consent_expires_at<=this.clock()||p.mandate_expires_at<=this.clock()||p.mandate_expires_at>this.clock()+3600000||p.mandate_expires_at>terms.expires_at||p.mandate_expires_at>account.expires_at||p.consent_expires_at>p.mandate_expires_at||minor(p.maximum_minor)>minor(terms.maximum_minor)||minor(p.maximum_minor)>minor(b.original_paid_minor))throw new Error('INSTANT_CONSENT_UNQUALIFIED');
-  if(p.reauthorization_of===null){if(p.trial_deadline_at!==p.confirmed_at+terms.trial_ms||p.trial_deadline_at>=p.mandate_expires_at)throw new Error('INSTANT_CONSENT_UNQUALIFIED');}
+  if(terms.account_id!==p.account_id||p.confirmed_at>this.clock()||p.consent_expires_at<=this.clock()||p.mandate_expires_at<=this.clock()||p.mandate_expires_at>this.clock()+3600000||p.mandate_expires_at>terms.expires_at||p.mandate_expires_at>account.expires_at||p.consent_expires_at>p.mandate_expires_at||minor(p.maximum_minor)>minor(terms.maximum_minor)||minor(p.maximum_minor)>minor(trials.originalObligation(b)))throw new Error('INSTANT_CONSENT_UNQUALIFIED');
+  if(isTrial)trials.assertTrialConsent(this,p,b,terms);
+  else if(p.reauthorization_of===null){if(p.trial_deadline_at!==p.confirmed_at+terms.trial_ms||p.trial_deadline_at>=p.mandate_expires_at)throw new Error('INSTANT_CONSENT_UNQUALIFIED');}
   else{const original=this.#obligation(id(p.reauthorization_of));if(original.obligation_id!==b.obligation_id||p.trial_deadline_at!==original.trial_deadline_at||canonical(original.binding)!==canonical(b))throw new Error('INSTANT_CONSENT_BINDING_CHANGED');}
   this.db.prepare('INSERT INTO fixture_instant_consents VALUES(?,NULL,0,?,?)').run(p.id,canonical(p),contentDigest(p));return {id:p.id,digest:contentDigest(p),qualification:this.qualification};
  }
@@ -91,12 +95,13 @@ export class InstantExchangeFixtureSource {
   if(row.used_by!==null&&row.used_by!==usedBy)throw new Error('INSTANT_CONSENT_USED');if(canonical(c.binding)!==canonical(binding))throw new Error('INSTANT_CONSENT_BINDING_CHANGED');
   const a=this.account(c.account_id),t=this.#terms(c.terms_id,c.terms_digest);this.#order(binding);
   if(c.mandate_expires_at<=this.clock())throw new Error('INSTANT_MANDATE_EXPIRED');
-  if(t.account_id!==c.account_id||minor(c.maximum_minor)>minor(t.maximum_minor)||minor(c.maximum_minor)>minor(binding.original_paid_minor)||c.mandate_expires_at>Math.min(t.expires_at,a.expires_at))throw new Error('INSTANT_CONSENT_UNQUALIFIED');
+  if(t.account_id!==c.account_id||minor(c.maximum_minor)>minor(t.maximum_minor)||minor(c.maximum_minor)>minor(trials.originalObligation(binding))||c.mandate_expires_at>Math.min(t.expires_at,a.expires_at))throw new Error('INSTANT_CONSENT_UNQUALIFIED');
+  if(trials.isDeliveryTrial(binding)){const window=trials.trialWindow(this,c.account_id);if(c.window_digest!==window.digest||c.authorization_duration_ms!==window.authorization_duration_ms||c.mandate_expires_at!==c.confirmed_at+window.authorization_duration_ms)throw new Error('INSTANT_TRIAL_AUTHORIZATION_DURATION_CHANGED');}
   return {consent:c,account:a,terms:t,digest:contentDigest(c)};
  }
  #obligation(ref:string){return this.#read(this.db.prepare('SELECT * FROM fixture_instant_obligations WHERE id=?').get(id(ref)) as Row);}
  #returns(obligation:Row){return (this.db.prepare('SELECT * FROM fixture_instant_returns WHERE obligation_id=?').all(obligation.obligation_id) as Row[]).map(r=>this.#read(r));}
- #balance(obligation:Row){const received=new Set(this.#returns(obligation).flatMap(r=>r.units.map((u:Row)=>u.line_id+':'+u.unit_index))),unreturned=obligation.binding.units.filter((u:Row)=>!received.has(u.line_id+':'+u.unit_index));
+ #balance(obligation:Row){if(trials.isDeliveryTrial(obligation.binding))return trials.deliveryTrialBalance(this,obligation.binding);const received=new Set(this.#returns(obligation).flatMap(r=>r.units.map((u:Row)=>u.line_id+':'+u.unit_index))),unreturned=obligation.binding.units.filter((u:Row)=>!received.has(u.line_id+':'+u.unit_index));
   return {unreturned,remaining:unreturned.reduce((n:bigint,u:Row)=>n+minor(u.paid_minor),0n),received};}
  #release(ref:string){const row=this.db.prepare('SELECT * FROM fixture_instant_releases WHERE obligation_id=?').get(ref) as Row;return row?{...this.#read(row),state:row.state}:{state:'none'};}
  #capture(ref:string){const row=this.db.prepare('SELECT * FROM fixture_instant_captures WHERE obligation_id=?').get(ref) as Row;return row?this.#read(row):null;}
@@ -106,32 +111,34 @@ export class InstantExchangeFixtureSource {
   const p=this.#consent(obligation.consent_id,obligation.binding,obligation.obligation_id);
   if(p.account.digest!==obligation.account_digest||p.terms.digest!==obligation.terms_digest||p.digest!==obligation.consent_digest)throw new Error('INSTANT_TERMS_CHANGED');return p;
  }
- #publicBinding(o:Row){return {obligation_id:o.obligation_id,mandate_id:o.mandate_id,mandate_revision:o.mandate_revision,source_identity:this.identity,exchange_quote_id:o.binding.exchange_quote_id,exchange_quote_digest:o.binding.exchange_quote_digest,allocation_id:o.allocation_id,resource_id:o.binding.resource_id,customer_id:o.binding.customer_id,currency:o.binding.currency,maximum_minor:o.maximum_minor,terms_digest:o.terms_digest,consent_id:o.consent_id,expires_at:o.expires_at,trial_deadline_at:o.trial_deadline_at};}
+ #publicBinding(o:Row){if(trials.isDeliveryTrial(o.binding))return trials.trialPublicBinding(this,o);return {obligation_id:o.obligation_id,mandate_id:o.mandate_id,mandate_revision:o.mandate_revision,source_identity:this.identity,exchange_quote_id:o.binding.exchange_quote_id,exchange_quote_digest:o.binding.exchange_quote_digest,allocation_id:o.allocation_id,resource_id:o.binding.resource_id,customer_id:o.binding.customer_id,currency:o.binding.currency,maximum_minor:o.maximum_minor,terms_digest:o.terms_digest,consent_id:o.consent_id,expires_at:o.expires_at,trial_deadline_at:o.trial_deadline_at};}
  binding(allocationId:string){const row=this.db.prepare('SELECT * FROM fixture_instant_obligations WHERE allocation_id=?').get(id(allocationId)) as Row;if(!row)return null;const o=this.#read(row);this.#active(o);return this.#publicBinding(o);}
  obligation(ref:string){const o=this.#obligation(ref),balance=this.#balance(o),capture=this.#capture(ref),release=this.#release(ref);
   const compensation=capture?(capture.units as Row[]).filter(u=>balance.received.has(u.line_id+':'+u.unit_index)).reduce((n,u)=>n+minor(u.captured_minor),0n):0n;
-  return {...this.#publicBinding(o),state:o.state,account_id:o.account_id,original_paid_minor:o.binding.original_paid_minor,remaining_minor:o.state==='canceled'?'0':balance.remaining.toString(),captured_minor:capture?.captured_minor??'0',compensation_required_minor:compensation.toString(),release,qualification:this.qualification};}
+  return {...this.#publicBinding(o),state:o.state,account_id:o.account_id,...(trials.isDeliveryTrial(o.binding)?{original_obligation_minor:o.binding.original_obligation_minor,receipt_certain:balance.certain}:{original_paid_minor:o.binding.original_paid_minor}),remaining_minor:o.state==='canceled'?'0':balance.remaining.toString(),captured_minor:capture?.captured_minor??'0',compensation_required_minor:compensation.toString(),release:trials.isDeliveryTrial(o.binding)?{state:'not_required'}:release,qualification:this.qualification};}
  plan(kind:string,input:unknown){
   if(kind==='authorize'){const p=exact(jsonValue(input),['binding','consent_id']),b=nativeBinding(p.binding),v=this.#consent(p.consent_id,b);
    if(v.consent.reauthorization_of!==null)throw new Error('INSTANT_CONSENT_BINDING_CHANGED');
+   if(trials.isDeliveryTrial(b))trials.assertTrialConsent(this,v.consent,b,v.terms);
    if(this.db.prepare('SELECT 1 FROM fixture_instant_obligations WHERE id=? OR allocation_id=?').get(b.obligation_id,b.allocation_id))throw new Error('INSTANT_OBLIGATION_EXISTS');
    if(b.units.some((u:Row)=>this.db.prepare('SELECT 1 FROM fixture_instant_unit_claims WHERE resource_id=? AND line_id=? AND unit_index=?').get(b.resource_id,u.line_id,u.unit_index)))throw new Error('INSTANT_UNIT_ALREADY_CLAIMED');
-   return {kind,binding:b,obligation_id:b.obligation_id,generation:1,account_id:v.account.account_id,account_digest:v.account.digest,terms_id:v.terms.terms_id,terms_digest:v.terms.digest,consent_id:v.consent.id,consent_digest:v.digest,maximum_minor:v.consent.maximum_minor,amount_minor:v.consent.maximum_minor,trial_deadline_at:v.consent.trial_deadline_at,expires_at:v.consent.mandate_expires_at,mandate_revision:1};
+   return {kind,binding:b,obligation_id:b.obligation_id,generation:1,account_id:v.account.account_id,account_digest:v.account.digest,terms_id:v.terms.terms_id,terms_digest:v.terms.digest,consent_id:v.consent.id,consent_digest:v.digest,maximum_minor:v.consent.maximum_minor,amount_minor:v.consent.maximum_minor,trial_deadline_at:v.consent.trial_deadline_at,expires_at:v.consent.mandate_expires_at,mandate_revision:1,...(trials.isDeliveryTrial(b)?trials.trialPlanFields(v.consent):{})};
   }
   const p=exact(jsonValue(input),kind==='reauthorize'?['obligation_id','consent_id']:['obligation_id']),o=this.#obligation(p.obligation_id),capture=this.#capture(o.obligation_id),release=this.#release(o.obligation_id);
   if(o.state!=='mandate_active'||capture)throw new Error('INSTANT_MANDATE_INACTIVE');
   if(kind==='reauthorize'){if(release.state==='reserved')throw new Error('INSTANT_RELEASE_UNRESOLVED');const v=this.#consent(p.consent_id,o.binding);
-   if(v.consent.reauthorization_of!==o.obligation_id||v.consent.id===o.consent_id||v.consent.confirmed_at<=o.authorized_at||v.consent.trial_deadline_at!==o.trial_deadline_at)throw new Error('INSTANT_FRESH_CONSENT_REQUIRED');
-   return {kind,binding:o.binding,obligation_id:o.obligation_id,generation:o.mandate_revision+1,account_id:v.account.account_id,account_digest:v.account.digest,terms_id:v.terms.terms_id,terms_digest:v.terms.digest,consent_id:v.consent.id,consent_digest:v.digest,maximum_minor:v.consent.maximum_minor,amount_minor:v.consent.maximum_minor,trial_deadline_at:o.trial_deadline_at,expires_at:v.consent.mandate_expires_at,mandate_revision:o.mandate_revision+1};
+   if(v.consent.reauthorization_of!==o.obligation_id||v.consent.id===o.consent_id||v.consent.confirmed_at<=o.authorized_at||!trials.isDeliveryTrial(o.binding)&&v.consent.trial_deadline_at!==o.trial_deadline_at)throw new Error('INSTANT_FRESH_CONSENT_REQUIRED');
+   if(trials.isDeliveryTrial(o.binding))trials.assertTrialConsent(this,v.consent,o.binding,v.terms);
+   return {kind,binding:o.binding,obligation_id:o.obligation_id,generation:o.mandate_revision+1,account_id:v.account.account_id,account_digest:v.account.digest,terms_id:v.terms.terms_id,terms_digest:v.terms.digest,consent_id:v.consent.id,consent_digest:v.digest,maximum_minor:v.consent.maximum_minor,amount_minor:v.consent.maximum_minor,trial_deadline_at:trials.isDeliveryTrial(o.binding)?v.consent.trial_deadline_at:o.trial_deadline_at,expires_at:v.consent.mandate_expires_at,mandate_revision:o.mandate_revision+1,...(trials.isDeliveryTrial(o.binding)?trials.trialPlanFields(v.consent):{})};
   }
   if(kind==='cancel'){if(release.state==='reserved')throw new Error('INSTANT_RELEASE_UNRESOLVED');return {kind,binding:o.binding,obligation_id:o.obligation_id,generation:1,mandate_revision:o.mandate_revision,amount_minor:'0',expires_at:this.clock()+300000};}
   if(kind!=='capture')throw new Error('UNSUPPORTED_ACTION');this.#active(o);
-  if(release.state!=='confirmed')throw new Error('INSTANT_RELEASE_UNCONFIRMED');if(this.clock()<o.trial_deadline_at)throw new Error('INSTANT_TRIAL_ACTIVE');
+  const trialState=trials.isDeliveryTrial(o.binding)?trials.trialCaptureState(this,o):null;if(!trialState){if(release.state!=='confirmed')throw new Error('INSTANT_RELEASE_UNCONFIRMED');if(this.clock()<o.trial_deadline_at)throw new Error('INSTANT_TRIAL_ACTIVE');}
   const balance=this.#balance(o),amount=minimum(balance.remaining,minor(o.maximum_minor));if(amount===0n)throw new Error('INSTANT_NOT_COLLECTIBLE');
-  return {kind,binding:o.binding,obligation_id:o.obligation_id,generation:1,mandate_revision:o.mandate_revision,consent_id:o.consent_id,terms_digest:o.terms_digest,maximum_minor:o.maximum_minor,amount_minor:amount.toString(),trial_deadline_at:o.trial_deadline_at,expires_at:o.expires_at};
+  return {kind,binding:o.binding,obligation_id:o.obligation_id,generation:trialState?trials.trialCaptureGeneration(this,o.obligation_id):1,mandate_revision:o.mandate_revision,consent_id:o.consent_id,terms_digest:o.terms_digest,maximum_minor:o.maximum_minor,amount_minor:amount.toString(),trial_deadline_at:trialState?trialState.clock.ends_at:o.trial_deadline_at,expires_at:o.expires_at,...(trialState?{trial_delivery_digest:trialState.clock.delivery_digest,trial_receipt_digest:trialState.balance.receipt_digest}:{})};
  }
  // Persist the exact approved command before a replaceable transport can alter it.
- bindOperation(input:unknown){const c=jsonValue(input);this.#scope(c);id(c.operation_id);integer(c.generation,1);
+ bindOperation(input:unknown){const c=jsonValue(input);this.#scope(c);id(c.operation_id);integer(c.generation,1);trials.assertDeliveryTrialGuard(this,c);
   return this.tx(()=>{const rows=this.db.prepare('SELECT * FROM fixture_instant_operation_bindings WHERE id=? OR (obligation_id=? AND kind=? AND generation=?)').all(c.operation_id,c.obligation_id,c.kind,c.generation) as Row[];
    if(rows.length){if(rows.length!==1||rows[0].id!==c.operation_id||rows[0].digest!==contentDigest(c))throw new Error('INSTANT_COMMAND_BINDING_CHANGED');return;}
    const plan=this.plan(c.kind,c.kind==='authorize'?{binding:c.binding,consent_id:c.consent_id}:c.kind==='reauthorize'?{obligation_id:c.obligation_id,consent_id:c.consent_id}:{obligation_id:c.obligation_id});
@@ -146,8 +153,10 @@ export class InstantExchangeFixtureSource {
    const rows=this.db.prepare('SELECT * FROM fixture_instant_operation_bindings WHERE id=? OR (obligation_id=? AND kind=? AND generation=?)').all(c.operation_id,c.obligation_id,c.kind,c.generation) as Row[];
    if(rows.length!==1||rows[0].id!==c.operation_id||rows[0].digest!==contentDigest(c))throw new Error('INSTANT_COMMAND_BINDING_CHANGED');
    const old=this.db.prepare('SELECT * FROM fixture_instant_operations WHERE id=?').get(c.operation_id) as Row;if(old)return this.#read(old);
+   if(trials.isDeliveryTrial(c.binding)&&!trials.hasDeliveryTrialGuard(this,c))throw new Error('INSTANT_TRIAL_GUARD_REQUIRED');
    let state='rejected',reason:string|null=null,mandate:Row|null=null,captured='0';
    try{
+    trials.assertDeliveryTrialGuard(this,c);
     if(!Number.isSafeInteger(c.dispatch_expires_at)||c.dispatch_expires_at<=this.clock())throw new Error('INSTANT_OPERATION_EXPIRED');
     if(c.kind==='authorize'||c.kind==='reauthorize'){
      const plan=this.plan(c.kind,c.kind==='authorize'?{binding:c.binding,consent_id:c.consent_id}:{obligation_id:c.obligation_id,consent_id:c.consent_id});
@@ -162,11 +171,11 @@ export class InstantExchangeFixtureSource {
     }else if(c.kind==='capture'){
      const o=this.#obligation(c.obligation_id);this.#active(o);
      if(o.mandate_revision!==c.mandate_revision||o.consent_id!==c.consent_id||o.terms_digest!==c.terms_digest||o.maximum_minor!==c.maximum_minor)throw new Error('INSTANT_BINDING_CHANGED');
-     if(this.#release(o.obligation_id).state!=='confirmed')throw new Error('INSTANT_RELEASE_UNCONFIRMED');if(this.clock()<o.trial_deadline_at)throw new Error('INSTANT_TRIAL_ACTIVE');
+     if(trials.isDeliveryTrial(o.binding))trials.trialCaptureState(this,o);else{if(this.#release(o.obligation_id).state!=='confirmed')throw new Error('INSTANT_RELEASE_UNCONFIRMED');if(this.clock()<o.trial_deadline_at)throw new Error('INSTANT_TRIAL_ACTIVE');}
      if(this.#capture(o.obligation_id))throw new Error('INSTANT_CAPTURE_EXISTS');
      const balance=this.#balance(o),amount=minimum(minimum(balance.remaining,minor(o.maximum_minor)),minor(c.amount_minor));
      if(amount===0n)throw new Error('INSTANT_NOT_COLLECTIBLE');
-     let left=amount;const chargedUnits=balance.unreturned.map((u:Row)=>{const share=minimum(minor(u.paid_minor),left);left-=share;return {...u,captured_minor:share.toString()};});
+     let left=amount;const chargedUnits=balance.unreturned.map((u:Row)=>{const share=minimum(trials.unitObligation(u),left);left-=share;return {...u,captured_minor:share.toString()};});
      const effect={obligation_id:o.obligation_id,operation_id:c.operation_id,captured_minor:amount.toString(),currency:o.binding.currency,mandate_id:o.mandate_id,mandate_revision:o.mandate_revision,units:chargedUnits,observed_at:this.clock(),qualification:this.qualification};
      this.db.prepare('INSERT INTO fixture_instant_captures VALUES(?,?,?,?,?,?)').run(o.obligation_id,c.operation_id,effect.captured_minor,effect.currency,canonical(effect),contentDigest(effect));
      captured=effect.captured_minor;state='captured';mandate=this.#publicBinding(o);

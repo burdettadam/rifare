@@ -6,14 +6,13 @@ import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { DatabaseSync } from 'node:sqlite';
 import { InstantExchangeFixtureSource } from '../../packages/adapters/instant-exchange-fixture-source.mts';
-import { contentDigest } from '../../packages/commerce/configuration-values.mts';
 import { usingTrials,oracle,captureCount,populateTrialPrivacy } from './trial-payments-helpers.mts';
 
-async function mutant(name:string,marker:string,replacement:string,run:(broken:any)=>unknown){
+async function mutant(name:string,marker:string,replacement:string,run:(broken:any,module:any)=>unknown){
  const directory=mkdtempSync(join(tmpdir(),'rifare-trial-mutant-'));
  try{const url=new URL('../../packages/adapters/delivery-trial-source-guards.mts',import.meta.url),original=readFileSync(url,'utf8');assert.equal(original.split(marker).length,2);
   const source=original.replace(marker,replacement).replace(/from '([.][^']+)'/g,(_all,path)=>"from '"+new URL(path,url).href+"'");
-  const target=join(directory,'mutant.mts');writeFileSync(target,source);await run((await import(pathToFileURL(target).href))[name]);
+  const target=join(directory,'mutant.mts');writeFileSync(target,source);const module=await import(pathToFileURL(target).href);await run(module[name],module);
  }finally{rmSync(directory,{recursive:true,force:true});}
 }
 
@@ -33,8 +32,16 @@ test('M10-G13-PREP-02',async()=>{
  await usingTrials(async f=>{
   const q=f.instant.quoteAuthorize(f.a.scope,{trial_id:f.trial.id,consent_id:f.consent.id}),op=f.approve(q),command=JSON.parse(f.kernel.db.prepare('SELECT command FROM commerce_instant_operations WHERE id=?').get(op.id).command);
   assert.throws(()=>f.source.bindOperation(command),/TRIAL_GUARD_REQUIRED/);assert.equal(captureCount(f),0);
-  const reopenedDb=new DatabaseSync(f.sourceFilename);try{const reopened=new InstantExchangeFixtureSource(reopenedDb,{mode:'fixture',tenant:f.a.tenant,store:f.a.store,identity:'delivery-trial-source',clock:f.now});await assert.rejects(reopened.issue(command),/TRIAL_GUARD_REQUIRED|COMMAND_BINDING/);}finally{reopenedDb.close();}
-  f.readiness.outage(f.owner.scope,{service:'trial_payments',account_id:'trial-account',unavailable:true});assert.throws(()=>f.instant.quoteAuthorize(f.a.scope,{trial_id:f.trial.id,consent_id:f.consent.id}),/PARTNER|TRIAL/);
+  const issue=f.source.issue.bind(f.source);f.source.issue=async current=>{
+   const reopenedDb=new DatabaseSync(f.sourceFilename);try{const reopened=new InstantExchangeFixtureSource(reopenedDb,{mode:'fixture',tenant:f.a.tenant,store:f.a.store,identity:'delivery-trial-source',clock:f.now});
+    // The canonical dispatcher has now persisted this exact original binding.
+    assert.equal(reopenedDb.prepare('SELECT count(*) n FROM fixture_instant_operation_bindings WHERE id=?').get(current.operation_id).n,1);
+    await assert.rejects(reopened.issue(current),/TRIAL_GUARD_REQUIRED/);const result=await issue(current);
+    assert.deepEqual(await reopened.lookup(current.operation_id),result);return result;
+   }finally{reopenedDb.close();}
+  };
+  assert.equal((await f.instant.dispatch(f.a.scope,op.id)).state,'mandate_active');f.delivery();f.advance(70001);
+  f.readiness.outage(f.owner.scope,{service:'trial_payments',account_id:'trial-account',unavailable:true});assert.throws(()=>f.instant.quoteCapture(f.a.scope,{obligation_id:f.obligationId}),/PARTNER|TRIAL/);
  });
  await usingTrials(f=>{
   const current=f.facts.window('trial-account');f.facts.qualifyWindow({...f.windowInput,expected_revision:current.revision,authorization_duration_ms:60000});
@@ -64,7 +71,7 @@ test('M10-G13-PREP-03',async()=>{
 
 test('M10-G14-PREP-01',async()=>{
  await usingTrials(async f=>{
-  await f.authorize();f.advance(1000);f.delivery();f.returned([1],true);f.advance(oracle.trial_ms+oracle.return_grace_ms+1);
+  await f.authorize();f.advance(1000);f.delivery();await f.returned([1],true);f.advance(oracle.trial_ms+oracle.return_grace_ms+1);
   const quote=f.instant.quoteCapture(f.a.scope,{obligation_id:f.obligationId});assert.equal(quote.quote.amount_minor,oracle.retained_after_one_return_minor);
   const op=f.approve(quote),result=await f.instant.dispatch(f.a.scope,op.id);assert.equal(result.state,'captured');assert.equal(result.source.captured_minor,oracle.captured_after_one_return_minor);
   assert.equal(captureCount(f),oracle.native_capture_count);assert.equal(f.warehouse.stock('shirt-small','trial-warehouse'),10);
@@ -76,10 +83,16 @@ test('M10-G14-PREP-01',async()=>{
   const quote=f.instant.quoteReauthorize(f.a.scope,{obligation_id:f.obligationId,consent_id:consent.id});assert.equal(f.trials.read(f.a.scope,f.trial.id).clock.ends_at,initial.ends_at);
   const op=f.approve(quote);assert.equal((await f.instant.dispatch(f.a.scope,op.id)).state,'mandate_active');assert.equal(f.trials.read(f.a.scope,f.trial.id).clock.ends_at,initial.ends_at+30000);assert.equal(captureCount(f),0);
  });
+ await usingTrials(async f=>{
+  await f.authorize();f.delivery();await f.returned([1,2,3],true);f.advance(70001);
+  assert.throws(()=>f.instant.quoteCapture(f.a.scope,{obligation_id:f.obligationId}),/INSTANT_NOT_COLLECTIBLE/);
+  const op=f.approve(f.instant.quoteCancel(f.a.scope,{obligation_id:f.obligationId})),result=await f.instant.dispatch(f.a.scope,op.id);
+  assert.equal(result.state,'canceled');assert.equal(result.source.remaining_minor,'0');assert.equal(captureCount(f),0);assert.equal(f.warehouse.stock('shirt-small','trial-warehouse'),10);
+ });
 });
 
 test('M10-G14-PREP-02',async()=>{
- await usingTrials(async f=>{await f.authorize();f.delivery();f.returned([1],false);f.advance(70001);assert.throws(()=>f.instant.quoteCapture(f.a.scope,{obligation_id:f.obligationId}),/TRIAL_RECEIPTS_UNCERTAIN/);assert.equal(captureCount(f),0);});
+ await usingTrials(async f=>{await f.authorize();f.delivery();await f.returned([1],false);f.advance(70001);assert.throws(()=>f.instant.quoteCapture(f.a.scope,{obligation_id:f.obligationId}),/TRIAL_RECEIPTS_UNCERTAIN/);assert.equal(captureCount(f),0);});
  await usingTrials(async f=>{await f.authorize();f.delivery();f.advance(oracle.authorization_duration_ms+1);assert.throws(()=>f.instant.quoteCapture(f.a.scope,{obligation_id:f.obligationId}),/EXPIRED|REAUTHORIZATION|VERIFICATION/);assert.equal(captureCount(f),0);});
  await usingTrials(async f=>{
   await f.authorize();f.delivery();assert.throws(()=>f.trials.consent(f.customer,{trial_id:f.trial.id,consent_id:'unapproved-extension',terms_digest:f.terms.digest,maximum_minor:'3000',confirmed:true,extension_ms:oracle.maximum_extension_ms+1,reauthorization_of:f.obligationId}),/TRIAL_EXTENSION/);
@@ -93,7 +106,7 @@ test('M10-G14-PREP-02',async()=>{
 test('M10-G14-PREP-03',async()=>{
  await usingTrials(async f=>{
   await f.authorize();f.delivery();f.advance(70001);const original=f.approve(f.instant.quoteCapture(f.a.scope,{obligation_id:f.obligationId})),issue=f.source.issue.bind(f.source);
-  f.source.issue=async(command:any)=>{if(command.kind==='capture')f.returned([1],true);return issue(command);};
+  f.source.issue=async(command:any)=>{if(command.kind==='capture')await f.returned([1],true);return issue(command);};
   const first=await f.instant.dispatch(f.a.scope,original.id);assert.equal(first.state,'rejected');assert.equal(captureCount(f),0);f.source.issue=issue;
   const final=f.approve(f.instant.quoteCapture(f.a.scope,{obligation_id:f.obligationId}));f.source.fault='after';const outcomes=await Promise.all([f.instant.dispatch(f.a.scope,final.id),f.instant.dispatch(f.a.scope,final.id)]);
   assert.ok(outcomes.every(result=>result.state==='unknown'));assert.equal(captureCount(f),1);assert.equal(f.source.db.prepare('SELECT captured_minor FROM fixture_instant_captures').get().captured_minor,'2000');
@@ -101,8 +114,8 @@ test('M10-G14-PREP-03',async()=>{
   f.readiness.outage(f.owner.scope,{service:'trial_payments',account_id:'trial-account',unavailable:true});const recovered=await f.instant.reconcile(f.a.scope,final.id);
   assert.equal(recovered.id,final.id);assert.equal(recovered.state,'captured');assert.equal(captureCount(f),1);assert.equal(f.warehouse.stock('shirt-small','trial-warehouse'),10);
  });
- await mutant('deliveryTrialBalance','const retained = binding.units.filter((unit:Row)=>!received.has(unit.line_id+\':\'+unit.unit_index));','const retained = binding.units;',broken=>usingTrials(async f=>{
-  await f.authorize();f.delivery();f.returned([1],true);const value=broken(f.source,f.binding);
+ await mutant('deliveryTrialBalance','const retained = binding.units.filter((unit:Row)=>!received.has(unit.line_id+\':\'+unit.unit_index));','const retained = binding.units;',(broken,module)=>usingTrials(async f=>{
+  await f.authorize();f.delivery();await f.returned([1],true);new module.DeliveryTrialFacts(f.source).bindWarehouse(f.warehouse);const value=broken(f.source,f.binding);
   assert.equal(value.remaining.toString(),'3000');assert.throws(()=>assert.equal(value.remaining.toString(),oracle.retained_after_one_return_minor,'Returned goods cannot enter final capture'),assert.AssertionError);
  }));
 });

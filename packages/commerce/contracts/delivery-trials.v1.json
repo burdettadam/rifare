@@ -1,0 +1,78 @@
+{
+  "version": 1,
+  "id": "rifare-delivery-trials-fixture-v1",
+  "api_version": "local-consent-mandate-source",
+  "goals": ["M10-G13"],
+  "capability": "FEATURE-M10-G13-PREPARATION",
+  "qualification": "synthetic_local_only",
+  "formal_goal_accepted": false,
+  "external_qualified": false,
+  "live_transport": false,
+  "canonical_service": "packages/commerce/delivery-trials.mts",
+  "canonical_money_owner": "packages/commerce/instant-exchanges.mts",
+  "source": "packages/adapters/instant-exchange-fixture-source.mts",
+  "source_extension": "packages/adapters/delivery-trial-source-guards.mts",
+  "adapter_extension": {
+    "id": "instant_exchange_source",
+    "operations": ["trial.authorize", "trial.reauthorize", "trial.capture", "trial.cancel"],
+    "binding_discriminator": "workflow=delivery_trial",
+    "existing_operations_retained": true,
+    "new_payment_owner": false
+  },
+  "readiness": {
+    "service": "trial_payments",
+    "context": ["service", "account_id", "source_identity", "source_config_digest", "region", "capability"],
+    "source_config_digest": "Original source identity, current account digest, separately observed authorization-window digest and revision",
+    "requirements": "Current independent PartnerReadiness approval, unchanged exact configuration and execution-control stamp, supported region/capability, unexpired evidence, no outage, active permissions and recovery egress"
+  },
+  "terms": {
+    "author_permission": "action.configure",
+    "reviewer_permission": "action.approve",
+    "independent_review": true,
+    "versioned": true,
+    "rule": "retained_trial_goods_v1",
+    "currency": "USD",
+    "native_notice_max_characters": 2000,
+    "clock_rule": "delivery_correction_never_shortens_v1",
+    "duration_qualification": "delivery_window_ms + trial_ms + return_grace_ms <= observed authorization_duration_ms",
+    "maximum_authorization_duration_ms": 3600000
+  },
+  "customer_consent": {
+    "current_customer_access_proof_required": true,
+    "current_owner_email_and_source_revision_bound": true,
+    "explicit_confirmed_true_required": true,
+    "records": ["terms_digest", "maximum_minor", "currency", "confirmed_at", "authorization_expires_at", "extension_ms", "reauthorization_of"],
+    "maximum": "No more than both the approved terms maximum and the exact sum of original trial unit obligations",
+    "source_authorization_expiry": "The native synthetic mandate records exactly confirmed_at + the independently observed account authorization_duration_ms; issuing later does not move that expiry",
+    "financial_execution": "Consent alone creates no payment effect; existing exact ActionGateway preview, independent financial approval, receipt and original InstantExchanges dispatch are required",
+    "withdrawal": "Revokes local and native consent for future effects; it neither reverses a committed capture nor silently waives the original obligation"
+  },
+  "trial_binding": {
+    "identity": ["trial_id", "obligation_id", "allocation_id", "case_id", "resource_id", "customer_id", "native_original_order_id", "order_digest"],
+    "amounts": ["currency", "original_obligation_minor", "units.line_id", "units.unit_index", "units.variant_id", "units.obligation_minor"],
+    "maximum_units": 100,
+    "fabricated_exchange_return_or_paid_fields": false,
+    "one_original_trial_per_scoped_order": true
+  },
+  "delivery": {
+    "authority": "Immutable synthetic original-source delivery observations, scoped to trial, resource and native original order",
+    "start": "No clock until the latest event confirms complete delivery; start is the maximum delivery timestamp among complete events in its correction chain",
+    "duplicate": "Same event ID and digest is idempotent",
+    "correction": "Strict next sequence and exact previous event reference; a correction can extend the clock but cannot shorten it",
+    "uncertain": "An incomplete or null latest delivery suspends capture eligibility",
+    "end": "started_at + approved trial_ms + dispatched trial_extension_ms",
+    "capture_after": "ends_at + approved return_grace_ms"
+  },
+  "source_final_guard": "The original source persists the exact typed command before sending and requires the current canonical dispatcher callback before a new bound effect. Reopening the source cannot bypass this requirement. Original stored-result lookup remains available.",
+  "privacy": "All five new tables are handled by canonical export, erasure and restore helpers. Customer proof/session material is omitted from export and stripped on erasure or restore. Typed additions in the original instant tables are allowlist-minimized without changing operation IDs, source IDs or unknown states.",
+  "native_preparation_cases": ["M10-G13-PREP-01", "M10-G13-PREP-02", "M10-G13-PREP-03"],
+  "original_connected_cases": ["CASE-M10-G13-01", "CASE-M10-G13-02", "CASE-M10-G13-03"],
+  "original_connected_cases_performed": false,
+  "remaining_limits": [
+    "No real processor, native card data, payment network, contractual authorization duration or settlement qualification",
+    "No real delivery observation, connected warehouse or physical service qualification",
+    "Synthetic USD original-order units only; at most one hour of observed authorization duration",
+    "M07-G99, external PartnerReadiness and original M10 connected qualification remain blocked",
+    "No public release, paid transaction, production operation or automatic milestone acceptance"
+  ]
+}

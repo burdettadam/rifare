@@ -12,6 +12,8 @@ import { assertRecoveryEgress } from './data-guards.mts';
 import { verifiedGiftCase } from './gift-proof.mts';
 import { money } from './money.mts';
 import { InstantExchangeFixtureSource } from '../adapters/instant-exchange-fixture-source.mts';
+import { isDeliveryTrial,armDeliveryTrialGuard } from '../adapters/delivery-trial-source-guards.mts';
+import { trialAuthorizationBinding,trialObligationContext,trialPaymentAuthority,trialReconcileAuthority } from './delivery-trial-core.mts';
 
 export const INSTANT_ACTIONS=Object.freeze({authorize:'diagnostic.instant.authorize',reauthorize:'diagnostic.instant.reauthorize',capture:'diagnostic.instant.capture',cancel:'diagnostic.instant.cancel'});
 export const INSTANT_CONTRACT=Object.freeze({id:'rifare-instant-exchange-fixture-v1',version:1,qualification:'synthetic_only',live_transport:false});
@@ -24,9 +26,9 @@ function instantSettings(k:CommerceKernel,s:Row){const r=k.db.prepare('SELECT * 
  if(b.source_identity!==source.identity||source.tenant!==s.tenant_id||source.store!==s.store_id)throw new Error('INSTANT_SOURCE_MISMATCH');
  const account=source.account(b.account_id);if(account.digest!==b.account_digest)throw new Error('INSTANT_CONFIGURATION_CHANGED');return {...b,revision:r.revision,digest:r.digest};
 }
-function obligationContext(k:CommerceKernel,scope:Scope,ref:string){const s=k.require(scope),r=k.db.prepare('SELECT * FROM commerce_instant_obligations WHERE tenant_id=? AND store_id=? AND id=?').get(s.tenant_id,s.store_id,id(ref)) as Row,b=checkedBody(r,'INSTANT_INTEGRITY'),ctx=allocationContext(k,scope,r.allocation_id,false);
+function obligationContext(k:CommerceKernel,scope:Scope,ref:string){const s=k.require(scope),r=k.db.prepare('SELECT * FROM commerce_instant_obligations WHERE tenant_id=? AND store_id=? AND id=?').get(s.tenant_id,s.store_id,id(ref)) as Row,b=checkedBody(r,'INSTANT_INTEGRITY');if(isDeliveryTrial(b.binding))return trialObligationContext(k,scope,r,b);const ctx=allocationContext(k,scope,r.allocation_id,false);
  if(r.case_id!==ctx.c.id||r.resource_id!==ctx.c.resource_id||b.binding.resource_id!==ctx.c.resource_id||b.binding.customer_id!==ctx.c.customer_id||b.binding.allocation_id!==r.allocation_id||b.binding.obligation_id!==r.id)throw new Error('INSTANT_INTEGRITY');return {...ctx,obligation:r,body:b};}
-function authorizationBinding(k:CommerceKernel,scope:Scope,intent:Row){const q=new VariantExchanges(k).validateForReview(scope,{quote_id:intent.exchange_quote_id,quote_digest:intent.exchange_quote_digest}),ctx=allocationContext(k,scope,q.allocation_id),{s,a,b,c,plan}=ctx;
+function authorizationBinding(k:CommerceKernel,scope:Scope,intent:Row){if(Object.hasOwn(intent,'trial_id'))return trialAuthorizationBinding(k,scope,intent);const q=new VariantExchanges(k).validateForReview(scope,{quote_id:intent.exchange_quote_id,quote_digest:intent.exchange_quote_digest}),ctx=allocationContext(k,scope,q.allocation_id),{s,a,b,c,plan}=ctx;
  k.authorize(scope,'return.read',c.resource_id);if(verifiedGiftCase(k,s,c.id))throw new Error('INSTANT_GIFT_UNQUALIFIED');
  const facts=financialFacts(k,c),paid=facts.paid_lines.find((l:Row)=>l.id===b.line_id);
  const native=k.db.prepare("SELECT * FROM commerce_native_return_operations WHERE tenant_id=? AND store_id=? AND request_id=? AND state='created'").get(s.tenant_id,s.store_id,plan.request_id) as Row;
@@ -36,7 +38,7 @@ function authorizationBinding(k:CommerceKernel,scope:Scope,intent:Row){const q=n
  return {...ctx,binding,q};
 }
 function instantValue(k:CommerceKernel,scope:Scope,kind:string,input:unknown,quotedAt:number){
- const intent=exact(jsonValue(input),kind==='authorize'?['exchange_quote_id','exchange_quote_digest','consent_id']:kind==='reauthorize'?['obligation_id','consent_id']:['obligation_id']);
+ const raw=jsonValue(input),intent=exact(raw,kind==='authorize'?(Object.hasOwn(raw,'trial_id')?['trial_id','consent_id']:['exchange_quote_id','exchange_quote_digest','consent_id']):kind==='reauthorize'?['obligation_id','consent_id']:['obligation_id']);
  let ctx:Row,plan:Row;const source=sourceFor(k);
  if(kind==='authorize'){ctx=authorizationBinding(k,scope,intent);plan=source.plan(kind,{binding:ctx.binding,consent_id:intent.consent_id});}
  else{ctx=obligationContext(k,scope,intent.obligation_id);k.authorize(scope,'return.read',ctx.c.resource_id);plan=source.plan(kind,intent);if(canonical(plan.binding)!==canonical(ctx.body.binding))throw new Error('INSTANT_BINDING_CHANGED');}
@@ -46,9 +48,10 @@ function instantValue(k:CommerceKernel,scope:Scope,kind:string,input:unknown,quo
  if(k.db.prepare('SELECT 1 FROM commerce_instant_operations WHERE tenant_id=? AND store_id=? AND obligation_id=? AND kind=? AND generation=?').get(s.tenant_id,s.store_id,plan.obligation_id,kind,plan.generation))throw new Error('INSTANT_OPERATION_EXISTS');
  const action=INSTANT_ACTIONS[kind as keyof typeof INSTANT_ACTIONS];if(!action)throw new Error('UNSUPPORTED_ACTION');
  const control=assertExecution(k,s,action);assertCaseWorkerScope(k,scope,c.id);
+ const trialAuthority=trialPaymentAuthority(k,scope,kind,plan);
  return {kind,intent,case_id:c.id,case_revision:c.revision,resource_id:c.resource_id,customer_id:c.customer_id,configuration_digest:c.configuration_digest,policy_digest:c.pins.policy.digest,source_version:c.order.source_version,source_digest:contentDigest(c.order),
   source_identity:source.identity,settings_digest:settings.digest,settings_revision:settings.revision,plan,obligation_id:plan.obligation_id,amount_minor:plan.amount_minor,currency:plan.binding.currency,control_stamp:control.stamp,quoted_at:quotedAt,
-  expires_at:Math.min(quotedAt+300000,settings.expires_at,proof.expires_at,plan.expires_at),qualification:'synthetic_only',live_financial_authority:false};
+  expires_at:Math.min(quotedAt+300000,settings.expires_at,proof.expires_at,plan.expires_at,trialAuthority?.expires_at??Number.MAX_SAFE_INTEGER),...(trialAuthority?{trial_authority:trialAuthority}:{}),qualification:'synthetic_only',live_financial_authority:false};
 }
 function quoteRow(k:CommerceKernel,scope:Scope,ref:string){const s=k.require(scope),r=k.db.prepare('SELECT * FROM commerce_instant_quotes WHERE tenant_id=? AND store_id=? AND id=?').get(s.tenant_id,s.store_id,id(ref)) as Row,q=checkedBody(r,'INSTANT_INTEGRITY');
  new CaseConfigurations(k).inspect(scope,r.case_id);k.authorize(scope,'return.read',r.resource_id);if(q.case_id!==r.case_id||q.resource_id!==r.resource_id||q.kind!==r.kind||q.obligation_id!==r.obligation_id)throw new Error('INSTANT_INTEGRITY');return {...r,quote:q};}
@@ -67,7 +70,8 @@ function instantValueExisting(k:CommerceKernel,scope:Scope,q:Row,operationId:str
  let plan=source.plan(q.kind,q.kind==='authorize'?{binding:ctx.binding,consent_id:q.intent.consent_id}:q.intent);
  if(q.kind==='cancel')plan={...plan,expires_at:Math.min(plan.expires_at,q.quoted_at+300000)};
  const control=assertExecution(k,s,INSTANT_ACTIONS[q.kind as keyof typeof INSTANT_ACTIONS]);
- return {...q,case_id:c.id,case_revision:c.revision,resource_id:c.resource_id,customer_id:c.customer_id,configuration_digest:c.configuration_digest,policy_digest:c.pins.policy.digest,source_version:c.order.source_version,source_digest:contentDigest(c.order),source_identity:source.identity,settings_digest:settings.digest,settings_revision:settings.revision,plan,amount_minor:plan.amount_minor,currency:plan.binding.currency,control_stamp:control.stamp,expires_at:Math.min(q.quoted_at+300000,settings.expires_at,proof.expires_at,plan.expires_at)};
+ const trialAuthority=trialPaymentAuthority(k,scope,q.kind,plan,operationId,q.trial_authority);
+ return {...q,case_id:c.id,case_revision:c.revision,resource_id:c.resource_id,customer_id:c.customer_id,configuration_digest:c.configuration_digest,policy_digest:c.pins.policy.digest,source_version:c.order.source_version,source_digest:contentDigest(c.order),source_identity:source.identity,settings_digest:settings.digest,settings_revision:settings.revision,plan,amount_minor:plan.amount_minor,currency:plan.binding.currency,control_stamp:control.stamp,...(trialAuthority?{trial_authority:trialAuthority}:{}),expires_at:Math.min(q.quoted_at+300000,settings.expires_at,proof.expires_at,plan.expires_at,trialAuthority?.expires_at??Number.MAX_SAFE_INTEGER)};
 }
 function observation(k:CommerceKernel,s:Row,operation:string,stage:string,value:Row){k.db.prepare('INSERT INTO commerce_instant_observations(tenant_id,store_id,operation_id,stage,body,digest,observed_at) VALUES(?,?,?,?,?,?,?)').run(s.tenant_id,s.store_id,operation,stage,canonical(value),contentDigest(value),k.clock());}
 
@@ -146,10 +150,10 @@ export class InstantExchanges {
  async dispatch(scope:Scope,operationId:string){const k=this.kernel,prepared=k.transaction(()=>{const ctx=this.#context(scope,operationId,'operation.dispatch');if(ctx.op.state!=='authorized')return null;this.#beforeSend(scope,operationId);
    k.db.prepare("UPDATE commerce_instant_operations SET state='unknown',observed_at=? WHERE tenant_id=? AND store_id=? AND id=? AND state='authorized'").run(k.clock(),ctx.s.tenant_id,ctx.s.store_id,operationId);observation(k,ctx.s,operationId,'unknown',{reason:'persisted_before_source_call'});return ctx;});
   if(!prepared)return this.read(scope,operationId);
-  try{const latest=this.#beforeSend(scope,operationId);this.source.bindOperation(latest.command);const response=await this.#bounded(()=>this.source.issue(latest.command));k.transaction(()=>{const current=this.#context(scope,operationId,'operation.dispatch');assertCaseWorkerScope(k,scope,current.op.case_id);assertExecution(k,current.s,INSTANT_ACTIONS[current.op.kind as keyof typeof INSTANT_ACTIONS]);this.#record(current,response);});}catch{/* Unknown means lookup the original operation; even a timeout before an observed effect never authorizes a new key. */}
+  try{const latest=this.#beforeSend(scope,operationId);armDeliveryTrialGuard(this.source,latest.command,()=>this.#beforeSend(scope,operationId));this.source.bindOperation(latest.command);const response=await this.#bounded(()=>this.source.issue(latest.command));k.transaction(()=>{const current=this.#context(scope,operationId,'operation.dispatch');assertCaseWorkerScope(k,scope,current.op.case_id);assertExecution(k,current.s,INSTANT_ACTIONS[current.op.kind as keyof typeof INSTANT_ACTIONS]);this.#record(current,response);});}catch{/* Unknown means lookup the original operation; even a timeout before an observed effect never authorizes a new key. */}
   return this.read(scope,operationId);
  }
- async reconcile(scope:Scope,operationId:string){const ctx=this.#context(scope,operationId,'operation.reconcile');if(ctx.op.state==='authorized')throw new Error('INSTANT_NOT_SENT');
+ async reconcile(scope:Scope,operationId:string){const ctx=this.#context(scope,operationId,'operation.reconcile');if(ctx.op.state==='authorized')throw new Error('INSTANT_NOT_SENT');trialReconcileAuthority(this.kernel,scope,ctx.command);
   let result:unknown;try{result=await this.#bounded(()=>this.source.lookup(operationId));}catch{return this.read(scope,operationId);}if(result===null)return this.read(scope,operationId);
   this.kernel.transaction(()=>{const current=this.#context(scope,operationId,'operation.reconcile');if(current.op.digest!==ctx.op.digest)throw new Error('INSTANT_INTEGRITY');this.#record(current,result);});return this.read(scope,operationId);
  }

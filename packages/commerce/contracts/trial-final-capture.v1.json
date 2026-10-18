@@ -1,0 +1,69 @@
+{
+  "version": 1,
+  "id": "rifare-trial-final-capture-fixture-v1",
+  "api_version": "local-consent-mandate-source",
+  "goals": ["M10-G14"],
+  "capability": "FEATURE-M10-G14-PREPARATION",
+  "qualification": "synthetic_local_only",
+  "formal_goal_accepted": false,
+  "external_qualified": false,
+  "live_transport": false,
+  "canonical_money_owner": "packages/commerce/instant-exchanges.mts",
+  "native_money_owner": "packages/adapters/instant-exchange-fixture-source.mts",
+  "native_capture_table": "fixture_instant_captures",
+  "canonical_operation_table": "commerce_instant_operations",
+  "canonical_return_owner": "packages/commerce/native-returns.mts",
+  "warehouse_owner": "packages/adapters/warehouse-fixture-source.mts",
+  "trial_service_stock_effects": 0,
+  "return_binding": {
+    "requires": ["original scoped order", "actual canonical return request", "created original native return operation", "unchanged native return digest", "current bound warehouse identity", "original line and unit identities"],
+    "accepted_native_states": ["OPEN", "CLOSED"],
+    "quantity_mapping": "Partial quantities may map by original ordinal only where their per-line obligations are equal; mixed-price partial units or a later request reusing linked original units are ambiguous and fail closed",
+    "receipt_authority": "Read the existing warehouse source return-event journal; do not copy administrative received flags into a new money or stock ledger",
+    "uncertain_receipts": "Every current canonical request must be linked. Missing events, partial latest completeness or missing expected units prevent final capture",
+    "corrections": "Use the effective latest observation of each original unit; a linked correction can change retained quantity and compensation visibility"
+  },
+  "extensions": {
+    "fresh_customer_consent_required": true,
+    "current_approved_terms_required": true,
+    "current_partner_capability": "reauthorization",
+    "same_original_obligation_required": true,
+    "bound": "Cumulative extension_ms cannot exceed the independently approved terms maximum_extension_ms",
+    "activation": "Only a successfully observed canonical reauthorization changes trial_extension_ms; consent or quote alone leaves the existing clock unchanged",
+    "expiry": "The recalculated delivery end plus return grace must precede the exact new source mandate expiry"
+  },
+  "final_capture": {
+    "amount": "min(exact retained original unit obligations, current explicit consent maximum, exact approved command amount)",
+    "currency": "USD",
+    "maximum_positive_native_captures_per_obligation": 1,
+    "zero_obligation": "No positive capture is issued; an independently approved canonical cancellation can waive the remaining obligation",
+    "current_checks": ["complete delivery clock", "trial end and return grace", "native authorization expiry", "current authentic customer proof", "current terms and consent", "exact independent financial approval", "current PartnerReadiness and execution stops", "current authoritative receipt certainty", "no other authorized or unknown original operation"],
+    "final_source_boundary": "Repeat the canonical approval/readiness/receipt checks inside the original source transaction immediately before the new effect. Current delivery and receipt digests are in the approved command, so an observation change invalidates the old quote and produces an original rejected outcome without capture"
+  },
+  "operation_identity": {
+    "key": "Existing deterministic InstantExchanges operation identity for scoped obligation, kind and generation",
+    "unknown_before_send": true,
+    "concurrent_dispatch": "The existing local state transition admits one dispatch; the original source binding and unique capture fence prevent duplicate effects",
+    "known_rejection": "A new capture generation is available only after every earlier native capture operation is rejected and local uncertainty is resolved",
+    "lost_response": "Retain the original operation as unknown and reconcile its original source identity; neither a different quote, request nor operation ID authorizes another capture",
+    "readiness_revoked_lookup": "An actor with current operation.reconcile permission may look up a proven stored original context after readiness outage/revocation; no new send is granted",
+    "late_return": "Original source obligation read exposes compensation_required_minor; no automatic refund, recapture or warehouse movement follows"
+  },
+  "privacy_restore": {
+    "exports": "Scoped trial rows and linked terms/approvals; no consent session hash or replay credential",
+    "erasure": "Explicit allowlists and pseudonymization on every invocation, including hash-only replay; preserve minimal original operation/source/amount/state identity",
+    "unknown_state": "Erasure, restore and uninstall never claim an unknown native payment was rejected, canceled, reversed or absent",
+    "restore": "Revoke all trial term approvals and consent authority, strip session material, and mark active trials restore_blocked",
+    "external_cleanup": "Separate original source stores, immutable native receipts, historic exports and caller copies require their own authorized retention or cleanup; no external erasure confirmation is inferred"
+  },
+  "native_preparation_cases": ["M10-G14-PREP-01", "M10-G14-PREP-02", "M10-G14-PREP-03"],
+  "original_connected_cases": ["CASE-M10-G14-01", "CASE-M10-G14-02", "CASE-M10-G14-03"],
+  "original_connected_cases_performed": false,
+  "remaining_limits": [
+    "No connected payment, real capture or settlement qualification",
+    "Separate warehouse/payment stores are synthetic fixture authorities; no distributed processor/warehouse transaction or physical race qualification is claimed",
+    "No automatic timer, extension, refund, compensation, stock movement or retry of an unknown operation",
+    "Original M10-G13 and M07-G99 acceptance remain prerequisites for formal qualification",
+    "No migration rollback drops original payment identities or unresolved obligations"
+  ]
+}
