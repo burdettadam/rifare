@@ -82,3 +82,22 @@ Separate nonauthor authority/security and regression sessions inspect the exact
 candidate, protected base and actual native evidence without duplicate suites.
 Findings remain blocking until resolved, with at most three corrective rounds.
 Only local integration is authorized; the accepted-goal ledger stays unchanged.
+
+## Prior clarification: additive current-schema counts
+
+Before the new packing/shipping table implementation, read-only assessment found
+that the retained privacy case `M07-G14-ALL-170-TABLES-HAVE-EXPLICIT-SURFACES`
+asserts the old current-schema total of 170 as well as exact actual membership.
+New durable tables necessarily increase that count. The delegated maintainer
+authorizes root to maintain this current-count assertion and any directly
+corresponding current-schema count fixture, with the following strict limits.
+
+Retain the stable test ID, all original 170 table names and classifications, and
+exact equality with the complete actual schema. Add explicit new table names and
+the independently declared new total. The legacy version-one 167-table projection
+and its immutable caller expectations stay unchanged. No existing table, subject
+handling, surface ID, test case, behavior assertion or acceptance threshold may
+be removed or relaxed. Other changes to existing tests remain outside scope.
+The new expectation must make omitted or unclassified new storage fail and must
+receive independent regression review. This is a prior additive schema update,
+not permission to rebaseline a failing behavioral oracle or conceal new storage.
