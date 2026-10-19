@@ -1,0 +1,10 @@
+{
+ "schema_version":1,"contract":"rifare-scoped-agency-aggregate-reports-v1","goal_ids":["M12-G03"],"qualification":"local_preparation_only","formal_goal_accepted":false,
+ "service":"packages/commerce/agency-reports.mts","source":"Existing SupportMetrics.report, with existing cohort and case authorization semantics",
+ "authorization":"Each explicit opaque store scope is revalidated against current canonical permissions and agency delegation on every request. Inaccessible selections are excluded without identifying hidden stores. Duplicate included stores are rejected.",
+ "aggregation":"At most 20 stores. Sum fixed count/denominator fields; calculate rates from summed counts, not averages. Missing, pending, unavailable and immature follow-up remain explicit. No persisted cache.",
+ "drilldown":"Requires current agency and support.analytics plus unrestricted store case.read/support.read/resource.read; case-specific permission checks remain in SupportMetrics.",
+ "excluded":["case identifiers","customer identifiers","resource identifiers","credential or secret references","financial observation rows","declared operating cost rows"],
+ "storage":{"tables":[]},
+ "tests":{"file":"tests/development/agency-operations.test.mts","cases":["CASE-M12-G03-01","CASE-M12-G03-02","CASE-M12-G03-03"],"targeted_fault":"A cached real aggregate ignores membership revocation and fails the independent post-revocation denominator.","author_executions":0}
+}

@@ -1,0 +1,9 @@
+{
+ "schema_version":1,"contract":"rifare-store-scoped-agency-access-v1","goal_ids":["M12-G01"],"qualification":"local_preparation_only","formal_goal_accepted":false,
+ "service":"packages/commerce/agency-access.mts","authority":"Existing CommerceKernel scopes, store membership and Permissions.change are the only role/action authority. Agency identity is descriptive metadata, never a global credential.",
+ "delegation":{"grantor":"current store owner with authority.manage","roles":["operator","reviewer"],"actions":"Explicit subset of existing role actions and AGENCY_DELEGABLE_ACTIONS; at most 30","resources":"Explicit scoped canonical IDs or null; at most 1000","protected":"Owner/authority, secret/account administration and budget configuration are not delegable","session_rule":"Every regrant revokes previous sessions; new server-issued store session is required"},
+ "revocation":"Clears only the selected store member's canonical permissions and deactivates membership; all its store sessions revoke. Original queued SupportDelivery checks its stored owner_session_hash immediately before native send.",
+ "limits":"An operation separately owned and approved by another authorized principal is not generically canceled merely because its earlier proposer was revoked.",
+ "storage":{"migration":"migrations/commerce/045_agencies.sql","tables":["commerce_agency_grants"]},
+ "tests":{"file":"tests/development/agency-operations.test.mts","cases":["CASE-M12-G01-01","CASE-M12-G01-02","CASE-M12-G01-03","M12-TEST-002-AGENCY-SCOPE","M12-AGENCY-AUTHORITY-INTEGRITY"],"targeted_fault":"Actual grant behavior copies store A role/actions into canonical store B membership; the independently required denied-write oracle fails.","author_executions":0}
+}
