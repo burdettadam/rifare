@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "id": "rifare-extensions-v1",
+  "sdk_version": "rifare-extension-v1",
+  "scope": "local_development_and_governance_preparation",
+  "artifact": {
+    "format": "rifare-extension-artifact-v1",
+    "maximum_bytes": 131072,
+    "kinds": ["instruction", "host_adapter"],
+    "source": "exact mirror SHA256, immutable declared Git revision and verified content digest",
+    "instruction_loader": "existing SkillInstaller and manifest-v2 validator",
+    "host_adapter": "existing catalog source and native test pins; inert descriptor only",
+    "sdk_and_engine": "current pinned host contracts only",
+    "license": "known declaration plus exact notice bytes and current scoped approval; no legal rights attested",
+    "provenance": "retained local fixture/source pins; no contributor independence attested",
+    "scripts": false,
+    "network_fetch": false,
+    "package_installation": false,
+    "mutable_tag_execution_identity": false
+  },
+  "authority": {
+    "stage": "current skill.stage",
+    "artifact_review": "current independent skill.approve and original SkillInstaller approval",
+    "install": "current skill.install and profile.write",
+    "transition_review": "current independent skill.review with exact source/profile/evidence binding",
+    "release": "existing SkillReleases only; separate stage/evaluate/review/publish controls remain",
+    "revoke": "current skill.revoke for one store and exact archived bundle",
+    "customer_api": false,
+    "grant_from_metadata": false
+  },
+  "compatibility": {
+    "compatible": "unchanged engine/action/input/output/configuration contract; presentation fields retain existing schema",
+    "breaking": "changed contract or schema requires major version and reviewed retain_pins_and_repreview strategy",
+    "profile_changes": ["tone", "locale"],
+    "in_flight": "immutable original case, approval, operation and source pins",
+    "explicit_case_migration": "existing CaseConfigurations.migrate; new preview required",
+    "rollback": "retained old bundle and new increasing profile revision; existing SkillReleases rollback where an activation changed",
+    "unknown_effect_replay": false
+  },
+  "retirement": {
+    "minimum_notice_ms": 86400000,
+    "required": ["exact artifact", "retained portable export", "retained version reader", "migration strategy", "host test membership", "impacted goal/store scope", "current independent review"],
+    "instruction_host_cases": ["CASE-M02-G04-01", "CASE-M02-G04-02", "CASE-M02-G04-03"],
+    "human_adoption": false,
+    "external_contribution_qualified": false,
+    "release_authorized": false
+  },
+  "tables": ["commerce_extension_artifacts", "commerce_extension_reviews", "commerce_extension_transitions", "commerce_extension_retirements"],
+  "privacy": {
+    "scope": "tenant_id and store_id",
+    "surface": "ecosystem_configuration",
+    "customer_records": false,
+    "customer_export": "empty per-table lists",
+    "erasure": "repeat field-specific typed allowlists and original artifact/bundle/resource integrity; preserve valid unrelated rows",
+    "restore_import_uninstall": "revoke all extension review/transition/retirement authority and exact corresponding canonical skill approvals",
+    "archived_business_pins": "retained; revocation does not rewrite original cases or effects",
+    "external_copies": "caller-owned mirror/download/backup copies need separate cleanup"
+  },
+  "native_cases": ["CASE-M12-G04-01", "CASE-M12-G04-02", "CASE-M12-G04-03", "CASE-M12-G05-01", "CASE-M12-G05-02", "CASE-M12-G05-03", "M12-G06-PREP-01", "M12-G06-PREP-02", "M12-G06-PREP-03", "M12-EXT-PORT-023", "M12-EXT-AUTHORITY", "M12-EXT-PRIVACY", "M12-EXT-HOST-ADAPTER"],
+  "native_test_execution": "root-owned coherent candidate only",
+  "external_qualification": false,
+  "production_qualified": false
+}
