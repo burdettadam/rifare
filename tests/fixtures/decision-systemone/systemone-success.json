@@ -1,0 +1,9 @@
+{
+  "model": "Cloudflare/clef",
+  "answers": {
+    "intent": {"type": "choice", "choice": "return", "probabilities": {"return": 0.8, "other": 0.2}, "confidence": 0.6},
+    "requires_review": {"type": "noul", "noul": 0.7},
+    "clarity": {"type": "score", "score": 1, "probabilities": {"0": 0.5, "1": 0, "2": 0.5}, "confidence": 0, "legend": {"0": "Unclear", "1": "Partly explicit", "2": "Explicit"}}
+  },
+  "usage": {"input_tokens": 96, "output_tokens": 0}
+}

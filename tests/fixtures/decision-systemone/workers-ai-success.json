@@ -1,0 +1,12 @@
+{
+  "success": true,
+  "result": {
+    "model": "clef-flash",
+    "answers": {
+      "intent": {"type": "choice", "choice": "return", "probabilities": {"return": 0.75, "other": 0.25}, "confidence": 0.75},
+      "requires_review": {"type": "noul", "noul": 0.72},
+      "clarity": {"type": "score", "score": 1, "probabilities": {"0": 0.4, "1": 0.2, "2": 0.4}, "confidence": 0.4, "legend": {"0": "Unclear", "1": "Partly explicit", "2": "Explicit"}}
+    },
+    "usage": {"input_tokens": 91, "output_tokens": 0}
+  }
+}

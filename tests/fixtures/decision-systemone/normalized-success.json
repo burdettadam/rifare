@@ -1,0 +1,12 @@
+{
+  "status": "usable",
+  "answers": {
+    "intent": {"type": "choice", "choice": "return", "probabilities": {"return": 0.8, "other": 0.2}, "confidence": {"provider": "systemone", "metric": "provider_reported", "value": 0.6}},
+    "requires_review": {"type": "noul", "probability_true": 0.7},
+    "clarity": {"type": "score", "score": 1, "probabilities": {"0": 0.5, "1": 0, "2": 0.5}, "confidence": {"provider": "systemone", "metric": "provider_reported", "value": 0}}
+  },
+  "reason": null,
+  "usage": {"input_tokens": 96, "output_tokens": 0},
+  "serving": {"reported_model": "Cloudflare/clef", "revision": null},
+  "evidence_kind": "synthetic_wire_fixture"
+}

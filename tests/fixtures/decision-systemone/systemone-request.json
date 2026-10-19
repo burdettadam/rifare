@@ -1,0 +1,13 @@
+{
+  "model": "Cloudflare/clef",
+  "state": "The customer says the item arrived cracked and asks how to return it. This is a customer claim, not an inspection finding.",
+  "questions": {
+    "intent": {
+      "type": "choice",
+      "instructions": "Classify the customer's request without granting an entitlement.",
+      "criteria": {"return": "The customer asks about returning the item.", "other": "Another request or insufficient information."}
+    },
+    "requires_review": {"type": "noul", "instructions": "Does the stated problem require manual review?"},
+    "clarity": {"type": "score", "instructions": "Rate how explicit the customer's request is.", "criteria": ["Unclear", "Partly explicit", "Explicit"]}
+  }
+}
