@@ -146,6 +146,19 @@ Explicitly select this subject's canonical case/resource/subject identities and
 validate retained record integrity. Historical personal values appear only when
 actually retained under a hold, with their revoked/held state made explicit.
 
+Preimplementation lifecycle clarification: an order's current owner can change
+after a preference was recorded. Recognize retained memory by its exact scoped
+`subject_ref` even if the original subject no longer owns any resource. The
+privacy export/erase not-found guards must include that memory surface. Export
+only the original subject's memory allowlist and scrub all its versions through
+`eraseSelected` even when the selected resource list is empty. Do not erase or
+export the reassigned order's new-owner data as a shortcut. Validate the retained
+memory's deterministic identity independently of later case/customer
+pseudonymization; a current context still requires live proof against current
+ownership. Existing conservative cleanup of unbound store text remains explicit.
+Preflight all restored/imported memory before subject suppression can redact a
+malformed record, including original package memory during repeat import.
+
 Subject erasure scrubs every version through the existing lifecycle transaction
 after its hold decision. Uninstall invalidates memory and preserves held content.
 The original subject suppression checkpoint is sufficient for subject deletion;
