@@ -61,7 +61,8 @@ export class DecisionRouting {
  freeze(scope:Scope,input:unknown){
   const p=exact(jsonValue(input,65536),['id','expected_version','case_id','task_id','configuration_id','protocol','expires_at']);id(p.id);integer(p.expected_version);this.#expires(p.expires_at);const protocol=validateRoutingProtocol(p.protocol);
   return this.k.transaction(()=>{const s=this.k.authorize(scope,'support.configure'),{pins,snapshot}=this.#pins(scope,p.case_id,p.task_id,p.configuration_id);
-   if(protocol.profile_variant!==pins.profile_variant||protocol.preprocessing_version!==pins.preprocessing_version||canonical(Object.fromEntries(Object.entries(snapshot.request!.questions).map(([key,q])=>[key,Object.keys((q as Row).options)])))!==canonical(protocol.vocabulary))throw new Error('ROUTING_CONFIGURATION_CHANGED');
+   const vocabulary=Object.fromEntries(Object.entries(snapshot.request!.questions).map(([key,q])=>[key,Object.keys((q as Row).options).sort()])),expectedVocabulary=Object.fromEntries(Object.entries(protocol.vocabulary).map(([key,options])=>[key,[...(options as string[])].sort()]));
+   if(protocol.profile_variant!==pins.profile_variant||protocol.preprocessing_version!==pins.preprocessing_version||canonical(vocabulary)!==canonical(expectedVocabulary))throw new Error('ROUTING_CONFIGURATION_CHANGED');
    saveDocument(this.k,s,PROTOCOL,p.id,p.expected_version,{encoding:'cohort_tuples_v1',protocol:protocolStorage(protocol),protocol_digest:contentDigest(protocol),pins,qualification_identity:routingIdentity(pins,protocol)},'active',p.expires_at);
    return this.#frozen(scope,p.id,p.expected_version+1);
   });
