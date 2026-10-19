@@ -113,7 +113,14 @@ export function workersAIReader(options:WorkersAIReaderOptions):WorkersAIReader 
     serving_configuration_ref:servingConfigurationRef,configuration_digest:configurationDigest,
     execute:async(credential,input):Promise<DecisionResult>=>{
       let request:DecisionRequest;
-      try {request=validateDecisionRequest(exact(jsonValue(input),['request']).request,capabilities);}
+      try {
+        const invocation=exact(jsonValue(input),['request','expected_configuration_digest']);
+        if(typeof invocation.expected_configuration_digest!=='string'||!/^[a-f0-9]{64}$/.test(invocation.expected_configuration_digest))throw new Error('DECISION_REQUEST_INVALID');
+        // The approved catalog entry and the reader installed in a vault can be
+        // separate objects. Bind this actual reader before any outbound work.
+        if(invocation.expected_configuration_digest!==configurationDigest)return unusableDecision('DECISION_CONFIGURATION_CHANGED',evidenceKind);
+        request=validateDecisionRequest(invocation.request,capabilities);
+      }
       catch(error){return unusableDecision(requestFailure(error),evidenceKind);}
       if(request.serving_configuration_ref!==servingConfigurationRef)return unusableDecision('DECISION_CONFIGURATION_CHANGED',evidenceKind);
       if(!fixtureTransport&&!liveEnabled)return unusableDecision('DECISION_DISABLED',evidenceKind);

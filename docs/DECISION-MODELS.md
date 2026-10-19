@@ -106,16 +106,25 @@ bounds, live permission and provenance. Root can bind owner-approved configurati
 to this digest even when a server configuration reuses an opaque ID. Mutating the
 constructor's objects later cannot change the reader.
 
-An installed vault invokes it with exactly `{request: decisionRequest}`:
+An installed vault invokes it with exactly
+`{request: decisionRequest, expected_configuration_digest: approvedDigest}`:
 
 ```ts
 const result = await vault.invokeReader(
   scope,
   opaqueTokenReference,
   WORKERS_AI_ADAPTER,
-  { request }
+  { request, expected_configuration_digest: approvedServingConfigurationDigest }
 ) as DecisionResult;
 ```
+
+The expected digest comes from the owner-approved server catalog entry. The
+reader actually installed in the vault compares it with its own frozen digest
+before dispatch. This detects a valid but different vault reader even when it
+shares the approved reader's opaque reference and fixture provenance. A missing
+or malformed digest is an invalid request; a well-shaped mismatch produces
+`DECISION_CONFIGURATION_CHANGED` with no outbound call. The digest is outside
+the logical request and is never included in the provider body.
 
 The owning shadow service performs current authorization and budget reservation
 before this boundary and revalidates evidence, scope, configuration and stop state
@@ -184,7 +193,10 @@ fixture provenance and primary source revisions are in
 [the fixture README](../tests/fixtures/decision-model/README.md).
 
 Tests-first commits are `4a78ee9` and `41db34c`. The latter adds root's immutable
-configuration digest requirement before implementation. The author executed no
+configuration digest requirement before implementation. Corrective tests-first
+commit `e714a81` adds the independently identified catalog/vault reader mismatch,
+using valid readers with the same reference but different account or bounds.
+The thirteen-case count and all earlier assertions are retained. The author executed no
 product imports, tests or demos. Root owns the source-bound focused invocation,
 any corrective evidence and independent review. A suitable affected file is:
 

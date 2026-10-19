@@ -70,7 +70,11 @@
     "endpoint": "https://api.cloudflare.com/client/v4/accounts/{approved_account_id}/ai/run/@cf/cloudflare/clef-flash",
     "method": "POST",
     "credential_placement": "Bearer authorization header inside existing SecretVault CredentialReader",
-    "invocation": {"request": "DecisionRequest"},
+    "invocation": {
+      "request": "DecisionRequest",
+      "expected_configuration_digest": "approved frozen reader SHA256; must match the reader actually installed in the vault before dispatch"
+    },
+    "invocation_binding": "missing/malformed digest is DECISION_REQUEST_INVALID; a valid but different digest is DECISION_CONFIGURATION_CHANGED; the digest never enters the provider body",
     "body_fields": ["model", "state", "questions"],
     "native_question_mapping": "choice options and score levels become criteria; noul has no criteria in the supported text profile",
     "native_envelope": "success plus result; optional empty errors/messages; unexpected fields rejected",
