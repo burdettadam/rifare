@@ -76,3 +76,68 @@ test('M12-EXT-PRIVACY',async()=>{
 test('M12-EXT-HOST-ADAPTER',()=>usingExtensions(f=>{const artifact=extensionArtifact('1.0.0',{kind:'host_adapter'}),inspected=inspectExtensionArtifact(artifact,{root:extensionRoot});assert.equal(inspected.conformance_scope,'retained_host_source_and_test_pins');assert.equal(inspected.bundle,null);assert.equal(inspected.execution_authorized,false);const staged=f.stage(artifact);assert.throws(()=>f.extensions.install(f.a.scope,{artifact_id:staged.a.id,review_id:staged.review.id,profile_id:'default',expected_profile_revision:1}),/EXTENSION_HOST_ADAPTER_INERT/);const changed=extensionArtifact('1.0.0',{kind:'host_adapter'});changed.payload.source_pins[0].sha256='f'.repeat(64);changed.origin.sha256=contentDigest(changed.payload);assert.throws(()=>inspectExtensionArtifact(changed,{root:extensionRoot}));assert.equal(f.db.prepare('SELECT count(*) n FROM commerce_connections').get().n,3);}));
 
 // Root owns one reserved integrated local case after author handoff; no placeholder test.
+
+import { usingAgency } from './agency-operations-helpers.mts';
+
+test('M12-PREP-INTEGRATION-01',t=>usingAgency(f=>{
+  const extensions=new Extensions(f.kernel,{root:extensionRoot});
+  function installFirst(scope:any,owner:any) {
+    const encoded=artifactBytes(extensionArtifact()),artifact=extensions.stage(scope,{bytes:encoded.bytes,sha256:encoded.sha256});
+    assert.deepEqual(artifact.requested_actions,['order.status']);assert.equal(artifact.execution_authorized,false);
+    const review=extensions.reviewArtifact(owner,{artifact_id:artifact.id,expires_at:f.now()+600000});
+    const current=f.reads.profiles.get(scope,'default').profile;
+    extensions.install(scope,{artifact_id:artifact.id,review_id:review.id,profile_id:'default',expected_profile_revision:current.revision});
+    return {artifact,review};
+  }
+  function publish(scope:any,owner:any,reviewer:any,artifact:any,percent:number) {
+    const release=f.releases.stage(scope,{skill_id:'order-status',bundle_digest:artifact.bundle_digest,rollout_percent:percent});
+    const evaluated=f.releases.evaluate(scope,release.id);
+    assert.equal(evaluated.model_quality_qualified,false);
+    f.releases.review(reviewer,{release_id:release.id,test_digest:evaluated.test_digest,rollout_percent:percent});
+    const active=f.releases.active(scope,'order-status');
+    f.releases.publish(owner,{release_id:release.id,expected_revision:active?.revision??0,rollout_percent:percent});
+    return release;
+  }
+  const a=installFirst(f.agencyA.scope,f.owner.scope),b=installFirst(f.agencyB.scope,f.ownerB.scope);
+  const baseline=publish(f.agencyA.scope,f.owner.scope,f.reviewer.scope,a.artifact,100);
+  f.create('ecosystem_pending');
+  const pinned=f.cases.resume(f.a.scope,'ecosystem_pending'),preview=f.gateway.prepare(f.a.scope,f.proposal('ecosystem_pending')),approval=f.approve(preview);
+  const encoded=artifactBytes(extensionArtifact('1.1.0')),next=extensions.stage(f.agencyA.scope,{bytes:encoded.bytes,sha256:encoded.sha256});
+  const review=extensions.reviewArtifact(f.owner.scope,{artifact_id:next.id,expires_at:f.now()+600000});
+  const transition=extensions.planTransition(f.agencyA.scope,{id:'ecosystem_upgrade',from_artifact_id:a.artifact.id,to_artifact_id:next.id,
+    review_id:review.id,profile_id:'default',expected_profile_revision:2,changes:{},strategy:null});
+  extensions.reviewTransition(f.reviewer.scope,{transition_id:transition.id,expected_digest:transition.digest,expires_at:f.now()+600000});
+  extensions.activate(f.agencyA.scope,{transition_id:transition.id,expected_profile_revision:2});
+  const canary=publish(f.agencyA.scope,f.owner.scope,f.reviewer.scope,next,25),selections=new Map<string,any>();
+  for(let i=0;i<100&&selections.size<2;i++) {
+    const selected=f.releases.select(f.agencyA.scope,'order-status','ecosystem_canary_'+i,next.bundle_digest);
+    const expected=selected.activation.mode==='primary'?next.bundle_digest:a.artifact.bundle_digest;
+    assert.equal(selected.bundle.digest,expected);selections.set(selected.activation.mode,selected);
+  }
+  assert.deepEqual([...selections.keys()].sort(),['canary_fallback','primary']);
+  assert.equal(f.releases.active(f.agencyB.scope,'order-status'),undefined);
+  const beforeB=f.reads.profiles.get(f.agencyB.scope,'default');
+  const publication=f.publish(),offerA=f.offer(f.agencyA.scope,publication,'ecosystem_a_choice'),offerB=f.offer(f.agencyB.scope,publication,'ecosystem_b_choice');
+  f.accept(f.owner,offerA);f.templates.reject(f.ownerB.scope,{offer_id:offerB.offer_id,expected_digest:offerB.digest});
+  assert.equal(f.reads.profiles.get(f.agencyA.scope,'default').profile.tone,'warm');
+  assert.equal(f.reads.profiles.get(f.agencyB.scope,'default').sha256,beforeB.sha256);
+  f.templates.rollback(f.owner.scope,{offer_id:offerA.offer_id,expected_digest:offerA.digest,expected_profile_revision:4});
+  assert.equal(f.reads.profiles.get(f.agencyA.scope,'default').profile.revision,5);
+  assert.equal(f.reads.profiles.get(f.agencyA.scope,'default').profile.tone,'neutral');
+  assert.deepEqual(f.cases.resume(f.a.scope,'ecosystem_pending').pins,pinned.pins);
+  extensions.revoke(f.owner.scope,{artifact_id:next.id});
+  assert.throws(()=>f.reads.skills.snapshot(f.a.scope,'order-status',next.bundle_digest),/SKILL_REVOKED|SKILL_APPROVAL_REQUIRED/);
+  assert.equal(f.reads.skills.snapshot(f.agencyB.scope,'order-status',b.artifact.bundle_digest).digest,b.artifact.bundle_digest);
+  const receipt=f.execute(preview,approval);
+  assert.equal(receipt.configuration_digest,pinned.configuration_digest);
+  assert.equal(f.db.prepare('SELECT count(*) n FROM commerce_case_effects').get().n,1);
+  f.access.revoke(f.owner.scope,{agency_id:f.agency_id,actor_id:f.actor_id,expected_revision:1});
+  assert.throws(()=>f.kernel.require(f.agencyA.scope),/ACCESS_DENIED/);
+  f.kernel.authorize(f.agencyB.scope,'profile.read');
+  assert.equal(f.reads.profiles.get(f.agencyB.scope,'default').sha256,beforeB.sha256);
+  t.diagnostic('M12_LOCAL_ECOSYSTEM_DEMO '+JSON.stringify({synthetic:true,community_contribution_qualified:false,stores:2,
+    requested_actions:['order.status'],baseline_release:baseline.id,canary_release:canary.id,canary_percent:25,
+    selected_modes:[...selections.keys()].sort(),template_digest:publication.publication.digest,template_a:'accepted_then_rolled_back',
+    template_b:'rejected',original_configuration_digest:pinned.configuration_digest,original_effect_count:1,
+    revoked_extension_digest:next.bundle_digest,agency_a_revoked:true,store_b_unchanged:true,formal_M12_accepted:false}));
+}));
