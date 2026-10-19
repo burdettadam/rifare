@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { IMAGE_ADAPTER, IMAGE_MODEL, imageReader, isImageReader } from '../../packages/agent/image-reader.mts';
+import { IMAGE_ADAPTER, IMAGE_MODEL, imageReader, isImageReader, verifyImageReaderResult } from '../../packages/agent/image-reader.mts';
 import type { ImageReader } from '../../packages/agent/image-reader.mts';
 import { DEFAULT_DECISION_CAPABILITIES, validateDecisionRequest } from '../../packages/agent/decisions.mts';
 import type { DecisionRequest, DecisionResult } from '../../packages/agent/decisions.mts';
@@ -28,7 +28,8 @@ function failure(result:DecisionResult,reason:string) {
 test('M17-IMAGE-WIRE-01',async()=>{
   const seen:any[]=[];
   const reader=imageReader(options({fixtureTransport:async(url:any,init:any)=>{seen.push({url,init});return response();}}));
-  const original=request(),result=await execute(reader,{request:original});
+  const original=request(),called=invocation(reader,{request:original});
+  const result=await reader.execute(Buffer.from(PRIVATE),called);
   assert.equal(IMAGE_ADAPTER,'cloudflare-image-decision-v1');assert.equal(IMAGE_MODEL,'@cf/cloudflare/clef-omni');
   assert.equal(seen.length,1);const sent=seen[0];
   assert.equal(sent.url,'https://api.cloudflare.com/client/v4/accounts/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/ai/run/@cf/cloudflare/clef-omni');
@@ -48,6 +49,29 @@ test('M17-IMAGE-WIRE-01',async()=>{
   assert.equal(Object.isFrozen(reader.capabilities.input_modalities),true);assert.equal(Object.isFrozen(reader.capabilities.image_mime_types),true);
   assert.equal(isImageReader(reader),true);assert.equal(isImageReader({...reader}),false);
   assert.equal(isImageReader(Object.create(reader)),false);assert.equal(isImageReader(null),false);
+  const otherReader=imageReader(options());assert.equal(otherReader.configuration_digest,reader.configuration_digest);
+  assert.equal(verifyImageReaderResult(reader,called,result),true);
+  assert.equal(verifyImageReaderResult(otherReader,called,result),false);
+  assert.equal(verifyImageReaderResult({...reader},called,result),false);
+  assert.equal(verifyImageReaderResult(reader,{...called},result),false);
+  assert.equal(verifyImageReaderResult(reader,invocation(reader,{request:original}),result),false);
+  assert.equal(verifyImageReaderResult(reader,called,structuredClone(result)),false);
+  assert.equal(verifyImageReaderResult(reader,called,Object.create(result)),false);
+  assert.equal(verifyImageReaderResult(reader,called,null),false);
+  assert.equal(verifyImageReaderResult(reader,null,result),false);
+  assert.equal(Object.isFrozen(result),true);assert.equal(Object.isFrozen(result.answers),true);
+  assert.equal(Object.isFrozen(result.serving),true);assert.equal(Object.isFrozen(result.usage),true);
+  if(result.status!=='usable')throw new Error('EXPECTED_USABLE_FIXTURE');
+  const visibility=result.answers.item_visibility;
+  assert.equal(Object.isFrozen(visibility),true);
+  if(visibility.type!=='choice')throw new Error('EXPECTED_CHOICE_FIXTURE');
+  assert.equal(Object.isFrozen(visibility.probabilities),true);assert.equal(Object.isFrozen(visibility.confidence),true);
+  assert.throws(()=>{visibility.probabilities.clear=0;},TypeError);
+  assert.deepEqual(result,fixture('normalized-clear'));
+  const deniedCall=invocation(reader),denied=await reader.execute(Buffer.alloc(0),deniedCall);
+  failure(denied,'DECISION_CREDENTIAL_UNAVAILABLE');
+  assert.equal(verifyImageReaderResult(reader,deniedCall,denied),true);
+  assert.equal(verifyImageReaderResult(reader,called,denied),false);assert.equal(seen.length,1);
 });
 
 test('M17-IMAGE-NORMALIZE-02',async()=>{
