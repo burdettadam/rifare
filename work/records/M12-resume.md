@@ -15,10 +15,11 @@ M12 assessment. It does not replace the earlier work or assign a later milestone
 - Current authority/security review: current `/root/m11_scope`, a nonauthor.
 - Current regression review: current `/root/m12_regression`, a nonauthor.
 - Privacy correction author: current `/root/m12_privacy_fix`, isolated branch
-  `fix/M12-privacy`; owns `packages/commerce/ecosystem-storage.mts` and the
-  associated extension/agency recovery helpers only after confirming actual
-  source paths with the integration owner. Any test change needs a concrete
-  independent-oracle explanation and regression review.
+  `fix/M12-privacy`; owns `packages/commerce/extension-privacy.mts` for the
+  retirement-reference minimization and exact canonical approval recovery
+  corrections. The existing archive supplies the independent bundle binding;
+  no schema addition or approval-system replacement is assigned. Existing
+  test helpers and their independent oracles remain unchanged.
 - Root owns shared metadata, documentation, native test execution, preservation
   records, exact-candidate reviews, local integration and cumulative packaging.
 
@@ -41,3 +42,22 @@ Fresh independent reviews must resolve the actual candidate's findings before
 root records a local nonrelease integration. Original goal acceptance remains
 blocked as documented in `docs/M12-QUALIFICATION.md`; code mode stays disabled,
 and contributor/human/external observations are not fabricated.
+
+## Narrow correction and review basis
+
+The privacy author committed `2747aca727f65f0a3a7097ee3eeb1a76985aad16` after
+both nonauthor reviewers inspected the proposed identity proof. Incomplete
+notice references are removed as a whole, retaining the valid opaque revision
+domain for intact records. For damaged extension metadata, independently checked
+archived bundle files, canonical origin and the scoped original review/archive/
+approval linkage identify only the corresponding authority to revoke. Damaged
+artifacts remain redacted; this fallback does not reinstall or execute them.
+
+The existing `Skills.snapshot` approval check also guards published release
+selection and archived case access. Revoking the exact canonical approval
+therefore disables that execution path while retaining release and case history.
+No extra release mutation, new table, narrowed valid input domain or changed test
+oracle is required. The affected whole-file selection is the existing 14-case
+extension file and nine-case privacy file; actual outcomes remain in the native
+reports. The 12 agency and nine assurance cases retain their earlier source-bound
+results only if both final reviewers approve the exact subsequent delta.

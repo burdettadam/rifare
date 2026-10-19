@@ -1,5 +1,5 @@
 {
-  "source_file_count": 1588,
+  "source_file_count": 1589,
   "source_count_reason": "ADR-0041 reviewed additive M12 agency, template, extension and assurance preparation source; all 1535 prior source members retained.",
   "component_ids": [
     "git-agent-adaptations",

@@ -176,3 +176,9 @@ contributor and per-merchant template exit criteria. G06/G07/G08 use distinct
 PREP evidence; human governance/licensing/code decisions and independent
 contribution are not manufactured. G09 remains explicitly deferred, code mode
 disabled. M07-G99 and formal cumulative qualification remain open. The retained roadmap ends at M12; later work needs a new assignment; public distribution, solicitation and real effects remain unauthorized.
+
+The [recovered M12 continuation](work/records/M12-resume.md) preserves the completed
+M11 handoff and unfinished M12 source and reports. It addresses the remaining
+retirement-record minimization and exact approval-revocation failures, with
+affected extension/privacy checks and fresh independent review. Actual final
+source, results and local integration are in the accompanying checkpoint evidence.
