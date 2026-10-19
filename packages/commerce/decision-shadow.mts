@@ -96,6 +96,10 @@ export class DecisionShadow {
     const p=this.#prepared.get(handle);if(!p||p.consumed)throw new Error('DECISION_PREPARATION_INVALID');
     p.consumed=true;this.#prepared.delete(handle);this.#guard(scope,p);
     if(p.replay)return this.read(scope,p.input.case_id,p.observation_id);
+    // Every path respects an earlier attempt, even after the provider is
+    // disabled or source evidence becomes unavailable while that attempt waits.
+    if(this.k.db.prepare('SELECT id FROM commerce_model_reservations WHERE tenant_id=? AND store_id=? AND id=?')
+      .get(p.tenant,p.store,p.observation_id))throw new Error('DECISION_OBSERVATION_IN_PROGRESS');
     const kind=p.entry.reader.evidence_kind,budgets=new ModelBudgets(this.k);let result:DecisionResult;
     let dispatch='not_attempted',failure_phase:string|null=null,reserved=false;
     if(!p.configuration.body.enabled){result=unusableDecision('DECISION_DISABLED',kind);failure_phase='configuration';}
@@ -120,8 +124,11 @@ export class DecisionShadow {
           const value=await this.#vault.invokeReader(scope,p.entry.secret_ref,WORKERS_AI_ADAPTER,
             {request:p.snapshot.request,expected_configuration_digest:p.entry.reader.configuration_digest});
           result=validateDecisionResult(p.snapshot.request,value);
-          if(result.evidence_kind!==kind)result=unusableDecision('DECISION_OUTPUT_INVALID',kind);
-          dispatch=['DECISION_DISABLED','DECISION_REQUEST_INVALID','DECISION_CONTEXT_LIMIT','DECISION_CAPABILITY_UNAVAILABLE','DECISION_DESTINATION_UNAPPROVED','DECISION_CREDENTIAL_UNAVAILABLE','DECISION_CONFIGURATION_CHANGED'].includes(result.reason??'')?'not_attempted':kind;
+          const noDispatch=['DECISION_DISABLED','DECISION_REQUEST_INVALID','DECISION_CONTEXT_LIMIT','DECISION_CAPABILITY_UNAVAILABLE','DECISION_DESTINATION_UNAPPROVED','DECISION_CREDENTIAL_UNAVAILABLE','DECISION_CONFIGURATION_CHANGED'].includes(result.reason??'');
+          if(result.evidence_kind!==kind){
+            result=unusableDecision(noDispatch?result.reason as DecisionFailure:'DECISION_OUTPUT_INVALID',kind);
+            dispatch=noDispatch?'not_attempted':'transport_unconfirmed';
+          }else dispatch=noDispatch?'not_attempted':kind;
           if(result.status==='unusable')failure_phase='provider';
         }catch(error){
           const credential=error instanceof Error&&error.message==='SECRET_UNAVAILABLE';
