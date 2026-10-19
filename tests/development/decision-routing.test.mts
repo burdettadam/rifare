@@ -11,6 +11,8 @@ test('CASE-M14-G01-01',()=>usingRouting(f=>{
  const p=f.freeze();assert.equal(p.body.protocol.baseline,'manual_review');assert.equal(p.body.protocol.calibration.minimum_calibration,60);
  assert.equal(p.body.protocol.calibration.minimum_held_out,60);assert.equal(p.body.protocol.canary.required_when_revision_unknown,true);
  assert.equal(p.body.protocol.cases.length,12);assert.equal(p.body.qualification_identity,routingIdentity(p.body.pins,p.body.protocol));assert.equal(f.requests.length,0);
+ const full=f.freeze(f.ref,{protocol:numericCohort().protocol}),stored=f.db.prepare("SELECT body FROM commerce_support_documents WHERE kind='decision_protocols' AND id=?").get(full.id);
+ assert.equal(full.body.protocol.cases.length,120);assert.ok(Buffer.byteLength(stored.body)<32768);assert.equal(full.body.protocol_digest,contentDigest(full.body.protocol));
 }));
 test('CASE-M14-G01-02',()=>usingRouting(f=>{
  const p=f.freeze(),identity=p.body.qualification_identity;
@@ -51,12 +53,14 @@ test('M14-G02-PREP-02',()=>usingRouting(async f=>{
  assert.throws(()=>f.routing.measure(f.owner.scope,input),/ROUTING_PROTOCOL_NOT_FROZEN/);
  f.advance(1);const r=await f.shadow.run(f.a.scope,f.input());input.observations[0].observation_id=r.id;
  assert.throws(()=>f.routing.measure(f.owner.scope,{...input,observations:[...input.observations,...input.observations]}),/ROUTING_OBSERVATIONS_INVALID/);
+ assert.throws(()=>f.routing.measure(f.owner.scope,{...input,observations:[...input.observations,{...input.observations[0],id:'calibration_mixed'}]}),/ROUTING_OBSERVATIONS_INVALID/);
  assert.throws(()=>f.routing.measure(f.owner.scope,{...input,evidence_kind:'live_test_unqualified'}),/INVALID_INPUT/);
  f.message('Source correction after the frozen cohort.');const changed=await f.shadow.run(f.a.scope,f.input());input.observations[0].observation_id=changed.id;
  assert.throws(()=>f.routing.measure(f.owner.scope,input),/ROUTING_COHORT_MISMATCH/);
 }));
 test('M14-G02-PREP-03',()=>usingRouting(f=>{
  const q=f.qualification();assert.equal(q.body.report.eligible_for_scoped_routing,false);
+ q.body.report.eligible_for_scoped_routing=true;q.body.report.live_observations=120;q.body.report.fixture_observations=0;
  assert.throws(()=>f.stage(q,{mode:'scoped'}),/ROUTING_QUALIFICATION_PENDING/);assert.equal(f.db.prepare("SELECT count(*) n FROM commerce_support_documents WHERE kind='decision_active'").get().n,0);
  assert.equal(f.intake.form(f.customer,f.caseA.id).financial_effect,false);
 }));
