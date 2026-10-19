@@ -103,3 +103,14 @@ local synthetic tests do not qualify connected storage erasure, actual image
 inference, target-host isolation, or missing M15/M16/M23 implementation history.
 Recovered main and the earlier M17 checkpoint remain preserved for explicit
 future reconciliation.
+
+## Observed local checkpoint
+
+The tests-first native run reproduced actual 69-byte image resurrection through
+both old native restore and merchant import. Candidate
+`949e0c14787febee9ced799b526daaa3ee57eed7` then passed all 60 assigned native
+cases in 21.240 seconds, with no failures or skipped cases. The independent
+authority/security and regression reviewers approved that exact clean source
+for the bounded diagnostic checkpoint. The work record preserves the initial
+red, a separately corrected fixture setup failure, exact source hashes and both
+real reviews. Full regression and formal milestone acceptance remain pending.

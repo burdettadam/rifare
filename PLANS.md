@@ -219,3 +219,25 @@ controls. M25 follows M17/M23 media and browser gates without requiring all of
 M24. M15 remains the earliest unassigned numerical sequence. This planning-only
 update runs focused helper/document checks and does not start an application,
 model conversion, browser qualification or a formal acceptance campaign.
+
+## Recovered M17 development checkpoint
+
+The original roadmap adoption above remains historical. The recovered checkout
+now preserves the first M17 diagnostic image-assistance checkpoint and the
+ADR-0052 individual-image suppression continuation. Missing later M15/M16/M23
+implementation is not present in this recovered history; recovered main remains
+at a33c4ad and the new work is isolated on recovery/M17-suppression.
+
+The local M17-G03 gap that could resurrect an individually erased image from an
+older backup or merchant snapshot is closed. Versioned checkpoints retain exact
+suppression identities, including absent sources and repeated transfers. The
+assigned selection passed 60 native cases in 21.240 seconds, and two independent
+reviewers approved product candidate 949e0c1 without corrective findings. See
+the [suppression checkpoint record](work/records/M17-suppression-checkpoint.md)
+for exact evidence, source identities and recovery instructions.
+
+M17-G99 and formal M13/M14/M17 acceptance remain blocked by real qualification
+and missing-history reconciliation. M18 remains unassigned because its M15
+remote authority prerequisite is unavailable here. This update records actual
+local progress; it does not advance the canonical acceptance ledger or infer
+live media, connected erasure, model quality or target-host qualification.

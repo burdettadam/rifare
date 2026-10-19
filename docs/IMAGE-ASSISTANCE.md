@@ -108,9 +108,14 @@ rejects held image copies; unheld restored image approvals/results are deleted
 and configuration is revoked, even when no subject suppression is requested.
 Subject erasure is also replayed through the existing suppression checkpoint.
 
-Individual-image erasure has no portable image suppression ledger, so backup
-erasure qualification remains pending even though restored approval/results are
-disabled. Canonical SQL erasure is not external-provider deletion. Owned byte
+At the first saved M17 checkpoint, individual-image erasure had no portable
+image suppression ledger. The subsequent ADR-0052 continuation implements
+[portable image suppression](IMAGE-SUPPRESSION.md): v2 checkpoints and retained
+minimized controls prevent individually erased source images from reappearing
+on native restore and merchant import. Subject and selected image suppression
+now precede held-image invalidation; unrelated held image records still refuse
+the restore/import atomically. Formal backup-erasure qualification remains
+pending. Canonical SQL erasure is not external-provider deletion. Owned byte
 buffers are cleared promptly, but JavaScript strings, caller downloads, OS
 snapshots, database free pages and remote copies need separate handling.
 Text DLP does not establish inspection of encoded images.
@@ -141,6 +146,13 @@ recovery. The [M17 recovery checkpoint record](../work/records/M17-recovery-chec
 retains every actual attempt, the corrected privacy finding and the scoped
 decisions. The expanded adapter catalog retains its broad 262-case campaign,
 which is deferred from this development selection.
+
+The later [individual-image suppression checkpoint](../work/records/M17-suppression-checkpoint.md)
+adds 12 independently authored cases and passes its assigned 60-case selection
+in 21.240 seconds on candidate `949e0c14787febee9ced799b526daaa3ee57eed7`.
+Both independent reviewers approved that bounded local continuation. It retains
+the preceding service/reader qualification contract and all original tests;
+it does not establish image-model quality or full milestone acceptance.
 
 ## Recovery and rollback
 
