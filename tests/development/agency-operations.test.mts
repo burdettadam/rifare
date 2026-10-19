@@ -9,12 +9,20 @@ import {SharedTemplates} from '../../packages/commerce/shared-templates.mts';
 const oracle=JSON.parse(readFileSync(new URL('../fixtures/agencies/known-answers.v1.json',import.meta.url),'utf8'));
 const subset=(actual:any,expected:any)=>{for(const [key,value] of Object.entries(expected))assert.deepEqual(actual[key],value,key);};
 
-test('CASE-M12-G01-01',()=>usingAgency(f=>{
+test('CASE-M12-G01-01',t=>usingAgency(f=>{
  const b=f.delegate(f.b,f.ownerB,{role:'reviewer',actions:['resource.read','case.read','support.read','profile.read','skill.read']});
  f.kernel.authorize(f.agencyA.scope,'profile.write');f.kernel.authorize(b.scope,'profile.read');
  assert.throws(()=>f.kernel.authorize(b.scope,'profile.write'),/ACCESS_DENIED/);assert.throws(()=>f.access.grant(f.agencyA.scope,{agency_id:'any'}),/ACCESS_DENIED/);
  assert.equal(f.kernel.require(f.agencyA.scope).role,'operator');assert.equal(f.kernel.require(b.scope).role,'reviewer');
  const key=new CommerceKernel(f.db,f.now);const current=new AgencyAccess(key).current(key.authenticate(f.agencyA.bearer),f.agency_id,'profile.write');assert.equal(current.grant.permission_revision,1);
+ const denyWrite=(scope:any)=>assert.throws(()=>f.kernel.authorize(scope,'profile.write'),/ACCESS_DENIED/);denyWrite(b.scope);
+ const grant=f.access.grant.bind(f.access);
+ f.access.grant=((scope:any,input:any)=>grant(scope,{...input,role:f.kernel.require(f.agencyA.scope).role,actions:[...AGENCY_TEST_ACTIONS]})) as any;
+ const global=f.delegate(f.b,f.ownerB,{role:'reviewer',actions:['resource.read','case.read','support.read','profile.read','skill.read']});
+ assert.equal(f.kernel.require(global.scope).role,'operator');assert.throws(()=>denyWrite(global.scope),assert.AssertionError);
+ f.access.grant=grant;
+ const repaired=f.delegate(f.b,f.ownerB,{role:'reviewer',actions:['resource.read','case.read','support.read','profile.read','skill.read']});denyWrite(repaired.scope);
+ t.diagnostic('M12_TARGET_FAULT agency_role_copied_globally: mutated actual delegation copies store A permissions into canonical store B membership and fails its independent denied-write oracle');
 }));
 test('CASE-M12-G01-02',()=>usingAgency(async f=>{
  let probes=0;const vault=new SecretVault(f.kernel,{activeId:'fixture-key',get:()=>Buffer.alloc(32,7)},{fixture:()=>{probes++;return true;}});
