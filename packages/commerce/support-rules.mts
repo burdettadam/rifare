@@ -36,7 +36,7 @@ export class SupportRules {
    const now=this.k.clock(),due=nextRuleTime(now,r.body.calendar);if(due!==now)throw new Error('RULE_SELECTION_NOT_DUE');
    const event=this.#event({id:p.event_id,case_id:c.id,trigger:'return_requested',channel:'webchat',at:now,visited:[],depth:0,link_id:null,sender_id:null}),ref='sj_'+contentDigest([s.tenant_id,s.store_id,r.id,event.id]).slice(0,40);
    const previous=this.k.db.prepare('SELECT * FROM commerce_support_rule_jobs WHERE tenant_id=? AND store_id=? AND id=?').get(s.tenant_id,s.store_id,ref) as Row;
-   if(previous){if(previous.case_id!==c.id||previous.rule_digest!==r.digest||previous.rule_version!==r.version||previous.generation!==ownership.owner.generation||previous.state!=='completed')throw new Error('RULE_EVENT_CONFLICT');return this.job(scope,ref);}
+   if(previous){if(previous.case_id!==c.id||previous.rule_digest!==r.digest||previous.version!==r.version||previous.generation!==ownership.owner.generation||previous.state!=='completed')throw new Error('RULE_EVENT_CONFLICT');return this.job(scope,ref);}
    this.k.db.prepare("INSERT INTO commerce_support_rule_jobs VALUES(?,?,?,?,?,?,?,?,?,?,?,?, 'waiting',NULL)").run(s.tenant_id,s.store_id,ref,c.id,c.resource_id,r.id,r.version,r.digest,event.id,canonical(event),ownership.owner.generation,due);
    return this.execute(scope,ref);
   });

@@ -72,7 +72,8 @@ export function scoreRoutingProtocol(input:unknown,observations:unknown){
  const selected=c.candidates.find((threshold:number)=>passesCalibration(score(p,rows,'calibration',threshold)))??null;
  const calibration=score(p,rows,'calibration',selected),held_out=score(p,rows,'held_out',selected),missing_cases=p.cases.length-rows.size;
  const numeric_passed=selected!==null&&!missing_cases&&held_out.denominator>=c.minimum_held_out&&held_out.routed>=c.minimum_held_out_routed&&!held_out.unavailable&&!held_out.malformed&&held_out.wrong_route_rate<=c.maximum_wrong_route_rate&&held_out.wrong_route_upper<=c.maximum_wrong_route_upper&&held_out.incorrect_review_rate<=c.maximum_incorrect_review_rate&&held_out.route_coverage>=c.minimum_route_coverage;
- return {protocol_digest:contentDigest(p),total_denominator:p.cases.length,observed:rows.size,missing_cases,selected_threshold:selected,calibration,held_out,numeric_passed,authorizes_routing:false,confidence_semantics:'configuration_specific_selected_option_statistic',uncertainty:'one_sided_95_percent_Wilson_upper'};
+ const cohort_complete=calibration.denominator>=c.minimum_calibration&&held_out.denominator>=c.minimum_held_out&&!missing_cases;
+ return {protocol_digest:contentDigest(p),total_denominator:p.cases.length,observed:rows.size,missing_cases,cohort_complete,numeric_status:!cohort_complete?'pending':numeric_passed?'passed':'measured_failure',selected_threshold:selected,calibration,held_out,numeric_passed,authorizes_routing:false,confidence_semantics:'configuration_specific_selected_option_statistic',uncertainty:'one_sided_95_percent_Wilson_upper'};
 }
 export function assessRoutingMilestone(claims:unknown={}){
  if(!claims||typeof claims!=='object'||Array.isArray(claims)||Object.keys(claims).length)throw new Error('UNSUPPORTED_QUALIFICATION');

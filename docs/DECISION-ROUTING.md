@@ -24,6 +24,9 @@ cases; routing coverage is at least 50%. Every missing, unavailable or malformed
 case remains in its role denominator. The twelve local reference cases are
 explicitly insufficient for these gates. See the frozen fixture protocol and
 its independent expected-outcome README for the complete denominator definitions.
+Enrollment and observation completeness are reported separately from numeric
+quality. A complete 60/60 cohort that fails a fixed quality gate records
+`numeric_status:measured_failure`; absent live evidence still remains pending.
 
 Provider confidence and selected-option probability are separate numbers. M14
 uses the minimum selected-option probability across the two questions as a
@@ -44,6 +47,9 @@ are not accepted. Shared qualification documents store configuration metadata,
 source hashes and aggregate measurements; they do not store customer case IDs,
 observation IDs, messages or credentials. Measured cost and latency remain null
 when the current observation contract provides no measured values.
+Partial conversation history is unavailable for qualification and canary scoring,
+retained in its denominator, and excluded from usable confidence distributions.
+Actual routing sends that same source condition to manual review.
 
 A numeric-only score has `authorizes_routing:false`. A full live cohort passing
 its frozen gate may become eligible for independent review. An approved report
@@ -58,13 +64,17 @@ Qualification and publication require different author and reviewer actors,
 current `policy.review` authority and exact record digests. Publications bind
 configuration identity, two exact published rule IDs/versions/digests, an expiry
 and a 25%, 50% or 100% rollout. The initial activation is complete; a smaller
-canary needs a still-current explicitly published fallback. Deterministic case
+canary needs a still-current publication independently reviewed for 100% as its
+fallback. Successive canaries retain that full-rollout fallback; a canary cannot
+be promoted by selecting it as another canary's fallback. Deterministic case
 buckets select one publication. Failed replacement leaves the active revision
-unchanged. Rollback can select only a previously published, still-current target.
+unchanged. Rollback can select only a previously published, still-current target
+whose reviewed percentage is 100%.
 
 Routing starts with an opaque one-use preparation handle. It binds the original
 actor/session, case/task input and evidence, ownership/work generation, model
-stop generation, active publication, qualification and actual serving identity.
+stop generation, active publication digest and revision, qualification and actual
+serving identity. Disable/reactivation cannot revive an old in-flight handle.
 These remain current before dispatch, after the awaited observation and in the
 transaction that applies the selected rule. Replaying a route is an authorized
 read, with current model/recovery/stop checks, and creates no second action.
@@ -97,9 +107,11 @@ The original M13 verifier remains scoped to Cloudflare so its historical evaluat
 cannot label a SystemOne result as Cloudflare. M14 uses the canonical two-backend
 receipt verifier.
 
-Configured and actually reported model revisions are distinct. An unknown hosted
-revision stays null and requires a fresh six-case canary selected in the frozen
-protocol. Canary observations must be later than the measured report and any
+Configured and actually reported model revisions are distinct. Both current
+transports report an unknown serving revision, so each requires a fresh six-case
+canary selected in the frozen protocol even when configured model and serving
+revision labels are supplied. Compatibility preserves those labels separately
+from `observed_serving_revision:null`. Canary observations must be later than the measured report and any
 previous canary record; old observations cannot refresh it. The canary uses the
 existing threshold and expected handling/labels, never retunes a model.
 
