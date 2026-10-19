@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "kind": "additive_browser_roadmap_adoption",
+  "authority": "ADR-0044",
+  "scope": "planning_and_architecture_only",
+  "protected_base": "93769a3029ebd2a5204c756733a8f8cf48fb67cd",
+  "protected_tree": "8742b31e937e1f0d25f507bb67ef393dea1a7597",
+  "source_inputs": {
+    "original_roadmap_zip_sha256": "e031a818673ce8bc9748b9a8e6d83da3b91bd451d64357136e8db0b2ae581e7e",
+    "expanded_roadmap_zip_sha256": "d02bf8aab75decb5cb163a2f82a8e12a51f3e778bfb311d3135d71fb5f57befe",
+    "revision_id": "rifare-browser-clef-architecture-2026-10-19",
+    "browser_delta_sha256": "8302245159ecadc0bcc69248624c8c820a5678656fa1b405dd93797f4ae9810e",
+    "frozen_prior_requirements_sha256": "0d4218fabd39eeb1328de5a3d1f79cc620967ef761a6dc4a405ec403a280d7b2",
+    "frozen_browser_requirements_sha256": "41d109fb6e810bfe9b2c9f8458e0aaa8cb5d45176c96d80fc3c733ca07e11abe"
+  },
+  "protected_counts": {
+    "milestones": 23,
+    "goals": 263,
+    "requirements": 201,
+    "test_specifications": 880,
+    "capability_targets": 54
+  },
+  "added_counts": {
+    "milestones": 3,
+    "worker_goals": 15,
+    "assessments": 3,
+    "goals": 18,
+    "requirements": 15,
+    "test_specifications": 69,
+    "capability_targets": 3
+  },
+  "resulting_counts": {
+    "milestones": 26,
+    "worker_goals": 255,
+    "assessments": 26,
+    "goals": 281,
+    "requirements": 216,
+    "test_specifications": 949,
+    "capability_targets": 57
+  },
+  "formal_predecessors": {
+    "M23-G99": [
+      "M13-G99"
+    ],
+    "M24-G99": [
+      "M23-G99",
+      "M14-G99"
+    ],
+    "M25-G99": [
+      "M17-G99",
+      "M23-G99"
+    ]
+  },
+  "recommended_next_browser_batch": [
+    "M23-G01",
+    "M23-G02",
+    "M23-G03",
+    "M23-G04",
+    "M23-G05"
+  ],
+  "next_numerical_unassigned_goal": "M15-G01",
+  "new_product_goals_assigned": [],
+  "new_goal_state": "not_started",
+  "new_test_specification_result": "not_run",
+  "product_execution_this_update": false,
+  "accepted_goal_ledger_changed": false,
+  "source_research_retained_outside_application": true,
+  "worker_handoff": "docs/BROWSER-WORKER-HANDOFF.md",
+  "actual_validation_and_reviews": "Accompanying candidate-bound ignored evidence and the separate integration record; this plan is not an execution result."
+}
