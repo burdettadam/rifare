@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "id": "rifare-systemone-decision",
+  "version": "1.0.0",
+  "goal": "M14-G04",
+  "qualification": "synthetic_transport_and_readiness_preparation_only",
+  "formal_goal_accepted": false,
+  "connected_qualified": false,
+  "self_hosted_qualified": false,
+  "business_actions": [],
+  "source": ["packages/agent/systemone.mts"],
+  "canonical_reuse": [
+    "packages/agent/decisions.mts",
+    "packages/commerce/secrets.mts",
+    "packages/commerce/model-budgets.mts",
+    "packages/commerce/decision-shadow.mts"
+  ],
+  "reader": {
+    "export": "systemOneReader",
+    "adapter_export": "SYSTEMONE_ADAPTER",
+    "adapter": "systemone-decision-v1",
+    "provider": "systemone",
+    "structural_contract": "WorkersAIReader plus deeply frozen metadata; unchanged logical DecisionRequest and DecisionResult",
+    "invocation_exact_fields": ["request", "expected_configuration_digest"],
+    "binding": "Mandatory lowercase SHA256 expected digest must match the actual frozen vault reader before transport. A well-shaped mismatch returns DECISION_CONFIGURATION_CHANGED.",
+    "configuration_digest": "SHA256 of captured endpoint/model allowlists, requested model, configured revisions, effective context, confidence profile, request/response/deadline limits, artifact attestation, metadata, provenance and live permission. Opaque logical IDs do not select endpoints.",
+    "metadata_fields": ["adapter", "provider", "protocol", "model_id", "model_revision", "serving_revision", "effective_context_tokens", "confidence_profile", "input_modalities", "context_qualification", "self_hosted_readiness"],
+    "context_qualification": "declared_unverified",
+    "default_live": "disabled",
+    "provenance": "fixtureTransport construction fixes synthetic_wire_fixture; absent fixtureTransport fixes live_test_unqualified. Supplied flags cannot relabel either.",
+    "secret": "Existing SecretVault credential, Bearer header only. No new credential or account registry."
+  },
+  "wire": {
+    "profile": "systemone.v1",
+    "method": "POST",
+    "endpoint": "exact canonical approved HTTPS URL with path /v1/systemone; no query, fragment, userinfo, redirect, path inference or runtime discovery",
+    "request_exact_fields": ["model", "state", "questions"],
+    "model": "Exact trusted model_id explicitly sent; successful reported model must equal that selected model, even if another model is separately allowlisted.",
+    "questions": "noul keeps type/instructions; choice maps logical options to criteria; score maps logical levels to criteria",
+    "response_required_fields": ["model", "answers"],
+    "response_optional_fields": ["usage"],
+    "response_envelope": "raw SystemOne response, not Cloudflare success/result or OpenAI chat output",
+    "normalization": "Preserve full probabilities and reported confidence through the existing strict decision validator. Check exact answer membership, types and score legends; reject unknown fields and business actions.",
+    "usage": "Complete finite nonnegative safe-integer input_tokens/output_tokens are preserved, including zero. Absent/null usage or a missing/null token count becomes unknown usage:null, never zero. Malformed known values or unknown usage fields are rejected.",
+    "revision": "Wire does not report revision; logical serving.revision remains null. Configured model/serving revisions are distinct metadata, not provider observations.",
+    "retries": 0,
+    "fallbacks": 0,
+    "streaming_output": false,
+    "error_handling": "Fixed DECISION_* failures only; no provider body, token, response headers or redirect destination returned."
+  },
+  "limits": {
+    "input_modalities": ["text"],
+    "question_types": ["choice", "noul", "score"],
+    "effective_context_tokens": "Required trusted declaration, 1024 through 16384; this is not an observed tokenizer or deployed context qualification.",
+    "max_request_bytes": 8192,
+    "request_limit_rule": "Default is min(8192,effective_context_tokens-512); trusted capability overrides can only narrow. Validate complete logical and encoded wire bodies; never truncate state.",
+    "max_questions": 64,
+    "max_choice_options": 255,
+    "max_score_levels": 10,
+    "max_timeout_ms": 10000,
+    "max_response_bytes": 131072,
+    "deadline": "One finite race covers fetch and bounded body read; cancellation is nonblocking and late aborted output cannot become usable."
+  },
+  "confidence_profiles": {
+    "sglang_systemone_adapter_v1": "Local descriptor for SGLang's System One adapter formulas, not calibrated correctness. Preserve the received statistic; do not transfer thresholds from another backend.",
+    "clef_reference_top_probability_v1": "Local descriptor for the reference implementation's top-option probability as choice/score confidence. Preserve its separate identity and configured revision.",
+    "normalizer": "Checks finite [0,1] bounds without recomputing confidence from probabilities or claiming formula/backend conformance from a supplied profile."
+  },
+  "readiness": {
+    "export": "assessSystemOneReadiness",
+    "required_input_fields": ["model_id", "model_revision", "serving_revision", "effective_context_tokens"],
+    "optional_input_fields": ["self_hosted_attestation"],
+    "attestation_fields": ["model_repository", "model_revision", "serving_revision", "effective_context_tokens", "backbone_sha256", "joint_head_sha256", "joint_head_config_sha256", "tokenizer_sha256", "serving_artifact_sha256", "loader_observation_sha256", "backbone_loaded", "joint_head_loaded"],
+    "complete": "Known Clef repository matches model_id; nonempty configured revisions and effective context match attestation; all named SHA256 pins exist; both load claims are true.",
+    "statuses": ["missing_evidence", "attestation_supplied"],
+    "qualified": false,
+    "observed_runtime": false,
+    "evidence_basis": "supplied_configuration",
+    "missing": "Explicit list of absent, invalid or mismatched evidence fields",
+    "attestation_digest": "Hash of supplied claims, or null; no authentication or runtime observation is inferred.",
+    "actual_qualification": "Requires separately authorized observed deployed loader/model/head/tokenizer/serving pins, effective context/no-truncation evidence, frozen-cohort backend observations and current independent qualification/publication."
+  },
+  "tests": {
+    "file": "tests/development/decision-systemone.test.mts",
+    "planned_cases": 8,
+    "product_executions_by_author": 0,
+    "actual_evidence_owner": "root",
+    "fixture_directory": "tests/fixtures/decision-systemone/"
+  },
+  "primary_sources_observed": {
+    "date": "2026-10-19",
+    "urls": [
+      "https://docs.sglang.io/cookbook/autoregressive/Cloudflare/clef",
+      "https://docs.sglang.io/docs/supported-models/decision_models#system-one-compatible-api",
+      "https://huggingface.co/Cloudflare/clef/blob/main/README.md",
+      "https://huggingface.co/Cloudflare/clef/blob/main/joint_schema_model.py",
+      "https://docs.system-one.dev/en/docs/api"
+    ],
+    "local_or_remote_model_execution": false
+  }
+}
