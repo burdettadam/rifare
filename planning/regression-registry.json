@@ -1869,6 +1869,14 @@
       "contract_files": [
         "packages/agent/contracts/image-reader.v1.json"
       ]
+    },
+    {
+      "id": "m17-image-suppression-diagnostic",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/image-suppression.v1.json"
+      ]
     }
   ],
   "tests": [
@@ -23417,6 +23425,90 @@
       "runner_case_id": "M17-IMAGE-AUTHORITY-10",
       "source": "tests/development/image-reader.test.mts",
       "capability_id": "m17-image-reader-diagnostic"
+    },
+    {
+      "id": "runtime:M17-SUPPRESSION-INDIVIDUAL-REPLAY-01",
+      "suite": "runtime",
+      "runner_case_id": "M17-SUPPRESSION-INDIVIDUAL-REPLAY-01",
+      "source": "tests/development/image-suppression.test.mts",
+      "capability_id": "m17-image-suppression-diagnostic"
+    },
+    {
+      "id": "runtime:M17-SUPPRESSION-VERSION-AND-MINIMIZATION-02",
+      "suite": "runtime",
+      "runner_case_id": "M17-SUPPRESSION-VERSION-AND-MINIMIZATION-02",
+      "source": "tests/development/image-suppression.test.mts",
+      "capability_id": "m17-image-suppression-diagnostic"
+    },
+    {
+      "id": "runtime:M17-SUPPRESSION-RETENTION-AND-GIFT-HOLDS-03",
+      "suite": "runtime",
+      "runner_case_id": "M17-SUPPRESSION-RETENTION-AND-GIFT-HOLDS-03",
+      "source": "tests/development/image-suppression.test.mts",
+      "capability_id": "m17-image-suppression-diagnostic"
+    },
+    {
+      "id": "runtime:M17-SUPPRESSION-MERCHANT-MONOTONIC-REPEAT-04",
+      "suite": "runtime",
+      "runner_case_id": "M17-SUPPRESSION-MERCHANT-MONOTONIC-REPEAT-04",
+      "source": "tests/development/image-suppression.test.mts",
+      "capability_id": "m17-image-suppression-diagnostic"
+    },
+    {
+      "id": "runtime:M17-SUPPRESSION-ABSENT-SOURCE-PERSISTENCE-05",
+      "suite": "runtime",
+      "runner_case_id": "M17-SUPPRESSION-ABSENT-SOURCE-PERSISTENCE-05",
+      "source": "tests/development/image-suppression.test.mts",
+      "capability_id": "m17-image-suppression-diagnostic"
+    },
+    {
+      "id": "runtime:M17-SUPPRESSION-STRICT-CHECKPOINT-VALIDATION-06",
+      "suite": "runtime",
+      "runner_case_id": "M17-SUPPRESSION-STRICT-CHECKPOINT-VALIDATION-06",
+      "source": "tests/development/image-suppression.test.mts",
+      "capability_id": "m17-image-suppression-diagnostic"
+    },
+    {
+      "id": "runtime:M17-SUPPRESSION-SCOPE-CONFLICT-AND-ROLLBACK-07",
+      "suite": "runtime",
+      "runner_case_id": "M17-SUPPRESSION-SCOPE-CONFLICT-AND-ROLLBACK-07",
+      "source": "tests/development/image-suppression.test.mts",
+      "capability_id": "m17-image-suppression-diagnostic"
+    },
+    {
+      "id": "runtime:M17-SUPPRESSION-RETAINED-CONTROL-INTEGRITY-08",
+      "suite": "runtime",
+      "runner_case_id": "M17-SUPPRESSION-RETAINED-CONTROL-INTEGRITY-08",
+      "source": "tests/development/image-suppression.test.mts",
+      "capability_id": "m17-image-suppression-diagnostic"
+    },
+    {
+      "id": "runtime:M17-SUPPRESSION-LEGACY-DOWNGRADE-DENIED-09",
+      "suite": "runtime",
+      "runner_case_id": "M17-SUPPRESSION-LEGACY-DOWNGRADE-DENIED-09",
+      "source": "tests/development/image-suppression.test.mts",
+      "capability_id": "m17-image-suppression-diagnostic"
+    },
+    {
+      "id": "runtime:M17-SUPPRESSION-COPIED-HOLDS-AND-ATOMICITY-10",
+      "suite": "runtime",
+      "runner_case_id": "M17-SUPPRESSION-COPIED-HOLDS-AND-ATOMICITY-10",
+      "source": "tests/development/image-suppression.test.mts",
+      "capability_id": "m17-image-suppression-diagnostic"
+    },
+    {
+      "id": "runtime:M17-SUPPRESSION-LATE-INFLIGHT-COMPLETION-11",
+      "suite": "runtime",
+      "runner_case_id": "M17-SUPPRESSION-LATE-INFLIGHT-COMPLETION-11",
+      "source": "tests/development/image-suppression.test.mts",
+      "capability_id": "m17-image-suppression-diagnostic"
+    },
+    {
+      "id": "runtime:M17-SUPPRESSION-SUBJECT-REPLAY-AND-QUARANTINE-12",
+      "suite": "runtime",
+      "runner_case_id": "M17-SUPPRESSION-SUBJECT-REPLAY-AND-QUARANTINE-12",
+      "source": "tests/development/image-suppression.test.mts",
+      "capability_id": "m17-image-suppression-diagnostic"
     }
   ],
   "protected_files": [
@@ -23931,7 +24023,10 @@
     "tests/fixtures/image-reader/provider-ambiguous.json",
     "tests/fixtures/image-reader/provider-clear.json",
     "tests/fixtures/image-reader/rejected-pngs.json",
-    "tests/fixtures/image-reader/request.json"
+    "tests/fixtures/image-reader/request.json",
+    "packages/commerce/contracts/image-suppression.v1.json",
+    "packages/commerce/image-suppression.mts",
+    "tests/development/image-suppression.test.mts"
   ],
   "source_count_fixture": "tests/fixtures/licensing/artifact-oracle.v1.json",
   "source_inventory": "planning/component-inventory.json"

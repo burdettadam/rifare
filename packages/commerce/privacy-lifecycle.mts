@@ -10,6 +10,7 @@ import { exportExtendedServicesSubject,eraseExtendedServicesSubject,revokeExtend
 import { exportInventoryPlanningSubject,eraseInventoryPlanningSubject,revokeInventoryPlanningForRestore } from './inventory-planning-privacy.mts';
 import { exportEcosystemSubject,eraseEcosystemSubject,revokeEcosystemForRestore } from './ecosystem-privacy.mts';
 import { eraseImageRecords,exportImageRecords,imageRecipientCaseIds,isImageRecord,revokeImageAuthority } from './image-privacy.mts';
+import { imageSuppressionState } from './image-suppression.mts';
 
 const MAX_RECORDS=10000;
 const PACKING_TABLES=['commerce_packing_sessions','commerce_packing_allocations','commerce_packing_scans','commerce_packing_confirmations'];
@@ -297,9 +298,12 @@ export function eraseSelected(k:CommerceKernel,s:Row,ids:string[],hash:string,at
     external_cleanup_required:['caller_memory','delivery_outboxes','logs','external_providers','older_backups'],physical_erasure:false};
 }
 export function suppressionCheckpoint(k:CommerceKernel) {
-  storageInventoryCurrent(k);const subjects=k.db.prepare('SELECT * FROM commerce_privacy_subjects ORDER BY tenant_id,store_id,subject_hash').all();
-  const records=k.db.prepare('SELECT * FROM commerce_privacy_resources ORDER BY tenant_id,store_id,resource_id').all();
-  return {version:1,generated_at:k.clock(),subjects,resources:records};
+  return k.transaction(()=>{
+    storageInventoryCurrent(k);const generated_at=k.clock(),state=imageSuppressionState(k,generated_at);
+    const subjects=k.db.prepare('SELECT * FROM commerce_privacy_subjects ORDER BY tenant_id,store_id,subject_hash').all();
+    const records=k.db.prepare('SELECT * FROM commerce_privacy_resources ORDER BY tenant_id,store_id,resource_id').all();
+    return state.required?{version:2,generated_at,subjects,resources:records,images:state.images}:{version:1,generated_at,subjects,resources:records};
+  });
 }
 export class PrivacyLifecycle {
   #k:CommerceKernel;constructor(kernel:CommerceKernel){this.#k=kernel;}

@@ -1,12 +1,13 @@
 import { CommerceKernel, digest, exact, id, integer } from './kernel.mts';
 import type { Row, Scope } from './kernel.mts';
 import { jsonValue } from './configuration-values.mts';
-import { storageInventoryCurrent, suppressionCheckpoint, eraseSelected } from './privacy-lifecycle.mts';
+import { storageInventoryCurrent, eraseSelected } from './privacy-lifecycle.mts';
 import { revokeGrowthForRestore } from './growth-privacy.mts';
 import { revokeExtendedServicesForRestore } from './extended-services-privacy.mts';
 import { revokeInventoryPlanningForRestore } from './inventory-planning-privacy.mts';
 import { revokeEcosystemForRestore } from './ecosystem-privacy.mts';
 import { revokeImagesForRestore } from './image-privacy.mts';
+import { imageSuppressionState,validateImageSuppression,prepareImageSuppression,applyImageSuppression } from './image-suppression.mts';
 
 const LIMIT=64*1024*1024, MAX_ROWS=10000;
 const LOCAL_KINDS=new Set(['migration_binding','merchant_import','merchant_credential_binding']);
@@ -87,17 +88,20 @@ function writeDocument(k:CommerceKernel,s:Row,kind:string,ref:string,body:Row){
  * suppression channel. A checkpoint bundled only with an old snapshot is not
  * proof of later erasures. Source quiescence and trusted delivery are caller duties. */
 export function exportMerchantSuppression(k:CommerceKernel,scope:Scope){
-  return k.transaction(()=>{const s=owner(k,scope),p=suppressionCheckpoint(k),same=(r:Row)=>r.tenant_id===s.tenant_id&&r.store_id===s.store_id;
-    return {version:1,tenant_id:s.tenant_id,store_id:s.store_id,generated_at:p.generated_at,subjects:p.subjects.filter(same),resources:p.resources.filter(same)};});
+  return k.transaction(()=>{const s=owner(k,scope);storageInventoryCurrent(k);const generated_at=k.clock(),state=imageSuppressionState(k,generated_at,s);
+    const subjects=k.db.prepare('SELECT * FROM commerce_privacy_subjects WHERE tenant_id=? AND store_id=? ORDER BY subject_hash').all(s.tenant_id,s.store_id);
+    const resources=k.db.prepare('SELECT * FROM commerce_privacy_resources WHERE tenant_id=? AND store_id=? ORDER BY resource_id').all(s.tenant_id,s.store_id);
+    const p={version:state.required?2:1,tenant_id:s.tenant_id,store_id:s.store_id,generated_at,subjects,resources};
+    return state.required?{...p,images:state.images}:p;});
 }
 export type MerchantSuppression={suppression:unknown;suppression_sha256:string};
 function checkedSuppression(k:CommerceKernel,s:Row,input:MerchantSuppression|undefined,minimum:number){
   if(!input)throw new Error('PORTABILITY_SUPPRESSION_REQUIRED');
   try{exact(input,['suppression','suppression_sha256']);}catch{throw new Error('PORTABILITY_SUPPRESSION_INVALID');}
   const p=jsonValue(input.suppression,LIMIT);
-  try{exact(p,['version','tenant_id','store_id','generated_at','subjects','resources']);integer(p.generated_at);}catch{throw new Error('PORTABILITY_SUPPRESSION_INVALID');}
+  try{exact(p,p.version===2?['version','tenant_id','store_id','generated_at','subjects','resources','images']:['version','tenant_id','store_id','generated_at','subjects','resources']);integer(p.generated_at);}catch{throw new Error('PORTABILITY_SUPPRESSION_INVALID');}
   if(p.tenant_id!==s.tenant_id||p.store_id!==s.store_id)throw new Error('PORTABILITY_SCOPE_MISMATCH');
-  if(p.version!==1||typeof input.suppression_sha256!=='string'||!/^[a-f0-9]{64}$/.test(input.suppression_sha256)||merchantSnapshotDigest(p)!==input.suppression_sha256)throw new Error('PORTABILITY_SUPPRESSION_INVALID');
+  if(![1,2].includes(p.version)||typeof input.suppression_sha256!=='string'||!/^[a-f0-9]{64}$/.test(input.suppression_sha256)||merchantSnapshotDigest(p)!==input.suppression_sha256)throw new Error('PORTABILITY_SUPPRESSION_INVALID');
   if(p.generated_at<minimum||p.generated_at>k.clock())throw new Error('PORTABILITY_SUPPRESSION_STALE');
   if(!Array.isArray(p.subjects)||!Array.isArray(p.resources)||p.subjects.length>MAX_ROWS||p.resources.length>MAX_ROWS)throw new Error('PORTABILITY_SUPPRESSION_INVALID');
   const subjects=new Set<string>(),resources=new Set<string>();
@@ -111,6 +115,8 @@ function checkedSuppression(k:CommerceKernel,s:Row,input:MerchantSuppression|und
     if(row.tenant_id!==s.tenant_id||row.store_id!==s.store_id)throw new Error('PORTABILITY_SCOPE_MISMATCH');
     if(resources.has(row.resource_id)||row.erased_at>p.generated_at||!p.subjects.some((subject:Row)=>subject.subject_hash===row.subject_hash&&subject.erased_at<=row.erased_at))throw new Error('PORTABILITY_SUPPRESSION_INVALID');resources.add(row.resource_id);
   }
+  if(p.version===2){p.images=validateImageSuppression(p.images,p.generated_at);
+    if(p.images.some((r:Row)=>r.tenant_id!==s.tenant_id||r.store_id!==s.store_id))throw new Error('PORTABILITY_SCOPE_MISMATCH');}
   return {checkpoint:p,digest:input.suppression_sha256};
 }
 function applySuppression(k:CommerceKernel,s:Row,p:Row){
@@ -198,7 +204,9 @@ export function importMerchant(k:CommerceKernel,scope:Scope,value:unknown,expect
     const s=owner(k,scope),{x,m,included}=validate(k,s,value,expected_digest),cp=checkedSuppression(k,s,suppression,m.created_at),prior=receipt(k,s);
     if(prior){const state=k.db.prepare('SELECT * FROM commerce_recovery_state WHERE id=1').get() as Row;
       if(prior.snapshot_id!==m.snapshot_id||prior.digest!==expected_digest||!state||state.restore_id!==m.snapshot_id||state.source_digest!==expected_digest)throw new Error('PORTABILITY_IMPORT_CONFLICT');
+      const imageReplay=prepareImageSuppression(k,cp.checkpoint,s,x.rows);
       applySuppression(k,s,cp.checkpoint);
+      applyImageSuppression(k,imageReplay);revokeImagesForRestore(k,s.tenant_id,s.store_id);
       k.db.prepare('UPDATE commerce_recovery_state SET suppression_digest=? WHERE id=1').run(cp.digest);
       return {...prior,suppression_sha256:cp.digest};}
     if(Number((k.db.prepare('SELECT count(*) n FROM commerce_stores').get() as Row).n)!==1||k.db.prepare('SELECT 1 FROM commerce_recovery_state').get())throw new Error('PORTABILITY_TARGET_NOT_EMPTY');
@@ -217,7 +225,9 @@ export function importMerchant(k:CommerceKernel,scope:Scope,value:unknown,expect
     if(k.db.prepare('PRAGMA foreign_key_check').all().length)throw new Error('PORTABILITY_FOREIGN_KEYS_INVALID');
     const erased=k.db.prepare(`SELECT r.payload,r.customer_id FROM commerce_resources r JOIN commerce_privacy_resources p USING(tenant_id,store_id) WHERE p.resource_id=r.id`).all() as Row[];
     if(erased.some(r=>r.payload!=='{"redacted":true}'||r.customer_id!==null))throw new Error('PORTABILITY_SUPPRESSION_INVALID');
+    const imageReplay=prepareImageSuppression(k,cp.checkpoint,s,x.rows);
     applySuppression(k,s,cp.checkpoint);
+    applyImageSuppression(k,imageReplay);
     if(k.db.prepare('PRAGMA foreign_key_check').all().length)throw new Error('PORTABILITY_FOREIGN_KEYS_INVALID');
     k.db.prepare('INSERT INTO commerce_recovery_state VALUES(1,?,?,?,?,?)').run(m.snapshot_id,'quarantine',expected_digest,cp.digest,k.clock());
     for(const [table,clause] of Object.entries(PAUSE)){

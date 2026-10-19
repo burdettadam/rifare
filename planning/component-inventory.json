@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "id": "rifare-source-inventory",
-  "revision": 25,
+  "revision": 26,
   "status": "proposed",
   "components": [
     {
@@ -123,6 +123,7 @@
         "docs/GROWTH-SHOPPING.md",
         "docs/IMAGE-ASSISTANCE.md",
         "docs/IMAGE-READER.md",
+        "docs/IMAGE-SUPPRESSION.md",
         "docs/INDEPENDENT-RETURN-RUNTIMES.md",
         "docs/INSTALL-UPGRADE.md",
         "docs/INSTANT-EXCHANGES.md",
@@ -251,6 +252,7 @@
         "docs/decisions/0043-calibrated-routing-and-backend-replacement.md",
         "docs/decisions/0044-browser-roadmap-adoption.md",
         "docs/decisions/0051-m17-recovery-image-assistance.md",
+        "docs/decisions/0052-m17-portable-image-suppression.md",
         "docs/decisions/README.md",
         "docs/exchange-depth.md",
         "docs/exchange-money.md",
@@ -710,6 +712,7 @@
         "packages/commerce/contracts/hsa-fsa.v1.json",
         "packages/commerce/contracts/identity-partner.v1.json",
         "packages/commerce/contracts/image-assistance.v1.json",
+        "packages/commerce/contracts/image-suppression.v1.json",
         "packages/commerce/contracts/international-handoffs.v1.json",
         "packages/commerce/contracts/inventory-forecasts.v1.json",
         "packages/commerce/contracts/inventory-reconciliation.v1.json",
@@ -808,6 +811,7 @@
         "packages/commerce/image-assistance.mts",
         "packages/commerce/image-privacy.mts",
         "packages/commerce/image-resources.mts",
+        "packages/commerce/image-suppression.mts",
         "packages/commerce/instant-exchanges.mts",
         "packages/commerce/integration-readiness.mts",
         "packages/commerce/international-handoffs.mts",
@@ -1149,6 +1153,7 @@
         "tests/development/image-assistance-helpers.mts",
         "tests/development/image-assistance.test.mts",
         "tests/development/image-reader.test.mts",
+        "tests/development/image-suppression.test.mts",
         "tests/development/installation-upgrade.test.mts",
         "tests/development/instant-helpers.mts",
         "tests/development/instant-lifecycle.test.mts",
@@ -1644,7 +1649,8 @@
         "work/records/M14-milestone-integration.md",
         "work/records/M17-reader-author.md",
         "work/records/M17-recovery-assignment.md",
-        "work/records/M17-recovery-checkpoint.md"
+        "work/records/M17-recovery-checkpoint.md",
+        "work/records/M17-suppression-checkpoint.md"
       ],
       "notices": []
     },

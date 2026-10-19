@@ -3,13 +3,14 @@ import { chmodSync,copyFileSync,existsSync,lstatSync,mkdirSync,readFileSync,read
 import { dirname,join,resolve } from 'node:path';
 import { CommerceKernel,exact,id,integer,token,digest } from './kernel.mts';
 import type { Scope,Row } from './kernel.mts';
-import { canonical,contentDigest } from './configuration-values.mts';
+import { canonical,contentDigest,jsonValue } from './configuration-values.mts';
 import { eraseSelected,storageInventory,suppressionCheckpoint } from './privacy-lifecycle.mts';
 import { revokeGrowthForRestore } from './growth-privacy.mts';
 import { revokeExtendedServicesForRestore } from './extended-services-privacy.mts';
 import { revokeInventoryPlanningForRestore } from './inventory-planning-privacy.mts';
 import { revokeEcosystemForRestore } from './ecosystem-privacy.mts';
 import { revokeImagesForRestore } from './image-privacy.mts';
+import { validateImageSuppression,prepareImageSuppression,applyImageSuppression } from './image-suppression.mts';
 
 const LIMIT=64*1024*1024;
 function pathCheck(path:string,mustExist=false) {
@@ -37,12 +38,14 @@ export function createRecoverySnapshot(k:CommerceKernel,directory:string) {
   }catch(error){rmSync(path,{recursive:true,force:true});throw error;}
 }
 function checkpoint(value:unknown,hash:string,minimum:number) {
-  const p=exact(value,['version','generated_at','subjects','resources']);if(contentDigest(p)!==hash||p.version!==1)throw new Error('SUPPRESSION_CHECKPOINT_INVALID');
+  const p=jsonValue(value);exact(p,p.version===2?['version','generated_at','subjects','resources','images']:['version','generated_at','subjects','resources']);
+  if(contentDigest(p)!==hash||![1,2].includes(p.version))throw new Error('SUPPRESSION_CHECKPOINT_INVALID');
   integer(p.generated_at);if(p.generated_at<minimum)throw new Error('SUPPRESSION_CHECKPOINT_STALE');
   for(const key of ['subjects','resources'])if(!Array.isArray(p[key])||p[key].length>10000)throw new Error('SUPPRESSION_CHECKPOINT_INVALID');
   for(const r of p.subjects){exact(r,['tenant_id','store_id','subject_hash','erased_at']);id(r.tenant_id);id(r.store_id);if(!/^[a-f0-9]{64}$/.test(r.subject_hash))throw new Error('SUPPRESSION_CHECKPOINT_INVALID');integer(r.erased_at);if(r.erased_at>p.generated_at)throw new Error('SUPPRESSION_CHECKPOINT_INVALID');}
   for(const r of p.resources){exact(r,['tenant_id','store_id','resource_id','subject_hash','erased_at']);id(r.resource_id);
     if(!p.subjects.some((s:Row)=>s.tenant_id===r.tenant_id&&s.store_id===r.store_id&&s.subject_hash===r.subject_hash&&s.erased_at<=r.erased_at))throw new Error('SUPPRESSION_CHECKPOINT_INVALID');}
+  if(p.version===2)p.images=validateImageSuppression(p.images,p.generated_at);
   return p;
 }
 export function restoreRecoverySnapshot(input:{snapshot:string;destination:string;manifest_sha256:string;suppression:unknown;suppression_sha256:string},clock:()=>number=Date.now) {
@@ -62,6 +65,7 @@ export function restoreRecoverySnapshot(input:{snapshot:string;destination:strin
     if(contentDigest(migrations(k))!==m.migrations_sha256)throw new Error('RECOVERY_SCHEMA_MISMATCH');
     const restoreId='restore_'+token().slice(0,32);
     k.transaction(()=>{
+      const imageReplay=prepareImageSuppression(k,cp);
       db!.prepare('INSERT OR REPLACE INTO commerce_recovery_state VALUES(1,?,?,?,?,?)').run(restoreId,'quarantine',m.database_sha256,input.suppression_sha256,clock());
       for(const [table,clause] of [['commerce_sessions','revoked=1'],['commerce_worker_grants','revoked=1'],['commerce_secrets','revoked=1'],['commerce_credential_slots','active=0'],['commerce_webhook_routes','enabled=0'],['commerce_execution_settings','enabled=0'],['commerce_action_readiness','revoked=1'],['commerce_action_approvals','revoked=1'],['commerce_shipping_label_approvals','revoked=1'],['commerce_inventory_transfer_approvals','revoked=1'],['commerce_case_work',"state='revoked',expires_at=0"]])db!.exec(`UPDATE ${table} SET ${clause}`);
       db!.exec('UPDATE commerce_gift_sessions SET revoked=1; UPDATE commerce_gift_challenges SET consumed=1;');
@@ -69,13 +73,14 @@ export function restoreRecoverySnapshot(input:{snapshot:string;destination:strin
       revokeExtendedServicesForRestore(k);
       revokeInventoryPlanningForRestore(k);
       revokeEcosystemForRestore(k);
-      revokeImagesForRestore(k);
       db!.exec('INSERT OR IGNORE INTO commerce_restored_operations SELECT tenant_id,store_id,id FROM commerce_operations');
       db!.exec("UPDATE commerce_operations SET state='unknown',revision=revision+1 WHERE state='sending'");
       db!.exec("UPDATE commerce_operation_work SET state='unknown',lease_token=NULL,lease_until=NULL,last_code='restore_uncertain' WHERE state IN ('sending','leased')");
       for(const s of cp.subjects){const ids=cp.resources.filter((r:Row)=>r.tenant_id===s.tenant_id&&r.store_id===s.store_id&&r.subject_hash===s.subject_hash).map((r:Row)=>r.resource_id);
         // Replaying an erasure cannot be blocked by an obsolete hold in an old snapshot.
         eraseSelected(k,s,ids,s.subject_hash,s.erased_at);}
+      applyImageSuppression(k,imageReplay);
+      revokeImagesForRestore(k);
       if(db!.prepare('PRAGMA foreign_key_check').all().length)throw new Error('RECOVERY_FOREIGN_KEYS_INVALID');
     });
     db.close();db=undefined;renameSync(staging,target);

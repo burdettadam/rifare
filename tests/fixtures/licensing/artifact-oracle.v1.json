@@ -1,6 +1,6 @@
 {
-  "source_file_count": 1791,
-  "source_count_reason": "ADR-0051 isolated M17 diagnostic recovery work from a33c4ad; all 1755 recovered source members retained. Missing later M15/M16/M23 implementation is not claimed; no new tables or dependencies.",
+  "source_file_count": 1797,
+  "source_count_reason": "ADR-0052 bounded M17 portable individual-image suppression from saved 26587c9. All 1791 previous M17 source members and 3078 registered cases retained; six new source files, no new tables, adapters or dependencies. Missing M15/M16/M23 history and formal qualification remain blocked.",
   "component_ids": [
     "git-agent-adaptations",
     "rifare-developer-helpers",

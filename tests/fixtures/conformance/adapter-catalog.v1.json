@@ -5269,7 +5269,7 @@
     },
     {
       "path": "packages/commerce/privacy-lifecycle.mts",
-      "sha256": "f2e0cefd63f84c4f9e3f40f2f1a5385ca7d5fccabbc0fc6bfdfb4524d2a1d57c"
+      "sha256": "db0d33a9ced42e330c80e41216b48850e2cb212848fe0e573b5092ffb17de56f"
     },
     {
       "path": "packages/commerce/profile-editor.mts",
@@ -5405,7 +5405,7 @@
     },
     {
       "path": "packages/commerce/safe-recovery.mts",
-      "sha256": "cc7b68eb4cbcec08a64a556dff6ed12a838390187c566772e2c20f71924ede7d"
+      "sha256": "e2dc27751bbdf69901cd51a1f28f2b3d48a8530b7c3f45b8fd13301dd7f6f08d"
     },
     {
       "path": "packages/commerce/secrets.mts",
@@ -6017,7 +6017,7 @@
     },
     {
       "path": "packages/commerce/merchant-portability.mts",
-      "sha256": "38c43402711d00f6168de37aaf8d049b72112b6228f75ddc3161cb3bafe87bf0"
+      "sha256": "17190c2b9d56361a1c7912821d832e6785a646ff55f3cc2ad8190cd897b1c134"
     },
     {
       "path": "packages/commerce/contracts/carrier-quotes.v1.json",
@@ -7198,6 +7198,18 @@
     {
       "path": "tests/fixtures/image-reader/request.json",
       "sha256": "3d0d8a02f5c0cd0e28d6bbc33f6f3cdac941ed7ece2edebf383bd9c6bf030f8f"
+    },
+    {
+      "path": "packages/commerce/image-suppression.mts",
+      "sha256": "131c8f201ee60e7678e4abe4a0aee7bb28b04eaa4f725a034c6d9943acabf26f"
+    },
+    {
+      "path": "packages/commerce/contracts/image-suppression.v1.json",
+      "sha256": "229bd502776ea8cda166f2a133b6f440b4be0d7f323a75fd9edf6a54e0fa4fb0"
+    },
+    {
+      "path": "tests/development/image-suppression.test.mts",
+      "sha256": "97f08ff26c310aa6f31a24c7eaa6c171ba229dc84b3047c8251964446b3a3295"
     }
   ]
 }
