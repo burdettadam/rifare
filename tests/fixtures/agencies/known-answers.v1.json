@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "qualification": "independent_expected_local_fixture_not_external_qualification",
+  "presentation": {"tone": "warm", "locale": "en-GB"},
+  "original_presentation": {"tone": "neutral", "locale": "en-US"},
+  "combined": {"included_stores": 2, "denominator": 5, "correct_handling": 1, "customer_confirmed_resolutions": 1, "ticket_closures": 3, "pending_cases": 4, "correct_handling_rate": 0.2, "resolution_rate": 0.2},
+  "after_a_revocation": {"included_stores": 1, "denominator": 3, "correct_handling": 0, "customer_confirmed_resolutions": 0, "ticket_closures": 2, "pending_cases": 3, "correct_handling_rate": 0, "resolution_rate": 0},
+  "forbidden_aggregate_fields": ["cases", "case_id", "customer_id", "resource_id", "financial_observations", "declared_contribution_minor", "source_ref", "address", "credential"]
+}
