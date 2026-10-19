@@ -175,5 +175,4 @@ The [M12 assessment](docs/M12-QUALIFICATION.md) retains the original independent
 contributor and per-merchant template exit criteria. G06/G07/G08 use distinct
 PREP evidence; human governance/licensing/code decisions and independent
 contribution are not manufactured. G09 remains explicitly deferred, code mode
-disabled. M07-G99 and formal cumulative qualification remain open. M13 is
-unassigned; public distribution, solicitation and real effects remain unauthorized.
+disabled. M07-G99 and formal cumulative qualification remain open. The retained roadmap ends at M12; later work needs a new assignment; public distribution, solicitation and real effects remain unauthorized.

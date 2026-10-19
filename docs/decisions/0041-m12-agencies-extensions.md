@@ -17,7 +17,7 @@ independent contribution, human licensing/governance adoption or agent code
 execution. G06, G07 and G08 use distinct PREP claims where their original human
 or external evidence is absent. G09 remains deferred with code mode disabled,
 as its original outcome expressly permits. Original G99 demonstration, criteria,
-cases and dependencies remain intact. M13 is not assigned.
+cases and dependencies remain intact. No later milestone is assigned; the retained roadmap ends at M12.
 
 Native isolated worktrees, local source commits, bounded checks, two independent
 reviews, local nonrelease integration and cumulative handoff packaging are

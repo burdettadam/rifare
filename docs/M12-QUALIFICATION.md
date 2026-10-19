@@ -25,7 +25,7 @@ publish a release or represent an independently contributed community extension.
 | G07 | PREP: local artifact/SDK/evidence intake identifies missing independence, private patches, widened privileges and stale contract/fixture bindings. | No independent contributor or authenticated independent execution observation exists. Maintainer-authored fixtures remain synthetic. |
 | G08 | PREP: named typed workflows and measured local observations support a threat/need packet. The code alternative is explicitly unexecuted; parity-only or ambient-access proposals are rejected. | An explicit human go/no-go decision remains outstanding. Local service review cannot impersonate that decision. |
 | G09 | Deferred with code mode disabled. The existing typed gateway refuses unknown code tools; no runtime is implemented. | This is the original conditional goal's deferred alternative, not a passing sandbox or completed adversarial runtime corpus. |
-| G99 | Local integration demonstration and exact source/evidence review; formal assessment records remaining obligations. | Original milestone acceptance remains blocked. M13 is unassigned. |
+| G99 | Local integration demonstration and exact source/evidence review; formal assessment records remaining obligations. | Original milestone acceptance remains blocked. The retained roadmap ends at M12; later work needs a new assignment. |
 
 ## Original demonstration and exit criteria
 
