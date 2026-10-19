@@ -67,6 +67,11 @@ test('CASE-M13-G04-03',()=>usingShadow(async f=>{
   assert.equal(f.db.prepare('SELECT count(*) n FROM commerce_assistance_receipts').get().n,2);
   release();const completed=await pending;assert.equal(completed.id,first.id);assert.equal(completed.result.status,'usable');
   assert.deepEqual(await f.shadow.run(f.a.scope,concurrent),completed);assert.equal(f.requests.length,3);
+  const stoppedInput=f.input(),stoppedPending=f.shadow.run(f.a.scope,stoppedInput);assert.equal(f.requests.length,4);
+  f.shadow.configure(f.owner.scope,{id:f.ref,expected_version:1,enabled:false,expires_at:f.now()+3600000});
+  await assert.rejects(()=>f.shadow.run(f.a.scope,stoppedInput),/DECISION_OBSERVATION_IN_PROGRESS/);
+  release();await assert.rejects(()=>stoppedPending,/DECISION_CONFIGURATION_CHANGED/);
+  assert.equal(f.db.prepare('SELECT count(*) n FROM commerce_assistance_receipts').get().n,3);
 }));
 test('CASE-M13-G04-04',()=>usingShadow(async f=>{
   const invalid=structuredClone(f.wire.clear);invalid.result.answers.reported_problem.choice='approve_refund';f.response(invalid);
@@ -178,6 +183,14 @@ test('M13-SHADOW-CONFIGURATION-CHANGE-AFTER-AWAIT',async()=>{
  await usingShadow(async f=>{
   const replacement=workersAIReader({serving_configuration_ref:f.ref,account_id:'b'.repeat(32),approved_account_ids:['b'.repeat(32)],model_id:WORKERS_AI_MODEL,approved_model_ids:[WORKERS_AI_MODEL],fixtureTransport:(async()=>{throw new Error('WRONG_CATALOG_READER_DISPATCH');}) as typeof fetch});
   assert.notEqual(replacement.configuration_digest,f.reader.configuration_digest);
+  const shadow=new DecisionShadow(f.kernel,f.reads,f.vault,[{id:f.ref,tenant_id:f.a.tenant,store_id:f.a.store,secret_ref:f.secret,reader:replacement}]);
+  shadow.configure(f.owner.scope,{id:f.ref,expected_version:1,enabled:true,expires_at:f.now()+3600000});
+  const receipt=await shadow.run(f.a.scope,f.input());assert.equal(receipt.result.status,'unusable');assert.equal(receipt.result.reason,'DECISION_CONFIGURATION_CHANGED');
+  assert.equal(receipt.provenance.dispatch,'not_attempted');assert.equal(receipt.provenance.live_inference_observed,false);assert.equal(f.requests.length,0);
+ });
+ await usingShadow(async f=>{
+  const replacement=workersAIReader({serving_configuration_ref:f.ref,account_id:'a'.repeat(32),approved_account_ids:['a'.repeat(32)],model_id:WORKERS_AI_MODEL,approved_model_ids:[WORKERS_AI_MODEL]});
+  assert.equal(replacement.evidence_kind,'live_test_unqualified');
   const shadow=new DecisionShadow(f.kernel,f.reads,f.vault,[{id:f.ref,tenant_id:f.a.tenant,store_id:f.a.store,secret_ref:f.secret,reader:replacement}]);
   shadow.configure(f.owner.scope,{id:f.ref,expected_version:1,enabled:true,expires_at:f.now()+3600000});
   const receipt=await shadow.run(f.a.scope,f.input());assert.equal(receipt.result.status,'unusable');assert.equal(receipt.result.reason,'DECISION_CONFIGURATION_CHANGED');
