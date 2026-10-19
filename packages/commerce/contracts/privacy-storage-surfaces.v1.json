@@ -1219,7 +1219,7 @@
     },
     {
       "path": "packages/commerce/image-privacy.mts",
-      "sha256": "7b5478b8c66e08ad2ebde54110fbcca69434f0edb0b7c1dac9bba1be6a50cf38"
+      "sha256": "5677f020376d02b6ace1e99883d900635b562974f7e65be367fe2ddf4bb916dd"
     }
   ],
   "surfaces": [

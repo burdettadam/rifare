@@ -7097,7 +7097,7 @@
     },
     {
       "path": "packages/commerce/image-privacy.mts",
-      "sha256": "7b5478b8c66e08ad2ebde54110fbcca69434f0edb0b7c1dac9bba1be6a50cf38"
+      "sha256": "5677f020376d02b6ace1e99883d900635b562974f7e65be367fe2ddf4bb916dd"
     },
     {
       "path": "packages/commerce/image-resources.mts",
@@ -7137,7 +7137,7 @@
     },
     {
       "path": "tests/development/image-assistance.test.mts",
-      "sha256": "d971391285f4a158c989f83af052d8159c03ddeba6c82b5a6fae78820e00bf20"
+      "sha256": "701d0df8c9009e8240f460075b5befae8822b89f8ea5982d51f8ee4615216232"
     },
     {
       "path": "tests/development/image-reader.test.mts",

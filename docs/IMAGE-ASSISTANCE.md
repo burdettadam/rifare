@@ -94,6 +94,9 @@ credentials or raw provider errors. Approval session hashes are internal only.
 Individual evidence erasure and retention purge remove every linked unheld new
 receipt kind. Subject/gift erasure removes new case-bound copies, and export
 uses a fixed projection that excludes sessions and purchaser gift data. The
+receipt timestamp must be a nonnegative safe integer matching the canonical
+row's `created_at`; a recomputed body digest cannot authorize an arbitrary
+imported object or a different timestamp in that projection. The
 gift test seeds historical/imported records into a real gift case to exercise
 privacy cleanup; it does not execute a gift image model workflow.
 

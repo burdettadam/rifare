@@ -10,7 +10,7 @@ function records(k:CommerceKernel,t?:string,st?:string):Row[]{
 }
 function checked(row:Row){
   const value=jsonValue(JSON.parse(row.body)),{receipt_digest,...body}=value;
-  if(!IMAGE_RECEIPT_KINDS.includes(value.kind)||value.id!==row.id||value.task_id!==row.task_id||contentDigest(body)!==receipt_digest||!value.source||typeof value.source.sha256!=='string'||!/^[a-f0-9]{64}$/.test(value.source.sha256))throw new Error('IMAGE_RECEIPT_INTEGRITY');id(value.case_id);id(value.source.evidence_id);return value;
+  if(!IMAGE_RECEIPT_KINDS.includes(value.kind)||value.id!==row.id||value.task_id!==row.task_id||!Number.isSafeInteger(value.observed_at)||value.observed_at<0||value.observed_at!==row.created_at||contentDigest(body)!==receipt_digest||!value.source||typeof value.source.sha256!=='string'||!/^[a-f0-9]{64}$/.test(value.source.sha256))throw new Error('IMAGE_RECEIPT_INTEGRITY');id(value.case_id);id(value.source.evidence_id);return value;
 }
 /** Erasure runs inside the owning lifecycle transaction, after its hold check.
  * Selection is by canonical image/case identity, not free text or task alone. */
