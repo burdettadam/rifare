@@ -3,7 +3,7 @@ import { digest } from './kernel.mts';
 import { canonical,contentDigest } from './configuration-values.mts';
 import { decodeSkillPackage } from './skill-installer.mts';
 import { checkedBundle } from './skills.mts';
-import { ACTION_CONTRACTS } from './skill-contract.mts';
+import { ACTION_CONTRACTS,withinVersion } from './skill-contract.mts';
 import { PROFILE_ACTIONS } from './profiles.mts';
 
 export const EXTENSION_TABLES=Object.freeze(['commerce_extension_artifacts','commerce_extension_reviews','commerce_extension_transitions','commerce_extension_retirements']);
@@ -13,7 +13,9 @@ const object=(value:unknown):Row=>value&&typeof value==='object'&&!Array.isArray
 const identifier:Check=v=>typeof v==='string'&&/^[A-Za-z0-9_-]{1,96}$/.test(v);
 const hash:Check=v=>typeof v==='string'&&/^[a-f0-9]{64}$/.test(v);
 const revision:Check=v=>typeof v==='string'&&/^[A-Za-z0-9_.-]{1,80}$/.test(v);
-const version:Check=v=>typeof v==='string'&&/^(0|[1-9][0-9]{0,5})\.(0|[1-9][0-9]{0,5})\.(0|[1-9][0-9]{0,5})$/.test(v);
+const version:Check=v=>{try{return typeof v==='string'&&withinVersion(v,{min:'0.0.0',max_exclusive:'999999.999999.999999'});}catch{return false;}};
+const fixtureVersion:Check=v=>typeof v==='string'&&/^[A-Za-z0-9_.-]{1,96}$/.test(v);
+const hostVersion:Check=v=>typeof v==='string'&&Boolean(v.trim())&&v.length<=600;
 const integer:Check=v=>Number.isSafeInteger(v)&&Number(v)>=0;
 const positive:Check=v=>integer(v)&&Number(v)>0;
 const boolean:Check=v=>typeof v==='boolean';
@@ -26,9 +28,9 @@ const conformance=oneOf('instruction_contract_only','retained_host_source_and_te
 const strategy=oneOf('retain_pins_and_repreview');
 const pending=oneOf('retain_immutable_pins');
 const action:Check=v=>typeof v==='string'&&Object.hasOwn(ACTION_CONTRACTS,v);
-const path:Check=v=>typeof v==='string'&&v.length<=200&&/^(?:packages|tests)\/[A-Za-z0-9_./-]+$/.test(v)&&!v.split('/').some(p=>!p||p==='.'||p==='..');
+const path:Check=v=>typeof v==='string'&&/^(?:apps|packages|migrations|tests|planning|examples)\/[A-Za-z0-9_./-]+$/.test(v)&&!v.split('/').includes('..');
 const uri:Check=v=>{if(typeof v!=='string'||v.length>400)return false;try{const u=new URL(v);return u.protocol==='https:'&&!u.username&&!u.password&&!u.search&&!u.hash;}catch{return false;}};
-const testId:Check=v=>typeof v==='string'&&/^(?:CASE-|M[0-9]{2}-)[A-Za-z0-9_-]{1,90}$/.test(v);
+const testId=identifier;
 const goalId:Check=v=>typeof v==='string'&&/^FEATURE-M[0-9]{2}-G[0-9]{2}$/.test(v);
 const storeId:Check=v=>typeof v==='string'&&v.split('/').length===2&&v.split('/').every(identifier);
 
@@ -57,14 +59,14 @@ function artifact(value:unknown,row:Row,bundleDigest:unknown){
   const metadata={...fields(v,{format:oneOf('rifare-extension-artifact-v1'),id:x=>x===row.extension_id,version:x=>version(x)&&x===row.version,kind:x=>oneOf('instruction','host_adapter')(x)&&x===row.kind}),
    origin:source(v.origin),ownership:fields(v.ownership,{owner_id:identifier,license:oneOf('Apache-2.0','MIT','AGPL-3.0-only'),notice_sha256:hash,provenance_sha256:hash,support_id:identifier}),
    contract:{...fields(c,{sdk_version:oneOf('rifare-extension-v1'),engine_version:oneOf('1.0.0')}),actions:map(c.actions,x=>fields(x,{name:action,version}),8)},
-   evidence:{fixture:fields(e.fixture,{path:x=>path(x)&&String(x).startsWith('tests/fixtures/')&&String(x).endsWith('.json'),sha256:hash,version:revision}),source_pins:map(e.source_pins,pin,32),test_pins:map(e.test_pins,x=>fields(x,{id:testId,path:x=>typeof x==='string'&&/^tests\/development\/[a-z0-9-]+\.test\.mts$/.test(x),sha256:hash}),32)},payload:v.payload};
+   evidence:{fixture:fields(e.fixture,{path:x=>path(x)&&String(x).startsWith('tests/fixtures/')&&String(x).endsWith('.json'),sha256:hash,version:fixtureVersion}),source_pins:map(e.source_pins,pin,32),test_pins:map(e.test_pins,x=>fields(x,{id:testId,path:x=>typeof x==='string'&&/^tests\/development\/[a-z0-9-]+\.test\.mts$/.test(x),sha256:hash}),32)},payload:v.payload};
   if(!hash(row.id)||contentDigest(v)!==row.id||!same(metadata,v)||!hash(object(v.origin).sha256)||contentDigest(p)!==v.origin.sha256)throw Error();
   if(!/^[a-f0-9]{40}$/.test(v.origin.revision)||v.ownership.provenance_sha256!==e.fixture.sha256||!e.source_pins.length||!e.test_pins.length)throw Error();
   if(v.kind==='instruction'){
    const decoded=decodeSkillPackage(Buffer.from(canonical(p)),'json'),bundle=decoded.bundle;
    if(bundle.id!==row.extension_id||bundle.version!==row.version||bundle.digest!==bundleDigest||decoded.origin!==new URL(v.origin.uri).href||digest(bundle.files['references/NOTICE.txt'])!==v.ownership.notice_sha256)throw Error();
   }else{
-   const host={...fields(p,{adapter_id:identifier,version,api_version:revision,notice_text:x=>typeof x==='string'&&x.length<=8192&&digest(x)===v.ownership.notice_sha256}),operations:list(p.operations,x=>typeof x==='string'&&/^[A-Za-z0-9_.-]{1,96}$/.test(x),32),source_pins:map(p.source_pins,pin,32)};
+   const host={...fields(p,{adapter_id:identifier,version:hostVersion,api_version:hostVersion,notice_text:x=>typeof x==='string'&&x.length<=8192&&digest(x)===v.ownership.notice_sha256}),operations:list(p.operations,x=>typeof x==='string'&&/^[A-Za-z0-9_.-]{1,96}$/.test(x),32),source_pins:map(p.source_pins,pin,32)};
    if(bundleDigest!==null||!same(host,p)||!same(p.source_pins,e.source_pins))throw Error();
   }
   return v;
