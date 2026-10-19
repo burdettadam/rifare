@@ -1,0 +1,82 @@
+{
+  "authority": "ADR-0042",
+  "status": "proposed_not_implemented",
+  "extensions": [
+    {
+      "goal_id": "M12-G08",
+      "title": "Refine the existing agent-code go/no-go decision",
+      "change_type": "refinement_preserve_existing_goal",
+      "preserve_depends_on": [
+        "M07-G99"
+      ],
+      "preserve_requirement_ids": [
+        "BUILD-092"
+      ],
+      "preserve_test_ids": [
+        "CASE-M12-G08-01",
+        "CASE-M12-G08-02",
+        "CASE-M12-G08-03"
+      ],
+      "integration_crossrefs": [
+        "M15",
+        "M16"
+      ],
+      "additional_scope": [
+        "Compare measured named tasks using the existing typed actions with one constrained-code candidate. Competitor parity or the availability of a code-execution SDK is insufficient justification.",
+        "Record input provenance, secret placement, package/filesystem access, network mediation, execution/resource budgets and pause/resume authority in the existing threat-model decision.",
+        "If Cloudflare Code Mode is evaluated, record its experimental status, exact SDK/runtime versions, supported execution profile and a replaceable executor interface. Reuse M16's qualified boundary where appropriate without making Cloudflare mandatory.",
+        "Explicitly compare stateless createCodeTool, which excludes approval-required tools, with the documented durable approval path. Decide whether the required workflow actually needs code and whether it can preserve exact server approvals.",
+        "Preserve the original human decision prerequisite and deferred/no-go outcome. Approving this research plan does not authorize arbitrary-code enablement or satisfy M12-G08's go decision."
+      ],
+      "additional_acceptance_criteria": [
+        "The decision records a bounded task comparison and measurable unmet need, or concludes no-go/defer with code execution disabled.",
+        "The candidate architecture has no ambient merchant keys or generic egress and can preserve current approval, schema and operation/reconciliation authority.",
+        "A material change in required privileges, execution runtime or pause/replay behavior triggers review of the original decision before enablement."
+      ],
+      "targeted_fault": "Enable code mode solely because it is on the roadmap or available in an SDK, without the recorded authorized go decision; the existing decision gate must reject it.",
+      "verification_policy": "Use the current focused-development policy for local comparison and the existing human/independent decision gate. Preserve stable obligation IDs and do not require a full product regression merely to write the decision.",
+      "release_claim": "A measured no-go or deferred decision is a valid decision outcome and never an implemented or qualified code-execution capability.",
+      "adoption_note": "Additive future cross-reference only. The protected original goal object and its human/qualification prerequisites remain unchanged; no code execution is enabled."
+    },
+    {
+      "goal_id": "M12-G09",
+      "title": "Refine optional executor mediation, approvals and replay",
+      "change_type": "refinement_preserve_existing_goal",
+      "preserve_depends_on": [
+        "M12-G08",
+        "M07-G99"
+      ],
+      "preserve_requirement_ids": [
+        "BUILD-092"
+      ],
+      "preserve_test_ids": [
+        "CASE-M12-G09-01",
+        "CASE-M12-G09-02",
+        "CASE-M12-G09-03"
+      ],
+      "integration_crossrefs": [
+        "M15",
+        "M16"
+      ],
+      "additional_scope": [
+        "Only after the original explicit go decision, connect a replaceable executor to the same typed broker/action gateway. Expose no raw adapters, database handles, merchant secrets or unbounded network/filesystem/package access.",
+        "Validate every requested operation and argument at the server regardless of SDK schema handling. The Code Mode resolver is not a substitute for Rifare's runtime validation or current task checks.",
+        "If using Dynamic Workers, explicitly deny general egress with globalOutbound:null or a separately verified egress policy; qualify the exact runtime instead of relying on raw loader defaults.",
+        "If approvals are needed, select and qualify the durable approval integration rather than assuming stateless createCodeTool can pause approval-required tools. Preserve exact preview/configuration/resource binding and current authorization at resume.",
+        "Treat SDK replay as execution control, not business idempotency. Do not mark financial or other irreversible calls replay:reexecute; preserve original operation identity and reconcile unknown effects.",
+        "Keep pausable work sequential unless the selected executor has demonstrated correct concurrent pause/replay semantics. A resumed task must retain its M16 restriction version and M15 authority ceiling where those profiles apply.",
+        "Qualify bounded time, memory, output and process behavior in the actual execution profile. Reuse the relevant M16 isolation evidence only when the executable runtime and trust boundary are the same."
+      ],
+      "additional_acceptance_criteria": [
+        "A bounded deterministic transform can request one permitted typed action, while direct network, secret access, oversized output and unbounded execution are denied or terminated by the actual profile.",
+        "Malformed arguments and an unauthorized action fail at the server even if the executor or SDK accepts them; a paused approval resumes only for the still-valid exact preview.",
+        "A crash or approval pause after an ambiguous synthetic effect cannot cause a duplicate send on replay; the original operation remains unknown until authoritative reconciliation.",
+        "If no-go/deferred or any required boundary is unqualified, code mode remains disabled and the supported typed/manual workflow continues."
+      ],
+      "targeted_fault": "Permit a raw adapter/secret inside the executor or reexecute an already attempted synthetic financial operation on resume; the focused isolation or replay fixture must reject the candidate.",
+      "verification_policy": "Retain the existing stable tests and human/governance gate. Select only changed executor, authority and resume/reconciliation whole files for routine development; broaden for a specific uncovered risk or the required integrated acceptance gate.",
+      "release_claim": "Optional code execution is conditional on the original go decision and actual executor qualification. Neither M15/M16 local readiness nor the availability of Cloudflare Code Mode establishes sandbox acceptance.",
+      "adoption_note": "Additive future cross-reference only. The protected original goal object and its human/qualification prerequisites remain unchanged; no code execution is enabled."
+    }
+  ]
+}

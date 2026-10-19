@@ -2,11 +2,16 @@
 """Validate planning structure, NOT commerce behavior or reviewer authorization."""
 from __future__ import annotations
 import argparse
+import hashlib
 import json
 import sys
 from collections import Counter
 from pathlib import Path
 from typing import Any
+
+# Prior authority: ADR-0042 / 97b888a. This is a closed, byte-pinned addition,
+# not a candidate-controlled namespace for replacing original requirements.
+ADOPTED_SHA256 = '0d4218fabd39eeb1328de5a3d1f79cc620967ef761a6dc4a405ec403a280d7b2'
 
 
 def validate_documents(docs: dict[str, Any]) -> list[str]:
@@ -17,6 +22,11 @@ def validate_documents(docs: dict[str, Any]) -> list[str]:
     milestones = docs['milestones']['milestones']
     original_reqs = docs['original_requirements']['items']
     original_tests = docs['original_tests']['tests']
+    adopted_document = docs['adopted_requirements']
+    adopted_bytes = (json.dumps(adopted_document, indent=2) + '\n').encode('utf-8')
+    if hashlib.sha256(adopted_bytes).hexdigest() != ADOPTED_SHA256:
+        errors.append('ADR-0042 frozen addition changed')
+    adopted_reqs = adopted_document['requirements']
     indexes: dict[str, dict[str, Any]] = {}
     for name, items in [('goals', goals), ('tests', tests), ('requirements', reqs), ('milestones', milestones)]:
         counts = Counter(x.get('id') for x in items)
@@ -74,8 +84,11 @@ def validate_documents(docs: dict[str, Any]) -> list[str]:
         if t.get('kind') == 'regression' and not t.get('mutation_to_detect'):
             errors.append(f'{t["id"]}: missing fault to detect')
     originals = {x['id']: x for x in original_reqs}
-    if set(ri) != set(originals):
-        errors.append('Original requirement IDs are missing or invented in coverage')
+    additions = {x['id']: x for x in adopted_reqs}
+    if len(additions) != len(adopted_reqs) or set(additions) & set(originals):
+        errors.append('Adopted requirements collide with protected IDs')
+    if set(ri) != set(originals) | set(additions):
+        errors.append('Requirement coverage differs from the exact approved union')
     for rid, r in ri.items():
         if not r.get('worker_goal_ids'):
             errors.append(f'{rid}: orphan requirement')
@@ -86,6 +99,8 @@ def validate_documents(docs: dict[str, Any]) -> list[str]:
             errors.append(f'{rid}: missing acceptance gate')
         if rid in originals and r.get('acceptance_criteria') != originals[rid].get('acceptance_criteria'):
             errors.append(f'{rid}: original acceptance criterion changed')
+        if rid in additions and r.get('acceptance_criteria') != additions[rid].get('acceptance_criteria'):
+            errors.append(f'{rid}: adopted acceptance criterion changed')
     for t in original_tests:
         tid = t['id']
         if tid not in ti:
@@ -110,7 +125,10 @@ def load_documents(root: Path) -> dict[str, Any]:
         'goals':'planning/goals.json', 'tests':'planning/test-specifications.json',
         'coverage':'planning/requirement-coverage.json', 'milestones':'planning/milestones.json',
         'original_requirements':'reference/original-backlog.json',
-        'original_tests':'reference/original-acceptance-tests.json'}
+        'original_tests':'reference/original-acceptance-tests.json',
+        'adopted_requirements':'reference/additions/m13-m22-requirements.json'}
+    if hashlib.sha256((root / paths['adopted_requirements']).read_bytes()).hexdigest() != ADOPTED_SHA256:
+        raise ValueError('ADR-0042 frozen addition changed')
     return {k: json.loads((root / rel).read_text(encoding="utf-8")) for k, rel in paths.items()}
 
 
@@ -127,7 +145,9 @@ def main() -> int:
                   'worker_goals':sum(g['type']=='worker_goal' for g in goals),
                   'milestone_gates':sum(g['type']=='milestone_acceptance' for g in goals),
                   'goal_total':len(goals),'test_specifications':len(docs['tests']['tests']),
-                  'source_requirements_preserved':len(docs['coverage']['requirements']),
+                  'source_requirements_preserved':len(docs['original_requirements']['items']),
+                  'adopted_requirements_preserved':len(docs['adopted_requirements']['requirements']),
+                  'total_requirements_mapped':len(docs['coverage']['requirements']),
                   'source_scenarios_preserved':len(docs['original_tests']['tests']),
                   'product_tests_executed':0, 'product_readiness':'not_assessed', 'errors':errors}
     except (OSError, ValueError, KeyError, TypeError) as exc:

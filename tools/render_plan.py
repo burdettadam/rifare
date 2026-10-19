@@ -13,7 +13,8 @@ def text(p,s):
 def js(p,o):text(p,json.dumps(o,indent=2,ensure_ascii=False))
 goals=load('planning/goals.json')['goals']; by={g['id']:g for g in goals}
 tests=load('planning/test-specifications.json')['tests'];ti={t['id']:t for t in tests}
-ms=load('planning/milestones.json')['milestones'];reqs=load('planning/requirement-coverage.json')['requirements']
+ms=load('planning/milestones.json')['milestones'];coverage=load('planning/requirement-coverage.json');reqs=coverage['requirements']
+original_count=coverage['source_count'];adopted_count=coverage.get('adopted_source_count',0)
 invs=load('planning/invariants.json')['invariants']
 # Static scheduling waves: not an autonomous scheduler or a calendar estimate.
 remaining=set(by);complete=set();waves=[]
@@ -100,7 +101,7 @@ for m in ms:
          '## Evidence gate',m['exit_rule'],m['exclusion_rule'],
          'A prior accepted component does not prove the integrated candidate still works. Re-run current applicable accepted tests, introduced invariants, affected connected-provider qualifications and the complete milestone journey.']
  text(f'milestones/{m["id"]}.md','\n\n'.join(per))
-catalogue[2]=f"{sum(g['type']=='worker_goal' for g in goals)} bounded worker goals + {len(ms)} integration/acceptance gates = **{len(goals)} goal packets**. **{len(tests)} acceptance/regression specifications** include all {sum(t.get('kind')=='retained_source_scenario' for t in tests)} original scenarios. All {len(reqs)} original requirements are preserved and mapped; their acceptance criteria are retained verbatim."
+catalogue[2]=f"{sum(g['type']=='worker_goal' for g in goals)} bounded worker goals + {len(ms)} integration/acceptance gates = **{len(goals)} goal packets**. **{len(tests)} acceptance/regression specifications** include all {sum(t.get('kind')=='retained_source_scenario' for t in tests)} original scenarios. All {original_count} original requirements and {adopted_count} separately adopted requirements are preserved and mapped; their acceptance criteria are retained verbatim."
 text('WORKER-GOALS.md','\n\n'.join(catalogue))
 
 # Single offline HTML view: searchable, no remote assets or dependencies.
@@ -108,7 +109,7 @@ styles='''*{box-sizing:border-box}body{margin:0;background:#f5f7fa;color:#152435
 H=html.escape
 header='''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Rifare — Worker Goals</title><style>'''+styles+'''</style></head><body><header><div class="meta">RIFARE · DEVELOPMENT STEERING · OCTOBER 15, 2026</div><h1>AI-worker goals and regression evidence</h1><p>Bounded work. Independent proof. Cumulative feature protection.</p><div class="meta">A decomposition of the existing roadmap, not a claim that the application has been built.</div></header><main>'''
 parts=[header,'<div class="stats"><div class="stat"><b>190</b>Worker goals</div><div class="stat"><b>13</b>Milestone gates</div><div class="stat"><b>676</b>Test specifications</div><div class="stat"><b>151 / 151</b>Requirements mapped</div></div>',
-'<div class="notice"><strong>All application tests are not run.</strong> The package contains executable planning/inventory helper self-tests, separate from the proposed product tests. Source-system qualification, human decisions and actual pilot observations cannot be replaced with simulated success.</div>',
+'<div class="notice"><strong>This catalogue is a planning baseline.</strong> Its test specifications remain not run; actual development observations are recorded separately in work records and candidate-bound evidence. The original roadmap and the ADR-0042 additions retain separate source provenance. Source-system qualification, human decisions and actual pilot observations cannot be replaced with simulated success.</div>',
 '<p>Start with <a href="#M00-G01">M00-G01</a>. Give each worker one packet after its dependencies are accepted. Use the installed git-agent workflow, ordinary project commands and one writer per isolated worktree. Every accepted feature adds protected regression obligations.</p>',
 '<p><a href="WORKER-GOALS.md">Complete Markdown catalogue</a> · <a href="planning/goals.json">Machine-readable goals</a> · <a href="docs/WORKER-CONTRACT.md">Worker contract</a> · <a href="docs/REGRESSION-STRATEGY.md">Regression strategy</a> · <a href="docs/EVIDENCE-CONTRACT.md">Evidence contract</a></p>',
 '<div class="toolbar"><input id="search" aria-label="Search goals" placeholder="Search goal, requirement, behavior, or test…"><select id="milestone" aria-label="Filter milestone"><option value="">All milestones</option>'+''.join('<option>'+m['id']+'</option>' for m in ms)+'</select><select id="mode" aria-label="Filter execution mode"><option value="">All proof modes</option>'+''.join('<option>'+v+'</option>' for v in sorted({g['execution_mode'] for g in goals}))+'</select></div><p class="quiet" id="count">203 goals displayed</p>',

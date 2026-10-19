@@ -182,3 +182,12 @@ M11 handoff and unfinished M12 source and reports. It addresses the remaining
 retirement-record minimization and exact approval-revocation failures, with
 affected extension/privacy checks and fresh independent review. Actual final
 source, results and local integration are in the accompanying checkpoint evidence.
+
+## M13 assignment and additive roadmap
+
+ADR-0042 records the separately retained M13–M22 handoff and the owner’s renewed
+instruction to continue through the next milestone. The original M00–M12 planning
+objects remain unchanged; fifty adopted requirements and 204 specifications extend
+the catalogue. Only M13-G01–G05 and G99 local assessment are assigned. The current
+M12 source remains the protected base. Formal gates, live provider qualification
+and code-execution deferral remain open. See `work/records/M13-milestone-integration.md`.

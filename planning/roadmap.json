@@ -503,6 +503,772 @@
       ],
       "decision_gate": "Expand administration only after real multi-store demand; never delay basic contributor/security docs until this stage.",
       "calendar_target": null
+    },
+    {
+      "id": "M13",
+      "title": "Optional decision models and shadow classification",
+      "track": "decision_models_and_skills",
+      "depends_on": [
+        "M02",
+        "M05"
+      ],
+      "outcome": "Add one useful, merchant-tailored return-intake classification path beside the existing generative runner. Record proposed classifications against authorized case evidence without changing routing, eligibility, money, inventory, approvals, or settlement. The first five goals must work with the current diagnostic fixtures; connected inference remains separately qualified.",
+      "deliverables": [
+        "A provider-neutral DecisionModelAdapter contract alongside the existing ModelStep/generative interface, with explicit question-type, context, and modality capabilities.",
+        "Versioned return-intake question resources and two permitted merchant overlays using one base skill.",
+        "Authorized bounded evidence snapshots and minimized decision receipts that distinguish customer claims, verified source facts, gaps, fixtures, inference observations, and business effects.",
+        "An optional text-only Clef-flash REST adapter using existing secrets, destination, timeout, revocation, budget, and response-size controls.",
+        "A complete operator/skill shadow invocation, reproducible fixture demonstration, and compact predeclared evaluation protocol with connected evidence tracked separately."
+      ],
+      "exit_criteria": [
+        "The integrated candidate delivers the complete first-five-goal shadow path under the existing fixture environment and preserves the manual workflow and server-owned business authority.",
+        "Question sets, inputs, observations, serving metadata, and configuration provenance are reproducible and privacy-scoped; unsupported or missing required inputs produce an explicit unusable result.",
+        "Affected tests and the compact planned demonstration have exact candidate evidence; no full regression suite is required per individual goal.",
+        "Connected inference and inherited formal product gates remain separately visible and cannot be satisfied by wire fixtures."
+      ],
+      "non_goals": [
+        "No replacement of the agent runtime, generative-model interface, vault, case model, policy engine, or action gateway.",
+        "No automatic case routing or business effect, no model-generated approval, and no inference of financial or identity authority.",
+        "No mandatory Cloudflare hosting, AI Gateway, fine-tuning service, GPU purchase, or new orchestration framework.",
+        "No media intake or blanket enablement of previously rejected attachments; that work belongs to M17.",
+        "No claim that fixture transport parity establishes live model quality, portability, determinism, or production readiness."
+      ],
+      "calendar_target": null,
+      "release": "Proposed additive expansion",
+      "status": "not_started",
+      "owner": null,
+      "accountable_role": "Delegated maintainer for assignment; governing acceptance owner for qualification",
+      "skill_packages": [],
+      "required_demo": "Classify one synthetic return-intake case for two merchant profiles through one base skill, record a source-bound shadow receipt, reject a malformed/oversized request, disable the provider, and continue manual handling.",
+      "decision_gate": "All original and adopted qualification obligations require actual evidence; this plan creates no execution authority.",
+      "origin_id": "rifare-research-milestones-2026-10-18/M13",
+      "release_claim": "Optional decision-model shadow classification is implemented for the declared diagnostic workflow. Hosted model compatibility and measured classification quality may be claimed only for configurations with actual connected evidence; no automatic routing or production-readiness claim follows from fixture completion.",
+      "reuse_goal_ids": [
+        "M00-G06",
+        "M00-G08",
+        "M01-G01",
+        "M01-G03",
+        "M01-G04",
+        "M01-G05",
+        "M01-G13",
+        "M01-G17",
+        "M01-G18",
+        "M02-G04",
+        "M02-G05",
+        "M02-G08",
+        "M02-G09",
+        "M02-G10",
+        "M02-G17",
+        "M02-G20",
+        "M02-G24",
+        "M05-G01",
+        "M05-G09",
+        "M05-G10"
+      ],
+      "local_prerequisites": [
+        "Finish the currently assigned M08 batch and inspect its integrated checkpoint before assigning this branch. Reuse the actual provider, vault, case, capability, skill-manifest, configuration-pinning, receipt, budget, and fallback implementations; bind concrete paths before edits.",
+        "Use the supplied synthetic tenant/case fixtures and existing diagnostic storage. Planning references and locally available code do not imply formal acceptance of inherited milestones or target-stack qualification.",
+        "Keep default live-call denial and the existing attachment rejection active. M13 consumes bounded text and authorized structured case facts only.",
+        "Use the current changed development test profile and affected behavioral checks. Do not run the full regression, browser, evidence, or catalog suites for every goal; broaden only for a demonstrated risk or an existing integration/release gate."
+      ],
+      "qualification_prerequisites": [
+        "The candidate must pass the affected contract, tenant, provider-control, and shadow-path checks with commit/configuration-bound evidence before its local integration is accepted.",
+        "Connected Workers AI compatibility, latency, usage, and cost require actual authorized measured inference. Fixture transport results must retain fixture-only status when no account or credentials are available.",
+        "Existing PostgreSQL/React, connected-provider, security, and formal product-release prerequisites remain open until their own evidence is supplied; M13 does not waive them.",
+        "Any external use of customer data follows the existing merchant-approved purpose, provider destination, budget, and retention configuration."
+      ],
+      "external_dependencies": [
+        "None for the first-five-goal synthetic shadow demonstration.",
+        "An authorized Workers AI account, account-scoped server-side token, configured budget, and approved data destination for separate connected qualification."
+      ]
+    },
+    {
+      "id": "M14",
+      "title": "Calibrated routing and backend replacement",
+      "track": "decision_models_and_skills",
+      "depends_on": [
+        "M13"
+      ],
+      "outcome": "Qualify one actually measured decision backend for a bounded routing task, retain review and manual operation, and add a separately evidenced backend-replacement path. Scoped routing does not require GPU or self-hosting expenditure; a portability claim additionally requires two actually exercised implementations.",
+      "deliverables": [
+        "Predeclared evaluation and calibration protocol with frozen denominators, baseline, held-out procedure, and scope-specific activation criteria.",
+        "A measured qualification record for one backend, or an honest pending result when external prerequisites are absent.",
+        "Bounded routing through existing published rules and the action boundary, with other/unclear review, current-state rechecks, takeover fencing, revocation, and manual fallback.",
+        "A replaceable SystemOne-compatible transport and conformance records, including backend-specific context, probability, and confidence semantics.",
+        "Separate scoped-routing and two-implementation portability evidence, with canary, rollback, and configuration-change invalidation behavior."
+      ],
+      "exit_criteria": [
+        "The implementation supports bounded routing, review, takeover, revocation, rollback, and backend substitution through existing server-owned authority and durable records.",
+        "Any enabled connected route has actual one-backend evidence meeting the protocol committed before evaluation; fixture-only paths remain diagnostic/shadow.",
+        "The release report separates one-backend scoped-routing qualification from two-implementation portability and optional self-hosted qualification; missing external evidence remains pending rather than being reclassified as a pass.",
+        "Configuration changes cannot reuse stale calibration/qualification; the report records effective input limits, distribution/confidence semantics, and numerical/quality differences.",
+        "Targeted affected checks and the declared model/configuration qualification cohort pass for the claimed scope; full regression is not repeated per goal."
+      ],
+      "non_goals": [
+        "No prerequisite GPU purchase, mandatory self-hosting, Cloudflare hosting migration, or managed fine-tuning subscription.",
+        "No bitwise probability-equality claim or assumption that a confidence threshold transfers unchanged across backends, vocabularies, or locales.",
+        "No automatic financial entitlement, refund approval, stock decision, identity finding, or policy publication from a classification score.",
+        "No copying provider-owned conversation state into canonical business records, and no automatic unapproved provider/data/billing fallback.",
+        "No claim of model portability based only on a settings switch, mock transport, or unexecuted compatible endpoint."
+      ],
+      "calendar_target": null,
+      "release": "Proposed additive expansion",
+      "status": "not_started",
+      "owner": null,
+      "accountable_role": "Delegated maintainer for assignment; governing acceptance owner for qualification",
+      "skill_packages": [],
+      "required_demo": "Classify and route an ordinary case through a named qualified configuration, review uncertainty, fence a late result after takeover, and demonstrate controlled backend replacement/rollback with the level of real evidence clearly labeled.",
+      "decision_gate": "All original and adopted qualification obligations require actual evidence; this plan creates no execution authority.",
+      "origin_id": "rifare-research-milestones-2026-10-18/M14",
+      "release_claim": "Measured case routing is qualified only for the named task, merchant/profile/locale, model, and serving configuration. Backend portability is additionally claimed only after two actual implementations complete the declared workflow; neither claim implies financial autonomy, equivalent probabilities, or general production readiness.",
+      "reuse_goal_ids": [
+        "M00-G02",
+        "M01-G04",
+        "M01-G14",
+        "M01-G16",
+        "M01-G18",
+        "M02-G03",
+        "M02-G08",
+        "M02-G09",
+        "M02-G10",
+        "M02-G17",
+        "M02-G18",
+        "M02-G21",
+        "M02-G23",
+        "M05-G07",
+        "M05-G09",
+        "M05-G10",
+        "M05-G11",
+        "M05-G14",
+        "M05-G16",
+        "M07-G05",
+        "M07-G06",
+        "M07-G17",
+        "M07-G18"
+      ],
+      "local_prerequisites": [
+        "Use M13's integrated decision contract, published question resources, evidence snapshots, shadow invocation, and frozen evaluation protocol.",
+        "Reuse existing rules, work fencing, takeover, kill switches, readiness, budget/fallback, evaluation, and compatibility records; qualification of the original generative runner does not automatically qualify a decision task.",
+        "Keep the default mode shadow/review until a named serving configuration and permitted route have their required evidence. Local fixture checks can continue without an external model account.",
+        "Run affected routing/provider/qualification checks during iteration; execute the predeclared qualification cohort at a model/schema/configuration release boundary instead of after every edit."
+      ],
+      "qualification_prerequisites": [
+        "Before measuring qualification outcomes, freeze the use case, cohort/strata, baseline, success/error definitions, calibration procedure, held-out split, thresholds or threshold-selection rule, handling of uncertainty, and maximum tolerated wrong routing. No after-the-fact benchmark targets.",
+        "Activating scoped routing requires actual observations from at least one approved model/backend on the declared cohort and approval through the existing publication mechanism; a fixture-only backend remains shadow/review-only.",
+        "Claiming backend portability requires two actually exercised serving implementations completing the same declared task, including comparisons and configuration-specific qualification. Two synthetic transport fixtures are insufficient.",
+        "A self-hosted Clef qualification must prove the trained joint schema head and backbone were loaded, pin serving/model artifacts, record the effective context limit and confidence semantics, and report numerical differences.",
+        "Inherited production and formal release gates remain effective; case-routing qualification does not qualify refunds, visual evidence, autonomous case resolution, or external-agent egress control."
+      ],
+      "external_dependencies": [
+        "Access to one approved, actually running decision backend and an authorized labeled cohort for initial routing qualification. Cloud-hosted inference is sufficient; no GPU purchase is a prerequisite.",
+        "A second approved actually running implementation for the additional portability claim. It may be a separately hosted compatible model or available self-hosted infrastructure.",
+        "For the optional self-hosted path only: suitable existing/authorized compute and a pinned inference build that loads the Clef decision head correctly. If unavailable, record self-hosted qualification as pending rather than procuring capacity."
+      ]
+    },
+    {
+      "id": "M15",
+      "title": "Sender-bound remote agent access",
+      "track": "security",
+      "depends_on": [
+        "M02",
+        "M07"
+      ],
+      "outcome": "Add one standards-based remote authorization profile to the existing task and worker boundaries, so possession of a copied token alone cannot read case data or prepare a proposal. Keep tenant, customer, task, policy, approval, lease and stop decisions in the existing server authority.",
+      "deliverables": [
+        "Versioned remote trust-profile contract and compatibility entry distinct from local_opaque_task_grant_not_oauth.",
+        "A narrow remote authenticator and resource-server verifier connected to existing task grants, worker leases, current authorization checks and minimized receipts.",
+        "Durable replay and restriction/revocation integration, plus a bounded independently implemented client example.",
+        "Focused synthetic evidence and a separate deployment-qualification checklist with observed, unobserved and disabled states."
+      ],
+      "exit_criteria": [
+        "All five bounded goals have candidate-bound local evidence for their stated behavior and unresolved external prerequisites remain explicit.",
+        "The actual remote profile cannot be enabled without verified sender binding, current task authority and shared replay enforcement. A portal is optional and cannot weaken direct-origin checks.",
+        "Remote deployment qualification, applicable independent review and inherited formal milestone/release gates remain separate from focused development completion.",
+        "No source baseline, accepted-goal ledger or unsupported external-host guarantee is changed by this research proposal."
+      ],
+      "non_goals": [
+        "No replacement permission engine, wholesale OAuth server, general orchestration framework, automatic token exchange service or mandatory Cloudflare dependency.",
+        "No new business action, remote agent approval authority, approval bypass or enlargement of the current supported commerce envelope.",
+        "No full MCP protocol-version migration in this milestone. Start with the existing worker HTTP reads and proposal-preparation contract; expose remote MCP only after its own transport/profile compatibility evidence.",
+        "No guarantee about an external agent host's key protection, storage, inference, deletion or network egress merely because Rifare accepts sender proofs.",
+        "No claim that DPoP binds a request body or approves its business semantics, and no compliance or Cloudflare certification claim."
+      ],
+      "calendar_target": null,
+      "release": "Proposed additive expansion",
+      "status": "not_started",
+      "owner": null,
+      "accountable_role": "Delegated maintainer for assignment; governing acceptance owner for qualification",
+      "skill_packages": [],
+      "required_demo": "Use one synthetic return case: an independent sender-bound client reads facts and prepares a proposal, a copied-token client fails, a two-process proof replay admits at most one request, revocation fences continuation, and the existing operator flow remains available.",
+      "decision_gate": "All original and adopted qualification obligations require actual evidence; this plan creates no execution authority.",
+      "origin_id": "rifare-research-milestones-2026-10-18/M15",
+      "release_claim": "After local implementation and evidence: a locally verified remote authorization profile for the named read/proposal scope, with deployed issuer and infrastructure qualification reported separately. No production, general OAuth/MCP compatibility, Cloudflare certification or external-agent-host security claim follows from this milestone alone.",
+      "reuse_goal_ids": [
+        "M01-G02",
+        "M01-G11",
+        "M02-G01",
+        "M02-G10",
+        "M02-G11",
+        "M02-G17",
+        "M02-G18",
+        "M02-G19",
+        "M02-G20",
+        "M02-G21",
+        "M02-G23",
+        "M07-G04",
+        "M07-G06",
+        "M07-G13"
+      ],
+      "local_prerequisites": [
+        "Bind a separate worker branch and concrete write paths to the newest M08 source checkpoint. This proposal changes neither that source nor its accepted-goal ledger.",
+        "Inspect and reuse packages/agent/mcp.mts, the current worker HTTP contract, packages/commerce/work-leases.mts, authorization.mts and kernel.mts. The checkpoint has explicit local opaque grants and bounded worker leases; it does not establish deployed OAuth or sender-bound remote qualification.",
+        "Treat milestone dependencies as integration and qualification dependencies. Local contract, fixture and implementation work may proceed under its normal assignment while formal prerequisite acceptance remains open; it must not report those prerequisite milestones as accepted.",
+        "Use signed synthetic issuer fixtures, independent local clients and isolated development storage. Select an actively maintained standards library after checking its documented support; do not implement cryptographic primitives or a new general authorization server.",
+        "Follow DEVELOPMENT.md and ADR-0032: inspect the affected-file plan, run a coherent focused selection once, and repeat only for a concrete failure or material correction. The default is at most 60 cases in four whole files within one 60-second deadline. Full applicable acceptance evidence belongs to the required integrated gate, not every goal."
+      ],
+      "qualification_prerequisites": [
+        "Before enabling a real remote route, identify the actual issuer, client, HTTPS origin, proxy trust configuration, token confirmation mechanism, shared replay store and deployment profile. Confirm that the issuer supports the selected sender-constrained profile; fixture-issued tokens do not qualify a deployed issuer.",
+        "Observe the exact deployment with at least two verifier processes or replicas, restart and fail-closed replay-store behavior, revocation and one independently implemented client. Keep tokens, private keys and customer payloads out of retained evidence.",
+        "Obtain the existing scoped authorization for connected credentials and effects. A synthetic remote read/proposal exercise does not authorize production data access or financial execution.",
+        "Complete applicable existing target-stack, integration-readiness, independent security and formal acceptance obligations separately. Current SQLite diagnostic success cannot establish PostgreSQL, production availability or a fully accepted M07/M08 release."
+      ],
+      "external_dependencies": [
+        "A selected OAuth issuer or resource-server integration that supports verifiable sender-constrained access tokens, using RFC 9449 DPoP for the initial profile.",
+        "A supported OAuth/JOSE implementation and a shared store capable of atomic replay admission across the deployed verifier replicas.",
+        "A controlled HTTPS origin and explicit reverse-proxy trust configuration for live qualification. Cloudflare Access or an MCP portal is optional infrastructure and does not replace origin enforcement."
+      ]
+    },
+    {
+      "id": "M16",
+      "title": "Managed execution security",
+      "track": "security",
+      "depends_on": [
+        "M15"
+      ],
+      "outcome": "Qualify one operator-managed runner boundary with mediated network access, constrained resources and a bounded two-branch restriction demonstration, while stating the narrower guarantees available for external agents. Keep AI Gateway use optional.",
+      "deliverables": [
+        "An execution-coverage matrix distinguishing managed runner, trusted broker and external agent responsibilities.",
+        "One real isolation profile with a typed broker path, explicit resource budgets and denied direct network/secret access.",
+        "Durable task restriction state and a bounded two-branch before-admission enforcement protocol.",
+        "A candidate-bound two-branch race/restart demonstration and privacy-minimized enforcement receipts.",
+        "An optional gateway policy profile that can remain disabled and unqualified without blocking the core managed execution result."
+      ],
+      "exit_criteria": [
+        "The selected real managed-runner profile denies broker bypass and demonstrates the declared resource/secret boundary with candidate-bound local evidence.",
+        "The fixed two-branch protected-data workflow fences the removed route before admission, survives the tested restart/failure cases and preserves the named useful operations.",
+        "Managed and external-agent coverage is explicit; the result is not generalized to uncontrolled hosts, arbitrary graphs or already completed external effects.",
+        "M16-G05 has an explicit optional-gateway state. A disabled or unrequested gateway is a valid core exit with no gateway-qualified claim; enabling it requires its separate profile evidence.",
+        "Focused goal checks remain distinct from live infrastructure qualification and applicable integrated acceptance/release reviews. Current target-stack and other qualification blockers retain their original force."
+      ],
+      "non_goals": [
+        "No new general agent framework, arbitrary graph scheduler, multi-user shared-memory solution or assurance about an external agent's host network, storage or deletion.",
+        "No arbitrary model-generated code execution in this milestone; that remains the conditional M12-G08/M12-G09 work.",
+        "No claim that prompt-injection classifiers, model instructions, a tool allowlist or an application exception alone contain hostile execution.",
+        "No mandatory Cloudflare runtime, gateway, firewall, billing account or provider. Optional Cloudflare product qualification is separate from the vendor-neutral core.",
+        "No cancellation guarantee for an external effect already accepted by its destination; existing operation identity and reconciliation continue to govern uncertainty.",
+        "No automatic release approval, certification, weakening of current formal gates or full-regression-per-goal requirement."
+      ],
+      "calendar_target": null,
+      "release": "Proposed additive expansion",
+      "status": "not_started",
+      "owner": null,
+      "accountable_role": "Delegated maintainer for assignment; governing acceptance owner for qualification",
+      "skill_packages": [],
+      "required_demo": "In one actual local isolation profile, run two branches over synthetic facts. Admit a protected fact only after the old export path is fenced, show direct egress denied, restart safely and finish an allowed proposal/update. Display external-agent coverage and optional gateway status separately.",
+      "decision_gate": "All original and adopted qualification obligations require actual evidence; this plan creates no execution authority.",
+      "origin_id": "rifare-research-milestones-2026-10-18/M16",
+      "release_claim": "After successful evidence: one named managed execution profile and one bounded two-branch restriction protocol. Deployment environments, additional platforms or topologies, and optional gateway routes require their own qualification. No control over independently operated external-agent hosts is implied.",
+      "reuse_goal_ids": [
+        "M00-G05",
+        "M01-G03",
+        "M01-G13",
+        "M01-G17",
+        "M02-G07",
+        "M02-G10",
+        "M02-G11",
+        "M02-G15",
+        "M02-G17",
+        "M02-G18",
+        "M02-G19",
+        "M02-G20",
+        "M02-G21",
+        "M02-G24",
+        "M02-G25",
+        "M07-G06",
+        "M07-G11",
+        "M07-G13",
+        "M07-G14"
+      ],
+      "local_prerequisites": [
+        "Read and reuse current runner, model transport, worker lease, authorization, action gateway, privacy and recovery code. The checkpoint's throwing development egress function and request-context guards are not an OS network boundary or hostile-code sandbox.",
+        "Assign a separate worker branch and one concrete supported Linux/container isolation profile. Bind proposed broker, isolation and restriction-state changes to actual repository paths before implementation.",
+        "Reuse M15's authenticated task identity where the broker is remote. Local isolation and contract work can use synthetic task identities while remote deployment remains unqualified.",
+        "Use synthetic protected facts, local recording endpoints and a non-production broker. No real merchant data, paid inference or production business effect is required to develop the core enforcement boundary.",
+        "Follow the existing focused-development workflow: at most 60 cases across four whole files and one 60-second deadline by default; one meaningful targeted fault per changed boundary. Broaden only for a concrete uncovered risk or a separately required formal gate."
+      ],
+      "qualification_prerequisites": [
+        "To claim managed egress enforcement, observe the exact deployed image/runtime, network and filesystem policy, broker path, task identity and secret placement. An application-level deny function or a mocked container configuration is insufficient.",
+        "To claim graph restriction, exercise the supported two-branch topology, actual broker enforcement, stale in-flight work, acknowledgement failure and restart behavior. Do not generalize that result to arbitrary graphs or uncontrolled external runtimes.",
+        "Remote broker deployment inherits the relevant M15 live profile qualification. The current diagnostic stack and formal target-stack/security/privacy/recovery release obligations retain their original status.",
+        "Any optional Cloudflare gateway deployment requires its own authorized account, gateway, model route, credentials, logging/cache/billing settings and live observations. Core managed-runner completion does not require enabling or qualifying that service."
+      ],
+      "external_dependencies": [
+        "One supported OS/container isolation mechanism with enforceable namespace/network policy, bounded resources and a narrow broker channel; ordinary Node process isolation or node:vm alone is not the claimed boundary.",
+        "Deployment infrastructure able to run the broker outside the runner's secret and network scope and persist task restriction state with atomic compare-and-update semantics.",
+        "Optional only: Cloudflare AI Gateway account and a supported model route, or a different explicitly qualified inference gateway. Cloudflare Dynamic Workers is a possible separate deployment profile, not a required runtime.",
+        "Optional gateway/model work must coordinate with the M14 decision-provider integration contract; this milestone owns enforcement configuration and observations, not another decision adapter."
+      ]
+    },
+    {
+      "id": "M17",
+      "title": "Multimodal evidence assistance",
+      "track": "decision_models_and_skills",
+      "depends_on": [
+        "M13",
+        "M14"
+      ],
+      "outcome": "Introduce an explicitly opt-in image-first evidence-assistance path only after qualifying intake, authorized model access, and the full privacy lifecycle. Keep audio/video disabled unless a named additional use case and its media pipeline are separately declared and qualified.",
+      "deliverables": [
+        "A current intake gap map and explicitly opt-in image-only capability profile that preserves unsupported attachment rejection.",
+        "A qualified restricted upload, quarantine, authorized retrieval, and bounded processing path using existing return-evidence mechanisms where available.",
+        "Purpose/provider-scoped media access, immutable attachment/transformation references, and erasure/retention handling across source media and derived observations.",
+        "Versioned image evidence-assistance questions connected to the same return skill, with cannot-assess handling and operator review.",
+        "Measured image qualification plus an explicit audio/video capability and prerequisite matrix; actual audio/video support only for separately opted-in, implemented, and measured profiles."
+      ],
+      "exit_criteria": [
+        "The default attachment boundary remains restrictive, and every enabled image path has explicit intake, quarantine/processing, exact-case access, provider-purpose, and privacy lifecycle evidence.",
+        "Image observations are evidence-linked, bounded, reviewable, and independent of authenticity, eligibility, approval, physical receipt, and financial authority.",
+        "Any model-quality claim uses a cohort and gate defined before actual media evaluation; fixture-only implementation status remains distinct from qualification.",
+        "Audio/video support is either explicitly disabled/deferred or tied to its own implemented, opted-in, and actually measured profile; an image-only release does not claim all-modality support.",
+        "Affected intake/access/privacy/adapter checks and the declared qualification cohort provide candidate-bound evidence without repeating the full product regression suite per goal."
+      ],
+      "non_goals": [
+        "No blanket enabling of the existing agent attachment channel or presumption that the current diagnostic upload contract is production-qualified.",
+        "No automatic fraud accusation, identity/document authenticity determination, financial entitlement, claim denial, refund approval, or inventory/receipt update based on media scores.",
+        "No mandatory Clef-omni account or self-hosted GPU, and no automatic media transfer to an unapproved fallback provider.",
+        "No undisclosed recording collection, generative try-on, transcription platform, or new audio/video customer workflow without a declared use case.",
+        "No claim that text DLP covers encoded media, that transformed evidence is original evidence, or that logical deletion proves forensic erasure from every external system."
+      ],
+      "calendar_target": null,
+      "release": "Proposed additive expansion",
+      "status": "not_started",
+      "owner": null,
+      "accountable_role": "Delegated maintainer for assignment; governing acceptance owner for qualification",
+      "skill_packages": [],
+      "required_demo": "Opt into the restricted image path, upload and approve a usable image, record an evidence-assistance observation, handle an ambiguous/oversized case, erase evidence while processing is in flight, and inspect the exact supported/deferred modality matrix.",
+      "decision_gate": "All original and adopted qualification obligations require actual evidence; this plan creates no execution authority.",
+      "origin_id": "rifare-research-milestones-2026-10-18/M17",
+      "release_claim": "Optional evidence assistance is qualified only for the named media type, purpose, merchant profile, model/backend, and evaluated input limits. It helps operators assess submitted evidence and does not establish authenticity, fraud, entitlement, financial authority, or general multimodal competence.",
+      "reuse_goal_ids": [
+        "M01-G01",
+        "M01-G03",
+        "M01-G04",
+        "M01-G17",
+        "M01-G18",
+        "M02-G04",
+        "M02-G05",
+        "M02-G08",
+        "M02-G09",
+        "M02-G17",
+        "M02-G20",
+        "M02-G24",
+        "M03-G02",
+        "M03-G03",
+        "M03-G04",
+        "M05-G09",
+        "M05-G10",
+        "M05-G11",
+        "M05-G16",
+        "M07-G06",
+        "M07-G14"
+      ],
+      "local_prerequisites": [
+        "Inspect the current attachment-denying agent boundary and the existing return-intake diagnostic contract before implementation. The contract's restricted PNG/quarantine/sign/content/erase surfaces and model_access=false are reusable foundations, not proof of active qualified model intake.",
+        "Keep every existing attachment rejection active until a specifically authorized replacement path passes its intake and privacy checks. Do not assume previously submitted attachments exist or can be reused for inference.",
+        "Use licensed/authorized synthetic image fixtures and the current privacy/storage mechanisms for local work; record exact attachment versions and transformations.",
+        "Reuse M13/M14's decision contract, bounded evidence, budgets, provider controls, review behavior, and qualification records. Text-routing success does not qualify visual or audio/video handling.",
+        "Use focused intake, access, decoder-boundary, privacy, and media-adapter checks during development; evaluate the frozen media cohort at the qualification boundary."
+      ],
+      "qualification_prerequisites": [
+        "Before any user media reaches a model, qualify the selected upload types, byte/pixel/decompression bounds, quarantine/processing policy, exact-case access, purpose/provider opt-in, retention, erasure, and derived-record lifecycle.",
+        "Freeze the image use case, allowed observations, reference labels, cohort/strata, preprocessing, metrics, targets or threshold-selection rule, and review behavior before evaluating qualification outputs.",
+        "Image assistance requires actual model observations on the authorized declared image cohort; fixture media and text-only model quality cannot satisfy that gate.",
+        "Audio/video additionally requires a named merchant need, explicit purpose and provider configuration, permitted codecs/duration/size/sampling policy, qualified processing/privacy path, and a separately predeclared measured cohort. Unselected modalities remain disabled.",
+        "Cloudflare Gateway text DLP cannot be assumed to inspect encoded image/audio/video content. Any DLP or content-filter coverage must be established for the actual media route.",
+        "Evidence-usability or condition classification does not establish authenticity, identity, intent, fraud, warranty entitlement, physical receipt, or financial authority."
+      ],
+      "external_dependencies": [
+        "None for isolated synthetic upload/privacy and media-transport development checks.",
+        "An approved actual vision/decision backend and authorized labeled image cohort for connected image qualification.",
+        "For optional Omni audio/video only: an approved actual multimodal backend, a defined customer use case, authorized recordings, and a qualified codec/processing environment. No new recording capture or external dataset is assumed."
+      ]
+    },
+    {
+      "id": "M18",
+      "title": "Persistent commerce journeys",
+      "track": "commerce_experience",
+      "depends_on": [
+        "M07",
+        "M09",
+        "M15"
+      ],
+      "outcome": "Continue a verified shopper's supported commerce journey across visits, channels and agent runtimes, using durable source-backed context and the existing action gateway.",
+      "deliverables": [
+        "Purpose-scoped shopper memory with source provenance, freshness, correction and deletion.",
+        "An effective merchant capability view that explains why a journey action is available, disabled or unqualified.",
+        "Versioned multi-intent journey state that references existing cases, previews, approvals and receipts.",
+        "Event-driven follow-up continuity using existing rules, consent and suppression.",
+        "A qualified manual, built-in and independent-client journey demonstration."
+      ],
+      "exit_criteria": [
+        "Two merchant profiles complete the declared text journey across two qualified channels using shared skills and existing business operations.",
+        "Correction, deletion, revocation, opt-out, stale-source, runtime handover and unknown-outcome cases preserve both privacy and original receipt identity.",
+        "The support matrix records every qualified action/caller/channel combination and labels missing external evidence without inferring success."
+      ],
+      "non_goals": [
+        "Do not rebuild M05 channel records, M06 bracketing prevention, M07 runtime takeover or M09 carts and offers.",
+        "No identity inference from similar names, shared devices or unverified channel handles.",
+        "No arbitrary conversation-derived policy, payment authority or permission changes.",
+        "No promised iMessage/RCS access, autonomous voice, hosted app-store approval or universal model compatibility.",
+        "Images and audio remain unavailable unless separately qualified through M17; this milestone's required path is text."
+      ],
+      "calendar_target": null,
+      "release": "Proposed additive expansion",
+      "status": "not_started",
+      "owner": null,
+      "accountable_role": "Delegated maintainer for assignment; governing acceptance owner for qualification",
+      "skill_packages": [],
+      "required_demo": "For one verified shopper, move from a status question to an exchange and an eligible subsequent shopping action across two channels; change runtime during an uncertain effect, reconcile it once, and show that opt-out prevents the later follow-up.",
+      "decision_gate": "All original and adopted qualification obligations require actual evidence; this plan creates no execution authority.",
+      "origin_id": "rifare-research-milestones-2026-10-18/M18",
+      "release_claim": "After acceptance: persistent cross-channel commerce journeys for the published merchant, channel, action and caller configurations; no universal channel, model or autonomy claim.",
+      "reuse_goal_ids": [
+        "M01-G04",
+        "M01-G08",
+        "M04-G99",
+        "M05-G01",
+        "M05-G05",
+        "M05-G06",
+        "M05-G07",
+        "M05-G11",
+        "M05-G12",
+        "M05-G13",
+        "M05-G16",
+        "M06-G01",
+        "M06-G13",
+        "M07-G04",
+        "M07-G06",
+        "M07-G14",
+        "M09-G01",
+        "M09-G02",
+        "M09-G08"
+      ],
+      "local_prerequisites": [
+        "Inspect the assigned branch and reuse the existing conversation, case, profile, skill, compatibility and operation contracts; snapshot planning status is not completion evidence.",
+        "Bind one supported journey fixture to each reused action without introducing a second case, consent or financial-operation ledger.",
+        "Keep the current focused development selection; introduce only tests for the new memory, journey and caller boundaries."
+      ],
+      "qualification_prerequisites": [
+        "Qualify the reused return, edit, shopping and communication capabilities for the declared store, payment and channel combinations.",
+        "M15 remote authorization and client-profile qualification are required before claiming remote external-agent support; local preparation does not close this gate.",
+        "Any optional decision classifier must use a configuration qualified through M13/M14; the manual and deterministic routing paths remain usable without it.",
+        "Complete privacy, correction and deletion coverage for new memory projections, including their source links and exported copies."
+      ],
+      "external_dependencies": [
+        "Authorized test accounts for the two declared communication channels and supported commerce actions.",
+        "At least one independently implemented remote client that can consume the published skill and action contracts.",
+        "A qualified model configuration only for journeys advertised as model-assisted; no mandatory Cloudflare service or app-store listing."
+      ]
+    },
+    {
+      "id": "M19",
+      "title": "Return-aware loyalty",
+      "track": "retention_operations",
+      "depends_on": [
+        "M07",
+        "M09"
+      ],
+      "outcome": "Keep loyalty accrual, redemption and recovery incentives correct when purchases, edits, exchanges and returns change the underlying eligible value.",
+      "deliverables": [
+        "A provider-neutral loyalty contract and source-backed balance snapshots.",
+        "Order-line-linked accrual and reversal mapping.",
+        "Reservation, redemption and release with unknown-outcome reconciliation.",
+        "Approved incentive quotations for support and recovery skills.",
+        "A reconciled purchase-redemption-return demonstration and discrepancy queue."
+      ],
+      "exit_criteria": [
+        "The declared provider supports the demonstrated lifecycle with attributable source events and no duplicate accrual, redemption or reversal.",
+        "Concurrent redemption, partial return, repeated exchange, timeout and insufficient-balance cases preserve original operation identity and instrument boundaries.",
+        "Unsupported partner behavior and incomplete settlement remain visible; loyalty never supplies financial or messaging authority.",
+        "The declared loyalty data lifecycle preserves customer erasure after late provider events and restore, with any permitted accounting retention explicitly minimized and recorded."
+      ],
+      "non_goals": [
+        "Do not rebuild the existing discount engine, refund ledger or customer-consent system.",
+        "No assumed Smile partnership, provider API availability or universal reversal behavior.",
+        "No conversion of points into money, debt, a new charge or store credit without a separately qualified instrument and authority.",
+        "Loyalty discrepancies cannot silently block an otherwise authorized refund.",
+        "No automated outreach justified by another vendor's human P2P service."
+      ],
+      "calendar_target": null,
+      "release": "Proposed additive expansion",
+      "status": "not_started",
+      "owner": null,
+      "accountable_role": "Delegated maintainer for assignment; governing acceptance owner for qualification",
+      "skill_packages": [],
+      "required_demo": "For one qualified merchant, earn points on a two-line purchase, redeem an approved amount, partially return the original purchase, and reconcile the provider balance while injecting a duplicate event and lost acknowledgment.",
+      "decision_gate": "All original and adopted qualification obligations require actual evidence; this plan creates no execution authority.",
+      "origin_id": "rifare-research-milestones-2026-10-18/M19",
+      "release_claim": "After acceptance: return-aware loyalty and approved recovery incentives for the qualified provider and documented instrument semantics; no general points-to-cash or universal provider claim.",
+      "reuse_goal_ids": [
+        "M01-G04",
+        "M02-G24",
+        "M03-G99",
+        "M04-G99",
+        "M05-G05",
+        "M05-G06",
+        "M05-G14",
+        "M06-G02",
+        "M06-G03",
+        "M06-G04",
+        "M06-G06",
+        "M07-G14",
+        "M09-G01",
+        "M09-G02",
+        "M09-G04",
+        "M09-G08"
+      ],
+      "local_prerequisites": [
+        "Use existing order-line, payment, refund and exchange lineage as the economic sources; points are a separate instrument, not fabricated store credit.",
+        "Document the selected provider's balance, accrual, redemption, reversal and reconciliation semantics before implementing its adapter.",
+        "Use a synthetic provider journal with original operation identities for local work; do not infer live provider capability from a fixture."
+      ],
+      "qualification_prerequisites": [
+        "Qualify one merchant-owned loyalty integration with real supported accrual/redemption/reversal observations and explicit unsupported states.",
+        "Retain customer refund entitlement and the existing financial approval boundary when loyalty reconciliation is incomplete.",
+        "Qualify the messaging and offer paths reused from M05/M09 before loyalty-based outreach or enrollment is advertised.",
+        "Qualify export, retention, erasure and restore behavior for new customer-linked loyalty data through M02-G24/M07-G14, recording provider-side retention and deletion coverage separately from Rifare-controlled storage."
+      ],
+      "external_dependencies": [
+        "Merchant-owned loyalty account and authorized API access for the selected provider.",
+        "Published provider rules for reversal, insufficient balances and event ordering.",
+        "Qualified commerce and communication accounts only for the operations included in the declared release."
+      ]
+    },
+    {
+      "id": "M20",
+      "title": "Qualified QR drop-off",
+      "track": "reverse_logistics_experience",
+      "depends_on": [
+        "M07",
+        "M08",
+        "M10"
+      ],
+      "outcome": "Offer a qualified shopper drop-off method and provider-bound credential inside the existing return journey, preserving item-level custody and true resolution status.",
+      "deliverables": [
+        "Qualified method/site discovery in the current return flow.",
+        "Exact fee/terms quote and QR or equivalent credential lifecycle.",
+        "Authenticated item-level handoff event mapping.",
+        "Shopper tracking over existing custody and receiving records.",
+        "A supported drop-off journey with explicit partner and evidence limits."
+      ],
+      "exit_criteria": [
+        "One declared method/site/item configuration has actual connected and physical evidence for every claimed handoff stage.",
+        "Partial intake, duplicate events, stale credentials, lost acknowledgments and missing custody do not fabricate goods, inspection or money movement.",
+        "Shopper wording and release capability reflect actual packaging, partner availability and financial-trigger limitations."
+      ],
+      "non_goals": [
+        "Do not recreate M10 partner readiness, custody or consolidation, or M08 receiving and stock movements.",
+        "No assumed Happy Returns agreement or claim of an owned return network.",
+        "No refund or inspection conclusion from a QR scan alone.",
+        "No universal box-free or label-free eligibility; requirements remain provider- and item-specific.",
+        "No camera/image analysis requirement; the initial QR display/scan path does not depend on M17 or a model."
+      ],
+      "calendar_target": null,
+      "release": "Proposed additive expansion",
+      "status": "not_started",
+      "owner": null,
+      "accountable_role": "Delegated maintainer for assignment; governing acceptance owner for qualification",
+      "skill_packages": [],
+      "required_demo": "Select an eligible drop-off for a two-item return, obtain a credential, accept only one item, reconcile duplicate and delayed events, and trace its observed consolidation/receipt without claiming the outstanding item's receipt or an unobserved refund.",
+      "decision_gate": "All original and adopted qualification obligations require actual evidence; this plan creates no execution authority.",
+      "origin_id": "rifare-research-milestones-2026-10-18/M20",
+      "release_claim": "After acceptance: QR or equivalent drop-off for the named qualified method, sites and merchandise rules; physical network coverage and financial resolution are claimed only where separately observed.",
+      "reuse_goal_ids": [
+        "M03-G99",
+        "M06-G12",
+        "M07-G14",
+        "M07-G15",
+        "M07-G16",
+        "M08-G07",
+        "M08-G08",
+        "M08-G09",
+        "M08-G10",
+        "M10-G01",
+        "M10-G09",
+        "M10-G10"
+      ],
+      "local_prerequisites": [
+        "Reuse the existing return request, qualified-destination, custody, receiving and financial contracts; no second consolidation ledger.",
+        "Define a synthetic drop-off credential source with expiry, replacement, partial acceptance and unknown-response scenarios.",
+        "Keep credential payloads out of ordinary logs and use the existing subject export/erasure and access controls."
+      ],
+      "qualification_prerequisites": [
+        "Verify an actual contracted test method/site, eligible merchandise, geographic scope, fees, packaging rules and event semantics.",
+        "Observe a permitted physical test handoff and subsequent item/custody records before claiming connected drop-off support.",
+        "Qualify every financial trigger independently; drop-off, carrier delivery, warehouse inspection and settlement remain separate."
+      ],
+      "external_dependencies": [
+        "An authorized drop-off provider account with credential and event API access.",
+        "A real eligible site and permitted test parcel for physical qualification.",
+        "Documented support for credential expiry/replacement, accepted merchandise, consolidation and custody observations."
+      ]
+    },
+    {
+      "id": "M21",
+      "title": "Warehouse routes, waves and supplies",
+      "track": "warehouse_intelligence",
+      "depends_on": [
+        "M08",
+        "M11"
+      ],
+      "outcome": "Use a versioned physical layout and coordinated pick waves to reduce warehouse travel while preserving existing allocations, item identity and inventory conservation; prepare supplies replenishment and optionally execute separately mandated recurring purchases.",
+      "deliverables": [
+        "Versioned warehouse topology and constraint validation.",
+        "Explainable route and wave proposals over existing eligible allocations.",
+        "Mobile/browser picker, tote and packer handoff coordination.",
+        "Consumable usage observations mapped into existing inventory movements.",
+        "Threshold/scheduled supplies PO drafts, plus an optional independently gated recurring-purchase mandate using existing procurement and reconciliation services."
+      ],
+      "exit_criteria": [
+        "The declared warehouse profile completes a routed wave with current holds, correct item/tote handoffs and no duplicate allocation or stock effects.",
+        "Measured routing results identify their baseline and actual observation scope; synthetic travel savings are not merchant productivity claims.",
+        "Consumable usage and replenishment drafts reconcile to authoritative stock and existing POs. Recurring purchase remains unavailable unless its separate merchant mandate, supplier qualification, caps, revocation and unknown-outcome gate have actual evidence; default M11 behavior is preserved."
+      ],
+      "non_goals": [
+        "Do not rebuild packing sessions, allocation conservation, stock ledgers, transfers or PO approvals.",
+        "No claim of globally optimal routes, arbitrary building-plan interpretation or universal scanner support.",
+        "No disconnected device may finalize authoritative inventory changes without reconciliation.",
+        "No forecast, threshold or skill text authorizes supplier spending. Recurring purchase is a separate explicit merchant mandate with bounded supplier/SKU/quantity/spend terms; it does not weaken M11-G04 proposal-only defaults.",
+        "No owned supplies marketplace or guaranteed vendor pricing.",
+        "The first local slice may leave recurring purchase unavailable. G05 draft completion cannot be represented as mandate execution qualification or authorize real supplier spending."
+      ],
+      "calendar_target": null,
+      "release": "Proposed additive expansion",
+      "status": "not_started",
+      "owner": null,
+      "accountable_role": "Delegated maintainer for assignment; governing acceptance owner for qualification",
+      "skill_packages": [],
+      "required_demo": "In a bounded warehouse layout, compare a wave with the named baseline, change an aisle or hold, execute the revised route through tote handoff and use observed supplies consumption to prepare one PO draft. Demonstrate optional recurring purchase only under a separately qualified test mandate, including revocation and original-identity reconciliation.",
+      "decision_gate": "All original and adopted qualification obligations require actual evidence; this plan creates no execution authority.",
+      "origin_id": "rifare-research-milestones-2026-10-18/M21",
+      "release_claim": "After acceptance: validated route/wave assistance and supplies replenishment drafts for the declared warehouse/device profile. Recurring purchases may be claimed only for separately activated and qualified bounded mandates; no global route optimality or unrestricted autonomous procurement claim.",
+      "reuse_goal_ids": [
+        "M07-G09",
+        "M07-G15",
+        "M08-G03",
+        "M08-G04",
+        "M08-G06",
+        "M08-G08",
+        "M08-G09",
+        "M08-G10",
+        "M11-G04",
+        "M11-G05",
+        "M11-G06",
+        "M11-G07"
+      ],
+      "local_prerequisites": [
+        "Use existing packing, allocation, inventory-movement, purchase-order and budget services as authoritative foundations.",
+        "Select one bounded warehouse topology, supported device profile and route baseline; do not begin with unrestricted floor-plan image inference.",
+        "Bind supplies consumption to explicit qualified source events rather than assuming every API call consumes a physical unit."
+      ],
+      "qualification_prerequisites": [
+        "Validate the chosen warehouse layout, bin identities, item placements, access constraints and operator/device workflows against the actual facility.",
+        "Measure route/wave outcomes against a named manual or deterministic baseline while preserving pick correctness.",
+        "Qualify supplies units, source ownership and procurement integration. Default operation retains M11 proposal/approval semantics. Optional recurring purchases require a separately accepted mandate capability approved against versioned terms by a principal with M11-G06 procurement authority and required separation of duties, plus a qualified supplier with observed purchase/reconciliation behavior."
+      ],
+      "external_dependencies": [
+        "A cooperating warehouse and permitted operator/device observations for the declared facility profile.",
+        "Authoritative stock, location and picking data through a qualified warehouse integration.",
+        "Supplier/product/pack-size data and approved procurement access for supplies drafts; a separately authorized merchant mandate and qualified supplier account for any optional recurring purchase."
+      ]
+    },
+    {
+      "id": "M22",
+      "title": "Individualized campaign production",
+      "track": "marketing_intelligence",
+      "depends_on": [
+        "M09"
+      ],
+      "outcome": "Produce reviewable per-recipient campaign variants from permitted operational facts while preserving existing campaign approval, final-send suppression and causal measurement.",
+      "deliverables": [
+        "Versioned personalization strategies and permitted operational-data contracts.",
+        "Grounded per-recipient variant drafts with explicit source gaps.",
+        "A bounded review manifest binding content, source and offer versions.",
+        "Integration with current eligibility, purchase and opt-out suppression.",
+        "Strategy-level evaluation and causal results using existing experiment records."
+      ],
+      "exit_criteria": [
+        "A declared text campaign produces source-grounded variants with reviewable immutable approval and correct suppression under changing facts.",
+        "Private or unqualified source data, invented claims, stale offers and post-approval content changes cannot reach the delivery path.",
+        "The evidence separates content quality, authorized sends, attribution and causal effect; any live commercial claim has its own permitted observations."
+      ],
+      "non_goals": [
+        "Do not rebuild M09 audience selection, campaigns, scheduling, delivery, consent or attribution.",
+        "No identity-resolution network, scraped personal enrichment or unrestricted use of support notes.",
+        "No post-approval content substitution or new offer invented by a model.",
+        "No assumed per-recipient lift or causality from code redemption alone.",
+        "Loyalty data is optional and requires M19 qualification; media requires M17 and is outside the required text path."
+      ],
+      "calendar_target": null,
+      "release": "Proposed additive expansion",
+      "status": "not_started",
+      "owner": null,
+      "accountable_role": "Delegated maintainer for assignment; governing acceptance owner for qualification",
+      "skill_packages": [],
+      "required_demo": "Build an individualized campaign for a bounded cohort, approve its frozen manifest, change one customer's purchase state and another's consent before dispatch, and compare permitted outcomes against the existing immutable holdout.",
+      "decision_gate": "All original and adopted qualification obligations require actual evidence; this plan creates no execution authority.",
+      "origin_id": "rifare-research-milestones-2026-10-18/M22",
+      "release_claim": "After acceptance: controlled per-recipient campaign production for the declared strategies, data purposes, generation configurations and channels; no guaranteed lift or autonomous publishing claim.",
+      "reuse_goal_ids": [
+        "M05-G01",
+        "M05-G05",
+        "M05-G06",
+        "M05-G07",
+        "M05-G14",
+        "M07-G14",
+        "M09-G03",
+        "M09-G04",
+        "M09-G05",
+        "M09-G06",
+        "M09-G07",
+        "M09-G08",
+        "M09-G11"
+      ],
+      "local_prerequisites": [
+        "Reuse M09 campaign drafts, audience selection, scheduling, delivery and experiment identities; do not implement another ESP or attribution system.",
+        "Define a bounded personalization strategy and permitted source fields for one merchant/channel before generating individual variants.",
+        "Preserve original M09 approval invalidation semantics by materializing and hashing variants before publication approval."
+      ],
+      "qualification_prerequisites": [
+        "Qualify the existing campaign provider and final-send consent/suppression path for the declared channel.",
+        "Qualify the generation backend for campaign drafting; M13/M14 are required only if the new decision-model path supplies classifications or routing.",
+        "Evaluate generated variants against held-out brand, product, offer and source-grounding cases before customer delivery.",
+        "Complete retention, erasure and cache invalidation for per-recipient variant manifests and their source references."
+      ],
+      "external_dependencies": [
+        "Merchant-approved product claims, campaign strategy, audience purpose and communication account.",
+        "A qualified generation backend only for model-generated variants; human-authored and deterministic-template alternatives remain valid.",
+        "An authorized bounded campaign evaluation or pilot before any claim of observed incremental commercial effect."
+      ]
     }
-  ]
+  ],
+  "adopted_additions": {
+    "authority": "ADR-0042",
+    "adopted_on": "2026-10-19",
+    "frozen_requirements": "reference/additions/m13-m22-requirements.json",
+    "frozen_requirements_sha256": "0d4218fabd39eeb1328de5a3d1f79cc620967ef761a6dc4a405ec403a280d7b2",
+    "original_requirements": 151,
+    "adopted_requirements": 50,
+    "planning_only": true
+  }
 }

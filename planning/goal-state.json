@@ -1219,6 +1219,366 @@
       "owner": null,
       "candidate_sha": null,
       "decision_reference": null
+    },
+    "M13-G01": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M13-G02": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M13-G03": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M13-G04": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M13-G05": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M13-G99": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M14-G01": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M14-G02": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M14-G03": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M14-G04": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M14-G05": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M14-G99": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M15-G01": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M15-G02": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M15-G03": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M15-G04": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M15-G05": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M15-G99": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M16-G01": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M16-G02": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M16-G03": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M16-G04": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M16-G05": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M16-G99": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M17-G01": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M17-G02": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M17-G03": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M17-G04": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M17-G05": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M17-G99": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M18-G01": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M18-G02": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M18-G03": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M18-G04": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M18-G05": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M18-G99": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M19-G01": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M19-G02": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M19-G03": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M19-G04": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M19-G05": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M19-G99": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M20-G01": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M20-G02": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M20-G03": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M20-G04": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M20-G05": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M20-G99": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M21-G01": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M21-G02": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M21-G03": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M21-G04": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M21-G05": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M21-G99": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M22-G01": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M22-G02": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M22-G03": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M22-G04": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M22-G05": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
+    },
+    "M22-G99": {
+      "state": "not_started",
+      "owner": null,
+      "candidate_sha": null,
+      "decision_reference": null
     }
   }
 }

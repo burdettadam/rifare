@@ -530,6 +530,135 @@
       "proposed_functionality": "Provide capability-qualified adapters for stores, helpdesks, messaging, warehouses, ERP, subscription and storefront systems.",
       "status": "proposed_not_implemented",
       "scope_note": "Rifare capability target; delivery mode and milestone do not establish implementation or external-service qualification."
+    },
+    {
+      "id": "CAP-M13",
+      "domain": "decision_models_and_skills",
+      "name": "Optional decision models and shadow classification",
+      "proposed_priority": "P0",
+      "target_milestone": "M13",
+      "delivery_mode": "build",
+      "implementation_status": "not_started",
+      "proposed_functionality": "Add one useful, merchant-tailored return-intake classification path beside the existing generative runner. Record proposed classifications against authorized case evidence without changing routing, eligibility, money, inventory, approvals, or settlement. The first five goals must work with the current diagnostic fixtures; connected inference remains separately qualified.",
+      "status": "proposed_not_implemented",
+      "scope_note": "Adopted Rifare target under ADR-0042. Separate work records hold actual local progress; formal qualification is not inferred."
+    },
+    {
+      "id": "CAP-M14",
+      "domain": "decision_models_and_skills",
+      "name": "Calibrated routing and backend replacement",
+      "proposed_priority": "P1",
+      "target_milestone": "M14",
+      "delivery_mode": "build",
+      "implementation_status": "not_started",
+      "proposed_functionality": "Qualify one actually measured decision backend for a bounded routing task, retain review and manual operation, and add a separately evidenced backend-replacement path. Scoped routing does not require GPU or self-hosting expenditure; a portability claim additionally requires two actually exercised implementations.",
+      "status": "proposed_not_implemented",
+      "scope_note": "Adopted Rifare target under ADR-0042. Separate work records hold actual local progress; formal qualification is not inferred."
+    },
+    {
+      "id": "CAP-M15",
+      "domain": "security",
+      "name": "Sender-bound remote agent access",
+      "proposed_priority": "P0 before remote task execution",
+      "target_milestone": "M15",
+      "delivery_mode": "build",
+      "implementation_status": "not_started",
+      "proposed_functionality": "Add one standards-based remote authorization profile to the existing task and worker boundaries, so possession of a copied token alone cannot read case data or prepare a proposal. Keep tenant, customer, task, policy, approval, lease and stop decisions in the existing server authority.",
+      "status": "proposed_not_implemented",
+      "scope_note": "Adopted Rifare target under ADR-0042. Separate work records hold actual local progress; formal qualification is not inferred."
+    },
+    {
+      "id": "CAP-M16",
+      "domain": "security",
+      "name": "Managed execution security",
+      "proposed_priority": "P0 before claiming managed egress or protected-data graph enforcement",
+      "target_milestone": "M16",
+      "delivery_mode": "build",
+      "implementation_status": "not_started",
+      "proposed_functionality": "Qualify one operator-managed runner boundary with mediated network access, constrained resources and a bounded two-branch restriction demonstration, while stating the narrower guarantees available for external agents. Keep AI Gateway use optional.",
+      "status": "proposed_not_implemented",
+      "scope_note": "Adopted Rifare target under ADR-0042. Separate work records hold actual local progress; formal qualification is not inferred."
+    },
+    {
+      "id": "CAP-M17",
+      "domain": "decision_models_and_skills",
+      "name": "Multimodal evidence assistance",
+      "proposed_priority": "P1",
+      "target_milestone": "M17",
+      "delivery_mode": "build",
+      "implementation_status": "not_started",
+      "proposed_functionality": "Introduce an explicitly opt-in image-first evidence-assistance path only after qualifying intake, authorized model access, and the full privacy lifecycle. Keep audio/video disabled unless a named additional use case and its media pipeline are separately declared and qualified.",
+      "status": "proposed_not_implemented",
+      "scope_note": "Adopted Rifare target under ADR-0042. Separate work records hold actual local progress; formal qualification is not inferred."
+    },
+    {
+      "id": "CAP-M18",
+      "domain": "commerce_experience",
+      "name": "Persistent commerce journeys",
+      "proposed_priority": "P1_after_core_qualification",
+      "target_milestone": "M18",
+      "delivery_mode": "build",
+      "implementation_status": "not_started",
+      "proposed_functionality": "Continue a verified shopper's supported commerce journey across visits, channels and agent runtimes, using durable source-backed context and the existing action gateway.",
+      "status": "proposed_not_implemented",
+      "scope_note": "Adopted Rifare target under ADR-0042. Separate work records hold actual local progress; formal qualification is not inferred."
+    },
+    {
+      "id": "CAP-M19",
+      "domain": "retention_operations",
+      "name": "Return-aware loyalty",
+      "proposed_priority": "P1_when_merchant_loyalty_need_is_confirmed",
+      "target_milestone": "M19",
+      "delivery_mode": "build",
+      "implementation_status": "not_started",
+      "proposed_functionality": "Keep loyalty accrual, redemption and recovery incentives correct when purchases, edits, exchanges and returns change the underlying eligible value.",
+      "status": "proposed_not_implemented",
+      "scope_note": "Adopted Rifare target under ADR-0042. Separate work records hold actual local progress; formal qualification is not inferred."
+    },
+    {
+      "id": "CAP-M20",
+      "domain": "reverse_logistics_experience",
+      "name": "Qualified QR drop-off",
+      "proposed_priority": "P1_when_partner_access_is_available",
+      "target_milestone": "M20",
+      "delivery_mode": "build",
+      "implementation_status": "not_started",
+      "proposed_functionality": "Offer a qualified shopper drop-off method and provider-bound credential inside the existing return journey, preserving item-level custody and true resolution status.",
+      "status": "proposed_not_implemented",
+      "scope_note": "Adopted Rifare target under ADR-0042. Separate work records hold actual local progress; formal qualification is not inferred."
+    },
+    {
+      "id": "CAP-M21",
+      "domain": "warehouse_intelligence",
+      "name": "Warehouse routes, waves and supplies",
+      "proposed_priority": "P2_after_shipping_and_inventory_foundations",
+      "target_milestone": "M21",
+      "delivery_mode": "build",
+      "implementation_status": "not_started",
+      "proposed_functionality": "Use a versioned physical layout and coordinated pick waves to reduce warehouse travel while preserving existing allocations, item identity and inventory conservation; prepare supplies replenishment and optionally execute separately mandated recurring purchases.",
+      "status": "proposed_not_implemented",
+      "scope_note": "Adopted Rifare target under ADR-0042. Separate work records hold actual local progress; formal qualification is not inferred."
+    },
+    {
+      "id": "CAP-M22",
+      "domain": "marketing_intelligence",
+      "name": "Individualized campaign production",
+      "proposed_priority": "P2_after_campaign_delivery_qualification",
+      "target_milestone": "M22",
+      "delivery_mode": "build",
+      "implementation_status": "not_started",
+      "proposed_functionality": "Produce reviewable per-recipient campaign variants from permitted operational facts while preserving existing campaign approval, final-send suppression and causal measurement.",
+      "status": "proposed_not_implemented",
+      "scope_note": "Adopted Rifare target under ADR-0042. Separate work records hold actual local progress; formal qualification is not inferred."
     }
-  ]
+  ],
+  "adopted_additions": {
+    "authority": "ADR-0042",
+    "adopted_on": "2026-10-19",
+    "frozen_requirements": "reference/additions/m13-m22-requirements.json",
+    "frozen_requirements_sha256": "0d4218fabd39eeb1328de5a3d1f79cc620967ef761a6dc4a405ec403a280d7b2",
+    "original_requirements": 151,
+    "adopted_requirements": 50,
+    "planning_only": true
+  }
 }

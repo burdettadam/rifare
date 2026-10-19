@@ -2,7 +2,7 @@
 
 **Planning date:** October 15, 2026. **State:** proposed, not implemented.
 
-190 bounded worker goals + 13 integration/acceptance gates = **203 goal packets**. **676 acceptance/regression specifications** include all 67 original scenarios. All 151 original requirements are preserved and mapped; their acceptance criteria are retained verbatim.
+240 bounded worker goals + 23 integration/acceptance gates = **263 goal packets**. **880 acceptance/regression specifications** include all 67 original scenarios. All 151 original requirements and 50 separately adopted requirements are preserved and mapped; their acceptance criteria are retained verbatim.
 
 Each linked packet includes dependencies, allowed ownership, explicit success/negative/regression assertions, a deliberate fault to detect, source requirement links and required evidence. Product tests remain not run.
 
@@ -42,6 +42,26 @@ Read `docs/WORKER-CONTRACT.md`, inspect the actual repository and installed git-
 | [M11](milestones/M11.md) | Inventory and procurement | 10 | [M11-G99](goals/M11/M11-G99.md) |
 
 | [M12](milestones/M12.md) | Ecosystem and multi-store operations | 9 | [M12-G99](goals/M12/M12-G99.md) |
+
+| [M13](milestones/M13.md) | Optional decision models and shadow classification | 5 | [M13-G99](goals/M13/M13-G99.md) |
+
+| [M14](milestones/M14.md) | Calibrated routing and backend replacement | 5 | [M14-G99](goals/M14/M14-G99.md) |
+
+| [M15](milestones/M15.md) | Sender-bound remote agent access | 5 | [M15-G99](goals/M15/M15-G99.md) |
+
+| [M16](milestones/M16.md) | Managed execution security | 5 | [M16-G99](goals/M16/M16-G99.md) |
+
+| [M17](milestones/M17.md) | Multimodal evidence assistance | 5 | [M17-G99](goals/M17/M17-G99.md) |
+
+| [M18](milestones/M18.md) | Persistent commerce journeys | 5 | [M18-G99](goals/M18/M18-G99.md) |
+
+| [M19](milestones/M19.md) | Return-aware loyalty | 5 | [M19-G99](goals/M19/M19-G99.md) |
+
+| [M20](milestones/M20.md) | Qualified QR drop-off | 5 | [M20-G99](goals/M20/M20-G99.md) |
+
+| [M21](milestones/M21.md) | Warehouse routes, waves and supplies | 5 | [M21-G99](goals/M21/M21-G99.md) |
+
+| [M22](milestones/M22.md) | Individualized campaign production | 5 | [M22-G99](goals/M22/M22-G99.md) |
 
 ## M00 — Product charter and reproducible development
 
@@ -565,3 +585,213 @@ Make extension, governance and deployment repeatable for agencies and larger ins
 | [M12-G09](goals/M12/M12-G09.md) | Implement optional sandboxed code under the same action authority | M12-G08, M07-G99 | conditional_local |
 
 | [M12-G99](goals/M12/M12-G99.md) | Accept the integrated M12 milestone | All milestone worker goals + prior milestone gates | milestone_acceptance |
+
+## M13 — Optional decision models and shadow classification
+
+Add one useful, merchant-tailored return-intake classification path beside the existing generative runner. Record proposed classifications against authorized case evidence without changing routing, eligibility, money, inventory, approvals, or settlement. The first five goals must work with the current diagnostic fixtures; connected inference remains separately qualified.
+
+**Prerequisite milestone gates:** M02-G99, M05-G99
+
+| Goal | Deliverable | Dependencies | Proof mode |
+|---|---|---|---|
+
+| [M13-G01](goals/M13/M13-G01.md) | Define the bounded decision contract beside the existing model runner | M02-G99, M05-G99 | local_then_separate_qualification |
+
+| [M13-G02](goals/M13/M13-G02.md) | Add merchant question resources and source-bound evidence snapshots | M13-G01, M02-G99, M05-G99 | local_then_separate_qualification |
+
+| [M13-G03](goals/M13/M13-G03.md) | Implement the optional text-only Workers AI transport | M13-G01, M13-G02, M02-G99, M05-G99 | local_then_separate_qualification |
+
+| [M13-G04](goals/M13/M13-G04.md) | Record useful shadow classifications in the existing case workflow | M13-G02, M13-G03, M02-G99, M05-G99 | local_then_separate_qualification |
+
+| [M13-G05](goals/M13/M13-G05.md) | Freeze the shadow evaluation protocol and capture the first-five-goal demonstration | M13-G04, M02-G99, M05-G99 | local_then_separate_qualification |
+
+| [M13-G99](goals/M13/M13-G99.md) | Assess the complete M13 capability | All milestone worker goals + prior milestone gates | milestone_acceptance |
+
+## M14 — Calibrated routing and backend replacement
+
+Qualify one actually measured decision backend for a bounded routing task, retain review and manual operation, and add a separately evidenced backend-replacement path. Scoped routing does not require GPU or self-hosting expenditure; a portability claim additionally requires two actually exercised implementations.
+
+**Prerequisite milestone gates:** M13-G99
+
+| Goal | Deliverable | Dependencies | Proof mode |
+|---|---|---|---|
+
+| [M14-G01](goals/M14/M14-G01.md) | Predeclare routing qualification and calibration | M13-G05, M13-G99 | local_then_separate_qualification |
+
+| [M14-G02](goals/M14/M14-G02.md) | Measure and qualify one available backend | M14-G01, M13-G99 | local_then_separate_qualification |
+
+| [M14-G03](goals/M14/M14-G03.md) | Enable bounded case routing with takeover and revocation | M14-G02, M13-G99 | local_then_separate_qualification |
+
+| [M14-G04](goals/M14/M14-G04.md) | Add and verify a replaceable SystemOne transport | M13-G03, M14-G01, M13-G99 | local_then_separate_qualification |
+
+| [M14-G05](goals/M14/M14-G05.md) | Prove controlled replacement and publish scoped compatibility | M14-G03, M14-G04, M13-G99 | local_then_separate_qualification |
+
+| [M14-G99](goals/M14/M14-G99.md) | Assess the complete M14 capability | All milestone worker goals + prior milestone gates | milestone_acceptance |
+
+## M15 — Sender-bound remote agent access
+
+Add one standards-based remote authorization profile to the existing task and worker boundaries, so possession of a copied token alone cannot read case data or prepare a proposal. Keep tenant, customer, task, policy, approval, lease and stop decisions in the existing server authority.
+
+**Prerequisite milestone gates:** M02-G99, M07-G99
+
+| Goal | Deliverable | Dependencies | Proof mode |
+|---|---|---|---|
+
+| [M15-G01](goals/M15/M15-G01.md) | Define one remote trust profile over current task authority | M02-G18, M02-G19, M02-G99, M07-G99 | local_then_separate_qualification |
+
+| [M15-G02](goals/M15/M15-G02.md) | Verify sender proof at the actual remote resource boundary | M15-G01, M02-G99, M07-G99 | local_then_separate_qualification |
+
+| [M15-G03](goals/M15/M15-G03.md) | Fence replay, revocation and active work across verifier processes | M15-G02, M02-G20, M02-G21, M02-G99, M07-G99 | local_then_separate_qualification |
+
+| [M15-G04](goals/M15/M15-G04.md) | Exercise bounded independent-client continuation | M15-G03, M07-G04, M02-G99, M07-G99 | local_then_separate_qualification |
+
+| [M15-G05](goals/M15/M15-G05.md) | Publish scoped remote-readiness and qualification evidence | M15-G03, M15-G04, M02-G99, M07-G99 | local_then_separate_qualification |
+
+| [M15-G99](goals/M15/M15-G99.md) | Assess the complete M15 capability | All milestone worker goals + prior milestone gates | milestone_acceptance |
+
+## M16 — Managed execution security
+
+Qualify one operator-managed runner boundary with mediated network access, constrained resources and a bounded two-branch restriction demonstration, while stating the narrower guarantees available for external agents. Keep AI Gateway use optional.
+
+**Prerequisite milestone gates:** M15-G99
+
+| Goal | Deliverable | Dependencies | Proof mode |
+|---|---|---|---|
+
+| [M16-G01](goals/M16/M16-G01.md) | Define managed coverage and the typed broker boundary | M15-G01, M02-G10, M02-G19, M15-G99 | local_then_separate_qualification |
+
+| [M16-G02](goals/M16/M16-G02.md) | Enforce one real isolation and egress profile | M16-G01, M15-G99 | local_then_separate_qualification |
+
+| [M16-G03](goals/M16/M16-G03.md) | Persist narrower authority before admitting protected data | M16-G01, M02-G18, M02-G21, M15-G99 | local_then_separate_qualification |
+
+| [M16-G04](goals/M16/M16-G04.md) | Demonstrate restriction across two concurrent branches | M16-G02, M16-G03, M15-G99 | local_then_separate_qualification |
+
+| [M16-G05](goals/M16/M16-G05.md) | Define optional gateway policy and observed enforcement limits | M16-G01, M16-G04, M15-G99 | local_then_separate_qualification |
+
+| [M16-G99](goals/M16/M16-G99.md) | Assess the complete M16 capability | All milestone worker goals + prior milestone gates | milestone_acceptance |
+
+## M17 — Multimodal evidence assistance
+
+Introduce an explicitly opt-in image-first evidence-assistance path only after qualifying intake, authorized model access, and the full privacy lifecycle. Keep audio/video disabled unless a named additional use case and its media pipeline are separately declared and qualified.
+
+**Prerequisite milestone gates:** M13-G99, M14-G99
+
+| Goal | Deliverable | Dependencies | Proof mode |
+|---|---|---|---|
+
+| [M17-G01](goals/M17/M17-G01.md) | Declare image intake scope and qualify existing upload foundations | M13-G05, M14-G01, M13-G99, M14-G99 | local_then_separate_qualification |
+
+| [M17-G02](goals/M17/M17-G02.md) | Authorize exact media versions for bounded model processing | M17-G01, M13-G99, M14-G99 | local_then_separate_qualification |
+
+| [M17-G03](goals/M17/M17-G03.md) | Extend privacy lifecycle to media and derived decision records | M17-G01, M17-G02, M13-G99, M14-G99 | local_then_separate_qualification |
+
+| [M17-G04](goals/M17/M17-G04.md) | Add bounded image evidence assistance to the return skill | M17-G02, M17-G03, M14-G01, M13-G99, M14-G99 | local_then_separate_qualification |
+
+| [M17-G05](goals/M17/M17-G05.md) | Qualify image assistance and declare optional audio/video scope | M17-G04, M14-G02, M13-G99, M14-G99 | local_then_separate_qualification |
+
+| [M17-G99](goals/M17/M17-G99.md) | Assess the complete M17 capability | All milestone worker goals + prior milestone gates | milestone_acceptance |
+
+## M18 — Persistent commerce journeys
+
+Continue a verified shopper's supported commerce journey across visits, channels and agent runtimes, using durable source-backed context and the existing action gateway.
+
+**Prerequisite milestone gates:** M07-G99, M09-G99, M15-G99
+
+| Goal | Deliverable | Dependencies | Proof mode |
+|---|---|---|---|
+
+| [M18-G01](goals/M18/M18-G01.md) | Add source-backed shopper memory | M05-G01, M07-G14, M07-G99, M09-G99, M15-G99 | local_then_separate_qualification |
+
+| [M18-G02](goals/M18/M18-G02.md) | Resolve journey capability readiness | M18-G01, M01-G04, M07-G06, M07-G99, M09-G99, M15-G99 | local_then_separate_qualification |
+
+| [M18-G03](goals/M18/M18-G03.md) | Compose supported intents into one journey | M18-G02, M06-G01, M04-G99, M09-G01, M09-G02, M07-G99, M09-G99, M15-G99 | local_then_separate_qualification |
+
+| [M18-G04](goals/M18/M18-G04.md) | Make follow-ups reflect current journey state | M18-G03, M05-G05, M05-G06, M05-G07, M06-G13, M09-G08, M07-G99, M09-G99, M15-G99 | local_then_separate_qualification |
+
+| [M18-G05](goals/M18/M18-G05.md) | Qualify journey continuity across callers | M18-G01, M18-G02, M18-G03, M18-G04, M07-G04, M05-G16, M07-G99, M09-G99, M15-G99 | local_then_separate_qualification |
+
+| [M18-G99](goals/M18/M18-G99.md) | Assess the complete M18 capability | All milestone worker goals + prior milestone gates | milestone_acceptance |
+
+## M19 — Return-aware loyalty
+
+Keep loyalty accrual, redemption and recovery incentives correct when purchases, edits, exchanges and returns change the underlying eligible value.
+
+**Prerequisite milestone gates:** M07-G99, M09-G99
+
+| Goal | Deliverable | Dependencies | Proof mode |
+|---|---|---|---|
+
+| [M19-G01](goals/M19/M19-G01.md) | Normalize qualified loyalty balances and rules | M01-G04, M06-G04, M07-G99, M09-G99 | local_then_separate_qualification |
+
+| [M19-G02](goals/M19/M19-G02.md) | Link loyalty accrual to order changes | M19-G01, M06-G04, M06-G06, M07-G99, M09-G99 | local_then_separate_qualification |
+
+| [M19-G03](goals/M19/M19-G03.md) | Reserve and reconcile loyalty redemption | M19-G01, M19-G02, M06-G02, M07-G99, M09-G99 | local_then_separate_qualification |
+
+| [M19-G04](goals/M19/M19-G04.md) | Quote loyalty-aware recovery incentives | M19-G02, M19-G03, M05-G05, M05-G06, M09-G01, M09-G08, M07-G99, M09-G99 | local_then_separate_qualification |
+
+| [M19-G05](goals/M19/M19-G05.md) | Reconcile the complete loyalty lifecycle | M19-G02, M19-G03, M19-G04, M05-G14, M09-G04, M02-G24, M07-G14, M07-G99, M09-G99 | local_then_separate_qualification |
+
+| [M19-G99](goals/M19/M19-G99.md) | Assess the complete M19 capability | All milestone worker goals + prior milestone gates | milestone_acceptance |
+
+## M20 — Qualified QR drop-off
+
+Offer a qualified shopper drop-off method and provider-bound credential inside the existing return journey, preserving item-level custody and true resolution status.
+
+**Prerequisite milestone gates:** M07-G99, M08-G99, M10-G99
+
+| Goal | Deliverable | Dependencies | Proof mode |
+|---|---|---|---|
+
+| [M20-G01](goals/M20/M20-G01.md) | Discover eligible drop-off choices | M06-G12, M10-G01, M10-G09, M07-G99, M08-G99, M10-G99 | local_then_separate_qualification |
+
+| [M20-G02](goals/M20/M20-G02.md) | Issue and replace provider-bound handoff credentials | M20-G01, M03-G99, M07-G14, M07-G99, M08-G99, M10-G99 | local_then_separate_qualification |
+
+| [M20-G03](goals/M20/M20-G03.md) | Record item-level drop-off acceptance | M20-G02, M08-G07, M10-G10, M07-G99, M08-G99, M10-G99 | local_then_separate_qualification |
+
+| [M20-G04](goals/M20/M20-G04.md) | Expose consolidation and custody continuity | M20-G03, M08-G08, M08-G09, M10-G09, M10-G10, M07-G99, M08-G99, M10-G99 | local_then_separate_qualification |
+
+| [M20-G05](goals/M20/M20-G05.md) | Qualify the shopper drop-off experience | M20-G01, M20-G02, M20-G03, M20-G04, M07-G15, M07-G16, M08-G10, M07-G99, M08-G99, M10-G99 | local_then_separate_qualification |
+
+| [M20-G99](goals/M20/M20-G99.md) | Assess the complete M20 capability | All milestone worker goals + prior milestone gates | milestone_acceptance |
+
+## M21 — Warehouse routes, waves and supplies
+
+Use a versioned physical layout and coordinated pick waves to reduce warehouse travel while preserving existing allocations, item identity and inventory conservation; prepare supplies replenishment and optionally execute separately mandated recurring purchases.
+
+**Prerequisite milestone gates:** M08-G99, M11-G99
+
+| Goal | Deliverable | Dependencies | Proof mode |
+|---|---|---|---|
+
+| [M21-G01](goals/M21/M21-G01.md) | Version warehouse topology and bin constraints | M08-G08, M08-G99, M11-G99 | local_then_separate_qualification |
+
+| [M21-G02](goals/M21/M21-G02.md) | Propose source-bound pick waves and routes | M21-G01, M08-G04, M08-G06, M08-G99, M11-G99 | local_then_separate_qualification |
+
+| [M21-G03](goals/M21/M21-G03.md) | Coordinate pickers, totes and packer handoffs | M21-G02, M08-G03, M08-G04, M07-G15, M08-G99, M11-G99 | local_then_separate_qualification |
+
+| [M21-G04](goals/M21/M21-G04.md) | Record supplies usage with source ownership | M08-G08, M11-G05, M08-G99, M11-G99 | local_then_separate_qualification |
+
+| [M21-G05](goals/M21/M21-G05.md) | Prepare supplies replenishment and gate recurring purchases | M21-G04, M11-G04, M11-G05, M11-G06, M11-G07, M08-G99, M11-G99 | local_then_separate_qualification |
+
+| [M21-G99](goals/M21/M21-G99.md) | Assess the complete M21 capability | All milestone worker goals + prior milestone gates | milestone_acceptance |
+
+## M22 — Individualized campaign production
+
+Produce reviewable per-recipient campaign variants from permitted operational facts while preserving existing campaign approval, final-send suppression and causal measurement.
+
+**Prerequisite milestone gates:** M09-G99
+
+| Goal | Deliverable | Dependencies | Proof mode |
+|---|---|---|---|
+
+| [M22-G01](goals/M22/M22-G01.md) | Define permitted personalization strategies | M09-G05, M09-G06, M05-G05, M07-G14, M09-G99 | local_then_separate_qualification |
+
+| [M22-G02](goals/M22/M22-G02.md) | Generate source-grounded recipient variants | M22-G01, M09-G05, M05-G01, M09-G99 | local_then_separate_qualification |
+
+| [M22-G03](goals/M22/M22-G03.md) | Approve a frozen variant manifest | M22-G02, M09-G05, M09-G99 | local_then_separate_qualification |
+
+| [M22-G04](goals/M22/M22-G04.md) | Revalidate personalized variants at dispatch | M22-G03, M05-G06, M05-G07, M09-G07, M09-G08, M09-G99 | local_then_separate_qualification |
+
+| [M22-G05](goals/M22/M22-G05.md) | Evaluate personalization without inflated attribution | M22-G02, M22-G03, M22-G04, M09-G03, M09-G04, M05-G14, M09-G99 | local_then_separate_qualification |
+
+| [M22-G99](goals/M22/M22-G99.md) | Assess the complete M22 capability | All milestone worker goals + prior milestone gates | milestone_acceptance |
