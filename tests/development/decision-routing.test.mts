@@ -38,7 +38,7 @@ test('CASE-M14-G01-04',()=>{
  const missing=scoreRoutingProtocol(protocol,rows.slice(0,-1));assert.equal(missing.held_out.denominator,60);assert.equal(missing.held_out.unavailable,1);assert.equal(missing.numeric_passed,false);
  const malformed=structuredClone(rows);Object.assign(malformed.find((x:any)=>x.id===heldClear.id),{status:'malformed',labels:null,probability:null});const broken=scoreRoutingProtocol(protocol,malformed);assert.equal(broken.held_out.malformed,1);assert.equal(broken.held_out.denominator,60);assert.equal(broken.numeric_passed,false);
 
-}));
+});
 test('M14-G02-PREP-01',()=>usingRouting(async f=>{
  const p=f.freeze();f.advance(1);const observed=await f.shadow.run(f.a.scope,f.input());
  const q=f.routing.measure(f.owner.scope,{id:'measured_fixture',expected_version:0,protocol_id:p.id,protocol_version:1,observations:[{id:'calibration_clear',case_id:f.caseA.id,observation_id:observed.id}]});

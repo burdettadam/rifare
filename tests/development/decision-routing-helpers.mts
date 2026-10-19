@@ -14,7 +14,7 @@ export function routingFixture(){
  const f=shadowFixture(),key=randomBytes(32),systemRef='systemone_a',systemRequests:any[]=[];
  const systemReader=systemOneReader({serving_configuration_ref:systemRef,endpoint:'https://systemone.example/v1/systemone',approved_endpoints:['https://systemone.example/v1/systemone'],model_id:'clef_fixture',approved_model_ids:['clef_fixture'],model_revision:null,serving_revision:null,effective_context_tokens:8192,confidence_profile:'sglang_systemone_adapter_v1',fixtureTransport:(async(_url:any,init:any)=>{
   systemRequests.push(JSON.parse(init.body));const r=structuredClone(f.wire.clear.result);r.model='clef_fixture';
-  for(const a of Object.values(r.answers) as any[]){a.confidence=0.71;for(const option of Object.keys(a.probabilities))a.probabilities[option]=option===a.choice?0.96:0.02;}
+  for(const a of Object.values(r.answers) as any[]){a.confidence=0.94;for(const option of Object.keys(a.probabilities))a.probabilities[option]=option===a.choice?0.96:0.02;}
   return new Response(JSON.stringify(r));
  }) as typeof fetch});
  const vault=new SecretVault(f.kernel,{activeId:'routing_fixture_key',get:()=>Buffer.from(key)},{},{[WORKERS_AI_ADAPTER]:f.reader,[SYSTEMONE_ADAPTER]:systemReader});
