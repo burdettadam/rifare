@@ -19,6 +19,7 @@ export function extensionArtifact(version='1.0.0',options:{breaking?:boolean;kin
   'references/output.json':JSON.stringify({type:'object',properties:{status:{type:'string'}},required:['status'],additionalProperties:false}),
   'references/config.json':JSON.stringify({type:'object',properties:{},additionalProperties:false}),
   'references/guide.md':'Synthetic locally mirrored instruction '+version+'. No model or vendor service is required.\n',
+  'references/NOTICE.txt':'Synthetic fixture notice; no rights attested.',
  };
  const manifest={schema_version:2,id:'order-status',version,engine:{min:'1.0.0',max_exclusive:'2.0.0'},required_actions:[{name:'order.status',versions:{min:'1.0.0',max_exclusive:'2.0.0'}}],resources:Object.entries(files).filter(([path])=>path!=='SKILL.md').map(([path,text])=>({path,sha256:hash(text)})),input_schema:'references/input.json',output_schema:'references/output.json',configuration:{schema_resource:'references/config.json',fields:[]},scripts:[],egress:[]};
  files['commerce-manifest.json']=JSON.stringify(manifest);
@@ -30,7 +31,7 @@ export function extensionArtifact(version='1.0.0',options:{breaking?:boolean;kin
   payload:{format:'rifare-instruction-bundle-v1',origin,files}};
  if(artifact.kind==='host_adapter'){
   const catalog=JSON.parse(readFileSync(join(extensionRoot,'tests/fixtures/conformance/adapter-catalog.v1.json'),'utf8')),adapter=catalog.adapters.find((a:any)=>a.id==='shopify_orders'),op=adapter.operations.find((o:any)=>o.id==='orders.get');
-  artifact.id='shopify-orders';artifact.payload={adapter_id:adapter.id,version:adapter.version,api_version:adapter.api_version,operations:[op.id],source_pins:adapter.source_files};
+  artifact.id='shopify-orders';artifact.payload={adapter_id:adapter.id,version:adapter.version,api_version:adapter.api_version,operations:[op.id],source_pins:adapter.source_files,notice_text:'Synthetic fixture notice; no rights attested.'};
   artifact.contract.actions=[];artifact.evidence.source_pins=adapter.source_files;
   artifact.evidence.test_pins=op.native_cases.map(({id,path,sha256}:any)=>({id,path,sha256}));
  }
@@ -57,6 +58,7 @@ export function populateExtensionPrivacy(f:ReturnType<typeof extensionsFixture>)
  const first=f.install(),next=f.next();f.extensions.activate(f.a.scope,{transition_id:next.transition.id,expected_profile_revision:2});
  const retirement=f.extensions.proposeRetirement(f.a.scope,{id:'privacy_retirement',artifact_id:first.a.id,replacement_artifact_id:next.a.id,notice:{uri:'https://extensions.example.invalid/notices/order-status',revision:'1',sha256:'a'.repeat(64)},effective_at:f.now()+86400000,export_digest:f.extensions.exportArtifact(f.a.scope,first.a.id).digest,reader_retained:true,retained_test_ids:[...extensionOracle.retained_cases],strategy:'retain_pins_and_repreview'});
  f.extensions.reviewRetirement(f.reviewer.scope,{retirement_id:retirement.id,expected_digest:retirement.digest,expires_at:f.now()+600000});
- const approvalIds=f.db.prepare('SELECT id FROM commerce_skill_approvals WHERE tenant_id=? AND store_id=?').all(f.a.tenant,f.a.store).map((r:any)=>r.id);
- return {owner_scope:f.owner.scope,tables:[...EXTENSION_TABLES],subject_tables:[],authority_tables:['commerce_extension_reviews','commerce_extension_transitions','commerce_extension_retirements'],authority_state:'revoked',approval_ids:approvalIds,installation_refs:[{tenant_id:f.a.tenant,store_id:f.a.store,skill_id:'order-status'}],first,next,retirement};
+ const approvalIds=f.db.prepare('SELECT body FROM commerce_extension_reviews WHERE tenant_id=? AND store_id=?').all(f.a.tenant,f.a.store).map((r:any)=>JSON.parse(r.body).skill_approval_id).filter(Boolean);
+ const unrelated=f.db.prepare('SELECT id FROM commerce_skill_approvals WHERE tenant_id=? AND store_id=?').all(f.a.tenant,f.a.store).map((r:any)=>r.id).filter((id:string)=>!approvalIds.includes(id));
+ return {owner_scope:f.owner.scope,tables:[...EXTENSION_TABLES],subject_tables:[],authority_tables:['commerce_extension_reviews','commerce_extension_transitions','commerce_extension_retirements'],authority_state:'revoked',approval_ids:approvalIds,unrelated_approval_ids:unrelated,installation_refs:[{tenant_id:f.a.tenant,store_id:f.a.store,skill_id:'order-status'}],first,next,retirement};
 }
