@@ -105,16 +105,23 @@ export class DecisionShadow {
         // The existing budget API needs an internal positive output bound. This
         // field is never added to the Clef wire body; actual zero usage is valid.
         const reservation=budgets.reserve(scope,'cloudflare',p.observation_id,{max_output_tokens:1,decision:p.snapshot.request});
-        if(reservation.duplicate)throw new Error('MODEL_RESERVATION_ALREADY_ATTEMPTED');reserved=true;
-      }catch{result=unusableDecision('DECISION_UNAVAILABLE',kind);failure_phase='budget';}
+        if(reservation.duplicate)throw new Error('DECISION_OBSERVATION_IN_PROGRESS');reserved=true;
+      }catch(error){
+        // An earlier attempt owns this identity, including its held budget and
+        // eventual receipt. A concurrent preparation cannot replace that result.
+        if(error instanceof Error&&error.message==='DECISION_OBSERVATION_IN_PROGRESS')throw error;
+        result=unusableDecision('DECISION_UNAVAILABLE',kind);failure_phase='budget';
+      }
       if(reserved){
         this.#guard(scope,p);
         try{
-          dispatch=kind;
-          const value=await this.#vault.invokeReader(scope,p.entry.secret_ref,WORKERS_AI_ADAPTER,{request:p.snapshot.request});
+          this.k.authorize(scope,'secret.invoke');
+          dispatch='transport_unconfirmed';
+          const value=await this.#vault.invokeReader(scope,p.entry.secret_ref,WORKERS_AI_ADAPTER,
+            {request:p.snapshot.request,expected_configuration_digest:p.entry.reader.configuration_digest});
           result=validateDecisionResult(p.snapshot.request,value);
           if(result.evidence_kind!==kind)result=unusableDecision('DECISION_OUTPUT_INVALID',kind);
-          if(['DECISION_DISABLED','DECISION_REQUEST_INVALID','DECISION_CONTEXT_LIMIT','DECISION_CAPABILITY_UNAVAILABLE','DECISION_DESTINATION_UNAPPROVED','DECISION_CREDENTIAL_UNAVAILABLE'].includes(result.reason??''))dispatch='not_attempted';
+          dispatch=['DECISION_DISABLED','DECISION_REQUEST_INVALID','DECISION_CONTEXT_LIMIT','DECISION_CAPABILITY_UNAVAILABLE','DECISION_DESTINATION_UNAPPROVED','DECISION_CREDENTIAL_UNAVAILABLE','DECISION_CONFIGURATION_CHANGED'].includes(result.reason??'')?'not_attempted':kind;
           if(result.status==='unusable')failure_phase='provider';
         }catch(error){
           const credential=error instanceof Error&&error.message==='SECRET_UNAVAILABLE';

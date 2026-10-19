@@ -92,7 +92,7 @@ export class DecisionResources {
       preprocessing_version:DECISION_PREPROCESSING_VERSION,input_hash:history.next_cursor===null?bigDigest(request):null,submitted_text_hash:history.next_cursor===null?digest(stateText):null,
       evidence_hash:bigDigest(evidence),claims_digest:history.next_cursor===null?bigDigest({customer_messages:messages.map((m:Row)=>m.text),profile_variant:resolved.profile_variant}):null,
       gaps,encoded_request_bytes:Buffer.byteLength(JSON.stringify(request)),truncated:false as const};
-    if(history.next_cursor!==null||!messages.length)return {...common,status:'unavailable' as const,reason:history.next_cursor!==null?'DECISION_CONTEXT_LIMIT':'DECISION_EVIDENCE_CHANGED',request:null};
+    if(history.next_cursor!==null||!messages.length||!status)return {...common,status:'unavailable' as const,reason:history.next_cursor!==null?'DECISION_CONTEXT_LIMIT':'DECISION_EVIDENCE_CHANGED',request:null};
     try{return {...common,status:'ready' as const,reason:null,request:validateDecisionRequest(request,this.capabilities)};}
     catch(error){if(error instanceof Error&&['DECISION_CONTEXT_LIMIT','DECISION_CAPABILITY_UNAVAILABLE'].includes(error.message))return {...common,status:'unavailable' as const,reason:error.message,request:null};throw error;}
   }
