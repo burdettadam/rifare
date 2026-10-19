@@ -36,6 +36,9 @@ function rows(db:any,table:string,s:any) {
 function originalRows(db:any,s:any,x:any) {
   return Object.fromEntries(x.tables.map((table:string)=>[table,rows(db,table,s)]));
 }
+function otherStores(db:any,s:any) {
+  return Object.fromEntries(ECOSYSTEM_TABLES.map(table=>[table,db.prepare('SELECT * FROM '+table+' WHERE NOT (tenant_id=? AND store_id=?) ORDER BY '+keys(db,table).join(',')).all(s.tenant_id,s.store_id)]));
+}
 function identities(db:any,s:any,x:any) {
   return Object.fromEntries(x.tables.map((table:string)=>[table,rows(db,table,s).map((row:any)=>keys(db,table).map((key:string)=>[key,row[key]]))]));
 }
@@ -106,7 +109,7 @@ function assertRevoked(db:any,s:any,x:any) {
 export async function ecosystemPrivacy() {
   for(const group of GROUPS)await group.using(async(f:any)=>{
     const x=await group.populate(f),s=populated(f,x),customer=seedCustomer(f,x,group),db=f.kernel.db,privacy=new PrivacyLifecycle(f.kernel);
-    const before=originalRows(db,s,x),ids=identities(db,s,x),source=sourceCopies(f);
+    const before=originalRows(db,s,x),ids=identities(db,s,x),source=sourceCopies(f),other=otherStores(db,s);
     const exported=privacy.export(x.owner_scope,customer);
     for(const table of x.tables)assert.deepEqual(exported.ecosystem_records[table],[],table+' excluded from unrelated customer export');
     assert.equal(JSON.stringify(exported.ecosystem_records).includes(f.kernel.require(x.owner_scope).token_hash),false);
@@ -118,6 +121,7 @@ export async function ecosystemPrivacy() {
     f.kernel.transaction(()=>eraseSelected(f.kernel,s,[],exported.subject_ref,f.kernel.clock()));
     assertMinimized(db,s,x);assert.deepEqual(identities(db,s,x),ids);
     assert.deepEqual(sourceCopies(f),source,'Minimization dispatches no source effects');
+    assert.deepEqual(otherStores(db,s),other,'Scoped erasure preserves every other store');
   });
 }
 function importCopy(f:any,s:any,snapshot:any,suppression:any,check:(db:any,k:CommerceKernel)=>void) {
@@ -147,7 +151,7 @@ export async function ecosystemRestore() {
 }
 export async function ecosystemUninstall() {
   for(const group of GROUPS)await group.using(async(f:any)=>{
-    const x=await group.populate(f),s=populated(f,x),db=f.kernel.db,ids=identities(db,s,x),source=sourceCopies(f);
+    const x=await group.populate(f),s=populated(f,x),db=f.kernel.db,ids=identities(db,s,x),source=sourceCopies(f),other=otherStores(db,s);
     injectCopies(db,s,x);
     const result=new PrivacyLifecycle(f.kernel).uninstall(x.owner_scope);
     assert.equal(result.status,'disconnected');assert.equal(result.physical_deletion,false);
@@ -155,5 +159,6 @@ export async function ecosystemUninstall() {
     assert.throws(()=>f.kernel.require(x.owner_scope),/ACCESS_DENIED/);
     if(x.agency_scope)assert.throws(()=>f.kernel.require(x.agency_scope),/ACCESS_DENIED/);
     assert.deepEqual(sourceCopies(f),source);
+    assert.deepEqual(otherStores(db,s),other,'Scoped uninstall preserves every other store');
   });
 }
