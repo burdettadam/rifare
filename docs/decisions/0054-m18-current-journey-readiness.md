@@ -108,3 +108,23 @@ hashes. Root executes; reviewers inspect without imports/builds/tests/probes.
 No full regression, live provider, deployment, push, release or publication.
 Local integration requires two independent reviews of the exact clean candidate.
 Save cumulative source and actual evidence in a verified recoverable checkpoint.
+
+## Preimplementation native-boundary clarification
+
+Read-only scope review found that support.read itself is denied by native restore
+quarantine. Preserve that top-level RESTORE_WRITE_BLOCKED error. Outside
+quarantine, recovery egress restrictions can be shown on the queue row without
+bypassing the existing native guard. ReadContext hides its kernel; when a
+delivery owner is attached, require its actual tracking.reads object to equal
+the supplied reads object. Other native owners expose their kernel directly.
+An unrelated ReadContext cannot use scopes from this kernel.
+
+Independent test-author agreement fixes disabled/OUTCOME_DISABLED for a policy
+that excludes a return outcome, disabled/ACCESS_DENIED for per-row permissions,
+unverified/PROOF_MISSING_EXPIRED_OR_REVOKED for the current revoked draft proof,
+and temporarily_unavailable/SENDER_UNAVAILABLE for revoked or expired senders.
+Missing owners are EDIT_WORKFLOW_REQUIRED, SHOPPING_WORKFLOW_REQUIRED and
+DELIVERY_WORKFLOW_REQUIRED; they remain needs_configuration. Form reads retain
+CUSTOMER_VERIFICATION_REQUIRED for an expired or revoked original case proof.
+Current customer contact changes also invalidate old customer inspections and
+an obsolete stored email contact; no contact address is returned by readiness.
