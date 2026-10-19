@@ -1,0 +1,206 @@
+{
+  "clear": {
+    "success": true,
+    "errors": [],
+    "messages": [],
+    "result": {
+      "model": "clef-flash",
+      "answers": {
+        "reported_problem": {
+          "type": "choice",
+          "choice": "damaged",
+          "probabilities": {
+            "damaged": 0.98,
+            "size_fit": 0.01,
+            "other_unclear": 0.01
+          },
+          "confidence": 0.98
+        },
+        "requested_resolution": {
+          "type": "choice",
+          "choice": "refund",
+          "probabilities": {
+            "refund": 0.98,
+            "exchange": 0.01,
+            "other_unclear": 0.01
+          },
+          "confidence": 0.98
+        }
+      },
+      "usage": {
+        "input_tokens": 125,
+        "output_tokens": 0
+      }
+    }
+  },
+  "mixed": {
+    "success": true,
+    "errors": [],
+    "messages": [],
+    "result": {
+      "model": "clef-flash",
+      "answers": {
+        "reported_problem": {
+          "type": "choice",
+          "choice": "other_unclear",
+          "probabilities": {
+            "damaged": 0.01,
+            "size_fit": 0.01,
+            "other_unclear": 0.98
+          },
+          "confidence": 0.98
+        },
+        "requested_resolution": {
+          "type": "choice",
+          "choice": "other_unclear",
+          "probabilities": {
+            "refund": 0.01,
+            "exchange": 0.01,
+            "other_unclear": 0.98
+          },
+          "confidence": 0.98
+        }
+      },
+      "usage": {
+        "input_tokens": 125,
+        "output_tokens": 0
+      }
+    }
+  },
+  "unknown": {
+    "success": true,
+    "errors": [],
+    "messages": [],
+    "result": {
+      "model": "clef-flash",
+      "answers": {
+        "reported_problem": {
+          "type": "choice",
+          "choice": "other_unclear",
+          "probabilities": {
+            "damaged": 0.01,
+            "size_fit": 0.01,
+            "other_unclear": 0.98
+          },
+          "confidence": 0.98
+        },
+        "requested_resolution": {
+          "type": "choice",
+          "choice": "other_unclear",
+          "probabilities": {
+            "refund": 0.01,
+            "exchange": 0.01,
+            "other_unclear": 0.98
+          },
+          "confidence": 0.98
+        }
+      },
+      "usage": {
+        "input_tokens": 125,
+        "output_tokens": 0
+      }
+    }
+  },
+  "corrected": {
+    "success": true,
+    "errors": [],
+    "messages": [],
+    "result": {
+      "model": "clef-flash",
+      "answers": {
+        "reported_problem": {
+          "type": "choice",
+          "choice": "size_fit",
+          "probabilities": {
+            "damaged": 0.01,
+            "size_fit": 0.98,
+            "other_unclear": 0.01
+          },
+          "confidence": 0.98
+        },
+        "requested_resolution": {
+          "type": "choice",
+          "choice": "exchange",
+          "probabilities": {
+            "refund": 0.01,
+            "exchange": 0.98,
+            "other_unclear": 0.01
+          },
+          "confidence": 0.98
+        }
+      },
+      "usage": {
+        "input_tokens": 125,
+        "output_tokens": 0
+      }
+    }
+  },
+  "hostile": {
+    "success": true,
+    "errors": [],
+    "messages": [],
+    "result": {
+      "model": "clef-flash",
+      "answers": {
+        "reported_problem": {
+          "type": "choice",
+          "choice": "other_unclear",
+          "probabilities": {
+            "damaged": 0.01,
+            "size_fit": 0.01,
+            "other_unclear": 0.98
+          },
+          "confidence": 0.98
+        },
+        "requested_resolution": {
+          "type": "choice",
+          "choice": "refund",
+          "probabilities": {
+            "refund": 0.98,
+            "exchange": 0.01,
+            "other_unclear": 0.01
+          },
+          "confidence": 0.98
+        }
+      },
+      "usage": {
+        "input_tokens": 125,
+        "output_tokens": 0
+      }
+    }
+  },
+  "profile": {
+    "success": true,
+    "errors": [],
+    "messages": [],
+    "result": {
+      "model": "clef-flash",
+      "answers": {
+        "reported_problem": {
+          "type": "choice",
+          "choice": "size_fit",
+          "probabilities": {
+            "damaged": 0.01,
+            "size_fit": 0.98,
+            "other_unclear": 0.01
+          },
+          "confidence": 0.98
+        },
+        "requested_resolution": {
+          "type": "choice",
+          "choice": "exchange",
+          "probabilities": {
+            "refund": 0.01,
+            "exchange": 0.98,
+            "other_unclear": 0.01
+          },
+          "confidence": 0.98
+        }
+      },
+      "usage": {
+        "input_tokens": 125,
+        "output_tokens": 0
+      }
+    }
+  }
+}

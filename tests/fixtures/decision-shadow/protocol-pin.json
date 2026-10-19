@@ -1,0 +1,7 @@
+{
+  "protocol_digest": "48aae019e34ae478044834c46946046b0fcab016076e0d1f75c6bd1dab49c6b8",
+  "frozen_before_product_implementation": true,
+  "reference_role": "predeclared_synthetic_fixture_labels_not_live_model_observations",
+  "development_cases": 6,
+  "held_out_cases": 6
+}
