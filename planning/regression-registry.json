@@ -1877,6 +1877,14 @@
       "contract_files": [
         "packages/commerce/contracts/image-suppression.v1.json"
       ]
+    },
+    {
+      "id": "m18-shopper-memory-diagnostic",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/shopper-memory.v1.json"
+      ]
     }
   ],
   "tests": [
@@ -23509,6 +23517,181 @@
       "runner_case_id": "M17-SUPPRESSION-SUBJECT-REPLAY-AND-QUARANTINE-12",
       "source": "tests/development/image-suppression.test.mts",
       "capability_id": "m17-image-suppression-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M18-G01-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M18-G01-01",
+      "source": "tests/development/shopper-memory.test.mts",
+      "capability_id": "m18-shopper-memory-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M18-G01-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M18-G01-02",
+      "source": "tests/development/shopper-memory.test.mts",
+      "capability_id": "m18-shopper-memory-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M18-G01-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M18-G01-03",
+      "source": "tests/development/shopper-memory.test.mts",
+      "capability_id": "m18-shopper-memory-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G01-EXACT-SCOPE-AND-SIMILAR-NAME",
+      "suite": "runtime",
+      "runner_case_id": "M18-G01-EXACT-SCOPE-AND-SIMILAR-NAME",
+      "source": "tests/development/shopper-memory.test.mts",
+      "capability_id": "m18-shopper-memory-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G01-VERIFIED-LINK-AND-CUSTOMER-WRITES-ONLY",
+      "suite": "runtime",
+      "runner_case_id": "M18-G01-VERIFIED-LINK-AND-CUSTOMER-WRITES-ONLY",
+      "source": "tests/development/shopper-memory.test.mts",
+      "capability_id": "m18-shopper-memory-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G01-CURRENT-CONTACT-PROOF",
+      "suite": "runtime",
+      "runner_case_id": "M18-G01-CURRENT-CONTACT-PROOF",
+      "source": "tests/development/shopper-memory.test.mts",
+      "capability_id": "m18-shopper-memory-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G01-CURRENT-ORDER-OWNERSHIP",
+      "suite": "runtime",
+      "runner_case_id": "M18-G01-CURRENT-ORDER-OWNERSHIP",
+      "source": "tests/development/shopper-memory.test.mts",
+      "capability_id": "m18-shopper-memory-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G01-CURRENT-PERMISSION-AND-SESSION",
+      "suite": "runtime",
+      "runner_case_id": "M18-G01-CURRENT-PERMISSION-AND-SESSION",
+      "source": "tests/development/shopper-memory.test.mts",
+      "capability_id": "m18-shopper-memory-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G01-PURPOSE-AND-INPUT-MINIMIZATION",
+      "suite": "runtime",
+      "runner_case_id": "M18-G01-PURPOSE-AND-INPUT-MINIMIZATION",
+      "source": "tests/development/shopper-memory.test.mts",
+      "capability_id": "m18-shopper-memory-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G01-FINITE-PREFERENCES-AND-EXPIRY-BOUNDS",
+      "suite": "runtime",
+      "runner_case_id": "M18-G01-FINITE-PREFERENCES-AND-EXPIRY-BOUNDS",
+      "source": "tests/development/shopper-memory.test.mts",
+      "capability_id": "m18-shopper-memory-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G01-MISSING-HISTORY-AND-SOURCE-LINK-REVISION",
+      "suite": "runtime",
+      "runner_case_id": "M18-G01-MISSING-HISTORY-AND-SOURCE-LINK-REVISION",
+      "source": "tests/development/shopper-memory.test.mts",
+      "capability_id": "m18-shopper-memory-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G01-RETAINED-INTEGRITY-AND-RESTORE-PREFLIGHT",
+      "suite": "runtime",
+      "runner_case_id": "M18-G01-RETAINED-INTEGRITY-AND-RESTORE-PREFLIGHT",
+      "source": "tests/development/shopper-memory.test.mts",
+      "capability_id": "m18-shopper-memory-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G01-CORRECTION-SCRUBS-ALL-VERSIONS",
+      "suite": "runtime",
+      "runner_case_id": "M18-G01-CORRECTION-SCRUBS-ALL-VERSIONS",
+      "source": "tests/development/shopper-memory.test.mts",
+      "capability_id": "m18-shopper-memory-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G01-VERSION-CONFLICT-AND-REQUEST-REPLAY",
+      "suite": "runtime",
+      "runner_case_id": "M18-G01-VERSION-CONFLICT-AND-REQUEST-REPLAY",
+      "source": "tests/development/shopper-memory.test.mts",
+      "capability_id": "m18-shopper-memory-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G01-EXPIRY-NEVER-FALLS-BACK",
+      "suite": "runtime",
+      "runner_case_id": "M18-G01-EXPIRY-NEVER-FALLS-BACK",
+      "source": "tests/development/shopper-memory.test.mts",
+      "capability_id": "m18-shopper-memory-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G01-SUBJECT-EXPORT-ALLOWLIST",
+      "suite": "runtime",
+      "runner_case_id": "M18-G01-SUBJECT-EXPORT-ALLOWLIST",
+      "source": "tests/development/shopper-memory.test.mts",
+      "capability_id": "m18-shopper-memory-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G01-ALL-VERSION-ERASURE-PRESERVES-OTHERS",
+      "suite": "runtime",
+      "runner_case_id": "M18-G01-ALL-VERSION-ERASURE-PRESERVES-OTHERS",
+      "source": "tests/development/shopper-memory.test.mts",
+      "capability_id": "m18-shopper-memory-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G01-HOLD-RETENTION-AND-RELEASE-CLEANUP",
+      "suite": "runtime",
+      "runner_case_id": "M18-G01-HOLD-RETENTION-AND-RELEASE-CLEANUP",
+      "source": "tests/development/shopper-memory.test.mts",
+      "capability_id": "m18-shopper-memory-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G01-UNINSTALL-INVALIDATES-AND-RETAINS-HOLDS",
+      "suite": "runtime",
+      "runner_case_id": "M18-G01-UNINSTALL-INVALIDATES-AND-RETAINS-HOLDS",
+      "source": "tests/development/shopper-memory.test.mts",
+      "capability_id": "m18-shopper-memory-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G01-NATIVE-RESTORE-CANNOT-RESURRECT-FORGET",
+      "suite": "runtime",
+      "runner_case_id": "M18-G01-NATIVE-RESTORE-CANNOT-RESURRECT-FORGET",
+      "source": "tests/development/shopper-memory.test.mts",
+      "capability_id": "m18-shopper-memory-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G01-NATIVE-RESTORE-REPLAYS-SUBJECT-ERASURE",
+      "suite": "runtime",
+      "runner_case_id": "M18-G01-NATIVE-RESTORE-REPLAYS-SUBJECT-ERASURE",
+      "source": "tests/development/shopper-memory.test.mts",
+      "capability_id": "m18-shopper-memory-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G01-NATIVE-HELD-RESTORE-IS-ATOMIC",
+      "suite": "runtime",
+      "runner_case_id": "M18-G01-NATIVE-HELD-RESTORE-IS-ATOMIC",
+      "source": "tests/development/shopper-memory.test.mts",
+      "capability_id": "m18-shopper-memory-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G01-MERCHANT-IMPORT-AND-REIMPORT-INVALIDATE",
+      "suite": "runtime",
+      "runner_case_id": "M18-G01-MERCHANT-IMPORT-AND-REIMPORT-INVALIDATE",
+      "source": "tests/development/shopper-memory.test.mts",
+      "capability_id": "m18-shopper-memory-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G01-MERCHANT-HELD-ATOMICITY-AND-ERASURE",
+      "suite": "runtime",
+      "runner_case_id": "M18-G01-MERCHANT-HELD-ATOMICITY-AND-ERASURE",
+      "source": "tests/development/shopper-memory.test.mts",
+      "capability_id": "m18-shopper-memory-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G01-MANUAL-DISPATCH-AND-OWNERSHIP-HANDOVER",
+      "suite": "runtime",
+      "runner_case_id": "M18-G01-MANUAL-DISPATCH-AND-OWNERSHIP-HANDOVER",
+      "source": "tests/development/shopper-memory.test.mts",
+      "capability_id": "m18-shopper-memory-diagnostic"
     }
   ],
   "protected_files": [
@@ -24026,7 +24209,13 @@
     "tests/fixtures/image-reader/request.json",
     "packages/commerce/contracts/image-suppression.v1.json",
     "packages/commerce/image-suppression.mts",
-    "tests/development/image-suppression.test.mts"
+    "tests/development/image-suppression.test.mts",
+    "packages/commerce/contracts/shopper-memory.v1.json",
+    "packages/commerce/shopper-memory-privacy.mts",
+    "packages/commerce/shopper-memory-records.mts",
+    "packages/commerce/shopper-memory.mts",
+    "tests/development/shopper-memory-helpers.mts",
+    "tests/development/shopper-memory.test.mts"
   ],
   "source_count_fixture": "tests/fixtures/licensing/artifact-oracle.v1.json",
   "source_inventory": "planning/component-inventory.json"

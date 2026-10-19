@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "id": "shopper-memory-v1",
+  "qualification": "proposed_not_accepted",
+  "milestone": "M18",
+  "goal": "M18-G01",
+  "mode": "bounded_local_preparation",
+  "purpose": "support_journey",
+  "preferences": {
+    "replacement_semantics": "one_or_both_finite_fields_complete_replacement",
+    "fit_preference": ["close", "regular", "relaxed"],
+    "response_style": ["concise", "detailed"],
+    "max_age_ms": 2592000000,
+    "inference_allowed": false,
+    "transcripts_allowed": false,
+    "unknown_fields_allowed": false
+  },
+  "api": {
+    "record": ["case_id", "link_id", "expected_generation", "expected_version", "request_id", "purpose", "preferences", "expires_at"],
+    "forget": ["case_id", "link_id", "expected_generation", "expected_version", "request_id", "purpose"],
+    "context": ["case_id", "link_id", "expected_generation", "purpose"],
+    "dispatcher": ["memory-record", "memory-forget", "memory-context"],
+    "context_dispatcher": ["customer_token", "context"],
+    "new_http_routes": false
+  },
+  "authority": {
+    "writer_role": "customer",
+    "write_action": "support.customer_message",
+    "read_action": "support.read",
+    "current_customer_proof_on_every_access": true,
+    "proof_owner": "growthCustomerProof",
+    "exact_bindings": ["tenant", "store", "case", "resource", "customer", "verified_link", "ownership_generation", "purpose"],
+    "noncustomer_reader_requires_current_support_owner": true,
+    "gift_case_available": false,
+    "work_grants_expanded": false,
+    "execution_authorized": false
+  },
+  "context": {
+    "fields": ["schema_version", "case_id", "resource_id", "purpose", "version", "context_digest", "status", "preferences", "provenance", "history", "ownership_generation", "retained_under_hold", "model_thread_required", "execution_authorized", "production_qualified"],
+    "statuses": ["available", "missing", "expired", "source_changed", "forgotten", "restored", "unavailable"],
+    "unavailable_preferences": {},
+    "unavailable_provenance": null,
+    "history_fields": ["status", "source_revision", "missing_history_is_explicit"],
+    "provenance_fields": ["kind", "source", "reference", "link_id", "source_revision", "observed_at", "source_digest"],
+    "model_thread_required": false,
+    "execution_authorized": false,
+    "production_qualified": false,
+    "older_version_fallback": false
+  },
+  "storage": {
+    "table": "commerce_support_documents",
+    "kind": "shopper_memory",
+    "new_tables": 0,
+    "author": "verified_customer",
+    "reviewer": null,
+    "review_digest": null,
+    "body_max_bytes": 32768,
+    "scan_and_version_limit": 10000,
+    "request_ids": "scoped_hash_only_replay_refused_across_all_versions",
+    "source_payloads": "normalized_digest_and_revision_only",
+    "source_statement": "explicit_verified_customer_request",
+    "retained_tokens_or_session_hashes": false,
+    "redacted_reasons": ["corrected", "forgotten", "expired", "source_changed", "subject_erased", "restored", "uninstalled"]
+  },
+  "privacy": {
+    "export": "shopper_memory_records subject allowlist; retained historical subject identity survives source removal and resource reassignment",
+    "unheld_retirement": "remove personal values, source references and old preference digests from affected versions",
+    "subject_erasure": "scrub all versions by exact scoped subject_ref, including subjects with zero current resources",
+    "holds": "retain personal bytes in revoked historical rows, suppress ordinary access, clean retired values after release on next authorized access or mutation",
+    "uninstall": "invalidate memory and disconnect store while retaining held content",
+    "preflight": "validate all memory before restore/import suppression, including original package and repeat-import destination",
+    "restore_and_import": "scrub and revoke all restored personal preferences, including repeat imports; apply current subject suppression before atomic held-content refusal",
+    "suppression_checkpoint_expansion": false,
+    "fresh_statement_after_restore": "required before any future usable memory; existing quarantine and customer verification egress restrictions remain",
+    "physical_or_external_copy_erasure_qualified": false
+  },
+  "boundaries": {
+    "new_business_operations": false,
+    "remote_client_qualified": false,
+    "connected_channels_qualified": false,
+    "target_host_qualified": false,
+    "formal_milestone_accepted": false,
+    "later_goals": ["M18-G02", "M18-G03", "M18-G04", "M18-G05", "M18-G99"]
+  }
+}

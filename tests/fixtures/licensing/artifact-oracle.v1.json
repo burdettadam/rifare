@@ -1,6 +1,6 @@
 {
-  "source_file_count": 1797,
-  "source_count_reason": "ADR-0052 bounded M17 portable individual-image suppression from saved 26587c9. All 1791 previous M17 source members and 3078 registered cases retained; six new source files, no new tables, adapters or dependencies. Missing M15/M16/M23 history and formal qualification remain blocked.",
+  "source_file_count": 1806,
+  "source_count_reason": "ADR-0053 bounded M18 verified shopper memory and privacy/recovery lifecycle from saved 1534f5e. All 1797 prior source members and 3090 registered cases retained; 9 new source files, 25 added native cases, no new tables, adapters, grants or dependencies. Later M18 goals, missing source history and formal qualification remain open.",
   "component_ids": [
     "git-agent-adaptations",
     "rifare-developer-helpers",

@@ -11,6 +11,7 @@ import { exportInventoryPlanningSubject,eraseInventoryPlanningSubject,revokeInve
 import { exportEcosystemSubject,eraseEcosystemSubject,revokeEcosystemForRestore } from './ecosystem-privacy.mts';
 import { eraseImageRecords,exportImageRecords,imageRecipientCaseIds,isImageRecord,revokeImageAuthority } from './image-privacy.mts';
 import { imageSuppressionState } from './image-suppression.mts';
+import { hasShopperMemorySubject,exportShopperMemorySubject,eraseShopperMemorySubject,revokeShopperMemoryForUninstall } from './shopper-memory-privacy.mts';
 
 const MAX_RECORDS=10000;
 const PACKING_TABLES=['commerce_packing_sessions','commerce_packing_allocations','commerce_packing_scans','commerce_packing_confirmations'];
@@ -257,6 +258,7 @@ export function eraseSelected(k:CommerceKernel,s:Row,ids:string[],hash:string,at
   eraseExtendedServicesSubject(k,t,st,ids,hash);
   eraseInventoryPlanningSubject(k,t,st,ids,hash);
   eraseEcosystemSubject(k,t,st,ids,hash);
+  eraseShopperMemorySubject(k,t,st,hash);
   if(ids.length) {
     const marks=where(ids),args=[t,st,...ids];
     eraseShippingAndPacking(k,s,ids);
@@ -312,7 +314,8 @@ export class PrivacyLifecycle {
     return k.transaction(()=>{k.authorize(scope,'privacy.manage');const rs=resources(k,s,customer),ids=rs.map(r=>r.id);
       const gifts=all(k,'commerce_resources',s.tenant_id,s.store_id).filter(r=>r.kind==='order'&&JSON.parse(r.payload).gift_facts?.recipient_customer_id===customer).map(r=>{const g=JSON.parse(r.payload).gift_facts;return {gift_id:g.gift_id,lines:g.lines,allowed_outcomes:g.allowed_outcomes};});
       const imageGiftCaseIds=imageRecipientCaseIds(k,s.tenant_id,s.store_id,customer);
-      if(!rs.length&&!gifts.length&&!imageGiftCaseIds.length)throw new Error('NOT_FOUND');
+      const shopper_memory_records=exportShopperMemorySubject(k,s.tenant_id,s.store_id,subjectHash(s.tenant_id,s.store_id,customer));
+      if(!rs.length&&!gifts.length&&!imageGiftCaseIds.length&&!shopper_memory_records.length)throw new Error('NOT_FOUND');
       const giftCaseIds=all(k,'commerce_gift_cases',s.tenant_id,s.store_id).map(r=>r.case_id);
       const cases=all(k,'commerce_cases',s.tenant_id,s.store_id).filter(r=>ids.includes(r.resource_id)&&!giftCaseIds.includes(r.id));
       const caseIds=cases.map(r=>r.id),subjectRecord=(r:Row)=>ids.includes(r.resource_id)&&(!r.case_id||caseIds.includes(r.case_id))&&!(r.source_kind==='case'&&giftCaseIds.includes(r.source_id)),operations=all(k,'commerce_operations',s.tenant_id,s.store_id).filter(subjectRecord);
@@ -347,7 +350,7 @@ export class PrivacyLifecycle {
       const inventory_planning_records=exportInventoryPlanningSubject(k,s.tenant_id,s.store_id,ids,customer,subjectHash(s.tenant_id,s.store_id,customer));
       const ecosystem_records=exportEcosystemSubject(k,s.tenant_id,s.store_id,ids,customer,subjectHash(s.tenant_id,s.store_id,customer));
       const image_assistance_records=exportImageRecords(k,s.tenant_id,s.store_id,[...caseIds,...imageGiftCaseIds]);
-      const result={image_assistance_records,ecosystem_records,inventory_planning_records,extended_service_records,growth_records,warehouse_inventory_records,packing_records,shipping_records,woocommerce_records,return_assistance_records,exchange_history_records,support_records,analytics_records,order_edit_records,gift_returns:gifts,schema_version:1,tenant_id:s.tenant_id,store_id:s.store_id,subject_ref:subjectHash(s.tenant_id,s.store_id,customer),
+      const result={shopper_memory_records,image_assistance_records,ecosystem_records,inventory_planning_records,extended_service_records,growth_records,warehouse_inventory_records,packing_records,shipping_records,woocommerce_records,return_assistance_records,exchange_history_records,support_records,analytics_records,order_edit_records,gift_returns:gifts,schema_version:1,tenant_id:s.tenant_id,store_id:s.store_id,subject_ref:subjectHash(s.tenant_id,s.store_id,customer),
         resources:rs.map(r=>k.project(r)),attachments:all(k,'commerce_attachments',s.tenant_id,s.store_id).filter(subjectRecord).map(r=>({id:r.id,resource_id:r.resource_id,content:JSON.parse(r.content)})),
         knowledge:all(k,'commerce_knowledge',s.tenant_id,s.store_id).filter(subjectRecord),
         tasks,assistance:all(k,'commerce_assistance_receipts',s.tenant_id,s.store_id).filter(r=>!isImageRecord(r)&&tasks.some(t=>t.id===r.task_id)),
@@ -381,7 +384,7 @@ export class PrivacyLifecycle {
       const hold=[...related].map(c=>k.db.prepare('SELECT reason,authority_ref,expires_at FROM commerce_privacy_holds WHERE tenant_id=? AND store_id=? AND subject_hash=? AND released=0 AND expires_at>?').get(s.tenant_id,s.store_id,subjectHash(s.tenant_id,s.store_id,c),k.clock())).find(Boolean);
       if(hold){event(k,s,hash,'erasure_held','configured_hold');return {status:'held',hold,erased:false};}
       if(k.db.prepare('SELECT 1 FROM commerce_privacy_subjects WHERE tenant_id=? AND store_id=? AND subject_hash=?').get(s.tenant_id,s.store_id,hash))return {status:'already_erased'};
-      const rs=resources(k,s,customer),giftCount=all(k,'commerce_resources',s.tenant_id,s.store_id).filter(r=>r.kind==='order'&&JSON.parse(r.payload).gift_facts?.recipient_customer_id===customer).length+all(k,'commerce_gift_cases',s.tenant_id,s.store_id).filter(r=>JSON.parse(r.body).recipient_customer_id===customer).length;if(!rs.length&&!giftCount)throw new Error('NOT_FOUND');return eraseSelected(k,s,rs.map(r=>r.id),hash,k.clock());});
+      const rs=resources(k,s,customer),giftCount=all(k,'commerce_resources',s.tenant_id,s.store_id).filter(r=>r.kind==='order'&&JSON.parse(r.payload).gift_facts?.recipient_customer_id===customer).length+all(k,'commerce_gift_cases',s.tenant_id,s.store_id).filter(r=>JSON.parse(r.body).recipient_customer_id===customer).length;if(!rs.length&&!giftCount&&!hasShopperMemorySubject(k,s.tenant_id,s.store_id,hash))throw new Error('NOT_FOUND');return eraseSelected(k,s,rs.map(r=>r.id),hash,k.clock());});
   }
   uninstall(scope:Scope) {
     const k=this.#k;return k.transaction(()=>{const s=k.authorize(scope,'privacy.manage');storageInventoryCurrent(k);
@@ -392,6 +395,7 @@ export class PrivacyLifecycle {
       revokeInventoryPlanningForRestore(k,s.tenant_id,s.store_id);
       revokeEcosystemForRestore(k,s.tenant_id,s.store_id);
       revokeImageAuthority(k,s.tenant_id,s.store_id);
+      revokeShopperMemoryForUninstall(k,s.tenant_id,s.store_id);
       k.db.prepare('UPDATE commerce_secrets SET revoked=1,envelope=? WHERE tenant_id=? AND store_id=?').run('{}',s.tenant_id,s.store_id);
       for(const [table,clause] of [['commerce_sessions','revoked=1'],['commerce_worker_grants','revoked=1'],['commerce_credential_slots','active=0'],['commerce_webhook_routes','enabled=0'],['commerce_execution_settings','enabled=0'],['commerce_action_readiness','revoked=1']])
         k.db.prepare(`UPDATE ${table} SET ${clause} WHERE tenant_id=? AND store_id=?`).run(s.tenant_id,s.store_id);

@@ -11,6 +11,7 @@ import { revokeInventoryPlanningForRestore } from './inventory-planning-privacy.
 import { revokeEcosystemForRestore } from './ecosystem-privacy.mts';
 import { revokeImagesForRestore } from './image-privacy.mts';
 import { validateImageSuppression,prepareImageSuppression,applyImageSuppression } from './image-suppression.mts';
+import { preflightShopperMemory,revokeShopperMemoryForRestore } from './shopper-memory-privacy.mts';
 
 const LIMIT=64*1024*1024;
 function pathCheck(path:string,mustExist=false) {
@@ -65,6 +66,7 @@ export function restoreRecoverySnapshot(input:{snapshot:string;destination:strin
     if(contentDigest(migrations(k))!==m.migrations_sha256)throw new Error('RECOVERY_SCHEMA_MISMATCH');
     const restoreId='restore_'+token().slice(0,32);
     k.transaction(()=>{
+      preflightShopperMemory(k);
       const imageReplay=prepareImageSuppression(k,cp);
       db!.prepare('INSERT OR REPLACE INTO commerce_recovery_state VALUES(1,?,?,?,?,?)').run(restoreId,'quarantine',m.database_sha256,input.suppression_sha256,clock());
       for(const [table,clause] of [['commerce_sessions','revoked=1'],['commerce_worker_grants','revoked=1'],['commerce_secrets','revoked=1'],['commerce_credential_slots','active=0'],['commerce_webhook_routes','enabled=0'],['commerce_execution_settings','enabled=0'],['commerce_action_readiness','revoked=1'],['commerce_action_approvals','revoked=1'],['commerce_shipping_label_approvals','revoked=1'],['commerce_inventory_transfer_approvals','revoked=1'],['commerce_case_work',"state='revoked',expires_at=0"]])db!.exec(`UPDATE ${table} SET ${clause}`);
@@ -81,6 +83,7 @@ export function restoreRecoverySnapshot(input:{snapshot:string;destination:strin
         eraseSelected(k,s,ids,s.subject_hash,s.erased_at);}
       applyImageSuppression(k,imageReplay);
       revokeImagesForRestore(k);
+      revokeShopperMemoryForRestore(k);
       if(db!.prepare('PRAGMA foreign_key_check').all().length)throw new Error('RECOVERY_FOREIGN_KEYS_INVALID');
     });
     db.close();db=undefined;renameSync(staging,target);

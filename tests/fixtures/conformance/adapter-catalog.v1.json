@@ -5269,7 +5269,7 @@
     },
     {
       "path": "packages/commerce/privacy-lifecycle.mts",
-      "sha256": "db0d33a9ced42e330c80e41216b48850e2cb212848fe0e573b5092ffb17de56f"
+      "sha256": "433917596d0260167cfbb734d9311b793036d857c6874414b36d89b90ef91844"
     },
     {
       "path": "packages/commerce/profile-editor.mts",
@@ -5405,7 +5405,7 @@
     },
     {
       "path": "packages/commerce/safe-recovery.mts",
-      "sha256": "e2dc27751bbdf69901cd51a1f28f2b3d48a8530b7c3f45b8fd13301dd7f6f08d"
+      "sha256": "e9089a1bb1b9a29de302ac06e918c88799c3dde3921ff3b6657282de5bb5821c"
     },
     {
       "path": "packages/commerce/secrets.mts",
@@ -5533,7 +5533,7 @@
     },
     {
       "path": "packages/commerce/support-service.mts",
-      "sha256": "83f551c2b76a548366021ef7c49d59f8129e05ded6425436f052ac64ebefb792"
+      "sha256": "03719247e5c6c9d309b6a5b843f9b542ff191e8d3cf3571291639b099b5d8244"
     },
     {
       "path": "packages/commerce/support-tracking.mts",
@@ -6017,7 +6017,7 @@
     },
     {
       "path": "packages/commerce/merchant-portability.mts",
-      "sha256": "17190c2b9d56361a1c7912821d832e6785a646ff55f3cc2ad8190cd897b1c134"
+      "sha256": "264753c282ba38484ebb2b6dc10fbea564f2d44351a0080d730373789f0ec27b"
     },
     {
       "path": "packages/commerce/contracts/carrier-quotes.v1.json",
@@ -7210,6 +7210,30 @@
     {
       "path": "tests/development/image-suppression.test.mts",
       "sha256": "97f08ff26c310aa6f31a24c7eaa6c171ba229dc84b3047c8251964446b3a3295"
+    },
+    {
+      "path": "packages/commerce/shopper-memory.mts",
+      "sha256": "ebc3abb3c7cfd52f326f378ac81e2009ab9f7e793b157b87430b44276caac174"
+    },
+    {
+      "path": "packages/commerce/shopper-memory-records.mts",
+      "sha256": "7d7d5aa00bf797fbab24016596918562204a2c795bb77b9f5ff8464be9e51bd4"
+    },
+    {
+      "path": "packages/commerce/shopper-memory-privacy.mts",
+      "sha256": "ddcc3db18b45c1d2074544abc5233299aa31f0fdccbc9254d5d65b9dd17c21eb"
+    },
+    {
+      "path": "packages/commerce/contracts/shopper-memory.v1.json",
+      "sha256": "6cc805a354bf7ef70de80488ebd6e342351195794fbd8fec3b2acf2449ed906c"
+    },
+    {
+      "path": "tests/development/shopper-memory.test.mts",
+      "sha256": "0e4163ec6e4f58593b983306758af5a1f844bb2000f966a37ea69e49f1c9cbed"
+    },
+    {
+      "path": "tests/development/shopper-memory-helpers.mts",
+      "sha256": "491fb31df169ba5b843c35f07a0e0bfa63d30f96e755faba9dd0b9d4e599acdf"
     }
   ]
 }

@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "id": "rifare-source-inventory",
-  "revision": 26,
+  "revision": 27,
   "status": "proposed",
   "components": [
     {
@@ -189,6 +189,7 @@
         "docs/RISK-ASSISTANCE.md",
         "docs/RUNTIME-TESTS.md",
         "docs/SHIPPING-BATCHES.md",
+        "docs/SHOPPER-MEMORY.md",
         "docs/SKILL-ARCHITECTURE.md",
         "docs/SUPPORT-ENVELOPE.md",
         "docs/SUPPORT-OPERATIONS-REVIEW.md",
@@ -253,6 +254,7 @@
         "docs/decisions/0044-browser-roadmap-adoption.md",
         "docs/decisions/0051-m17-recovery-image-assistance.md",
         "docs/decisions/0052-m17-portable-image-suppression.md",
+        "docs/decisions/0053-m18-verified-shopper-memory.md",
         "docs/decisions/README.md",
         "docs/exchange-depth.md",
         "docs/exchange-money.md",
@@ -743,6 +745,7 @@
         "packages/commerce/contracts/shipping-batch-labels.v1.json",
         "packages/commerce/contracts/shipping-claims.v1.json",
         "packages/commerce/contracts/shipping-manifests.v1.json",
+        "packages/commerce/contracts/shopper-memory.v1.json",
         "packages/commerce/contracts/shopping-cart.v1.json",
         "packages/commerce/contracts/storage-ecosystem-extension.v1.json",
         "packages/commerce/contracts/storage-exchange-extension.v1.json",
@@ -899,6 +902,9 @@
         "packages/commerce/shipping-batch-labels.mts",
         "packages/commerce/shipping-claims.mts",
         "packages/commerce/shipping-manifests.mts",
+        "packages/commerce/shopper-memory-privacy.mts",
+        "packages/commerce/shopper-memory-records.mts",
+        "packages/commerce/shopper-memory.mts",
         "packages/commerce/shopping-cart.mts",
         "packages/commerce/simulator.mts",
         "packages/commerce/skill-bundles/catalog-shopping/SKILL.md",
@@ -1255,6 +1261,8 @@
         "tests/development/safe-recovery.test.mts",
         "tests/development/shipping-batches.test.mts",
         "tests/development/shipping-helpers.mts",
+        "tests/development/shopper-memory-helpers.mts",
+        "tests/development/shopper-memory.test.mts",
         "tests/development/skill-contract.test.mts",
         "tests/development/skill-installer.test.mts",
         "tests/development/skill-releases.test.mts",
@@ -1650,7 +1658,8 @@
         "work/records/M17-reader-author.md",
         "work/records/M17-recovery-assignment.md",
         "work/records/M17-recovery-checkpoint.md",
-        "work/records/M17-suppression-checkpoint.md"
+        "work/records/M17-suppression-checkpoint.md",
+        "work/records/M18-memory-checkpoint.md"
       ],
       "notices": []
     },
