@@ -317,7 +317,11 @@ test('M17-SUPPRESSION-COPIED-HOLDS-AND-ATOMICITY-10',()=>usingImages(async f=>{
 }));
 
 test('M17-SUPPRESSION-LATE-INFLIGHT-COMPLETION-11',()=>usingImages(async f=>{
-  const textObservation=await f.shadow.run(f.a.scope,f.input()),{evidence,approval}=await f.approve();
+  // Installing the image bundle advances the skill version. Use its current
+  // case/task pins for this separate text-only observation as well.
+  const textObservation=await f.shadow.run(f.a.scope,f.input({case_id:f.imageCase.id,task_id:f.imageTask.id}));
+  assert.equal(textObservation.kind,'decision_shadow');assert.equal(f.requests.length,1);
+  const {evidence,approval}=await f.approve();
   const snapshot=createRecoverySnapshot(f.kernel,join(f.directory,'before_inflight_erasure'));
   let entered!:()=>void,resume!:()=>void;
   const started=new Promise<void>(resolve=>{entered=resolve;}),pause=new Promise<void>(resolve=>{resume=resolve;});
