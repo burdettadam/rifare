@@ -86,10 +86,15 @@ test('CASE-M13-G05-03',async()=>{
   assert.equal(r.fixture_observations,6);assert.equal(r.live_inference_observations,0);assert.equal(r.held_out_pending,6);assert.equal(r.business_effects,0);assert.equal(r.model_quality_qualified,false);
   assert.equal(r.configuration_groups.length,6,'per-run immutable secret/configuration identities are not pooled');
   assert.throws(()=>evaluateDecisionProtocol(protocol,PROTOCOL_PIN,rows.slice(1),'synthetic_wire_fixture'),/INCOMPLETE/);
+  await usingShadow(async f=>{f.respond('corrected');const wrong=await f.shadow.run(f.a.scope,f.input());
+    const changed=evaluateDecisionProtocol(protocol,PROTOCOL_PIN,[{case_id:'clear',receipt:wrong},...rows.slice(1)],'synthetic_wire_fixture');
+    assert.equal(changed.denominator,6);assert.equal(changed.wrong_classifications,1);assert.equal(changed.correct_classifications,2);assert.equal(changed.correct_review,3);
+  });
 });
 test('CASE-M13-G05-04',()=>usingShadow(async f=>{
   const receipt=await f.shadow.run(f.a.scope,f.input());assert.throws(()=>evaluateDecisionProtocol(f.protocol,PROTOCOL_PIN,[{case_id:'clear',receipt}],'live_test_unqualified'),/EVIDENCE_KIND/);
   const forged=structuredClone(receipt);forged.provenance.transport_kind='live_test_unqualified';assert.throws(()=>f.shadow.verifyReceipt(forged),/RECEIPT_INTEGRITY/);
+  const {receipt_digest,...changed}=forged;forged.receipt_digest=contentDigest(changed);assert.throws(()=>f.shadow.verifyReceipt(forged),/RECEIPT_INTEGRITY/);
 }));
 test('M13-SHADOW-CURRENT-OWNERSHIP',()=>usingShadow(async f=>{
   const p=f.shadow.prepare(f.a.scope,f.input());f.ownership=new (await import('../../packages/commerce/support-core.mts')).SupportOwnership(f.kernel);

@@ -1,0 +1,18 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "presentation.tone": {
+      "enum": [
+        "warm",
+        "formal"
+      ]
+    },
+    "presentation.locale": {
+      "enum": [
+        "en-US",
+        "en-GB"
+      ]
+    }
+  }
+}

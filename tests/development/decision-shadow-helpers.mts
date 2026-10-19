@@ -46,7 +46,7 @@ export function shadowFixture(){
   const taskA=f.reads.createTask(f.a.scope,{order_id:f.order().id,profile_id:'shadow'}),taskB=f.reads.createTask(f.b.scope,{order_id:orderB.id,profile_id:'shadow'});
   function service(store:any,owner:any,suffix:string){
     const ref='shadow_'+suffix,reader=workersAIReader({serving_configuration_ref:ref,account_id:'a'.repeat(32),approved_account_ids:['a'.repeat(32)],model_id:WORKERS_AI_MODEL,approved_model_ids:[WORKERS_AI_MODEL],fixtureTransport:(async(_url:any,init:any)=>{
-      requests.push({configuration:ref,body:JSON.parse(init.body),authorization_present:typeof init.headers.Authorization==='string'});
+      requests.push({configuration:ref,body:JSON.parse(init.body),authorization_present:new Headers(init.headers).has('authorization')});
       await before?.();if(reply instanceof Error)throw reply;return new Response(JSON.stringify(reply));
     }) as typeof fetch});
     const vault=new SecretVault(f.kernel,{activeId:'shadow_fixture_key',get:()=>Buffer.from(key)},{},{[WORKERS_AI_ADAPTER]:reader});
