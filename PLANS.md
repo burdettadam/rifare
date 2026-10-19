@@ -237,12 +237,12 @@ the [suppression checkpoint record](work/records/M17-suppression-checkpoint.md)
 for exact evidence, source identities and recovery instructions.
 
 M17-G99 and formal M13/M14/M17 acceptance remain blocked by real qualification
-and missing-history reconciliation. M18 remains unassigned because its M15
-remote authority prerequisite is unavailable here. This update records actual
+and missing-history reconciliation. At that checkpoint M18 was left unassigned
+because its M15 remote authority prerequisite was unavailable here. That update recorded actual
 local progress; it does not advance the canonical acceptance ledger or infer
 live media, connected erasure, model quality or target-host qualification.
 
-## Assigned M18 verified shopper-memory foundation
+## Verified M18 shopper-memory foundation
 
 The owner's renewed next-milestone instruction assigns bounded local M18-G01
 under [ADR-0053](docs/decisions/0053-m18-verified-shopper-memory.md), using M18's
@@ -250,16 +250,24 @@ explicit local-preparation path. The earlier decision to leave M18 unassigned is
 historical. Recovered main and every prior checkpoint remain unchanged; root
 works from saved 1534f5e on recovery/M18-memory.
 
-The assigned outcome is purpose-scoped, explicit customer preferences bound to
-the current verified case, customer source and channel links, with correction,
-expiry, all-version privacy cleanup and conservative backup/import invalidation.
-Independent tests precede implementation. The focused selection is 25 new memory
-cases plus seven retained conversation, 14 safe-recovery and 14 merchant-transfer
-cases under the unchanged 60-case/four-file/60-second limit.
+The assigned local M18-G01 increment is implemented and verified: explicit,
+purpose-scoped preferences bind the current customer proof, case, source and
+verified channel links. Correction, forgetting, expiry, source changes,
+all-version subject erasure, holds, uninstall and conservative backup/import
+invalidation are covered. Historical memory remains exportable and erasable
+after order reassignment, including subjects with zero current resources.
+
+Independent tests were committed before implementation. Clean product candidate
+90ee7d8 passed 25 memory, seven conversation, 14 safe-recovery and 14 merchant-
+portability cases: all 60 passed in 13.703 seconds within the unchanged budget.
+An isolated source-freshness fault was detected by three native cases and was
+not integrated. Both independent reviewers approved the exact product candidate
+without corrective findings. The closing changes are milestone documentation
+only; all runtime, test, contract and pin bytes remain as executed and reviewed.
 
 M18-G02 readiness, G03 journey composition and G04 follow-ups consume this
 foundation in subsequent assignments. G05 independent remote-client/channel
 qualification and G99 assessment retain their actual prerequisites. This local
-assignment does not accept M07/M09/M15/M18 gates, recover missing implementation
-history, or expand any worker grant. Actual outcome and source-bound evidence
-will be recorded in [the M18 memory record](work/records/M18-memory-checkpoint.md).
+increment does not accept M07/M09/M15/M18 gates, recover missing implementation
+history, or expand any worker grant. Actual evidence and precise next-goal
+handoffs are in [the M18 memory record](work/records/M18-memory-checkpoint.md).
