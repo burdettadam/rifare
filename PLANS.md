@@ -271,3 +271,14 @@ qualification and G99 assessment retain their actual prerequisites. This local
 increment does not accept M07/M09/M15/M18 gates, recover missing implementation
 history, or expand any worker grant. Actual evidence and precise next-goal
 handoffs are in [the M18 memory record](work/records/M18-memory-checkpoint.md).
+
+## Current M18 readiness
+
+ADR-0054's G02 increment is locally implemented and independently reviewed at
+6743310. All 57 selected native cases passed in 10.131 seconds; the isolated
+readiness fault was caught by two behavioral cases. Both nonauthor reviews
+approved round 1 without findings. Eight fixed readiness rows recheck current
+native owners and grant no action authority. G03 composition now receives its
+separate ADR-0055 assignment; follow-up and real remote/formal gates remain open.
+See [the journey checkpoint](work/records/M18-journey-checkpoint.md) for exact
+source identities, evidence, preservation and continuation scope.
