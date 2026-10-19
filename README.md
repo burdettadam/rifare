@@ -342,3 +342,20 @@ receiving starts. Read [warehouse return events](docs/WAREHOUSE-RETURN-EVENTS.md
 documented limitation when an unknown stock effect has not been imported before
 subject erasure. The blocked [M08 assessment](docs/M08-QUALIFICATION.md) preserves
 the original physical cycle and formal acceptance requirements.
+
+
+## M12 agency and extension development
+
+The [M12 assignment](docs/decisions/0041-m12-agencies-extensions.md) covers
+store-specific agency delegation, independently accepted presentation templates,
+customer-free aggregate reports, pinned local extension artifacts and explicit
+version/migration/retirement preparation. Existing permissions, case pins,
+installer, release controls and recovery remain canonical.
+
+Read [the milestone assessment](docs/M12-QUALIFICATION.md) and
+[the integration record](work/records/M12-milestone-integration.md) for scope,
+evidence and formal blockers. The planned focused check is 44 cases across four
+files within the retained development limits. Actual candidate-bound reports and
+two nonauthor decisions accompany the cumulative checkpoint. Independent
+contribution and human governance/code decisions remain open; optional code
+execution remains deferred and disabled.

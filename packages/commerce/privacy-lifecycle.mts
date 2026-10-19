@@ -8,6 +8,7 @@ import { inventoryMovementCore,inventorySnapshotCore,inventoryRow,INVENTORY_FIEL
 import { exportGrowthSubject,eraseGrowthSubject,revokeGrowthForRestore } from './growth-privacy.mts';
 import { exportExtendedServicesSubject,eraseExtendedServicesSubject,revokeExtendedServicesForRestore } from './extended-services-privacy.mts';
 import { exportInventoryPlanningSubject,eraseInventoryPlanningSubject,revokeInventoryPlanningForRestore } from './inventory-planning-privacy.mts';
+import { exportEcosystemSubject,eraseEcosystemSubject,revokeEcosystemForRestore } from './ecosystem-privacy.mts';
 
 const MAX_RECORDS=10000;
 const PACKING_TABLES=['commerce_packing_sessions','commerce_packing_allocations','commerce_packing_scans','commerce_packing_confirmations'];
@@ -42,13 +43,16 @@ function storageInventoryVersions(k:CommerceKernel) {
   const extendedCurrent=[...growthCurrent,...extended.tables].sort((a:Row,b:Row)=>a.name.localeCompare(b.name));
   const planning=JSON.parse(readFileSync(new URL('./contracts/storage-inventory-planning-extension.v1.json',import.meta.url),'utf8'));
   if(planning.base_schema_digest!==extended.schema_digest||contentDigest(extendedCurrent.map((r:Row)=>({name:r.name,columns:r.columns})))!==extended.schema_digest)throw new Error('STORAGE_INVENTORY_CHANGED');
-  const current=[...extendedCurrent,...planning.tables].sort((a:Row,b:Row)=>a.name.localeCompare(b.name));
+  const planningCurrent=[...extendedCurrent,...planning.tables].sort((a:Row,b:Row)=>a.name.localeCompare(b.name));
+  const ecosystem=JSON.parse(readFileSync(new URL('./contracts/storage-ecosystem-extension.v1.json',import.meta.url),'utf8'));
+  if(ecosystem.base_schema_digest!==planning.schema_digest||contentDigest(planningCurrent.map((r:Row)=>({name:r.name,columns:r.columns})))!==planning.schema_digest)throw new Error('STORAGE_INVENTORY_CHANGED');
+  const current=[...planningCurrent,...ecosystem.tables].sort((a:Row,b:Row)=>a.name.localeCompare(b.name));
   if(new Set(current.map((r:Row)=>r.name)).size!==current.length)throw new Error('STORAGE_INVENTORY_CHANGED');
   const actual=(k.db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name").all() as Row[])
     .map(r=>({name:r.name,columns:(k.db.prepare('PRAGMA table_info('+r.name+')').all() as Row[]).map(c=>c.name)}));
-  if(contentDigest(actual)!==planning.schema_digest||contentDigest(current.map((r:Row)=>({name:r.name,columns:r.columns})))!==planning.schema_digest||contentDigest(tables.map((r:Row)=>({name:r.name,columns:r.columns})))!==assistance.schema_digest)throw new Error('STORAGE_INVENTORY_CHANGED');
+  if(contentDigest(actual)!==ecosystem.schema_digest||contentDigest(current.map((r:Row)=>({name:r.name,columns:r.columns})))!==ecosystem.schema_digest||contentDigest(tables.map((r:Row)=>({name:r.name,columns:r.columns})))!==assistance.schema_digest)throw new Error('STORAGE_INVENTORY_CHANGED');
   const legacy={...declared,tables,schema_digest:assistance.schema_digest,base_schema_digest:declared.schema_digest};
-  return {legacy,current:{...declared,version:2,tables:current,schema_digest:planning.schema_digest,base_schema_digest:assistance.schema_digest}};
+  return {legacy,current:{...declared,version:2,tables:current,schema_digest:ecosystem.schema_digest,base_schema_digest:assistance.schema_digest}};
 }
 // Preserve the established version-one projection and its immutable caller
 // expectations. Both views first validate the entire current database schema.
@@ -250,6 +254,7 @@ export function eraseSelected(k:CommerceKernel,s:Row,ids:string[],hash:string,at
   eraseGrowthSubject(k,t,st,ids,hash);
   eraseExtendedServicesSubject(k,t,st,ids,hash);
   eraseInventoryPlanningSubject(k,t,st,ids,hash);
+  eraseEcosystemSubject(k,t,st,ids,hash);
   if(ids.length) {
     const marks=where(ids),args=[t,st,...ids];
     eraseShippingAndPacking(k,s,ids);
@@ -334,7 +339,8 @@ export class PrivacyLifecycle {
       const growth_records=exportGrowthSubject(k,s.tenant_id,s.store_id,ids,customer,subjectHash(s.tenant_id,s.store_id,customer));
       const extended_service_records=exportExtendedServicesSubject(k,s.tenant_id,s.store_id,ids,customer,subjectHash(s.tenant_id,s.store_id,customer));
       const inventory_planning_records=exportInventoryPlanningSubject(k,s.tenant_id,s.store_id,ids,customer,subjectHash(s.tenant_id,s.store_id,customer));
-      const result={inventory_planning_records,extended_service_records,growth_records,warehouse_inventory_records,packing_records,shipping_records,woocommerce_records,return_assistance_records,exchange_history_records,support_records,analytics_records,order_edit_records,gift_returns:gifts,schema_version:1,tenant_id:s.tenant_id,store_id:s.store_id,subject_ref:subjectHash(s.tenant_id,s.store_id,customer),
+      const ecosystem_records=exportEcosystemSubject(k,s.tenant_id,s.store_id,ids,customer,subjectHash(s.tenant_id,s.store_id,customer));
+      const result={ecosystem_records,inventory_planning_records,extended_service_records,growth_records,warehouse_inventory_records,packing_records,shipping_records,woocommerce_records,return_assistance_records,exchange_history_records,support_records,analytics_records,order_edit_records,gift_returns:gifts,schema_version:1,tenant_id:s.tenant_id,store_id:s.store_id,subject_ref:subjectHash(s.tenant_id,s.store_id,customer),
         resources:rs.map(r=>k.project(r)),attachments:all(k,'commerce_attachments',s.tenant_id,s.store_id).filter(subjectRecord).map(r=>({id:r.id,resource_id:r.resource_id,content:JSON.parse(r.content)})),
         knowledge:all(k,'commerce_knowledge',s.tenant_id,s.store_id).filter(subjectRecord),
         tasks,assistance:all(k,'commerce_assistance_receipts',s.tenant_id,s.store_id).filter(r=>tasks.some(t=>t.id===r.task_id)),
@@ -377,6 +383,7 @@ export class PrivacyLifecycle {
       revokeGrowthForRestore(k,s.tenant_id,s.store_id);
       revokeExtendedServicesForRestore(k,s.tenant_id,s.store_id);
       revokeInventoryPlanningForRestore(k,s.tenant_id,s.store_id);
+      revokeEcosystemForRestore(k,s.tenant_id,s.store_id);
       k.db.prepare('UPDATE commerce_secrets SET revoked=1,envelope=? WHERE tenant_id=? AND store_id=?').run('{}',s.tenant_id,s.store_id);
       for(const [table,clause] of [['commerce_sessions','revoked=1'],['commerce_worker_grants','revoked=1'],['commerce_credential_slots','active=0'],['commerce_webhook_routes','enabled=0'],['commerce_execution_settings','enabled=0'],['commerce_action_readiness','revoked=1']])
         k.db.prepare(`UPDATE ${table} SET ${clause} WHERE tenant_id=? AND store_id=?`).run(s.tenant_id,s.store_id);

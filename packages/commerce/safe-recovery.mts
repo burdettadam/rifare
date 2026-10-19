@@ -8,6 +8,7 @@ import { eraseSelected,storageInventory,suppressionCheckpoint } from './privacy-
 import { revokeGrowthForRestore } from './growth-privacy.mts';
 import { revokeExtendedServicesForRestore } from './extended-services-privacy.mts';
 import { revokeInventoryPlanningForRestore } from './inventory-planning-privacy.mts';
+import { revokeEcosystemForRestore } from './ecosystem-privacy.mts';
 
 const LIMIT=64*1024*1024;
 function pathCheck(path:string,mustExist=false) {
@@ -66,6 +67,7 @@ export function restoreRecoverySnapshot(input:{snapshot:string;destination:strin
       revokeGrowthForRestore(k);
       revokeExtendedServicesForRestore(k);
       revokeInventoryPlanningForRestore(k);
+      revokeEcosystemForRestore(k);
       db!.exec('INSERT OR IGNORE INTO commerce_restored_operations SELECT tenant_id,store_id,id FROM commerce_operations');
       db!.exec("UPDATE commerce_operations SET state='unknown',revision=revision+1 WHERE state='sending'");
       db!.exec("UPDATE commerce_operation_work SET state='unknown',lease_token=NULL,lease_until=NULL,last_code='restore_uncertain' WHERE state IN ('sending','leased')");

@@ -149,5 +149,31 @@ and formal blockers. M07-G99, M08-G99, worker acceptance and actual connected
 G07/G10 evidence remain open. Synthetic forecasts and physical source journals
 do not establish real merchant forecasting value, supplier orders or production
 qualification. All prior source, registrations, capabilities, storage contracts,
-migrations, fixtures and cumulative checkpoints remain protected. M12 remains
-unassigned.
+migrations, fixtures and cumulative checkpoints remain protected. The following
+ADR-0041 assigns M12.
+
+
+## Assigned all-goals M12 agency and extension development
+
+The owner requested continued goals through the next milestone after reviewed
+M11. [ADR-0041](docs/decisions/0041-m12-agencies-extensions.md) assigns bounded
+M12-G01 through G08 work/preparation, G09's deferred/disabled alternative and the
+blocked G99 assessment from clean `e36dbcd`. Agency access uses canonical store
+permissions and current sessions. Shared presentation templates require separate
+store acceptance and preserve archived case pins. Locally mirrored instructions
+use existing installation/release controls; no arbitrary adapter code is loaded.
+
+Three isolated authors cover agency/templates/reports, extensions/migrations/
+governance preparation and qualification/code-need preparation. Root owns shared
+privacy/recovery, metadata, the local demonstration and two fresh nonauthor
+reviews. The planned selection is 12 agency, 14 extension, nine assurance PREP
+and nine retained privacy cases: 44 in four whole files. The unchanged limit is
+60 cases/four files/one 60-second deadline; only concrete issues justify affected
+whole-file repeats. Authors/reviewers run no duplicate product tests or demos.
+
+The [M12 assessment](docs/M12-QUALIFICATION.md) retains the original independent
+contributor and per-merchant template exit criteria. G06/G07/G08 use distinct
+PREP evidence; human governance/licensing/code decisions and independent
+contribution are not manufactured. G09 remains explicitly deferred, code mode
+disabled. M07-G99 and formal cumulative qualification remain open. M13 is
+unassigned; public distribution, solicitation and real effects remain unauthorized.

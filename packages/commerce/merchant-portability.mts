@@ -5,6 +5,7 @@ import { storageInventoryCurrent, suppressionCheckpoint, eraseSelected } from '.
 import { revokeGrowthForRestore } from './growth-privacy.mts';
 import { revokeExtendedServicesForRestore } from './extended-services-privacy.mts';
 import { revokeInventoryPlanningForRestore } from './inventory-planning-privacy.mts';
+import { revokeEcosystemForRestore } from './ecosystem-privacy.mts';
 
 const LIMIT=64*1024*1024, MAX_ROWS=10000;
 const LOCAL_KINDS=new Set(['migration_binding','merchant_import','merchant_credential_binding']);
@@ -225,6 +226,7 @@ export function importMerchant(k:CommerceKernel,scope:Scope,value:unknown,expect
     revokeGrowthForRestore(k,s.tenant_id,s.store_id);
     revokeExtendedServicesForRestore(k,s.tenant_id,s.store_id);
     revokeInventoryPlanningForRestore(k,s.tenant_id,s.store_id);
+    revokeEcosystemForRestore(k,s.tenant_id,s.store_id);
     k.db.exec('INSERT OR IGNORE INTO commerce_restored_operations SELECT tenant_id,store_id,id FROM commerce_operations');
     k.db.exec("UPDATE commerce_operations SET state='unknown',revision=revision+1 WHERE state='sending'");
     k.db.exec("UPDATE commerce_operation_work SET state='unknown',lease_token=NULL,lease_until=NULL,last_code='merchant_import_uncertain' WHERE state IN ('sending','leased')");
