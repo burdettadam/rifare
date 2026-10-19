@@ -235,3 +235,9 @@ Retired unheld records can be scrubbed before export. Redacted bodies clear
 link_id, link_revision, configuration_digest and ownership_generation to NULL,
 and intents to []; no historical approval, preview, operation or link is retained
 there. The deterministic identifier uses journey_ plus forty hexadecimal digits.
+
+Unresolved child scans must not hide an orphan through an inner join. Bound and
+validate unknown native-return and edit children against exact scoped parents;
+missing or inconsistent parents are an integrity refusal. A valid parent proving
+an unrelated resource permits exclusion. Old artifact provenance is compared
+with its own immutable quote/preview/receipt chain, not today's case configuration.
