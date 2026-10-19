@@ -2604,6 +2604,453 @@
       "entry_rule": "All declared predecessor milestone gates accepted; design-only exploration may occur separately but cannot be counted as goal acceptance.",
       "exit_rule": "All in-scope worker goals accepted; current integrated candidate passes full applicable accepted regression suite and original exit criteria; independent review and trusted acceptance.",
       "exclusion_rule": "Human-approved unavailable/optional capabilities remain explicitly excluded and disabled; excluded goals are not passed. Missing required v1 pilot evidence means beta/RC, not full M07 acceptance."
+    },
+    {
+      "id": "M23",
+      "title": "Browser Clef-flash with pinned Kevala Q8 text",
+      "track": "browser_decision_models",
+      "depends_on": [
+        "M13"
+      ],
+      "outcome": "Add optional on-device text decision assistance using the complete Clef-flash joint model in a pinned Kevala WebGPU runtime. Browser suggestions are untrusted client observations and remain shadow-only; no inference or product qualification is supplied by this plan.",
+      "deliverables": [
+        "A pinned full-model Q8 conversion/reference manifest and compact frozen fidelity protocol.",
+        "An opt-in worker loader with verified artifacts, actual capability states, cache controls and cancellation.",
+        "A narrow browser DecisionRequest adapter plus separately versioned client-observation preparation/ingestion and truthful operator provenance.",
+        "Purpose-scoped client lifecycle and explicit manual/approved-provider fallback behavior.",
+        "A separately recorded actual desktop reference and two-profile case-shadow demonstration, with all missing qualification left open."
+      ],
+      "exit_criteria": [
+        "The complete pinned Kevala Q8 Clef-flash text path actually executes the frozen reference cohort on a named supported desktop/browser and reports all outcomes and limitations.",
+        "The retained M13 question/resource/authority contracts are preserved; browser submissions cannot become canonical server observations, silently transfer thresholds or initiate routing/business effects.",
+        "The case-shadow demonstration covers both declared merchant profiles, actual local inference, a stale/tampered result, privacy/cancellation and manual continuity without unapproved external inference.",
+        "Prepared, local fixture, actual browser inference, fidelity, merchant-workload qualification and formal release states are recorded separately. Missing real artifact/hardware/reference evidence leaves the relevant exit and assessment open."
+      ],
+      "non_goals": [
+        "Do not replace or relax M13's logical v1 schema, branded server observations, retained evaluation protocol, Workers AI reader or current server authority owners.",
+        "No automatic client-triggered routing, business effects, approvals, confidence-based entitlement, identity verification or client execution attestation.",
+        "No mandatory Cloudflare service, Kevala hosting, model provider, new agent framework, GPU purchase or universal device support.",
+        "No browser conversion of the large Flash checkpoint by assumption, no generic Qwen chat model presented as Clef, and no claim that weight bytes equal peak runtime memory.",
+        "No image/audio/video enablement, no smaller-model substitution marketed as Clef, and no imported upstream fixture result represented as Rifare inference or calibration."
+      ],
+      "calendar_target": null,
+      "release": "Proposed additive browser expansion",
+      "status": "not_started",
+      "owner": null,
+      "accountable_role": "Delegated maintainer for assignment; governing acceptance owner for qualification",
+      "skill_packages": [],
+      "required_demo": "Explicitly load the pinned Clef-flash Q8 pack on one named desktop, score a mixed-type joint request and two synthetic return-intake profiles, display client-reported shadow labels, reject a changed-case result and continue manually after local inference is disabled.",
+      "decision_gate": "All original browser requirements, formal predecessor gates and applicable qualification obligations require actual candidate-bound evidence and independent review. Planning adoption creates no implementation, model-execution or release authority.",
+      "origin_id": "rifare-browser-clef-architecture-2026-10-19/M23",
+      "release_claim": "After actual acceptance: optional Clef-flash text shadow assistance on the published desktop/browser/pack configurations. Browser model execution remains client-reported in commerce observations; no universal hardware support, authoritative routing, calibrated financial decisions or verified-client claim.",
+      "reuse_goal_ids": [
+        "M13-G01",
+        "M13-G02",
+        "M13-G03",
+        "M13-G04",
+        "M13-G05",
+        "M01-G01",
+        "M01-G03",
+        "M01-G04",
+        "M01-G17",
+        "M01-G18",
+        "M02-G04",
+        "M02-G05",
+        "M02-G08",
+        "M02-G09",
+        "M02-G17",
+        "M02-G20",
+        "M02-G24",
+        "M05-G10",
+        "M05-G11",
+        "M05-G16",
+        "M07-G06",
+        "M07-G14"
+      ],
+      "local_prerequisites": [
+        "Adopt only these new additions at the current worker head, preserve M13-G01 through G05 and all M14-M22 adopted records/assignments, and finish any coherent active batch before shared planning changes.",
+        "Reuse packages/agent/decisions.mts, packages/agent/contracts/decision-model.v1.json, packages/commerce/decision-resources.mts, packages/commerce/decision-shadow.mts, packages/agent/decision-evaluation.mts and the checked return-intake-shadow skill. The current v1 service/evaluator trusts canonical server reads and does not accept browser execution attestations.",
+        "Retain the exact protected original-plus-M13-M22 requirement union and the frozen reference/additions/m13-m22-requirements.json pin. Adoption adds a second frozen browser-requirement set under the parent's metadata plan; no prior acceptance criterion, source pin or canonical-evaluator branding is rewritten.",
+        "Local artifact/adapter/UI preparation may proceed against honest fixtures while M13 formal gates and actual desktop inference remain open. First-five implementation is not permission to claim the actual-browser exits below without their evidence.",
+        "Respect current work ownership and focused verification: authors/reviewers run no product code where the branch retains that rule; the maintainer schedules affected checks and a distinct targeted actual-browser run. No full regression, model sweep or paid inference per goal."
+      ],
+      "qualification_prerequisites": [
+        "Formal M13 and inherited product prerequisites remain explicit; local M13 implementation is reusable but does not waive its hosted, stack or release gates.",
+        "Actual browser qualification requires a pinned Clef-capable runtime, an actual converted pack retaining backbone/head/readout, an independently sourced reference and one named hardware/browser observation. Documentation, cached files and mocks do not supply this evidence.",
+        "The current server authority and canonical observation boundary must reject client-authored execution claims, even when public hashes match; browser results cannot automatically enter M14 routing or a trusted quality cohort.",
+        "Qualify the declared client/server privacy lifecycle and data destinations. Merchant accuracy, calibration and any later product use beyond shadow assistance require their own predeclared evaluation; they are not inferred from numerical reference agreement."
+      ],
+      "external_dependencies": [
+        "Approved access to the pinned Cloudflare Apache-2.0 weights and native conversion environment, or an already converted verified Kevala pack; no hosted inference account is required for browser execution.",
+        "One available capable desktop with WebGPU and sufficient actual GPU/working memory and browser storage for the selected pack. The plan does not require purchasing hardware or downloading weights before authorization for implementation/qualification.",
+        "An approved artifact-serving location with pinned bytes and suitable fetch/cache behavior. Kevala's documented Clef pack sizes are estimates and public Clef packs are not assumed available."
+      ],
+      "assignment_status": "unassigned",
+      "all_product_test_results": "not_run",
+      "priority": "P1_after_M13_local_preparation",
+      "source_ids": [
+        "B01",
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "requirement_refs": [
+        "CF-001",
+        "CF-002",
+        "CF-004",
+        "CF-008",
+        "CF-011",
+        "CF-015"
+      ],
+      "formal_depends_on": [
+        "M13-G99"
+      ],
+      "origin_depends_on": [
+        "M13"
+      ],
+      "origin_status": "proposed_not_implemented",
+      "adoption_authority": "ADR-0044",
+      "formal_acceptance": false,
+      "worker_goal_ids": [
+        "M23-G01",
+        "M23-G02",
+        "M23-G03",
+        "M23-G04",
+        "M23-G05"
+      ],
+      "acceptance_goal_id": "M23-G99",
+      "worker_goal_count": 5,
+      "test_specification_ids": [
+        "CASE-M23-G01-01",
+        "CASE-M23-G01-02",
+        "CASE-M23-G01-03",
+        "CASE-M23-G01-04",
+        "CASE-M23-G02-01",
+        "CASE-M23-G02-02",
+        "CASE-M23-G02-03",
+        "CASE-M23-G02-04",
+        "CASE-M23-G03-01",
+        "CASE-M23-G03-02",
+        "CASE-M23-G03-03",
+        "CASE-M23-G03-04",
+        "CASE-M23-G04-01",
+        "CASE-M23-G04-02",
+        "CASE-M23-G04-03",
+        "CASE-M23-G04-04",
+        "CASE-M23-G05-01",
+        "CASE-M23-G05-02",
+        "CASE-M23-G05-03",
+        "CASE-M23-G05-04",
+        "CASE-M23-G99-01",
+        "CASE-M23-G99-02",
+        "CASE-M23-G99-03"
+      ],
+      "all_goal_test_results": "not_run",
+      "entry_rule": "All declared predecessor milestone gates require trusted acceptance for formal entry. Separately authorized local preparation can expose blockers without counting as goal or milestone acceptance.",
+      "exit_rule": "All in-scope workers, exact original criteria and formal dependencies require actual applicable evidence; the current integrated candidate must satisfy its separately authorized integration/release checks, independent review and trusted acceptance.",
+      "exclusion_rule": "Unavailable artifacts, hardware, upstream support, media/privacy foundations or required observed qualification remain explicit blockers. Optional scope can be excluded only by a trusted human decision with a reduced truthful claim; exclusion is not a passing result."
+    },
+    {
+      "id": "M24",
+      "title": "Compact browser backend with joint-path verification",
+      "track": "browser_decision_models",
+      "depends_on": [
+        "M23",
+        "M14"
+      ],
+      "outcome": "Add an optional compact Clef-flash Q4 browser implementation after verifying or repairing Wllama's complete joint decision route, and compare it with Kevala using predeclared paired evidence. Preserve the separate M14 server transport and all server-owned business authority.",
+      "deliverables": [
+        "Exact wrapper-to-joint-path verification and any bounded reviewed integration repair.",
+        "Pinned Q4 artifact/shard manifest and an actual capability-qualified loader profile.",
+        "A compact browser adapter using the existing logical task and separate client-observation contract.",
+        "A paired Q8/Q4 reference and task evaluation with frozen criteria and complete failure accounting.",
+        "An optional browser support matrix, configuration selection and rollback demonstration preserving existing server transport obligations."
+      ],
+      "exit_criteria": [
+        "The selected Wllama/llama.cpp build executes the complete Clef joint request and the pinned compact pack actually loads and runs on the declared browser/device profile.",
+        "Both Kevala Q8 and Wllama Q4 have actual paired observations under a predeclared protocol; the report separates fidelity, task quality, performance and unsupported cases.",
+        "Selection, disablement, stale-result fencing and rollback preserve source-bound untrusted client observations, manual continuity and zero automatic business/routing effects.",
+        "Published compatibility names only exercised configurations. Existing M14 server-transport work and every missing formal qualification remain separately tracked."
+      ],
+      "non_goals": [
+        "No replacement, reassignment or automatic acceptance of M14-G04's SystemOne/SGLang server integration.",
+        "No generic per-question or chat path presented as full joint Clef inference, and no repaired-output probabilities used to conceal incompatibility.",
+        "No mandatory Q4 fallback, automatic client-triggered routing, silent hosted upload or assurance that quantization preserves calibration.",
+        "No browser media API, vision companion, audio/video pipeline, full Clef 27B deployment or universal mobile/low-memory support.",
+        "No conclusion that the smaller file is faster, sufficiently accurate or memory-safe until those properties are measured on the declared profile."
+      ],
+      "calendar_target": null,
+      "release": "Proposed additive browser expansion",
+      "status": "not_started",
+      "owner": null,
+      "accountable_role": "Delegated maintainer for assignment; governing acceptance owner for qualification",
+      "skill_packages": [],
+      "required_demo": "On the same declared desktop, execute the frozen case/question cohort with pinned Kevala Q8 and compact Wllama Q4, inspect the distributions and measured costs, revoke the compact configuration and reject its late result while returning to an approved browser/manual path.",
+      "decision_gate": "All original browser requirements, formal predecessor gates and applicable qualification obligations require actual candidate-bound evidence and independent review. Planning adoption creates no implementation, model-execution or release authority.",
+      "origin_id": "rifare-browser-clef-architecture-2026-10-19/M24",
+      "release_claim": "After actual acceptance: an optional compact Clef-flash browser choice and demonstrated replacement between the two published browser implementations. This is not self-hosted-server qualification, blanket model portability, automatic case routing or general device support.",
+      "reuse_goal_ids": [
+        "M23-G01",
+        "M23-G02",
+        "M23-G03",
+        "M23-G04",
+        "M23-G05",
+        "M13-G01",
+        "M13-G02",
+        "M13-G04",
+        "M13-G05",
+        "M14-G01",
+        "M14-G02",
+        "M14-G04",
+        "M14-G05",
+        "M02-G08",
+        "M02-G09",
+        "M02-G17",
+        "M05-G10",
+        "M05-G11",
+        "M05-G16",
+        "M07-G06"
+      ],
+      "local_prerequisites": [
+        "Reuse M23's browser loader, manifest, privacy and separate client-observation boundary; do not build a second commerce gateway or fork merchant skills.",
+        "The M14 architectural link supplies calibration and qualification discipline. Local wrapper inspection, Q4 packaging and fixtures may proceed with its formal gate open; they do not require a paid account, GPU purchase or a self-hosted SGLang deployment.",
+        "Preserve M14-G04's planned SystemOne/SGLang-compatible server endpoint, trained-head checks and independent assignment. A browser backend is additive and does not satisfy or replace that existing goal.",
+        "Inspect the worker's pinned Wllama version before assuming a repair is needed. Use focused behavioral checks and separately scheduled paired browser execution; no broad product regression or model sweep per goal."
+      ],
+      "qualification_prerequisites": [
+        "M23 must supply actual named-device browser evidence for the comparison. Kevala and compact Wllama must both actually execute before any two-implementation browser portability claim.",
+        "Apply M14-G01's frozen protocol and backend-specific qualification process for task-quality/calibration claims. Local numerical-conformance preparation does not require activation of M14 routing, and browser results never directly authorize that routing.",
+        "A supported complete Clef joint path, verified Q4 pack, actual browser load/inference, paired measurements and controlled replacement/rollback are required for compact-backend acceptance.",
+        "Missing upstream support, pack artifacts, reference data or capable hardware remains a visible blocked qualification; it is not resolved by a simulated success or a relaxed post-hoc threshold."
+      ],
+      "external_dependencies": [
+        "A pinned Wllama/llama.cpp build with the required joint execution path and compatible WebGPU kernels; a narrowly maintained repair may be needed after inspection.",
+        "Approved access to the pinned Apache-2.0 Flash Q4 GGUF and artifact packaging location, plus a capable available desktop for the paired run.",
+        "Predeclared task/reference data and M14 calibration resources for any task-quality claim. No hosted provider or self-hosted inference deployment is required for the browser comparison."
+      ],
+      "assignment_status": "unassigned",
+      "all_product_test_results": "not_run",
+      "priority": "P2_after_M23_browser_evidence",
+      "source_ids": [
+        "B02",
+        "B05",
+        "B06",
+        "B07",
+        "B08",
+        "B09"
+      ],
+      "requirement_refs": [
+        "CF-001",
+        "CF-002",
+        "CF-005",
+        "CF-010",
+        "CF-011",
+        "CF-015"
+      ],
+      "formal_depends_on": [
+        "M23-G99",
+        "M14-G99"
+      ],
+      "origin_depends_on": [
+        "M23",
+        "M14"
+      ],
+      "origin_status": "proposed_not_implemented",
+      "adoption_authority": "ADR-0044",
+      "formal_acceptance": false,
+      "worker_goal_ids": [
+        "M24-G01",
+        "M24-G02",
+        "M24-G03",
+        "M24-G04",
+        "M24-G05"
+      ],
+      "acceptance_goal_id": "M24-G99",
+      "worker_goal_count": 5,
+      "test_specification_ids": [
+        "CASE-M24-G01-01",
+        "CASE-M24-G01-02",
+        "CASE-M24-G01-03",
+        "CASE-M24-G01-04",
+        "CASE-M24-G02-01",
+        "CASE-M24-G02-02",
+        "CASE-M24-G02-03",
+        "CASE-M24-G02-04",
+        "CASE-M24-G03-01",
+        "CASE-M24-G03-02",
+        "CASE-M24-G03-03",
+        "CASE-M24-G03-04",
+        "CASE-M24-G04-01",
+        "CASE-M24-G04-02",
+        "CASE-M24-G04-03",
+        "CASE-M24-G04-04",
+        "CASE-M24-G05-01",
+        "CASE-M24-G05-02",
+        "CASE-M24-G05-03",
+        "CASE-M24-G05-04",
+        "CASE-M24-G99-01",
+        "CASE-M24-G99-02",
+        "CASE-M24-G99-03"
+      ],
+      "all_goal_test_results": "not_run",
+      "entry_rule": "All declared predecessor milestone gates require trusted acceptance for formal entry. Separately authorized local preparation can expose blockers without counting as goal or milestone acceptance.",
+      "exit_rule": "All in-scope workers, exact original criteria and formal dependencies require actual applicable evidence; the current integrated candidate must satisfy its separately authorized integration/release checks, independent review and trusted acceptance.",
+      "exclusion_rule": "Unavailable artifacts, hardware, upstream support, media/privacy foundations or required observed qualification remain explicit blockers. Optional scope can be excluded only by a trusted human decision with a reduced truthful claim; exclusion is not a passing result."
+    },
+    {
+      "id": "M25",
+      "title": "Browser image evidence with a qualified vision decision path",
+      "track": "browser_decision_models",
+      "depends_on": [
+        "M17",
+        "M23"
+      ],
+      "outcome": "Add optional image-first browser evidence assistance after M17's media intake and privacy foundations, using a matched vision companion and a proven image-aware joint decision API. Preserve untrusted client provenance and server-owned business authority.",
+      "deliverables": [
+        "A narrow image capability/purpose profile governed by the existing M17 intake and privacy owners.",
+        "A matched vision companion/text/head/runtime manifest and a proved image-aware decision API bridge.",
+        "Bounded exact-version image preprocessing and separately labeled client observations.",
+        "Client media-buffer/cache lifecycle, current-source cancellation and explicit destination fallback.",
+        "A predeclared real-browser image assistance demonstration and limited compatibility statement, with audio/video and missing prerequisites kept explicit."
+      ],
+      "exit_criteria": [
+        "The applicable M17 media/intake/privacy profile is enabled only with its required evidence, and the declared browser vision companion/API actually processes authorized image versions with the complete decision head.",
+        "The frozen image corpus, named device/runtime/companion manifest and complete results establish only the published image-assistance scope; text or hosted demonstrations do not substitute.",
+        "Wrong-case/version, decode limits, missing media, late completion, correction/erasure, device failure and destination fallback preserve source privacy, client-provenance limits and manual continuity.",
+        "No client image result authorizes routing or business effects, and no audio/video or broader authenticity claim is enabled. Missing M17, vision or actual-browser evidence remains open in formal assessment."
+      ],
+      "non_goals": [
+        "No new ungoverned upload path, fabricated existing attachment, bypass of quarantine/model_access:false or reinterpretation of M13 v1 text input as arbitrary binary/media.",
+        "No assumption that Kevala's Gemma vision companion fits Clef or that Wllama generic chat image support reaches the decision API.",
+        "No authenticity, fraud, identity, physical-condition certainty, received-goods, entitlement, refund or permission decision based on browser images.",
+        "No automatic client-triggered routing, remote upload fallback, blanket client erasure attestation or promotion of client reports into canonical server model observations.",
+        "No required M24 completion, audio/video ingestion, continuous camera monitoring, full Clef/Omni browser deployment or universal device/media support."
+      ],
+      "calendar_target": null,
+      "release": "Proposed additive browser expansion",
+      "status": "not_started",
+      "owner": null,
+      "accountable_role": "Delegated maintainer for assignment; governing acceptance owner for qualification",
+      "skill_packages": [],
+      "required_demo": "Through a specifically qualified M17 image profile, process one readable and one unreadable synthetic return-evidence image on the named desktop, show typed client-reported assistance, delete or revoke a pending source and continue manually with no remote fallback or business effect.",
+      "decision_gate": "All original browser requirements, formal predecessor gates and applicable qualification obligations require actual candidate-bound evidence and independent review. Planning adoption creates no implementation, model-execution or release authority.",
+      "origin_id": "rifare-browser-clef-architecture-2026-10-19/M25",
+      "release_claim": "After actual acceptance: optional browser image evidence assistance for the published intake, model/vision companion, question, purpose and device configurations. It does not authenticate images or clients, authorize business actions, qualify audio/video or prove unmanaged-client erasure.",
+      "reuse_goal_ids": [
+        "M17-G01",
+        "M17-G02",
+        "M17-G03",
+        "M17-G04",
+        "M17-G05",
+        "M23-G01",
+        "M23-G02",
+        "M23-G03",
+        "M23-G04",
+        "M23-G05",
+        "M13-G01",
+        "M13-G02",
+        "M13-G04",
+        "M14-G01",
+        "M14-G02",
+        "M03-G02",
+        "M03-G03",
+        "M03-G04",
+        "M02-G17",
+        "M02-G24",
+        "M05-G10",
+        "M05-G11",
+        "M07-G06",
+        "M07-G14"
+      ],
+      "local_prerequisites": [
+        "Inspect actual M17 adoption and implementation before exposing image controls. Preparation may use honest synthetic fixtures while formal dependencies remain open; disabled intake/model_access and current attachment rejection are never bypassed.",
+        "Reuse M17's upload, scan/quarantine, exact-content authorization, retention, original/derivative ownership and erasure/restore controls plus M23's browser loader and client-observation boundary.",
+        "Kevala Clef-flash is text-only in the inspected source, and Wllama's decision API excludes images. A matched vision bridge is explicit new work with its own qualification, not a feature inherited from the model card or generic chat API.",
+        "M24 is optional rather than a hard milestone dependency. A chosen Wllama vision build still must prove its required complete joint path and runtime-specific prerequisites; a Kevala vision path may proceed without implementing the compact backend.",
+        "Keep current author/maintainer roles and focused verification. Do not run all browser/media/product tests or download every model per goal."
+      ],
+      "qualification_prerequisites": [
+        "Applicable M17 intake, access, preprocessing, purpose, retention, export/erasure and restore obligations must be qualified before customer image processing is enabled.",
+        "M23 must supply its actual browser execution and separate client-observation authority boundary; no browser-issued result is a canonical server inference attestation.",
+        "A matched vision companion, decoder, tokenizer/processor, trained joint head and browser decision API must actually process the declared images on named hardware. Generic multimodal support and published mmproj weights are insufficient.",
+        "Use the predeclared M17/M14 evaluation discipline for the image-specific task and retain separate unsupported audio/video scope. Missing actual vision or privacy evidence leaves the capability disabled or unqualified."
+      ],
+      "external_dependencies": [
+        "One available browser-capable implementation of the matching Clef vision encoder/projector and joint decision path, with permitted pinned model/companion artifacts and actual conversion/reference provenance.",
+        "A capable available desktop and approved synthetic or purpose-authorized image corpus for the declared narrow evaluation; no automatic hardware purchase or hosted inference spend.",
+        "M17-qualified media ownership, grants, scan/quarantine and privacy services for any server-linked customer image. No existing attachment is assumed."
+      ],
+      "assignment_status": "unassigned",
+      "all_product_test_results": "not_run",
+      "priority": "P2_after_M17_and_M23_qualification",
+      "source_ids": [
+        "B01",
+        "B02",
+        "B03",
+        "B05",
+        "B06",
+        "B07",
+        "B08",
+        "B09"
+      ],
+      "requirement_refs": [
+        "CF-001",
+        "CF-002",
+        "CF-008",
+        "CF-011",
+        "CF-012",
+        "CF-015"
+      ],
+      "formal_depends_on": [
+        "M17-G99",
+        "M23-G99"
+      ],
+      "origin_depends_on": [
+        "M17",
+        "M23"
+      ],
+      "origin_status": "proposed_not_implemented",
+      "adoption_authority": "ADR-0044",
+      "formal_acceptance": false,
+      "worker_goal_ids": [
+        "M25-G01",
+        "M25-G02",
+        "M25-G03",
+        "M25-G04",
+        "M25-G05"
+      ],
+      "acceptance_goal_id": "M25-G99",
+      "worker_goal_count": 5,
+      "test_specification_ids": [
+        "CASE-M25-G01-01",
+        "CASE-M25-G01-02",
+        "CASE-M25-G01-03",
+        "CASE-M25-G01-04",
+        "CASE-M25-G02-01",
+        "CASE-M25-G02-02",
+        "CASE-M25-G02-03",
+        "CASE-M25-G02-04",
+        "CASE-M25-G03-01",
+        "CASE-M25-G03-02",
+        "CASE-M25-G03-03",
+        "CASE-M25-G03-04",
+        "CASE-M25-G04-01",
+        "CASE-M25-G04-02",
+        "CASE-M25-G04-03",
+        "CASE-M25-G04-04",
+        "CASE-M25-G05-01",
+        "CASE-M25-G05-02",
+        "CASE-M25-G05-03",
+        "CASE-M25-G05-04",
+        "CASE-M25-G99-01",
+        "CASE-M25-G99-02",
+        "CASE-M25-G99-03"
+      ],
+      "all_goal_test_results": "not_run",
+      "entry_rule": "All declared predecessor milestone gates require trusted acceptance for formal entry. Separately authorized local preparation can expose blockers without counting as goal or milestone acceptance.",
+      "exit_rule": "All in-scope workers, exact original criteria and formal dependencies require actual applicable evidence; the current integrated candidate must satisfy its separately authorized integration/release checks, independent review and trusted acceptance.",
+      "exclusion_rule": "Unavailable artifacts, hardware, upstream support, media/privacy foundations or required observed qualification remain explicit blockers. Optional scope can be excluded only by a trusted human decision with a reduced truthful claim; exclusion is not a passing result."
     }
   ],
   "adopted_additions": {
@@ -2614,5 +3061,56 @@
     "original_requirements": 151,
     "adopted_requirements": 50,
     "planning_only": true
+  },
+  "browser_adopted_additions": {
+    "authority": "ADR-0044",
+    "adopted_on": "2026-10-19",
+    "source_package": "rifare-browser-clef-architecture-2026-10-19",
+    "source_document": "browser-milestone-additions.json",
+    "source_sha256": "8302245159ecadc0bcc69248624c8c820a5678656fa1b405dd93797f4ae9810e",
+    "revised_handoff_archive_sha256": "d02bf8aab75decb5cb163a2f82a8e12a51f3e778bfb311d3135d71fb5f57befe",
+    "frozen_requirements": "reference/additions/m23-m25-requirements.json",
+    "frozen_requirements_sha256": "41d109fb6e810bfe9b2c9f8458e0aaa8cb5d45176c96d80fc3c733ca07e11abe",
+    "protected_prior_requirements": "reference/additions/m13-m22-requirements.json",
+    "protected_prior_requirements_sha256": "0d4218fabd39eeb1328de5a3d1f79cc620967ef761a6dc4a405ec403a280d7b2",
+    "protected_current_product_base": "93769a3029ebd2a5204c756733a8f8cf48fb67cd",
+    "prior_counts": {
+      "milestones": 23,
+      "goals": 263,
+      "requirements": 201,
+      "test_specifications": 880,
+      "adopted_requirements": 50
+    },
+    "added_counts": {
+      "new_milestones": 3,
+      "new_worker_goals": 15,
+      "new_assessments": 3,
+      "new_total_goals": 18,
+      "new_requirements": 15,
+      "new_proposed_cases": 69
+    },
+    "current_counts": {
+      "milestones": 26,
+      "goals": 281,
+      "requirements": 216,
+      "test_specifications": 949,
+      "adopted_requirements": 65
+    },
+    "planning_only": true,
+    "implementation_assigned": false,
+    "product_execution_performed": false,
+    "formal_acceptance": false,
+    "current_progress_rule": "The current M14 checkpoint and work records govern progress. The handoff inspected an older M13 checkpoint; its historical progress wording is provenance, not a restore target or a reset of newer work.",
+    "recommended_browser_batch": [
+      "M23-G01",
+      "M23-G02",
+      "M23-G03",
+      "M23-G04",
+      "M23-G05"
+    ],
+    "recommendation_status": "planning_recommendation_only_not_assignment",
+    "sequence_rule": "M15 remains the earliest existing unassigned milestone. The recommended browser batch requires a separate coherent assignment; formal predecessor gates remain mandatory and no prior milestone is skipped or accepted.",
+    "local_preparation_rule": "Separately authorized local preparation may identify blockers while formal gates remain open. Local fixtures, actual browser inference, numerical fidelity, merchant qualification and formal acceptance are distinct evidence states.",
+    "origin_recommended_worker_instruction": "Adopt the attached browser-Clef architecture update at your current Rifare branch head. Preserve newer work, the implemented M13 path, all M00–M22 requirements and original gates. Add M23–M25 through a second frozen requirement set and the existing exact-union planning validation; do not reimport the old roadmap or rebuild M13. Merge ARCHITECTURE.md using the included patch as a comparison aid. After integrating the current coherent assignment, implement M23-G01 through M23-G05 under our existing delegation. Start with pinned Kevala/Clef Flash Q8 text/JSON in the operator browser. Reuse the logical contracts through a browser-safe layer, keep client observations explicitly untrusted, and preserve server authority and hosted provenance. Keep local-to-hosted fallback explicit. Follow the current focused-development policy and record actual browser/model qualification separately from fixtures. Return the updated checkpoint, actual evidence and remaining qualification."
   }
 }

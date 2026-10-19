@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0",
+  "adoption_authority": "ADR-0044",
+  "state": "planning_only",
+  "source_package": "rifare-browser-clef-architecture-2026-10-19",
+  "source_document": "browser-milestone-additions.json",
+  "source_sha256": "8302245159ecadc0bcc69248624c8c820a5678656fa1b405dd93797f4ae9810e",
+  "protected_current_product_base": "93769a3029ebd2a5204c756733a8f8cf48fb67cd",
+  "existing_goal_records_modified": false,
+  "formal_acceptance": false,
+  "application_note": "These exact source clarifications are additive cross-references. Existing M13/M14/M17 records, criteria and current work outcomes remain authoritative and unchanged; browser preparation/qualification is future separately assigned work.",
+  "existing_goal_clarifications": [
+    {
+      "id": "BROWSER-LINK-M13",
+      "goal_ids": [
+        "M13-G01",
+        "M13-G02",
+        "M13-G03",
+        "M13-G04",
+        "M13-G05"
+      ],
+      "implemented_scope_preserved": true,
+      "addition": "M23 reuses the logical questions, source snapshots and strict validation through a minimal browser-safe layer. The current Workers AI/vault/budget reader and v1 evidence kinds remain intact. A new versioned server-owned preparation/ingestion path records browser submissions as untrusted client observations, never as copied or relabeled branded server inference."
+    },
+    {
+      "id": "BROWSER-LINK-M14",
+      "goal_ids": [
+        "M14-G01",
+        "M14-G02",
+        "M14-G03",
+        "M14-G04",
+        "M14-G05"
+      ],
+      "original_criteria_preserved": true,
+      "addition": "M23/M24 add separately observed browser execution profiles to the comparison and calibration design. Preserve G04 SystemOne endpoint transport and the original one-backend/two-implementation distinctions. Client submissions alone cannot satisfy controlled-inference evidence or trusted automatic-routing inputs."
+    },
+    {
+      "id": "BROWSER-LINK-M17",
+      "goal_ids": [
+        "M17-G01",
+        "M17-G02",
+        "M17-G03",
+        "M17-G04",
+        "M17-G05"
+      ],
+      "original_criteria_preserved": true,
+      "addition": "M25 reuses all M17 intake, exact-version access, quarantine/processing, privacy and image-quality gates. Preserve the planned hosted/server media path. Browser-local purpose does not grant hosted upload, and image support does not enable audio/video."
+    }
+  ]
+}
