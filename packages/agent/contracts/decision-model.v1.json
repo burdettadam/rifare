@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "id": "rifare-decision-model",
+  "version": "1.0.0",
+  "goals": ["M13-G01", "M13-G03"],
+  "qualification": "synthetic_transport_contract_only",
+  "formal_goal_accepted": false,
+  "connected_qualified": false,
+  "business_actions": [],
+  "source": ["packages/agent/decisions.mts", "packages/agent/workers-ai.mts"],
+  "logical_request": {
+    "exact_fields": ["task_id", "question_set_id", "question_set_digest", "serving_configuration_ref", "state", "questions"],
+    "identifier_pattern": "^[A-Za-z0-9_.-]{1,100}$",
+    "forbidden_identifier_values": ["__proto__", "constructor", "prototype"],
+    "question_set_digest": "lowercase SHA256 identifier for the separately resolved question resource",
+    "serving_configuration_ref": "opaque identifier; not an endpoint, account, provider model, token, or permission",
+    "state": "nonempty text; complete authorized evidence assembled by the owning orchestrator",
+    "questions": {
+      "noul": {"fields": ["type", "instructions"]},
+      "choice": {"fields": ["type", "instructions", "options"], "options": "finite map of stable option IDs to nonempty text descriptions"},
+      "score": {"fields": ["type", "instructions", "levels"], "levels": "ordered nonempty text descriptions indexed from zero"}
+    }
+  },
+  "capabilities": {
+    "question_types": ["choice", "noul", "score"],
+    "input_modalities": ["text"],
+    "max_context_tokens": 24576,
+    "max_request_bytes": 16384,
+    "max_questions": 64,
+    "max_choice_options": 255,
+    "max_score_levels": 10,
+    "configuration": "trusted overrides only narrow these limits; max_request_bytes plus 512 must not exceed the advertised context count",
+    "context_qualification": "encoded-byte safety bound, not a live tokenizer proof; no silent truncation"
+  },
+  "normalized_result": {
+    "exact_fields": ["status", "answers", "reason", "usage", "serving", "evidence_kind"],
+    "usable": "status usable, every exact requested answer, reason null",
+    "unusable": "status unusable, answers null, one fixed safe reason",
+    "noul_fields": ["type", "probability_true"],
+    "choice_fields": ["type", "choice", "probabilities", "confidence"],
+    "score_fields": ["type", "score", "probabilities", "confidence"],
+    "confidence": {"fields": ["provider", "metric", "value"], "metric": "provider_reported", "range": [0, 1], "calibrated": false},
+    "membership": "exact question IDs, types and probability keys; selected choice belongs to the published options; score keys equal all zero-based level indices",
+    "numbers": "finite; probabilities between zero and one; score between zero and last level",
+    "usage": "null or exact nonnegative safe-integer input_tokens/output_tokens",
+    "serving": "reported_model and revision, each a bounded identifier or null; native transport revision is always unknown",
+    "evidence_kind": ["synthetic_wire_fixture", "live_test_unqualified"],
+    "unexpected_fields": "rejected, including business actions, tools and permissions"
+  },
+  "rounding": {
+    "decimal_places": 4,
+    "half_unit": 0.00005,
+    "epsilon": 0.000000001,
+    "distribution_sum_tolerance": "number of options multiplied by half_unit, plus epsilon",
+    "choice_tolerance": "selected probability may differ from the maximum by at most two half_units plus epsilon",
+    "weighted_score_tolerance": "one plus the sum of zero-based level indices, multiplied by half_unit, plus epsilon",
+    "normalization": "retain original finite probability values; do not repair or renormalize malformed distributions"
+  },
+  "failure_codes": [
+    "DECISION_REQUEST_INVALID", "DECISION_CONTEXT_LIMIT", "DECISION_CAPABILITY_UNAVAILABLE",
+    "DECISION_OUTPUT_INVALID", "DECISION_UNAVAILABLE", "DECISION_TIMEOUT", "DECISION_RESPONSE_LIMIT",
+    "DECISION_DESTINATION_UNAPPROVED", "DECISION_DISABLED", "DECISION_CREDENTIAL_UNAVAILABLE",
+    "DECISION_CONFIGURATION_CHANGED", "DECISION_AUTHORITY_CHANGED", "DECISION_EVIDENCE_CHANGED"
+  ],
+  "workers_ai": {
+    "provider": "cloudflare",
+    "adapter": "cloudflare-decision-v1",
+    "model": "@cf/cloudflare/clef-flash",
+    "body_selector": "clef-flash",
+    "endpoint": "https://api.cloudflare.com/client/v4/accounts/{approved_account_id}/ai/run/@cf/cloudflare/clef-flash",
+    "method": "POST",
+    "credential_placement": "Bearer authorization header inside existing SecretVault CredentialReader",
+    "invocation": {"request": "DecisionRequest"},
+    "body_fields": ["model", "state", "questions"],
+    "native_question_mapping": "choice options and score levels become criteria; noul has no criteria in the supported text profile",
+    "native_envelope": "success plus result; optional empty errors/messages; unexpected fields rejected",
+    "native_result": "answers plus optional reported model and usage; omitted/null identity or usage is explicitly unknown",
+    "known_reported_models": ["clef-flash", "@cf/cloudflare/clef-flash"],
+    "score_legend": "must exactly match each submitted level description",
+    "allow_live_test_default": false,
+    "automatic_retry": false,
+    "automatic_fallback": false,
+    "redirect": "error",
+    "maximum_deadline_ms": 10000,
+    "maximum_response_bytes": 131072,
+    "construction": "snapshot approved account/model allowlists, destination, bounds and opaque ref; freeze reader metadata; derive provenance from presence of the fixture transport",
+    "configuration_digest": "SHA256 of contract/adapter/provider, opaque ref, account/model and sorted allowlists, endpoint/selector, bounds, capabilities, live permission and derived provenance",
+    "raw_error_retention": false
+  },
+  "canonical_orchestration": {
+    "credential_owner": "packages/commerce/secrets.mts",
+    "credential_lifecycle": "packages/commerce/credential-lifecycle.mts",
+    "spend_owner": "packages/commerce/model-budgets.mts",
+    "budget_envelope": "reserve with internal max_output_tokens:1; do not send this field to Workers AI; settle null when usage is unknown",
+    "required_current_checks": "owning orchestrator and vault recheck scope, permissions, task/source/configuration and credential state around asynchronous work",
+    "new_tables": [],
+    "new_secret_store": false,
+    "new_provider_registry": false,
+    "generative_contract_changed": false
+  },
+  "tests": {
+    "file": "tests/development/decision-model.test.mts",
+    "native_case_count": 13,
+    "goal_cases": ["CASE-M13-G01-01", "CASE-M13-G01-02", "CASE-M13-G01-03", "CASE-M13-G03-01", "CASE-M13-G03-02", "CASE-M13-G03-03", "CASE-M13-G03-04"],
+    "targeted_faults": ["unpublished option in an otherwise valid response", "canonical credential revoked after work preparation and before dispatch"],
+    "author_product_executions": 0
+  }
+}
