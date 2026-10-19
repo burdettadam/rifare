@@ -9,6 +9,9 @@ import {evaluateDecisionProtocol,assessDecisionMilestone} from '../../packages/a
 import {ExecutionStops} from '../../packages/commerce/execution-stops.mts';
 import {PrivacyLifecycle,suppressionCheckpoint} from '../../packages/commerce/privacy-lifecycle.mts';
 import {createRecoverySnapshot,restoreRecoverySnapshot} from '../../packages/commerce/safe-recovery.mts';
+import {SupportOwnership} from '../../packages/commerce/support-core.mts';
+import {DecisionShadow} from '../../packages/commerce/decision-shadow.mts';
+import {WORKERS_AI_MODEL,workersAIReader} from '../../packages/agent/workers-ai.mts';
 
 test('CASE-M13-G02-01',()=>usingShadow(f=>{
   const a=f.shadow.snapshot(f.a.scope,f.input()),b=f.shadowB.snapshot(f.b.scope,f.inputB());
@@ -54,6 +57,13 @@ test('CASE-M13-G04-03',()=>usingShadow(async f=>{
   const input=f.input(),r=await f.shadow.run(f.a.scope,input),replayed=await f.shadow.run(f.a.scope,input);assert.deepEqual(replayed,r);assert.equal(f.requests.length,1);
   const fresh=await f.shadow.run(f.a.scope,f.input());assert.notEqual(fresh.id,r.id);assert.equal(fresh.sequence,r.sequence+1);assert.equal(fresh.input_hash,r.input_hash);
   f.message('I am correcting my earlier request.');assert.deepEqual(f.shadow.read(f.a.scope,f.caseA.id,r.id),r);assert.equal(f.requests.length,2);
+  const concurrent=f.input(),first=f.shadow.prepare(f.a.scope,concurrent),second=f.shadow.prepare(f.a.scope,concurrent);
+  let release!:()=>void;f.before(()=>new Promise<void>(resolve=>release=resolve));
+  const pending=f.shadow.execute(f.a.scope,first);assert.equal(f.requests.length,3);
+  await assert.rejects(()=>f.shadow.execute(f.a.scope,second),/DECISION_OBSERVATION_IN_PROGRESS/);
+  assert.equal(f.db.prepare('SELECT count(*) n FROM commerce_assistance_receipts').get().n,2);
+  release();const completed=await pending;assert.equal(completed.id,first.id);assert.equal(completed.result.status,'usable');
+  assert.deepEqual(await f.shadow.run(f.a.scope,concurrent),completed);assert.equal(f.requests.length,3);
 }));
 test('CASE-M13-G04-04',()=>usingShadow(async f=>{
   const invalid=structuredClone(f.wire.clear);invalid.result.answers.reported_problem.choice='approve_refund';f.response(invalid);
@@ -97,8 +107,8 @@ test('CASE-M13-G05-04',()=>usingShadow(async f=>{
   const {receipt_digest,...changed}=forged;forged.receipt_digest=contentDigest(changed);assert.throws(()=>f.shadow.verifyReceipt(forged),/RECEIPT_INTEGRITY/);
 }));
 test('M13-SHADOW-CURRENT-OWNERSHIP',()=>usingShadow(async f=>{
-  const p=f.shadow.prepare(f.a.scope,f.input());f.ownership=new (await import('../../packages/commerce/support-core.mts')).SupportOwnership(f.kernel);
-  f.ownership.assign(f.owner.scope,{case_id:f.caseA.id,expected_generation:1,actor_id:'agent'});
+  const p=f.shadow.prepare(f.a.scope,f.input()),ownership=new SupportOwnership(f.kernel);
+  ownership.assign(f.owner.scope,{case_id:f.caseA.id,expected_generation:1,actor_id:'agent'});
   await assert.rejects(()=>f.shadow.execute(f.a.scope,p),/OWNERSHIP_CHANGED/);assert.equal(f.requests.length,0);
 }));
 test('M13-SHADOW-CURRENT-SOURCE-AFTER-AWAIT',()=>usingShadow(async f=>{
@@ -138,16 +148,33 @@ test('M13-SHADOW-PREPARED-CREDENTIAL-REVOCATION',()=>usingShadow(async f=>{
   const p=f.shadow.prepare(f.a.scope,f.input());f.vault.revoke(f.a.scope,f.secret);const r=await f.shadow.execute(f.a.scope,p);
   assert.equal(r.result.status,'unusable');assert.equal(r.result.reason,'DECISION_CREDENTIAL_UNAVAILABLE');assert.equal(f.requests.length,0);
 }));
-test('M13-SHADOW-ATTACHMENTS-GAPS-AND-MESSAGE-WINDOW',()=>usingShadow(async f=>{
+test('M13-SHADOW-ATTACHMENTS-GAPS-AND-MESSAGE-WINDOW',async()=>{
+ await usingShadow(async f=>{
   assert.throws(()=>f.shadow.snapshot(f.a.scope,{...f.input(),attachments:[{url:'https://private.invalid/evidence'}]}),/INVALID_INPUT/);
   f.conversations.link(f.a.scope,f.customer,{case_id:f.caseA.id,channel:'webchat',account_id:'shadow_channel_a',external_id:'shadow_thread_a',history:'partial',source_revision:2});
   const gap=f.shadow.snapshot(f.a.scope,f.input());assert.ok(gap.gaps.includes('conversation_history_partial'));assert.equal(gap.request.state.includes('verified_absence'),false);
   for(let i=0;i<100;i++)f.message('Required message '+i);const r=await f.shadow.run(f.a.scope,f.input());assert.equal(r.result.status,'unusable');assert.equal(f.requests.length,0);
-}));
-test('M13-SHADOW-CONFIGURATION-CHANGE-AFTER-AWAIT',()=>usingShadow(async f=>{
+ });
+ await usingShadow(async f=>{
+  f.advance(301000);const snapshot=f.shadow.snapshot(f.a.scope,f.input());
+  assert.equal(snapshot.status,'unavailable');assert.equal(snapshot.request,null);assert.ok(snapshot.gaps.includes('order_source_stale_or_unavailable'));
+  const receipt=await f.shadow.run(f.a.scope,f.input());assert.equal(receipt.result.status,'unusable');assert.equal(receipt.provenance.dispatch,'not_attempted');assert.equal(f.requests.length,0);
+ });
+});
+test('M13-SHADOW-CONFIGURATION-CHANGE-AFTER-AWAIT',async()=>{
+ await usingShadow(async f=>{
   f.before(()=>f.shadow.configure(f.owner.scope,{id:f.ref,expected_version:1,enabled:false,expires_at:f.now()+3600000}));
   await assert.rejects(()=>f.shadow.run(f.a.scope,f.input()),/CONFIGURATION_CHANGED/);assert.equal(f.db.prepare('SELECT count(*) n FROM commerce_assistance_receipts').get().n,0);
-}));
+ });
+ await usingShadow(async f=>{
+  const replacement=workersAIReader({serving_configuration_ref:f.ref,account_id:'b'.repeat(32),approved_account_ids:['b'.repeat(32)],model_id:WORKERS_AI_MODEL,approved_model_ids:[WORKERS_AI_MODEL],fixtureTransport:(async()=>{throw new Error('WRONG_CATALOG_READER_DISPATCH');}) as typeof fetch});
+  assert.notEqual(replacement.configuration_digest,f.reader.configuration_digest);
+  const shadow=new DecisionShadow(f.kernel,f.reads,f.vault,[{id:f.ref,tenant_id:f.a.tenant,store_id:f.a.store,secret_ref:f.secret,reader:replacement}]);
+  shadow.configure(f.owner.scope,{id:f.ref,expected_version:1,enabled:true,expires_at:f.now()+3600000});
+  const receipt=await shadow.run(f.a.scope,f.input());assert.equal(receipt.result.status,'unusable');assert.equal(receipt.result.reason,'DECISION_CONFIGURATION_CHANGED');
+  assert.equal(receipt.provenance.dispatch,'not_attempted');assert.equal(receipt.provenance.live_inference_observed,false);assert.equal(f.requests.length,0);
+ });
+});
 test('M13-LOCAL-MILESTONE-ASSESSMENT',()=>usingShadow(async f=>{
   const r=await f.shadow.run(f.a.scope,f.input()),a=assessDecisionMilestone([r]);
   assert.equal(a.local_observations,1);assert.equal(a.formal_status,'blocked');assert.equal(a.live_inference_observations,0);assert.equal(a.business_effects,0);
