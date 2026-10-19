@@ -145,3 +145,17 @@ Any resulting checkpoint states its recovered base and reconciliation gap.
 No release, remote push, publication, paid effect, customer media processing or
 third-party message is authorized. The previously rejected complete M16/archive
 upload is not retried or bypassed by this recovery assignment.
+
+## Hold-preservation clarification before integration
+
+The independent privacy design review identified that unconditional deletion of
+image records during a held uninstall, restore, or consent withdrawal would
+discard retained evidence. Existing hold rules remain authoritative. Uninstall
+revokes every image configuration version and preserves held image receipts.
+Consent withdrawal preserves held receipts and marks the approval revoked with
+an integrity-protected timestamp; an unheld withdrawal can delete linked image
+records. Restore/import with held image content fails closed for separate local
+retention administration, rather than silently dropping that content. These
+behaviors do not activate any saved approval or add a new table/authority kind.
+Gift image consent/inference remains unavailable; the gift privacy test creates
+a canonical gift case and seeds explicitly labeled historical/imported residue.
