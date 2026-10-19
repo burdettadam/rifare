@@ -14,7 +14,7 @@ const load=(name:string)=>JSON.parse(readFileSync(new URL('../fixtures/model-pol
 const clock=1800000000000;
 let observed:ReturnType<typeof runCatalogFixtures>|undefined;
 // Two existing native fixture bindings produce the raw source observations once.
-// This does not run the catalog's 231-case nested native runner.
+// This does not run the catalog's 244-case nested native runner.
 async function setup(allCases=false){
  observed??=runCatalogFixtures(readAdapterCatalog(),readCatalogFixtures(),nativeCatalogFactories,{only:['simulator','openai']});
  const suite=load('evaluation-suite'),configuration=load('evaluation-configuration'),observations=load('evaluation-observations');
@@ -118,7 +118,7 @@ test('M07-G06-RUNTIME-SOURCE-01',async()=>{
 test('M07-G06-MINIMIZED-EXPORT-01',async()=>{
  const f=await setup(),m=f.matrix(),text=JSON.stringify(m);
  assert(!text.includes('ORD-FIXTURE'));assert(!text.includes('catalog-model-fixture'));
- assert.equal(m.catalog.adapter_count,35);assert.equal(m.catalog.operation_count,196);
+ assert.equal(m.catalog.adapter_count,36);assert.equal(m.catalog.operation_count,197);
  assert.equal(m.rows[0].report_hashes.evaluation,contentDigest(f.row.evidence.evaluation));
  assert.equal(m.rows[0].platform.api_version,'local-read-v1');assert.equal(m.rows[0].payment,null);
  assert.equal(m.rows[0].execution_authorized,false);assert.equal(m.rows[0].qualification,'local_fixture_only');

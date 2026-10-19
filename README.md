@@ -2,7 +2,30 @@
 
 Merchant-owned commerce operations with tailorable skills and independently replaceable platforms, agents and models.
 
-## Current development milestone: M11 inventory and procurement
+## Current development milestone: M13 decision-model shadow observations
+
+M13 adds optional bounded decision models and a source-bound return-intake
+shadow service under [ADR-0042](docs/decisions/0042-decision-model-shadow-milestone.md).
+One published question resource serves two declared merchant profile variants.
+Current case, task, source, credential and budget checks govern each observation;
+the existing manual workflow retains approval and execution authority.
+
+The focused selection is 53 cases in four whole files within the unchanged
+60-case/four-file/60-second development limit. Actual native evidence and two
+independent reviews accompany the cumulative checkpoint. Read
+[decision models](docs/DECISION-MODELS.md), [shadow observations](docs/DECISION-SHADOW.md),
+[the M13 assessment](docs/M13-QUALIFICATION.md), and
+[the integration record](work/records/M13-milestone-integration.md).
+Live provider quality and formal milestone acceptance remain blocked. M14 is the
+next planning milestone and remains unassigned.
+
+The preceding [M12 assessment](docs/M12-QUALIFICATION.md) retains agency access,
+extension preparation and its human/contributor qualification limits. Its original
+source, cumulative archive, formal gate and disabled code-mode outcome remain
+preserved. The separate M13–M22 handoff was adopted additively; the historical
+M11/M12 continuation statements below describe their earlier checkpoints.
+
+## Historical M11 inventory and procurement checkpoint
 
 All ten M11 worker goals and the G99 assessment are assigned under
 [ADR-0040](docs/decisions/0040-m11-inventory-procurement.md). They add historical

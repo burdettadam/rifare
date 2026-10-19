@@ -338,6 +338,14 @@
       "sha256": "2c4d5abe073c3c916da8fdf78cbe28014c865d44b0958281aa423b3133dcbeac"
     },
     {
+      "path": "packages/agent/decision-evaluation.mts",
+      "sha256": "02e906a73facf50cc11564b87a162d237a5575b02173100648f3d6bbbd83400e"
+    },
+    {
+      "path": "packages/agent/decisions.mts",
+      "sha256": "1d45d39708ffba44f88ec84de4442d07d4e4ed4d55017bc3347cb5d9e2a095ac"
+    },
+    {
       "path": "packages/agent/evaluation.mts",
       "sha256": "230308a801443d719d3316b1508b81d46d8a22cc24e545b14e4b75245c764700"
     },
@@ -368,6 +376,10 @@
     {
       "path": "packages/agent/untrusted.mts",
       "sha256": "43619ba490cf51afe7e7bcf7ae22870592b56014b4b3774461cca6f72ee85e56"
+    },
+    {
+      "path": "packages/agent/workers-ai.mts",
+      "sha256": "4cbe06704cda2ac1248bc9fcb07df1794a3f5a0896f7b01c098ff76325bba3e0"
     },
     {
       "path": "packages/assistance/return-workflow-runner.mts",
@@ -444,6 +456,14 @@
     {
       "path": "packages/commerce/data-guards.mts",
       "sha256": "e01d50bb34c6011a8198504610f89c0cd097eebf61bf946c7f41799f82be9020"
+    },
+    {
+      "path": "packages/commerce/decision-resources.mts",
+      "sha256": "9175bf8f3f7345c15e9db7ea506d47cc0a7a85768ee13a75dcd490ae3caedc3a"
+    },
+    {
+      "path": "packages/commerce/decision-shadow.mts",
+      "sha256": "04048444641b397de30194f5a8d131bd423998b55df6bec912b37dfd76103f7d"
     },
     {
       "path": "packages/commerce/delivery-trial-core.mts",
@@ -1253,11 +1273,12 @@
         "packages/commerce/privacy-lifecycle.mts",
         "packages/commerce/growth-privacy.mts",
         "packages/commerce/growth-marketing-privacy.mts",
-        "packages/commerce/growth-campaigns.mts"
+        "packages/commerce/growth-campaigns.mts",
+        "packages/commerce/decision-resources.mts"
       ],
       "export": "Subject conversations, contacts, attempts/deliveries, current consent and consent events are scoped to the customer and cases. Campaign recipients are subject scoped; canonical SupportDelivery remains the message owner.",
       "erasure": "Redact messages and delivery bodies, null contacts, withdraw/pseudonymize consent, revoke session ownership and cancel rule jobs. Revoke affected campaign approvals and suppress recipient bodies, preserving original send IDs.",
-      "retention": "Delivery references and operational observations remain minimized; an already delivered provider copy cannot be recalled. Provider acceptance stays distinct from observed delivery; no new effect is created by minimization.",
+      "retention": "Delivery references and operational observations remain minimized; an already delivered provider copy cannot be recalled. Provider acceptance stays distinct from observed delivery; no new effect is created by minimization. M13 snapshots select currently authorized incoming public text; partial history remains a gap and an exceeded complete-message bound cannot dispatch a prefix.",
       "observation_required": "Exercise real conversation/contact/consent APIs and verify local copy fields and blocked subsequent access. Observe campaign copies plus existing delivery, consent, contact and source outbox records."
     },
     {
@@ -1318,12 +1339,15 @@
         "packages/commerce/privacy-lifecycle.mts",
         "packages/commerce/growth-privacy.mts",
         "packages/commerce/growth-marketing-privacy.mts",
-        "packages/commerce/cart-recovery.mts"
+        "packages/commerce/cart-recovery.mts",
+        "packages/commerce/decision-resources.mts",
+        "packages/commerce/decision-shadow.mts",
+        "packages/agent/decision-evaluation.mts"
       ],
-      "export": "Scoped tasks and assistance receipts are exported with relevant case configuration/proposals. Recovery proposal copies are subject scoped.",
-      "erasure": "Delete task/read-job/assistance rows; redact worker submission/completion/effect bodies and revoke work. Cancel and minimize recovery proposals on erasure and restore.",
-      "retention": "Authority/audit identities stay minimized. Caller memory and already sent provider inputs are outside these database mutations. Queued proposals grant no send authority; current cart purchase and consent are rechecked at final send.",
-      "observation_required": "Exercise a real task and denied old task access, then inspect deployed process/provider copies separately. Observe recovery proposal copies and their original cart/message references."
+      "export": "Scoped tasks and assistance receipts are exported with relevant case configuration/proposals. Recovery proposal copies are subject scoped. M13 shadow observations use the actual customer context-task foreign key and existing assistance export.",
+      "erasure": "Delete task/read-job/assistance rows; redact worker submission/completion/effect bodies and revoke work. Cancel and minimize recovery proposals on erasure and restore. The existing task/assistance owner removes minimized shadow receipts on subject erasure, restore suppression and uninstall.",
+      "retention": "Authority/audit identities stay minimized. Caller memory and already sent provider inputs are outside these database mutations. Queued proposals grant no send authority; current cart purchase and consent are rechecked at final send. Receipts retain hashes, normalized labels, usage, gaps and fixed provenance, excluding raw submitted text and provider errors.",
+      "observation_required": "Exercise a real task and denied old task access, then inspect deployed process/provider copies separately. Observe recovery proposal copies and their original cart/message references. Focused M13 cases verify exact customer export, unrelated-subject preservation, erasure, one suppressed restore and uninstall."
     },
     {
       "id": "analytics_readmodels",
@@ -1534,11 +1558,12 @@
         "packages/commerce/shared-templates.mts",
         "packages/commerce/extension-artifacts.mts",
         "packages/commerce/extension-lifecycle.mts",
-        "packages/security/code-execution-decision.mts"
+        "packages/security/code-execution-decision.mts",
+        "packages/commerce/decision-shadow.mts"
       ],
       "export": "Customer export excludes credentials, authentication tokens and unbound merchant/staff configuration. Subject-linked label approvals export as resource audit without credential or session token hashes. Inventory field ownership and transfer approvals export only through subject-resource mappings; approvals do not expose authentication tokens. Exports omit bearer/session/link hashes and contain only relevant merchant configurations. Include only relevant M10 configuration and omit replay/session/proof credentials. No M11 forecast review, supplier/budget control or stock grant is a customer export credential. M12 agency grants, presentation templates and extension reviews contain no customer export records.",
       "erasure": "Invalidate customer proof/session and gift grants; uninstall revokes/envelope-clears vault entries, routes, credentials, readiness and store access. Subject label approvals are revoked and their private bodies minimized; merchant import and snapshot restore also revoke these approvals before any diagnostic access. Transfer approvals are revoked and minimized on subject erasure. Merchant import and snapshot restore revoke transfer approvals and replay minimization for suppressed subjects. Field ownership keeps the minimum SKU, location, field and original source identity required to avoid a competing physical owner. Revoke upsell/catalog/campaign/email/optional authority; remove customer consent payloads and active link tokens. Revoke affected warranty/dispute approvals, partner confirmations and trial consent; minimize private proof bodies. Minimization of malformed business records invalidates affected authority. Reapply nested typed allowlists, including malformed scalar containers; invalidate affected authority on minimization.",
-      "retention": "Staff/security/configuration and source provenance audits persist. Unbound arbitrary configuration text needs operator review; no blanket customer-data-free claim. A preserved field-owner row is quantitative stock control, not renewed approval for a transfer or erased journey. Restore and uninstall disable optional configurations and quality, pause campaigns and cancel recovery; structured audit is not permission. Import, restore and uninstall disable partner readiness and revoke approval/consent even without erasure tombstones. Import, restore and uninstall revoke forecast, procurement and stock approvals even without customer tombstones. Import, restore and uninstall revoke new authority even with no subject tombstones; archived case semantics remain.",
+      "retention": "Staff/security/configuration and source provenance audits persist. Unbound arbitrary configuration text needs operator review; no blanket customer-data-free claim. A preserved field-owner row is quantitative stock control, not renewed approval for a transfer or erased journey. Restore and uninstall disable optional configurations and quality, pause campaigns and cancel recovery; structured audit is not permission. Import, restore and uninstall disable partner readiness and revoke approval/consent even without erasure tombstones. Import, restore and uninstall revoke forecast, procurement and stock approvals even without customer tombstones. Import, restore and uninstall revoke new authority even with no subject tombstones; archived case semantics remain. M13 owner-published expiring decision_shadow documents contain only opaque configuration/digests, purpose, mode and enabled state; existing vault and budget owners remain canonical.",
       "observation_required": "Check exported bytes exclude bearer/credential material and actual uninstall disables store access and clears local vault envelopes. Observe all current new configurations, consents, approvals, scope bindings and expiration paths. Observe current independent authority, exact source/account/configuration pins, expiration, outage and final source callbacks. Observe distinct drafting/review identities, current permissions, budgets, versions, expiry and final source guards. Observe canonical per-store permissions/sessions, independent review, digest/revision bindings and disabled code execution."
     },
     {
@@ -1751,12 +1776,14 @@
         "packages/adapters/procurement-fixture-source.mts",
         "packages/adapters/procurement-source-guards.mts",
         "packages/adapters/procurement-inventory-source-guards.mts",
-        "packages/adapters/warehouse-inventory-fixture-source.mts"
+        "packages/adapters/warehouse-inventory-fixture-source.mts",
+        "packages/agent/workers-ai.mts",
+        "packages/commerce/decision-shadow.mts"
       ],
       "export": "Caller/partner retrieval is separately authorized; local export cannot query every external copy. Provider and publication copies require named operator handling; canonical export is not a source dump. M10 source databases and historical provider copies are not canonical subject export bundles. Separate M11 demand/supplier/warehouse source stores are not customer export copies.",
-      "erasure": "Provider, sender, helpdesk, scanner and fulfillment replicas are not physically erased by local SQL. Optional eligible deletion uses original source identity; published catalog descriptions require reviewed source cleanup. The operator handles separate source cleanup while retaining original unknown-effect audit duties. The operator owns separate-source and historical-copy cleanup; original unresolved effect identity remains necessary.",
+      "erasure": "Provider, sender, helpdesk, scanner and fulfillment replicas are not physically erased by local SQL. Optional eligible deletion uses original source identity; published catalog descriptions require reviewed source cleanup. The operator handles separate source cleanup while retaining original unknown-effect audit duties. The operator owns separate-source and historical-copy cleanup; original unresolved effect identity remains necessary. Optional decision-provider copies remain outside local erasure authority; local shadow receipt deletion is not hosted deletion evidence.",
       "retention": "Provider agreements, deletion confirmations and backup windows need actual current evidence. No live processor, real contact, partner, publication or physical source erasure is qualified. Local fixture outcomes do not establish provider agreements, medical/tax/coverage eligibility or physical deletion. Local observations do not establish supplier orders, invoices, payments, physical receipt, manufacturing completion or real forecast performance.",
-      "observation_required": "Identify each connected account and data copy, obtain authorized deletion/retention outcomes, and independently retain relevant provider receipts. Inventory separate cart/listing/visibility/upsell-consent, marketing-template/audience/event and optional-effect stores. Inventory partner terms/eligibility/fees/custody, claim submissions/evidence, and original trial authorization/capture ledgers. Inventory every native source journal and durable guard binding."
+      "observation_required": "Identify each connected account and data copy, obtain authorized deletion/retention outcomes, and independently retain relevant provider receipts. Inventory separate cart/listing/visibility/upsell-consent, marketing-template/audience/event and optional-effect stores. Inventory partner terms/eligibility/fees/custody, claim submissions/evidence, and original trial authorization/capture ledgers. Inventory every native source journal and durable guard binding. M13 uses synthetic transports only; connected account retention/deletion and inference qualification are absent."
     },
     {
       "id": "process_and_browser_memory",
@@ -1797,11 +1824,14 @@
         "packages/commerce/agency-privacy.mts",
         "packages/commerce/extension-privacy.mts",
         "packages/commerce/extension-artifacts.mts",
-        "packages/security/extension-qualification.mts"
+        "packages/security/extension-qualification.mts",
+        "packages/commerce/decision-resources.mts",
+        "packages/commerce/decision-shadow.mts",
+        "packages/agent/workers-ai.mts"
       ],
       "export": "Previously returned response bodies, clipboard, screenshots and tabs are caller copies. Ephemeral carrier quote snapshots and locale-formatted display values are also returned caller/process/browser copies. Returned packing scans/status, label and carrier receipts, manifest events and warehouse snapshots are also caller/process copies whose previously returned bytes cannot be recalled by local erasure. Warehouse return timelines, stock histories, transfer receipts and cycle reconciliation results also remain caller/process copies after they have been returned. Caller-owned growth previews and media are outside automatic canonical export. Returned M10 proposals, evidence drafts and consent previews remain caller-owned copies. M11 planning, PO, receipt and production previews returned to callers are separate copies. M12 mirrored bytes, templates, aggregate results and draft qualification/decision packets held by callers are separate copies.",
       "erasure": "Revocation blocks later server reads/completion; it cannot recall bytes already in an arbitrary process, plugin, scanner or browser. Callers discard copied previews, media, generated output and links after withdrawal/erasure. Callers discard copied proofs, evidence, terms and commands after withdrawal or erasure. Callers discard obsolete copied source facts and approval previews. Callers discard obsolete artifact, configuration and evidence snapshots.",
-      "retention": "No general heap, browser history, swap, core dump or log deletion is implemented. Canonical minimization does not erase caller memory. Canonical minimization cannot erase caller memory. Canonical changes cannot erase arbitrary caller memory. Canonical erasure cannot remove arbitrary caller memory or independently stored mirror files.",
+      "retention": "No general heap, browser history, swap, core dump or log deletion is implemented. Canonical minimization does not erase caller memory. Canonical minimization cannot erase caller memory. Canonical changes cannot erase arbitrary caller memory. Canonical erasure cannot remove arbitrary caller memory or independently stored mirror files. Shadow preparation holds bounded authorized text in process memory; caller-held snapshots/receipts need separate disposal and confer no replay authority.",
       "observation_required": "Inventory actual deployed processes/plugins/logging and browser storage; observe their cleanup and retention separately. Source pins only flag code drift. Observe caller-retained growth drafts, media, templates, tokens and model outputs. Observe caller-held warranty/dispute packets and trial/partner previews. Observe caller-held quantity, supplier term, forecast and source command snapshots. Inspect caller copies and distinguish diagnostic contract validation from independent external or human qualification."
     },
     {
@@ -1869,7 +1899,7 @@
       ],
       "export": "The legacy smoke SQLite/files and synthetic adapter ledgers are separate from commerce stores and do not contain authorized customer data. The carrier quote fixture holds bounded account, package and rate records only in its owning process memory. The shipping carrier fixture retains its original purchase/charge/void/refund, manifest and event ledgers in a separate synthetic SQLite database. Named warehouse configuration bindings and durable binding-requirement markers reside in two additional tables of the separate order-edit fixture database alongside its source orders, holds and effect history. Native warehouse return events and effective unit records plus inventory snapshot, movement, transfer and command journals share the existing warehouse fixture database and its sole available-stock owner. Separate sources contain invented local facts and are not subject-export bundles. Only invented local M10 source records are used; their stores remain separate from canonical exports. M11 fixture journals contain invented aggregate demand, supplier terms and stock observations only.",
       "erasure": "Commerce erasure cannot attest cleanup of independent fixture databases or filesystem attachments. Commerce erasure blocks reauthorized resource access but does not rewrite these independent source ledgers, warehouse binding records or source orders; only synthetic inputs are authorized. Commerce minimization cannot physically erase these source journals or invalidate caller-held native observations; the owning operator must retain or clean those synthetic copies independently. Operators own source-file cleanup; optional deletion queues address original effects and never replay processing. Separate fixture files require operator cleanup, with original unknown identities retained for reconciliation. Fixture files require separate operator cleanup; canonical privacy dispatches no native mutation.",
-      "retention": "Fixture cleanup belongs to its owning test/operator directory; no migration to a production storage backend is claimed. Separate fixture files and old checkpoints are not physically erased by canonical erasure. Durable bound warranty/trial commands deny fresh-adapter new effects without current guards; original committed lookup remains distinct. Current guards are required for new bound effects; original committed lookup remains distinct.",
+      "retention": "Fixture cleanup belongs to its owning test/operator directory; no migration to a production storage backend is claimed. Separate fixture files and old checkpoints are not physically erased by canonical erasure. Durable bound warranty/trial commands deny fresh-adapter new effects without current guards; original committed lookup remains distinct. Current guards are required for new bound effects; original committed lookup remains distinct. M13 development and distinct held-out texts and wire outputs are synthetic; held-out observations remain unrun and fixture results cannot become live evidence.",
       "observation_required": "Verify that only synthetic data is used and inventory/clean owned fixture directories separately; treating them as a real deployment blocks privacy qualification. Inspect and clean the owned carrier and warehouse fixture databases and their files independently; source identities and configuration are not claimed anonymous. Inspect native event/correction/transfer IDs and independently handle warehouse database files, pages and source copies; this declaration does not attest physical stock or provider cleanup. Observe every new separate source database, purpose scope and original native effect ledger. Observe actual source bindings, separate fixture databases, and native effect/observation ledgers. Observe independent database identity, native receipt and output event identity, and shared warehouse_stock ownership."
     }
   ]

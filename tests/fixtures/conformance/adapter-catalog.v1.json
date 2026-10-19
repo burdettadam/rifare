@@ -59,8 +59,10 @@
     "packages/adapters/woocommerce/refund-gateway-fixture.mts",
     "packages/adapters/woocommerce/return-contract.mts",
     "packages/adapters/woocommerce/return-source.mts",
+    "packages/agent/decisions.mts",
     "packages/agent/local-model.mts",
     "packages/agent/providers.mts",
+    "packages/agent/workers-ai.mts",
     "packages/commerce/bill-of-materials.mts",
     "packages/commerce/capabilities.mts",
     "packages/commerce/delivery-trial-core.mts",
@@ -4521,6 +4523,116 @@
           "direct_fixtures": []
         }
       ]
+    },
+    {
+      "id": "cloudflare_decision",
+      "kind": "model",
+      "source_files": [
+        {
+          "path": "packages/agent/workers-ai.mts",
+          "sha256": "4cbe06704cda2ac1248bc9fcb07df1794a3f5a0896f7b01c098ff76325bba3e0"
+        },
+        {
+          "path": "packages/agent/decisions.mts",
+          "sha256": "1d45d39708ffba44f88ec84de4442d07d4e4ed4d55017bc3347cb5d9e2a095ac"
+        }
+      ],
+      "version": "source-sha256:4cbe06704cda2ac1248bc9fcb07df1794a3f5a0896f7b01c098ff76325bba3e0",
+      "api_version": "workers-ai-account-run-clef-flash-unqualified",
+      "external_version": null,
+      "external_account": null,
+      "external_scopes_attested": false,
+      "source_oracle": "Independent bounded choice/noul/score wire fixtures and actual canonical vault reader fault checks. Synthetic transport only; no hosted account, connected inference, direct common-engine factory or release qualification.",
+      "operations": [
+        {
+          "id": "decision.classify",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M13-G01-01",
+              "name": "CASE-M13-G01-01",
+              "path": "tests/development/decision-model.test.mts",
+              "sha256": "fcdad7288e2e9bb1bb2b88d841731d77523a821ee0e6f292c697a6ba9a7ed544"
+            },
+            {
+              "id": "CASE-M13-G01-02",
+              "name": "CASE-M13-G01-02",
+              "path": "tests/development/decision-model.test.mts",
+              "sha256": "fcdad7288e2e9bb1bb2b88d841731d77523a821ee0e6f292c697a6ba9a7ed544"
+            },
+            {
+              "id": "CASE-M13-G01-03",
+              "name": "CASE-M13-G01-03",
+              "path": "tests/development/decision-model.test.mts",
+              "sha256": "fcdad7288e2e9bb1bb2b88d841731d77523a821ee0e6f292c697a6ba9a7ed544"
+            },
+            {
+              "id": "CASE-M13-G03-01",
+              "name": "CASE-M13-G03-01",
+              "path": "tests/development/decision-model.test.mts",
+              "sha256": "fcdad7288e2e9bb1bb2b88d841731d77523a821ee0e6f292c697a6ba9a7ed544"
+            },
+            {
+              "id": "CASE-M13-G03-02",
+              "name": "CASE-M13-G03-02",
+              "path": "tests/development/decision-model.test.mts",
+              "sha256": "fcdad7288e2e9bb1bb2b88d841731d77523a821ee0e6f292c697a6ba9a7ed544"
+            },
+            {
+              "id": "CASE-M13-G03-03",
+              "name": "CASE-M13-G03-03",
+              "path": "tests/development/decision-model.test.mts",
+              "sha256": "fcdad7288e2e9bb1bb2b88d841731d77523a821ee0e6f292c697a6ba9a7ed544"
+            },
+            {
+              "id": "CASE-M13-G03-04",
+              "name": "CASE-M13-G03-04",
+              "path": "tests/development/decision-model.test.mts",
+              "sha256": "fcdad7288e2e9bb1bb2b88d841731d77523a821ee0e6f292c697a6ba9a7ed544"
+            },
+            {
+              "id": "M13-G01-DISTRIBUTION-ROUNDING-AND-SCORE",
+              "name": "M13-G01-DISTRIBUTION-ROUNDING-AND-SCORE",
+              "path": "tests/development/decision-model.test.mts",
+              "sha256": "fcdad7288e2e9bb1bb2b88d841731d77523a821ee0e6f292c697a6ba9a7ed544"
+            },
+            {
+              "id": "M13-G01-BOUNDARIES-AND-MODALITIES",
+              "name": "M13-G01-BOUNDARIES-AND-MODALITIES",
+              "path": "tests/development/decision-model.test.mts",
+              "sha256": "fcdad7288e2e9bb1bb2b88d841731d77523a821ee0e6f292c697a6ba9a7ed544"
+            },
+            {
+              "id": "M13-G03-REQUEST-BOUND-PREVENTS-SILENT-TRUNCATION",
+              "name": "M13-G03-REQUEST-BOUND-PREVENTS-SILENT-TRUNCATION",
+              "path": "tests/development/decision-model.test.mts",
+              "sha256": "fcdad7288e2e9bb1bb2b88d841731d77523a821ee0e6f292c697a6ba9a7ed544"
+            },
+            {
+              "id": "M13-G03-REDIRECT-AND-ERROR-REDACTION",
+              "name": "M13-G03-REDIRECT-AND-ERROR-REDACTION",
+              "path": "tests/development/decision-model.test.mts",
+              "sha256": "fcdad7288e2e9bb1bb2b88d841731d77523a821ee0e6f292c697a6ba9a7ed544"
+            },
+            {
+              "id": "M13-G03-CREDENTIAL-REVOKED-IN-FLIGHT",
+              "name": "M13-G03-CREDENTIAL-REVOKED-IN-FLIGHT",
+              "path": "tests/development/decision-model.test.mts",
+              "sha256": "fcdad7288e2e9bb1bb2b88d841731d77523a821ee0e6f292c697a6ba9a7ed544"
+            },
+            {
+              "id": "M13-G03-CONFIGURATION-AND-USAGE-BOUNDARY",
+              "name": "M13-G03-CONFIGURATION-AND-USAGE-BOUNDARY",
+              "path": "tests/development/decision-model.test.mts",
+              "sha256": "fcdad7288e2e9bb1bb2b88d841731d77523a821ee0e6f292c697a6ba9a7ed544"
+            }
+          ],
+          "direct_fixtures": []
+        }
+      ]
     }
   ],
   "fixture_administration": "Seed, injected faults, and source observation setters are fixture administration, not remote provider operations. Unnamed real gateway/carrier/warehouse/ERP adapters are unavailable.",
@@ -5559,7 +5671,7 @@
     },
     {
       "path": "tests/fixtures/conformance/expected-coverage.v1.json",
-      "sha256": "6f065bc2ca9234204fe46d74b1f11422066527d7f17d337e6f38d592f120b703"
+      "sha256": "95bc7b797419391bc510f8228a0ccac10b59fde2710a8913273bda72dc68e56f"
     },
     {
       "path": "tests/fixtures/conformance/source-inputs.v1.json",
@@ -6628,6 +6740,106 @@
     {
       "path": "tests/fixtures/extensions/compatibility.v1.json",
       "sha256": "b13443593538ba66002f18c30c12171d5ca2c8098e9755a916b94d7890e33e32"
+    },
+    {
+      "path": "packages/agent/contracts/decision-model.v1.json",
+      "sha256": "3830ec32308d1b2a02ea2f4698911b9b2573b4460ade2202e8b41305b1530672"
+    },
+    {
+      "path": "packages/agent/decision-evaluation.mts",
+      "sha256": "02e906a73facf50cc11564b87a162d237a5575b02173100648f3d6bbbd83400e"
+    },
+    {
+      "path": "packages/agent/decisions.mts",
+      "sha256": "1d45d39708ffba44f88ec84de4442d07d4e4ed4d55017bc3347cb5d9e2a095ac"
+    },
+    {
+      "path": "packages/agent/workers-ai.mts",
+      "sha256": "4cbe06704cda2ac1248bc9fcb07df1794a3f5a0896f7b01c098ff76325bba3e0"
+    },
+    {
+      "path": "packages/commerce/contracts/decision-shadow.v1.json",
+      "sha256": "2c59445960ac4a0cc2f35767ea8f4bab8299914691f6d3e02904204a0df7be79"
+    },
+    {
+      "path": "packages/commerce/decision-resources.mts",
+      "sha256": "9175bf8f3f7345c15e9db7ea506d47cc0a7a85768ee13a75dcd490ae3caedc3a"
+    },
+    {
+      "path": "packages/commerce/decision-shadow.mts",
+      "sha256": "04048444641b397de30194f5a8d131bd423998b55df6bec912b37dfd76103f7d"
+    },
+    {
+      "path": "packages/commerce/skill-bundles/return-intake-shadow/SKILL.md",
+      "sha256": "b834bb6ce64f2ede1b36c8f57814367e66d6a44d67c0db6d6ba6e105dcede5eb"
+    },
+    {
+      "path": "packages/commerce/skill-bundles/return-intake-shadow/commerce-manifest.json",
+      "sha256": "2a1b17d0639c34a69fdb82a63e0ea4080207104db4d3c236448c19fac70cf56b"
+    },
+    {
+      "path": "packages/commerce/skill-bundles/return-intake-shadow/references/config.json",
+      "sha256": "0f8c95fbb5f4adbd3b6ea7d0c71b6fd44ae7b34b3fee87196ecbe0e120f74da3"
+    },
+    {
+      "path": "packages/commerce/skill-bundles/return-intake-shadow/references/input.json",
+      "sha256": "cf1660fdb0446edcafa1d2d1a598f20a1874000eb9a86740428a7ada92634ec4"
+    },
+    {
+      "path": "packages/commerce/skill-bundles/return-intake-shadow/references/output.json",
+      "sha256": "64b32c8e1849eb6e4f6756a8d7510acc25770fe0f5d2f302e3171db61c101406"
+    },
+    {
+      "path": "packages/commerce/skill-bundles/return-intake-shadow/references/return-intake-questions.v1.json",
+      "sha256": "4e65f64d0416929e44153c2ed7b864a4992ed91cd563784ee7087eb0d382ad8e"
+    },
+    {
+      "path": "tests/development/decision-model.test.mts",
+      "sha256": "fcdad7288e2e9bb1bb2b88d841731d77523a821ee0e6f292c697a6ba9a7ed544"
+    },
+    {
+      "path": "tests/development/decision-shadow-helpers.mts",
+      "sha256": "170a603609f900f52e831e911ad619142363c7a35ab9d6f163fff2d5940139ff"
+    },
+    {
+      "path": "tests/development/decision-shadow.test.mts",
+      "sha256": "a3dd5ae48e3ac5f74aa03c73cb275a451c930d3bf98af6b6493cc4db69112313"
+    },
+    {
+      "path": "tests/fixtures/decision-model/README.md",
+      "sha256": "51f43716d56588993cdea7e57a0f50a573da295dbe53ec54bb5f06459ded5eb8"
+    },
+    {
+      "path": "tests/fixtures/decision-model/normalized-success.json",
+      "sha256": "cff346b6ee34b09aa48be7d086001c6fa6662832f27e06718cbf0d232ef586cb"
+    },
+    {
+      "path": "tests/fixtures/decision-model/request.json",
+      "sha256": "dada3507551ea1409c80974dab8518d7ef96da632137bb1bf33d9bc137e7c307"
+    },
+    {
+      "path": "tests/fixtures/decision-model/workers-ai-success.json",
+      "sha256": "6f7ff4a99145738a69d06a4bb9844ca9aea487513e0afed42573920a54b02d75"
+    },
+    {
+      "path": "tests/fixtures/decision-model/workers-ai-unknown-option.json",
+      "sha256": "c57950423e928c7e7ce2421b6a3004ccaf62e9d2aace610fd222b9751ba27803"
+    },
+    {
+      "path": "tests/fixtures/decision-shadow/README.md",
+      "sha256": "b85b6b2168c5c1ab77132079f6aefd50a505d7bd6b50ff0c522b8f53a07ffb08"
+    },
+    {
+      "path": "tests/fixtures/decision-shadow/evaluation-protocol.v1.json",
+      "sha256": "f8baaa14a4f800ffe6463d30ca4262b50bc52d5848c37bdf1580533327c0a6db"
+    },
+    {
+      "path": "tests/fixtures/decision-shadow/protocol-pin.json",
+      "sha256": "90b2b8f7dbc5ac3a0887002b6defa067d1d6f2d92dece9bab56d3bac93ba32dd"
+    },
+    {
+      "path": "tests/fixtures/decision-shadow/wire-responses.v1.json",
+      "sha256": "b16869f56dfb8602f1bc92884478f88784695a0a077427f61c0660d5c566de50"
     }
   ]
 }

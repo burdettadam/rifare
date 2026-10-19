@@ -1,6 +1,6 @@
 {
-  "source_file_count": 1589,
-  "source_count_reason": "ADR-0041 reviewed additive M12 agency, template, extension and assurance preparation source; all 1535 prior source members retained.",
+  "source_file_count": 1697,
+  "source_count_reason": "ADR-0042 additive M13 decision-model/shadow development and exact M13-M22 planning adoption; all 1589 prior source members retained.",
   "component_ids": [
     "git-agent-adaptations",
     "rifare-developer-helpers",

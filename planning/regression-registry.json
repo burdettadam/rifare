@@ -1749,6 +1749,59 @@
       "contract_files": [
         "packages/security/contracts/code-execution-decision.v1.json"
       ]
+    },
+    {
+      "id": "FEATURE-M13-G01",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/agent/contracts/decision-model.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M13-G02",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/decision-shadow.v1.json",
+        "packages/commerce/skill-bundles/return-intake-shadow/commerce-manifest.json",
+        "packages/commerce/skill-bundles/return-intake-shadow/references/return-intake-questions.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M13-G03",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/agent/contracts/decision-model.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M13-G04",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/decision-shadow.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M13-G05",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/decision-shadow.v1.json",
+        "tests/fixtures/decision-shadow/evaluation-protocol.v1.json",
+        "tests/fixtures/decision-shadow/protocol-pin.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M13-LOCAL-ASSESSMENT",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/decision-shadow.v1.json",
+        "docs/M13-QUALIFICATION.md"
+      ]
     }
   ],
   "tests": [
@@ -22527,6 +22580,258 @@
       "runner_case_id": "M12-G09-DEFERRED-CANONICAL-BOUNDARY",
       "source": "tests/development/ecosystem-assurance.test.mts",
       "capability_id": "FEATURE-M12-G09-DISABLED-GUARD"
+    },
+    {
+      "id": "runtime:CASE-M13-G01-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M13-G01-01",
+      "source": "tests/development/decision-model.test.mts",
+      "capability_id": "FEATURE-M13-G01"
+    },
+    {
+      "id": "runtime:CASE-M13-G01-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M13-G01-02",
+      "source": "tests/development/decision-model.test.mts",
+      "capability_id": "FEATURE-M13-G01"
+    },
+    {
+      "id": "runtime:CASE-M13-G01-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M13-G01-03",
+      "source": "tests/development/decision-model.test.mts",
+      "capability_id": "FEATURE-M13-G01"
+    },
+    {
+      "id": "runtime:CASE-M13-G03-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M13-G03-01",
+      "source": "tests/development/decision-model.test.mts",
+      "capability_id": "FEATURE-M13-G03"
+    },
+    {
+      "id": "runtime:CASE-M13-G03-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M13-G03-02",
+      "source": "tests/development/decision-model.test.mts",
+      "capability_id": "FEATURE-M13-G03"
+    },
+    {
+      "id": "runtime:CASE-M13-G03-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M13-G03-03",
+      "source": "tests/development/decision-model.test.mts",
+      "capability_id": "FEATURE-M13-G03"
+    },
+    {
+      "id": "runtime:CASE-M13-G03-04",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M13-G03-04",
+      "source": "tests/development/decision-model.test.mts",
+      "capability_id": "FEATURE-M13-G03"
+    },
+    {
+      "id": "runtime:M13-G01-DISTRIBUTION-ROUNDING-AND-SCORE",
+      "suite": "runtime",
+      "runner_case_id": "M13-G01-DISTRIBUTION-ROUNDING-AND-SCORE",
+      "source": "tests/development/decision-model.test.mts",
+      "capability_id": "FEATURE-M13-G01"
+    },
+    {
+      "id": "runtime:M13-G01-BOUNDARIES-AND-MODALITIES",
+      "suite": "runtime",
+      "runner_case_id": "M13-G01-BOUNDARIES-AND-MODALITIES",
+      "source": "tests/development/decision-model.test.mts",
+      "capability_id": "FEATURE-M13-G01"
+    },
+    {
+      "id": "runtime:M13-G03-REQUEST-BOUND-PREVENTS-SILENT-TRUNCATION",
+      "suite": "runtime",
+      "runner_case_id": "M13-G03-REQUEST-BOUND-PREVENTS-SILENT-TRUNCATION",
+      "source": "tests/development/decision-model.test.mts",
+      "capability_id": "FEATURE-M13-G03"
+    },
+    {
+      "id": "runtime:M13-G03-REDIRECT-AND-ERROR-REDACTION",
+      "suite": "runtime",
+      "runner_case_id": "M13-G03-REDIRECT-AND-ERROR-REDACTION",
+      "source": "tests/development/decision-model.test.mts",
+      "capability_id": "FEATURE-M13-G03"
+    },
+    {
+      "id": "runtime:M13-G03-CREDENTIAL-REVOKED-IN-FLIGHT",
+      "suite": "runtime",
+      "runner_case_id": "M13-G03-CREDENTIAL-REVOKED-IN-FLIGHT",
+      "source": "tests/development/decision-model.test.mts",
+      "capability_id": "FEATURE-M13-G03"
+    },
+    {
+      "id": "runtime:M13-G03-CONFIGURATION-AND-USAGE-BOUNDARY",
+      "suite": "runtime",
+      "runner_case_id": "M13-G03-CONFIGURATION-AND-USAGE-BOUNDARY",
+      "source": "tests/development/decision-model.test.mts",
+      "capability_id": "FEATURE-M13-G03"
+    },
+    {
+      "id": "runtime:CASE-M13-G02-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M13-G02-01",
+      "source": "tests/development/decision-shadow.test.mts",
+      "capability_id": "FEATURE-M13-G02"
+    },
+    {
+      "id": "runtime:CASE-M13-G02-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M13-G02-02",
+      "source": "tests/development/decision-shadow.test.mts",
+      "capability_id": "FEATURE-M13-G02"
+    },
+    {
+      "id": "runtime:CASE-M13-G02-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M13-G02-03",
+      "source": "tests/development/decision-shadow.test.mts",
+      "capability_id": "FEATURE-M13-G02"
+    },
+    {
+      "id": "runtime:CASE-M13-G02-04",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M13-G02-04",
+      "source": "tests/development/decision-shadow.test.mts",
+      "capability_id": "FEATURE-M13-G02"
+    },
+    {
+      "id": "runtime:CASE-M13-G04-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M13-G04-01",
+      "source": "tests/development/decision-shadow.test.mts",
+      "capability_id": "FEATURE-M13-G04"
+    },
+    {
+      "id": "runtime:CASE-M13-G04-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M13-G04-02",
+      "source": "tests/development/decision-shadow.test.mts",
+      "capability_id": "FEATURE-M13-G04"
+    },
+    {
+      "id": "runtime:CASE-M13-G04-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M13-G04-03",
+      "source": "tests/development/decision-shadow.test.mts",
+      "capability_id": "FEATURE-M13-G04"
+    },
+    {
+      "id": "runtime:CASE-M13-G04-04",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M13-G04-04",
+      "source": "tests/development/decision-shadow.test.mts",
+      "capability_id": "FEATURE-M13-G04"
+    },
+    {
+      "id": "runtime:CASE-M13-G05-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M13-G05-01",
+      "source": "tests/development/decision-shadow.test.mts",
+      "capability_id": "FEATURE-M13-G05"
+    },
+    {
+      "id": "runtime:CASE-M13-G05-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M13-G05-02",
+      "source": "tests/development/decision-shadow.test.mts",
+      "capability_id": "FEATURE-M13-G05"
+    },
+    {
+      "id": "runtime:CASE-M13-G05-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M13-G05-03",
+      "source": "tests/development/decision-shadow.test.mts",
+      "capability_id": "FEATURE-M13-G05"
+    },
+    {
+      "id": "runtime:CASE-M13-G05-04",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M13-G05-04",
+      "source": "tests/development/decision-shadow.test.mts",
+      "capability_id": "FEATURE-M13-G05"
+    },
+    {
+      "id": "runtime:M13-SHADOW-CURRENT-OWNERSHIP",
+      "suite": "runtime",
+      "runner_case_id": "M13-SHADOW-CURRENT-OWNERSHIP",
+      "source": "tests/development/decision-shadow.test.mts",
+      "capability_id": "FEATURE-M13-G04"
+    },
+    {
+      "id": "runtime:M13-SHADOW-CURRENT-SOURCE-AFTER-AWAIT",
+      "suite": "runtime",
+      "runner_case_id": "M13-SHADOW-CURRENT-SOURCE-AFTER-AWAIT",
+      "source": "tests/development/decision-shadow.test.mts",
+      "capability_id": "FEATURE-M13-G04"
+    },
+    {
+      "id": "runtime:M13-SHADOW-CURRENT-PROFILE-AND-SKILL",
+      "suite": "runtime",
+      "runner_case_id": "M13-SHADOW-CURRENT-PROFILE-AND-SKILL",
+      "source": "tests/development/decision-shadow.test.mts",
+      "capability_id": "FEATURE-M13-G04"
+    },
+    {
+      "id": "runtime:M13-SHADOW-STOP-RESUME-GENERATION",
+      "suite": "runtime",
+      "runner_case_id": "M13-SHADOW-STOP-RESUME-GENERATION",
+      "source": "tests/development/decision-shadow.test.mts",
+      "capability_id": "FEATURE-M13-G04"
+    },
+    {
+      "id": "runtime:M13-SHADOW-EXPORT-ERASURE-AND-OTHER-SUBJECT",
+      "suite": "runtime",
+      "runner_case_id": "M13-SHADOW-EXPORT-ERASURE-AND-OTHER-SUBJECT",
+      "source": "tests/development/decision-shadow.test.mts",
+      "capability_id": "FEATURE-M13-G04"
+    },
+    {
+      "id": "runtime:M13-SHADOW-RESTORED-ERASURE-AND-UNINSTALL",
+      "suite": "runtime",
+      "runner_case_id": "M13-SHADOW-RESTORED-ERASURE-AND-UNINSTALL",
+      "source": "tests/development/decision-shadow.test.mts",
+      "capability_id": "FEATURE-M13-G04"
+    },
+    {
+      "id": "runtime:M13-SHADOW-UNKNOWN-USAGE-AND-BUDGET-EXHAUSTION",
+      "suite": "runtime",
+      "runner_case_id": "M13-SHADOW-UNKNOWN-USAGE-AND-BUDGET-EXHAUSTION",
+      "source": "tests/development/decision-shadow.test.mts",
+      "capability_id": "FEATURE-M13-G03"
+    },
+    {
+      "id": "runtime:M13-SHADOW-PREPARED-CREDENTIAL-REVOCATION",
+      "suite": "runtime",
+      "runner_case_id": "M13-SHADOW-PREPARED-CREDENTIAL-REVOCATION",
+      "source": "tests/development/decision-shadow.test.mts",
+      "capability_id": "FEATURE-M13-G04"
+    },
+    {
+      "id": "runtime:M13-SHADOW-ATTACHMENTS-GAPS-AND-MESSAGE-WINDOW",
+      "suite": "runtime",
+      "runner_case_id": "M13-SHADOW-ATTACHMENTS-GAPS-AND-MESSAGE-WINDOW",
+      "source": "tests/development/decision-shadow.test.mts",
+      "capability_id": "FEATURE-M13-G02"
+    },
+    {
+      "id": "runtime:M13-SHADOW-CONFIGURATION-CHANGE-AFTER-AWAIT",
+      "suite": "runtime",
+      "runner_case_id": "M13-SHADOW-CONFIGURATION-CHANGE-AFTER-AWAIT",
+      "source": "tests/development/decision-shadow.test.mts",
+      "capability_id": "FEATURE-M13-G04"
+    },
+    {
+      "id": "runtime:M13-LOCAL-MILESTONE-ASSESSMENT",
+      "suite": "runtime",
+      "runner_case_id": "M13-LOCAL-MILESTONE-ASSESSMENT",
+      "source": "tests/development/decision-shadow.test.mts",
+      "capability_id": "FEATURE-M13-LOCAL-ASSESSMENT"
     }
   ],
   "protected_files": [

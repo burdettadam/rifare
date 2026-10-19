@@ -854,6 +854,12 @@
         "semantics": "native",
         "qualification": "sandbox-only"
       }
+    },
+    "cloudflare_decision": {
+      "decision.classify": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      }
     }
   },
   "declarations": [
@@ -898,8 +904,10 @@
     "packages/adapters/woocommerce/refund-gateway-fixture.mts",
     "packages/adapters/woocommerce/return-contract.mts",
     "packages/adapters/woocommerce/return-source.mts",
+    "packages/agent/decisions.mts",
     "packages/agent/local-model.mts",
     "packages/agent/providers.mts",
+    "packages/agent/workers-ai.mts",
     "packages/commerce/bill-of-materials.mts",
     "packages/commerce/capabilities.mts",
     "packages/commerce/delivery-trial-core.mts",
@@ -1966,6 +1974,16 @@
           "scope_kind": "server_local_fixture_only"
         }
       }
+    },
+    "cloudflare_decision": {
+      "version": "source-sha256:4cbe06704cda2ac1248bc9fcb07df1794a3f5a0896f7b01c098ff76325bba3e0",
+      "api_version": "workers-ai-account-run-clef-flash-unqualified",
+      "operations": {
+        "decision.classify": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        }
+      }
     }
   },
   "native_cases": [
@@ -2526,6 +2544,48 @@
       "name": "CASE-M11-G09-03",
       "path": "tests/development/procurement-inventory.test.mts",
       "sha256": "5a444c8bf5822e689aefffdfb224fc87b3f39ff908915be9db8b6d74e6bfcd52"
+    },
+    {
+      "id": "CASE-M13-G01-01",
+      "name": "CASE-M13-G01-01",
+      "path": "tests/development/decision-model.test.mts",
+      "sha256": "fcdad7288e2e9bb1bb2b88d841731d77523a821ee0e6f292c697a6ba9a7ed544"
+    },
+    {
+      "id": "CASE-M13-G01-02",
+      "name": "CASE-M13-G01-02",
+      "path": "tests/development/decision-model.test.mts",
+      "sha256": "fcdad7288e2e9bb1bb2b88d841731d77523a821ee0e6f292c697a6ba9a7ed544"
+    },
+    {
+      "id": "CASE-M13-G01-03",
+      "name": "CASE-M13-G01-03",
+      "path": "tests/development/decision-model.test.mts",
+      "sha256": "fcdad7288e2e9bb1bb2b88d841731d77523a821ee0e6f292c697a6ba9a7ed544"
+    },
+    {
+      "id": "CASE-M13-G03-01",
+      "name": "CASE-M13-G03-01",
+      "path": "tests/development/decision-model.test.mts",
+      "sha256": "fcdad7288e2e9bb1bb2b88d841731d77523a821ee0e6f292c697a6ba9a7ed544"
+    },
+    {
+      "id": "CASE-M13-G03-02",
+      "name": "CASE-M13-G03-02",
+      "path": "tests/development/decision-model.test.mts",
+      "sha256": "fcdad7288e2e9bb1bb2b88d841731d77523a821ee0e6f292c697a6ba9a7ed544"
+    },
+    {
+      "id": "CASE-M13-G03-03",
+      "name": "CASE-M13-G03-03",
+      "path": "tests/development/decision-model.test.mts",
+      "sha256": "fcdad7288e2e9bb1bb2b88d841731d77523a821ee0e6f292c697a6ba9a7ed544"
+    },
+    {
+      "id": "CASE-M13-G03-04",
+      "name": "CASE-M13-G03-04",
+      "path": "tests/development/decision-model.test.mts",
+      "sha256": "fcdad7288e2e9bb1bb2b88d841731d77523a821ee0e6f292c697a6ba9a7ed544"
     },
     {
       "id": "M01-G04-01",
@@ -3324,6 +3384,42 @@
       "name": "M11-STOCK-SOURCE-INTEGRITY",
       "path": "tests/development/procurement-inventory.test.mts",
       "sha256": "5a444c8bf5822e689aefffdfb224fc87b3f39ff908915be9db8b6d74e6bfcd52"
+    },
+    {
+      "id": "M13-G01-BOUNDARIES-AND-MODALITIES",
+      "name": "M13-G01-BOUNDARIES-AND-MODALITIES",
+      "path": "tests/development/decision-model.test.mts",
+      "sha256": "fcdad7288e2e9bb1bb2b88d841731d77523a821ee0e6f292c697a6ba9a7ed544"
+    },
+    {
+      "id": "M13-G01-DISTRIBUTION-ROUNDING-AND-SCORE",
+      "name": "M13-G01-DISTRIBUTION-ROUNDING-AND-SCORE",
+      "path": "tests/development/decision-model.test.mts",
+      "sha256": "fcdad7288e2e9bb1bb2b88d841731d77523a821ee0e6f292c697a6ba9a7ed544"
+    },
+    {
+      "id": "M13-G03-CONFIGURATION-AND-USAGE-BOUNDARY",
+      "name": "M13-G03-CONFIGURATION-AND-USAGE-BOUNDARY",
+      "path": "tests/development/decision-model.test.mts",
+      "sha256": "fcdad7288e2e9bb1bb2b88d841731d77523a821ee0e6f292c697a6ba9a7ed544"
+    },
+    {
+      "id": "M13-G03-CREDENTIAL-REVOKED-IN-FLIGHT",
+      "name": "M13-G03-CREDENTIAL-REVOKED-IN-FLIGHT",
+      "path": "tests/development/decision-model.test.mts",
+      "sha256": "fcdad7288e2e9bb1bb2b88d841731d77523a821ee0e6f292c697a6ba9a7ed544"
+    },
+    {
+      "id": "M13-G03-REDIRECT-AND-ERROR-REDACTION",
+      "name": "M13-G03-REDIRECT-AND-ERROR-REDACTION",
+      "path": "tests/development/decision-model.test.mts",
+      "sha256": "fcdad7288e2e9bb1bb2b88d841731d77523a821ee0e6f292c697a6ba9a7ed544"
+    },
+    {
+      "id": "M13-G03-REQUEST-BOUND-PREVENTS-SILENT-TRUNCATION",
+      "name": "M13-G03-REQUEST-BOUND-PREVENTS-SILENT-TRUNCATION",
+      "path": "tests/development/decision-model.test.mts",
+      "sha256": "fcdad7288e2e9bb1bb2b88d841731d77523a821ee0e6f292c697a6ba9a7ed544"
     },
     {
       "id": "PORT-027",
