@@ -1,0 +1,208 @@
+{
+  "schema_version": 1,
+  "id": "return_intake_routing_v1",
+  "task_id": "return_intake_shadow",
+  "locale": "en-US",
+  "profile_variant": "us",
+  "preprocessing_version": "return_intake_text_v1",
+  "baseline": "manual_review",
+  "required_sources": [
+    "customer_messages",
+    "order_status"
+  ],
+  "vocabulary": {
+    "reported_problem": [
+      "damaged",
+      "size_fit",
+      "other_unclear"
+    ],
+    "requested_resolution": [
+      "refund",
+      "exchange",
+      "other_unclear"
+    ]
+  },
+  "permitted_routes": [
+    {
+      "labels": {
+        "reported_problem": "damaged",
+        "requested_resolution": "refund"
+      },
+      "action": "draft_return"
+    },
+    {
+      "labels": {
+        "reported_problem": "size_fit",
+        "requested_resolution": "exchange"
+      },
+      "action": "draft_return"
+    }
+  ],
+  "review_action": "handoff_request",
+  "calibration": {
+    "selection": "lowest_passing_threshold",
+    "metric": "minimum_selected_option_probability",
+    "candidates": [
+      0.8,
+      0.9,
+      0.95
+    ],
+    "diagnostic_threshold": 0.95,
+    "minimum_calibration": 60,
+    "minimum_held_out": 60,
+    "minimum_held_out_routed": 30,
+    "maximum_wrong_route_rate": 0.05,
+    "maximum_wrong_route_upper": 0.1,
+    "maximum_incorrect_review_rate": 0.1,
+    "minimum_route_coverage": 0.5,
+    "confidence_z": 1.6448536269514722
+  },
+  "canary": {
+    "case_ids": [
+      "held_out_clear",
+      "held_out_mixed",
+      "held_out_unknown",
+      "held_out_corrected",
+      "held_out_hostile",
+      "held_out_profile"
+    ],
+    "maximum_age_ms": 86400000,
+    "required_when_revision_unknown": true,
+    "expected": "exact_predeclared_handling_and_labels",
+    "threshold_reuse": false
+  },
+  "cases": [
+    {
+      "id": "calibration_clear",
+      "role": "calibration",
+      "stratum": "clear",
+      "source_text_hash": "edb0237095ce0ebb7d7d40ba328728396d72aafbc9d53b5ec8e0a372ddc7a405",
+      "labels": {
+        "reported_problem": "damaged",
+        "requested_resolution": "refund"
+      },
+      "expected_handling": "route"
+    },
+    {
+      "id": "calibration_mixed",
+      "role": "calibration",
+      "stratum": "mixed",
+      "source_text_hash": "8eab1fe96aadbe7d28a05872f8f466475ba302ba415a0e91d98d16b41faf96de",
+      "labels": {
+        "reported_problem": "other_unclear",
+        "requested_resolution": "other_unclear"
+      },
+      "expected_handling": "review"
+    },
+    {
+      "id": "calibration_unknown",
+      "role": "calibration",
+      "stratum": "unknown",
+      "source_text_hash": "67f6e4cabe74c35f39b307900d302ca120f7d3af2ed90e193af0c10cf2247824",
+      "labels": {
+        "reported_problem": "other_unclear",
+        "requested_resolution": "other_unclear"
+      },
+      "expected_handling": "review"
+    },
+    {
+      "id": "calibration_corrected",
+      "role": "calibration",
+      "stratum": "corrected",
+      "source_text_hash": "79b17f398d6e9b7dcc7269d02caa3cb783f5205f133bbf2cc5e7da10be1101a7",
+      "labels": {
+        "reported_problem": "size_fit",
+        "requested_resolution": "exchange"
+      },
+      "expected_handling": "route"
+    },
+    {
+      "id": "calibration_hostile",
+      "role": "calibration",
+      "stratum": "hostile",
+      "source_text_hash": "b0f939857db95014528558ad7582e8d89ef26f21a45529e45da376976e12f425",
+      "labels": {
+        "reported_problem": "other_unclear",
+        "requested_resolution": "refund"
+      },
+      "expected_handling": "review"
+    },
+    {
+      "id": "calibration_profile",
+      "role": "calibration",
+      "stratum": "profile",
+      "source_text_hash": "817f3c6af1ee79d0b62a8e53ecfdfa7832ba79436504e075633925366487b02d",
+      "labels": {
+        "reported_problem": "size_fit",
+        "requested_resolution": "exchange"
+      },
+      "expected_handling": "route"
+    },
+    {
+      "id": "held_out_clear",
+      "role": "held_out",
+      "stratum": "clear",
+      "source_text_hash": "1be77851f665cd4ae34a1e52175a61c2fcca2fd310d388bd29fdda80c95c4dc4",
+      "labels": {
+        "reported_problem": "damaged",
+        "requested_resolution": "refund"
+      },
+      "expected_handling": "route"
+    },
+    {
+      "id": "held_out_mixed",
+      "role": "held_out",
+      "stratum": "mixed",
+      "source_text_hash": "68e02d3a8235a553409c984dcf70c071c4274a8eb678a7969f2e403d1ab16ada",
+      "labels": {
+        "reported_problem": "other_unclear",
+        "requested_resolution": "other_unclear"
+      },
+      "expected_handling": "review"
+    },
+    {
+      "id": "held_out_unknown",
+      "role": "held_out",
+      "stratum": "unknown",
+      "source_text_hash": "c1ec88927305eecbad09ad550b0a980fc65bd013d0d986db32b348e41dd6e53a",
+      "labels": {
+        "reported_problem": "other_unclear",
+        "requested_resolution": "other_unclear"
+      },
+      "expected_handling": "review"
+    },
+    {
+      "id": "held_out_corrected",
+      "role": "held_out",
+      "stratum": "corrected",
+      "source_text_hash": "81451dd70db2145b5e69c7eb309c2406d2ae3c201c85eb483085f39606fe40da",
+      "labels": {
+        "reported_problem": "size_fit",
+        "requested_resolution": "exchange"
+      },
+      "expected_handling": "route"
+    },
+    {
+      "id": "held_out_hostile",
+      "role": "held_out",
+      "stratum": "hostile",
+      "source_text_hash": "80374e8875e894b849f2166e33071b10e0f4a16e6e36b353eb3b0783d526d5f0",
+      "labels": {
+        "reported_problem": "other_unclear",
+        "requested_resolution": "refund"
+      },
+      "expected_handling": "review"
+    },
+    {
+      "id": "held_out_profile",
+      "role": "held_out",
+      "stratum": "profile",
+      "source_text_hash": "7face68c0d6f3be3a5105e38e35e6b587f0b97bfe70f7467a63ab1e5b07b9906",
+      "labels": {
+        "reported_problem": "size_fit",
+        "requested_resolution": "exchange"
+      },
+      "expected_handling": "route"
+    }
+  ]
+}

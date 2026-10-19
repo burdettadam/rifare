@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "diagnostic_scope_only": true,
+  "protocol_denominators": {
+    "calibration": 6,
+    "held_out": 6,
+    "total": 12
+  },
+  "adequate_numeric_cohort": {
+    "calibration": 60,
+    "held_out": 60,
+    "correctly_routed": 30,
+    "correctly_reviewed": 30,
+    "wrongly_routed": 0,
+    "incorrectly_reviewed": 0,
+    "selected_threshold": 0.8,
+    "maximum_wrong_route_upper": 0.1
+  },
+  "route": {
+    "action": "draft_return",
+    "outcome": "routed",
+    "mode": "diagnostic",
+    "business_effects": 0,
+    "case_resolution_qualified": false
+  },
+  "review": {
+    "action": "handoff_request",
+    "outcome": "review"
+  },
+  "pending": [
+    "approved_live_backend_observations",
+    "adequate_frozen_cohort",
+    "independent_scoped_publication",
+    "two_actual_backend_comparison",
+    "optional_self_hosted_observation",
+    "inherited_formal_product_gates"
+  ]
+}
