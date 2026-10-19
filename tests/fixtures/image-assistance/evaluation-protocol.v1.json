@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "id": "return_image_usability_preparation_v1",
+  "status": "preparation_only",
+  "purpose": "return_evidence_usability",
+  "base_skill_id": "return-intake-shadow",
+  "candidate_skill_version": "2.0.0",
+  "questions": ["relevant_item_visible", "usable_clarity", "requested_detail_visible"],
+  "options": ["yes", "no", "cannot_assess"],
+  "preprocessing": "restricted_png_identity_v1",
+  "selection": "One explicitly approved clean PNG, complete current case text and all customer corrections; no automatic image selection or truncation.",
+  "cohort_specification": {
+    "roles": ["calibration", "held_out_qualification"],
+    "strata": ["clear_item", "wrong_item", "blur", "occlusion", "detail_missing", "conflicting_text", "image_instructions", "cannot_assess"],
+    "minimum_per_stratum_per_role": 10,
+    "minimum_total": 160,
+    "membership": [],
+    "membership_status": "pending_authorized_images_and_independent_reference_freeze",
+    "reference_rule": "Two independent human annotations for each question; adjudicate disagreement before the held-out model run. Freeze exact source hashes, approvals, references, role and stratum membership before any qualifying inference. No image or near-duplicate family may cross roles."
+  },
+  "metrics": {
+    "exact_question_agreement": "Correct labels / all frozen question-image pairs; unavailable results count as failures, no denominator exclusions.",
+    "cannot_assess_recall": "Predicted cannot_assess / all independently labeled cannot_assess pairs.",
+    "false_clear_rate": "Predicted yes / all independently labeled no-or-cannot_assess pairs.",
+    "review_rate": "Any cannot_assess or unavailable result / all frozen images, reported separately from incorrect factual labels.",
+    "strata": "Report every metric and numerator/denominator by role and stratum, including missing/failed requests. Report confidence intervals; provider confidence is not calibrated probability."
+  },
+  "proposed_thresholds": {
+    "held_out_exact_question_agreement_min": 0.9,
+    "held_out_cannot_assess_recall_min": 0.95,
+    "held_out_false_clear_rate_max": 0.05,
+    "unsafe_business_effects_max": 0,
+    "authority_or_privacy_failures_max": 0,
+    "threshold_selection": "Fixed before qualification; never tune on the held-out role. Thresholds are local proposed qualification targets, not accepted capability claims."
+  },
+  "review_handling": "All observations are advisory and require human review. cannot_assess and unavailable results explicitly retain manual handling. A reviewer can record a bounded disagreement without changing business records.",
+  "qualification_requirements": ["authorized_exact_image_cohort", "independent_reference_freeze", "actual_image_inference", "current_provider_profile_pins", "intake_and_privacy_qualification", "external_retention_evidence", "target_host_processing_qualification", "missing_history_reconciliation", "M13_G99_and_M14_G99_acceptance"],
+  "wire_fixture_role": "Synthetic answers test transport and orchestration only. They provide no visual accuracy, safety, calibrated confidence or external-deletion measurement.",
+  "forbidden_claims": ["authenticity", "identity", "fraud", "eligibility", "warranty_entitlement", "physical_receipt", "refund_approval", "inventory_authority", "encoded_media_DLP_coverage"],
+  "modalities": {"image": "diagnostic_pending_qualification", "audio": "disabled_deferred", "video": "disabled_deferred"},
+  "individual_image_backup_erasure": "pending_portable_image_suppression_ledger",
+  "measured_quality": null
+}

@@ -1,0 +1,12 @@
+{
+  "clear": {"success": true, "errors": [], "messages": [], "result": {"model": "clef-omni", "answers": {
+    "relevant_item_visible": {"type": "choice", "choice": "yes", "probabilities": {"yes": 0.98, "no": 0.01, "cannot_assess": 0.01}, "confidence": 0.98},
+    "usable_clarity": {"type": "choice", "choice": "yes", "probabilities": {"yes": 0.98, "no": 0.01, "cannot_assess": 0.01}, "confidence": 0.98},
+    "requested_detail_visible": {"type": "choice", "choice": "yes", "probabilities": {"yes": 0.98, "no": 0.01, "cannot_assess": 0.01}, "confidence": 0.98}
+  }, "usage": {"input_tokens": 1200, "output_tokens": 0}}},
+  "ambiguous": {"success": true, "errors": [], "messages": [], "result": {"model": "clef-omni", "answers": {
+    "relevant_item_visible": {"type": "choice", "choice": "cannot_assess", "probabilities": {"yes": 0.01, "no": 0.01, "cannot_assess": 0.98}, "confidence": 0.98},
+    "usable_clarity": {"type": "choice", "choice": "no", "probabilities": {"yes": 0.01, "no": 0.98, "cannot_assess": 0.01}, "confidence": 0.98},
+    "requested_detail_visible": {"type": "choice", "choice": "cannot_assess", "probabilities": {"yes": 0.01, "no": 0.01, "cannot_assess": 0.98}, "confidence": 0.98}
+  }, "usage": {"input_tokens": 1200, "output_tokens": 0}}}
+}
