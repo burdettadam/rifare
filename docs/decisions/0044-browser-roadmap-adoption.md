@@ -130,3 +130,23 @@ remain unchanged. New browser worker acceptance criteria must agree exactly
 with their independently frozen requirements as well as canonical coverage.
 These changes concern planning integrity only and do not register the 69 new
 behavioral specifications as executed or executable product tests.
+
+## Final project-summary metadata reconciliation
+
+Before final integration, root found that `project.json` still exposes the
+original starter totals (13 milestones, 190 workers, 13 gates, 151 requirements,
+676 specifications and 44 capability targets) under an unlabeled `counts` key.
+Its counts were not advanced by the earlier roadmap adoption. The owner's
+request to update this project and the aggregate-count authority above permit
+this narrow correction: report the current canonical totals in `counts`, retain
+the exact former object as `initial_catalogue_counts`, and explicitly label the
+remaining starter metadata as historical. Preserve every other existing field,
+identity, workflow pin, implementation/test flag and recorded initial checkpoint.
+
+Read-only consumer inspection found no product/runtime use of these counts.
+The existing repository helper reads the identity and starter flags, which remain
+unchanged. `project.json` is not a protected regression file or capability
+contract. Independent reviewers inspect the exact metadata-only delta. Recheck
+the affected whole repository-helper file and the final metadata; carry any
+earlier helper results only with exact unchanged input/source bindings. No new
+product behavior, executable case, source member or formal acceptance is added.
