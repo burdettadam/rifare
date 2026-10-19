@@ -44,7 +44,7 @@ test('M12-G07-PREP-COMPATIBILITY-BINDING', () => {
   assert.throws(() => assessExtensionQualification(removed, {...context, expectedArtifactSha256: objectSha(removed.artifact)}), /EVIDENCE|PIN|TEST/);
 });
 
-test('M12-G08-PREP-TYPED-WORKFLOW', () => usingTyped((_f, {request, context, receipt}) => {
+test('M12-G08-PREP-TYPED-WORKFLOW', t => usingTyped((_f, {request, context, receipt}) => {
   const result = assessCodeExecutionNeed(request, context);
   for (const [key, value] of Object.entries(EXPECTED.typed)) assert.equal(result[key], value);
   assert.equal(result.code_alternative_executed, false);
@@ -53,6 +53,10 @@ test('M12-G08-PREP-TYPED-WORKFLOW', () => usingTyped((_f, {request, context, rec
   assert.equal(result.observation_authenticity, 'caller_owned_unverified');
   assert.equal(receipt.approval_consumed, true);
   assert.ok(result.tasks.every((task: any) => task.correct && task.elapsed_ms >= 0));
+  t.diagnostic('M12_TYPED_WORKFLOW_MEASUREMENTS ' + JSON.stringify({binding_sha256: result.binding_sha256,
+    source_bindings_sha256: result.source_bindings_sha256, oracle_sha256: result.oracle_sha256,
+    tasks: result.tasks, action_count: result.action_count, code_alternative_executed: false, code_latency_ms: null,
+    recommendation: result.recommendation, human_decision_authenticated: false}));
 }));
 
 test('M12-G08-PREP-PARITY-AND-PRIVILEGES', () => usingTyped((_f, {request, context}) => {

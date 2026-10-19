@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "id": "rifare-code-execution-decision-preparation-v1",
+  "mode": "assessment_only",
+  "maximum_input_bytes": 131072,
+  "oracle_id": "rifare-typed-code-need-v1",
+  "task_ids": ["typed_resolution_state", "typed_approved_resolution"],
+  "source_paths": [
+    "packages/agent/action-mcp.mts",
+    "packages/agent/mcp.mts",
+    "packages/commerce/action-gateway.mts",
+    "packages/commerce/case-configurations.mts",
+    "packages/commerce/authorization.mts",
+    "packages/commerce/skills.mts",
+    "packages/commerce/skill-contract.mts"
+  ],
+  "task_actions": {
+    "typed_resolution_state": ["resolution_state"],
+    "typed_approved_resolution": ["action.preview", "action.approve", "action.execute", "resolution_state"]
+  },
+  "maximum_observation_age_ms": 86400000,
+  "maximum_observed_elapsed_ms": 60000,
+  "proposed_resource_ceiling": {"cpu_ms": 5000, "wall_ms": 5000, "memory_bytes": 134217728, "output_bytes": 65536},
+  "enabled": false,
+  "implementation": "absent",
+  "human_decision_authenticated": false,
+  "sandbox_qualified": false,
+  "database_tables": [],
+  "network_operations": []
+}

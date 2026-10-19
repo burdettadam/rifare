@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "id": "rifare-extension-qualification-preparation-v1",
+  "mode": "local_preparation_only",
+  "maximum_input_bytes": 262144,
+  "sdk_paths": [
+    "packages/commerce/skills.mts",
+    "packages/commerce/skill-contract.mts",
+    "packages/commerce/skill-installer.mts",
+    "packages/conformance/adapter-fixtures.mts",
+    "packages/conformance/adapter-catalog.mts",
+    "docs/SKILL-ARCHITECTURE.md",
+    "docs/ADAPTER-CONFORMANCE.md",
+    "planning/licensing-policy.json"
+  ],
+  "required_external_obligations": [
+    "ATTRIBUTABLE_EXTERNAL_EXECUTION_MISSING",
+    "NATIVE_CONFORMANCE_EXECUTION_MISSING",
+    "INDEPENDENT_SECURITY_REVIEW_MISSING",
+    "INDEPENDENT_REGRESSION_REVIEW_MISSING",
+    "COMPATIBLE_CORE_EXTERNAL_RERUN_MISSING"
+  ],
+  "independently_qualified": false,
+  "execution_authorized": false,
+  "contribution_solicitation_authorized": false,
+  "database_tables": [],
+  "network_operations": [],
+  "package_execution": false
+}
