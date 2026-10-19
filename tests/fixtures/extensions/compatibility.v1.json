@@ -1,0 +1,12 @@
+{
+  "version": "rifare-extension-fixtures-v1",
+  "classification": "maintainer_authored_synthetic_fixture",
+  "instruction": {"id": "order-status", "version": "1.0.0", "actions": ["order.status"], "authority": "guidance_only"},
+  "compatible": {"from": "1.0.0", "to": "1.1.0", "tone": "warm", "locale": "fr-CA", "case_revision": 1, "case_tone": "neutral"},
+  "breaking": {"from": "1.0.0", "to": "2.0.0", "strategy": "retain_pins_and_repreview", "requires_new_preview": true},
+  "rollback": {"initial_profile_revision": 2, "activated_profile_revision": 3, "rollback_profile_revision": 4, "effect_count": 1},
+  "retained_cases": ["CASE-M02-G04-01", "CASE-M02-G04-02", "CASE-M02-G04-03"],
+  "retirement": {"notice_ms": 86400000, "portable_export_required": true, "reader_retained": true, "human_adoption": false},
+  "external_qualification": false,
+  "license_rights_verified": false
+}
