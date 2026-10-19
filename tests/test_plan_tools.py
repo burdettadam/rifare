@@ -47,6 +47,16 @@ class PlanStructureTests(unittest.TestCase):
     def test_duplicate_test_id_fails(self):
         self.d['tests']['tests'][1]['id']=self.d['tests']['tests'][0]['id']
         self.assertTrue(any('duplicate ID' in e for e in validate_documents(self.d)))
+    def test_unapproved_addition_is_not_an_open_coverage_namespace(self):
+        extra=copy.deepcopy(self.d['coverage']['requirements'][-1]);extra['id']='ADD-UNAPPROVED'
+        self.d['coverage']['requirements'].append(extra)
+        self.assertTrue(any('exact approved union' in e for e in validate_documents(self.d)))
+    def test_adopted_criterion_cannot_be_weakened_to_match_a_candidate(self):
+        self.d['coverage']['requirements'][-1]['acceptance_criteria']='A fixture is enough to accept all live behavior.'
+        self.assertTrue(any('adopted acceptance criterion changed' in e for e in validate_documents(self.d)))
+    def test_frozen_addition_cannot_replace_an_original_requirement(self):
+        self.d['adopted_requirements']['requirements'][0]['id']=self.d['original_requirements']['items'][0]['id']
+        self.assertTrue(any('frozen addition changed' in e for e in validate_documents(self.d)))
 
 class InventoryTests(unittest.TestCase):
     def setUp(self):
