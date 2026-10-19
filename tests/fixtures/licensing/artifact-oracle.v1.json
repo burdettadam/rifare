@@ -1,6 +1,6 @@
 {
-  "source_file_count": 1697,
-  "source_count_reason": "ADR-0042 additive M13 decision-model/shadow development and exact M13-M22 planning adoption; all 1589 prior source members retained.",
+  "source_file_count": 1727,
+  "source_count_reason": "ADR-0043 additive M14 calibration/routing/SystemOne development; all 1697 prior source members and original/adopted planning retained.",
   "component_ids": [
     "git-agent-adaptations",
     "rifare-developer-helpers",

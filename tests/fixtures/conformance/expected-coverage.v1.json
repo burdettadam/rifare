@@ -860,6 +860,12 @@
         "semantics": "native",
         "qualification": "sandbox-only"
       }
+    },
+    "systemone_decision": {
+      "decision.classify": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      }
     }
   },
   "declarations": [
@@ -907,6 +913,7 @@
     "packages/agent/decisions.mts",
     "packages/agent/local-model.mts",
     "packages/agent/providers.mts",
+    "packages/agent/systemone.mts",
     "packages/agent/workers-ai.mts",
     "packages/commerce/bill-of-materials.mts",
     "packages/commerce/capabilities.mts",
@@ -1984,6 +1991,16 @@
           "scope_kind": "server_local_fixture_only"
         }
       }
+    },
+    "systemone_decision": {
+      "version": "source-sha256:5b485aa0196c8dc419aab86ff68d10e1c53592222705d63c9035606b91207f30",
+      "api_version": "systemone-v1-explicit-endpoint-unqualified",
+      "operations": {
+        "decision.classify": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        }
+      }
     }
   },
   "native_cases": [
@@ -2586,6 +2603,30 @@
       "name": "CASE-M13-G03-04",
       "path": "tests/development/decision-model.test.mts",
       "sha256": "fcdad7288e2e9bb1bb2b88d841731d77523a821ee0e6f292c697a6ba9a7ed544"
+    },
+    {
+      "id": "CASE-M14-G04-01",
+      "name": "CASE-M14-G04-01",
+      "path": "tests/development/decision-systemone.test.mts",
+      "sha256": "4f4b01ea4525d4d8eb918f351cd3907fb8bd9320ec60ea48c5584493396fa8a5"
+    },
+    {
+      "id": "CASE-M14-G04-02",
+      "name": "CASE-M14-G04-02",
+      "path": "tests/development/decision-systemone.test.mts",
+      "sha256": "4f4b01ea4525d4d8eb918f351cd3907fb8bd9320ec60ea48c5584493396fa8a5"
+    },
+    {
+      "id": "CASE-M14-G04-03",
+      "name": "CASE-M14-G04-03",
+      "path": "tests/development/decision-systemone.test.mts",
+      "sha256": "4f4b01ea4525d4d8eb918f351cd3907fb8bd9320ec60ea48c5584493396fa8a5"
+    },
+    {
+      "id": "CASE-M14-G04-04",
+      "name": "CASE-M14-G04-04",
+      "path": "tests/development/decision-systemone.test.mts",
+      "sha256": "4f4b01ea4525d4d8eb918f351cd3907fb8bd9320ec60ea48c5584493396fa8a5"
     },
     {
       "id": "M01-G04-01",
@@ -3420,6 +3461,30 @@
       "name": "M13-G03-REQUEST-BOUND-PREVENTS-SILENT-TRUNCATION",
       "path": "tests/development/decision-model.test.mts",
       "sha256": "fcdad7288e2e9bb1bb2b88d841731d77523a821ee0e6f292c697a6ba9a7ed544"
+    },
+    {
+      "id": "M14-G04-BOUNDED-TRANSPORT-AND-SAFE-FAILURE",
+      "name": "M14-G04-BOUNDED-TRANSPORT-AND-SAFE-FAILURE",
+      "path": "tests/development/decision-systemone.test.mts",
+      "sha256": "4f4b01ea4525d4d8eb918f351cd3907fb8bd9320ec60ea48c5584493396fa8a5"
+    },
+    {
+      "id": "M14-G04-CURRENT-VAULT-CREDENTIAL-AND-SCOPE",
+      "name": "M14-G04-CURRENT-VAULT-CREDENTIAL-AND-SCOPE",
+      "path": "tests/development/decision-systemone.test.mts",
+      "sha256": "4f4b01ea4525d4d8eb918f351cd3907fb8bd9320ec60ea48c5584493396fa8a5"
+    },
+    {
+      "id": "M14-G04-DESTINATION-CONFIGURATION-AND-REQUEST-BOUNDS",
+      "name": "M14-G04-DESTINATION-CONFIGURATION-AND-REQUEST-BOUNDS",
+      "path": "tests/development/decision-systemone.test.mts",
+      "sha256": "4f4b01ea4525d4d8eb918f351cd3907fb8bd9320ec60ea48c5584493396fa8a5"
+    },
+    {
+      "id": "M14-G04-STRICT-NATIVE-RESULT-AND-UNKNOWN-USAGE",
+      "name": "M14-G04-STRICT-NATIVE-RESULT-AND-UNKNOWN-USAGE",
+      "path": "tests/development/decision-systemone.test.mts",
+      "sha256": "4f4b01ea4525d4d8eb918f351cd3907fb8bd9320ec60ea48c5584493396fa8a5"
     },
     {
       "id": "PORT-027",

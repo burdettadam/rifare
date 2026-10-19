@@ -1802,6 +1802,56 @@
         "packages/commerce/contracts/decision-shadow.v1.json",
         "docs/M13-QUALIFICATION.md"
       ]
+    },
+    {
+      "id": "FEATURE-M14-G01",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/decision-routing.v1.json",
+        "tests/fixtures/decision-routing/protocol.v1.json",
+        "tests/fixtures/decision-routing/oracles.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M14-G02",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/decision-routing.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M14-G03",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/decision-routing.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M14-G04",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/agent/contracts/systemone-decision.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M14-G05",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/decision-routing.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M14-LOCAL-ASSESSMENT",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/decision-routing.v1.json"
+      ]
     }
   ],
   "tests": [
@@ -22832,6 +22882,202 @@
       "runner_case_id": "M13-LOCAL-MILESTONE-ASSESSMENT",
       "source": "tests/development/decision-shadow.test.mts",
       "capability_id": "FEATURE-M13-LOCAL-ASSESSMENT"
+    },
+    {
+      "id": "runtime:CASE-M14-G01-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M14-G01-01",
+      "source": "tests/development/decision-routing.test.mts",
+      "capability_id": "FEATURE-M14-G01"
+    },
+    {
+      "id": "runtime:CASE-M14-G01-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M14-G01-02",
+      "source": "tests/development/decision-routing.test.mts",
+      "capability_id": "FEATURE-M14-G01"
+    },
+    {
+      "id": "runtime:CASE-M14-G01-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M14-G01-03",
+      "source": "tests/development/decision-routing.test.mts",
+      "capability_id": "FEATURE-M14-G01"
+    },
+    {
+      "id": "runtime:CASE-M14-G01-04",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M14-G01-04",
+      "source": "tests/development/decision-routing.test.mts",
+      "capability_id": "FEATURE-M14-G01"
+    },
+    {
+      "id": "runtime:M14-G02-PREP-01",
+      "suite": "runtime",
+      "runner_case_id": "M14-G02-PREP-01",
+      "source": "tests/development/decision-routing.test.mts",
+      "capability_id": "FEATURE-M14-G02"
+    },
+    {
+      "id": "runtime:M14-G02-PREP-02",
+      "suite": "runtime",
+      "runner_case_id": "M14-G02-PREP-02",
+      "source": "tests/development/decision-routing.test.mts",
+      "capability_id": "FEATURE-M14-G02"
+    },
+    {
+      "id": "runtime:M14-G02-PREP-03",
+      "suite": "runtime",
+      "runner_case_id": "M14-G02-PREP-03",
+      "source": "tests/development/decision-routing.test.mts",
+      "capability_id": "FEATURE-M14-G02"
+    },
+    {
+      "id": "runtime:M14-G02-PREP-04",
+      "suite": "runtime",
+      "runner_case_id": "M14-G02-PREP-04",
+      "source": "tests/development/decision-routing.test.mts",
+      "capability_id": "FEATURE-M14-G02"
+    },
+    {
+      "id": "runtime:CASE-M14-G03-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M14-G03-01",
+      "source": "tests/development/decision-routing.test.mts",
+      "capability_id": "FEATURE-M14-G03"
+    },
+    {
+      "id": "runtime:CASE-M14-G03-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M14-G03-02",
+      "source": "tests/development/decision-routing.test.mts",
+      "capability_id": "FEATURE-M14-G03"
+    },
+    {
+      "id": "runtime:CASE-M14-G03-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M14-G03-03",
+      "source": "tests/development/decision-routing.test.mts",
+      "capability_id": "FEATURE-M14-G03"
+    },
+    {
+      "id": "runtime:CASE-M14-G03-04",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M14-G03-04",
+      "source": "tests/development/decision-routing.test.mts",
+      "capability_id": "FEATURE-M14-G03"
+    },
+    {
+      "id": "runtime:M14-G05-LOCAL-01",
+      "suite": "runtime",
+      "runner_case_id": "M14-G05-LOCAL-01",
+      "source": "tests/development/decision-routing.test.mts",
+      "capability_id": "FEATURE-M14-G05"
+    },
+    {
+      "id": "runtime:M14-G05-LOCAL-02",
+      "suite": "runtime",
+      "runner_case_id": "M14-G05-LOCAL-02",
+      "source": "tests/development/decision-routing.test.mts",
+      "capability_id": "FEATURE-M14-G05"
+    },
+    {
+      "id": "runtime:M14-G05-LOCAL-03",
+      "suite": "runtime",
+      "runner_case_id": "M14-G05-LOCAL-03",
+      "source": "tests/development/decision-routing.test.mts",
+      "capability_id": "FEATURE-M14-G05"
+    },
+    {
+      "id": "runtime:M14-G05-LOCAL-04",
+      "suite": "runtime",
+      "runner_case_id": "M14-G05-LOCAL-04",
+      "source": "tests/development/decision-routing.test.mts",
+      "capability_id": "FEATURE-M14-G05"
+    },
+    {
+      "id": "runtime:M14-LOCAL-MILESTONE-ASSESSMENT",
+      "suite": "runtime",
+      "runner_case_id": "M14-LOCAL-MILESTONE-ASSESSMENT",
+      "source": "tests/development/decision-routing.test.mts",
+      "capability_id": "FEATURE-M14-LOCAL-ASSESSMENT"
+    },
+    {
+      "id": "runtime:M14-ROUTING-CURRENT-AUTHORITY",
+      "suite": "runtime",
+      "runner_case_id": "M14-ROUTING-CURRENT-AUTHORITY",
+      "source": "tests/development/decision-routing.test.mts",
+      "capability_id": "FEATURE-M14-G03"
+    },
+    {
+      "id": "runtime:M14-ROUTING-SELECTED-RULE-BOUNDARY",
+      "suite": "runtime",
+      "runner_case_id": "M14-ROUTING-SELECTED-RULE-BOUNDARY",
+      "source": "tests/development/decision-routing.test.mts",
+      "capability_id": "FEATURE-M14-G03"
+    },
+    {
+      "id": "runtime:M14-ROUTING-PRIVACY-AND-REPLAY-STOP",
+      "suite": "runtime",
+      "runner_case_id": "M14-ROUTING-PRIVACY-AND-REPLAY-STOP",
+      "source": "tests/development/decision-routing.test.mts",
+      "capability_id": "FEATURE-M14-G03"
+    },
+    {
+      "id": "runtime:CASE-M14-G04-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M14-G04-01",
+      "source": "tests/development/decision-systemone.test.mts",
+      "capability_id": "FEATURE-M14-G04"
+    },
+    {
+      "id": "runtime:CASE-M14-G04-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M14-G04-02",
+      "source": "tests/development/decision-systemone.test.mts",
+      "capability_id": "FEATURE-M14-G04"
+    },
+    {
+      "id": "runtime:CASE-M14-G04-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M14-G04-03",
+      "source": "tests/development/decision-systemone.test.mts",
+      "capability_id": "FEATURE-M14-G04"
+    },
+    {
+      "id": "runtime:CASE-M14-G04-04",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M14-G04-04",
+      "source": "tests/development/decision-systemone.test.mts",
+      "capability_id": "FEATURE-M14-G04"
+    },
+    {
+      "id": "runtime:M14-G04-DESTINATION-CONFIGURATION-AND-REQUEST-BOUNDS",
+      "suite": "runtime",
+      "runner_case_id": "M14-G04-DESTINATION-CONFIGURATION-AND-REQUEST-BOUNDS",
+      "source": "tests/development/decision-systemone.test.mts",
+      "capability_id": "FEATURE-M14-G04"
+    },
+    {
+      "id": "runtime:M14-G04-STRICT-NATIVE-RESULT-AND-UNKNOWN-USAGE",
+      "suite": "runtime",
+      "runner_case_id": "M14-G04-STRICT-NATIVE-RESULT-AND-UNKNOWN-USAGE",
+      "source": "tests/development/decision-systemone.test.mts",
+      "capability_id": "FEATURE-M14-G04"
+    },
+    {
+      "id": "runtime:M14-G04-BOUNDED-TRANSPORT-AND-SAFE-FAILURE",
+      "suite": "runtime",
+      "runner_case_id": "M14-G04-BOUNDED-TRANSPORT-AND-SAFE-FAILURE",
+      "source": "tests/development/decision-systemone.test.mts",
+      "capability_id": "FEATURE-M14-G04"
+    },
+    {
+      "id": "runtime:M14-G04-CURRENT-VAULT-CREDENTIAL-AND-SCOPE",
+      "suite": "runtime",
+      "runner_case_id": "M14-G04-CURRENT-VAULT-CREDENTIAL-AND-SCOPE",
+      "source": "tests/development/decision-systemone.test.mts",
+      "capability_id": "FEATURE-M14-G04"
     }
   ],
   "protected_files": [

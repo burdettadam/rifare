@@ -62,6 +62,7 @@
     "packages/agent/decisions.mts",
     "packages/agent/local-model.mts",
     "packages/agent/providers.mts",
+    "packages/agent/systemone.mts",
     "packages/agent/workers-ai.mts",
     "packages/commerce/bill-of-materials.mts",
     "packages/commerce/capabilities.mts",
@@ -4633,6 +4634,82 @@
           "direct_fixtures": []
         }
       ]
+    },
+    {
+      "id": "systemone_decision",
+      "kind": "model",
+      "source_files": [
+        {
+          "path": "packages/agent/systemone.mts",
+          "sha256": "5b485aa0196c8dc419aab86ff68d10e1c53592222705d63c9035606b91207f30"
+        }
+      ],
+      "version": "source-sha256:5b485aa0196c8dc419aab86ff68d10e1c53592222705d63c9035606b91207f30",
+      "api_version": "systemone-v1-explicit-endpoint-unqualified",
+      "external_version": null,
+      "external_account": null,
+      "external_scopes_attested": false,
+      "source_oracle": "Eight native transport/readiness cases with independent SystemOne and Cloudflare wire fixtures. Synthetic conformance only; no actually exercised endpoint, trained-head runtime observation, live quality or release claim.",
+      "operations": [
+        {
+          "id": "decision.classify",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M14-G04-01",
+              "name": "CASE-M14-G04-01",
+              "path": "tests/development/decision-systemone.test.mts",
+              "sha256": "4f4b01ea4525d4d8eb918f351cd3907fb8bd9320ec60ea48c5584493396fa8a5"
+            },
+            {
+              "id": "CASE-M14-G04-02",
+              "name": "CASE-M14-G04-02",
+              "path": "tests/development/decision-systemone.test.mts",
+              "sha256": "4f4b01ea4525d4d8eb918f351cd3907fb8bd9320ec60ea48c5584493396fa8a5"
+            },
+            {
+              "id": "CASE-M14-G04-03",
+              "name": "CASE-M14-G04-03",
+              "path": "tests/development/decision-systemone.test.mts",
+              "sha256": "4f4b01ea4525d4d8eb918f351cd3907fb8bd9320ec60ea48c5584493396fa8a5"
+            },
+            {
+              "id": "CASE-M14-G04-04",
+              "name": "CASE-M14-G04-04",
+              "path": "tests/development/decision-systemone.test.mts",
+              "sha256": "4f4b01ea4525d4d8eb918f351cd3907fb8bd9320ec60ea48c5584493396fa8a5"
+            },
+            {
+              "id": "M14-G04-DESTINATION-CONFIGURATION-AND-REQUEST-BOUNDS",
+              "name": "M14-G04-DESTINATION-CONFIGURATION-AND-REQUEST-BOUNDS",
+              "path": "tests/development/decision-systemone.test.mts",
+              "sha256": "4f4b01ea4525d4d8eb918f351cd3907fb8bd9320ec60ea48c5584493396fa8a5"
+            },
+            {
+              "id": "M14-G04-STRICT-NATIVE-RESULT-AND-UNKNOWN-USAGE",
+              "name": "M14-G04-STRICT-NATIVE-RESULT-AND-UNKNOWN-USAGE",
+              "path": "tests/development/decision-systemone.test.mts",
+              "sha256": "4f4b01ea4525d4d8eb918f351cd3907fb8bd9320ec60ea48c5584493396fa8a5"
+            },
+            {
+              "id": "M14-G04-BOUNDED-TRANSPORT-AND-SAFE-FAILURE",
+              "name": "M14-G04-BOUNDED-TRANSPORT-AND-SAFE-FAILURE",
+              "path": "tests/development/decision-systemone.test.mts",
+              "sha256": "4f4b01ea4525d4d8eb918f351cd3907fb8bd9320ec60ea48c5584493396fa8a5"
+            },
+            {
+              "id": "M14-G04-CURRENT-VAULT-CREDENTIAL-AND-SCOPE",
+              "name": "M14-G04-CURRENT-VAULT-CREDENTIAL-AND-SCOPE",
+              "path": "tests/development/decision-systemone.test.mts",
+              "sha256": "4f4b01ea4525d4d8eb918f351cd3907fb8bd9320ec60ea48c5584493396fa8a5"
+            }
+          ],
+          "direct_fixtures": []
+        }
+      ]
     }
   ],
   "fixture_administration": "Seed, injected faults, and source observation setters are fixture administration, not remote provider operations. Unnamed real gateway/carrier/warehouse/ERP adapters are unavailable.",
@@ -5671,7 +5748,7 @@
     },
     {
       "path": "tests/fixtures/conformance/expected-coverage.v1.json",
-      "sha256": "95bc7b797419391bc510f8228a0ccac10b59fde2710a8913273bda72dc68e56f"
+      "sha256": "613a2f31d8adcd07864617579f6cee873f3a4e6dcdfbd9d74df1f562436e9725"
     },
     {
       "path": "tests/fixtures/conformance/source-inputs.v1.json",
@@ -6767,7 +6844,7 @@
     },
     {
       "path": "packages/commerce/decision-shadow.mts",
-      "sha256": "04048444641b397de30194f5a8d131bd423998b55df6bec912b37dfd76103f7d"
+      "sha256": "061de841dfdfd238e3caa4a0ac8d05ac72ab386b510edb7658eea7a58411dd4a"
     },
     {
       "path": "packages/commerce/skill-bundles/return-intake-shadow/SKILL.md",
@@ -6840,6 +6917,78 @@
     {
       "path": "tests/fixtures/decision-shadow/wire-responses.v1.json",
       "sha256": "b16869f56dfb8602f1bc92884478f88784695a0a077427f61c0660d5c566de50"
+    },
+    {
+      "path": "packages/agent/contracts/systemone-decision.v1.json",
+      "sha256": "25216d55f09a2cef8718e029342bf9d2ef77726a3ed43691b317a6992193c724"
+    },
+    {
+      "path": "packages/agent/decision-calibration.mts",
+      "sha256": "9fc1cdf64a824cc323a44eee450ae25ed03023006f66d4c3a569690a694a9816"
+    },
+    {
+      "path": "packages/agent/systemone.mts",
+      "sha256": "5b485aa0196c8dc419aab86ff68d10e1c53592222705d63c9035606b91207f30"
+    },
+    {
+      "path": "packages/commerce/contracts/decision-routing.v1.json",
+      "sha256": "3310d2ca6c62841a45cdb8b5e70dbe829661661cc8c4a47cf35acbd73339be9e"
+    },
+    {
+      "path": "packages/commerce/decision-routing.mts",
+      "sha256": "33fe49ede903ef674f02788ed344d3a8956d3cf20a4f4de703b7022066a41a2f"
+    },
+    {
+      "path": "tests/development/decision-routing-helpers.mts",
+      "sha256": "fe5f874aa1e6410655435c4d257b42ddcd5881f8d0a2d3553f8e8ff58a3375bf"
+    },
+    {
+      "path": "tests/development/decision-routing.test.mts",
+      "sha256": "84df5f28c2ed9249245a29c8e838f52aa041591999da44b0987dfb5c522a23f7"
+    },
+    {
+      "path": "tests/development/decision-systemone.test.mts",
+      "sha256": "4f4b01ea4525d4d8eb918f351cd3907fb8bd9320ec60ea48c5584493396fa8a5"
+    },
+    {
+      "path": "tests/fixtures/decision-routing/README.md",
+      "sha256": "2b297ef0731c37757dac2f8f8cdc90ef5f58d1f52e6a3aaaf32d5e7b908b8f5d"
+    },
+    {
+      "path": "tests/fixtures/decision-routing/oracles.v1.json",
+      "sha256": "35cb79bb0c6efc14d56b9db439b8565b2643de81675b3ea38835eeb886bfa003"
+    },
+    {
+      "path": "tests/fixtures/decision-routing/protocol.v1.json",
+      "sha256": "5953618fa2a0c6aefdeee87aafca2fca842716c6ab0bf3c95eda7dd2d9d59e6f"
+    },
+    {
+      "path": "tests/fixtures/decision-systemone/README.md",
+      "sha256": "be819563a41779cb691db23b5554d880169e68e68bad743c4c7dcb1558d0f53c"
+    },
+    {
+      "path": "tests/fixtures/decision-systemone/artifact-attestation.json",
+      "sha256": "c811b92b1ad894728e48c9b504983d82274621ba04afff609493b8613b412fbb"
+    },
+    {
+      "path": "tests/fixtures/decision-systemone/normalized-success.json",
+      "sha256": "6f402044424fa09cdf765358638aa47090df86535e214bf07ed2d9979ca3bbf6"
+    },
+    {
+      "path": "tests/fixtures/decision-systemone/request.json",
+      "sha256": "79c3d5e0ff2bd1a1bec4cae88fd42245429e195c0959358831a1d63bf9aafe12"
+    },
+    {
+      "path": "tests/fixtures/decision-systemone/systemone-request.json",
+      "sha256": "338bbcb61d333f8f9ef7253158c68187578b25d5088d4d0f252dea486be281a2"
+    },
+    {
+      "path": "tests/fixtures/decision-systemone/systemone-success.json",
+      "sha256": "024ade1af5408ef708222179be4f10d4725dedb8dc8d6384a8f122b1fec81f56"
+    },
+    {
+      "path": "tests/fixtures/decision-systemone/workers-ai-success.json",
+      "sha256": "c294705dc59a854df0a501d6ebde835e6a63929f557300af51b8aeb1e557906a"
     }
   ]
 }
