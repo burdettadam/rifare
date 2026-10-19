@@ -91,6 +91,12 @@ function canonicalBindings(k:CommerceKernel,tenant:string,store:string){const re
   if(row.kind!=='instruction'||!identifier(row.extension_id)||!version(row.version))continue;
   const b=body(row),candidate=new Set<string>();if(hash(b.bundle_digest))candidate.add(b.bundle_digest);
   for(const review of rows(k,'commerce_extension_reviews',tenant,store)){const r=body(review);if(review.artifact_id===row.id&&r.artifact_digest===row.id&&hash(r.bundle_digest))candidate.add(r.bundle_digest);}
+  // Copied digest fields may both be malformed. Recover identity only from the
+  // untouched immutable artifact and its real package/content/origin bindings.
+  try{const a=object(b.artifact),origin=object(a.origin);if(hash(row.id)&&a.kind===row.kind&&a.id===row.extension_id&&a.version===row.version&&contentDigest(a)===row.id&&contentDigest(a.payload)===origin.sha256){
+   const decoded=decodeSkillPackage(Buffer.from(canonical(a.payload)),'json'),bundle=decoded.bundle;
+   if(bundle.id===row.extension_id&&bundle.version===row.version&&typeof origin.uri==='string'&&decoded.origin===new URL(origin.uri).href)candidate.add(bundle.digest);
+  }}catch{}
   for(const bundleDigest of candidate){let bound=false;
    const archived=k.db.prepare('SELECT bundle FROM commerce_skill_archive WHERE tenant_id=? AND store_id=? AND skill_id=? AND bundle_digest=?').get(tenant,store,row.extension_id,bundleDigest) as Row|undefined;
    try{if(archived){const saved=JSON.parse(archived.bundle),bundle=checkedBundle(saved.files);bound=bundle.id===row.extension_id&&bundle.version===row.version&&bundle.digest===bundleDigest&&saved.digest===bundleDigest;}}catch{}

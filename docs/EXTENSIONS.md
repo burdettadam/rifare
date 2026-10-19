@@ -110,8 +110,11 @@ rows become `revoked_restore`, with their prior state retained as history.
 Canonical approval bindings are resolved before minimization from exact scoped
 artifact version/digest and independently checked archived or staged bundles.
 Only matching canonical skill/bundle/version/store approval IDs are revoked; a
-malformed copied review pointer cannot spare its original approval. Other
-merchants and unrelated skills remain unchanged. Missing canonical references
+malformed copied review pointer cannot spare its original approval. If both
+copied bundle digests are malformed, the original semantic artifact ID, payload
+content hash and normalized package origin allow the existing loader to recover
+the exact candidate before cleanup. Other merchants and unrelated bundles,
+including another bundle of the same skill, remain unchanged. Missing canonical references
 after merchant import are tolerated.
 
 The original case configuration and effect history remain stored and inspectable.
