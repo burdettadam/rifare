@@ -126,3 +126,23 @@ message, release tag, purchase or real business effect is authorized. M14-G02's
 actual backend measurement, G04/G05 portability/self-hosted qualification and
 G99 formal acceptance remain visibly pending/blocked unless actual separately
 authorized evidence is available. No passing label may replace missing evidence.
+
+## Prior metadata and documentation clarification
+
+Before changing retained aggregate metadata, root assigns one additive SystemOne
+`decision.classify` catalog declaration: 37 adapters, 198 operations and 252
+declared native IDs (eight new, 244 retained), with no additional common-engine
+fixture or live claim. Only exact aggregate integer maintenance in the retained
+adapter-catalog and compatibility-matrix test files is authorized; all their
+other bytes, case IDs, assertions and existing fixtures remain protected. Refresh
+only actual changed source/oracle hashes and append new path pins. This does not
+assign a nested catalog execution. Root may append the current M14 checkpoint
+summary to README/PLANS while retaining their historical content.
+
+The complete 120-case semantic protocol is stored in the existing 32 KiB support
+document limit using a versioned, lossless tuple encoding for cohort rows. Its
+semantic digest and configuration identity are checked on every decoded read;
+no schema or generic input limit changes. Native verification includes that full
+stored envelope. The M13 evaluator remains Cloudflare-specific: its original
+receipt verifier rejects other backend brands, while the new routing verifier
+accepts both canonically read backends. No M13 evaluator source change is needed.

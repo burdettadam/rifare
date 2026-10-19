@@ -12,12 +12,15 @@ import {unusableDecision,validateDecisionResult} from '../agent/decisions.mts';
 import type {DecisionResult,DecisionFailure} from '../agent/decisions.mts';
 import {WORKERS_AI_ADAPTER,WORKERS_AI_MODEL} from '../agent/workers-ai.mts';
 import type {WorkersAIReader} from '../agent/workers-ai.mts';
+import {SYSTEMONE_ADAPTER} from '../agent/systemone.mts';
+import type {SystemOneReader} from '../agent/systemone.mts';
 
-type ServingConfiguration={id:string;tenant_id:string;store_id:string;secret_ref:string;reader:WorkersAIReader};
+type ServingConfiguration={id:string;tenant_id:string;store_id:string;secret_ref:string;reader:WorkersAIReader|SystemOneReader};
 type CatalogEntry=ServingConfiguration&{digest:string};
 const KIND='decision_shadow';
 const PURPOSE='authorized_return_intake_text';
 const OBSERVED=new WeakSet<object>();
+const OBSERVED_BACKENDS=new WeakMap<object,string>();
 const hash=(value:unknown)=>typeof value==='string'&&/^[a-f0-9]{64}$/.test(value);
 function freeze<T>(value:T):T{if(value&&typeof value==='object'){Object.values(value).forEach(freeze);Object.freeze(value);}return value;}
 function core(value:Row){const {receipt_digest,...body}=value;return body;}
@@ -25,6 +28,13 @@ function core(value:Row){const {receipt_digest,...body}=value;return body;}
 /** Only a current-authorized canonical read/run can brand a receipt. A caller
  * cannot authenticate fixture/live provenance by recomputing a public hash. */
 export function verifyDecisionReceipt(value:unknown):Row{
+  const receipt=verifyRoutingDecisionReceipt(value);
+  // The retained M13 evaluator explicitly reports Cloudflare semantics. Keep
+  // its original receipt verifier scoped rather than mislabel a new backend.
+  if(OBSERVED_BACKENDS.get(receipt)!=='cloudflare')throw new Error('DECISION_RECEIPT_SCOPE');
+  return receipt;
+}
+export function verifyRoutingDecisionReceipt(value:unknown):Row{
   if(!value||typeof value!=='object'||!OBSERVED.has(value)||!hash((value as Row).receipt_digest)
     ||contentDigest(core(value as Row))!==(value as Row).receipt_digest)throw new Error('DECISION_RECEIPT_INTEGRITY');
   return value as Row;
@@ -40,11 +50,14 @@ export class DecisionShadow {
       exact(config,['id','tenant_id','store_id','secret_ref','reader']);
       for(const key of ['id','tenant_id','store_id','secret_ref'] as const)id(config[key]);
       const reader=config.reader;
-      if(!reader||reader.provider!=='cloudflare'||reader.serving_configuration_ref!==config.id||!hash(reader.configuration_digest)
+      if(!reader||!['cloudflare','systemone'].includes(reader.provider)||reader.serving_configuration_ref!==config.id||!hash(reader.configuration_digest)
         ||!Object.isFrozen(reader)||!['synthetic_wire_fixture','live_test_unqualified'].includes(reader.evidence_kind))throw new Error('DECISION_CONFIGURATION_INVALID');
+      if(reader.provider==='systemone'&&(!(reader as SystemOneReader).metadata||!Object.isFrozen((reader as SystemOneReader).metadata)
+        ||(reader as SystemOneReader).metadata.adapter!==SYSTEMONE_ADAPTER||(reader as SystemOneReader).metadata.provider!=='systemone'))throw new Error('DECISION_CONFIGURATION_INVALID');
       const key=canonical([config.tenant_id,config.store_id,config.id]);if(this.#catalog.has(key))throw new Error('DECISION_CONFIGURATION_INVALID');
       const descriptor={id:config.id,tenant_id:config.tenant_id,store_id:config.store_id,secret_ref:config.secret_ref,
-        reader_configuration_digest:reader.configuration_digest,evidence_kind:reader.evidence_kind,capabilities:reader.capabilities};
+        reader_configuration_digest:reader.configuration_digest,evidence_kind:reader.evidence_kind,capabilities:reader.capabilities,
+        ...(reader.provider==='systemone'?{reader_metadata:(reader as SystemOneReader).metadata}:{})};
       this.#catalog.set(key,Object.freeze({...config,digest:contentDigest(descriptor)}));
     }
   }
@@ -54,16 +67,27 @@ export class DecisionShadow {
     if(typeof p.enabled!=='boolean'||p.expires_at<=this.k.clock()||p.expires_at>this.k.clock()+31*86400000)throw new Error('DECISION_CONFIGURATION_INVALID');
     return this.k.transaction(()=>{const s=this.k.authorize(scope,'support.configure'),entry=this.#entry(s,p.id);
       const body={serving_configuration_ref:entry.id,catalog_digest:entry.digest,reader_configuration_digest:entry.reader.configuration_digest,
-        evidence_kind:entry.reader.evidence_kind,mode:'shadow',purpose:PURPOSE,enabled:p.enabled};
+        evidence_kind:entry.reader.evidence_kind,mode:'shadow',purpose:PURPOSE,enabled:p.enabled,
+        ...(entry.reader.provider==='systemone'?{reader_metadata:(entry.reader as SystemOneReader).metadata}:{})};
       const r=saveDocument(this.k,s,KIND,p.id,p.expected_version,body,'active',p.expires_at);
       return {id:r.id,version:r.version,configuration_digest:r.digest,enabled:p.enabled,mode:'shadow',execution_authorized:false};});
   }
   #configuration(scope:Scope,ref:string){
     const s=this.k.require(scope),entry=this.#entry(s,ref),r=checkedDocument(this.k,s,KIND,ref);
-    exact(r.body,['serving_configuration_ref','catalog_digest','reader_configuration_digest','evidence_kind','mode','purpose','enabled']);
+    exact(r.body,['serving_configuration_ref','catalog_digest','reader_configuration_digest','evidence_kind','mode','purpose','enabled',...(entry.reader.provider==='systemone'?['reader_metadata']:[])]);
     if(r.body.serving_configuration_ref!==entry.id||r.body.catalog_digest!==entry.digest||r.body.reader_configuration_digest!==entry.reader.configuration_digest
-      ||r.body.evidence_kind!==entry.reader.evidence_kind||r.body.mode!=='shadow'||r.body.purpose!==PURPOSE||typeof r.body.enabled!=='boolean')throw new Error('DECISION_CONFIGURATION_CHANGED');
+      ||r.body.evidence_kind!==entry.reader.evidence_kind||r.body.mode!=='shadow'||r.body.purpose!==PURPOSE||typeof r.body.enabled!=='boolean'
+      ||entry.reader.provider==='systemone'&&canonical(r.body.reader_metadata)!==canonical((entry.reader as SystemOneReader).metadata))throw new Error('DECISION_CONFIGURATION_CHANGED');
     return {entry,record:r};
+  }
+  /** Current server descriptor; no credential or endpoint is exposed. Existing
+   * Cloudflare document and receipt bytes retain their historical schema. */
+  configuration(scope:Scope,ref:string){
+    this.k.authorize(scope,'support.read');const {entry,record:r}=this.#configuration(scope,ref),reader=entry.reader,meta=reader.provider==='systemone'?(reader as SystemOneReader).metadata:null;
+    return freeze({id:entry.id,version:r.version,digest:r.digest,catalog_digest:entry.digest,reader_configuration_digest:reader.configuration_digest,evidence_kind:reader.evidence_kind,enabled:r.body.enabled,
+      provider:reader.provider,adapter:meta?.adapter??WORKERS_AI_ADAPTER,model_id:meta?.model_id??WORKERS_AI_MODEL,model_revision:meta?.model_revision??null,serving_revision:meta?.serving_revision??null,
+      effective_context_tokens:meta?.effective_context_tokens??reader.capabilities.max_context_tokens,max_request_bytes:reader.capabilities.max_request_bytes,capabilities:reader.capabilities,
+      confidence_semantics:meta?.confidence_profile??'cloudflare_provider_reported_v1',context_qualification:meta?.context_qualification??'declared_unverified',self_hosted_readiness:meta?.self_hosted_readiness??null});
   }
   #input(input:unknown){const p=exact(jsonValue(input),['case_id','task_id','configuration_id','request_id']);for(const v of Object.values(p))id(v);return p;}
   snapshot(scope:Scope,input:unknown){
@@ -108,7 +132,7 @@ export class DecisionShadow {
       try {
         // The existing budget API needs an internal positive output bound. This
         // field is never added to the Clef wire body; actual zero usage is valid.
-        const reservation=budgets.reserve(scope,'cloudflare',p.observation_id,{max_output_tokens:1,decision:p.snapshot.request});
+        const reservation=budgets.reserve(scope,p.entry.reader.provider,p.observation_id,{max_output_tokens:1,decision:p.snapshot.request});
         if(reservation.duplicate)throw new Error('DECISION_OBSERVATION_IN_PROGRESS');reserved=true;
       }catch(error){
         // An earlier attempt owns this identity, including its held budget and
@@ -121,7 +145,7 @@ export class DecisionShadow {
         try{
           this.k.authorize(scope,'secret.invoke');
           dispatch='transport_unconfirmed';
-          const value=await this.#vault.invokeReader(scope,p.entry.secret_ref,WORKERS_AI_ADAPTER,
+          const value=await this.#vault.invokeReader(scope,p.entry.secret_ref,p.entry.reader.provider==='systemone'?SYSTEMONE_ADAPTER:WORKERS_AI_ADAPTER,
             {request:p.snapshot.request,expected_configuration_digest:p.entry.reader.configuration_digest});
           result=validateDecisionResult(p.snapshot.request,value);
           const noDispatch=['DECISION_DISABLED','DECISION_REQUEST_INVALID','DECISION_CONTEXT_LIMIT','DECISION_CAPABILITY_UNAVAILABLE','DECISION_DESTINATION_UNAPPROVED','DECISION_CREDENTIAL_UNAVAILABLE','DECISION_CONFIGURATION_CHANGED'].includes(result.reason??'');
@@ -176,10 +200,11 @@ export class DecisionShadow {
     const normalized=validateDecisionResult({task_id:'return_intake_shadow',question_set_id:'historical_receipt',question_set_digest:value.question_set_digest,serving_configuration_ref:value.configuration_id,state:'Historical receipt validation only.',questions:{
       reported_problem:{type:'choice',instructions:'Validate stored labels.',options:{damaged:'Damaged.',size_fit:'Size or fit.',other_unclear:'Other or unclear.'}},
       requested_resolution:{type:'choice',instructions:'Validate stored labels.',options:{refund:'Refund.',exchange:'Exchange.',other_unclear:'Other or unclear.'}}}},value.result);
-    if(canonical(normalized)!==canonical(value.result)||![null,'clef-flash',WORKERS_AI_MODEL].includes(value.result.serving.reported_model)||value.result.serving.revision!==null)throw new Error('DECISION_RECEIPT_INTEGRITY');
-    const result=freeze(value);OBSERVED.add(result);return result;
+    const historicalModels=cfg.body.reader_metadata?.provider==='systemone'?[null,cfg.body.reader_metadata.model_id]:[null,'clef-flash',WORKERS_AI_MODEL];
+    if(canonical(normalized)!==canonical(value.result)||!historicalModels.includes(value.result.serving.reported_model)||value.result.serving.revision!==null)throw new Error('DECISION_RECEIPT_INTEGRITY');
+    const result=freeze(value);OBSERVED.add(result);OBSERVED_BACKENDS.set(result,cfg.body.reader_metadata?.provider==='systemone'?'systemone':'cloudflare');return result;
   }
-  verifyReceipt(value:unknown){return verifyDecisionReceipt(value);}
+  verifyReceipt(value:unknown){return verifyRoutingDecisionReceipt(value);}
   view(scope:Scope,caseId:string,observationId:string){
     const r=this.read(scope,caseId,observationId),answers=r.result.status==='usable'?r.result.answers:null;
     return {observation_id:r.id,mode:'shadow',status:r.result.status,reported_problem:answers?.reported_problem.choice??null,requested_resolution:answers?.requested_resolution.choice??null,

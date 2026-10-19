@@ -2,7 +2,19 @@
 
 Merchant-owned commerce operations with tailorable skills and independently replaceable platforms, agents and models.
 
-## Current development milestone: M13 decision-model shadow observations
+## Current development milestone: M14 calibrated routing
+
+M14 adds frozen calibration protocols, canonical measurement records, bounded
+diagnostic routing through one published manual-work rule, a SystemOne reader,
+and controlled serving activation/canary/rollback. The existing case, skill,
+policy, credential, budget, ownership and privacy owners remain authoritative.
+See [routing behavior](docs/DECISION-ROUTING.md),
+[qualification limits](docs/M14-QUALIFICATION.md), and
+[the integration record](work/records/M14-milestone-integration.md).
+Actual connected model qualification and formal acceptance remain pending.
+M15 is the next unassigned milestone. The earlier M13 checkpoint follows.
+
+## Historical M13 decision-model shadow observations
 
 M13 adds optional bounded decision models and a source-bound return-intake
 shadow service under [ADR-0042](docs/decisions/0042-decision-model-shadow-milestone.md).

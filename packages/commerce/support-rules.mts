@@ -2,8 +2,9 @@ import {permissionDecision} from './authorization.mts';
 import type {CommerceKernel,Scope,Row} from './kernel.mts';
 import {id,integer,exact} from './kernel.mts';
 import {canonical,contentDigest,jsonValue} from './configuration-values.mts';
-import {supportCase,saveDocument,documentRow,checkedDocument,ownershipRow,supportEvent} from './support-core.mts';
+import {supportCase,saveDocument,documentRow,checkedDocument,ownershipRow,supportEvent,assertSupportOwner} from './support-core.mts';
 import type {SupportDelivery} from './support-delivery.mts';
+import {assertCaseWorkerScope} from './work-leases.mts';
 const TRIGGERS=['message_received','shipment_exception','return_requested'] as const;
 const ACTIONS=['handoff_request','draft_return','queue_tracking'] as const;
 function validateRule(input:unknown){const p=exact(jsonValue(input),['id','expected_version','trigger','conditions','priority','wait_ms','calendar','action','expires_at']);
@@ -24,6 +25,22 @@ export class SupportRules {
   const authority=member?.active?permissionDecision(this.k.db,{...s,actor_id:r.reviewer,role:member.role},'policy.review'):null;
   if(r.state!=='reviewed'||!authority?.allowed||r.review_digest!==contentDigest({digest:r.digest,revision:authority?.authority_revision})||r.expires_at<=this.k.clock())throw new Error('RULE_REVIEW_INVALID');this.k.db.prepare("UPDATE commerce_support_documents SET state='active' WHERE tenant_id=? AND store_id=? AND kind='support_rules' AND id=? AND version=?").run(s.tenant_id,s.store_id,ref,version);return {state:'active',id:ref,version,digest:r.digest};});}
  revoke(scope:Scope,ref:string,version:number){return this.k.transaction(()=>{const s=this.k.authorize(scope,'support.configure');documentRow(this.k,s,'support_rules',ref,version);this.k.db.prepare("UPDATE commerce_support_documents SET state='revoked' WHERE tenant_id=? AND store_id=? AND kind='support_rules' AND id=? AND version=?").run(s.tenant_id,s.store_id,ref,version);return {state:'revoked'};});}
+ // A decision selects one existing manual-work rule, never schedule()'s fan-out.
+ selection(scope:Scope,input:unknown){const p=exact(jsonValue(input),['id','version','digest']),s=this.k.authorize(scope,'support.read'),r=checkedDocument(this.k,s,'support_rules',p.id,p.version);validateRule(r.body);
+  const member=this.k.db.prepare('SELECT active,role FROM commerce_members WHERE tenant_id=? AND store_id=? AND actor_id=?').get(s.tenant_id,s.store_id,r.reviewer) as Row,authority=member?.active?permissionDecision(this.k.db,{...s,actor_id:r.reviewer,role:member.role},'policy.review'):null;
+  if(!authority?.allowed||r.review_digest!==contentDigest({digest:r.digest,revision:authority.authority_revision}))throw new Error('ROUTING_REVIEW_CHANGED');
+  if(r.digest!==p.digest||!['handoff_request','draft_return'].includes(r.body.action)||r.body.trigger!=='return_requested'||r.body.wait_ms!==0||!['any','webchat'].includes(r.body.conditions.channel))throw new Error('RULE_SELECTION_INVALID');return r;
+ }
+ applySelected(scope:Scope,input:unknown){const p=exact(jsonValue(input),['rule_id','rule_version','rule_digest','case_id','event_id','expected_generation']);integer(p.expected_generation,1);id(p.event_id);
+  return this.k.transaction(()=>{const {s,c}=supportCase(this.k,scope,p.case_id,'support.reply'),ownership=assertSupportOwner(this.k,scope,c.id,p.expected_generation),r=this.selection(scope,{id:p.rule_id,version:p.rule_version,digest:p.rule_digest});assertCaseWorkerScope(this.k,scope,c.id);
+   const now=this.k.clock(),due=nextRuleTime(now,r.body.calendar);if(due!==now)throw new Error('RULE_SELECTION_NOT_DUE');
+   const event=this.#event({id:p.event_id,case_id:c.id,trigger:'return_requested',channel:'webchat',at:now,visited:[],depth:0,link_id:null,sender_id:null}),ref='sj_'+contentDigest([s.tenant_id,s.store_id,r.id,event.id]).slice(0,40);
+   const previous=this.k.db.prepare('SELECT * FROM commerce_support_rule_jobs WHERE tenant_id=? AND store_id=? AND id=?').get(s.tenant_id,s.store_id,ref) as Row;
+   if(previous){if(previous.case_id!==c.id||previous.rule_digest!==r.digest||previous.rule_version!==r.version||previous.generation!==ownership.owner.generation||previous.state!=='completed')throw new Error('RULE_EVENT_CONFLICT');return this.job(scope,ref);}
+   this.k.db.prepare("INSERT INTO commerce_support_rule_jobs VALUES(?,?,?,?,?,?,?,?,?,?,?,?, 'waiting',NULL)").run(s.tenant_id,s.store_id,ref,c.id,c.resource_id,r.id,r.version,r.digest,event.id,canonical(event),ownership.owner.generation,due);
+   return this.execute(scope,ref);
+  });
+ }
  #event(input:unknown){const e=exact(jsonValue(input),['id','case_id','trigger','channel','at','visited','depth','link_id','sender_id']);[e.id,e.case_id].forEach(id);integer(e.at);integer(e.depth);if(!TRIGGERS.includes(e.trigger)||!['email','webchat','helpdesk'].includes(e.channel)||e.at>this.k.clock()||!Array.isArray(e.visited)||e.visited.length>8||e.depth>8||new Set(e.visited).size!==e.visited.length)throw new Error('RULE_EVENT_INVALID');e.visited.forEach(id);if(e.link_id!==null)id(e.link_id);if(e.sender_id!==null)id(e.sender_id);return e;}
  #matches(p:Row,e:Row){return e.trigger===p.trigger&&(p.conditions.channel==='any'||p.conditions.channel===e.channel);}
  schedule(scope:Scope,input:unknown){const e=this.#event(input);return this.k.transaction(()=>{const {s,c}=supportCase(this.k,scope,e.case_id,'support.reply'),owner=ownershipRow(this.k,s,c.id);if(!owner)throw new Error('SUPPORT_OWNERSHIP_CHANGED');

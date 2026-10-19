@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "id": "decision-routing.v1",
+  "milestone": "M14",
+  "storage": {
+    "configuration_owner": "commerce_support_documents",
+    "protocol_encoding": "cohort_tuples_v1",
+    "maximum_document_bytes": 32768,
+    "maximum_cohort_cases": 120,
+    "subject_receipts": "commerce_assistance_receipts",
+    "task_foreign_key": "commerce_context_tasks"
+  },
+  "allowed_actions": [
+    "draft_return",
+    "handoff_request"
+  ],
+  "forbidden_claims": [
+    "financial_approval",
+    "autonomous_case_resolution",
+    "fixture_live_qualification",
+    "settings_only_portability",
+    "attestation_only_self_hosted_qualification"
+  ],
+  "modes": [
+    "diagnostic",
+    "scoped"
+  ],
+  "default": "shadow_review",
+  "publication": {
+    "author_permission": "support.configure",
+    "review_permission": "policy.review",
+    "nonauthor_review": true,
+    "current_reviewer_authority": true,
+    "rollout_percent": [
+      25,
+      50,
+      100
+    ],
+    "unqualified_replacement": "reject_without_changing_active_revision",
+    "rollback": "previously_published_and_currently_qualified_only"
+  },
+  "cohort": {
+    "calibration_minimum": 60,
+    "held_out_minimum": 60,
+    "held_out_routed_minimum": 30,
+    "wrong_route_maximum": 0.05,
+    "wrong_route_one_sided_95_upper_maximum": 0.1,
+    "incorrect_review_fraction_of_all_cases_maximum": 0.1,
+    "minimum_route_coverage": 0.5,
+    "threshold_candidates": [
+      0.8,
+      0.9,
+      0.95
+    ],
+    "diagnostic_threshold": 0.95,
+    "cost_and_latency": "null_without_measurements"
+  },
+  "qualification": {
+    "one_backend": "canonical_live_observations_plus_frozen_numeric_gate_and_current_publication",
+    "portability": "two_actual_implementations_bound_to_same_frozen_task",
+    "self_hosted": "pending_separate_runtime_observation",
+    "unknown_revision": "fresh_six_case_predeclared_canary",
+    "maximum_lifetime_ms": 86400000
+  },
+  "authority_rechecks": [
+    "actor_and_session",
+    "task_and_case_sources",
+    "case_configuration",
+    "support_ownership_generation",
+    "managed_work_fence",
+    "model_stop_and_recovery",
+    "qualification_and_reviewer",
+    "exact_publication",
+    "actual_reader_configuration",
+    "one_published_immediately_due_rule"
+  ],
+  "formal_acceptance": false
+}

@@ -191,3 +191,13 @@ objects remain unchanged; fifty adopted requirements and 204 specifications exte
 the catalogue. Only M13-G01–G05 and G99 local assessment are assigned. The current
 M12 source remains the protected base. Formal gates, live provider qualification
 and code-execution deferral remain open. See `work/records/M13-milestone-integration.md`.
+
+## M14 assignment and bounded continuation
+
+ADR-0043 assigns M14-G01–G05 and the G99 local assessment from the retained M13
+checkpoint. Frozen calibration, canonical qualification intake, selected manual
+routing, SystemOne transport and controlled replacement are implemented/prepared
+under the focused 60-case/four-file/60-second development limit. The milestone
+record binds actual native evidence and independent reviews when available.
+Canonical planning/accepted states and all inherited external/formal gates remain
+unchanged. M15–M22 remain unassigned.
