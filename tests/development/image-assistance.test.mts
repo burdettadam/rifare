@@ -121,11 +121,11 @@ test('M17-IMAGES-ERASURE-AND-LATE-RESULT-11',async()=>{
   });
 });
 test('M17-IMAGES-RETENTION-AND-HOLDS-12',()=>usingImages(async f=>{
-  const {evidence,approval}=await f.approve();await f.images.run(f.a.scope,f.imageInput(approval));const privacy=new PrivacyLifecycle(f.kernel);
-  privacy.hold(f.owner.scope,{customer_id:f.order().customer_id,reason:'retention_obligation',authority_ref:'image_hold',expires_at:f.now()+35*86400000});assert.equal(f.evidence.erase(f.customer,evidence.id).held,true);assert.equal(f.imageRows().length,2);
+  const {evidence,approval}=await f.approve();await f.images.run(f.a.scope,f.imageInput(approval));const privacy=new PrivacyLifecycle(f.kernel),customer=f.order().customer_id;
+  privacy.hold(f.owner.scope,{customer_id:customer,reason:'retention_obligation',authority_ref:'image_hold',expires_at:f.now()+35*86400000});assert.equal(f.evidence.erase(f.customer,evidence.id).held,true);assert.equal(f.imageRows().length,2);
   f.images.revoke(f.customer,{case_id:f.imageCase.id,approval_id:approval.id});assert.equal(f.imageRows().length,2,'withdrawal revokes authority while preserving held evidence');assert.throws(()=>f.images.prepare(f.a.scope,f.imageInput(approval)),/IMAGE_APPROVAL_UNAVAILABLE/);
   f.advance(31*86400000);const owner=f.kernel.authenticate(f.kernel.issueSession(f.a.tenant,f.a.store,'owner'));assert.equal(f.evidence.purgeExpired(owner).erased,0);assert.equal(f.imageRows().length,2);
-  privacy.releaseHold(owner,f.order().customer_id,'image_hold');assert.equal(f.evidence.purgeExpired(owner).erased,1);assert.equal(f.imageRows().length,0);
+  privacy.releaseHold(owner,customer,'image_hold');assert.equal(f.evidence.purgeExpired(owner).erased,1);assert.equal(f.imageRows().length,0);
 }));
 test('M17-IMAGES-SUBJECT-EXPORT-ERASURE-13',()=>usingImages(async f=>{
   const {approval}=await f.approve(),r=await f.images.run(f.a.scope,f.imageInput(approval)),other=await f.shadowB.run(f.b.scope,f.inputB()),privacy=new PrivacyLifecycle(f.kernel),exported=privacy.export(f.owner.scope,f.order().customer_id);
@@ -184,4 +184,5 @@ test('M17-IMAGES-TASK-PINS-AND-MALFORMED-OUTPUT-20',async()=>{
     await assert.rejects(()=>f.images.execute(f.a.scope,p),/TASK_CONTEXT_CHANGED|IMAGE_CONTEXT_CHANGED/);assert.equal(f.imageRequests.length,0);
   });
   await usingImages(async f=>{const {approval}=await f.approve(),reply=structuredClone(f.imageWire.clear);reply.result.answers.requested_detail_visible.choice='refund_approved';f.imageResponse(reply);const business=f.business(),r=await f.images.run(f.a.scope,f.imageInput(approval));assert.equal(r.result.status,'unusable');assert.equal(r.result.answers,null);assert.equal(r.handling,'cannot_assess');assert.deepEqual(f.business(),business);});
+  for(const usage of [{input_tokens:24576,output_tokens:0},{input_tokens:1200,output_tokens:2}])await usingImages(async f=>{const {approval}=await f.approve(),reply=structuredClone(f.imageWire.clear);reply.result.usage=usage;f.imageResponse(reply);const r=await f.images.run(f.a.scope,f.imageInput(approval));assert.equal(r.result.status,'unusable');assert.equal(r.result.reason,'DECISION_OUTPUT_INVALID');assert.equal(r.result.usage,null);const budget=f.budgets.inspect(f.a.scope,'cloudflare','shadow_period');assert.equal(budget.unknown_usage_count,1);assert.equal(budget.charged_micro,'0');assert.ok(BigInt(budget.held_micro)>0n);});
 });

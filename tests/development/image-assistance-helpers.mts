@@ -10,7 +10,7 @@ export const imageFixture=(name:string)=>JSON.parse(readFileSync(new URL('../fix
 export const PHOTO=JSON.parse(readFileSync(new URL('../fixtures/return-intake/photo.v1.json',import.meta.url),'utf8')).base64;
 export function imageAssistanceFixture(){
   const f=shadowFixture(),requests:any[]=[],wire=imageFixture('wire-responses.v1'),ref='images_a';
-  const imageBundle=loadSkillDirectory(fileURLToPath(new URL('../../packages/commerce/skill-bundles/return-intake-images/',import.meta.url)));
+  const imageBundle=loadSkillDirectory(fileURLToPath(new URL('../../packages/commerce/skill-bundles/return-intake-images/return-intake-shadow/',import.meta.url)));
   const origin='https://rifare.invalid/skills/return-intake-images';
   const installApproval=f.installer.approve(f.owner.scope,{origin,bundle_digest:imageBundle.digest,skill_id:imageBundle.id,version:imageBundle.version,expires_at:f.now()+3600000});
   f.installer.install(f.a.scope,installApproval.id,{origin,bundle:imageBundle});
