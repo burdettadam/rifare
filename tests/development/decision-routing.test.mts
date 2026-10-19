@@ -90,7 +90,7 @@ test('CASE-M14-G03-02',async()=>{
   if(cause==='activation')assert.equal(f.routing.active(f.owner.scope,'return_route').revision,2);
   assert.equal(f.db.prepare('SELECT count(*) n FROM commerce_support_rule_jobs').get().n,0);assert.equal(f.intake.form(f.customer,f.caseA.id).financial_effect,false);
  });
-}));
+});
 test('CASE-M14-G03-03',()=>usingRouting(async f=>{
  f.bootstrap();const ownership=new SupportOwnership(f.kernel),generation=ownership.inspect(f.a.scope,f.caseA.id).generation;
  f.before(()=>ownership.takeover(f.a.scope,{case_id:f.caseA.id,expected_generation:generation,reason:'operator_requested'}));
