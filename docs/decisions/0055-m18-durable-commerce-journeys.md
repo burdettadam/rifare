@@ -220,3 +220,18 @@ supplied current customerProof in ShoppingCart.confirm, gated on canonical
 unknown/committed state. Direct customer reconciliation remains ACCESS_DENIED.
 The restricted context covers all nested observations and unresolved IDs as well
 as references, preserving only an explicit handoff flag for hidden uncertainty.
+
+Read-only continuity may use a fresh current customerProof while the original
+case verification is expired. open/context/attach retain provenance without
+replacing case.verification_hash. context.case_verification_current is the native
+cases.verified outcome; false requires handoff. configuration_current separately
+reports the native current configuration resume outcome. Native prepare/execute
+still enforce their original case proof. Supplied proof must itself always be
+current. Reconciliation remains an observation through its native owner.
+
+PrivacyLifecycle.export adds journey_records, a subject-only array of
+{id,case_id,resource_id,version,state,intents,retained_under_hold,subject_projection}.
+Retired unheld records can be scrubbed before export. Redacted bodies clear
+link_id, link_revision, configuration_digest and ownership_generation to NULL,
+and intents to []; no historical approval, preview, operation or link is retained
+there. The deterministic identifier uses journey_ plus forty hexadecimal digits.
