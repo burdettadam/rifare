@@ -11,8 +11,9 @@ acceptance ledger and all M00–M12 planning objects remain unchanged.
 Root owns the integration worktree `goal/M13-milestone`, shared planning, resource
 and shadow orchestration, frozen evaluation, evidence and packaging. An isolated
 decision author owns G01/G03. The authority/security and regression reviewers are
-nonauthors; neither reviewers nor authors execute product code. Their actual
-review records will bind the finished candidate, independently of this assignment.
+nonauthors. The isolated G01/G03 author and independent reviewers execute zero
+product code; root is the sole product executor and integration author. Their
+actual review records bind the finished candidate independently of this assignment.
 
 ## Planned evidence and preservation
 
@@ -28,3 +29,18 @@ input, disables the provider and continues manual handling. Neither this record
 nor a fixture observation claims actual hosted inference, calibrated quality,
 business execution, a reviewer approval or formal milestone acceptance. Actual
 commands and outcomes will appear in ignored candidate-bound evidence.
+
+## Observed focused execution
+
+Root executed the coherent candidate `fa5676c02eac6730616097606c93f617f666025f`
+once: all 53 native cases passed in 28.065 seconds across the four assigned whole
+files. No native failure, skipped case, timeout or product repeat occurred. The
+retained report is `evidence/development/m13-attempt-01/report.json`, SHA256
+`dc17956adf46c9d26e7d90c0a8f97633188dfe423fa6bcbb644a5a4a3547a6c9`; its four native XML
+reports and TAP logs retain individual case results and complete source pins.
+
+The following documentation-only clarification distinguishes root from the
+isolated author. It changes no runtime, test, fixture, configuration, metadata or
+execution limits and does not justify a product rerun. Final independent reviews
+will bind this exact source delta to the observed candidate. Local integration is
+recorded separately after those reviews; formal G99 remains blocked.

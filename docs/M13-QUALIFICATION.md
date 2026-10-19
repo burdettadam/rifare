@@ -25,8 +25,9 @@ are preserved. M14 routing work is the next milestone and remains unassigned.
 The root-owned native selection is four whole files: 13 decision-model cases,
 23 shadow/resource/evaluation cases, nine retained privacy cases and eight
 retained support-provider routing cases. This is 53 actual cases within the
-unchanged 60-case, four-file, one-total-60-second ceiling. Authors and reviewers
-execute zero product code. No nested catalog, broad regression, browser or formal
+unchanged 60-case, four-file, one-total-60-second ceiling. The isolated G01/G03 author and independent reviewers
+execute zero product code; root is the sole product executor and integration
+author. No nested catalog, broad regression, browser or formal
 controller campaign is part of this local assessment.
 
 The checkpoint retains every actual attempt, including any failed candidate and
