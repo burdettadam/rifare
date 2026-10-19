@@ -109,7 +109,7 @@ export class DecisionShadow {
       }catch(error){
         // An earlier attempt owns this identity, including its held budget and
         // eventual receipt. A concurrent preparation cannot replace that result.
-        if(error instanceof Error&&error.message==='DECISION_OBSERVATION_IN_PROGRESS')throw error;
+        if(error instanceof Error&&['DECISION_OBSERVATION_IN_PROGRESS','BUDGET_IDEMPOTENCY_CONFLICT'].includes(error.message))throw new Error('DECISION_OBSERVATION_IN_PROGRESS');
         result=unusableDecision('DECISION_UNAVAILABLE',kind);failure_phase='budget';
       }
       if(reserved){
