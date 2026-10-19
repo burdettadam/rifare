@@ -8,6 +8,7 @@ import { pathToFileURL } from 'node:url';
 import { inspectExtensionArtifact,inspectPinnedExtensionArtifact } from '../../packages/commerce/extension-artifacts.mts';
 import { classifyExtensionTransition,retirementImpact } from '../../packages/commerce/extension-compatibility.mts';
 import { Extensions } from '../../packages/commerce/extension-lifecycle.mts';
+import { SkillInstaller,decodeSkillPackage } from '../../packages/commerce/skill-installer.mts';
 import { EXTENSION_TABLES,eraseExtensionSubject,exportExtensionSubject,revokeExtensionsForRestore } from '../../packages/commerce/extension-privacy.mts';
 import { CommerceKernel } from '../../packages/commerce/kernel.mts';
 import { ActionGateway } from '../../packages/commerce/action-gateway.mts';
@@ -71,6 +72,21 @@ test('M12-EXT-PRIVACY',async()=>{
   for(const row of f.db.prepare('SELECT * FROM commerce_extension_artifacts').all()){assert.equal(JSON.parse(row.body).artifact.redacted,true,'Changed skill or resource bytes require an inert artifact reference');assert.equal(row.state,'revoked_privacy');assert.doesNotMatch(row.body,/SYNTHETIC_PRIVATE|private@example/);}
   for(const id of data.approval_ids)assert.equal(f.db.prepare('SELECT revoked FROM commerce_skill_approvals WHERE id=?').get(id).revoked,1);
   assert.deepEqual(f.db.prepare('SELECT * FROM commerce_skill_archive ORDER BY skill_id,bundle_digest').all(),archive,'Original archived bytes and pins remain intact');
+ });
+ await usingExtensions(f=>{
+  const data=populateExtensionPrivacy(f),other=extensionArtifact();other.payload.files['SKILL.md']+='\nSeparately retained instruction bytes.\n';
+  const decoded=decodeSkillPackage(Buffer.from(canonical(other.payload)),'json'),installer=new SkillInstaller(f.kernel),unrelated=installer.approve(f.owner.scope,{origin:decoded.origin,bundle_digest:decoded.bundle.digest,skill_id:decoded.bundle.id,version:decoded.bundle.version,expires_at:f.now()+600000});
+  const unrelatedBefore=f.db.prepare('SELECT * FROM commerce_skill_approvals WHERE id=?').get(unrelated.id),archive=f.db.prepare('SELECT * FROM commerce_skill_archive ORDER BY skill_id,bundle_digest').all(),installations=f.db.prepare('SELECT * FROM commerce_skill_installations ORDER BY skill_id').all();
+  assert.equal(unrelatedBefore.skill_id,data.first.a.extension_id);assert.equal(unrelatedBefore.version,data.first.a.version);assert.notEqual(unrelatedBefore.bundle_digest,data.first.a.bundle_digest);
+  for(const table of ['commerce_extension_artifacts','commerce_extension_reviews'])for(const row of f.db.prepare('SELECT * FROM '+table+' WHERE tenant_id=? AND store_id=?').all(f.a.tenant,f.a.store)){
+   const b=JSON.parse(row.body);if(table==='commerce_extension_artifacts')assert.equal(contentDigest(b.artifact),row.id,'Original pinned artifact remains intact');b.bundle_digest='private@example.invalid';
+   f.db.prepare('UPDATE '+table+' SET body=?,digest=? WHERE tenant_id=? AND store_id=? AND id=?').run(canonical(b),contentDigest(b),row.tenant_id,row.store_id,row.id);
+  }
+  eraseExtensionSubject(f.kernel,f.a.tenant,f.a.store,[],'a'.repeat(64));eraseExtensionSubject(f.kernel,f.a.tenant,f.a.store,[],'a'.repeat(64));
+  for(const id of data.approval_ids)assert.equal(f.db.prepare('SELECT revoked FROM commerce_skill_approvals WHERE id=?').get(id).revoked,1,'Intact artifact binds canonical approvals when both copied bundle digests are poisoned');
+  for(const table of EXTENSION_TABLES)assert.doesNotMatch(JSON.stringify(f.db.prepare('SELECT * FROM '+table).all()),/private@example/);
+  assert.deepEqual(f.db.prepare('SELECT * FROM commerce_skill_approvals WHERE id=?').get(unrelated.id),unrelatedBefore,'Same-skill different-bundle approval remains byte-identical');
+  assert.deepEqual(f.db.prepare('SELECT * FROM commerce_skill_archive ORDER BY skill_id,bundle_digest').all(),archive);assert.deepEqual(f.db.prepare('SELECT * FROM commerce_skill_installations ORDER BY skill_id').all(),installations);
  });
 });
 test('M12-EXT-HOST-ADAPTER',()=>usingExtensions(f=>{const artifact=extensionArtifact('1.0.0',{kind:'host_adapter'}),inspected=inspectExtensionArtifact(artifact,{root:extensionRoot});assert.equal(inspected.conformance_scope,'retained_host_source_and_test_pins');assert.equal(inspected.bundle,null);assert.equal(inspected.execution_authorized,false);const staged=f.stage(artifact);assert.throws(()=>f.extensions.install(f.a.scope,{artifact_id:staged.a.id,review_id:staged.review.id,profile_id:'default',expected_profile_revision:1}),/EXTENSION_HOST_ADAPTER_INERT/);const changed=extensionArtifact('1.0.0',{kind:'host_adapter'});changed.payload.source_pins[0].sha256='f'.repeat(64);changed.origin.sha256=contentDigest(changed.payload);assert.throws(()=>inspectExtensionArtifact(changed,{root:extensionRoot}));assert.equal(f.db.prepare('SELECT count(*) n FROM commerce_connections').get().n,3);}));
