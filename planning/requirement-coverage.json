@@ -7130,10 +7130,830 @@
         "Campaign results preserve original holdout assignment, exposure identity and attribution windows; duplicated events cannot inflate measured effect.",
         "Reported commercial outcomes distinguish synthetic evaluation, observed attributed revenue and estimated incremental effect with uncertainty."
       ]
+    },
+    {
+      "id": "ADD-M23-G01",
+      "milestone": "M23",
+      "title": "Pin the complete Clef-flash conversion and reference contract",
+      "acceptance_criteria": "The manifest identifies an actual available pack or records its absence; an estimate, model name, generic Qwen checkpoint or unverified hosted URL cannot be marked prepared or qualified.\nReference preparation preserves all questions together, option identities, token/span mapping and the trained head/readout. Omitting the head, replacing joint scoring with generated JSON, or changing the tokenizer fails the declared conformance check.\nThe evaluation corpus, reference provenance and tolerance rationale are versioned before candidate measurement; inherited fixture labels, reported upstream 5/5 agreement and the original M13 held-out cohort are not relabeled as browser observations.\nThe candidate advertises text only and bounds no wider than the effective current M13 profile. Unsupported types, missing required evidence or overflow produce an explicit unavailable result without silent truncation.",
+      "domain": "browser_decision_models",
+      "depends_on": [],
+      "priority": "P1",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M13"
+      ],
+      "readiness": "not_assessed",
+      "classification": "adopted_roadmap_requirement",
+      "release_requirement": "additive_browser_expansion",
+      "source_requirement_id": "ADD-M23-G01",
+      "acceptance_test_ids": [
+        "CASE-M23-G01-01",
+        "CASE-M23-G01-02",
+        "CASE-M23-G01-03",
+        "CASE-M23-G01-04"
+      ],
+      "test_mapping_note": "Exact source case IDs and expected behaviors are retained. These are unexecuted specifications; bind the independent fixtures and actual observations at implementation/qualification without treating local diagnostics as full browser evidence.",
+      "source_reference": "reference/additions/m23-m25-requirements.json",
+      "origin_acceptance_criteria": [
+        "The manifest identifies an actual available pack or records its absence; an estimate, model name, generic Qwen checkpoint or unverified hosted URL cannot be marked prepared or qualified.",
+        "Reference preparation preserves all questions together, option identities, token/span mapping and the trained head/readout. Omitting the head, replacing joint scoring with generated JSON, or changing the tokenizer fails the declared conformance check.",
+        "The evaluation corpus, reference provenance and tolerance rationale are versioned before candidate measurement; inherited fixture labels, reported upstream 5/5 agreement and the original M13 held-out cohort are not relabeled as browser observations.",
+        "The candidate advertises text only and bounds no wider than the effective current M13 profile. Unsupported types, missing required evidence or overflow produce an explicit unavailable result without silent truncation."
+      ],
+      "outcome": "Specify and prepare one reproducible Kevala Q8 text pack that retains Clef's trained joint decision path and can be compared with the pinned upstream reference.",
+      "goal_id": "M23-G01",
+      "research_requirement_refs": [
+        "CF-001",
+        "CF-002",
+        "CF-004",
+        "CF-008",
+        "CF-011",
+        "CF-015"
+      ],
+      "origin_id": "rifare-browser-clef-architecture-2026-10-19/ADD-M23-G01",
+      "origin_status": "proposed_not_implemented",
+      "origin_priority": "P1_after_M13_local_preparation",
+      "adoption_authority": "ADR-0044",
+      "formal_acceptance": false,
+      "worker_goal_ids": [
+        "M23-G01"
+      ],
+      "acceptance_gate": "M23-G99",
+      "coverage_rule": "All in-scope mapped goals AND exact frozen original acceptance criteria AND the formal milestone gate must be accepted. One local partial implementation or diagnostic pass does not close this source requirement.",
+      "continuous_obligation": false
+    },
+    {
+      "id": "ADD-M23-G02",
+      "milestone": "M23",
+      "title": "Load the pinned pack in a bounded desktop browser worker",
+      "acceptance_criteria": "The browser remains responsive through loading and cancellation; no model download begins merely because the ordinary commerce view opens, and an unapproved or corrupt artifact never reaches a ready state.\nAn actual target browser can load, warm and unload the approved pack, or records a concrete unsupported/unavailable reason. A mocked adapter, navigator.gpu presence or successful file download alone cannot qualify inference.\nA cache hit verifies artifact identity and still records initialization; cache eviction, interrupted transfer and insufficient storage yield a recoverable state without an uncontrolled re-download loop.\nGPU allocation failure, device loss or a CPU fallback that cannot fit the pack leaves the existing manual workflow available and releases resources when possible, with no automatic hosted inference.",
+      "domain": "browser_decision_models",
+      "depends_on": [],
+      "priority": "P1",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M13"
+      ],
+      "readiness": "not_assessed",
+      "classification": "adopted_roadmap_requirement",
+      "release_requirement": "additive_browser_expansion",
+      "source_requirement_id": "ADD-M23-G02",
+      "acceptance_test_ids": [
+        "CASE-M23-G02-01",
+        "CASE-M23-G02-02",
+        "CASE-M23-G02-03",
+        "CASE-M23-G02-04"
+      ],
+      "test_mapping_note": "Exact source case IDs and expected behaviors are retained. These are unexecuted specifications; bind the independent fixtures and actual observations at implementation/qualification without treating local diagnostics as full browser evidence.",
+      "source_reference": "reference/additions/m23-m25-requirements.json",
+      "origin_acceptance_criteria": [
+        "The browser remains responsive through loading and cancellation; no model download begins merely because the ordinary commerce view opens, and an unapproved or corrupt artifact never reaches a ready state.",
+        "An actual target browser can load, warm and unload the approved pack, or records a concrete unsupported/unavailable reason. A mocked adapter, navigator.gpu presence or successful file download alone cannot qualify inference.",
+        "A cache hit verifies artifact identity and still records initialization; cache eviction, interrupted transfer and insufficient storage yield a recoverable state without an uncontrolled re-download loop.",
+        "GPU allocation failure, device loss or a CPU fallback that cannot fit the pack leaves the existing manual workflow available and releases resources when possible, with no automatic hosted inference."
+      ],
+      "outcome": "Add an opt-in browser loader whose actual capability and lifecycle determine availability, with honest download, cache and memory behavior.",
+      "goal_id": "M23-G02",
+      "research_requirement_refs": [
+        "CF-001",
+        "CF-002",
+        "CF-004",
+        "CF-008",
+        "CF-011",
+        "CF-015"
+      ],
+      "origin_id": "rifare-browser-clef-architecture-2026-10-19/ADD-M23-G02",
+      "origin_status": "proposed_not_implemented",
+      "origin_priority": "P1_after_M13_local_preparation",
+      "adoption_authority": "ADR-0044",
+      "formal_acceptance": false,
+      "worker_goal_ids": [
+        "M23-G02"
+      ],
+      "acceptance_gate": "M23-G99",
+      "coverage_rule": "All in-scope mapped goals AND exact frozen original acceptance criteria AND the formal milestone gate must be accepted. One local partial implementation or diagnostic pass does not close this source requirement.",
+      "continuous_obligation": false
+    },
+    {
+      "id": "ADD-M23-G03",
+      "milestone": "M23",
+      "title": "Add a browser adapter and separate client-observation ingestion",
+      "acceptance_criteria": "The minimal browser module compiles without Node-only commerce, crypto, filesystem, SQLite or Buffer dependencies and matches retained v1 UTF-8 sizing and result-validation behavior on boundary fixtures. The authorized request retains M13 question/answer IDs and exposes no provider secrets or hidden server-only evidence.\nA private M13 prepare() object cannot be serialized or copied into browser authority. A server-issued expiring preparation identity governs ingestion; a forged browser payload claiming fixture/live provenance, canonical branding, verified revision or execution is rejected or retained only as a client assertion in the new record kind.\nCross-tenant substitution, changed evidence/question/configuration, expired preparation, revoked ownership or duplicate/conflicting submission cannot create or replace a usable current observation.\nThe operator sees a labeled shadow suggestion with execution_authorized:false. Ingestion changes no assignment, rule, eligibility, approval, money, stock, notification or business-operation identity and cannot trigger M14 routing.",
+      "domain": "browser_decision_models",
+      "depends_on": [],
+      "priority": "P1",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M13"
+      ],
+      "readiness": "not_assessed",
+      "classification": "adopted_roadmap_requirement",
+      "release_requirement": "additive_browser_expansion",
+      "source_requirement_id": "ADD-M23-G03",
+      "acceptance_test_ids": [
+        "CASE-M23-G03-01",
+        "CASE-M23-G03-02",
+        "CASE-M23-G03-03",
+        "CASE-M23-G03-04"
+      ],
+      "test_mapping_note": "Exact source case IDs and expected behaviors are retained. These are unexecuted specifications; bind the independent fixtures and actual observations at implementation/qualification without treating local diagnostics as full browser evidence.",
+      "source_reference": "reference/additions/m23-m25-requirements.json",
+      "origin_acceptance_criteria": [
+        "The minimal browser module compiles without Node-only commerce, crypto, filesystem, SQLite or Buffer dependencies and matches retained v1 UTF-8 sizing and result-validation behavior on boundary fixtures. The authorized request retains M13 question/answer IDs and exposes no provider secrets or hidden server-only evidence.",
+        "A private M13 prepare() object cannot be serialized or copied into browser authority. A server-issued expiring preparation identity governs ingestion; a forged browser payload claiming fixture/live provenance, canonical branding, verified revision or execution is rejected or retained only as a client assertion in the new record kind.",
+        "Cross-tenant substitution, changed evidence/question/configuration, expired preparation, revoked ownership or duplicate/conflicting submission cannot create or replace a usable current observation.",
+        "The operator sees a labeled shadow suggestion with execution_authorized:false. Ingestion changes no assignment, rule, eligibility, approval, money, stock, notification or business-operation identity and cannot trigger M14 routing."
+      ],
+      "outcome": "Let an authorized operator view a browser-generated shadow suggestion through the existing decision schema while the server records its untrusted origin and owns all authority checks.",
+      "goal_id": "M23-G03",
+      "research_requirement_refs": [
+        "CF-001",
+        "CF-002",
+        "CF-004",
+        "CF-008",
+        "CF-011",
+        "CF-015"
+      ],
+      "origin_id": "rifare-browser-clef-architecture-2026-10-19/ADD-M23-G03",
+      "origin_status": "proposed_not_implemented",
+      "origin_priority": "P1_after_M13_local_preparation",
+      "adoption_authority": "ADR-0044",
+      "formal_acceptance": false,
+      "worker_goal_ids": [
+        "M23-G03"
+      ],
+      "acceptance_gate": "M23-G99",
+      "coverage_rule": "All in-scope mapped goals AND exact frozen original acceptance criteria AND the formal milestone gate must be accepted. One local partial implementation or diagnostic pass does not close this source requirement.",
+      "continuous_obligation": false
+    },
+    {
+      "id": "ADD-M23-G04",
+      "milestone": "M23",
+      "title": "Apply purpose, privacy, cancellation and destination rules",
+      "acceptance_criteria": "The declared local-only inference demonstration contains no model-input request to a hosted inference service; model downloads and authorized Rifare traffic are identified separately and carry no case text in model URLs or telemetry.\nModel failure leaves manual handling available. A hosted or self-hosted inference fallback requires an already approved current destination/purpose and explicit configured selection; it uses a new authorized server invocation rather than laundering a client result.\nLogout, tenant switch, correction, revocation or deadline invalidates pending ingestion and disposes controlled client state as specified; reopening a tab or replaying an old result cannot restore erased or superseded observations.\nThe privacy inventory names client memory, any enabled cache and server observation stores; controlled cleanup/export checks have evidence, and inaccessible external copies remain an explicit limit rather than a deletion attestation.",
+      "domain": "browser_decision_models",
+      "depends_on": [],
+      "priority": "P1",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M13"
+      ],
+      "readiness": "not_assessed",
+      "classification": "adopted_roadmap_requirement",
+      "release_requirement": "additive_browser_expansion",
+      "source_requirement_id": "ADD-M23-G04",
+      "acceptance_test_ids": [
+        "CASE-M23-G04-01",
+        "CASE-M23-G04-02",
+        "CASE-M23-G04-03",
+        "CASE-M23-G04-04"
+      ],
+      "test_mapping_note": "Exact source case IDs and expected behaviors are retained. These are unexecuted specifications; bind the independent fixtures and actual observations at implementation/qualification without treating local diagnostics as full browser evidence.",
+      "source_reference": "reference/additions/m23-m25-requirements.json",
+      "origin_acceptance_criteria": [
+        "The declared local-only inference demonstration contains no model-input request to a hosted inference service; model downloads and authorized Rifare traffic are identified separately and carry no case text in model URLs or telemetry.",
+        "Model failure leaves manual handling available. A hosted or self-hosted inference fallback requires an already approved current destination/purpose and explicit configured selection; it uses a new authorized server invocation rather than laundering a client result.",
+        "Logout, tenant switch, correction, revocation or deadline invalidates pending ingestion and disposes controlled client state as specified; reopening a tab or replaying an old result cannot restore erased or superseded observations.",
+        "The privacy inventory names client memory, any enabled cache and server observation stores; controlled cleanup/export checks have evidence, and inaccessible external copies remain an explicit limit rather than a deletion attestation."
+      ],
+      "outcome": "Keep browser computation within the approved data purpose and make cancellation, local cleanup and any fallback explicit without transferring authority or evidence silently.",
+      "goal_id": "M23-G04",
+      "research_requirement_refs": [
+        "CF-001",
+        "CF-002",
+        "CF-004",
+        "CF-008",
+        "CF-011",
+        "CF-015"
+      ],
+      "origin_id": "rifare-browser-clef-architecture-2026-10-19/ADD-M23-G04",
+      "origin_status": "proposed_not_implemented",
+      "origin_priority": "P1_after_M13_local_preparation",
+      "adoption_authority": "ADR-0044",
+      "formal_acceptance": false,
+      "worker_goal_ids": [
+        "M23-G04"
+      ],
+      "acceptance_gate": "M23-G99",
+      "coverage_rule": "All in-scope mapped goals AND exact frozen original acceptance criteria AND the formal milestone gate must be accepted. One local partial implementation or diagnostic pass does not close this source requirement.",
+      "continuous_obligation": false
+    },
+    {
+      "id": "ADD-M23-G05",
+      "milestone": "M23",
+      "title": "Demonstrate real desktop fidelity and case shadow behavior",
+      "acceptance_criteria": "The report binds actual browser inference to named hardware, exact runtime/pack/source hashes, input/question revisions and the protocol committed before execution. An imported upstream result or stub cannot satisfy it.\nEvery request in the declared reference cohort is accounted for, including failures; any tolerance or performance target comes from the frozen protocol, and a missed target is not changed after seeing results.\nThe two-profile case demo records only client-reported shadow suggestions, rejects one stale or tampered submission, preserves zero business effects and continues manually when local inference is unavailable.\nStatus distinguishes prepared artifacts, fixture implementation, actual named-device inference, numerical fidelity, unqualified merchant accuracy and formal acceptance. There is no broad device, calibrated routing, bitwise determinism or production-readiness claim.",
+      "domain": "browser_decision_models",
+      "depends_on": [],
+      "priority": "P1",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M13"
+      ],
+      "readiness": "not_assessed",
+      "classification": "adopted_roadmap_requirement",
+      "release_requirement": "additive_browser_expansion",
+      "source_requirement_id": "ADD-M23-G05",
+      "acceptance_test_ids": [
+        "CASE-M23-G05-01",
+        "CASE-M23-G05-02",
+        "CASE-M23-G05-03",
+        "CASE-M23-G05-04"
+      ],
+      "test_mapping_note": "Exact source case IDs and expected behaviors are retained. These are unexecuted specifications; bind the independent fixtures and actual observations at implementation/qualification without treating local diagnostics as full browser evidence.",
+      "source_reference": "reference/additions/m23-m25-requirements.json",
+      "origin_acceptance_criteria": [
+        "The report binds actual browser inference to named hardware, exact runtime/pack/source hashes, input/question revisions and the protocol committed before execution. An imported upstream result or stub cannot satisfy it.",
+        "Every request in the declared reference cohort is accounted for, including failures; any tolerance or performance target comes from the frozen protocol, and a missed target is not changed after seeing results.",
+        "The two-profile case demo records only client-reported shadow suggestions, rejects one stale or tampered submission, preserves zero business effects and continues manually when local inference is unavailable.",
+        "Status distinguishes prepared artifacts, fixture implementation, actual named-device inference, numerical fidelity, unqualified merchant accuracy and formal acceptance. There is no broad device, calibrated routing, bitwise determinism or production-readiness claim."
+      ],
+      "outcome": "Record one actual browser execution profile and an end-to-end synthetic commerce shadow demonstration without converting a small fidelity check into a product-quality or authority claim.",
+      "goal_id": "M23-G05",
+      "research_requirement_refs": [
+        "CF-001",
+        "CF-002",
+        "CF-004",
+        "CF-008",
+        "CF-011",
+        "CF-015"
+      ],
+      "origin_id": "rifare-browser-clef-architecture-2026-10-19/ADD-M23-G05",
+      "origin_status": "proposed_not_implemented",
+      "origin_priority": "P1_after_M13_local_preparation",
+      "adoption_authority": "ADR-0044",
+      "formal_acceptance": false,
+      "worker_goal_ids": [
+        "M23-G05"
+      ],
+      "acceptance_gate": "M23-G99",
+      "coverage_rule": "All in-scope mapped goals AND exact frozen original acceptance criteria AND the formal milestone gate must be accepted. One local partial implementation or diagnostic pass does not close this source requirement.",
+      "continuous_obligation": false
+    },
+    {
+      "id": "ADD-M24-G01",
+      "milestone": "M24",
+      "title": "Verify or repair Wllama's complete Clef joint path",
+      "acceptance_criteria": "Source inspection identifies the exact joint execution route and build identities; a working generic chat completion, one-question decision or advertised WebGPU support cannot qualify multi-question Clef.\nA compact joint request matches the declared reference token/span/head layout or reports a specific unsupported path. A missing integration remains blocked rather than receiving a compatibility badge.\nAny wrapper repair preserves all requested questions and output positions without silently splitting joint inference into different prompts; the browser adapter cannot fall back to generated JSON.\nNo M14-G04 endpoint, server configuration, acceptance criterion or assignment is removed or marked complete by this work; browser image support remains unavailable.",
+      "domain": "browser_decision_models",
+      "depends_on": [],
+      "priority": "P2",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M23",
+        "M14"
+      ],
+      "readiness": "not_assessed",
+      "classification": "adopted_roadmap_requirement",
+      "release_requirement": "additive_browser_expansion",
+      "source_requirement_id": "ADD-M24-G01",
+      "acceptance_test_ids": [
+        "CASE-M24-G01-01",
+        "CASE-M24-G01-02",
+        "CASE-M24-G01-03",
+        "CASE-M24-G01-04"
+      ],
+      "test_mapping_note": "Exact source case IDs and expected behaviors are retained. These are unexecuted specifications; bind the independent fixtures and actual observations at implementation/qualification without treating local diagnostics as full browser evidence.",
+      "source_reference": "reference/additions/m23-m25-requirements.json",
+      "origin_acceptance_criteria": [
+        "Source inspection identifies the exact joint execution route and build identities; a working generic chat completion, one-question decision or advertised WebGPU support cannot qualify multi-question Clef.",
+        "A compact joint request matches the declared reference token/span/head layout or reports a specific unsupported path. A missing integration remains blocked rather than receiving a compatibility badge.",
+        "Any wrapper repair preserves all requested questions and output positions without silently splitting joint inference into different prompts; the browser adapter cannot fall back to generated JSON.",
+        "No M14-G04 endpoint, server configuration, acceptance criterion or assignment is removed or marked complete by this work; browser image support remains unavailable."
+      ],
+      "outcome": "Establish whether the pinned Wllama/llama.cpp combination executes Clef's full joint request, and add only the narrow integration repair required if it does not.",
+      "goal_id": "M24-G01",
+      "research_requirement_refs": [
+        "CF-001",
+        "CF-002",
+        "CF-005",
+        "CF-010",
+        "CF-011",
+        "CF-015"
+      ],
+      "origin_id": "rifare-browser-clef-architecture-2026-10-19/ADD-M24-G01",
+      "origin_status": "proposed_not_implemented",
+      "origin_priority": "P2_after_M23_browser_evidence",
+      "adoption_authority": "ADR-0044",
+      "formal_acceptance": false,
+      "worker_goal_ids": [
+        "M24-G01"
+      ],
+      "acceptance_gate": "M24-G99",
+      "coverage_rule": "All in-scope mapped goals AND exact frozen original acceptance criteria AND the formal milestone gate must be accepted. One local partial implementation or diagnostic pass does not close this source requirement.",
+      "continuous_obligation": false
+    },
+    {
+      "id": "ADD-M24-G02",
+      "milestone": "M24",
+      "title": "Package and load a verified compact Q4 candidate",
+      "acceptance_criteria": "The compact artifact is a pinned Clef-flash Q4 pack with the trained joint components, not a plain Qwen or unrelated smaller model; every loaded shard is bound to that manifest.\nA missing, duplicated, reordered, truncated or hash-mismatched shard produces a bounded load error and cannot be cached as a verified complete model.\nActual target-browser load/warmup records the selected build, device/limits and memory/failure observations; neither the 6.49 GB published file size nor successful splitting proves availability.\nUnsupported headers, browser features or GPU operators leave Kevala/manual operation available; enabling the candidate does not change case authorization, unrelated channel configuration or hosted-provider defaults.",
+      "domain": "browser_decision_models",
+      "depends_on": [],
+      "priority": "P2",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M23",
+        "M14"
+      ],
+      "readiness": "not_assessed",
+      "classification": "adopted_roadmap_requirement",
+      "release_requirement": "additive_browser_expansion",
+      "source_requirement_id": "ADD-M24-G02",
+      "acceptance_test_ids": [
+        "CASE-M24-G02-01",
+        "CASE-M24-G02-02",
+        "CASE-M24-G02-03",
+        "CASE-M24-G02-04"
+      ],
+      "test_mapping_note": "Exact source case IDs and expected behaviors are retained. These are unexecuted specifications; bind the independent fixtures and actual observations at implementation/qualification without treating local diagnostics as full browser evidence.",
+      "source_reference": "reference/additions/m23-m25-requirements.json",
+      "origin_acceptance_criteria": [
+        "The compact artifact is a pinned Clef-flash Q4 pack with the trained joint components, not a plain Qwen or unrelated smaller model; every loaded shard is bound to that manifest.",
+        "A missing, duplicated, reordered, truncated or hash-mismatched shard produces a bounded load error and cannot be cached as a verified complete model.",
+        "Actual target-browser load/warmup records the selected build, device/limits and memory/failure observations; neither the 6.49 GB published file size nor successful splitting proves availability.",
+        "Unsupported headers, browser features or GPU operators leave Kevala/manual operation available; enabling the candidate does not change case authorization, unrelated channel configuration or hosted-provider defaults."
+      ],
+      "outcome": "Prepare one Q4 GGUF Clef-flash candidate for the repaired/verified browser runtime with bounded artifact transfer and actual memory qualification.",
+      "goal_id": "M24-G02",
+      "research_requirement_refs": [
+        "CF-001",
+        "CF-002",
+        "CF-005",
+        "CF-010",
+        "CF-011",
+        "CF-015"
+      ],
+      "origin_id": "rifare-browser-clef-architecture-2026-10-19/ADD-M24-G02",
+      "origin_status": "proposed_not_implemented",
+      "origin_priority": "P2_after_M23_browser_evidence",
+      "adoption_authority": "ADR-0044",
+      "formal_acceptance": false,
+      "worker_goal_ids": [
+        "M24-G02"
+      ],
+      "acceptance_gate": "M24-G99",
+      "coverage_rule": "All in-scope mapped goals AND exact frozen original acceptance criteria AND the formal milestone gate must be accepted. One local partial implementation or diagnostic pass does not close this source requirement.",
+      "continuous_obligation": false
+    },
+    {
+      "id": "ADD-M24-G03",
+      "milestone": "M24",
+      "title": "Normalize compact results through the browser observation boundary",
+      "acceptance_criteria": "Both browser implementations accept the same declared logical task and merchant answer IDs, with no provider-specific branch in the base skill or business action contract.\nInvalid distributions, missing questions, reordered score meanings or unsupported response semantics remain unusable; result normalization never repairs a malformed answer into apparent confidence.\nChanging only a client-reported runtime/model label cannot promote a result to canonical M13 evidence or a qualified server route; observed and asserted facts remain distinct.\nA failed or revoked compact attempt retains its exact observation status and manual alternative, with no unapproved model/destination fallback and no business effect.",
+      "domain": "browser_decision_models",
+      "depends_on": [],
+      "priority": "P2",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M23",
+        "M14"
+      ],
+      "readiness": "not_assessed",
+      "classification": "adopted_roadmap_requirement",
+      "release_requirement": "additive_browser_expansion",
+      "source_requirement_id": "ADD-M24-G03",
+      "acceptance_test_ids": [
+        "CASE-M24-G03-01",
+        "CASE-M24-G03-02",
+        "CASE-M24-G03-03",
+        "CASE-M24-G03-04"
+      ],
+      "test_mapping_note": "Exact source case IDs and expected behaviors are retained. These are unexecuted specifications; bind the independent fixtures and actual observations at implementation/qualification without treating local diagnostics as full browser evidence.",
+      "source_reference": "reference/additions/m23-m25-requirements.json",
+      "origin_acceptance_criteria": [
+        "Both browser implementations accept the same declared logical task and merchant answer IDs, with no provider-specific branch in the base skill or business action contract.",
+        "Invalid distributions, missing questions, reordered score meanings or unsupported response semantics remain unusable; result normalization never repairs a malformed answer into apparent confidence.",
+        "Changing only a client-reported runtime/model label cannot promote a result to canonical M13 evidence or a qualified server route; observed and asserted facts remain distinct.",
+        "A failed or revoked compact attempt retains its exact observation status and manual alternative, with no unapproved model/destination fallback and no business effect."
+      ],
+      "outcome": "Expose the compact engine as a selectable browser implementation of the same logical decision task while preserving schema and untrusted provenance.",
+      "goal_id": "M24-G03",
+      "research_requirement_refs": [
+        "CF-001",
+        "CF-002",
+        "CF-005",
+        "CF-010",
+        "CF-011",
+        "CF-015"
+      ],
+      "origin_id": "rifare-browser-clef-architecture-2026-10-19/ADD-M24-G03",
+      "origin_status": "proposed_not_implemented",
+      "origin_priority": "P2_after_M23_browser_evidence",
+      "adoption_authority": "ADR-0044",
+      "formal_acceptance": false,
+      "worker_goal_ids": [
+        "M24-G03"
+      ],
+      "acceptance_gate": "M24-G99",
+      "coverage_rule": "All in-scope mapped goals AND exact frozen original acceptance criteria AND the formal milestone gate must be accepted. One local partial implementation or diagnostic pass does not close this source requirement.",
+      "continuous_obligation": false
+    },
+    {
+      "id": "ADD-M24-G04",
+      "milestone": "M24",
+      "title": "Run a predeclared paired browser evaluation",
+      "acceptance_criteria": "Both named browser engines actually execute the same frozen cohort; mocks, a single engine with two wrappers or a previously imported result do not satisfy the paired comparison.\nResults report the declared denominators, failures, unknowns and differences, with no tolerance, quality target or winner rule invented after data. Failed goals stay failed or pending under the original protocol.\nAny task-confidence threshold is qualified per engine/precision/question profile using the M14 process; numerical agreement or compressed file size alone cannot transfer thresholds or imply a quality improvement.\nThe report identifies the exact measured device and cold/cached/inference scopes; no native-server timing or unrelated model benchmark is presented as browser performance.",
+      "domain": "browser_decision_models",
+      "depends_on": [],
+      "priority": "P2",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M23",
+        "M14"
+      ],
+      "readiness": "not_assessed",
+      "classification": "adopted_roadmap_requirement",
+      "release_requirement": "additive_browser_expansion",
+      "source_requirement_id": "ADD-M24-G04",
+      "acceptance_test_ids": [
+        "CASE-M24-G04-01",
+        "CASE-M24-G04-02",
+        "CASE-M24-G04-03",
+        "CASE-M24-G04-04"
+      ],
+      "test_mapping_note": "Exact source case IDs and expected behaviors are retained. These are unexecuted specifications; bind the independent fixtures and actual observations at implementation/qualification without treating local diagnostics as full browser evidence.",
+      "source_reference": "reference/additions/m23-m25-requirements.json",
+      "origin_acceptance_criteria": [
+        "Both named browser engines actually execute the same frozen cohort; mocks, a single engine with two wrappers or a previously imported result do not satisfy the paired comparison.",
+        "Results report the declared denominators, failures, unknowns and differences, with no tolerance, quality target or winner rule invented after data. Failed goals stay failed or pending under the original protocol.",
+        "Any task-confidence threshold is qualified per engine/precision/question profile using the M14 process; numerical agreement or compressed file size alone cannot transfer thresholds or imply a quality improvement.",
+        "The report identifies the exact measured device and cold/cached/inference scopes; no native-server timing or unrelated model benchmark is presented as browser performance."
+      ],
+      "outcome": "Measure both actually exercised browser implementations on a frozen shared workload, separating numerical fidelity, task quality and device performance.",
+      "goal_id": "M24-G04",
+      "research_requirement_refs": [
+        "CF-001",
+        "CF-002",
+        "CF-005",
+        "CF-010",
+        "CF-011",
+        "CF-015"
+      ],
+      "origin_id": "rifare-browser-clef-architecture-2026-10-19/ADD-M24-G04",
+      "origin_status": "proposed_not_implemented",
+      "origin_priority": "P2_after_M23_browser_evidence",
+      "adoption_authority": "ADR-0044",
+      "formal_acceptance": false,
+      "worker_goal_ids": [
+        "M24-G04"
+      ],
+      "acceptance_gate": "M24-G99",
+      "coverage_rule": "All in-scope mapped goals AND exact frozen original acceptance criteria AND the formal milestone gate must be accepted. One local partial implementation or diagnostic pass does not close this source requirement.",
+      "continuous_obligation": false
+    },
+    {
+      "id": "ADD-M24-G05",
+      "milestone": "M24",
+      "title": "Demonstrate controlled browser replacement and rollback",
+      "acceptance_criteria": "A supported case can be evaluated by both actual browser implementations under the published profile without changing merchant skills, case identities or business-operation contracts.\nAfter replacement/revocation, an old worker's late result is rejected; rollback uses a currently approved configuration and cannot resurrect superseded evidence or a cached authority grant.\nThe compact path can be disabled entirely while Kevala/manual and the retained server choices still operate; no account, model provider or compact runtime is mandatory.\nThe release record claims only the measured browser combinations and leaves M14-G04 server implementation and all unperformed live/formal gates unchanged.",
+      "domain": "browser_decision_models",
+      "depends_on": [],
+      "priority": "P2",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M23",
+        "M14"
+      ],
+      "readiness": "not_assessed",
+      "classification": "adopted_roadmap_requirement",
+      "release_requirement": "additive_browser_expansion",
+      "source_requirement_id": "ADD-M24-G05",
+      "acceptance_test_ids": [
+        "CASE-M24-G05-01",
+        "CASE-M24-G05-02",
+        "CASE-M24-G05-03",
+        "CASE-M24-G05-04"
+      ],
+      "test_mapping_note": "Exact source case IDs and expected behaviors are retained. These are unexecuted specifications; bind the independent fixtures and actual observations at implementation/qualification without treating local diagnostics as full browser evidence.",
+      "source_reference": "reference/additions/m23-m25-requirements.json",
+      "origin_acceptance_criteria": [
+        "A supported case can be evaluated by both actual browser implementations under the published profile without changing merchant skills, case identities or business-operation contracts.",
+        "After replacement/revocation, an old worker's late result is rejected; rollback uses a currently approved configuration and cannot resurrect superseded evidence or a cached authority grant.",
+        "The compact path can be disabled entirely while Kevala/manual and the retained server choices still operate; no account, model provider or compact runtime is mandatory.",
+        "The release record claims only the measured browser combinations and leaves M14-G04 server implementation and all unperformed live/formal gates unchanged."
+      ],
+      "outcome": "Qualify one bounded compact browser choice and its rollback behavior without making the alternative mandatory or closing unrelated server portability gates.",
+      "goal_id": "M24-G05",
+      "research_requirement_refs": [
+        "CF-001",
+        "CF-002",
+        "CF-005",
+        "CF-010",
+        "CF-011",
+        "CF-015"
+      ],
+      "origin_id": "rifare-browser-clef-architecture-2026-10-19/ADD-M24-G05",
+      "origin_status": "proposed_not_implemented",
+      "origin_priority": "P2_after_M23_browser_evidence",
+      "adoption_authority": "ADR-0044",
+      "formal_acceptance": false,
+      "worker_goal_ids": [
+        "M24-G05"
+      ],
+      "acceptance_gate": "M24-G99",
+      "coverage_rule": "All in-scope mapped goals AND exact frozen original acceptance criteria AND the formal milestone gate must be accepted. One local partial implementation or diagnostic pass does not close this source requirement.",
+      "continuous_obligation": false
+    },
+    {
+      "id": "ADD-M25-G01",
+      "milestone": "M25",
+      "title": "Bind browser image scope to the existing intake and privacy owners",
+      "acceptance_criteria": "While the applicable M17 image capability is disabled, unqualified or model_access:false, browser image inference remains unavailable and text/manual handling still works.\nThe enabled profile names its exact purpose, actor/case scope, MIME/size/count limits and media ownership; cross-case media and expired/revoked versions cannot be prepared for inference.\nNo-existing-attachment and quarantined/unscanned-image cases produce truthful unavailable states or approved synthetic intake, with no fabricated file identity or bypass of the M17 upload boundary.\nAudio/video and unapproved remote image URLs are rejected even if the selected runtime advertises general multimodal features; upload consent and local preview consent remain distinct.",
+      "domain": "browser_decision_models",
+      "depends_on": [],
+      "priority": "P2",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M17",
+        "M23"
+      ],
+      "readiness": "not_assessed",
+      "classification": "adopted_roadmap_requirement",
+      "release_requirement": "additive_browser_expansion",
+      "source_requirement_id": "ADD-M25-G01",
+      "acceptance_test_ids": [
+        "CASE-M25-G01-01",
+        "CASE-M25-G01-02",
+        "CASE-M25-G01-03",
+        "CASE-M25-G01-04"
+      ],
+      "test_mapping_note": "Exact source case IDs and expected behaviors are retained. These are unexecuted specifications; bind the independent fixtures and actual observations at implementation/qualification without treating local diagnostics as full browser evidence.",
+      "source_reference": "reference/additions/m23-m25-requirements.json",
+      "origin_acceptance_criteria": [
+        "While the applicable M17 image capability is disabled, unqualified or model_access:false, browser image inference remains unavailable and text/manual handling still works.",
+        "The enabled profile names its exact purpose, actor/case scope, MIME/size/count limits and media ownership; cross-case media and expired/revoked versions cannot be prepared for inference.",
+        "No-existing-attachment and quarantined/unscanned-image cases produce truthful unavailable states or approved synthetic intake, with no fabricated file identity or bypass of the M17 upload boundary.",
+        "Audio/video and unapproved remote image URLs are rejected even if the selected runtime advertises general multimodal features; upload consent and local preview consent remain distinct."
+      ],
+      "outcome": "Define one opt-in browser image assistance profile only after the applicable M17 upload, authorization and privacy foundations exist.",
+      "goal_id": "M25-G01",
+      "research_requirement_refs": [
+        "CF-001",
+        "CF-002",
+        "CF-008",
+        "CF-011",
+        "CF-012",
+        "CF-015"
+      ],
+      "origin_id": "rifare-browser-clef-architecture-2026-10-19/ADD-M25-G01",
+      "origin_status": "proposed_not_implemented",
+      "origin_priority": "P2_after_M17_and_M23_qualification",
+      "adoption_authority": "ADR-0044",
+      "formal_acceptance": false,
+      "worker_goal_ids": [
+        "M25-G01"
+      ],
+      "acceptance_gate": "M25-G99",
+      "coverage_rule": "All in-scope mapped goals AND exact frozen original acceptance criteria AND the formal milestone gate must be accepted. One local partial implementation or diagnostic pass does not close this source requirement.",
+      "continuous_obligation": false
+    },
+    {
+      "id": "ADD-M25-G02",
+      "milestone": "M25",
+      "title": "Qualify a compatible vision companion and decision API path",
+      "acceptance_criteria": "The manifest proves that the selected vision companion, decoder, processor and trained head belong to the same supported model/configuration; a mismatched companion is rejected before inference.\nA real browser request reaches the image-aware joint decision computation with all requested questions, or the capability stays unqualified. General runtime image support cannot substitute for this observation.\nPinned reference checks cover image preprocessing/position or span mapping and complete typed outputs within predeclared tolerance; text-only execution that ignores the supplied image fails the capability check.\nThe existing text Kevala path and M13 v1 text contract retain their behavior; image support uses an explicit M17-governed extension and does not implicitly enable audio/video.",
+      "domain": "browser_decision_models",
+      "depends_on": [],
+      "priority": "P2",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M17",
+        "M23"
+      ],
+      "readiness": "not_assessed",
+      "classification": "adopted_roadmap_requirement",
+      "release_requirement": "additive_browser_expansion",
+      "source_requirement_id": "ADD-M25-G02",
+      "acceptance_test_ids": [
+        "CASE-M25-G02-01",
+        "CASE-M25-G02-02",
+        "CASE-M25-G02-03",
+        "CASE-M25-G02-04"
+      ],
+      "test_mapping_note": "Exact source case IDs and expected behaviors are retained. These are unexecuted specifications; bind the independent fixtures and actual observations at implementation/qualification without treating local diagnostics as full browser evidence.",
+      "source_reference": "reference/additions/m23-m25-requirements.json",
+      "origin_acceptance_criteria": [
+        "The manifest proves that the selected vision companion, decoder, processor and trained head belong to the same supported model/configuration; a mismatched companion is rejected before inference.",
+        "A real browser request reaches the image-aware joint decision computation with all requested questions, or the capability stays unqualified. General runtime image support cannot substitute for this observation.",
+        "Pinned reference checks cover image preprocessing/position or span mapping and complete typed outputs within predeclared tolerance; text-only execution that ignores the supplied image fails the capability check.",
+        "The existing text Kevala path and M13 v1 text contract retain their behavior; image support uses an explicit M17-governed extension and does not implicitly enable audio/video."
+      ],
+      "outcome": "Implement or adopt one pinned browser vision path that feeds the Clef joint decision model correctly, with explicit unavailable status until the companion and API work together.",
+      "goal_id": "M25-G02",
+      "research_requirement_refs": [
+        "CF-001",
+        "CF-002",
+        "CF-008",
+        "CF-011",
+        "CF-012",
+        "CF-015"
+      ],
+      "origin_id": "rifare-browser-clef-architecture-2026-10-19/ADD-M25-G02",
+      "origin_status": "proposed_not_implemented",
+      "origin_priority": "P2_after_M17_and_M23_qualification",
+      "adoption_authority": "ADR-0044",
+      "formal_acceptance": false,
+      "worker_goal_ids": [
+        "M25-G02"
+      ],
+      "acceptance_gate": "M25-G99",
+      "coverage_rule": "All in-scope mapped goals AND exact frozen original acceptance criteria AND the formal milestone gate must be accepted. One local partial implementation or diagnostic pass does not close this source requirement.",
+      "continuous_obligation": false
+    },
+    {
+      "id": "ADD-M25-G03",
+      "milestone": "M25",
+      "title": "Process exact authorized image bytes under explicit bounds",
+      "acceptance_criteria": "Substitution of another case, image version, expired grant or changed content fails preparation or ingestion; a caller-supplied digest alone cannot establish authoritative attachment provenance.\nMalformed/unsupported images, decompression-size excess and input/context overflow fail within declared resource bounds rather than becoming an apparently valid result on partial evidence.\nThe observation identifies the authorized original and declared transformation/configuration, with missing or unobservable client details labeled reported/unknown and no claim of authenticated inference.\nAn image omitted from the executed request or an undeclared transformation cannot be represented as a qualified image observation; source evidence and manual review remain available according to the existing M17 policy.",
+      "domain": "browser_decision_models",
+      "depends_on": [],
+      "priority": "P2",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M17",
+        "M23"
+      ],
+      "readiness": "not_assessed",
+      "classification": "adopted_roadmap_requirement",
+      "release_requirement": "additive_browser_expansion",
+      "source_requirement_id": "ADD-M25-G03",
+      "acceptance_test_ids": [
+        "CASE-M25-G03-01",
+        "CASE-M25-G03-02",
+        "CASE-M25-G03-03",
+        "CASE-M25-G03-04"
+      ],
+      "test_mapping_note": "Exact source case IDs and expected behaviors are retained. These are unexecuted specifications; bind the independent fixtures and actual observations at implementation/qualification without treating local diagnostics as full browser evidence.",
+      "source_reference": "reference/additions/m23-m25-requirements.json",
+      "origin_acceptance_criteria": [
+        "Substitution of another case, image version, expired grant or changed content fails preparation or ingestion; a caller-supplied digest alone cannot establish authoritative attachment provenance.",
+        "Malformed/unsupported images, decompression-size excess and input/context overflow fail within declared resource bounds rather than becoming an apparently valid result on partial evidence.",
+        "The observation identifies the authorized original and declared transformation/configuration, with missing or unobservable client details labeled reported/unknown and no claim of authenticated inference.",
+        "An image omitted from the executed request or an undeclared transformation cannot be represented as a qualified image observation; source evidence and manual review remain available according to the existing M17 policy."
+      ],
+      "outcome": "Pass only the permitted image version through bounded decoding and preprocessing while preserving evidence provenance and typed decision limits.",
+      "goal_id": "M25-G03",
+      "research_requirement_refs": [
+        "CF-001",
+        "CF-002",
+        "CF-008",
+        "CF-011",
+        "CF-012",
+        "CF-015"
+      ],
+      "origin_id": "rifare-browser-clef-architecture-2026-10-19/ADD-M25-G03",
+      "origin_status": "proposed_not_implemented",
+      "origin_priority": "P2_after_M17_and_M23_qualification",
+      "adoption_authority": "ADR-0044",
+      "formal_acceptance": false,
+      "worker_goal_ids": [
+        "M25-G03"
+      ],
+      "acceptance_gate": "M25-G99",
+      "coverage_rule": "All in-scope mapped goals AND exact frozen original acceptance criteria AND the formal milestone gate must be accepted. One local partial implementation or diagnostic pass does not close this source requirement.",
+      "continuous_obligation": false
+    },
+    {
+      "id": "ADD-M25-G04",
+      "milestone": "M25",
+      "title": "Extend media privacy and cancellation through browser memory",
+      "acceptance_criteria": "Approved local-only processing sends no image inference payload to a hosted provider; permitted M17 uploads or Rifare observation submissions are explicit, separately authorized and accounted for.\nCorrection, erasure, revocation or tenant switch during asynchronous image processing prevents accepting the late proposal, including after a tab is suspended and resumed.\nThe privacy record covers every enabled customer-media/derivative surface and demonstrates cleanup/export/restore suppression for controlled stores; an old cache cannot repopulate erased server observations.\nUnavailable vision or GPU failure preserves a text/manual alternative and requires a current approved destination selection before any remote inference; there is no silent upload or broadened retention.",
+      "domain": "browser_decision_models",
+      "depends_on": [],
+      "priority": "P2",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M17",
+        "M23"
+      ],
+      "readiness": "not_assessed",
+      "classification": "adopted_roadmap_requirement",
+      "release_requirement": "additive_browser_expansion",
+      "source_requirement_id": "ADD-M25-G04",
+      "acceptance_test_ids": [
+        "CASE-M25-G04-01",
+        "CASE-M25-G04-02",
+        "CASE-M25-G04-03",
+        "CASE-M25-G04-04"
+      ],
+      "test_mapping_note": "Exact source case IDs and expected behaviors are retained. These are unexecuted specifications; bind the independent fixtures and actual observations at implementation/qualification without treating local diagnostics as full browser evidence.",
+      "source_reference": "reference/additions/m23-m25-requirements.json",
+      "origin_acceptance_criteria": [
+        "Approved local-only processing sends no image inference payload to a hosted provider; permitted M17 uploads or Rifare observation submissions are explicit, separately authorized and accounted for.",
+        "Correction, erasure, revocation or tenant switch during asynchronous image processing prevents accepting the late proposal, including after a tab is suspended and resumed.",
+        "The privacy record covers every enabled customer-media/derivative surface and demonstrates cleanup/export/restore suppression for controlled stores; an old cache cannot repopulate erased server observations.",
+        "Unavailable vision or GPU failure preserves a text/manual alternative and requires a current approved destination selection before any remote inference; there is no silent upload or broadened retention."
+      ],
+      "outcome": "Apply the established M17 purpose and deletion lifecycle to browser image data, derivatives and observations, with explicit destination fallback and honest cleanup limits.",
+      "goal_id": "M25-G04",
+      "research_requirement_refs": [
+        "CF-001",
+        "CF-002",
+        "CF-008",
+        "CF-011",
+        "CF-012",
+        "CF-015"
+      ],
+      "origin_id": "rifare-browser-clef-architecture-2026-10-19/ADD-M25-G04",
+      "origin_status": "proposed_not_implemented",
+      "origin_priority": "P2_after_M17_and_M23_qualification",
+      "adoption_authority": "ADR-0044",
+      "formal_acceptance": false,
+      "worker_goal_ids": [
+        "M25-G04"
+      ],
+      "acceptance_gate": "M25-G99",
+      "coverage_rule": "All in-scope mapped goals AND exact frozen original acceptance criteria AND the formal milestone gate must be accepted. One local partial implementation or diagnostic pass does not close this source requirement.",
+      "continuous_obligation": false
+    },
+    {
+      "id": "ADD-M25-G05",
+      "milestone": "M25",
+      "title": "Demonstrate scoped image evidence assistance on a real browser",
+      "acceptance_criteria": "Actual browser inference uses the matched vision companion and complete decision head on the declared corpus; a text-only stub, native-server run or generic image chat cannot satisfy the image gate.\nThe report binds source/companion/text/runtime hashes, preprocessing, hardware/browser, exact input counts and frozen criteria; every unsupported or failed image remains in the declared accounting.\nThe operator receives a labeled client-reported evidence suggestion and can continue manually; changing or deleting the source invalidates late ingestion, and no suggestion changes financial, inventory, routing or approval authority.\nThe support matrix publishes only the observed image types, limits, device/runtime and purpose. Audio/video remain unavailable, and absent actual vision, privacy or M17 evidence leaves the milestone assessment open.",
+      "domain": "browser_decision_models",
+      "depends_on": [],
+      "priority": "P2",
+      "delivery_mode": "build",
+      "status": "not_started",
+      "owner": null,
+      "blocked_by_milestones": [
+        "M17",
+        "M23"
+      ],
+      "readiness": "not_assessed",
+      "classification": "adopted_roadmap_requirement",
+      "release_requirement": "additive_browser_expansion",
+      "source_requirement_id": "ADD-M25-G05",
+      "acceptance_test_ids": [
+        "CASE-M25-G05-01",
+        "CASE-M25-G05-02",
+        "CASE-M25-G05-03",
+        "CASE-M25-G05-04"
+      ],
+      "test_mapping_note": "Exact source case IDs and expected behaviors are retained. These are unexecuted specifications; bind the independent fixtures and actual observations at implementation/qualification without treating local diagnostics as full browser evidence.",
+      "source_reference": "reference/additions/m23-m25-requirements.json",
+      "origin_acceptance_criteria": [
+        "Actual browser inference uses the matched vision companion and complete decision head on the declared corpus; a text-only stub, native-server run or generic image chat cannot satisfy the image gate.",
+        "The report binds source/companion/text/runtime hashes, preprocessing, hardware/browser, exact input counts and frozen criteria; every unsupported or failed image remains in the declared accounting.",
+        "The operator receives a labeled client-reported evidence suggestion and can continue manually; changing or deleting the source invalidates late ingestion, and no suggestion changes financial, inventory, routing or approval authority.",
+        "The support matrix publishes only the observed image types, limits, device/runtime and purpose. Audio/video remain unavailable, and absent actual vision, privacy or M17 evidence leaves the milestone assessment open."
+      ],
+      "outcome": "Record actual browser image processing for one narrowly defined evidence-assistance task and qualify only the declared companion, device and privacy configuration.",
+      "goal_id": "M25-G05",
+      "research_requirement_refs": [
+        "CF-001",
+        "CF-002",
+        "CF-008",
+        "CF-011",
+        "CF-012",
+        "CF-015"
+      ],
+      "origin_id": "rifare-browser-clef-architecture-2026-10-19/ADD-M25-G05",
+      "origin_status": "proposed_not_implemented",
+      "origin_priority": "P2_after_M17_and_M23_qualification",
+      "adoption_authority": "ADR-0044",
+      "formal_acceptance": false,
+      "worker_goal_ids": [
+        "M25-G05"
+      ],
+      "acceptance_gate": "M25-G99",
+      "coverage_rule": "All in-scope mapped goals AND exact frozen original acceptance criteria AND the formal milestone gate must be accepted. One local partial implementation or diagnostic pass does not close this source requirement.",
+      "continuous_obligation": false
     }
   ],
-  "adopted_source_count": 50,
-  "total_requirement_count": 201,
+  "adopted_source_count": 65,
+  "total_requirement_count": 216,
   "adopted_additions": {
     "authority": "ADR-0042",
     "adopted_on": "2026-10-19",
@@ -7142,5 +7962,57 @@
     "original_requirements": 151,
     "adopted_requirements": 50,
     "planning_only": true
-  }
+  },
+  "browser_adopted_additions": {
+    "authority": "ADR-0044",
+    "adopted_on": "2026-10-19",
+    "source_package": "rifare-browser-clef-architecture-2026-10-19",
+    "source_document": "browser-milestone-additions.json",
+    "source_sha256": "8302245159ecadc0bcc69248624c8c820a5678656fa1b405dd93797f4ae9810e",
+    "revised_handoff_archive_sha256": "d02bf8aab75decb5cb163a2f82a8e12a51f3e778bfb311d3135d71fb5f57befe",
+    "frozen_requirements": "reference/additions/m23-m25-requirements.json",
+    "frozen_requirements_sha256": "41d109fb6e810bfe9b2c9f8458e0aaa8cb5d45176c96d80fc3c733ca07e11abe",
+    "protected_prior_requirements": "reference/additions/m13-m22-requirements.json",
+    "protected_prior_requirements_sha256": "0d4218fabd39eeb1328de5a3d1f79cc620967ef761a6dc4a405ec403a280d7b2",
+    "protected_current_product_base": "93769a3029ebd2a5204c756733a8f8cf48fb67cd",
+    "prior_counts": {
+      "milestones": 23,
+      "goals": 263,
+      "requirements": 201,
+      "test_specifications": 880,
+      "adopted_requirements": 50
+    },
+    "added_counts": {
+      "new_milestones": 3,
+      "new_worker_goals": 15,
+      "new_assessments": 3,
+      "new_total_goals": 18,
+      "new_requirements": 15,
+      "new_proposed_cases": 69
+    },
+    "current_counts": {
+      "milestones": 26,
+      "goals": 281,
+      "requirements": 216,
+      "test_specifications": 949,
+      "adopted_requirements": 65
+    },
+    "planning_only": true,
+    "implementation_assigned": false,
+    "product_execution_performed": false,
+    "formal_acceptance": false,
+    "current_progress_rule": "The current M14 checkpoint and work records govern progress. The handoff inspected an older M13 checkpoint; its historical progress wording is provenance, not a restore target or a reset of newer work.",
+    "recommended_browser_batch": [
+      "M23-G01",
+      "M23-G02",
+      "M23-G03",
+      "M23-G04",
+      "M23-G05"
+    ],
+    "recommendation_status": "planning_recommendation_only_not_assignment",
+    "sequence_rule": "M15 remains the earliest existing unassigned milestone. The recommended browser batch requires a separate coherent assignment; formal predecessor gates remain mandatory and no prior milestone is skipped or accepted.",
+    "local_preparation_rule": "Separately authorized local preparation may identify blockers while formal gates remain open. Local fixtures, actual browser inference, numerical fidelity, merchant qualification and formal acceptance are distinct evidence states.",
+    "origin_recommended_worker_instruction": "Adopt the attached browser-Clef architecture update at your current Rifare branch head. Preserve newer work, the implemented M13 path, all M00–M22 requirements and original gates. Add M23–M25 through a second frozen requirement set and the existing exact-union planning validation; do not reimport the old roadmap or rebuild M13. Merge ARCHITECTURE.md using the included patch as a comparison aid. After integrating the current coherent assignment, implement M23-G01 through M23-G05 under our existing delegation. Start with pinned Kevala/Clef Flash Q8 text/JSON in the operator browser. Reuse the logical contracts through a browser-safe layer, keep client observations explicitly untrusted, and preserve server authority and hosted provenance. Keep local-to-hosted fallback explicit. Follow the current focused-development policy and record actual browser/model qualification separately from fixtures. Return the updated checkpoint, actual evidence and remaining qualification."
+  },
+  "browser_adopted_source_count": 15
 }
