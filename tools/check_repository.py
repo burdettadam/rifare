@@ -62,7 +62,8 @@ def validate_capability_targets(capabilities: list[dict]) -> list[str]:
     identifiers = [capability.get('id') for capability in capabilities]
     errors: list[str] = []
     if len(identifiers) != len(expected) or set(identifiers) != expected:
-        errors.append('Expected the exact 57 unique approved capability targets')
+        errors.append('Expected the exact 57 unique approved capability targets: '
+                      '44 unique original targets plus 13 adopted targets')
     if any(capability.get('status') != 'proposed_not_implemented' for capability in capabilities):
         errors.append('Capability targets cannot claim implementation')
     return errors

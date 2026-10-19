@@ -48,9 +48,20 @@ the missing frozen browser source/criterion controls and the missing closed
 capability-target validator; the complete native output remains in the checkpoint
 evidence rather than this source record.
 
-The final focused selection consists of the complete `tests/test_plan_tools.py`
-(30 cases) and `tests/test_browser_plan_adoption.py` (13 cases): 43 actual cases,
-two whole files, one 60-second invocation deadline. Root also checks canonical
+The initial focused selection passed all 43 cases on candidate
+`3d87eeca2fd6488ec1a93782cafb410d0241639e`. Independent regression review then
+identified a retained diagnostic contract in `tests/test_repository.py`: its
+missing-target check requires the original-target description `44 unique`.
+Root ran that complete 15-case helper file and observed the specific failure
+(14 pass, one fail). The correction preserves the existing test and reports the
+exact 57-target set as 44 unique original targets plus 13 adopted targets.
+Both actual failure runs and the initial green remain in checkpoint evidence.
+
+The final focused selection includes the complete `tests/test_plan_tools.py`
+(30 cases), `tests/test_browser_plan_adoption.py` (13 cases) and retained
+`tests/test_repository.py` (15 cases): 58 actual cases, three whole files, one
+60-second invocation deadline. The expansion addresses the concrete review
+finding without changing any existing test. Root also checks canonical
 planning, local repository links/metadata, generated-view freshness and Git
 whitespace. Independent preservation review covers the old records and cards,
 both frozen additions, the exact 69 new source expectations, protected file
