@@ -210,3 +210,13 @@ original operation_id, stage and state. Private-restricted readers see no refs,
 observations or unresolved IDs; handoff_required still reflects hidden uncertainty.
 Expected-version conflicts use JOURNEY_VERSION_CHANGED; request replay uses
 JOURNEY_REQUEST_REPLAY. These clarifications precede new tests and runtime.
+
+Current operation.read is additionally required for prepare, execute and
+reconcile before returning a raw native preview/receipt/observation. Existing
+native action.execute and operation.reconcile permissions still apply. The
+customer role gains no new permission. Cart reconciliation is performed by a
+staff caller with operation.read and operation.reconcile using the separately
+supplied current customerProof in ShoppingCart.confirm, gated on canonical
+unknown/committed state. Direct customer reconciliation remains ACCESS_DENIED.
+The restricted context covers all nested observations and unresolved IDs as well
+as references, preserving only an explicit handoff flag for hidden uncertainty.
