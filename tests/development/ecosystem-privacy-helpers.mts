@@ -72,9 +72,20 @@ function copied(value:any):any {
   if(value&&typeof value==='object')return {...Object.fromEntries(Object.entries(value).map(([k,v])=>[k,copied(v)])),unexpected_private_copy:PRIVATE_COPY};
   return value;
 }
+function corruptTypedScalars(value:any):number {
+  if(!value||typeof value!=='object')return 0;
+  let changed=0;
+  for(const [key,item] of Object.entries(value)) {
+    if(['tone','locale','role','revision','version','created_at','updated_at','expires_at','published_at','at'].includes(key)||key==='digest'||key==='sha256'||key.endsWith('_digest')||key.endsWith('_sha256')) {
+      value[key]=PRIVATE_COPY;changed++;
+    } else changed+=corruptTypedScalars(item);
+  }
+  return changed;
+}
 function injectCopies(db:any,s:any,x:any) {
   for(const table of x.tables)for(const row of rows(db,table,s)) {
     const body=copied(JSON.parse(row.body)),columns=keys(db,table);
+    assert.ok(corruptTypedScalars(body)>0,table+' refuses private strings in typed hash/enum/number slots');
     // A permitted scalar field cannot become a container for restored private
     // material. Each new table exercises this independently of extra-key cleanup.
     const field=Object.keys(body).find(key=>key!=='unexpected_private_copy'&&typeof body[key]==='string');
