@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "id": "return-image-assistance-v1",
+  "qualification": "proposed_not_accepted",
+  "mode": "diagnostic_synthetic_wire_only",
+  "purpose": "return_evidence_usability",
+  "base_skill": {"id": "return-intake-shadow", "version": "2.0.0", "resource": "references/image-evidence-questions.v1.json"},
+  "questions": ["relevant_item_visible", "usable_clarity", "requested_detail_visible"],
+  "options": ["yes", "no", "cannot_assess"],
+  "intake": {"merchant_default": "disabled", "merchant_purpose_opt_in": true, "customer_exact_image_approval": true, "approval_max_age_ms": 60000, "quarantine_required": true, "clean_scan_required": true, "mime": "image/png", "images_per_request": 1, "max_bytes": 262144, "max_pixels": 4000000, "pixel_formats": ["RGB8", "RGBA8"], "metadata": "rejected", "transformation": "restricted_png_identity_v1", "persistent_derivative": false},
+  "execution": {"roles": ["owner", "operator"], "current_support_owner": true, "worker_grants_expanded": false, "new_http_routes": false, "bindings": ["tenant", "store", "actor", "session", "case", "task", "profile", "skill", "configuration", "customer_session", "exact_image", "scanner", "expiry", "ownership_generation", "execution_stop_stamp"], "checks": ["before_canonical_byte_access", "before_transport", "after_await", "before_persistence"], "reader_and_invocation_result_branding": true, "retry": false, "fallback": false, "cancellation": true},
+  "budget": {"owner": "ModelBudgets", "input_bound": "Full logical JSON bytes plus 1024 image-token allowance and at least 512 marker allowance.", "max_accepted_output_tokens": 1, "over_bound_usage": "Unusable result with unknown full reservation held; no inflated settlement.", "unknown_attempt_identity": "Original reservation retained; never dispatch under the same observation identity again.", "live_price_qualified": false},
+  "observations": {"purpose": "advisory_usability_only", "default_handling": "review", "cannot_assess_handling": "manual_review", "business_effects": 0, "execution_authorized": false, "routing_changed": false, "raw_image_or_customer_text_in_receipts": false, "disagreement_reasons": ["image_unclear", "wrong_item", "detail_not_visible", "other_review"]},
+  "privacy": {"canonical_media": "commerce_return_evidence", "configuration": "commerce_support_documents:image_configuration", "receipts": ["image_approval", "image_observation", "image_disagreement"], "receipt_table": "commerce_assistance_receipts", "new_tables": 0, "export": "Case-bound allowlist projection, excluding customer session hashes and purchaser gift data.", "individual_erase_and_retention": "Delete linked unheld image receipts and canonical bytes; retain original unknown budget identity.", "holds": "Preserve held evidence. Consent withdrawal revokes approval in place; uninstall revokes all configuration versions and sessions.", "restore_and_import": "Delete nonportable image records and revoke configuration; refuse held image copies for separate retention administration.", "subject_restore": "Existing independently supplied suppression checkpoint.", "individual_image_backup_erasure": "pending_portable_image_suppression_ledger", "external_deletion": "unqualified", "forensic_memory_erasure": false},
+  "evaluation_protocol_digest": "07dcdda89316fa8825fdf31b311e05159a95bac326f62b608e5be6f62d47fe8f",
+  "evaluation": "Cohort specification and proposed metrics/thresholds frozen; actual authorized membership, independent labels and image inference pending. Wire answers are not quality measurements.",
+  "modalities": {"image": "diagnostic_pending_qualification", "audio": "disabled_deferred", "video": "disabled_deferred", "gift_recipient_image": "unavailable"},
+  "encoded_media_dlp_qualified": false,
+  "managed_M16_isolation_present": false,
+  "history_reconciliation": "Missing later M15/M16/M23 implementation must be restored and reconciled before integration. Recovered main is unchanged."
+}

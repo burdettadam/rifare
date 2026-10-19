@@ -1,6 +1,6 @@
 {
-  "source_file_count": 1755,
-  "source_count_reason": "ADR-0044 additive M23\u2013M25 browser roadmap and worker packets; all 1727 prior M14 source members, product behavior and original/adopted planning retained.",
+  "source_file_count": 1791,
+  "source_count_reason": "ADR-0051 isolated M17 diagnostic recovery work from a33c4ad; all 1755 recovered source members retained. Missing later M15/M16/M23 implementation is not claimed; no new tables or dependencies.",
   "component_ids": [
     "git-agent-adaptations",
     "rifare-developer-helpers",

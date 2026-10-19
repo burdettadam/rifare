@@ -1,0 +1,24 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "case_id",
+    "task_id",
+    "configuration_id",
+    "request_id"
+  ],
+  "properties": {
+    "case_id": {
+      "type": "string"
+    },
+    "task_id": {
+      "type": "string"
+    },
+    "configuration_id": {
+      "type": "string"
+    },
+    "request_id": {
+      "type": "string"
+    }
+  }
+}

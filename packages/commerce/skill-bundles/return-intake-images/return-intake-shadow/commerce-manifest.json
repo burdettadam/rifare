@@ -1,0 +1,51 @@
+{
+  "schema_version": 2,
+  "id": "return-intake-shadow",
+  "version": "2.0.0",
+  "engine": {
+    "min": "1.0.0",
+    "max_exclusive": "2.0.0"
+  },
+  "required_actions": [
+    {
+      "name": "order.status",
+      "versions": {
+        "min": "1.0.0",
+        "max_exclusive": "2.0.0"
+      }
+    }
+  ],
+  "resources": [
+    {
+      "path": "references/config.json",
+      "sha256": "0f8c95fbb5f4adbd3b6ea7d0c71b6fd44ae7b34b3fee87196ecbe0e120f74da3"
+    },
+    {
+      "path": "references/input.json",
+      "sha256": "cf1660fdb0446edcafa1d2d1a598f20a1874000eb9a86740428a7ada92634ec4"
+    },
+    {
+      "path": "references/output.json",
+      "sha256": "64b32c8e1849eb6e4f6756a8d7510acc25770fe0f5d2f302e3171db61c101406"
+    },
+    {
+      "path": "references/return-intake-questions.v1.json",
+      "sha256": "4e65f64d0416929e44153c2ed7b864a4992ed91cd563784ee7087eb0d382ad8e"
+    },
+    {
+      "path": "references/image-evidence-questions.v1.json",
+      "sha256": "b25adf518400ede6ff7e778e17b2aa72005f27239598308976b22a42f86b758a"
+    }
+  ],
+  "input_schema": "references/input.json",
+  "output_schema": "references/output.json",
+  "configuration": {
+    "schema_resource": "references/config.json",
+    "fields": [
+      "presentation.tone",
+      "presentation.locale"
+    ]
+  },
+  "scripts": [],
+  "egress": []
+}

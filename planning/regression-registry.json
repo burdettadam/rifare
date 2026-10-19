@@ -1852,6 +1852,23 @@
       "contract_files": [
         "packages/commerce/contracts/decision-routing.v1.json"
       ]
+    },
+    {
+      "id": "m17-image-service-diagnostic",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/image-assistance.v1.json",
+        "tests/fixtures/image-assistance/evaluation-protocol.v1.json"
+      ]
+    },
+    {
+      "id": "m17-image-reader-diagnostic",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/agent/contracts/image-reader.v1.json"
+      ]
     }
   ],
   "tests": [
@@ -23190,6 +23207,216 @@
       "runner_case_id": "test_browser_plan_adoption.CapabilityTargetStructureTests.test_planning_target_cannot_claim_implementation",
       "source": "tests/test_browser_plan_adoption.py",
       "capability_id": "FEATURE-BOOTSTRAP"
+    },
+    {
+      "id": "runtime:M17-IMAGES-DEFAULT-MANUAL-01",
+      "suite": "runtime",
+      "runner_case_id": "M17-IMAGES-DEFAULT-MANUAL-01",
+      "source": "tests/development/image-assistance.test.mts",
+      "capability_id": "m17-image-service-diagnostic"
+    },
+    {
+      "id": "runtime:M17-IMAGES-INTAKE-QUARANTINE-02",
+      "suite": "runtime",
+      "runner_case_id": "M17-IMAGES-INTAKE-QUARANTINE-02",
+      "source": "tests/development/image-assistance.test.mts",
+      "capability_id": "m17-image-service-diagnostic"
+    },
+    {
+      "id": "runtime:M17-IMAGES-EXACT-PNG-ADVISORY-03",
+      "suite": "runtime",
+      "runner_case_id": "M17-IMAGES-EXACT-PNG-ADVISORY-03",
+      "source": "tests/development/image-assistance.test.mts",
+      "capability_id": "m17-image-service-diagnostic"
+    },
+    {
+      "id": "runtime:M17-IMAGES-PRINCIPAL-BOUNDARIES-04",
+      "suite": "runtime",
+      "runner_case_id": "M17-IMAGES-PRINCIPAL-BOUNDARIES-04",
+      "source": "tests/development/image-assistance.test.mts",
+      "capability_id": "m17-image-service-diagnostic"
+    },
+    {
+      "id": "runtime:M17-IMAGES-EXACT-SOURCE-BINDING-05",
+      "suite": "runtime",
+      "runner_case_id": "M17-IMAGES-EXACT-SOURCE-BINDING-05",
+      "source": "tests/development/image-assistance.test.mts",
+      "capability_id": "m17-image-service-diagnostic"
+    },
+    {
+      "id": "runtime:M17-IMAGES-PREPARED-REVOCATION-06",
+      "suite": "runtime",
+      "runner_case_id": "M17-IMAGES-PREPARED-REVOCATION-06",
+      "source": "tests/development/image-assistance.test.mts",
+      "capability_id": "m17-image-service-diagnostic"
+    },
+    {
+      "id": "runtime:M17-IMAGES-COMPLETE-CORRECTIONS-07",
+      "suite": "runtime",
+      "runner_case_id": "M17-IMAGES-COMPLETE-CORRECTIONS-07",
+      "source": "tests/development/image-assistance.test.mts",
+      "capability_id": "m17-image-service-diagnostic"
+    },
+    {
+      "id": "runtime:M17-IMAGES-LATE-CONTROL-CHANGES-08",
+      "suite": "runtime",
+      "runner_case_id": "M17-IMAGES-LATE-CONTROL-CHANGES-08",
+      "source": "tests/development/image-assistance.test.mts",
+      "capability_id": "m17-image-service-diagnostic"
+    },
+    {
+      "id": "runtime:M17-IMAGES-CANCEL-AND-SESSION-09",
+      "suite": "runtime",
+      "runner_case_id": "M17-IMAGES-CANCEL-AND-SESSION-09",
+      "source": "tests/development/image-assistance.test.mts",
+      "capability_id": "m17-image-service-diagnostic"
+    },
+    {
+      "id": "runtime:M17-IMAGES-IDEMPOTENCY-UNKNOWN-10",
+      "suite": "runtime",
+      "runner_case_id": "M17-IMAGES-IDEMPOTENCY-UNKNOWN-10",
+      "source": "tests/development/image-assistance.test.mts",
+      "capability_id": "m17-image-service-diagnostic"
+    },
+    {
+      "id": "runtime:M17-IMAGES-ERASURE-AND-LATE-RESULT-11",
+      "suite": "runtime",
+      "runner_case_id": "M17-IMAGES-ERASURE-AND-LATE-RESULT-11",
+      "source": "tests/development/image-assistance.test.mts",
+      "capability_id": "m17-image-service-diagnostic"
+    },
+    {
+      "id": "runtime:M17-IMAGES-RETENTION-AND-HOLDS-12",
+      "suite": "runtime",
+      "runner_case_id": "M17-IMAGES-RETENTION-AND-HOLDS-12",
+      "source": "tests/development/image-assistance.test.mts",
+      "capability_id": "m17-image-service-diagnostic"
+    },
+    {
+      "id": "runtime:M17-IMAGES-SUBJECT-EXPORT-ERASURE-13",
+      "suite": "runtime",
+      "runner_case_id": "M17-IMAGES-SUBJECT-EXPORT-ERASURE-13",
+      "source": "tests/development/image-assistance.test.mts",
+      "capability_id": "m17-image-service-diagnostic"
+    },
+    {
+      "id": "runtime:M17-IMAGES-GIFT-RESIDUE-PRIVACY-14",
+      "suite": "runtime",
+      "runner_case_id": "M17-IMAGES-GIFT-RESIDUE-PRIVACY-14",
+      "source": "tests/development/image-assistance.test.mts",
+      "capability_id": "m17-image-service-diagnostic"
+    },
+    {
+      "id": "runtime:M17-IMAGES-SNAPSHOT-SUPPRESSION-15",
+      "suite": "runtime",
+      "runner_case_id": "M17-IMAGES-SNAPSHOT-SUPPRESSION-15",
+      "source": "tests/development/image-assistance.test.mts",
+      "capability_id": "m17-image-service-diagnostic"
+    },
+    {
+      "id": "runtime:M17-IMAGES-IMPORT-AND-HELD-UNINSTALL-16",
+      "suite": "runtime",
+      "runner_case_id": "M17-IMAGES-IMPORT-AND-HELD-UNINSTALL-16",
+      "source": "tests/development/image-assistance.test.mts",
+      "capability_id": "m17-image-service-diagnostic"
+    },
+    {
+      "id": "runtime:M17-IMAGES-CONTEXT-AND-OPTIONAL-RESOURCE-17",
+      "suite": "runtime",
+      "runner_case_id": "M17-IMAGES-CONTEXT-AND-OPTIONAL-RESOURCE-17",
+      "source": "tests/development/image-assistance.test.mts",
+      "capability_id": "m17-image-service-diagnostic"
+    },
+    {
+      "id": "runtime:M17-IMAGES-AMBIGUITY-REVIEW-BRANDING-18",
+      "suite": "runtime",
+      "runner_case_id": "M17-IMAGES-AMBIGUITY-REVIEW-BRANDING-18",
+      "source": "tests/development/image-assistance.test.mts",
+      "capability_id": "m17-image-service-diagnostic"
+    },
+    {
+      "id": "runtime:M17-IMAGES-QUALIFICATION-AND-MODALITIES-19",
+      "suite": "runtime",
+      "runner_case_id": "M17-IMAGES-QUALIFICATION-AND-MODALITIES-19",
+      "source": "tests/development/image-assistance.test.mts",
+      "capability_id": "m17-image-service-diagnostic"
+    },
+    {
+      "id": "runtime:M17-IMAGES-TASK-PINS-AND-MALFORMED-OUTPUT-20",
+      "suite": "runtime",
+      "runner_case_id": "M17-IMAGES-TASK-PINS-AND-MALFORMED-OUTPUT-20",
+      "source": "tests/development/image-assistance.test.mts",
+      "capability_id": "m17-image-service-diagnostic"
+    },
+    {
+      "id": "runtime:M17-IMAGE-WIRE-01",
+      "suite": "runtime",
+      "runner_case_id": "M17-IMAGE-WIRE-01",
+      "source": "tests/development/image-reader.test.mts",
+      "capability_id": "m17-image-reader-diagnostic"
+    },
+    {
+      "id": "runtime:M17-IMAGE-NORMALIZE-02",
+      "suite": "runtime",
+      "runner_case_id": "M17-IMAGE-NORMALIZE-02",
+      "source": "tests/development/image-reader.test.mts",
+      "capability_id": "m17-image-reader-diagnostic"
+    },
+    {
+      "id": "runtime:M17-IMAGE-MEDIA-03",
+      "suite": "runtime",
+      "runner_case_id": "M17-IMAGE-MEDIA-03",
+      "source": "tests/development/image-reader.test.mts",
+      "capability_id": "m17-image-reader-diagnostic"
+    },
+    {
+      "id": "runtime:M17-IMAGE-CONTEXT-04",
+      "suite": "runtime",
+      "runner_case_id": "M17-IMAGE-CONTEXT-04",
+      "source": "tests/development/image-reader.test.mts",
+      "capability_id": "m17-image-reader-diagnostic"
+    },
+    {
+      "id": "runtime:M17-IMAGE-CONFIG-05",
+      "suite": "runtime",
+      "runner_case_id": "M17-IMAGE-CONFIG-05",
+      "source": "tests/development/image-reader.test.mts",
+      "capability_id": "m17-image-reader-diagnostic"
+    },
+    {
+      "id": "runtime:M17-IMAGE-OUTPUT-06",
+      "suite": "runtime",
+      "runner_case_id": "M17-IMAGE-OUTPUT-06",
+      "source": "tests/development/image-reader.test.mts",
+      "capability_id": "m17-image-reader-diagnostic"
+    },
+    {
+      "id": "runtime:M17-IMAGE-TRANSPORT-07",
+      "suite": "runtime",
+      "runner_case_id": "M17-IMAGE-TRANSPORT-07",
+      "source": "tests/development/image-reader.test.mts",
+      "capability_id": "m17-image-reader-diagnostic"
+    },
+    {
+      "id": "runtime:M17-IMAGE-RESPONSE-LIMIT-08",
+      "suite": "runtime",
+      "runner_case_id": "M17-IMAGE-RESPONSE-LIMIT-08",
+      "source": "tests/development/image-reader.test.mts",
+      "capability_id": "m17-image-reader-diagnostic"
+    },
+    {
+      "id": "runtime:M17-IMAGE-DEADLINE-09",
+      "suite": "runtime",
+      "runner_case_id": "M17-IMAGE-DEADLINE-09",
+      "source": "tests/development/image-reader.test.mts",
+      "capability_id": "m17-image-reader-diagnostic"
+    },
+    {
+      "id": "runtime:M17-IMAGE-AUTHORITY-10",
+      "suite": "runtime",
+      "runner_case_id": "M17-IMAGE-AUTHORITY-10",
+      "source": "tests/development/image-reader.test.mts",
+      "capability_id": "m17-image-reader-diagnostic"
     }
   ],
   "protected_files": [
@@ -23674,7 +23901,37 @@
     "tests/fixtures/runtime-switch/expected.v1.json",
     "tests/fixtures/woocommerce/agent-mode.v1.json",
     "tests/fixtures/woocommerce/refund-ledger.v1.json",
-    "tests/fixtures/woocommerce/shared-lifecycle.v1.json"
+    "tests/fixtures/woocommerce/shared-lifecycle.v1.json",
+    "packages/agent/contracts/image-reader.v1.json",
+    "packages/agent/image-reader.mts",
+    "packages/commerce/contracts/image-assistance.v1.json",
+    "packages/commerce/image-assistance.mts",
+    "packages/commerce/image-privacy.mts",
+    "packages/commerce/image-resources.mts",
+    "packages/commerce/skill-bundles/return-intake-images/return-intake-shadow/SKILL.md",
+    "packages/commerce/skill-bundles/return-intake-images/return-intake-shadow/commerce-manifest.json",
+    "packages/commerce/skill-bundles/return-intake-images/return-intake-shadow/references/config.json",
+    "packages/commerce/skill-bundles/return-intake-images/return-intake-shadow/references/image-evidence-questions.v1.json",
+    "packages/commerce/skill-bundles/return-intake-images/return-intake-shadow/references/input.json",
+    "packages/commerce/skill-bundles/return-intake-images/return-intake-shadow/references/output.json",
+    "packages/commerce/skill-bundles/return-intake-images/return-intake-shadow/references/return-intake-questions.v1.json",
+    "tests/development/image-assistance-helpers.mts",
+    "tests/development/image-assistance.test.mts",
+    "tests/development/image-reader.test.mts",
+    "tests/fixtures/image-assistance/evaluation-protocol.v1.json",
+    "tests/fixtures/image-assistance/questions.v1.json",
+    "tests/fixtures/image-assistance/wire-responses.v1.json",
+    "tests/fixtures/image-reader/README.md",
+    "tests/fixtures/image-reader/expected-wire.json",
+    "tests/fixtures/image-reader/image.json",
+    "tests/fixtures/image-reader/large-image.json",
+    "tests/fixtures/image-reader/large-rgba.png",
+    "tests/fixtures/image-reader/normalized-ambiguous.json",
+    "tests/fixtures/image-reader/normalized-clear.json",
+    "tests/fixtures/image-reader/provider-ambiguous.json",
+    "tests/fixtures/image-reader/provider-clear.json",
+    "tests/fixtures/image-reader/rejected-pngs.json",
+    "tests/fixtures/image-reader/request.json"
   ],
   "source_count_fixture": "tests/fixtures/licensing/artifact-oracle.v1.json",
   "source_inventory": "planning/component-inventory.json"

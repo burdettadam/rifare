@@ -60,6 +60,7 @@
     "packages/adapters/woocommerce/return-contract.mts",
     "packages/adapters/woocommerce/return-source.mts",
     "packages/agent/decisions.mts",
+    "packages/agent/image-reader.mts",
     "packages/agent/local-model.mts",
     "packages/agent/providers.mts",
     "packages/agent/systemone.mts",
@@ -4710,6 +4711,94 @@
           "direct_fixtures": []
         }
       ]
+    },
+    {
+      "id": "image_reader",
+      "kind": "model",
+      "source_files": [
+        {
+          "path": "packages/agent/image-reader.mts",
+          "sha256": "63e91e5e5f3a8f96152cab6bea759a3b4e4404ffce925b63286e424274b7209e"
+        }
+      ],
+      "version": "source-sha256:63e91e5e5f3a8f96152cab6bea759a3b4e4404ffce925b63286e424274b7209e",
+      "api_version": "workers-ai-account-run-clef-omni-diagnostic-fixture-only",
+      "external_version": null,
+      "external_account": null,
+      "external_scopes_attested": false,
+      "source_oracle": "Independent synthetic PNG identity, typed wire/result, bound, cancellation and authority fixtures. Fixture-only image transport; no hosted account, actual model quality, external retention or release qualification.",
+      "operations": [
+        {
+          "id": "decision.image-usability",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "M17-IMAGE-WIRE-01",
+              "name": "M17-IMAGE-WIRE-01",
+              "path": "tests/development/image-reader.test.mts",
+              "sha256": "9a83a5d574d42a1b54ea83b673aa7df05a0296070ca5cb9302dfe0ff0a1cd616"
+            },
+            {
+              "id": "M17-IMAGE-NORMALIZE-02",
+              "name": "M17-IMAGE-NORMALIZE-02",
+              "path": "tests/development/image-reader.test.mts",
+              "sha256": "9a83a5d574d42a1b54ea83b673aa7df05a0296070ca5cb9302dfe0ff0a1cd616"
+            },
+            {
+              "id": "M17-IMAGE-MEDIA-03",
+              "name": "M17-IMAGE-MEDIA-03",
+              "path": "tests/development/image-reader.test.mts",
+              "sha256": "9a83a5d574d42a1b54ea83b673aa7df05a0296070ca5cb9302dfe0ff0a1cd616"
+            },
+            {
+              "id": "M17-IMAGE-CONTEXT-04",
+              "name": "M17-IMAGE-CONTEXT-04",
+              "path": "tests/development/image-reader.test.mts",
+              "sha256": "9a83a5d574d42a1b54ea83b673aa7df05a0296070ca5cb9302dfe0ff0a1cd616"
+            },
+            {
+              "id": "M17-IMAGE-CONFIG-05",
+              "name": "M17-IMAGE-CONFIG-05",
+              "path": "tests/development/image-reader.test.mts",
+              "sha256": "9a83a5d574d42a1b54ea83b673aa7df05a0296070ca5cb9302dfe0ff0a1cd616"
+            },
+            {
+              "id": "M17-IMAGE-OUTPUT-06",
+              "name": "M17-IMAGE-OUTPUT-06",
+              "path": "tests/development/image-reader.test.mts",
+              "sha256": "9a83a5d574d42a1b54ea83b673aa7df05a0296070ca5cb9302dfe0ff0a1cd616"
+            },
+            {
+              "id": "M17-IMAGE-TRANSPORT-07",
+              "name": "M17-IMAGE-TRANSPORT-07",
+              "path": "tests/development/image-reader.test.mts",
+              "sha256": "9a83a5d574d42a1b54ea83b673aa7df05a0296070ca5cb9302dfe0ff0a1cd616"
+            },
+            {
+              "id": "M17-IMAGE-RESPONSE-LIMIT-08",
+              "name": "M17-IMAGE-RESPONSE-LIMIT-08",
+              "path": "tests/development/image-reader.test.mts",
+              "sha256": "9a83a5d574d42a1b54ea83b673aa7df05a0296070ca5cb9302dfe0ff0a1cd616"
+            },
+            {
+              "id": "M17-IMAGE-DEADLINE-09",
+              "name": "M17-IMAGE-DEADLINE-09",
+              "path": "tests/development/image-reader.test.mts",
+              "sha256": "9a83a5d574d42a1b54ea83b673aa7df05a0296070ca5cb9302dfe0ff0a1cd616"
+            },
+            {
+              "id": "M17-IMAGE-AUTHORITY-10",
+              "name": "M17-IMAGE-AUTHORITY-10",
+              "path": "tests/development/image-reader.test.mts",
+              "sha256": "9a83a5d574d42a1b54ea83b673aa7df05a0296070ca5cb9302dfe0ff0a1cd616"
+            }
+          ],
+          "direct_fixtures": []
+        }
+      ]
     }
   ],
   "fixture_administration": "Seed, injected faults, and source observation setters are fixture administration, not remote provider operations. Unnamed real gateway/carrier/warehouse/ERP adapters are unavailable.",
@@ -5180,7 +5269,7 @@
     },
     {
       "path": "packages/commerce/privacy-lifecycle.mts",
-      "sha256": "f6f9e808cf89dfaf571e668100a974f78b0475495fe38e77816dfa21a1e9e8c3"
+      "sha256": "f2e0cefd63f84c4f9e3f40f2f1a5385ca7d5fccabbc0fc6bfdfb4524d2a1d57c"
     },
     {
       "path": "packages/commerce/profile-editor.mts",
@@ -5256,7 +5345,7 @@
     },
     {
       "path": "packages/commerce/return-evidence.mts",
-      "sha256": "9136b6982d9a76359400ee022bfde1aba2575e5084ebf05bd6ef77cfcec80d37"
+      "sha256": "e03babb9ff5d02b47bd5d54576479cbd78a3ca17bf6531eb3a37ffffdab55bca"
     },
     {
       "path": "packages/commerce/return-fulfillment-core.mts",
@@ -5316,7 +5405,7 @@
     },
     {
       "path": "packages/commerce/safe-recovery.mts",
-      "sha256": "6fbb8c78b31e853c00d5416872ba17ffc34ab780a58e388516ec80a7bf134717"
+      "sha256": "cc7b68eb4cbcec08a64a556dff6ed12a838390187c566772e2c20f71924ede7d"
     },
     {
       "path": "packages/commerce/secrets.mts",
@@ -5748,7 +5837,7 @@
     },
     {
       "path": "tests/fixtures/conformance/expected-coverage.v1.json",
-      "sha256": "613a2f31d8adcd07864617579f6cee873f3a4e6dcdfbd9d74df1f562436e9725"
+      "sha256": "93cb6c2014df3117cbb64fa213957086a63a3bec60ec2e3cc959e5c9991ba838"
     },
     {
       "path": "tests/fixtures/conformance/source-inputs.v1.json",
@@ -5928,7 +6017,7 @@
     },
     {
       "path": "packages/commerce/merchant-portability.mts",
-      "sha256": "29675f5458844977ec53b6d3c9fdc948f2c581dc3b99617329bd9512531ed5f5"
+      "sha256": "38c43402711d00f6168de37aaf8d049b72112b6228f75ddc3161cb3bafe87bf0"
     },
     {
       "path": "packages/commerce/contracts/carrier-quotes.v1.json",
@@ -6989,6 +7078,126 @@
     {
       "path": "tests/fixtures/decision-systemone/workers-ai-success.json",
       "sha256": "c294705dc59a854df0a501d6ebde835e6a63929f557300af51b8aeb1e557906a"
+    },
+    {
+      "path": "packages/agent/contracts/image-reader.v1.json",
+      "sha256": "84ca4bf99ed48efa149460723b6486c8901508d6f8cff52482a73fca8ef61236"
+    },
+    {
+      "path": "packages/agent/image-reader.mts",
+      "sha256": "63e91e5e5f3a8f96152cab6bea759a3b4e4404ffce925b63286e424274b7209e"
+    },
+    {
+      "path": "packages/commerce/contracts/image-assistance.v1.json",
+      "sha256": "071795ed9e178103160968a11ec18cc28ffd06a1edd6f7bae03dae792a944711"
+    },
+    {
+      "path": "packages/commerce/image-assistance.mts",
+      "sha256": "bfacd4576f46f64f66b8ff7dea22d27a9c48a9ccd6d65e66e0f80abe181cf647"
+    },
+    {
+      "path": "packages/commerce/image-privacy.mts",
+      "sha256": "7b5478b8c66e08ad2ebde54110fbcca69434f0edb0b7c1dac9bba1be6a50cf38"
+    },
+    {
+      "path": "packages/commerce/image-resources.mts",
+      "sha256": "bbf1f3fa3036dc02c5b60d51cbf3b8eef37b2f8ef96a7811d92d945861135e9b"
+    },
+    {
+      "path": "packages/commerce/skill-bundles/return-intake-images/return-intake-shadow/SKILL.md",
+      "sha256": "d6c41982cc3ea80b633405b310e71d01880ca3a779d8916546c4a542ac22deba"
+    },
+    {
+      "path": "packages/commerce/skill-bundles/return-intake-images/return-intake-shadow/commerce-manifest.json",
+      "sha256": "20d1d9a32a5e520cbeee3c948e5f861f5804a9e58888bc969aa52e1db2c01774"
+    },
+    {
+      "path": "packages/commerce/skill-bundles/return-intake-images/return-intake-shadow/references/config.json",
+      "sha256": "0f8c95fbb5f4adbd3b6ea7d0c71b6fd44ae7b34b3fee87196ecbe0e120f74da3"
+    },
+    {
+      "path": "packages/commerce/skill-bundles/return-intake-images/return-intake-shadow/references/image-evidence-questions.v1.json",
+      "sha256": "b25adf518400ede6ff7e778e17b2aa72005f27239598308976b22a42f86b758a"
+    },
+    {
+      "path": "packages/commerce/skill-bundles/return-intake-images/return-intake-shadow/references/input.json",
+      "sha256": "cf1660fdb0446edcafa1d2d1a598f20a1874000eb9a86740428a7ada92634ec4"
+    },
+    {
+      "path": "packages/commerce/skill-bundles/return-intake-images/return-intake-shadow/references/output.json",
+      "sha256": "64b32c8e1849eb6e4f6756a8d7510acc25770fe0f5d2f302e3171db61c101406"
+    },
+    {
+      "path": "packages/commerce/skill-bundles/return-intake-images/return-intake-shadow/references/return-intake-questions.v1.json",
+      "sha256": "4e65f64d0416929e44153c2ed7b864a4992ed91cd563784ee7087eb0d382ad8e"
+    },
+    {
+      "path": "tests/development/image-assistance-helpers.mts",
+      "sha256": "dc1cb184f212d990e77371533ff0ea6f8dcc9115fa938dc64b7fd7174a54fb8b"
+    },
+    {
+      "path": "tests/development/image-assistance.test.mts",
+      "sha256": "d971391285f4a158c989f83af052d8159c03ddeba6c82b5a6fae78820e00bf20"
+    },
+    {
+      "path": "tests/development/image-reader.test.mts",
+      "sha256": "9a83a5d574d42a1b54ea83b673aa7df05a0296070ca5cb9302dfe0ff0a1cd616"
+    },
+    {
+      "path": "tests/fixtures/image-assistance/evaluation-protocol.v1.json",
+      "sha256": "e77d07bb4454f6c29381a2570d129ce9720895ea629b7c168d38b47affdc93b0"
+    },
+    {
+      "path": "tests/fixtures/image-assistance/questions.v1.json",
+      "sha256": "b25adf518400ede6ff7e778e17b2aa72005f27239598308976b22a42f86b758a"
+    },
+    {
+      "path": "tests/fixtures/image-assistance/wire-responses.v1.json",
+      "sha256": "870dc39a2fc7505e6d17c4d078606252a0db4f96bbe79dc3c13232953fcff967"
+    },
+    {
+      "path": "tests/fixtures/image-reader/README.md",
+      "sha256": "ee1bd49bd0753910688c44361184ea9bc97be00cedf5a86676f1d01ee62ede1e"
+    },
+    {
+      "path": "tests/fixtures/image-reader/expected-wire.json",
+      "sha256": "1e7fd06f8fa5fd555293b2f4dc0b6549fcbcc0969fcddc493fc46a6fc9de62d7"
+    },
+    {
+      "path": "tests/fixtures/image-reader/image.json",
+      "sha256": "d5e90fe34efa5ec4eb9873b6cf36fb1d8db7bb9e7ea95ae031534b1cc9e29958"
+    },
+    {
+      "path": "tests/fixtures/image-reader/large-image.json",
+      "sha256": "b95b6df78c0bee2461ec54e2aa075ca10b19d0182da1a93ddd0e115cd140e454"
+    },
+    {
+      "path": "tests/fixtures/image-reader/large-rgba.png",
+      "sha256": "bdc42ed97198fe54cd13698a25da2f0c71cfd04eb372154ba153b59c69c40102"
+    },
+    {
+      "path": "tests/fixtures/image-reader/normalized-ambiguous.json",
+      "sha256": "60c01edd71419be41b63be93f8ce8b7f78e8d633d35e4b085d3995790653b44f"
+    },
+    {
+      "path": "tests/fixtures/image-reader/normalized-clear.json",
+      "sha256": "1bd7699eba69a5edd6d48d492f31024f105824ec5297460d71de3ff75a3d0a4a"
+    },
+    {
+      "path": "tests/fixtures/image-reader/provider-ambiguous.json",
+      "sha256": "21ec03e0792917c4483409f738c82b5a3ebd202f58e4548aa8557bf0b31e13da"
+    },
+    {
+      "path": "tests/fixtures/image-reader/provider-clear.json",
+      "sha256": "759e2b779a42bb687c0e1b95456310c6c925bada18d905524b6e800e5b903309"
+    },
+    {
+      "path": "tests/fixtures/image-reader/rejected-pngs.json",
+      "sha256": "3dc3afbb01c4a7b60ebfda80e55465740fc4466d6a7f40c17cfe7c46bb4aeb9f"
+    },
+    {
+      "path": "tests/fixtures/image-reader/request.json",
+      "sha256": "3d0d8a02f5c0cd0e28d6bbc33f6f3cdac941ed7ece2edebf383bd9c6bf030f8f"
     }
   ]
 }

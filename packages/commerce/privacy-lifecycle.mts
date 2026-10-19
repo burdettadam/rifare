@@ -9,6 +9,7 @@ import { exportGrowthSubject,eraseGrowthSubject,revokeGrowthForRestore } from '.
 import { exportExtendedServicesSubject,eraseExtendedServicesSubject,revokeExtendedServicesForRestore } from './extended-services-privacy.mts';
 import { exportInventoryPlanningSubject,eraseInventoryPlanningSubject,revokeInventoryPlanningForRestore } from './inventory-planning-privacy.mts';
 import { exportEcosystemSubject,eraseEcosystemSubject,revokeEcosystemForRestore } from './ecosystem-privacy.mts';
+import { eraseImageRecords,exportImageRecords,imageRecipientCaseIds,isImageRecord,revokeImageAuthority } from './image-privacy.mts';
 
 const MAX_RECORDS=10000;
 const PACKING_TABLES=['commerce_packing_sessions','commerce_packing_allocations','commerce_packing_scans','commerce_packing_confirmations'];
@@ -111,7 +112,7 @@ function eraseUnboundGuidanceCopies(k:CommerceKernel,s:Row){
  }
 }
 function eraseCaseData(k:CommerceKernel,s:Row,cases:string[],hash:string) {
-  if(!cases.length)return;eraseAssistance(k,s,cases,hash);const t=s.tenant_id,st=s.store_id;
+  if(!cases.length)return;eraseAssistance(k,s,cases,hash);eraseImageRecords(k,s.tenant_id,s.store_id,{case_ids:cases});const t=s.tenant_id,st=s.store_id;
       const cargs=[t,st,...cases],cm=where(cases);
       const supportLinks=all(k,'commerce_support_links',t,st).filter(r=>cases.includes(r.case_id)).map(r=>r.id);
       if(supportLinks.length)k.db.prepare(`UPDATE commerce_support_contacts SET address=NULL,erased=1,revision=revision+1 WHERE tenant_id=? AND store_id=? AND link_id IN (${where(supportLinks)})`).run(t,st,...supportLinks);
@@ -142,7 +143,7 @@ function eraseCaseData(k:CommerceKernel,s:Row,cases:string[],hash:string) {
 /** Recipient erasure preserves the purchaser's unit reservations and settlement
  * context. Free text is mutable privacy material; monetary audit is retained. */
 function eraseGiftCaseData(k:CommerceKernel,s:Row,cases:string[],hash:string) {
- if(!cases.length)return;eraseAssistance(k,s,cases,hash);const t=s.tenant_id,st=s.store_id,cargs=[t,st,...cases],cm=where(cases);
+ if(!cases.length)return;eraseAssistance(k,s,cases,hash);eraseImageRecords(k,s.tenant_id,s.store_id,{case_ids:cases});const t=s.tenant_id,st=s.store_id,cargs=[t,st,...cases],cm=where(cases);
       const supportLinks=all(k,'commerce_support_links',t,st).filter(r=>cases.includes(r.case_id)).map(r=>r.id);
       if(supportLinks.length)k.db.prepare(`UPDATE commerce_support_contacts SET address=NULL,erased=1,revision=revision+1 WHERE tenant_id=? AND store_id=? AND link_id IN (${where(supportLinks)})`).run(t,st,...supportLinks);
       for(const table of ['commerce_support_messages','commerce_support_attempts']){scrubRecord(k,table,t,st,cases,'case_id');k.db.prepare(`UPDATE ${table} SET erased=1 WHERE tenant_id=? AND store_id=? AND case_id IN (${cm})`).run(...cargs);}
@@ -306,7 +307,8 @@ export class PrivacyLifecycle {
     const k=this.#k,s=k.authorize(scope,'privacy.manage');id(customer);storageInventoryCurrent(k);
     return k.transaction(()=>{k.authorize(scope,'privacy.manage');const rs=resources(k,s,customer),ids=rs.map(r=>r.id);
       const gifts=all(k,'commerce_resources',s.tenant_id,s.store_id).filter(r=>r.kind==='order'&&JSON.parse(r.payload).gift_facts?.recipient_customer_id===customer).map(r=>{const g=JSON.parse(r.payload).gift_facts;return {gift_id:g.gift_id,lines:g.lines,allowed_outcomes:g.allowed_outcomes};});
-      if(!rs.length&&!gifts.length)throw new Error('NOT_FOUND');
+      const imageGiftCaseIds=imageRecipientCaseIds(k,s.tenant_id,s.store_id,customer);
+      if(!rs.length&&!gifts.length&&!imageGiftCaseIds.length)throw new Error('NOT_FOUND');
       const giftCaseIds=all(k,'commerce_gift_cases',s.tenant_id,s.store_id).map(r=>r.case_id);
       const cases=all(k,'commerce_cases',s.tenant_id,s.store_id).filter(r=>ids.includes(r.resource_id)&&!giftCaseIds.includes(r.id));
       const caseIds=cases.map(r=>r.id),subjectRecord=(r:Row)=>ids.includes(r.resource_id)&&(!r.case_id||caseIds.includes(r.case_id))&&!(r.source_kind==='case'&&giftCaseIds.includes(r.source_id)),operations=all(k,'commerce_operations',s.tenant_id,s.store_id).filter(subjectRecord);
@@ -340,10 +342,11 @@ export class PrivacyLifecycle {
       const extended_service_records=exportExtendedServicesSubject(k,s.tenant_id,s.store_id,ids,customer,subjectHash(s.tenant_id,s.store_id,customer));
       const inventory_planning_records=exportInventoryPlanningSubject(k,s.tenant_id,s.store_id,ids,customer,subjectHash(s.tenant_id,s.store_id,customer));
       const ecosystem_records=exportEcosystemSubject(k,s.tenant_id,s.store_id,ids,customer,subjectHash(s.tenant_id,s.store_id,customer));
-      const result={ecosystem_records,inventory_planning_records,extended_service_records,growth_records,warehouse_inventory_records,packing_records,shipping_records,woocommerce_records,return_assistance_records,exchange_history_records,support_records,analytics_records,order_edit_records,gift_returns:gifts,schema_version:1,tenant_id:s.tenant_id,store_id:s.store_id,subject_ref:subjectHash(s.tenant_id,s.store_id,customer),
+      const image_assistance_records=exportImageRecords(k,s.tenant_id,s.store_id,[...caseIds,...imageGiftCaseIds]);
+      const result={image_assistance_records,ecosystem_records,inventory_planning_records,extended_service_records,growth_records,warehouse_inventory_records,packing_records,shipping_records,woocommerce_records,return_assistance_records,exchange_history_records,support_records,analytics_records,order_edit_records,gift_returns:gifts,schema_version:1,tenant_id:s.tenant_id,store_id:s.store_id,subject_ref:subjectHash(s.tenant_id,s.store_id,customer),
         resources:rs.map(r=>k.project(r)),attachments:all(k,'commerce_attachments',s.tenant_id,s.store_id).filter(subjectRecord).map(r=>({id:r.id,resource_id:r.resource_id,content:JSON.parse(r.content)})),
         knowledge:all(k,'commerce_knowledge',s.tenant_id,s.store_id).filter(subjectRecord),
-        tasks,assistance:all(k,'commerce_assistance_receipts',s.tenant_id,s.store_id).filter(r=>tasks.some(t=>t.id===r.task_id)),
+        tasks,assistance:all(k,'commerce_assistance_receipts',s.tenant_id,s.store_id).filter(r=>!isImageRecord(r)&&tasks.some(t=>t.id===r.task_id)),
         return_evidence:all(k,'commerce_return_evidence',s.tenant_id,s.store_id).filter(subjectRecord).map(r=>({...r,bytes:r.bytes?Buffer.from(r.bytes).toString('base64'):null})),
         return_requests:all(k,'commerce_return_requests',s.tenant_id,s.store_id).filter(subjectRecord),
         resolution_records:Object.fromEntries(['commerce_resolution_plans','commerce_resolution_allocations','commerce_resolution_quotes','commerce_resolution_operations','commerce_resolution_observations','commerce_exchange_quotes'].map(table=>[table,all(k,table,s.tenant_id,s.store_id).filter(r=>table==='commerce_resolution_observations'?resolutionOpIds.includes(r.operation_id):subjectRecord(r))])),
@@ -384,6 +387,7 @@ export class PrivacyLifecycle {
       revokeExtendedServicesForRestore(k,s.tenant_id,s.store_id);
       revokeInventoryPlanningForRestore(k,s.tenant_id,s.store_id);
       revokeEcosystemForRestore(k,s.tenant_id,s.store_id);
+      revokeImageAuthority(k,s.tenant_id,s.store_id);
       k.db.prepare('UPDATE commerce_secrets SET revoked=1,envelope=? WHERE tenant_id=? AND store_id=?').run('{}',s.tenant_id,s.store_id);
       for(const [table,clause] of [['commerce_sessions','revoked=1'],['commerce_worker_grants','revoked=1'],['commerce_credential_slots','active=0'],['commerce_webhook_routes','enabled=0'],['commerce_execution_settings','enabled=0'],['commerce_action_readiness','revoked=1']])
         k.db.prepare(`UPDATE ${table} SET ${clause} WHERE tenant_id=? AND store_id=?`).run(s.tenant_id,s.store_id);

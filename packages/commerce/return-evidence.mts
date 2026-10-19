@@ -5,6 +5,7 @@ import type { CommerceKernel,Scope,Row } from './kernel.mts';
 import { CaseConfigurations } from './case-configurations.mts';
 import { contentDigest,jsonValue } from './configuration-values.mts';
 import { subjectHash } from './data-guards.mts';
+import { eraseImageRecords } from './image-privacy.mts';
 
 export const MAX_EVIDENCE_BYTES=262144;
 export type EvidenceScanner={identity:string;scan:(bytes:Buffer)=>Promise<{verdict:'clean'|'rejected'|'unavailable';sha256:string}>};
@@ -105,9 +106,10 @@ export class ReturnEvidence {
   return [c.customer_id,recipient?.recipient_customer_id].filter(Boolean).some(customer=>!!k.db.prepare('SELECT 1 FROM commerce_privacy_holds WHERE tenant_id=? AND store_id=? AND subject_hash=? AND released=0 AND expires_at>?').get(s.tenant_id,s.store_id,subjectHash(s.tenant_id,s.store_id,customer),k.clock()));}
  purgeExpired(scope:Scope,after:string|null=null){const k=this.#k;if(after!==null)id(after);return k.transaction(()=>{const s=k.authorize(scope,'privacy.manage');
   const rows=k.db.prepare("SELECT id,case_id FROM commerce_return_evidence WHERE tenant_id=? AND store_id=? AND expires_at<=? AND state!='erased' AND id>? ORDER BY id LIMIT 100").all(s.tenant_id,s.store_id,k.clock(),after??'') as Row[];let erased=0,held=0;
-  for(const row of rows){if(this.#held(s,row.case_id)){held++;continue;}k.db.prepare("UPDATE commerce_return_evidence SET state='erased',bytes=NULL,note='',scanner=NULL WHERE tenant_id=? AND store_id=? AND id=?").run(s.tenant_id,s.store_id,row.id);erased++;}
+  for(const row of rows){if(this.#held(s,row.case_id)){held++;continue;}eraseImageRecords(k,s.tenant_id,s.store_id,{evidence_ids:[row.id]});k.db.prepare("UPDATE commerce_return_evidence SET state='erased',bytes=NULL,note='',scanner=NULL WHERE tenant_id=? AND store_id=? AND id=?").run(s.tenant_id,s.store_id,row.id);erased++;}
   return {erased,batch_limit:100,physical_erasure:false,...(held?{held}:{}),...(rows.length===100?{next_cursor:rows.at(-1)!.id}:{})};});}
  erase(scope:Scope,ref:string){const k=this.#k;return k.transaction(()=>{const info=this.inspect(scope,ref),s=k.authorize(scope,'return.evidence',this.#cases.inspect(scope,info.case_id).resource_id);
   if(this.#held(s,info.case_id))return {erased:false,held:true,physical_erasure:false};
+  eraseImageRecords(k,s.tenant_id,s.store_id,{evidence_ids:[ref]});
   k.db.prepare("UPDATE commerce_return_evidence SET state='erased',bytes=NULL,note='',scanner=NULL WHERE tenant_id=? AND store_id=? AND id=?").run(s.tenant_id,s.store_id,ref);return {erased:true,physical_erasure:false};});}
 }

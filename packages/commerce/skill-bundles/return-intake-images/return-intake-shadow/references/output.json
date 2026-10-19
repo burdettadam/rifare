@@ -1,0 +1,20 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "observation_id",
+    "mode",
+    "execution_authorized"
+  ],
+  "properties": {
+    "observation_id": {
+      "type": "string"
+    },
+    "mode": {
+      "const": "shadow"
+    },
+    "execution_authorized": {
+      "const": false
+    }
+  }
+}

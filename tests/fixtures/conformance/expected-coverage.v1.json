@@ -866,6 +866,12 @@
         "semantics": "native",
         "qualification": "sandbox-only"
       }
+    },
+    "image_reader": {
+      "decision.image-usability": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      }
     }
   },
   "declarations": [
@@ -911,6 +917,7 @@
     "packages/adapters/woocommerce/return-contract.mts",
     "packages/adapters/woocommerce/return-source.mts",
     "packages/agent/decisions.mts",
+    "packages/agent/image-reader.mts",
     "packages/agent/local-model.mts",
     "packages/agent/providers.mts",
     "packages/agent/systemone.mts",
@@ -1997,6 +2004,16 @@
       "api_version": "systemone-v1-explicit-endpoint-unqualified",
       "operations": {
         "decision.classify": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        }
+      }
+    },
+    "image_reader": {
+      "version": "source-sha256:63e91e5e5f3a8f96152cab6bea759a3b4e4404ffce925b63286e424274b7209e",
+      "api_version": "workers-ai-account-run-clef-omni-diagnostic-fixture-only",
+      "operations": {
+        "decision.image-usability": {
           "required_scopes": [],
           "scope_kind": "server_local_fixture_only"
         }
@@ -3485,6 +3502,66 @@
       "name": "M14-G04-STRICT-NATIVE-RESULT-AND-UNKNOWN-USAGE",
       "path": "tests/development/decision-systemone.test.mts",
       "sha256": "4f4b01ea4525d4d8eb918f351cd3907fb8bd9320ec60ea48c5584493396fa8a5"
+    },
+    {
+      "id": "M17-IMAGE-AUTHORITY-10",
+      "name": "M17-IMAGE-AUTHORITY-10",
+      "path": "tests/development/image-reader.test.mts",
+      "sha256": "9a83a5d574d42a1b54ea83b673aa7df05a0296070ca5cb9302dfe0ff0a1cd616"
+    },
+    {
+      "id": "M17-IMAGE-CONFIG-05",
+      "name": "M17-IMAGE-CONFIG-05",
+      "path": "tests/development/image-reader.test.mts",
+      "sha256": "9a83a5d574d42a1b54ea83b673aa7df05a0296070ca5cb9302dfe0ff0a1cd616"
+    },
+    {
+      "id": "M17-IMAGE-CONTEXT-04",
+      "name": "M17-IMAGE-CONTEXT-04",
+      "path": "tests/development/image-reader.test.mts",
+      "sha256": "9a83a5d574d42a1b54ea83b673aa7df05a0296070ca5cb9302dfe0ff0a1cd616"
+    },
+    {
+      "id": "M17-IMAGE-DEADLINE-09",
+      "name": "M17-IMAGE-DEADLINE-09",
+      "path": "tests/development/image-reader.test.mts",
+      "sha256": "9a83a5d574d42a1b54ea83b673aa7df05a0296070ca5cb9302dfe0ff0a1cd616"
+    },
+    {
+      "id": "M17-IMAGE-MEDIA-03",
+      "name": "M17-IMAGE-MEDIA-03",
+      "path": "tests/development/image-reader.test.mts",
+      "sha256": "9a83a5d574d42a1b54ea83b673aa7df05a0296070ca5cb9302dfe0ff0a1cd616"
+    },
+    {
+      "id": "M17-IMAGE-NORMALIZE-02",
+      "name": "M17-IMAGE-NORMALIZE-02",
+      "path": "tests/development/image-reader.test.mts",
+      "sha256": "9a83a5d574d42a1b54ea83b673aa7df05a0296070ca5cb9302dfe0ff0a1cd616"
+    },
+    {
+      "id": "M17-IMAGE-OUTPUT-06",
+      "name": "M17-IMAGE-OUTPUT-06",
+      "path": "tests/development/image-reader.test.mts",
+      "sha256": "9a83a5d574d42a1b54ea83b673aa7df05a0296070ca5cb9302dfe0ff0a1cd616"
+    },
+    {
+      "id": "M17-IMAGE-RESPONSE-LIMIT-08",
+      "name": "M17-IMAGE-RESPONSE-LIMIT-08",
+      "path": "tests/development/image-reader.test.mts",
+      "sha256": "9a83a5d574d42a1b54ea83b673aa7df05a0296070ca5cb9302dfe0ff0a1cd616"
+    },
+    {
+      "id": "M17-IMAGE-TRANSPORT-07",
+      "name": "M17-IMAGE-TRANSPORT-07",
+      "path": "tests/development/image-reader.test.mts",
+      "sha256": "9a83a5d574d42a1b54ea83b673aa7df05a0296070ca5cb9302dfe0ff0a1cd616"
+    },
+    {
+      "id": "M17-IMAGE-WIRE-01",
+      "name": "M17-IMAGE-WIRE-01",
+      "path": "tests/development/image-reader.test.mts",
+      "sha256": "9a83a5d574d42a1b54ea83b673aa7df05a0296070ca5cb9302dfe0ff0a1cd616"
     },
     {
       "id": "PORT-027",
