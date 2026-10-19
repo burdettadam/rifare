@@ -10,9 +10,9 @@ import {WORKERS_AI_ADAPTER} from '../../packages/agent/workers-ai.mts';
 import {contentDigest} from '../../packages/commerce/configuration-values.mts';
 
 export const routingFixtureFile=(name:string)=>JSON.parse(readFileSync(new URL('../fixtures/decision-routing/'+name+'.json',import.meta.url),'utf8'));
-export function routingFixture(){
+export function routingFixture(revisions:{model_revision?:string|null;serving_revision?:string|null}={}){
  const f=shadowFixture(),key=randomBytes(32),systemRef='systemone_a',systemRequests:any[]=[];
- const systemReader=systemOneReader({serving_configuration_ref:systemRef,endpoint:'https://systemone.example/v1/systemone',approved_endpoints:['https://systemone.example/v1/systemone'],model_id:'clef_fixture',approved_model_ids:['clef_fixture'],model_revision:null,serving_revision:null,effective_context_tokens:8192,confidence_profile:'sglang_systemone_adapter_v1',fixtureTransport:(async(_url:any,init:any)=>{
+ const systemReader=systemOneReader({serving_configuration_ref:systemRef,endpoint:'https://systemone.example/v1/systemone',approved_endpoints:['https://systemone.example/v1/systemone'],model_id:'clef_fixture',approved_model_ids:['clef_fixture'],model_revision:revisions.model_revision??null,serving_revision:revisions.serving_revision??null,effective_context_tokens:8192,confidence_profile:'sglang_systemone_adapter_v1',fixtureTransport:(async(_url:any,init:any)=>{
   systemRequests.push(JSON.parse(init.body));const r=structuredClone(f.wire.clear.result);r.model='clef_fixture';
   for(const a of Object.values(r.answers) as any[]){a.confidence=0.94;for(const option of Object.keys(a.probabilities))a.probabilities[option]=option===a.choice?0.96:0.02;}
   return new Response(JSON.stringify(r));
@@ -47,7 +47,7 @@ export function routingFixture(){
  const routeInput=(extra:any={})=>({publication_id:'return_route',case_id:f.caseA.id,task_id:f.taskA.id,request_id:'route_request_'+(++counter),...extra});
  return {...f,shadow,vault,secret,systemReader,systemRef,systemRequests,rules,routing,routeRules,publishedRule,protocol,freeze,qualification,stage,publish,bootstrap,routeInput,cleanup:()=>{key.fill(0);f.cleanup();}};
 }
-export async function usingRouting(fn:(f:ReturnType<typeof routingFixture>)=>unknown){const f=routingFixture();try{return await fn(f);}finally{f.cleanup();}}
+export async function usingRouting(fn:(f:ReturnType<typeof routingFixture>)=>unknown,revisions:{model_revision?:string|null;serving_revision?:string|null}={}){const f=routingFixture(revisions);try{return await fn(f);}finally{f.cleanup();}}
 export function numericCohort(){
  const p=routingFixtureFile('protocol.v1'),base=p.cases;p.cases=[];
  for(const row of base)for(let i=0;i<10;i++)p.cases.push({...structuredClone(row),id:'n'+base.indexOf(row)+'_'+i,source_text_hash:contentDigest(['independent_numeric_source',row.id,i])});
