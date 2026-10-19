@@ -241,3 +241,25 @@ and missing-history reconciliation. M18 remains unassigned because its M15
 remote authority prerequisite is unavailable here. This update records actual
 local progress; it does not advance the canonical acceptance ledger or infer
 live media, connected erasure, model quality or target-host qualification.
+
+## Assigned M18 verified shopper-memory foundation
+
+The owner's renewed next-milestone instruction assigns bounded local M18-G01
+under [ADR-0053](docs/decisions/0053-m18-verified-shopper-memory.md), using M18's
+explicit local-preparation path. The earlier decision to leave M18 unassigned is
+historical. Recovered main and every prior checkpoint remain unchanged; root
+works from saved 1534f5e on recovery/M18-memory.
+
+The assigned outcome is purpose-scoped, explicit customer preferences bound to
+the current verified case, customer source and channel links, with correction,
+expiry, all-version privacy cleanup and conservative backup/import invalidation.
+Independent tests precede implementation. The focused selection is 25 new memory
+cases plus seven retained conversation, 14 safe-recovery and 14 merchant-transfer
+cases under the unchanged 60-case/four-file/60-second limit.
+
+M18-G02 readiness, G03 journey composition and G04 follow-ups consume this
+foundation in subsequent assignments. G05 independent remote-client/channel
+qualification and G99 assessment retain their actual prerequisites. This local
+assignment does not accept M07/M09/M15/M18 gates, recover missing implementation
+history, or expand any worker grant. Actual outcome and source-bound evidence
+will be recorded in [the M18 memory record](work/records/M18-memory-checkpoint.md).
