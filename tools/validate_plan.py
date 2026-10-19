@@ -12,6 +12,8 @@ from typing import Any
 # Prior authority: ADR-0042 / 97b888a. This is a closed, byte-pinned addition,
 # not a candidate-controlled namespace for replacing original requirements.
 ADOPTED_SHA256 = '0d4218fabd39eeb1328de5a3d1f79cc620967ef761a6dc4a405ec403a280d7b2'
+# Separate prior authority: ADR-0044. Retain both frozen additions independently.
+BROWSER_ADOPTED_SHA256 = '41d109fb6e810bfe9b2c9f8458e0aaa8cb5d45176c96d80fc3c733ca07e11abe'
 
 
 def validate_documents(docs: dict[str, Any]) -> list[str]:
@@ -27,6 +29,11 @@ def validate_documents(docs: dict[str, Any]) -> list[str]:
     if hashlib.sha256(adopted_bytes).hexdigest() != ADOPTED_SHA256:
         errors.append('ADR-0042 frozen addition changed')
     adopted_reqs = adopted_document['requirements']
+    browser_document = docs['browser_requirements']
+    browser_bytes = (json.dumps(browser_document, indent=2) + '\n').encode('utf-8')
+    if hashlib.sha256(browser_bytes).hexdigest() != BROWSER_ADOPTED_SHA256:
+        errors.append('ADR-0044 frozen browser addition changed')
+    browser_reqs = browser_document['requirements']
     indexes: dict[str, dict[str, Any]] = {}
     for name, items in [('goals', goals), ('tests', tests), ('requirements', reqs), ('milestones', milestones)]:
         counts = Counter(x.get('id') for x in items)
@@ -85,9 +92,13 @@ def validate_documents(docs: dict[str, Any]) -> list[str]:
             errors.append(f'{t["id"]}: missing fault to detect')
     originals = {x['id']: x for x in original_reqs}
     additions = {x['id']: x for x in adopted_reqs}
+    browser_additions = {x['id']: x for x in browser_reqs}
     if len(additions) != len(adopted_reqs) or set(additions) & set(originals):
         errors.append('Adopted requirements collide with protected IDs')
-    if set(ri) != set(originals) | set(additions):
+    if (len(browser_additions) != len(browser_reqs)
+            or set(browser_additions) & (set(originals) | set(additions))):
+        errors.append('Browser adopted requirements collide with protected IDs')
+    if set(ri) != set(originals) | set(additions) | set(browser_additions):
         errors.append('Requirement coverage differs from the exact approved union')
     for rid, r in ri.items():
         if not r.get('worker_goal_ids'):
@@ -101,6 +112,13 @@ def validate_documents(docs: dict[str, Any]) -> list[str]:
             errors.append(f'{rid}: original acceptance criterion changed')
         if rid in additions and r.get('acceptance_criteria') != additions[rid].get('acceptance_criteria'):
             errors.append(f'{rid}: adopted acceptance criterion changed')
+        if rid in browser_additions and r.get('acceptance_criteria') != browser_additions[rid].get('acceptance_criteria'):
+            errors.append(f'{rid}: browser adopted acceptance criterion changed')
+    for requirement in browser_reqs:
+        gid = requirement['goal_id']
+        if (gid not in gi or gi[gid].get('acceptance_criteria')
+                != requirement['original_acceptance_criteria']):
+            errors.append(f'{gid}: browser goal acceptance criterion changed')
     for t in original_tests:
         tid = t['id']
         if tid not in ti:
@@ -126,9 +144,12 @@ def load_documents(root: Path) -> dict[str, Any]:
         'coverage':'planning/requirement-coverage.json', 'milestones':'planning/milestones.json',
         'original_requirements':'reference/original-backlog.json',
         'original_tests':'reference/original-acceptance-tests.json',
-        'adopted_requirements':'reference/additions/m13-m22-requirements.json'}
+        'adopted_requirements':'reference/additions/m13-m22-requirements.json',
+        'browser_requirements':'reference/additions/m23-m25-requirements.json'}
     if hashlib.sha256((root / paths['adopted_requirements']).read_bytes()).hexdigest() != ADOPTED_SHA256:
         raise ValueError('ADR-0042 frozen addition changed')
+    if hashlib.sha256((root / paths['browser_requirements']).read_bytes()).hexdigest() != BROWSER_ADOPTED_SHA256:
+        raise ValueError('ADR-0044 frozen browser addition changed')
     return {k: json.loads((root / rel).read_text(encoding="utf-8")) for k, rel in paths.items()}
 
 
@@ -147,6 +168,7 @@ def main() -> int:
                   'goal_total':len(goals),'test_specifications':len(docs['tests']['tests']),
                   'source_requirements_preserved':len(docs['original_requirements']['items']),
                   'adopted_requirements_preserved':len(docs['adopted_requirements']['requirements']),
+                  'browser_requirements_preserved':len(docs['browser_requirements']['requirements']),
                   'total_requirements_mapped':len(docs['coverage']['requirements']),
                   'source_scenarios_preserved':len(docs['original_tests']['tests']),
                   'product_tests_executed':0, 'product_readiness':'not_assessed', 'errors':errors}

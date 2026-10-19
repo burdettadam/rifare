@@ -624,7 +624,8 @@
       "goal_ids": [
         "M07-G01",
         "M07-G07",
-        "M14-G01"
+        "M14-G01",
+        "M23-G01"
       ],
       "shared_lane_conflicts": {},
       "note": "Dependency-ready only. Actual execution needs accepted prerequisites, approved scope and nonoverlapping concrete write paths; a wave is not a duration estimate."
@@ -636,7 +637,8 @@
         "M07-G10",
         "M07-G14",
         "M14-G02",
-        "M14-G04"
+        "M14-G04",
+        "M23-G02"
       ],
       "shared_lane_conflicts": {
         "decision_models_and_skills": [
@@ -651,7 +653,8 @@
       "goal_ids": [
         "M07-G03",
         "M07-G11",
-        "M14-G03"
+        "M14-G03",
+        "M23-G03"
       ],
       "shared_lane_conflicts": {},
       "note": "Dependency-ready only. Actual execution needs accepted prerequisites, approved scope and nonoverlapping concrete write paths; a wave is not a duration estimate."
@@ -662,7 +665,8 @@
         "M07-G04",
         "M07-G05",
         "M07-G15",
-        "M14-G05"
+        "M14-G05",
+        "M23-G04"
       ],
       "shared_lane_conflicts": {},
       "note": "Dependency-ready only. Actual execution needs accepted prerequisites, approved scope and nonoverlapping concrete write paths; a wave is not a duration estimate."
@@ -675,7 +679,8 @@
         "M07-G12",
         "M07-G13",
         "M07-G16",
-        "M14-G99"
+        "M14-G99",
+        "M23-G05"
       ],
       "shared_lane_conflicts": {
         "operations": [
@@ -690,7 +695,8 @@
       "goal_ids": [
         "M07-G09",
         "M07-G17",
-        "M17-G01"
+        "M17-G01",
+        "M23-G99"
       ],
       "shared_lane_conflicts": {},
       "note": "Dependency-ready only. Actual execution needs accepted prerequisites, approved scope and nonoverlapping concrete write paths; a wave is not a duration estimate."
@@ -699,7 +705,8 @@
       "wave": 69,
       "goal_ids": [
         "M07-G18",
-        "M17-G02"
+        "M17-G02",
+        "M24-G01"
       ],
       "shared_lane_conflicts": {},
       "note": "Dependency-ready only. Actual execution needs accepted prerequisites, approved scope and nonoverlapping concrete write paths; a wave is not a duration estimate."
@@ -708,7 +715,8 @@
       "wave": 70,
       "goal_ids": [
         "M07-G99",
-        "M17-G03"
+        "M17-G03",
+        "M24-G02"
       ],
       "shared_lane_conflicts": {},
       "note": "Dependency-ready only. Actual execution needs accepted prerequisites, approved scope and nonoverlapping concrete write paths; a wave is not a duration estimate."
@@ -729,7 +737,8 @@
         "M12-G04",
         "M12-G08",
         "M15-G01",
-        "M17-G04"
+        "M17-G04",
+        "M24-G03"
       ],
       "shared_lane_conflicts": {
         "security": [
@@ -762,7 +771,8 @@
         "M12-G03",
         "M12-G09",
         "M15-G02",
-        "M17-G05"
+        "M17-G05",
+        "M24-G04"
       ],
       "shared_lane_conflicts": {
         "adapters": [
@@ -802,7 +812,8 @@
         "M10-G14",
         "M12-G05",
         "M15-G03",
-        "M17-G99"
+        "M17-G99",
+        "M24-G05"
       ],
       "shared_lane_conflicts": {
         "partners": [
@@ -821,12 +832,18 @@
         "M09-G09",
         "M10-G99",
         "M12-G06",
-        "M15-G04"
+        "M15-G04",
+        "M24-G99",
+        "M25-G01"
       ],
       "shared_lane_conflicts": {
         "security": [
           "M09-G09",
           "M15-G04"
+        ],
+        "integration": [
+          "M10-G99",
+          "M24-G99"
         ]
       },
       "note": "Dependency-ready only. Actual execution needs accepted prerequisites, approved scope and nonoverlapping concrete write paths; a wave is not a duration estimate."
@@ -837,7 +854,8 @@
         "M08-G10",
         "M09-G99",
         "M12-G07",
-        "M15-G05"
+        "M15-G05",
+        "M25-G02"
       ],
       "shared_lane_conflicts": {},
       "note": "Dependency-ready only. Actual execution needs accepted prerequisites, approved scope and nonoverlapping concrete write paths; a wave is not a duration estimate."
@@ -849,7 +867,8 @@
         "M12-G99",
         "M15-G99",
         "M19-G01",
-        "M22-G01"
+        "M22-G01",
+        "M25-G03"
       ],
       "shared_lane_conflicts": {
         "integration": [
@@ -868,7 +887,8 @@
         "M18-G01",
         "M19-G02",
         "M20-G01",
-        "M22-G02"
+        "M22-G02",
+        "M25-G04"
       ],
       "shared_lane_conflicts": {},
       "note": "Dependency-ready only. Actual execution needs accepted prerequisites, approved scope and nonoverlapping concrete write paths; a wave is not a duration estimate."
@@ -882,7 +902,8 @@
         "M18-G02",
         "M19-G03",
         "M20-G02",
-        "M22-G03"
+        "M22-G03",
+        "M25-G05"
       ],
       "shared_lane_conflicts": {
         "security": [
@@ -900,7 +921,8 @@
         "M18-G03",
         "M19-G04",
         "M20-G03",
-        "M22-G04"
+        "M22-G04",
+        "M25-G99"
       ],
       "shared_lane_conflicts": {},
       "note": "Dependency-ready only. Actual execution needs accepted prerequisites, approved scope and nonoverlapping concrete write paths; a wave is not a duration estimate."

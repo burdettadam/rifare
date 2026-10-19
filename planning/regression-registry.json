@@ -23078,6 +23078,118 @@
       "runner_case_id": "M14-G04-CURRENT-VAULT-CREDENTIAL-AND-SCOPE",
       "source": "tests/development/decision-systemone.test.mts",
       "capability_id": "FEATURE-M14-G04"
+    },
+    {
+      "id": "python:test_plan_tools.PlanStructureTests.test_unapproved_addition_is_not_an_open_coverage_namespace",
+      "suite": "python",
+      "runner_case_id": "test_plan_tools.PlanStructureTests.test_unapproved_addition_is_not_an_open_coverage_namespace",
+      "source": "tests/test_plan_tools.py",
+      "capability_id": "FEATURE-BOOTSTRAP"
+    },
+    {
+      "id": "python:test_plan_tools.PlanStructureTests.test_adopted_criterion_cannot_be_weakened_to_match_a_candidate",
+      "suite": "python",
+      "runner_case_id": "test_plan_tools.PlanStructureTests.test_adopted_criterion_cannot_be_weakened_to_match_a_candidate",
+      "source": "tests/test_plan_tools.py",
+      "capability_id": "FEATURE-BOOTSTRAP"
+    },
+    {
+      "id": "python:test_plan_tools.PlanStructureTests.test_frozen_addition_cannot_replace_an_original_requirement",
+      "suite": "python",
+      "runner_case_id": "test_plan_tools.PlanStructureTests.test_frozen_addition_cannot_replace_an_original_requirement",
+      "source": "tests/test_plan_tools.py",
+      "capability_id": "FEATURE-BOOTSTRAP"
+    },
+    {
+      "id": "python:test_browser_plan_adoption.BrowserPlanStructureTests.test_browser_source_is_loaded_and_exact_union_is_valid",
+      "suite": "python",
+      "runner_case_id": "test_browser_plan_adoption.BrowserPlanStructureTests.test_browser_source_is_loaded_and_exact_union_is_valid",
+      "source": "tests/test_browser_plan_adoption.py",
+      "capability_id": "FEATURE-BOOTSTRAP"
+    },
+    {
+      "id": "python:test_browser_plan_adoption.BrowserPlanStructureTests.test_browser_coverage_criterion_cannot_be_weakened",
+      "suite": "python",
+      "runner_case_id": "test_browser_plan_adoption.BrowserPlanStructureTests.test_browser_coverage_criterion_cannot_be_weakened",
+      "source": "tests/test_browser_plan_adoption.py",
+      "capability_id": "FEATURE-BOOTSTRAP"
+    },
+    {
+      "id": "python:test_browser_plan_adoption.BrowserPlanStructureTests.test_missing_browser_requirement_breaks_exact_union",
+      "suite": "python",
+      "runner_case_id": "test_browser_plan_adoption.BrowserPlanStructureTests.test_missing_browser_requirement_breaks_exact_union",
+      "source": "tests/test_browser_plan_adoption.py",
+      "capability_id": "FEATURE-BOOTSTRAP"
+    },
+    {
+      "id": "python:test_browser_plan_adoption.BrowserPlanStructureTests.test_browser_frozen_source_cannot_reuse_an_original_id",
+      "suite": "python",
+      "runner_case_id": "test_browser_plan_adoption.BrowserPlanStructureTests.test_browser_frozen_source_cannot_reuse_an_original_id",
+      "source": "tests/test_browser_plan_adoption.py",
+      "capability_id": "FEATURE-BOOTSTRAP"
+    },
+    {
+      "id": "python:test_browser_plan_adoption.BrowserPlanStructureTests.test_browser_frozen_source_cannot_reuse_a_prior_adopted_id",
+      "suite": "python",
+      "runner_case_id": "test_browser_plan_adoption.BrowserPlanStructureTests.test_browser_frozen_source_cannot_reuse_a_prior_adopted_id",
+      "source": "tests/test_browser_plan_adoption.py",
+      "capability_id": "FEATURE-BOOTSTRAP"
+    },
+    {
+      "id": "python:test_browser_plan_adoption.BrowserPlanStructureTests.test_candidate_cannot_expand_the_browser_frozen_namespace",
+      "suite": "python",
+      "runner_case_id": "test_browser_plan_adoption.BrowserPlanStructureTests.test_candidate_cannot_expand_the_browser_frozen_namespace",
+      "source": "tests/test_browser_plan_adoption.py",
+      "capability_id": "FEATURE-BOOTSTRAP"
+    },
+    {
+      "id": "python:test_browser_plan_adoption.BrowserPlanStructureTests.test_worker_criteria_cannot_diverge_from_frozen_browser_requirement",
+      "suite": "python",
+      "runner_case_id": "test_browser_plan_adoption.BrowserPlanStructureTests.test_worker_criteria_cannot_diverge_from_frozen_browser_requirement",
+      "source": "tests/test_browser_plan_adoption.py",
+      "capability_id": "FEATURE-BOOTSTRAP"
+    },
+    {
+      "id": "python:test_browser_plan_adoption.BrowserPlanStructureTests.test_browser_frozen_file_checks_exact_bytes",
+      "suite": "python",
+      "runner_case_id": "test_browser_plan_adoption.BrowserPlanStructureTests.test_browser_frozen_file_checks_exact_bytes",
+      "source": "tests/test_browser_plan_adoption.py",
+      "capability_id": "FEATURE-BOOTSTRAP"
+    },
+    {
+      "id": "python:test_browser_plan_adoption.BrowserPlanStructureTests.test_missing_browser_frozen_file_fails_loading",
+      "suite": "python",
+      "runner_case_id": "test_browser_plan_adoption.BrowserPlanStructureTests.test_missing_browser_frozen_file_fails_loading",
+      "source": "tests/test_browser_plan_adoption.py",
+      "capability_id": "FEATURE-BOOTSTRAP"
+    },
+    {
+      "id": "python:test_browser_plan_adoption.CapabilityTargetStructureTests.test_current_closed_target_set_is_valid",
+      "suite": "python",
+      "runner_case_id": "test_browser_plan_adoption.CapabilityTargetStructureTests.test_current_closed_target_set_is_valid",
+      "source": "tests/test_browser_plan_adoption.py",
+      "capability_id": "FEATURE-BOOTSTRAP"
+    },
+    {
+      "id": "python:test_browser_plan_adoption.CapabilityTargetStructureTests.test_same_count_unapproved_target_is_rejected",
+      "suite": "python",
+      "runner_case_id": "test_browser_plan_adoption.CapabilityTargetStructureTests.test_same_count_unapproved_target_is_rejected",
+      "source": "tests/test_browser_plan_adoption.py",
+      "capability_id": "FEATURE-BOOTSTRAP"
+    },
+    {
+      "id": "python:test_browser_plan_adoption.CapabilityTargetStructureTests.test_same_count_duplicate_cannot_hide_missing_target",
+      "suite": "python",
+      "runner_case_id": "test_browser_plan_adoption.CapabilityTargetStructureTests.test_same_count_duplicate_cannot_hide_missing_target",
+      "source": "tests/test_browser_plan_adoption.py",
+      "capability_id": "FEATURE-BOOTSTRAP"
+    },
+    {
+      "id": "python:test_browser_plan_adoption.CapabilityTargetStructureTests.test_planning_target_cannot_claim_implementation",
+      "suite": "python",
+      "runner_case_id": "test_browser_plan_adoption.CapabilityTargetStructureTests.test_planning_target_cannot_claim_implementation",
+      "source": "tests/test_browser_plan_adoption.py",
+      "capability_id": "FEATURE-BOOTSTRAP"
     }
   ],
   "protected_files": [

@@ -2,9 +2,11 @@
 
 **Planning date:** October 15, 2026. **State:** proposed, not implemented.
 
-240 bounded worker goals + 23 integration/acceptance gates = **263 goal packets**. **880 acceptance/regression specifications** include all 67 original scenarios. All 151 original requirements and 50 separately adopted requirements are preserved and mapped; their acceptance criteria are retained verbatim.
+255 bounded worker goals + 26 integration/acceptance gates = **281 goal packets**. **949 acceptance/regression specifications** include all 67 original scenarios. All 151 original requirements and 65 separately adopted requirements are preserved and mapped; their acceptance criteria are retained verbatim.
 
 Each linked packet includes dependencies, allowed ownership, explicit success/negative/regression assertions, a deliberate fault to detect, source requirement links and required evidence. Product tests remain not run.
+
+**Latest additive planning update: October 19, 2026.** M23–M25 add browser decision work under ADR-0044. Read [the browser worker handoff](docs/BROWSER-WORKER-HANDOFF.md) for the recommended next browser batch and current M14 continuation boundary. The initial M00 queue below remains a historical planning snapshot; use current work records for assignment.
 
 ## How to dispatch
 
@@ -62,6 +64,12 @@ Read `docs/WORKER-CONTRACT.md`, inspect the actual repository and installed git-
 | [M21](milestones/M21.md) | Warehouse routes, waves and supplies | 5 | [M21-G99](goals/M21/M21-G99.md) |
 
 | [M22](milestones/M22.md) | Individualized campaign production | 5 | [M22-G99](goals/M22/M22-G99.md) |
+
+| [M23](milestones/M23.md) | Browser Clef-flash with pinned Kevala Q8 text | 5 | [M23-G99](goals/M23/M23-G99.md) |
+
+| [M24](milestones/M24.md) | Compact browser backend with joint-path verification | 5 | [M24-G99](goals/M24/M24-G99.md) |
+
+| [M25](milestones/M25.md) | Browser image evidence with a qualified vision decision path | 5 | [M25-G99](goals/M25/M25-G99.md) |
 
 ## M00 — Product charter and reproducible development
 
@@ -795,3 +803,66 @@ Produce reviewable per-recipient campaign variants from permitted operational fa
 | [M22-G05](goals/M22/M22-G05.md) | Evaluate personalization without inflated attribution | M22-G02, M22-G03, M22-G04, M09-G03, M09-G04, M05-G14, M09-G99 | local_then_separate_qualification |
 
 | [M22-G99](goals/M22/M22-G99.md) | Assess the complete M22 capability | All milestone worker goals + prior milestone gates | milestone_acceptance |
+
+## M23 — Browser Clef-flash with pinned Kevala Q8 text
+
+Add optional on-device text decision assistance using the complete Clef-flash joint model in a pinned Kevala WebGPU runtime. Browser suggestions are untrusted client observations and remain shadow-only; no inference or product qualification is supplied by this plan.
+
+**Prerequisite milestone gates:** M13-G99
+
+| Goal | Deliverable | Dependencies | Proof mode |
+|---|---|---|---|
+
+| [M23-G01](goals/M23/M23-G01.md) | Pin the complete Clef-flash conversion and reference contract | M13-G01, M13-G02, M13-G05, M13-G99 | local_then_separate_qualification |
+
+| [M23-G02](goals/M23/M23-G02.md) | Load the pinned pack in a bounded desktop browser worker | M23-G01, M13-G99 | local_then_separate_qualification |
+
+| [M23-G03](goals/M23/M23-G03.md) | Add a browser adapter and separate client-observation ingestion | M23-G01, M23-G02, M13-G04, M13-G99 | local_then_separate_qualification |
+
+| [M23-G04](goals/M23/M23-G04.md) | Apply purpose, privacy, cancellation and destination rules | M23-G02, M23-G03, M02-G24, M05-G10, M05-G11, M13-G99 | local_then_separate_qualification |
+
+| [M23-G05](goals/M23/M23-G05.md) | Demonstrate real desktop fidelity and case shadow behavior | M23-G01, M23-G02, M23-G03, M23-G04, M13-G05, M13-G99 | local_then_separate_qualification |
+
+| [M23-G99](goals/M23/M23-G99.md) | Assess the complete M23 capability | All milestone worker goals + prior milestone gates | milestone_acceptance |
+
+## M24 — Compact browser backend with joint-path verification
+
+Add an optional compact Clef-flash Q4 browser implementation after verifying or repairing Wllama's complete joint decision route, and compare it with Kevala using predeclared paired evidence. Preserve the separate M14 server transport and all server-owned business authority.
+
+**Prerequisite milestone gates:** M23-G99, M14-G99
+
+| Goal | Deliverable | Dependencies | Proof mode |
+|---|---|---|---|
+
+| [M24-G01](goals/M24/M24-G01.md) | Verify or repair Wllama's complete Clef joint path | M23-G01, M23-G99, M14-G99 | local_then_separate_qualification |
+
+| [M24-G02](goals/M24/M24-G02.md) | Package and load a verified compact Q4 candidate | M24-G01, M23-G02, M23-G99, M14-G99 | local_then_separate_qualification |
+
+| [M24-G03](goals/M24/M24-G03.md) | Normalize compact results through the browser observation boundary | M24-G01, M24-G02, M23-G03, M23-G04, M23-G99, M14-G99 | local_then_separate_qualification |
+
+| [M24-G04](goals/M24/M24-G04.md) | Run a predeclared paired browser evaluation | M24-G03, M23-G05, M14-G01, M23-G99, M14-G99 | local_then_separate_qualification |
+
+| [M24-G05](goals/M24/M24-G05.md) | Demonstrate controlled browser replacement and rollback | M24-G02, M24-G03, M24-G04, M23-G04, M23-G99, M14-G99 | local_then_separate_qualification |
+
+| [M24-G99](goals/M24/M24-G99.md) | Assess the complete M24 capability | All milestone worker goals + prior milestone gates | milestone_acceptance |
+
+## M25 — Browser image evidence with a qualified vision decision path
+
+Add optional image-first browser evidence assistance after M17's media intake and privacy foundations, using a matched vision companion and a proven image-aware joint decision API. Preserve untrusted client provenance and server-owned business authority.
+
+**Prerequisite milestone gates:** M17-G99, M23-G99
+
+| Goal | Deliverable | Dependencies | Proof mode |
+|---|---|---|---|
+
+| [M25-G01](goals/M25/M25-G01.md) | Bind browser image scope to the existing intake and privacy owners | M17-G01, M17-G02, M17-G03, M23-G03, M23-G04, M17-G99, M23-G99 | local_then_separate_qualification |
+
+| [M25-G02](goals/M25/M25-G02.md) | Qualify a compatible vision companion and decision API path | M25-G01, M23-G01, M17-G99, M23-G99 | local_then_separate_qualification |
+
+| [M25-G03](goals/M25/M25-G03.md) | Process exact authorized image bytes under explicit bounds | M25-G01, M25-G02, M17-G02, M23-G03, M17-G99, M23-G99 | local_then_separate_qualification |
+
+| [M25-G04](goals/M25/M25-G04.md) | Extend media privacy and cancellation through browser memory | M25-G03, M17-G03, M23-G04, M17-G99, M23-G99 | local_then_separate_qualification |
+
+| [M25-G05](goals/M25/M25-G05.md) | Demonstrate scoped image evidence assistance on a real browser | M25-G02, M25-G03, M25-G04, M17-G04, M17-G05, M23-G05, M17-G99, M23-G99 | local_then_separate_qualification |
+
+| [M25-G99](goals/M25/M25-G99.md) | Assess the complete M25 capability | All milestone worker goals + prior milestone gates | milestone_acceptance |

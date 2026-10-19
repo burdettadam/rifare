@@ -55,6 +55,19 @@ def validate_local_link(root: Path, source: Path, link: str) -> str | None:
     return None
 
 
+def validate_capability_targets(capabilities: list[dict]) -> list[str]:
+    """Require the closed original, ADR-0042 and ADR-0044 planning target set."""
+    expected = ({f'CAP-{number:03d}' for number in range(1, 45)}
+                | {f'CAP-M{number}' for number in range(13, 26)})
+    identifiers = [capability.get('id') for capability in capabilities]
+    errors: list[str] = []
+    if len(identifiers) != len(expected) or set(identifiers) != expected:
+        errors.append('Expected the exact 57 unique approved capability targets')
+    if any(capability.get('status') != 'proposed_not_implemented' for capability in capabilities):
+        errors.append('Capability targets cannot claim implementation')
+    return errors
+
+
 def check(root: Path) -> list[str]:
     root = root.resolve()
     errors: list[str] = []
@@ -112,10 +125,7 @@ def check(root: Path) -> list[str]:
         if queue.get('can_begin_drafting') != ['M00-G01']:
             errors.append('Initial draft queue must start at M00-G01')
         caps = json.loads((root / 'planning/capability-targets.json').read_text(encoding='utf-8'))['capabilities']
-        if len(caps) != 44 or len({c['id'] for c in caps}) != 44:
-            errors.append('Expected 44 unique capability targets')
-        if any(c.get('status') != 'proposed_not_implemented' for c in caps):
-            errors.append('Capability targets cannot claim implementation')
+        errors.extend(validate_capability_targets(caps))
     except (OSError, ValueError, KeyError, TypeError) as exc:
         errors.append(f'Starter metadata/state error: {exc}')
     return errors
