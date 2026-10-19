@@ -204,5 +204,14 @@
       },
       "expected_handling": "route"
     }
-  ]
+  ],
+  "metric_definitions": {
+    "role_denominator": "all_enrolled_cases_in_the_declared_role",
+    "wrong_route_rate": "wrongly_routed_divided_by_all_routed",
+    "incorrect_review_rate": "incorrectly_reviewed_divided_by_role_denominator",
+    "route_coverage": "all_routed_divided_by_role_denominator",
+    "unavailable_and_malformed": "separate_counts_retained_in_role_denominator",
+    "calibration_selection": "first_ascending_candidate_passing_calibration_without_held_out_tuning",
+    "confidence": "minimum_selected_option_probability_is_configuration_specific_not_provider_confidence"
+  }
 }

@@ -34,5 +34,10 @@
     "two_actual_backend_comparison",
     "optional_self_hosted_observation",
     "inherited_formal_product_gates"
-  ]
+  ],
+  "wilson_one_sided_95": {
+    "zero_wrong_of_30": 0.08272430812509929,
+    "one_wrong_of_30": 0.136404142151817,
+    "one_wrong_point_rate": 0.03333333333333333
+  }
 }

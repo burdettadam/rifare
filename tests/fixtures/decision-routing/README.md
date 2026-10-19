@@ -20,3 +20,16 @@ The expanded numeric test cohort repeats the independently specified handling
 patterns under distinct source hashes to verify arithmetic only. It carries no
 canonical inference receipts and cannot be published as live qualification.
 All route outcomes in native checks are existing durable manual-work requests.
+
+## Frozen metric denominators
+
+Each role denominator is every enrolled case in that role. Wrong-route rate uses
+all routed cases as its denominator; the Wilson bound uses the same routed count.
+Incorrect-review rate uses every enrolled role case, and route coverage is routed
+cases divided by every enrolled role case. Missing, unavailable and malformed
+observations stay in that role denominator and are also reported separately.
+Calibrating does not tune on held-out outcomes. Two additional independent Wilson
+constants are 0/30 = 0.08272430812509929 and 1/30 = 0.136404142151817; the latter
+fails the 0.10 uncertainty gate while passing the 0.05 point-rate gate. These
+definitions and fault oracles were clarified by independent review before any
+implementation output or native execution; no numeric threshold changed.

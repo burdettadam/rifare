@@ -30,6 +30,14 @@ test('CASE-M14-G01-04',()=>{
  assert.equal(r.held_out.correctly_routed,30);assert.equal(r.held_out.correctly_reviewed,30);assert.equal(r.held_out.wrongly_routed,0);assert.ok(r.held_out.wrong_route_upper<oracle.maximum_wrong_route_upper);assert.equal(r.numeric_passed,true);assert.equal(r.authorizes_routing,false);
  const short=scoreRoutingProtocol(routingFixtureFile('protocol.v1'),[]);assert.equal(short.calibration.denominator,6);assert.equal(short.held_out.denominator,6);assert.equal(short.numeric_passed,false);assert.equal(short.missing_cases,12);
  assert.throws(()=>scoreRoutingProtocol(protocol,[...rows,rows[0]]),/ROUTING_OBSERVATIONS_INVALID/);
+ const constants=routingFixtureFile('oracles.v1').wilson_one_sided_95;assert.ok(Math.abs(r.held_out.wrong_route_upper-constants.zero_wrong_of_30)<1e-12);
+ const wrong=structuredClone(rows),heldClear=protocol.cases.find((x:any)=>x.role==='held_out'&&x.stratum==='clear');wrong.find((x:any)=>x.id===heldClear.id).labels={reported_problem:'size_fit',requested_resolution:'exchange'};
+ const error=scoreRoutingProtocol(protocol,wrong);assert.equal(error.held_out.wrongly_routed,1);assert.ok(Math.abs(error.held_out.wrong_route_upper-constants.one_wrong_of_30)<1e-12);assert.equal(error.numeric_passed,false);assert.ok(error.held_out.wrong_route_rate<0.05);
+ const select=structuredClone(rows);for(const stratum of ['mixed','unknown']){const ref=protocol.cases.find((x:any)=>x.role==='calibration'&&x.stratum===stratum).id;Object.assign(select.find((x:any)=>x.id===ref),{labels:{reported_problem:'damaged',requested_resolution:'refund'},probability:0.85});}
+ assert.equal(scoreRoutingProtocol(protocol,select).selected_threshold,0.9);
+ const missing=scoreRoutingProtocol(protocol,rows.slice(0,-1));assert.equal(missing.held_out.denominator,60);assert.equal(missing.held_out.unavailable,1);assert.equal(missing.numeric_passed,false);
+ const malformed=structuredClone(rows);Object.assign(malformed.find((x:any)=>x.id===heldClear.id),{status:'malformed',labels:null,probability:null});const broken=scoreRoutingProtocol(protocol,malformed);assert.equal(broken.held_out.malformed,1);assert.equal(broken.held_out.denominator,60);assert.equal(broken.numeric_passed,false);
+
 }));
 test('M14-G02-PREP-01',()=>usingRouting(async f=>{
  const p=f.freeze();f.advance(1);const observed=await f.shadow.run(f.a.scope,f.input());

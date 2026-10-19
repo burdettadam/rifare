@@ -50,7 +50,7 @@ export function routingFixture(){
 export async function usingRouting(fn:(f:ReturnType<typeof routingFixture>)=>unknown){const f=routingFixture();try{return await fn(f);}finally{f.cleanup();}}
 export function numericCohort(){
  const p=routingFixtureFile('protocol.v1'),base=p.cases;p.cases=[];
- for(const row of base)for(let i=0;i<10;i++)p.cases.push({...structuredClone(row),id:row.id+'_'+i,source_text_hash:contentDigest(['independent_numeric_source',row.id,i])});
- p.canary.case_ids=base.filter((r:any)=>r.role==='held_out').map((r:any)=>r.id+'_0');
+ for(const row of base)for(let i=0;i<10;i++)p.cases.push({...structuredClone(row),id:'n'+base.indexOf(row)+'_'+i,source_text_hash:contentDigest(['independent_numeric_source',row.id,i])});
+ p.canary.case_ids=base.filter((r:any)=>r.role==='held_out').map((r:any)=>'n'+base.indexOf(r)+'_0');
  const rows=p.cases.map((r:any)=>({id:r.id,status:'usable',labels:r.labels,probability:0.98}));return {protocol:p,rows};
 }
