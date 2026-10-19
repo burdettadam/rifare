@@ -1,0 +1,22 @@
+{
+  "status": "usable",
+  "answers": {
+    "reported_problem": {
+      "type": "choice",
+      "choice": "damaged",
+      "probabilities": {"damaged": 0.8, "other": 0.2},
+      "confidence": {"provider": "cloudflare", "metric": "provider_reported", "value": 0.8}
+    },
+    "requests_return": {"type": "noul", "probability_true": 0.9},
+    "clarity": {
+      "type": "score",
+      "score": 1.5,
+      "probabilities": {"0": 0.1, "1": 0.3, "2": 0.6},
+      "confidence": {"provider": "cloudflare", "metric": "provider_reported", "value": 0.6}
+    }
+  },
+  "reason": null,
+  "usage": {"input_tokens": 32, "output_tokens": 0},
+  "serving": {"reported_model": "clef-flash", "revision": null},
+  "evidence_kind": "synthetic_wire_fixture"
+}

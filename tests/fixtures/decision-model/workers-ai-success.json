@@ -1,0 +1,25 @@
+{
+  "success": true,
+  "errors": [],
+  "messages": [],
+  "result": {
+    "model": "clef-flash",
+    "answers": {
+      "reported_problem": {
+        "type": "choice",
+        "choice": "damaged",
+        "probabilities": {"damaged": 0.8, "other": 0.2},
+        "confidence": 0.8
+      },
+      "requests_return": {"type": "noul", "noul": 0.9},
+      "clarity": {
+        "type": "score",
+        "score": 1.5,
+        "legend": {"0": "Unclear", "1": "Partly explicit", "2": "Explicit"},
+        "probabilities": {"0": 0.1, "1": 0.3, "2": 0.6},
+        "confidence": 0.6
+      }
+    },
+    "usage": {"input_tokens": 32, "output_tokens": 0}
+  }
+}

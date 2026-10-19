@@ -1,0 +1,26 @@
+{
+  "task_id": "return-intake-v1",
+  "question_set_id": "return-intake-basic-v1",
+  "question_set_digest": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+  "serving_configuration_ref": "decision-fixture",
+  "state": "Customer claim: The item arrived damaged and I want to return it.\nVerified order fact: The current order contains one delivered item.\nUnavailable source: No inspection observation exists.",
+  "questions": {
+    "reported_problem": {
+      "type": "choice",
+      "instructions": "Classify the customer's reported problem, without treating the claim as an inspection finding.",
+      "options": {
+        "damaged": "The customer reports physical damage.",
+        "other": "Another problem or insufficient information."
+      }
+    },
+    "requests_return": {
+      "type": "noul",
+      "instructions": "Does the customer request a return?"
+    },
+    "clarity": {
+      "type": "score",
+      "instructions": "Rate how explicit the customer's request is.",
+      "levels": ["Unclear", "Partly explicit", "Explicit"]
+    }
+  }
+}
