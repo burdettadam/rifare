@@ -38,7 +38,9 @@ function fields(value:unknown,rules:Record<string,Check>){const source=object(va
 function list(value:unknown,check:Check,max=128){return Array.isArray(value)?value.slice(0,max).filter(check):[];}
 function map(value:unknown,clean:(value:unknown)=>unknown,max=128){return Array.isArray(value)?value.slice(0,max).map(clean):[];}
 function same(a:unknown,b:unknown){try{return canonical(a)===canonical(b);}catch{return false;}}
-const source=(value:unknown)=>fields(value,{uri,revision,sha256:hash});
+// URI and opaque revision are one pinned reference. A missing/invalid content
+// hash cannot justify retaining its otherwise identifier-shaped copied text.
+const source=(value:unknown)=>{const v=object(value);return uri(v.uri)&&revision(v.revision)&&hash(v.sha256)?fields(v,{uri,revision,sha256:hash}):{};};
 const pin=(value:unknown)=>fields(value,{path,sha256:hash});
 const history={previous_state:state,authority_revoked:isTrue};
 const actor={author:identifier,reviewer:nullable(identifier),reviewer_revision:nullable(integer),expires_at:integer,created_at:integer,human_adoption:isFalse,...history};
@@ -90,7 +92,25 @@ function canonicalBindings(k:CommerceKernel,tenant:string,store:string){const re
  for(const row of rows(k,'commerce_extension_artifacts',tenant,store)){
   if(row.kind!=='instruction'||!identifier(row.extension_id)||!version(row.version))continue;
   const b=body(row),candidate=new Set<string>();if(hash(b.bundle_digest))candidate.add(b.bundle_digest);
-  for(const review of rows(k,'commerce_extension_reviews',tenant,store)){const r=body(review);if(review.artifact_id===row.id&&r.artifact_digest===row.id&&hash(r.bundle_digest))candidate.add(r.bundle_digest);}
+  for(const review of rows(k,'commerce_extension_reviews',tenant,store)){
+   if(review.artifact_id!==row.id)continue;
+   const r=body(review);if(r.artifact_digest===row.id&&hash(r.bundle_digest))candidate.add(r.bundle_digest);
+   // A restore can corrupt both copied digests and add keys around otherwise
+   // unchanged file strings. Recover revocation identity from the independently
+   // checked archive plus its original canonical review approval. A copied
+   // pointer or a matching skill/version alone never selects another bundle.
+   if(!hash(row.id)||!identifier(r.skill_approval_id))continue;
+   const archived=k.db.prepare(`SELECT a.bundle,a.bundle_digest,a.approval_id,p.origin FROM commerce_skill_archive a
+    JOIN commerce_skill_approvals p ON p.tenant_id=a.tenant_id AND p.store_id=a.store_id AND p.id=a.approval_id
+     AND p.skill_id=a.skill_id AND p.bundle_digest=a.bundle_digest
+    WHERE a.tenant_id=? AND a.store_id=? AND a.skill_id=? AND a.approval_id=? AND p.version=?`).get(tenant,store,row.extension_id,r.skill_approval_id,row.version) as Row|undefined;
+   try{if(archived){
+    const saved=JSON.parse(archived.bundle),bundle=checkedBundle(saved.files),payload=object(object(b.artifact).payload),files=object(payload.files);
+    if(bundle.id===row.extension_id&&bundle.version===row.version&&bundle.digest===archived.bundle_digest&&saved.digest===bundle.digest
+     &&uri(payload.origin)&&new URL(payload.origin).href===archived.origin
+     &&Object.entries(bundle.files).every(([path,content])=>Object.hasOwn(files,path)&&files[path]===content))candidate.add(bundle.digest);
+   }}catch{}
+  }
   // Copied digest fields may both be malformed. Recover identity only from the
   // untouched immutable artifact and its real package/content/origin bindings.
   try{const a=object(b.artifact),origin=object(a.origin);if(hash(row.id)&&a.kind===row.kind&&a.id===row.extension_id&&a.version===row.version&&contentDigest(a)===row.id&&contentDigest(a.payload)===origin.sha256){
