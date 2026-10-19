@@ -1677,6 +1677,78 @@
       "contract_files": [
         "packages/commerce/contracts/production-orders.v1.json"
       ]
+    },
+    {
+      "id": "FEATURE-M12-G01",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/agency-access.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M12-G02",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/shared-templates.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M12-G03",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/agency-reports.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M12-G04",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/extensions.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M12-G05",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/extensions.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M12-G06-PREPARATION",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/extensions.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M12-G07-PREPARATION",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/security/contracts/extension-qualification.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M12-G08-PREPARATION",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/security/contracts/code-execution-decision.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-M12-G09-DISABLED-GUARD",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/security/contracts/code-execution-decision.v1.json"
+      ]
     }
   ],
   "tests": [
@@ -22210,6 +22282,251 @@
       "runner_case_id": "M11-STOCK-CONSERVATION",
       "source": "tests/development/procurement-inventory.test.mts",
       "capability_id": "FEATURE-M11-G10-PREPARATION"
+    },
+    {
+      "id": "runtime:CASE-M12-G01-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M12-G01-01",
+      "source": "tests/development/agency-operations.test.mts",
+      "capability_id": "FEATURE-M12-G01"
+    },
+    {
+      "id": "runtime:CASE-M12-G01-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M12-G01-02",
+      "source": "tests/development/agency-operations.test.mts",
+      "capability_id": "FEATURE-M12-G01"
+    },
+    {
+      "id": "runtime:CASE-M12-G01-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M12-G01-03",
+      "source": "tests/development/agency-operations.test.mts",
+      "capability_id": "FEATURE-M12-G01"
+    },
+    {
+      "id": "runtime:CASE-M12-G02-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M12-G02-01",
+      "source": "tests/development/agency-operations.test.mts",
+      "capability_id": "FEATURE-M12-G02"
+    },
+    {
+      "id": "runtime:CASE-M12-G02-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M12-G02-02",
+      "source": "tests/development/agency-operations.test.mts",
+      "capability_id": "FEATURE-M12-G02"
+    },
+    {
+      "id": "runtime:CASE-M12-G02-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M12-G02-03",
+      "source": "tests/development/agency-operations.test.mts",
+      "capability_id": "FEATURE-M12-G02"
+    },
+    {
+      "id": "runtime:CASE-M12-G03-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M12-G03-01",
+      "source": "tests/development/agency-operations.test.mts",
+      "capability_id": "FEATURE-M12-G03"
+    },
+    {
+      "id": "runtime:CASE-M12-G03-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M12-G03-02",
+      "source": "tests/development/agency-operations.test.mts",
+      "capability_id": "FEATURE-M12-G03"
+    },
+    {
+      "id": "runtime:CASE-M12-G03-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M12-G03-03",
+      "source": "tests/development/agency-operations.test.mts",
+      "capability_id": "FEATURE-M12-G03"
+    },
+    {
+      "id": "runtime:PORT-032",
+      "suite": "runtime",
+      "runner_case_id": "PORT-032",
+      "source": "tests/development/agency-operations.test.mts",
+      "capability_id": "FEATURE-M12-G02"
+    },
+    {
+      "id": "runtime:M12-TEST-002-AGENCY-SCOPE",
+      "suite": "runtime",
+      "runner_case_id": "M12-TEST-002-AGENCY-SCOPE",
+      "source": "tests/development/agency-operations.test.mts",
+      "capability_id": "FEATURE-M12-G01"
+    },
+    {
+      "id": "runtime:M12-AGENCY-AUTHORITY-INTEGRITY",
+      "suite": "runtime",
+      "runner_case_id": "M12-AGENCY-AUTHORITY-INTEGRITY",
+      "source": "tests/development/agency-operations.test.mts",
+      "capability_id": "FEATURE-M12-G01"
+    },
+    {
+      "id": "runtime:CASE-M12-G04-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M12-G04-01",
+      "source": "tests/development/extensions.test.mts",
+      "capability_id": "FEATURE-M12-G04"
+    },
+    {
+      "id": "runtime:CASE-M12-G04-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M12-G04-02",
+      "source": "tests/development/extensions.test.mts",
+      "capability_id": "FEATURE-M12-G04"
+    },
+    {
+      "id": "runtime:CASE-M12-G04-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M12-G04-03",
+      "source": "tests/development/extensions.test.mts",
+      "capability_id": "FEATURE-M12-G04"
+    },
+    {
+      "id": "runtime:CASE-M12-G05-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M12-G05-01",
+      "source": "tests/development/extensions.test.mts",
+      "capability_id": "FEATURE-M12-G05"
+    },
+    {
+      "id": "runtime:CASE-M12-G05-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M12-G05-02",
+      "source": "tests/development/extensions.test.mts",
+      "capability_id": "FEATURE-M12-G05"
+    },
+    {
+      "id": "runtime:CASE-M12-G05-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M12-G05-03",
+      "source": "tests/development/extensions.test.mts",
+      "capability_id": "FEATURE-M12-G05"
+    },
+    {
+      "id": "runtime:M12-G06-PREP-01",
+      "suite": "runtime",
+      "runner_case_id": "M12-G06-PREP-01",
+      "source": "tests/development/extensions.test.mts",
+      "capability_id": "FEATURE-M12-G06-PREPARATION"
+    },
+    {
+      "id": "runtime:M12-G06-PREP-02",
+      "suite": "runtime",
+      "runner_case_id": "M12-G06-PREP-02",
+      "source": "tests/development/extensions.test.mts",
+      "capability_id": "FEATURE-M12-G06-PREPARATION"
+    },
+    {
+      "id": "runtime:M12-G06-PREP-03",
+      "suite": "runtime",
+      "runner_case_id": "M12-G06-PREP-03",
+      "source": "tests/development/extensions.test.mts",
+      "capability_id": "FEATURE-M12-G06-PREPARATION"
+    },
+    {
+      "id": "runtime:M12-EXT-PORT-023",
+      "suite": "runtime",
+      "runner_case_id": "M12-EXT-PORT-023",
+      "source": "tests/development/extensions.test.mts",
+      "capability_id": "FEATURE-M12-G05"
+    },
+    {
+      "id": "runtime:M12-EXT-AUTHORITY",
+      "suite": "runtime",
+      "runner_case_id": "M12-EXT-AUTHORITY",
+      "source": "tests/development/extensions.test.mts",
+      "capability_id": "FEATURE-M12-G04"
+    },
+    {
+      "id": "runtime:M12-EXT-PRIVACY",
+      "suite": "runtime",
+      "runner_case_id": "M12-EXT-PRIVACY",
+      "source": "tests/development/extensions.test.mts",
+      "capability_id": "FEATURE-M12-G06-PREPARATION"
+    },
+    {
+      "id": "runtime:M12-EXT-HOST-ADAPTER",
+      "suite": "runtime",
+      "runner_case_id": "M12-EXT-HOST-ADAPTER",
+      "source": "tests/development/extensions.test.mts",
+      "capability_id": "FEATURE-M12-G04"
+    },
+    {
+      "id": "runtime:M12-PREP-INTEGRATION-01",
+      "suite": "runtime",
+      "runner_case_id": "M12-PREP-INTEGRATION-01",
+      "source": "tests/development/extensions.test.mts",
+      "capability_id": "FEATURE-M12-G04"
+    },
+    {
+      "id": "runtime:M12-G07-PREP-ARTIFACT-EVIDENCE",
+      "suite": "runtime",
+      "runner_case_id": "M12-G07-PREP-ARTIFACT-EVIDENCE",
+      "source": "tests/development/ecosystem-assurance.test.mts",
+      "capability_id": "FEATURE-M12-G07-PREPARATION"
+    },
+    {
+      "id": "runtime:M12-G07-PREP-INDEPENDENCE-REFUSAL",
+      "suite": "runtime",
+      "runner_case_id": "M12-G07-PREP-INDEPENDENCE-REFUSAL",
+      "source": "tests/development/ecosystem-assurance.test.mts",
+      "capability_id": "FEATURE-M12-G07-PREPARATION"
+    },
+    {
+      "id": "runtime:M12-G07-PREP-COMPATIBILITY-BINDING",
+      "suite": "runtime",
+      "runner_case_id": "M12-G07-PREP-COMPATIBILITY-BINDING",
+      "source": "tests/development/ecosystem-assurance.test.mts",
+      "capability_id": "FEATURE-M12-G07-PREPARATION"
+    },
+    {
+      "id": "runtime:M12-G08-PREP-TYPED-WORKFLOW",
+      "suite": "runtime",
+      "runner_case_id": "M12-G08-PREP-TYPED-WORKFLOW",
+      "source": "tests/development/ecosystem-assurance.test.mts",
+      "capability_id": "FEATURE-M12-G08-PREPARATION"
+    },
+    {
+      "id": "runtime:M12-G08-PREP-PARITY-AND-PRIVILEGES",
+      "suite": "runtime",
+      "runner_case_id": "M12-G08-PREP-PARITY-AND-PRIVILEGES",
+      "source": "tests/development/ecosystem-assurance.test.mts",
+      "capability_id": "FEATURE-M12-G08-PREPARATION"
+    },
+    {
+      "id": "runtime:M12-G08-PREP-THREAT-BINDING",
+      "suite": "runtime",
+      "runner_case_id": "M12-G08-PREP-THREAT-BINDING",
+      "source": "tests/development/ecosystem-assurance.test.mts",
+      "capability_id": "FEATURE-M12-G08-PREPARATION"
+    },
+    {
+      "id": "runtime:M12-G08-PREP-EVIDENCE-MEMBERSHIP",
+      "suite": "runtime",
+      "runner_case_id": "M12-G08-PREP-EVIDENCE-MEMBERSHIP",
+      "source": "tests/development/ecosystem-assurance.test.mts",
+      "capability_id": "FEATURE-M12-G08-PREPARATION"
+    },
+    {
+      "id": "runtime:M12-G09-DEFERRED-NO-GO",
+      "suite": "runtime",
+      "runner_case_id": "M12-G09-DEFERRED-NO-GO",
+      "source": "tests/development/ecosystem-assurance.test.mts",
+      "capability_id": "FEATURE-M12-G09-DISABLED-GUARD"
+    },
+    {
+      "id": "runtime:M12-G09-DEFERRED-CANONICAL-BOUNDARY",
+      "suite": "runtime",
+      "runner_case_id": "M12-G09-DEFERRED-CANONICAL-BOUNDARY",
+      "source": "tests/development/ecosystem-assurance.test.mts",
+      "capability_id": "FEATURE-M12-G09-DISABLED-GUARD"
     }
   ],
   "protected_files": [

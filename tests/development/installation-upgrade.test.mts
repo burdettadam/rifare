@@ -46,8 +46,8 @@ test('CASE-M07-G10-01 clean install, seed and staged upgrade preserve the shared
   assert.equal(run.status, 0, run.stderr);
   const installed = JSON.parse(run.stdout);
   const before = withKernel(installed, k => {
-    assert.equal(k.db.prepare('SELECT count(*) AS n FROM commerce_migrations').get()!.n, 44);
-    assert.equal(k.db.prepare("SELECT count(*) AS n FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'").get()!.n, 254);
+    assert.equal(k.db.prepare('SELECT count(*) AS n FROM commerce_migrations').get()!.n, 46);
+    assert.equal(k.db.prepare("SELECT count(*) AS n FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'").get()!.n, 262);
     const observed = status(k);
     assert.equal(observed.order.number, 'ORD-1001');
     assert.deepEqual(observed.order.totals, { amount_minor: 12500, currency: 'USD' });
@@ -58,7 +58,7 @@ test('CASE-M07-G10-01 clean install, seed and staged upgrade preserve the shared
   assert.equal(digest(readFileSync(installed.database)), sourceHash);
   assert.equal(upgraded.mode, 'quarantine');
   assert.deepEqual(withKernel(upgraded, k => status(k).order), before);
-  assert.equal(inspectInstallation(current(upgraded)).migration_count, 44);
+  assert.equal(inspectInstallation(current(upgraded)).migration_count, 46);
   assert.equal(digest(readFileSync(join(upgraded.directory, 'artifact.bundle'))), artifact.bundle_sha256);
 });
 
@@ -180,7 +180,7 @@ test('M07-G10-TRANSACTIONAL-MIGRATION a real failed migration rolls back its pri
   try {
     db.exec('PRAGMA foreign_keys=ON; CREATE TABLE commerce_migrations(version TEXT PRIMARY KEY,sha256 TEXT NOT NULL) STRICT');
     const files = readdirSync(join(root, 'migrations/commerce')).filter(x => x.endsWith('.sql')).sort();
-    assert.equal(files.length, 44);
+    assert.equal(files.length, 46);
     for (const version of files.slice(0, 30)) {
       const bytes = readFileSync(join(root, 'migrations/commerce', version));
       db.exec(bytes.toString());
@@ -194,7 +194,7 @@ test('M07-G10-TRANSACTIONAL-MIGRATION a real failed migration rolls back its pri
     assert.equal(db.prepare("SELECT count(*) n FROM sqlite_master WHERE type='index' AND name='commerce_resolution_operations_order'").get()!.n, 1);
     db.exec('DROP TABLE commerce_resolution_operations_before_woo');
     const k = new CommerceKernel(db);
-    assert.equal(k.db.prepare('SELECT count(*) n FROM commerce_migrations').get()!.n, 44);
+    assert.equal(k.db.prepare('SELECT count(*) n FROM commerce_migrations').get()!.n, 46);
     assert.equal(k.db.prepare('PRAGMA foreign_key_check').all().length, 0);
   } finally { db.close(); }
 });

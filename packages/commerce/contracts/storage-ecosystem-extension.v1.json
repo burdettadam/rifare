@@ -1,0 +1,113 @@
+{
+  "version": 1,
+  "base_schema_digest": "2fbc8a0e548b1366becce7ed8eec0be2a3d80dff3ee40558a1f221737993cbfa",
+  "schema_digest": "1be56171e04e051e0402ac4ccb339b0f1c910a09f8f358001e0a3e62cb70ff3b",
+  "tables": [
+    {
+      "name": "commerce_agency_grants",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "revision",
+        "state",
+        "body",
+        "digest"
+      ],
+      "handling": "merchant_configuration_m12_revocable_canonical_agency_delegation"
+    },
+    {
+      "name": "commerce_extension_artifacts",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "extension_id",
+        "version",
+        "kind",
+        "state",
+        "body",
+        "digest"
+      ],
+      "handling": "merchant_configuration_m12_pinned_inert_artifact_identity"
+    },
+    {
+      "name": "commerce_extension_retirements",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "extension_id",
+        "state",
+        "body",
+        "digest"
+      ],
+      "handling": "merchant_configuration_m12_revocable_retirement_preparation"
+    },
+    {
+      "name": "commerce_extension_reviews",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "artifact_id",
+        "state",
+        "body",
+        "digest"
+      ],
+      "handling": "merchant_configuration_m12_revocable_current_extension_review"
+    },
+    {
+      "name": "commerce_extension_transitions",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "extension_id",
+        "state",
+        "body",
+        "digest"
+      ],
+      "handling": "merchant_configuration_m12_versioned_repreview_migration_history"
+    },
+    {
+      "name": "commerce_shared_templates",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "version",
+        "state",
+        "body",
+        "digest"
+      ],
+      "handling": "merchant_configuration_m12_immutable_presentation_only_template"
+    },
+    {
+      "name": "commerce_template_decisions",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "version",
+        "state",
+        "body",
+        "digest"
+      ],
+      "handling": "merchant_configuration_m12_versioned_acceptance_rollback_history"
+    },
+    {
+      "name": "commerce_template_offers",
+      "columns": [
+        "tenant_id",
+        "store_id",
+        "id",
+        "revision",
+        "state",
+        "body",
+        "digest"
+      ],
+      "handling": "merchant_configuration_m12_revocable_per_store_acceptance"
+    }
+  ]
+}

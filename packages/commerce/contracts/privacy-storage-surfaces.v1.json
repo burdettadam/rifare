@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "schema_digest": "2fbc8a0e548b1366becce7ed8eec0be2a3d80dff3ee40558a1f221737993cbfa",
+  "schema_digest": "1be56171e04e051e0402ac4ccb339b0f1c910a09f8f358001e0a3e62cb70ff3b",
   "runtime_roots": [
     "apps",
     "packages"
@@ -378,6 +378,18 @@
       "sha256": "af5944ee783f8679ad114e7b613f9783812714e7cff0b429194747ad850b6ae7"
     },
     {
+      "path": "packages/commerce/agency-access.mts",
+      "sha256": "3ce3e3c692bb47098f32583d39984d1295093a7df56c6154b1e082c477c445e0"
+    },
+    {
+      "path": "packages/commerce/agency-privacy.mts",
+      "sha256": "6ac44efb5b57efae6f14b9cc2677596a97454fc3a7926ca2d8cf1b696644448e"
+    },
+    {
+      "path": "packages/commerce/agency-reports.mts",
+      "sha256": "9b4ef6b829515d5e0926201216ad5b7cf278dd96c8ddd282a8c555286b4caffe"
+    },
+    {
       "path": "packages/commerce/authorization.mts",
       "sha256": "9811f1692f9dc57545b907fcf1c5982dc2cb61c5b9b54d3bd2e001823f87ec75"
     },
@@ -466,6 +478,10 @@
       "sha256": "dfd8a0f207e951bc9900e51160624dfd6387c68c5c74cdb78a7e8234fb949a20"
     },
     {
+      "path": "packages/commerce/ecosystem-privacy.mts",
+      "sha256": "b06ac270074930f34c61dcf291156f1579bea7a643665499bbcbc1d2dbb83585"
+    },
+    {
       "path": "packages/commerce/email-action-links.mts",
       "sha256": "4e1fa1c5ff3254dce833f7998ed72d56474da61a32641e12f12db7c0079b046f"
     },
@@ -504,6 +520,22 @@
     {
       "path": "packages/commerce/extended-services-privacy.mts",
       "sha256": "a7308397d4bdc4f6516f9fa012d0f4f81c101d6f19b98712209998ef5dbb39f9"
+    },
+    {
+      "path": "packages/commerce/extension-artifacts.mts",
+      "sha256": "927520aff8a7c14f4c137c88dbaa2fa523fc7917598d403cd3d1a23b175462b4"
+    },
+    {
+      "path": "packages/commerce/extension-compatibility.mts",
+      "sha256": "46d4ca3bd300eb1239e0f521240b21ae44dcea6a5f90ac95c4dce65a7f2cf170"
+    },
+    {
+      "path": "packages/commerce/extension-lifecycle.mts",
+      "sha256": "4ffa483dd0ec50d1c8decfcd434f394cf4529900d418adeee0d7dda6817beb96"
+    },
+    {
+      "path": "packages/commerce/extension-privacy.mts",
+      "sha256": "6bf654115c5a1b43ce08b520d733fee12390840e71a6a63a3847dfda5f27db0c"
     },
     {
       "path": "packages/commerce/forecast-backtests.mts",
@@ -611,7 +643,7 @@
     },
     {
       "path": "packages/commerce/merchant-portability.mts",
-      "sha256": "99ff12959d191db7a29dad4c231e76bae1dfcb970fad00ebe7542b6da72cadfd"
+      "sha256": "29675f5458844977ec53b6d3c9fdc948f2c581dc3b99617329bd9512531ed5f5"
     },
     {
       "path": "packages/commerce/migration-cutover.mts",
@@ -707,7 +739,7 @@
     },
     {
       "path": "packages/commerce/privacy-lifecycle.mts",
-      "sha256": "15f2d9737e5fddd885778ba33a8b774a9059725b5b6f0e427846aea9df4502c5"
+      "sha256": "f6f9e808cf89dfaf571e668100a974f78b0475495fe38e77816dfa21a1e9e8c3"
     },
     {
       "path": "packages/commerce/procurement-approvals.mts",
@@ -887,11 +919,15 @@
     },
     {
       "path": "packages/commerce/safe-recovery.mts",
-      "sha256": "d02c2638d2061e22c7729a5afe53e2522ec77819c513ab1f023e1c612fea1aee"
+      "sha256": "6fbb8c78b31e853c00d5416872ba17ffc34ab780a58e388516ec80a7bf134717"
     },
     {
       "path": "packages/commerce/secrets.mts",
       "sha256": "a777cfb21160f37c1d1470ec6d9cbe8af90e9b8ce780d1566e207b9beaad177c"
+    },
+    {
+      "path": "packages/commerce/shared-templates.mts",
+      "sha256": "405e501d1142cbac7ad9b59f85e310ecb5a171069cb98cb1dfb875798dbd5616"
     },
     {
       "path": "packages/commerce/shipping-batch-labels.mts",
@@ -1122,6 +1158,14 @@
       "sha256": "7a258ac13532f35cf2e83405897f754046452b0e73ecb8bc73f5430ebda6d7cb"
     },
     {
+      "path": "packages/security/code-execution-decision.mts",
+      "sha256": "ef284c8eccf916c5828d920a00d0326105cb10b8ea89cd9190e386c12e45b08a"
+    },
+    {
+      "path": "packages/security/extension-qualification.mts",
+      "sha256": "7c89e86be6324d80edf88ed3d452d88173fe3f6b5eef1092feac2e2067a18793"
+    },
+    {
       "path": "packages/security/release-audit.mts",
       "sha256": "0eb46e7f97f74bfc1734938cdea632a1037bb7fa13f7ad63f469d8d9bebb5c2f"
     },
@@ -1321,12 +1365,13 @@
         "packages/commerce/procurement-inventory-privacy.mts",
         "packages/commerce/demand-history.mts",
         "packages/commerce/forecast-backtests.mts",
-        "packages/commerce/inventory-forecasts.mts"
+        "packages/commerce/inventory-forecasts.mts",
+        "packages/commerce/agency-reports.mts"
       ],
-      "export": "Subject cost/completion and return assistance records export; mixed-customer metric documents expose only owned members. Other aggregate and unbound configuration text requires scope review. Project only the subject assignment, exposure and native observations plus relevant seed-free experiment metadata. M11 aggregate source snapshots and forecasts contain no order or customer data.",
-      "erasure": "Support metrics recheck case access when rebuilt; erased members remain unavailable in the frozen denominator. Insight drafts revoke. Bound prevention/risk bodies and customer IDs redact. Remove customer text and outcomes while retaining frozen assigned-arm denominators; missing/erased results remain unavailable. Rebuild explicit nested field allowlists even for empty resource lists and hash-only erasure.",
-      "retention": "The support_documents table also carries merchant configuration, qualification and migration/import control. Do not bulk-delete it. Frozen denominator and minimized financial facts remain; no legal retention duration is inferred. Experiment counts and immutable source/prompt/catalog/model digests are audit, not causal-lift or placement guarantees. Keep frozen observations, declared cohorts, metrics, uncertainty limits and original digests when facts are unchanged.",
-      "observation_required": "Rebuild the actual metric report after erasure and current-checkpoint import; inspect unbound document data before claiming subject completeness. Observe native event deduplication, cost coverage, erased unavailable units and catalog observation copies. Observe source availability cutoffs and retained zero, missing and censored demand denominators."
+      "export": "Subject cost/completion and return assistance records export; mixed-customer metric documents expose only owned members. Other aggregate and unbound configuration text requires scope review. Project only the subject assignment, exposure and native observations plus relevant seed-free experiment metadata. M11 aggregate source snapshots and forecasts contain no order or customer data. Agency aggregates allow only customer-free metric counts and explicit denominators.",
+      "erasure": "Support metrics recheck case access when rebuilt; erased members remain unavailable in the frozen denominator. Insight drafts revoke. Bound prevention/risk bodies and customer IDs redact. Remove customer text and outcomes while retaining frozen assigned-arm denominators; missing/erased results remain unavailable. Rebuild explicit nested field allowlists even for empty resource lists and hash-only erasure. Every refresh recomputes current store authorization and the canonical subject-minimized metrics.",
+      "retention": "The support_documents table also carries merchant configuration, qualification and migration/import control. Do not bulk-delete it. Frozen denominator and minimized financial facts remain; no legal retention duration is inferred. Experiment counts and immutable source/prompt/catalog/model digests are audit, not causal-lift or placement guarantees. Keep frozen observations, declared cohorts, metrics, uncertainty limits and original digests when facts are unchanged. No agency aggregate cache is persisted.",
+      "observation_required": "Rebuild the actual metric report after erasure and current-checkpoint import; inspect unbound document data before claiming subject completeness. Observe native event deduplication, cost coverage, erased unavailable units and catalog observation copies. Observe source availability cutoffs and retained zero, missing and censored demand denominators. Verify exact known-answer counts, denied drilldown and immediate exclusion after store revocation."
     },
     {
       "id": "integration_replicas",
@@ -1369,6 +1414,7 @@
       "control": "local_sqlite",
       "tables": [
         "commerce_action_readiness",
+        "commerce_agency_grants",
         "commerce_audit",
         "commerce_bom_versions",
         "commerce_catalog_approvals",
@@ -1387,6 +1433,8 @@
         "commerce_exchange_settings",
         "commerce_execution_settings",
         "commerce_execution_stops",
+        "commerce_extension_artifacts",
+        "commerce_extension_reviews",
         "commerce_forecast_reviews",
         "commerce_fulfillment_settings",
         "commerce_gift_challenges",
@@ -1423,6 +1471,7 @@
         "commerce_secrets",
         "commerce_security_events",
         "commerce_sessions",
+        "commerce_shared_templates",
         "commerce_shipping_label_approvals",
         "commerce_shopify_connections",
         "commerce_simulator",
@@ -1437,6 +1486,7 @@
         "commerce_stock_approvals",
         "commerce_stores",
         "commerce_support_ownership",
+        "commerce_template_offers",
         "commerce_trial_consents",
         "commerce_trial_term_approvals",
         "commerce_trial_terms",
@@ -1476,12 +1526,20 @@
         "packages/commerce/inventory-forecasts.mts",
         "packages/commerce/procurement-approvals.mts",
         "packages/commerce/bill-of-materials.mts",
-        "packages/commerce/production-orders.mts"
+        "packages/commerce/production-orders.mts",
+        "packages/commerce/ecosystem-privacy.mts",
+        "packages/commerce/agency-privacy.mts",
+        "packages/commerce/extension-privacy.mts",
+        "packages/commerce/agency-access.mts",
+        "packages/commerce/shared-templates.mts",
+        "packages/commerce/extension-artifacts.mts",
+        "packages/commerce/extension-lifecycle.mts",
+        "packages/security/code-execution-decision.mts"
       ],
-      "export": "Customer export excludes credentials, authentication tokens and unbound merchant/staff configuration. Subject-linked label approvals export as resource audit without credential or session token hashes. Inventory field ownership and transfer approvals export only through subject-resource mappings; approvals do not expose authentication tokens. Exports omit bearer/session/link hashes and contain only relevant merchant configurations. Include only relevant M10 configuration and omit replay/session/proof credentials. No M11 forecast review, supplier/budget control or stock grant is a customer export credential.",
-      "erasure": "Invalidate customer proof/session and gift grants; uninstall revokes/envelope-clears vault entries, routes, credentials, readiness and store access. Subject label approvals are revoked and their private bodies minimized; merchant import and snapshot restore also revoke these approvals before any diagnostic access. Transfer approvals are revoked and minimized on subject erasure. Merchant import and snapshot restore revoke transfer approvals and replay minimization for suppressed subjects. Field ownership keeps the minimum SKU, location, field and original source identity required to avoid a competing physical owner. Revoke upsell/catalog/campaign/email/optional authority; remove customer consent payloads and active link tokens. Revoke affected warranty/dispute approvals, partner confirmations and trial consent; minimize private proof bodies. Minimization of malformed business records invalidates affected authority.",
-      "retention": "Staff/security/configuration and source provenance audits persist. Unbound arbitrary configuration text needs operator review; no blanket customer-data-free claim. A preserved field-owner row is quantitative stock control, not renewed approval for a transfer or erased journey. Restore and uninstall disable optional configurations and quality, pause campaigns and cancel recovery; structured audit is not permission. Import, restore and uninstall disable partner readiness and revoke approval/consent even without erasure tombstones. Import, restore and uninstall revoke forecast, procurement and stock approvals even without customer tombstones.",
-      "observation_required": "Check exported bytes exclude bearer/credential material and actual uninstall disables store access and clears local vault envelopes. Observe all current new configurations, consents, approvals, scope bindings and expiration paths. Observe current independent authority, exact source/account/configuration pins, expiration, outage and final source callbacks. Observe distinct drafting/review identities, current permissions, budgets, versions, expiry and final source guards."
+      "export": "Customer export excludes credentials, authentication tokens and unbound merchant/staff configuration. Subject-linked label approvals export as resource audit without credential or session token hashes. Inventory field ownership and transfer approvals export only through subject-resource mappings; approvals do not expose authentication tokens. Exports omit bearer/session/link hashes and contain only relevant merchant configurations. Include only relevant M10 configuration and omit replay/session/proof credentials. No M11 forecast review, supplier/budget control or stock grant is a customer export credential. M12 agency grants, presentation templates and extension reviews contain no customer export records.",
+      "erasure": "Invalidate customer proof/session and gift grants; uninstall revokes/envelope-clears vault entries, routes, credentials, readiness and store access. Subject label approvals are revoked and their private bodies minimized; merchant import and snapshot restore also revoke these approvals before any diagnostic access. Transfer approvals are revoked and minimized on subject erasure. Merchant import and snapshot restore revoke transfer approvals and replay minimization for suppressed subjects. Field ownership keeps the minimum SKU, location, field and original source identity required to avoid a competing physical owner. Revoke upsell/catalog/campaign/email/optional authority; remove customer consent payloads and active link tokens. Revoke affected warranty/dispute approvals, partner confirmations and trial consent; minimize private proof bodies. Minimization of malformed business records invalidates affected authority. Reapply nested typed allowlists, including malformed scalar containers; invalidate affected authority on minimization.",
+      "retention": "Staff/security/configuration and source provenance audits persist. Unbound arbitrary configuration text needs operator review; no blanket customer-data-free claim. A preserved field-owner row is quantitative stock control, not renewed approval for a transfer or erased journey. Restore and uninstall disable optional configurations and quality, pause campaigns and cancel recovery; structured audit is not permission. Import, restore and uninstall disable partner readiness and revoke approval/consent even without erasure tombstones. Import, restore and uninstall revoke forecast, procurement and stock approvals even without customer tombstones. Import, restore and uninstall revoke new authority even with no subject tombstones; archived case semantics remain.",
+      "observation_required": "Check exported bytes exclude bearer/credential material and actual uninstall disables store access and clears local vault envelopes. Observe all current new configurations, consents, approvals, scope bindings and expiration paths. Observe current independent authority, exact source/account/configuration pins, expiration, outage and final source callbacks. Observe distinct drafting/review identities, current permissions, budgets, versions, expiry and final source guards. Observe canonical per-store permissions/sessions, independent review, digest/revision bindings and disabled code execution."
     },
     {
       "id": "operation_audit",
@@ -1513,6 +1571,8 @@
         "commerce_exchange_lineage_imports",
         "commerce_exchange_lineage_nodes",
         "commerce_exchange_quotes",
+        "commerce_extension_retirements",
+        "commerce_extension_transitions",
         "commerce_fulfillment_observations",
         "commerce_fulfillment_operations",
         "commerce_fulfillment_quotes",
@@ -1581,6 +1641,7 @@
         "commerce_stock_operations",
         "commerce_supplier_receipt_events",
         "commerce_support_events",
+        "commerce_template_decisions",
         "commerce_trial_events",
         "commerce_warranty_entitlements"
       ],
@@ -1614,12 +1675,17 @@
         "packages/commerce/procurement-inventory-privacy.mts",
         "packages/commerce/procurement-core.mts",
         "packages/commerce/procurement-inventory-core.mts",
-        "packages/commerce/supplier-returns.mts"
+        "packages/commerce/supplier-returns.mts",
+        "packages/commerce/ecosystem-privacy.mts",
+        "packages/commerce/agency-privacy.mts",
+        "packages/commerce/extension-privacy.mts",
+        "packages/commerce/shared-templates.mts",
+        "packages/commerce/extension-lifecycle.mts"
       ],
-      "export": "Scoped native financial/physical/return/edit history, receipts and associated subject payloads export through their existing projections. Outbound label purchase/void/refund records and carrier events export only for the subject resources. Subject inventory snapshots, append-linked movements, discrepancies, transfers and original operations export by tenant/store/resource while physical balances remain global per SKU and location. Export only original subject effects or relevant merchant template operations. M10 operation and source-observation copies remain subject scoped with original identities. M11 supplier and stock operation audit is scoped merchant data, outside unrelated customer exports.",
-      "erasure": "Redact privacy-bearing case/quote/plan/input bodies and delete receipt notes while retaining command/receipt/effect identities; subject reads remain guarded. Outbound label bodies are integrity-checked and reconstructed from an allowlist even when marked redacted; command, address, parcel, tracking and arbitrary private fields are removed. Inventory bodies are reconstructed from explicit allowlists even if already marked redacted; private journey, operator, evidence and arbitrary copied fields are removed. Snapshot quantitative cores and movement delta/chain cores remain so erasing one journey cannot silently remove shared stock. Minimize private command/output bodies while retaining original native operation IDs and uncertain states. Retain minimal original uncertain submission/authorization/capture identity while removing customer and evidence copies. Preserve original unknown operation/source IDs and exact obligation amounts while stripping unexpected private copies.",
-      "retention": "Monetary amounts, currencies, original native identity and audit digests must not be deleted or replayed. Arbitrary external source identifiers are not certified anonymous. Original purchase/source/command identity, exact monetary amount and currency, native charge/label/refund references and separate void/refund states remain minimized and cannot authorize replay. Original source/effect identities, covered movement IDs, quantitative digests, stock deltas, chain links, transfer quantities and unknown states remain as minimized audit and cannot authorize replay. An effect erased before its movement was imported can leave shared stock unresolved; repair under privacy constraints remains an operator duty. Erasure and restoration never rekey or resend unknown cart, catalog, campaign, cancellation or optional processor effects. Submitted, accepted, decided, paid and recovered remain distinct; erasure cannot rekey or resolve an unknown effect. Sent, acknowledged, received, cancelled, credited, invoiced and paid remain distinct; privacy does not settle or replay an unknown effect.",
-      "observation_required": "Verify representative retained receipts and subject access denial; qualify actual legal retention and source identifier policy separately. Inspect actual populated movement/snapshot/transfer rows, shared balances after subject minimization, revoked approvals and original-ID unknown outcomes; a stock checksum alone does not prove native physical movement. Observe original-source lookup and eligible deletion ledgers, without claiming physical deletion. Observe canonical original operations and separate native source ledgers; fee, custody and claim states do not prove external qualification. Observe budget reservations, purchase cancellations, partial receipts, additive corrections and component/output conservation."
+      "export": "Scoped native financial/physical/return/edit history, receipts and associated subject payloads export through their existing projections. Outbound label purchase/void/refund records and carrier events export only for the subject resources. Subject inventory snapshots, append-linked movements, discrepancies, transfers and original operations export by tenant/store/resource while physical balances remain global per SKU and location. Export only original subject effects or relevant merchant template operations. M10 operation and source-observation copies remain subject scoped with original identities. M11 supplier and stock operation audit is scoped merchant data, outside unrelated customer exports. M12 template decisions, extension transitions and retirement proposals are merchant configuration history, outside unrelated customer export.",
+      "erasure": "Redact privacy-bearing case/quote/plan/input bodies and delete receipt notes while retaining command/receipt/effect identities; subject reads remain guarded. Outbound label bodies are integrity-checked and reconstructed from an allowlist even when marked redacted; command, address, parcel, tracking and arbitrary private fields are removed. Inventory bodies are reconstructed from explicit allowlists even if already marked redacted; private journey, operator, evidence and arbitrary copied fields are removed. Snapshot quantitative cores and movement delta/chain cores remain so erasing one journey cannot silently remove shared stock. Minimize private command/output bodies while retaining original native operation IDs and uncertain states. Retain minimal original uncertain submission/authorization/capture identity while removing customer and evidence copies. Preserve original unknown operation/source IDs and exact obligation amounts while stripping unexpected private copies. Keep original scoped record identities while stripping arbitrary restored private copies.",
+      "retention": "Monetary amounts, currencies, original native identity and audit digests must not be deleted or replayed. Arbitrary external source identifiers are not certified anonymous. Original purchase/source/command identity, exact monetary amount and currency, native charge/label/refund references and separate void/refund states remain minimized and cannot authorize replay. Original source/effect identities, covered movement IDs, quantitative digests, stock deltas, chain links, transfer quantities and unknown states remain as minimized audit and cannot authorize replay. An effect erased before its movement was imported can leave shared stock unresolved; repair under privacy constraints remains an operator duty. Erasure and restoration never rekey or resend unknown cart, catalog, campaign, cancellation or optional processor effects. Submitted, accepted, decided, paid and recovered remain distinct; erasure cannot rekey or resolve an unknown effect. Sent, acknowledged, received, cancelled, credited, invoiced and paid remain distinct; privacy does not settle or replay an unknown effect. Case/approval/operation pins and unknown native identities survive migration and rollback; recovery does not replay effects.",
+      "observation_required": "Verify representative retained receipts and subject access denial; qualify actual legal retention and source identifier policy separately. Inspect actual populated movement/snapshot/transfer rows, shared balances after subject minimization, revoked approvals and original-ID unknown outcomes; a stock checksum alone does not prove native physical movement. Observe original-source lookup and eligible deletion ledgers, without claiming physical deletion. Observe canonical original operations and separate native source ledgers; fee, custody and claim states do not prove external qualification. Observe budget reservations, purchase cancellations, partial receipts, additive corrections and component/output conservation. Inspect real profile revisions, canonical skill approval/release references, migration decisions and per-store rollback."
     },
     {
       "id": "privacy_and_restore_controls",
@@ -1647,12 +1713,15 @@
         "packages/commerce/inventory-planning-privacy.mts",
         "packages/commerce/forecast-privacy.mts",
         "packages/commerce/procurement-privacy.mts",
-        "packages/commerce/procurement-inventory-privacy.mts"
+        "packages/commerce/procurement-inventory-privacy.mts",
+        "packages/commerce/ecosystem-privacy.mts",
+        "packages/commerce/agency-privacy.mts",
+        "packages/commerce/extension-privacy.mts"
       ],
-      "export": "Merchant transfer includes scoped suppression controls; ordinary subject export does not disclose other subject hashes or installation-wide recovery rows. Canonical growth export obeys the same privacy authority and scope. Canonical M10 export uses the existing privacy authority and merchant scope. Canonical M11 handling reuses existing tenant/store privacy authority.",
-      "erasure": "Retain subject/resource tombstones. Restore/import requires a separately retained current checkpoint, applies erasure before exposure and leaves execution quarantined. Current suppression also minimizes packing/shipping payloads and revokes label approvals while retaining original monetary and package identities. Current suppression preserves the minimum global inventory cores, minimizes warehouse event histories and revokes transfer approvals; quarantine blocks new observation imports and source effect dispatch. Apply growth allowlists even for hash-only and already-redacted imported records. Apply each M10 allowlist for hash-only and already-redacted suppression replay. Every M11 area receives canonical erasure including empty resource lists and repeated hash-only requests.",
-      "retention": "Suppression hashes are linkable control data, not claimed anonymous; current checkpoint freshness and delivery remain explicit caller duties. All growth controls are revoked before restored data can be exposed; quarantine remains local and no source effect is performed. Revoke all new authority before restored data is exposed; perform no external or source effect. All new approvals are revoked before restored data can execute effects, independently of erasure tombstones.",
-      "observation_required": "Use one old snapshot with a later independently retained suppression checkpoint; verify no restored active subject payloads or analytics exposure. Observe canonical erasure, merchant import, snapshot restore and uninstall calls. Observe canonical erasure, merchant import, snapshot recovery and uninstall calls. Observe canonical subject export/erase, merchant import, recovery and uninstall wiring."
+      "export": "Merchant transfer includes scoped suppression controls; ordinary subject export does not disclose other subject hashes or installation-wide recovery rows. Canonical growth export obeys the same privacy authority and scope. Canonical M10 export uses the existing privacy authority and merchant scope. Canonical M11 handling reuses existing tenant/store privacy authority. Canonical M12 handling shares the existing tenant/store privacy authority.",
+      "erasure": "Retain subject/resource tombstones. Restore/import requires a separately retained current checkpoint, applies erasure before exposure and leaves execution quarantined. Current suppression also minimizes packing/shipping payloads and revokes label approvals while retaining original monetary and package identities. Current suppression preserves the minimum global inventory cores, minimizes warehouse event histories and revokes transfer approvals; quarantine blocks new observation imports and source effect dispatch. Apply growth allowlists even for hash-only and already-redacted imported records. Apply each M10 allowlist for hash-only and already-redacted suppression replay. Every M11 area receives canonical erasure including empty resource lists and repeated hash-only requests. Every new table receives canonical erasure and repeated empty-resource hash-only handling.",
+      "retention": "Suppression hashes are linkable control data, not claimed anonymous; current checkpoint freshness and delivery remain explicit caller duties. All growth controls are revoked before restored data can be exposed; quarantine remains local and no source effect is performed. Revoke all new authority before restored data is exposed; perform no external or source effect. All new approvals are revoked before restored data can execute effects, independently of erasure tombstones. Revoke restored agency/template/extension authority without requiring a customer tombstone.",
+      "observation_required": "Use one old snapshot with a later independently retained suppression checkpoint; verify no restored active subject payloads or analytics exposure. Observe canonical erasure, merchant import, snapshot restore and uninstall calls. Observe canonical erasure, merchant import, snapshot recovery and uninstall calls. Observe canonical subject export/erase, merchant import, recovery and uninstall wiring. Observe canonical export, erase, import, recovery and uninstall composition for all eight new tables."
     },
     {
       "id": "provider_copies",
@@ -1723,12 +1792,17 @@
         "packages/commerce/inventory-planning-privacy.mts",
         "packages/commerce/forecast-privacy.mts",
         "packages/commerce/procurement-privacy.mts",
-        "packages/commerce/procurement-inventory-privacy.mts"
+        "packages/commerce/procurement-inventory-privacy.mts",
+        "packages/commerce/ecosystem-privacy.mts",
+        "packages/commerce/agency-privacy.mts",
+        "packages/commerce/extension-privacy.mts",
+        "packages/commerce/extension-artifacts.mts",
+        "packages/security/extension-qualification.mts"
       ],
-      "export": "Previously returned response bodies, clipboard, screenshots and tabs are caller copies. Ephemeral carrier quote snapshots and locale-formatted display values are also returned caller/process/browser copies. Returned packing scans/status, label and carrier receipts, manifest events and warehouse snapshots are also caller/process copies whose previously returned bytes cannot be recalled by local erasure. Warehouse return timelines, stock histories, transfer receipts and cycle reconciliation results also remain caller/process copies after they have been returned. Caller-owned growth previews and media are outside automatic canonical export. Returned M10 proposals, evidence drafts and consent previews remain caller-owned copies. M11 planning, PO, receipt and production previews returned to callers are separate copies.",
-      "erasure": "Revocation blocks later server reads/completion; it cannot recall bytes already in an arbitrary process, plugin, scanner or browser. Callers discard copied previews, media, generated output and links after withdrawal/erasure. Callers discard copied proofs, evidence, terms and commands after withdrawal or erasure. Callers discard obsolete copied source facts and approval previews.",
-      "retention": "No general heap, browser history, swap, core dump or log deletion is implemented. Canonical minimization does not erase caller memory. Canonical minimization cannot erase caller memory. Canonical changes cannot erase arbitrary caller memory.",
-      "observation_required": "Inventory actual deployed processes/plugins/logging and browser storage; observe their cleanup and retention separately. Source pins only flag code drift. Observe caller-retained growth drafts, media, templates, tokens and model outputs. Observe caller-held warranty/dispute packets and trial/partner previews. Observe caller-held quantity, supplier term, forecast and source command snapshots."
+      "export": "Previously returned response bodies, clipboard, screenshots and tabs are caller copies. Ephemeral carrier quote snapshots and locale-formatted display values are also returned caller/process/browser copies. Returned packing scans/status, label and carrier receipts, manifest events and warehouse snapshots are also caller/process copies whose previously returned bytes cannot be recalled by local erasure. Warehouse return timelines, stock histories, transfer receipts and cycle reconciliation results also remain caller/process copies after they have been returned. Caller-owned growth previews and media are outside automatic canonical export. Returned M10 proposals, evidence drafts and consent previews remain caller-owned copies. M11 planning, PO, receipt and production previews returned to callers are separate copies. M12 mirrored bytes, templates, aggregate results and draft qualification/decision packets held by callers are separate copies.",
+      "erasure": "Revocation blocks later server reads/completion; it cannot recall bytes already in an arbitrary process, plugin, scanner or browser. Callers discard copied previews, media, generated output and links after withdrawal/erasure. Callers discard copied proofs, evidence, terms and commands after withdrawal or erasure. Callers discard obsolete copied source facts and approval previews. Callers discard obsolete artifact, configuration and evidence snapshots.",
+      "retention": "No general heap, browser history, swap, core dump or log deletion is implemented. Canonical minimization does not erase caller memory. Canonical minimization cannot erase caller memory. Canonical changes cannot erase arbitrary caller memory. Canonical erasure cannot remove arbitrary caller memory or independently stored mirror files.",
+      "observation_required": "Inventory actual deployed processes/plugins/logging and browser storage; observe their cleanup and retention separately. Source pins only flag code drift. Observe caller-retained growth drafts, media, templates, tokens and model outputs. Observe caller-held warranty/dispute packets and trial/partner previews. Observe caller-held quantity, supplier term, forecast and source command snapshots. Inspect caller copies and distinguish diagnostic contract validation from independent external or human qualification."
     },
     {
       "id": "caller_export_artifacts",
@@ -1738,12 +1812,16 @@
         "packages/commerce/privacy-lifecycle.mts",
         "packages/commerce/merchant-portability.mts",
         "packages/pilot/protocol.mts",
-        "packages/pilot/protocol.py"
+        "packages/pilot/protocol.py",
+        "packages/commerce/ecosystem-privacy.mts",
+        "packages/commerce/agency-privacy.mts",
+        "packages/commerce/extension-privacy.mts",
+        "packages/commerce/extension-lifecycle.mts"
       ],
-      "export": "Customer export and owner transfer return scoped caller-owned data; transfer excludes vault envelopes and secrets. Pilot enrollment, hash-linked event batches, evidence references and projected reports are caller-owned artifacts and may contain personal identifiers. Packing/shipping subject projections and fixture demo output remain operator-owned copies with the same separate cleanup duties. Inventory/warehouse subject exports and fixture demo outputs remain operator-owned copies whose previous bytes are not recalled by commerce erasure.",
-      "erasure": "Exported JSON, downloaded media and derived spreadsheets remain outside the running kernel. Commerce erasure does not discover or rewrite separate pilot input files, protocol journals, reports or referenced evidence.",
-      "retention": "An old export remains private even when the live store is erased. No filesystem scan discovers every copy. Pilot artifact retention and deletion apply to the operator-controlled originals and copies; a hash chain does not establish a retention period or consent.",
-      "observation_required": "Identify controlled export destinations, permissions, copies and retention; record actual deletion or retention decision. Record actual pilot artifact destinations, owner-only permissions, all copies and the authorized whole-artifact deletion or retention decision; current synthetic artifacts do not authorize real collection."
+      "export": "Customer export and owner transfer return scoped caller-owned data; transfer excludes vault envelopes and secrets. Pilot enrollment, hash-linked event batches, evidence references and projected reports are caller-owned artifacts and may contain personal identifiers. Packing/shipping subject projections and fixture demo output remain operator-owned copies with the same separate cleanup duties. Inventory/warehouse subject exports and fixture demo outputs remain operator-owned copies whose previous bytes are not recalled by commerce erasure. Merchant artifact/version export remains an explicit caller-owned copy; no customer records are pooled.",
+      "erasure": "Exported JSON, downloaded media and derived spreadsheets remain outside the running kernel. Commerce erasure does not discover or rewrite separate pilot input files, protocol journals, reports or referenced evidence. The operator owns cleanup of separately exported artifact and proposal files.",
+      "retention": "An old export remains private even when the live store is erased. No filesystem scan discovers every copy. Pilot artifact retention and deletion apply to the operator-controlled originals and copies; a hash chain does not establish a retention period or consent. Retirement must retain export/readability and reviewed version/migration obligations.",
+      "observation_required": "Identify controlled export destinations, permissions, copies and retention; record actual deletion or retention decision. Record actual pilot artifact destinations, owner-only permissions, all copies and the authorized whole-artifact deletion or retention decision; current synthetic artifacts do not authorize real collection. Observe pinned retained artifact identity and exact impacted contract, fixture, test and store/version references."
     },
     {
       "id": "recovery_files_and_database_pages",

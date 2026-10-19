@@ -4991,7 +4991,7 @@
     },
     {
       "path": "packages/commerce/privacy-lifecycle.mts",
-      "sha256": "15f2d9737e5fddd885778ba33a8b774a9059725b5b6f0e427846aea9df4502c5"
+      "sha256": "f6f9e808cf89dfaf571e668100a974f78b0475495fe38e77816dfa21a1e9e8c3"
     },
     {
       "path": "packages/commerce/profile-editor.mts",
@@ -5127,7 +5127,7 @@
     },
     {
       "path": "packages/commerce/safe-recovery.mts",
-      "sha256": "d02c2638d2061e22c7729a5afe53e2522ec77819c513ab1f023e1c612fea1aee"
+      "sha256": "6fbb8c78b31e853c00d5416872ba17ffc34ab780a58e388516ec80a7bf134717"
     },
     {
       "path": "packages/commerce/secrets.mts",
@@ -5739,7 +5739,7 @@
     },
     {
       "path": "packages/commerce/merchant-portability.mts",
-      "sha256": "99ff12959d191db7a29dad4c231e76bae1dfcb970fad00ebe7542b6da72cadfd"
+      "sha256": "29675f5458844977ec53b6d3c9fdc948f2c581dc3b99617329bd9512531ed5f5"
     },
     {
       "path": "packages/commerce/contracts/carrier-quotes.v1.json",
@@ -6492,6 +6492,142 @@
     {
       "path": "tests/fixtures/procurement/known-answer.v1.json",
       "sha256": "ca1de7b3f5dee3499d492694e8c733ad94f5b40f80d89cb4a6c6d8d93f4639be"
+    },
+    {
+      "path": "migrations/commerce/045_agencies.sql",
+      "sha256": "c7cd0fa82dad0365cbb13a1c86a467e1f61318115d0bf79e641dfef444ddf569"
+    },
+    {
+      "path": "migrations/commerce/046_ecosystem_extensions.sql",
+      "sha256": "91057aa01f8d33e31f7410a1259918b8d758020b67719ee89d888b0aecdeaa14"
+    },
+    {
+      "path": "packages/commerce/agency-access.mts",
+      "sha256": "3ce3e3c692bb47098f32583d39984d1295093a7df56c6154b1e082c477c445e0"
+    },
+    {
+      "path": "packages/commerce/agency-privacy.mts",
+      "sha256": "6ac44efb5b57efae6f14b9cc2677596a97454fc3a7926ca2d8cf1b696644448e"
+    },
+    {
+      "path": "packages/commerce/agency-reports.mts",
+      "sha256": "9b4ef6b829515d5e0926201216ad5b7cf278dd96c8ddd282a8c555286b4caffe"
+    },
+    {
+      "path": "packages/commerce/contracts/agency-access.v1.json",
+      "sha256": "105414e273f3107e574bf9c7b62bb581ecc35f9775f4a6fc32a6db65a6c6d1e2"
+    },
+    {
+      "path": "packages/commerce/contracts/agency-reports.v1.json",
+      "sha256": "8ffbe35f33563f0661de0a9d5c838b215e012b03044633a90de0b475f45c9ead"
+    },
+    {
+      "path": "packages/commerce/contracts/extensions.v1.json",
+      "sha256": "87b4dd1569cadb28faba7e2b0cc4a87db7f9ee82cdbe1d275e3295979f02c348"
+    },
+    {
+      "path": "packages/commerce/contracts/shared-templates.v1.json",
+      "sha256": "72cf97223d0c2213e2454057d7099a107c5b5b86a9f4b94d7e6ebc6d2d585cb4"
+    },
+    {
+      "path": "packages/commerce/ecosystem-privacy.mts",
+      "sha256": "b06ac270074930f34c61dcf291156f1579bea7a643665499bbcbc1d2dbb83585"
+    },
+    {
+      "path": "packages/commerce/extension-artifacts.mts",
+      "sha256": "927520aff8a7c14f4c137c88dbaa2fa523fc7917598d403cd3d1a23b175462b4"
+    },
+    {
+      "path": "packages/commerce/extension-compatibility.mts",
+      "sha256": "46d4ca3bd300eb1239e0f521240b21ae44dcea6a5f90ac95c4dce65a7f2cf170"
+    },
+    {
+      "path": "packages/commerce/extension-lifecycle.mts",
+      "sha256": "4ffa483dd0ec50d1c8decfcd434f394cf4529900d418adeee0d7dda6817beb96"
+    },
+    {
+      "path": "packages/commerce/extension-privacy.mts",
+      "sha256": "6bf654115c5a1b43ce08b520d733fee12390840e71a6a63a3847dfda5f27db0c"
+    },
+    {
+      "path": "packages/commerce/shared-templates.mts",
+      "sha256": "405e501d1142cbac7ad9b59f85e310ecb5a171069cb98cb1dfb875798dbd5616"
+    },
+    {
+      "path": "packages/security/code-execution-decision.mts",
+      "sha256": "ef284c8eccf916c5828d920a00d0326105cb10b8ea89cd9190e386c12e45b08a"
+    },
+    {
+      "path": "packages/security/contracts/code-execution-decision.v1.json",
+      "sha256": "cd440e09e84bb3d3252d119400526c0f7acd205b43d0d1597cfae660c083e542"
+    },
+    {
+      "path": "packages/security/contracts/extension-qualification.v1.json",
+      "sha256": "39487019e395dc04459072b48a6279f115977854ffebab2ece32fe402296f433"
+    },
+    {
+      "path": "packages/security/extension-qualification.mts",
+      "sha256": "7c89e86be6324d80edf88ed3d452d88173fe3f6b5eef1092feac2e2067a18793"
+    },
+    {
+      "path": "tests/development/agency-operations-helpers.mts",
+      "sha256": "360b896a709922fba97148a10e247b9d4acb57f889de1386804ace959e31af44"
+    },
+    {
+      "path": "tests/development/agency-operations.test.mts",
+      "sha256": "d6b7d6baa4d546c51888574260f56101ba23d0ac8ac5f9bb179157faeab0b962"
+    },
+    {
+      "path": "tests/development/ecosystem-assurance-helpers.mts",
+      "sha256": "f9c7d5c2050a42117f3b470f1ffa7db6f7ae677fa4053dededbe45fa7d3a3cd8"
+    },
+    {
+      "path": "tests/development/ecosystem-assurance.test.mts",
+      "sha256": "d4b9f47ae47033736026782f412dc395953a95ca3680a35285157eb950167674"
+    },
+    {
+      "path": "tests/development/ecosystem-privacy-helpers.mts",
+      "sha256": "0735dc9423ec34a112c3ef819e8752530a61f24018203391951a70b01848e9b0"
+    },
+    {
+      "path": "tests/development/extensions-helpers.mts",
+      "sha256": "f77df877b46f95f3cbb5b6d7292e360a66c521c03ca9ccbebbabdc733e878921"
+    },
+    {
+      "path": "tests/development/extensions.test.mts",
+      "sha256": "0a536df31e2a9ecbf5e531684f31cfe4511c4cace41d8a0c5b83e77b7a6fa56b"
+    },
+    {
+      "path": "tests/fixtures/agencies/known-answers.v1.json",
+      "sha256": "bc93fa91c4427e7fdaa087ea158ad0a234f4e9d00c2f3de0912cd7c9c590ad2b"
+    },
+    {
+      "path": "tests/fixtures/ecosystem-assurance/expected.v1.json",
+      "sha256": "ffa65f09ecae78b464e4308404762763c79f85808dfe8ff6f1455cd131874f9b"
+    },
+    {
+      "path": "tests/fixtures/ecosystem-assurance/sdk-pins.v1.json",
+      "sha256": "ce3736f79bd8c8e95836acec84ab2ed6ac84ca58b19d2b3c95b33d2387f1a107"
+    },
+    {
+      "path": "tests/fixtures/ecosystem-assurance/typed-source-pins.v1.json",
+      "sha256": "6eec87b7021bc8a9f85eae12cc427e8cfacf70adbcf4c7faabd3a1ec57bf9f17"
+    },
+    {
+      "path": "tests/fixtures/ecosystem-assurance/typed-task-oracle.v1.json",
+      "sha256": "10c427f6ab17fce37746863241512eee8dd4df6f054882b546a9ff762c8b6170"
+    },
+    {
+      "path": "tests/fixtures/ecosystem/storage-baseline.v1.json",
+      "sha256": "fc7b96c13a008b231fa5f620794ad62c38bb487a0622868b014578f6f00cbee4"
+    },
+    {
+      "path": "tests/fixtures/extensions/compatibility.v1.json",
+      "sha256": "b13443593538ba66002f18c30c12171d5ca2c8098e9755a916b94d7890e33e32"
+    },
+    {
+      "path": "packages/commerce/contracts/storage-ecosystem-extension.v1.json",
+      "sha256": "eff45266a38cb84476a0f2170272ca17072207579e119c719a538032a86d9d70"
     }
   ]
 }
