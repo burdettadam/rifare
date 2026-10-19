@@ -2,6 +2,25 @@
 
 Merchant-owned commerce operations with tailorable skills and independently replaceable platforms, agents and models.
 
+## Browser roadmap adopted: M23–M25
+
+The browser expansion is now decomposed into fifteen worker goals and three
+separate milestone assessments under
+[ADR-0044](docs/decisions/0044-browser-roadmap-adoption.md). M23 plans pinned
+Clef Flash Q8/Kevala text inference, M24 a separately verified compact
+Wllama/GGUF backend, and M25 browser image evidence after the M17 media gates.
+The current catalogue contains 26 milestones, 281 goal packets, 216 requirements
+and 949 behavioral specifications.
+
+Start with [the browser worker handoff](docs/BROWSER-WORKER-HANDOFF.md),
+[the searchable goal catalogue](WORKER-GOALS.html) and
+[the updated architecture](ARCHITECTURE.md). Each new worker packet includes
+bounded scope, component and formal dependencies, proposed paths, behavioral
+oracles, a targeted fault, a small first verification slice and handoff evidence.
+M23-G01–G05 is the recommended next browser batch; all new goals remain
+unassigned. This planning update preserves the completed M14 local checkpoint
+and does not claim browser/model execution or formal acceptance.
+
 ## Current development milestone: M14 calibrated routing
 
 M14 adds frozen calibration protocols, canonical measurement records, bounded

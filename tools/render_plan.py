@@ -36,9 +36,25 @@ for g in goals:
   '> Planning specification only. No application test, provider operation or feature completion is claimed.',
   '## Outcome',g['outcome'],'## Dependencies']
  lines += ['; '.join(f'[{d}](../{d[:3]}/{d}.md)' for d in g['depends_on']) or 'None. Prepare the charter and seek the actual authorized human decision.']
- lines += ['Dependencies must be **accepted**, not merely assigned or implemented. Inspect current accepted evidence before starting.','## Bounded ownership']
+ dependency_note='Dependencies must be **accepted**, not merely assigned or implemented. Inspect current accepted evidence before starting.'
+ if g.get('implementation_plan'):
+  dependency_note='These dependencies retain the formal qualification gates. A maintainer may separately assign bounded local preparation using current evidence; that assignment cannot mark a dependency or this goal accepted. Inspect current work records before starting.'
+ lines += [dependency_note,'## Bounded ownership']
  lines += ['\n'.join('- '+v for v in g['scope']),g['scope_note'],'## Before starting','\n'.join(f'{i+1}. {s}' for i,s in enumerate(g['prerequisites']))]
  lines += ['## Worker instructions','\n'.join(f'{i+1}. {s}' for i,s in enumerate(g['worker_steps']))]
+ if g.get('implementation_plan'):
+  plan=g['implementation_plan'];selection=plan['first_verification_slice']
+  lines += ['## Implementation map for assignment',
+   '**Planning state:** `'+plan['planning_state']+'`',
+   '### Existing paths to inspect and reuse','\n'.join('- `'+p+'`' for p in plan['reuse_paths']),
+   '### Proposed owned paths',plan['proposed_paths_note'],'\n'.join('- `'+p+'`' for p in plan['proposed_paths']),
+   '### First verification slice',
+   '**State:** `'+selection['state']+'` · **Executor:** '+selection['executor'],
+   '**Proposed whole files:** '+', '.join('`'+p+'`' for p in selection['whole_files']),
+   '**Stable specification IDs:** '+', '.join('`'+p+'`' for p in selection['case_ids']),
+   f'**Slice ceiling:** {selection["max_actual_cases"]} actual cases, {selection["max_whole_files"]} whole files, one {selection["invocation_deadline_seconds"]}-second invocation deadline.',
+   selection['scope'],selection['qualification_boundary'],
+   '### Goal-specific handoff','\n'.join('- '+p for p in plan['handoff'])]
  lines += ['## Do not change','\n'.join('- '+v for v in g['non_goals'])]
  lines += ['## Required behavior and permanent tests']
  for tid in g['new_test_ids']:
@@ -102,6 +118,8 @@ for m in ms:
          'A prior accepted component does not prove the integrated candidate still works. Re-run current applicable accepted tests, introduced invariants, affected connected-provider qualifications and the complete milestone journey.']
  text(f'milestones/{m["id"]}.md','\n\n'.join(per))
 catalogue[2]=f"{sum(g['type']=='worker_goal' for g in goals)} bounded worker goals + {len(ms)} integration/acceptance gates = **{len(goals)} goal packets**. **{len(tests)} acceptance/regression specifications** include all {sum(t.get('kind')=='retained_source_scenario' for t in tests)} original scenarios. All {original_count} original requirements and {adopted_count} separately adopted requirements are preserved and mapped; their acceptance criteria are retained verbatim."
+if coverage.get('browser_adopted_source_count'):
+ catalogue.insert(4,'**Latest additive planning update: October 19, 2026.** M23–M25 add browser decision work under ADR-0044. Read [the browser worker handoff](docs/BROWSER-WORKER-HANDOFF.md) for the recommended next browser batch and current M14 continuation boundary. The initial M00 queue below remains a historical planning snapshot; use current work records for assignment.')
 text('WORKER-GOALS.md','\n\n'.join(catalogue))
 
 # Single offline HTML view: searchable, no remote assets or dependencies.
@@ -125,6 +143,9 @@ for m in ms:
   parts.append('<p><strong>Outcome:</strong> '+H(g['outcome'])+'</p>')
   parts.append('<p><strong>Depends on:</strong> '+(', '.join(f'<a href="#{d}">{d}</a>' for d in g['depends_on']) or 'No prior goal; obtain the actual charter decision.')+'</p>')
   parts.append('<p><strong>Owned scope:</strong> '+H('; '.join(g['scope']))+'. Proposed modules; bind to real repository paths.</p>')
+  if g.get('implementation_plan'):
+   plan=g['implementation_plan'];selection=plan['first_verification_slice']
+   parts.append('<h3>Implementation map for assignment</h3><p><strong>Existing paths:</strong> '+H(', '.join(plan['reuse_paths']))+'</p><p><strong>Proposed paths:</strong> '+H(', '.join(plan['proposed_paths']))+'</p><p>'+H(plan['proposed_paths_note'])+'</p><p><strong>First planned verification:</strong> '+H(', '.join(selection['whole_files']))+'; '+H(', '.join(selection['case_ids']))+'. '+H(selection['scope'])+'</p><p>'+H(selection['qualification_boundary'])+'</p>')
   parts.append('<h3>Required tests and independent oracles</h3>')
   for tid in g['new_test_ids']:
    t=ti[tid];parts.append('<div class="test"><strong>'+H(tid)+' · '+H(t['kind'])+'</strong><p><strong>Arrange / act:</strong> '+H(t['given_when'])+'</p><p><strong>Assert:</strong> '+H(t['then'])+'</p>')
@@ -152,5 +173,8 @@ window.addEventListener('hashchange',reveal);reveal();
 </script></main></body></html>''')
 markup='\n'.join(parts)
 markup=markup.replace('<b>190</b>Worker goals',f"<b>{sum(g['type']=='worker_goal' for g in goals)}</b>Worker goals").replace('<b>13</b>Milestone gates',f'<b>{len(ms)}</b>Milestone gates').replace('<b>676</b>Test specifications',f'<b>{len(tests)}</b>Test specifications').replace('<b>151 / 151</b>Requirements mapped',f'<b>{len(reqs)} / {len(reqs)}</b>Requirements mapped').replace('203 goals displayed',f'{len(goals)} goals displayed')
+if coverage.get('browser_adopted_source_count'):
+ markup=markup.replace('The original roadmap and the ADR-0042 additions retain separate source provenance.','The original roadmap, ADR-0042 additions and ADR-0044 browser additions retain separate source provenance.')
+ markup=markup.replace('<div class="toolbar">','<p><strong>Browser roadmap added October 19, 2026.</strong> Read <a href="docs/BROWSER-WORKER-HANDOFF.md">the M23–M25 worker handoff</a> for current M14 progress and the recommended browser batch. The initial M00 dispatch text remains a historical baseline, not a reset of completed work.</p><div class="toolbar">',1)
 text('WORKER-GOALS.html',markup)
 print('Rendered',len(goals),'goal packets,',len(ms),'milestone sheets and searchable HTML.')

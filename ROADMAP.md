@@ -1,5 +1,25 @@
 # Rifare — development roadmap
 
+## Current additive planning catalogue
+
+The original roadmap below is retained. The current canonical catalogue adds
+M13–M22 under ADR-0042 and M23–M25 under
+[ADR-0044](docs/decisions/0044-browser-roadmap-adoption.md), for 26 milestones,
+281 goals, 216 requirements and 949 behavioral specifications. Actual local
+implementation is recorded through M14; the initial planning states do not
+replace its source-bound work records or formal qualification limits.
+
+| New milestone | Development outcome | Worker goals | Assessment |
+| --- | --- | --- | --- |
+| [M23](milestones/M23.md) | Pinned Kevala/Clef Flash Q8 text in an opted-in desktop browser | M23-G01–G05 | M23-G99 |
+| [M24](milestones/M24.md) | Verified compact browser backend and paired comparison | M24-G01–G05 | M24-G99 |
+| [M25](milestones/M25.md) | Qualified browser image evidence over M17 media/privacy | M25-G01–G05 | M25-G99 |
+
+Read [the worker handoff](docs/BROWSER-WORKER-HANDOFF.md) and
+[the complete catalogue](WORKER-GOALS.md). Browser implementation is unassigned;
+M23-G01–G05 is the recommended next browser batch. All earlier requirements,
+prerequisites, IDs and acceptance gates remain in force.
+
 **Project: Rifare; name clearance has not been performed.** Plan 0.1.0 · October 15, 2026 · Proposed, not implemented.
 
 ## Decision summary

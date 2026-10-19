@@ -650,6 +650,42 @@
       "proposed_functionality": "Produce reviewable per-recipient campaign variants from permitted operational facts while preserving existing campaign approval, final-send suppression and causal measurement.",
       "status": "proposed_not_implemented",
       "scope_note": "Adopted Rifare target under ADR-0042. Separate work records hold actual local progress; formal qualification is not inferred."
+    },
+    {
+      "id": "CAP-M23",
+      "domain": "browser_decision_models",
+      "name": "Browser Clef-flash with pinned Kevala Q8 text",
+      "proposed_priority": "P1_after_M13_local_preparation",
+      "target_milestone": "M23",
+      "delivery_mode": "build",
+      "implementation_status": "not_started",
+      "proposed_functionality": "Add optional on-device text decision assistance using the complete Clef-flash joint model in a pinned Kevala WebGPU runtime. Browser suggestions are untrusted client observations and remain shadow-only; no inference or product qualification is supplied by this plan.",
+      "status": "proposed_not_implemented",
+      "scope_note": "Adopted browser target under ADR-0044. No browser implementation or qualification is claimed; actual assignment and progress belong to work records."
+    },
+    {
+      "id": "CAP-M24",
+      "domain": "browser_decision_models",
+      "name": "Compact browser backend with joint-path verification",
+      "proposed_priority": "P2_after_M23_browser_evidence",
+      "target_milestone": "M24",
+      "delivery_mode": "build",
+      "implementation_status": "not_started",
+      "proposed_functionality": "Add an optional compact Clef-flash Q4 browser implementation after verifying or repairing Wllama's complete joint decision route, and compare it with Kevala using predeclared paired evidence. Preserve the separate M14 server transport and all server-owned business authority.",
+      "status": "proposed_not_implemented",
+      "scope_note": "Adopted browser target under ADR-0044. No browser implementation or qualification is claimed; actual assignment and progress belong to work records."
+    },
+    {
+      "id": "CAP-M25",
+      "domain": "browser_decision_models",
+      "name": "Browser image evidence with a qualified vision decision path",
+      "proposed_priority": "P2_after_M17_and_M23_qualification",
+      "target_milestone": "M25",
+      "delivery_mode": "build",
+      "implementation_status": "not_started",
+      "proposed_functionality": "Add optional image-first browser evidence assistance after M17's media intake and privacy foundations, using a matched vision companion and a proven image-aware joint decision API. Preserve untrusted client provenance and server-owned business authority.",
+      "status": "proposed_not_implemented",
+      "scope_note": "Adopted browser target under ADR-0044. No browser implementation or qualification is claimed; actual assignment and progress belong to work records."
     }
   ],
   "adopted_additions": {
@@ -660,5 +696,16 @@
     "original_requirements": 151,
     "adopted_requirements": 50,
     "planning_only": true
+  },
+  "browser_adopted_additions": {
+    "authority": "ADR-0044",
+    "source_revision": "rifare-browser-clef-architecture-2026-10-19",
+    "added_target_ids": [
+      "CAP-M23",
+      "CAP-M24",
+      "CAP-M25"
+    ],
+    "prior_target_count": 54,
+    "current_target_count": 57
   }
 }

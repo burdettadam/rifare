@@ -201,3 +201,21 @@ under the focused 60-case/four-file/60-second development limit. The milestone
 record binds actual native evidence and independent reviews when available.
 Canonical planning/accepted states and all inherited external/formal gates remain
 unchanged. M15–M22 remain unassigned.
+
+## Browser roadmap adoption and worker decomposition
+
+The owner requested the expanded milestones be integrated and decomposed into
+worker goals. [ADR-0044](docs/decisions/0044-browser-roadmap-adoption.md) adopts
+M23–M25 on top of reviewed M14 `93769a3`: fifteen worker goals, three G99
+assessments, fifteen separately frozen requirements and 69 specifications.
+M00–M22 objects/cards, M14 source/evidence and the accepted-goal ledger remain
+protected. The exact union is 151 original + 50 earlier additions + 15 browser
+requirements; aggregate views now cover 26 milestones and 281 goals.
+
+The [browser worker handoff](docs/BROWSER-WORKER-HANDOFF.md) recommends
+M23-G01–G05 as the next browser implementation batch, with explicit assignment
+and path ownership still required. M24 follows the browser and M14 comparison
+controls. M25 follows M17/M23 media and browser gates without requiring all of
+M24. M15 remains the earliest unassigned numerical sequence. This planning-only
+update runs focused helper/document checks and does not start an application,
+model conversion, browser qualification or a formal acceptance campaign.
