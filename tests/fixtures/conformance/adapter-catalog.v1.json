@@ -6530,6 +6530,10 @@
       "sha256": "72cf97223d0c2213e2454057d7099a107c5b5b86a9f4b94d7e6ebc6d2d585cb4"
     },
     {
+      "path": "packages/commerce/contracts/storage-ecosystem-extension.v1.json",
+      "sha256": "eff45266a38cb84476a0f2170272ca17072207579e119c719a538032a86d9d70"
+    },
+    {
       "path": "packages/commerce/ecosystem-privacy.mts",
       "sha256": "b06ac270074930f34c61dcf291156f1579bea7a643665499bbcbc1d2dbb83585"
     },
@@ -6547,7 +6551,7 @@
     },
     {
       "path": "packages/commerce/extension-privacy.mts",
-      "sha256": "6bf654115c5a1b43ce08b520d733fee12390840e71a6a63a3847dfda5f27db0c"
+      "sha256": "35237e2b6ff984708a74bed7952065b5bbbf9319ea7e505af360e29161d2c056"
     },
     {
       "path": "packages/commerce/shared-templates.mts",
@@ -6575,7 +6579,7 @@
     },
     {
       "path": "tests/development/agency-operations.test.mts",
-      "sha256": "d6b7d6baa4d546c51888574260f56101ba23d0ac8ac5f9bb179157faeab0b962"
+      "sha256": "d5c99680a357c882eac45e5bac4b5acc809aa31011f0db371ac273973cf4df7f"
     },
     {
       "path": "tests/development/ecosystem-assurance-helpers.mts",
@@ -6595,7 +6599,7 @@
     },
     {
       "path": "tests/development/extensions.test.mts",
-      "sha256": "0a536df31e2a9ecbf5e531684f31cfe4511c4cace41d8a0c5b83e77b7a6fa56b"
+      "sha256": "531ff17f1f56fae8cd43c63541127b44cab20b7225029f3ec7a38c2421b155e7"
     },
     {
       "path": "tests/fixtures/agencies/known-answers.v1.json",
@@ -6624,10 +6628,6 @@
     {
       "path": "tests/fixtures/extensions/compatibility.v1.json",
       "sha256": "b13443593538ba66002f18c30c12171d5ca2c8098e9755a916b94d7890e33e32"
-    },
-    {
-      "path": "packages/commerce/contracts/storage-ecosystem-extension.v1.json",
-      "sha256": "eff45266a38cb84476a0f2170272ca17072207579e119c719a538032a86d9d70"
     }
   ]
 }

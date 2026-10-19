@@ -535,7 +535,7 @@
     },
     {
       "path": "packages/commerce/extension-privacy.mts",
-      "sha256": "6bf654115c5a1b43ce08b520d733fee12390840e71a6a63a3847dfda5f27db0c"
+      "sha256": "35237e2b6ff984708a74bed7952065b5bbbf9319ea7e505af360e29161d2c056"
     },
     {
       "path": "packages/commerce/forecast-backtests.mts",
