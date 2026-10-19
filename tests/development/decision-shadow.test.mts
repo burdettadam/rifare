@@ -58,9 +58,12 @@ test('CASE-M13-G04-03',()=>usingShadow(async f=>{
   const fresh=await f.shadow.run(f.a.scope,f.input());assert.notEqual(fresh.id,r.id);assert.equal(fresh.sequence,r.sequence+1);assert.equal(fresh.input_hash,r.input_hash);
   f.message('I am correcting my earlier request.');assert.deepEqual(f.shadow.read(f.a.scope,f.caseA.id,r.id),r);assert.equal(f.requests.length,2);
   const concurrent=f.input(),first=f.shadow.prepare(f.a.scope,concurrent),second=f.shadow.prepare(f.a.scope,concurrent);
+  const anotherSession=f.kernel.authenticate(f.kernel.issueSession(f.a.tenant,f.a.store,'operator'));
+  const third=f.shadow.prepare(anotherSession,concurrent);
   let release!:()=>void;f.before(()=>new Promise<void>(resolve=>release=resolve));
   const pending=f.shadow.execute(f.a.scope,first);assert.equal(f.requests.length,3);
   await assert.rejects(()=>f.shadow.execute(f.a.scope,second),/DECISION_OBSERVATION_IN_PROGRESS/);
+  await assert.rejects(()=>f.shadow.execute(anotherSession,third),/DECISION_OBSERVATION_IN_PROGRESS/);
   assert.equal(f.db.prepare('SELECT count(*) n FROM commerce_assistance_receipts').get().n,2);
   release();const completed=await pending;assert.equal(completed.id,first.id);assert.equal(completed.result.status,'usable');
   assert.deepEqual(await f.shadow.run(f.a.scope,concurrent),completed);assert.equal(f.requests.length,3);
@@ -144,10 +147,16 @@ test('M13-SHADOW-UNKNOWN-USAGE-AND-BUDGET-EXHAUSTION',()=>usingShadow(async f=>{
   f.budgets.configure(f.owner.scope,{provider_id:'cloudflare',period_id:'shadow_period',starts_at:f.now(),ends_at:f.now()+3600000,limit_micro:budget.held_micro,input_micro:'1',output_micro:'1',max_input_bytes:40000,max_output_tokens:1,expected_revision:1});
   const denied=await f.shadow.run(f.a.scope,f.input());assert.equal(denied.result.status,'unusable');assert.equal(f.requests.length,1);assert.equal(f.intake.read(f.a.scope,f.caseA.id).state,'not_submitted');
 }));
-test('M13-SHADOW-PREPARED-CREDENTIAL-REVOCATION',()=>usingShadow(async f=>{
+test('M13-SHADOW-PREPARED-CREDENTIAL-REVOCATION',async()=>{
+ await usingShadow(async f=>{
   const p=f.shadow.prepare(f.a.scope,f.input());f.vault.revoke(f.a.scope,f.secret);const r=await f.shadow.execute(f.a.scope,p);
   assert.equal(r.result.status,'unusable');assert.equal(r.result.reason,'DECISION_CREDENTIAL_UNAVAILABLE');assert.equal(f.requests.length,0);
-}));
+ });
+ await usingShadow(async f=>{
+  f.permissions.change(f.owner.scope,{actor_id:'operator',role:'operator',actions:['support.read','resource.read','skill.read','profile.read','task.read','model.run','capability.read','policy.read','case.read','return.read'],resource_ids:null,expected_revision:0});
+  const r=await f.shadow.run(f.a.scope,f.input());assert.equal(r.result.status,'unusable');assert.equal(r.provenance.dispatch,'not_attempted');assert.equal(f.requests.length,0);
+ });
+});
 test('M13-SHADOW-ATTACHMENTS-GAPS-AND-MESSAGE-WINDOW',async()=>{
  await usingShadow(async f=>{
   assert.throws(()=>f.shadow.snapshot(f.a.scope,{...f.input(),attachments:[{url:'https://private.invalid/evidence'}]}),/INVALID_INPUT/);
