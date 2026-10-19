@@ -1,0 +1,31 @@
+{
+  "model": "clef-omni",
+  "state": "Synthetic item image. Customer claim: a mark is visible.\nCorrection: the customer has not claimed a broken part.\nNo inspection, eligibility, authenticity or financial conclusion is authorized.",
+  "questions": {
+    "item_visibility": {
+      "type": "choice",
+      "instructions": "Select only how much of the item can be seen.",
+      "criteria": {
+        "clear": "The item is clearly visible.",
+        "partial": "Only part of the item is visible.",
+        "cannot_assess": "The image does not permit assessment."
+      }
+    },
+    "requested_detail_visible": {
+      "type": "noul",
+      "instructions": "Is the requested visual detail visible in this image?"
+    },
+    "clarity": {
+      "type": "score",
+      "instructions": "Rate image usability for visual review.",
+      "criteria": [
+        "Unusable",
+        "Partial",
+        "Clear"
+      ]
+    }
+  },
+  "images": [
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAEklEQVR42mP4z8DwHwyBNBgAAEnICfcD2WTxAAAAAElFTkSuQmCC"
+  ]
+}

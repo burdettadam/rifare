@@ -1,0 +1,47 @@
+{
+  "status": "usable",
+  "answers": {
+    "item_visibility": {
+      "type": "choice",
+      "choice": "clear",
+      "probabilities": {
+        "clear": 0.8,
+        "partial": 0.1,
+        "cannot_assess": 0.1
+      },
+      "confidence": {
+        "provider": "cloudflare",
+        "metric": "provider_reported",
+        "value": 0.8
+      }
+    },
+    "requested_detail_visible": {
+      "type": "noul",
+      "probability_true": 0.9
+    },
+    "clarity": {
+      "type": "score",
+      "score": 1.5,
+      "probabilities": {
+        "0": 0.1,
+        "1": 0.3,
+        "2": 0.6
+      },
+      "confidence": {
+        "provider": "cloudflare",
+        "metric": "provider_reported",
+        "value": 0.6
+      }
+    }
+  },
+  "reason": null,
+  "usage": {
+    "input_tokens": 1080,
+    "output_tokens": 0
+  },
+  "serving": {
+    "reported_model": "clef-omni",
+    "revision": null
+  },
+  "evidence_kind": "synthetic_wire_fixture"
+}

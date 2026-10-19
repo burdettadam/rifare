@@ -1,0 +1,43 @@
+{
+  "success": true,
+  "errors": [],
+  "messages": [],
+  "result": {
+    "model": "clef-omni",
+    "answers": {
+      "item_visibility": {
+        "type": "choice",
+        "choice": "clear",
+        "probabilities": {
+          "clear": 0.8,
+          "partial": 0.1,
+          "cannot_assess": 0.1
+        },
+        "confidence": 0.8
+      },
+      "requested_detail_visible": {
+        "type": "noul",
+        "noul": 0.9
+      },
+      "clarity": {
+        "type": "score",
+        "score": 1.5,
+        "legend": {
+          "0": "Unusable",
+          "1": "Partial",
+          "2": "Clear"
+        },
+        "probabilities": {
+          "0": 0.1,
+          "1": 0.3,
+          "2": 0.6
+        },
+        "confidence": 0.6
+      }
+    },
+    "usage": {
+      "input_tokens": 1080,
+      "output_tokens": 0
+    }
+  }
+}

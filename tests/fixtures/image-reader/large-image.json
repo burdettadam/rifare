@@ -1,0 +1,9 @@
+{
+  "mime": "image/png",
+  "sha256": "bdc42ed97198fe54cd13698a25da2f0c71cfd04eb372154ba153b59c69c40102",
+  "source_sha256": "bdc42ed97198fe54cd13698a25da2f0c71cfd04eb372154ba153b59c69c40102",
+  "transformation": "restricted_png_identity_v1",
+  "bytes": 261463,
+  "width": 256,
+  "height": 255
+}

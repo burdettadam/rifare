@@ -1,0 +1,43 @@
+{
+  "success": true,
+  "errors": [],
+  "messages": [],
+  "result": {
+    "model": "@cf/cloudflare/clef-omni",
+    "answers": {
+      "item_visibility": {
+        "type": "choice",
+        "choice": "cannot_assess",
+        "probabilities": {
+          "clear": 0.2,
+          "partial": 0.3,
+          "cannot_assess": 0.5
+        },
+        "confidence": 0.5
+      },
+      "requested_detail_visible": {
+        "type": "noul",
+        "noul": 0.2
+      },
+      "clarity": {
+        "type": "score",
+        "score": 0.3,
+        "legend": {
+          "0": "Unusable",
+          "1": "Partial",
+          "2": "Clear"
+        },
+        "probabilities": {
+          "0": 0.8,
+          "1": 0.1,
+          "2": 0.1
+        },
+        "confidence": 0.8
+      }
+    },
+    "usage": {
+      "input_tokens": 1080,
+      "output_tokens": 0
+    }
+  }
+}
