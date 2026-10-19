@@ -110,3 +110,23 @@ owner's delegation. Production/paid effects, publication, account changes,
 messages, release tags, model downloads and enabled browser execution are outside
 this planning assignment. A cumulative checkpoint preserves the unchanged M14
 archive, both roadmap revisions, all native Git refs and actual adoption evidence.
+
+## Prior narrow metadata correction
+
+Read-only review found that `tools/check_repository.py` still requires 44
+capability targets even though the protected catalogue already contains 54, and
+three existing ADR-0042 planning-helper test methods are absent from the current
+registration list. Correct these specific mismatches as part of adoption.
+Preserve all 54 target objects and append `CAP-M23`, `CAP-M24` and `CAP-M25` as
+proposed targets. The checker must enforce the exact closed ID set `CAP-001`
+through `CAP-044` plus `CAP-M13` through `CAP-M25`, with unique IDs and unchanged
+proposed status; it must not trust a candidate-supplied count. Add only the three
+missing existing helper registrations and the actual new planning-helper cases,
+preserving every old registration and protected capability.
+
+Aggregate counts may change to report the actual union; old requirement,
+milestone, goal, case and target objects and their original adoption metadata
+remain unchanged. New browser worker acceptance criteria must agree exactly
+with their independently frozen requirements as well as canonical coverage.
+These changes concern planning integrity only and do not register the 69 new
+behavioral specifications as executed or executable product tests.
