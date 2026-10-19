@@ -159,3 +159,19 @@ retention administration, rather than silently dropping that content. These
 behaviors do not activate any saved approval or add a new table/authority kind.
 Gift image consent/inference remains unavailable; the gift privacy test creates
 a canonical gift case and seeds explicitly labeled historical/imported residue.
+
+## Prior additive catalog assignment
+
+Independent regression reviewer /root/m17_recovery_regression approved this
+arithmetic-only extension before the protected assertions changed. Add the
+proposed fixture-only image_reader model adapter with one decision operation and
+ten distinct reader cases. Preserve all 37 old adapter objects, 198 operations,
+252 native references and 62 declared source paths; refresh exact changed hashes.
+The additive totals are 38 adapters, 199 operations, 262 native references and
+63 declarations. In tests/development/adapter-catalog.test.mts only the nine
+corresponding numeric substitutions in its aggregate assertions and diagnostic
+text are assigned (37→38 once in assertions and once in text, 198→199 likewise,
+252→262 in the count assertion, tests/pass/length assertions, and diagnostic).
+All other assertions, case IDs and native/direct runners remain unchanged.
+The nested 262-case catalog campaign is deferred, not included in or claimed by
+the 59-case development selection. No table/schema count changes are assigned.
