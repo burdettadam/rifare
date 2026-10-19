@@ -146,10 +146,10 @@ test('M17-IMAGES-GIFT-RESIDUE-PRIVACY-14',()=>usingGift(f=>{
     const body={schema_version:1,kind,id:'seed_'+kind,case_id:'gift_case',task_id:task.id,source:{evidence_id:evidence.id,sha256:evidence.sha256},customer_session_hash:'SYNTHETIC_PRIVATE_SESSION',observed_at:f.now()};
     f.db.prepare('INSERT INTO commerce_assistance_receipts VALUES(?,?,?,?,?,?)').run(f.a.tenant,f.a.store,body.id,task.id,f.now(),canonical({...body,receipt_digest:contentDigest(body)}));
   }
-  const privacy=new PrivacyLifecycle(f.kernel),original=f.db.prepare('SELECT body,observed_at FROM commerce_assistance_receipts WHERE id=?').get('seed_image_approval'),{receipt_digest,...originalBody}=JSON.parse(original.body);
+  const privacy=new PrivacyLifecycle(f.kernel),original=f.db.prepare('SELECT body,created_at FROM commerce_assistance_receipts WHERE id=?').get('seed_image_approval'),{receipt_digest,...originalBody}=JSON.parse(original.body);
   // Imported bodies cannot carry private objects or a different timestamp
   // through the fixed recipient projection, even with a recomputed digest.
-  for(const observed_at of [{customer_session_hash:'SYNTHETIC_PRIVATE_SESSION'},original.observed_at+1]){
+  for(const observed_at of [{customer_session_hash:'SYNTHETIC_PRIVATE_SESSION'},original.created_at+1]){
     const body={...originalBody,observed_at};
     f.db.prepare('UPDATE commerce_assistance_receipts SET body=? WHERE id=?').run(canonical({...body,receipt_digest:contentDigest(body)}),'seed_image_approval');
     assert.throws(()=>privacy.export(f.owner.scope,'recipient-one'),/IMAGE_RECEIPT_INTEGRITY/);
