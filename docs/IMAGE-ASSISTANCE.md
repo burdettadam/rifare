@@ -133,11 +133,14 @@ acceptance, actual image inference, intake/privacy/provider retention evidence,
 target-host processing and missing-history reconciliation are still required.
 This checkout does not contain or inherit the missing M16 managed isolation.
 
-The planned focused selection is 20 service cases, 10 reader cases, 20 retained
-evidence cases and nine retained privacy cases, using the unchanged 60/4/60
-development budget. Actual observations and independent reviews belong in the
-M17 recovery checkpoint record. The expanded adapter catalog retains its broad
-262-case campaign, which is deferred from this development selection.
+The final focused selection passed all 20 service cases, 10 reader cases,
+20 retained evidence cases and nine retained privacy cases in 35.664 seconds,
+using the unchanged 60/4/60 development budget. Both independent reviewers
+approved candidate `0fa3b7ebe7c41b880077d4a40619a84dbfd4ed6a` for local diagnostic
+recovery. The [M17 recovery checkpoint record](../work/records/M17-recovery-checkpoint.md)
+retains every actual attempt, the corrected privacy finding and the scoped
+decisions. The expanded adapter catalog retains its broad 262-case campaign,
+which is deferred from this development selection.
 
 ## Recovery and rollback
 
