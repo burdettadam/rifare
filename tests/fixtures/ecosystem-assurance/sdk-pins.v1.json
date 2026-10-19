@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "protected_source": "e36dbcd7cf392d04f21d082e834698bbc6a1ac79",
+  "pins": [
+    {
+      "path": "packages/commerce/skills.mts",
+      "sha256": "6665660dc2c53b4692b9cb04522b9d892870755aba7da702e4c7831cc864a2ce"
+    },
+    {
+      "path": "packages/commerce/skill-contract.mts",
+      "sha256": "a187d8cc9d0580b1ca8f505967cea8e6780d2b5b25d7cc0c6d01709deb55a501"
+    },
+    {
+      "path": "packages/commerce/skill-installer.mts",
+      "sha256": "8656d37a78878154a80bc888c9c0998d44157137ead41522f2906e12875efacd"
+    },
+    {
+      "path": "packages/conformance/adapter-fixtures.mts",
+      "sha256": "c415ad1d00324892cb719b8afa690213b3dc0aa9401d601ad24a5b02151abef5"
+    },
+    {
+      "path": "packages/conformance/adapter-catalog.mts",
+      "sha256": "6c69d00dd9229f9260320e49f0da5730409eb54c62609600455d3ec2e19cfa2f"
+    },
+    {
+      "path": "docs/SKILL-ARCHITECTURE.md",
+      "sha256": "57d1139c922f2a721e90ea42c55eeab7d24fd5e0dec7d9bdeb14f4a42f230678"
+    },
+    {
+      "path": "docs/ADAPTER-CONFORMANCE.md",
+      "sha256": "1576d667974495cf4c46bd04071a4cfe605e9755d55c0eeb0e7924c16500070a"
+    },
+    {
+      "path": "planning/licensing-policy.json",
+      "sha256": "7d187d0ca4a2bca57d323c3db81c956f084c63fcb4e3da28a01b485d9e54f9c7"
+    }
+  ]
+}

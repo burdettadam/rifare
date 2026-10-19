@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "id": "rifare-typed-code-need-v1",
+  "tasks": [
+    {
+      "id": "typed_resolution_state",
+      "actions": [
+        "resolution_state"
+      ],
+      "expected": {
+        "resolution": "none",
+        "revision": 0,
+        "financial_effect": false
+      }
+    },
+    {
+      "id": "typed_approved_resolution",
+      "actions": [
+        "action.preview",
+        "action.approve",
+        "action.execute",
+        "resolution_state"
+      ],
+      "expected": {
+        "resolution": "refund",
+        "revision": 1,
+        "financial_effect": false,
+        "approval_consumed": true
+      }
+    }
+  ]
+}

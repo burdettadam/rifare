@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "qualification": {
+    "independently_qualified": false,
+    "execution_authorized": false,
+    "native_conformance_observed": false,
+    "contribution_solicitation_authorized": false
+  },
+  "typed": {
+    "task_count": 2,
+    "correct": 2,
+    "action_count": 5,
+    "unmet_task_count": 0,
+    "recommendation": "retain_typed_actions_pending_human_decision"
+  },
+  "disabled": {
+    "enabled": false,
+    "implementation": "absent",
+    "human_decision_authenticated": false,
+    "sandbox_qualified": false
+  }
+}

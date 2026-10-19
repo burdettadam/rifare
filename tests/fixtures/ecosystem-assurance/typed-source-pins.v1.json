@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "protected_source": "e36dbcd7cf392d04f21d082e834698bbc6a1ac79",
+  "pins": [
+    {
+      "path": "packages/agent/action-mcp.mts",
+      "sha256": "2c4d5abe073c3c916da8fdf78cbe28014c865d44b0958281aa423b3133dcbeac"
+    },
+    {
+      "path": "packages/agent/mcp.mts",
+      "sha256": "a54bb3bc31441e8c2cac5d6c2d5938e1d23f2a10f3fd040d25289b168b8c49b5"
+    },
+    {
+      "path": "packages/commerce/action-gateway.mts",
+      "sha256": "af5944ee783f8679ad114e7b613f9783812714e7cff0b429194747ad850b6ae7"
+    },
+    {
+      "path": "packages/commerce/case-configurations.mts",
+      "sha256": "8791a9dc4d79059553ff7c5d9198dc2d6845cebb1508933536f922c14481fa86"
+    },
+    {
+      "path": "packages/commerce/authorization.mts",
+      "sha256": "9811f1692f9dc57545b907fcf1c5982dc2cb61c5b9b54d3bd2e001823f87ec75"
+    },
+    {
+      "path": "packages/commerce/skills.mts",
+      "sha256": "6665660dc2c53b4692b9cb04522b9d892870755aba7da702e4c7831cc864a2ce"
+    },
+    {
+      "path": "packages/commerce/skill-contract.mts",
+      "sha256": "a187d8cc9d0580b1ca8f505967cea8e6780d2b5b25d7cc0c6d01709deb55a501"
+    }
+  ]
+}
