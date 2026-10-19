@@ -128,7 +128,7 @@ test('M12-PREP-INTEGRATION-01',t=>usingAgency(f=>{
   extensions.revoke(f.owner.scope,{artifact_id:next.id});
   assert.throws(()=>f.reads.skills.snapshot(f.a.scope,'order-status',next.bundle_digest),/SKILL_REVOKED|SKILL_APPROVAL_REQUIRED/);
   assert.equal(f.reads.skills.snapshot(f.agencyB.scope,'order-status',b.artifact.bundle_digest).digest,b.artifact.bundle_digest);
-  const receipt=f.execute(preview,approval);
+  const receipt=f.execute(preview,approval,f.agencyA.scope);
   assert.equal(receipt.configuration_digest,pinned.configuration_digest);
   assert.equal(f.db.prepare('SELECT count(*) n FROM commerce_case_effects').get().n,1);
   f.access.revoke(f.owner.scope,{agency_id:f.agency_id,actor_id:f.actor_id,expected_revision:1});

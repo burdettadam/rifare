@@ -62,7 +62,7 @@ test('CASE-M12-G02-03',()=>usingAgency(f=>{
  f.accept(f.owner,oa);f.accept(f.ownerB,ob);
  f.templates.rollback(f.owner.scope,{offer_id:oa.offer_id,expected_digest:oa.digest,expected_profile_revision:2});
  assert.equal(f.reads.profiles.get(f.a.scope,'default').profile.revision,3);subset(f.reads.profiles.get(f.a.scope,'default').profile,oracle.original_presentation);subset(f.reads.profiles.get(f.b.scope,'default').profile,oracle.presentation);
- assert.deepEqual(f.cases.resume(f.a.scope,'case_one').pins,old.pins);assert.equal(f.execute(p,a).configuration_digest,old.configuration_digest);
+ assert.deepEqual(f.cases.resume(f.a.scope,'case_one').pins,old.pins);assert.throws(()=>f.execute(p,a),/SUPPORT_TAKEN_OVER/);assert.equal(f.execute(p,a,f.agencyA.scope).configuration_digest,old.configuration_digest);
  assert.throws(()=>f.templates.rollback(f.owner.scope,{offer_id:oa.offer_id,expected_digest:oa.digest,expected_profile_revision:3}),/TEMPLATE_TRANSITION/);
 }));
 test('CASE-M12-G03-01',()=>usingAgency(f=>{
