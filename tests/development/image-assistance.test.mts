@@ -146,7 +146,16 @@ test('M17-IMAGES-GIFT-RESIDUE-PRIVACY-14',()=>usingGift(f=>{
     const body={schema_version:1,kind,id:'seed_'+kind,case_id:'gift_case',task_id:task.id,source:{evidence_id:evidence.id,sha256:evidence.sha256},customer_session_hash:'SYNTHETIC_PRIVATE_SESSION',observed_at:f.now()};
     f.db.prepare('INSERT INTO commerce_assistance_receipts VALUES(?,?,?,?,?,?)').run(f.a.tenant,f.a.store,body.id,task.id,f.now(),canonical({...body,receipt_digest:contentDigest(body)}));
   }
-  const privacy=new PrivacyLifecycle(f.kernel),recipient=privacy.export(f.owner.scope,'recipient-one'),buyer=privacy.export(f.owner.scope,f.giftOrder.customer_id);
+  const privacy=new PrivacyLifecycle(f.kernel),original=f.db.prepare('SELECT body,observed_at FROM commerce_assistance_receipts WHERE id=?').get('seed_image_approval'),{receipt_digest,...originalBody}=JSON.parse(original.body);
+  // Imported bodies cannot carry private objects or a different timestamp
+  // through the fixed recipient projection, even with a recomputed digest.
+  for(const observed_at of [{customer_session_hash:'SYNTHETIC_PRIVATE_SESSION'},original.observed_at+1]){
+    const body={...originalBody,observed_at};
+    f.db.prepare('UPDATE commerce_assistance_receipts SET body=? WHERE id=?').run(canonical({...body,receipt_digest:contentDigest(body)}),'seed_image_approval');
+    assert.throws(()=>privacy.export(f.owner.scope,'recipient-one'),/IMAGE_RECEIPT_INTEGRITY/);
+  }
+  f.db.prepare('UPDATE commerce_assistance_receipts SET body=? WHERE id=?').run(original.body,'seed_image_approval');
+  const recipient=privacy.export(f.owner.scope,'recipient-one'),buyer=privacy.export(f.owner.scope,f.giftOrder.customer_id);
   assert.equal(recipient.image_assistance_records.length,3);assert.equal(JSON.stringify(recipient.image_assistance_records).includes('session_hash'),false);assert.equal(JSON.stringify(recipient).includes('Private Purchaser'),false);assert.equal(buyer.image_assistance_records.length,0);assert.equal(JSON.stringify(buyer.assistance).includes('seed_image'),false);
   assert.equal(privacy.erase(f.owner.scope,'recipient-one').status,'logically_erased');assert.equal(f.db.prepare("SELECT count(*) n FROM commerce_assistance_receipts WHERE id LIKE 'seed_image_%'").get().n,0);assert.equal(f.db.prepare('SELECT bytes FROM commerce_return_evidence WHERE id=?').get(evidence.id).bytes,null);assert.equal(f.kernel.get(f.buyer,f.giftOrder.id).payload.purchaser_name,'Private Purchaser');assert.ok(f.reads.task(f.a.scope,task.id));
 }));
