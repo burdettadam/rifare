@@ -17,13 +17,13 @@ function options(extra:any={}) {
     model_id:WORKERS_AI_MODEL,approved_model_ids:[WORKERS_AI_MODEL],
     fixtureTransport:(async()=>response()) as typeof fetch,...extra};
 }
-const execute=(r:ReturnType<typeof workersAIReader>,input:unknown=request())=>r.execute(Buffer.from(PRIVATE),{request:input});
-async function usingVault(fn:(f:ReturnType<typeof commerceFixture>,vault:SecretVault,ref:string,calls:()=>number)=>Promise<void>,transport?:typeof fetch) {
+const execute=(r:ReturnType<typeof workersAIReader>,input:unknown=request())=>r.execute(Buffer.from(PRIVATE),{request:input,expected_configuration_digest:r.configuration_digest});
+async function usingVault(fn:(f:ReturnType<typeof commerceFixture>,vault:SecretVault,ref:string,calls:()=>number,configurationDigest:string)=>Promise<void>,transport?:typeof fetch) {
   const f=commerceFixture(),key=Buffer.alloc(32,7);let count=0;
   const reader=workersAIReader(options({fixtureTransport:(async(url:any,init:any)=>{count++;return transport?transport(url,init):response();}) as typeof fetch}));
   const vault=new SecretVault(f.kernel,{activeId:'decision-key',get:()=>Buffer.from(key)},{},{[WORKERS_AI_ADAPTER]:reader});
   const ref=vault.put(f.a.scope,{provider:'cloudflare',adapter:WORKERS_AI_ADAPTER,value:PRIVATE}).ref;
-  try {await fn(f,vault,ref,()=>count);} finally {key.fill(0);f.cleanup();}
+  try {await fn(f,vault,ref,()=>count,reader.configuration_digest);} finally {key.fill(0);f.cleanup();}
 }
 
 test('CASE-M13-G01-01',async()=>{
@@ -82,12 +82,13 @@ test('CASE-M13-G03-01',async()=>{
     clarity:{type:'score',instructions:"Rate how explicit the customer's request is.",criteria:['Unclear','Partly explicit','Explicit']}
   }});
   assert.equal(sent.init.body.includes(PRIVATE),false);assert.equal(sent.init.body.includes('max_output_tokens'),false);
+  assert.equal(sent.init.body.includes('expected_configuration_digest'),false);assert.equal(sent.init.body.includes(reader.configuration_digest),false);
   assert.deepEqual(result.usage,{input_tokens:32,output_tokens:0});assert.deepEqual(result.serving,{reported_model:'clef-flash',revision:null});
   assert.equal(result.evidence_kind,'synthetic_wire_fixture');assert.equal(JSON.stringify(result).includes(PRIVATE),false);
 });
 
-test('CASE-M13-G03-02',()=>usingVault(async(f,vault,ref,calls)=>{
-  const prepared={request:request()};vault.revoke(f.a.scope,ref);
+test('CASE-M13-G03-02',()=>usingVault(async(f,vault,ref,calls,configurationDigest)=>{
+  const prepared={request:request(),expected_configuration_digest:configurationDigest};vault.revoke(f.a.scope,ref);
   await assert.rejects(()=>vault.invokeReader(f.a.scope,ref,WORKERS_AI_ADAPTER,prepared),/SECRET_UNAVAILABLE/);
   assert.equal(calls(),0);assert.equal(f.db.prepare('SELECT count(*) n FROM commerce_assistance_receipts').get()!.n,0);
 }));
@@ -181,12 +182,12 @@ test('M13-G03-REDIRECT-AND-ERROR-REDACTION',async()=>{
 
 test('M13-G03-CREDENTIAL-REVOKED-IN-FLIGHT',async()=>{
   let release!:(value:Response)=>void;
-  await usingVault(async(f,vault,ref,calls)=>{
-    const pending=vault.invokeReader(f.a.scope,ref,WORKERS_AI_ADAPTER,{request:request()});
+  await usingVault(async(f,vault,ref,calls,configurationDigest)=>{
+    const pending=vault.invokeReader(f.a.scope,ref,WORKERS_AI_ADAPTER,{request:request(),expected_configuration_digest:configurationDigest});
     assert.equal(calls(),1);vault.revoke(f.a.scope,ref);release(response());
     await assert.rejects(()=>pending,/ADAPTER_UNAVAILABLE/);
     assert.equal(calls(),1);assert.equal(f.db.prepare('SELECT count(*) n FROM commerce_assistance_receipts').get()!.n,0);
-    await assert.rejects(()=>vault.invokeReader(f.b.scope,ref,WORKERS_AI_ADAPTER,{request:request()}),/SECRET_UNAVAILABLE/);
+    await assert.rejects(()=>vault.invokeReader(f.b.scope,ref,WORKERS_AI_ADAPTER,{request:request(),expected_configuration_digest:configurationDigest}),/SECRET_UNAVAILABLE/);
     assert.equal(JSON.stringify(vault.list(f.a.scope)).includes(PRIVATE),false);
   },((()=>new Promise<Response>(resolve=>release=resolve))) as typeof fetch);
 });
@@ -214,4 +215,22 @@ test('M13-G03-CONFIGURATION-AND-USAGE-BOUNDARY',async()=>{
   assert.equal((await execute(workersAIReader(options({fixtureTransport:async()=>response(wrongLegend)})))).status,'unusable');
   const logical:any=request();logical.evidence_kind='live_test_unqualified';
   assert.equal((await execute(reader,logical)).status,'unusable');
+  // The approved catalog reader and the actual vault reader can have the same
+  // opaque reference/provenance while their approved destinations or bounds differ.
+  const changedBounds=workersAIReader(options({capabilities:{max_request_bytes:4096}}));
+  const changedAccount=workersAIReader(options({account_id:'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',approved_account_ids:['bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb']}));
+  await usingVault(async(f,vault,ref,calls,actualDigest)=>{
+    for(const approved of [changedBounds,changedAccount]){
+      assert.equal(approved.serving_configuration_ref,request().serving_configuration_ref);
+      assert.equal(approved.evidence_kind,'synthetic_wire_fixture');assert.notEqual(approved.configuration_digest,actualDigest);
+      const denied=await vault.invokeReader(f.a.scope,ref,WORKERS_AI_ADAPTER,{request:request(),expected_configuration_digest:approved.configuration_digest}) as DecisionResult;
+      assert.equal(denied.status,'unusable');assert.equal(denied.reason,'DECISION_CONFIGURATION_CHANGED');assert.equal(calls(),0);
+    }
+    const missing=await vault.invokeReader(f.a.scope,ref,WORKERS_AI_ADAPTER,{request:request()}) as DecisionResult;
+    assert.equal(missing.reason,'DECISION_REQUEST_INVALID');assert.equal(calls(),0);
+    const malformed=await vault.invokeReader(f.a.scope,ref,WORKERS_AI_ADAPTER,{request:request(),expected_configuration_digest:'not-a-digest'}) as DecisionResult;
+    assert.equal(malformed.reason,'DECISION_REQUEST_INVALID');assert.equal(calls(),0);
+    const matched=await vault.invokeReader(f.a.scope,ref,WORKERS_AI_ADAPTER,{request:request(),expected_configuration_digest:actualDigest}) as DecisionResult;
+    assert.equal(matched.status,'usable');assert.equal(calls(),1);
+  });
 });
