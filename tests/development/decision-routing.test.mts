@@ -6,6 +6,7 @@ import {validateRoutingProtocol,routingIdentity,scoreRoutingProtocol,assessRouti
 import {SupportOwnership} from '../../packages/commerce/support-core.mts';
 import {ExecutionStops} from '../../packages/commerce/execution-stops.mts';
 import {PrivacyLifecycle} from '../../packages/commerce/privacy-lifecycle.mts';
+import {verifyDecisionReceipt} from '../../packages/commerce/decision-shadow.mts';
 
 test('CASE-M14-G01-01',()=>usingRouting(f=>{
  const p=f.freeze();assert.equal(p.body.protocol.baseline,'manual_review');assert.equal(p.body.protocol.calibration.minimum_calibration,60);
@@ -99,6 +100,7 @@ test('M14-G05-LOCAL-01',()=>usingRouting(async f=>{
  const rolled=f.routing.rollback(f.owner.scope,{id:'return_route',publication_version:first.p.version,expected_revision:2,case_id:f.caseA.id,task_id:f.taskA.id});assert.equal(rolled.revision,3);
  const again=await f.routing.run(f.a.scope,f.routeInput());assert.equal(again.configuration_id,f.ref);assert.deepEqual(f.business(),before);assert.deepEqual(f.routing.read(f.a.scope,f.caseA.id,initial.id),initial);
  assert.notEqual(replaced.observation_id,initial.observation_id);assert.equal(f.shadow.read(f.a.scope,f.caseA.id,replaced.observation_id).result.serving.reported_model,'clef_fixture');
+ assert.throws(()=>verifyDecisionReceipt(f.shadow.read(f.a.scope,f.caseA.id,replaced.observation_id)),/DECISION_RECEIPT_SCOPE/);
 }));
 test('M14-G05-LOCAL-02',()=>usingRouting(f=>{
  const a=f.qualification(),b=f.qualification(f.systemRef),report=f.routing.compatibility(f.owner.scope,[{id:a.id,version:a.version},{id:b.id,version:b.version}]);
