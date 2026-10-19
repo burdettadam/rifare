@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "id": "portable-image-suppression-v1",
+  "qualification": "proposed_not_accepted",
+  "mode": "local_diagnostic_recovery",
+  "authority": "docs/decisions/0052-m17-portable-image-suppression.md",
+  "checkpoint": {
+    "media_free": {"version": 1, "fields": ["version", "generated_at", "subjects", "resources"]},
+    "media_present": {"version": 2, "fields": ["version", "generated_at", "subjects", "resources", "images"]},
+    "merchant_extra_fields": ["tenant_id", "store_id"],
+    "v2_required_for": ["any_return_evidence", "image_receipt_residue", "retained_image_suppression"],
+    "image_fields": ["tenant_id", "store_id", "evidence_id", "case_id", "resource_id", "sha256", "source_created_at"],
+    "identity": ["tenant_id", "store_id", "evidence_id"],
+    "conflict_fields": ["case_id", "resource_id", "sha256", "source_created_at"],
+    "source_created_at": "Canonical evidence creation, nonnegative safe integer no later than checkpoint observation.",
+    "generated_at": "Actual checkpoint observation time; not the historical deletion time.",
+    "sha256": "lowercase_64_hex",
+    "id_validation": "existing_kernel_id",
+    "max_image_entries_and_merged_union": 10000,
+    "global_canonical_json_max_bytes": 131072,
+    "merchant_json_max_bytes": 67108864,
+    "duplicate_input": "reject",
+    "truncation": false
+  },
+  "canonical_source": {
+    "table": "commerce_return_evidence",
+    "required_state": "erased",
+    "bytes": null,
+    "note": "",
+    "scanner": null,
+    "payload_contains_media": false,
+    "invented_erased_at": false
+  },
+  "retained_control": {
+    "table": "commerce_support_documents",
+    "kind": "image_suppression",
+    "version": 1,
+    "id": "evidence_id",
+    "body_fields": ["version", "image"],
+    "body_version": 1,
+    "digest": "existing_canonical_content_digest",
+    "author": "privacy_replay",
+    "effective_states": ["recorded", "revoked"],
+    "reviewer": null,
+    "review_digest": null,
+    "expires_at": null,
+    "created_at": "First local checkpoint application time, retained on replay.",
+    "absent_source_retained": true
+  },
+  "replay": {
+    "merge": ["independently_supplied_checkpoint", "existing_destination_controls", "canonical_erased_rows", "validated_original_merchant_package_deletions"],
+    "monotonic": true,
+    "validate_before_subject_replay": true,
+    "image_receipt_selection": "exact_tenant_store_evidence_id",
+    "receipt_kinds": ["image_approval", "image_observation", "image_disagreement"],
+    "whole_case_erasure_shortcut": false,
+    "copied_hold": "A source-authorized deletion supersedes the obsolete copied hold for its selected image.",
+    "unselected_held_image_records": "atomic_refusal",
+    "quarantine_and_authority_invalidation": "existing_controls_preserved",
+    "live_activation_supported": false
+  },
+  "trust": {
+    "digest_authenticates_owner": false,
+    "caller_duties": ["source_quiescence", "independently_trusted_current_checkpoint", "trusted_delivery", "retain_latest_checkpoint"],
+    "older_backup_file_destruction": "unqualified",
+    "external_provider_deletion": "unqualified",
+    "forensic_memory_or_database_page_erasure": false
+  },
+  "new_tables": 0,
+  "new_migrations": 0,
+  "new_adapters": 0,
+  "new_grants_or_http_routes": 0
+}
