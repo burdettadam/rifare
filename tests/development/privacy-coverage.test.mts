@@ -24,6 +24,7 @@ import { usingOptional, populateOptionalPrivacy } from './growth-optional-helper
 import { usingMarketing, populateMarketingPrivacy, usingCancellation } from './growth-marketing-helpers.mts';
 import { EXTENDED_SERVICE_TABLES, extendedServicesPrivacy, extendedServicesRestore, extendedServicesUninstall } from './extended-services-privacy-helpers.mts';
 import { INVENTORY_PLANNING_TABLES, inventoryPlanningPrivacy, inventoryPlanningRestore, inventoryPlanningUninstall } from './inventory-planning-privacy-helpers.mts';
+import { ECOSYSTEM_TABLES, ecosystemPrivacy, ecosystemRestore, ecosystemUninstall } from './ecosystem-privacy-helpers.mts';
 
 const SENTINEL='SYNTHETIC_PRIVACY_CUSTOMER_NOTE';
 const PHOTO=JSON.parse(readFileSync(new URL('../fixtures/return-intake/photo.v1.json',import.meta.url),'utf8')).base64;
@@ -243,7 +244,7 @@ test('CASE-M07-G14-01',async()=>{await usingSupport(f=>{
   assert.throws(()=>x.evidence.inspect(f.a.scope,x.media.id),/SUBJECT_ERASED/);
   const rebuilt=x.metrics.report(f.a.scope,'privacy_cohort');assert.equal(rebuilt.denominator,1);assert.equal(rebuilt.unavailable_cases,1);
   assert.deepEqual(rebuilt.cases,[{case_id:'case_one',state:'unavailable_still_in_denominator'}]);
-});await shoppingPrivacy();await optionalPrivacy();await marketingPrivacy();await extendedServicesPrivacy();await inventoryPlanningPrivacy();});
+});await shoppingPrivacy();await optionalPrivacy();await marketingPrivacy();await extendedServicesPrivacy();await inventoryPlanningPrivacy();await ecosystemPrivacy();});
 
 test('CASE-M07-G14-02',()=>usingSupport(f=>{
   f.db.exec('CREATE TABLE unregistered_agent_memory(customer_id TEXT, content TEXT)');
@@ -277,11 +278,11 @@ test('CASE-M07-G14-03',async()=>{await usingSupport(f=>{
     assert.equal(JSON.stringify(rebuilt).includes(SENTINEL),false);
     assert.deepEqual(db.prepare('PRAGMA foreign_key_check').all(),[]);
   }finally{db.close();}
-});await growthRestore();await extendedServicesRestore();await inventoryPlanningRestore();});
+});await growthRestore();await extendedServicesRestore();await inventoryPlanningRestore();await ecosystemRestore();});
 
 test('M07-G14-ALL-170-TABLES-HAVE-EXPLICIT-SURFACES',()=>usingSupport(f=>{
   const r=auditPrivacyCoverage(f.kernel,f.owner.scope),actual=f.db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name").all().map((x:any)=>x.name);
-  assert.equal(r.tables.length,254);assert.deepEqual(r.tables.map((t:any)=>t.name).sort(),actual);
+  assert.equal(r.tables.length,262);assert.deepEqual(r.tables.map((t:any)=>t.name).sort(),actual);
   const baseline=JSON.parse(readFileSync(new URL('../fixtures/shipping/storage-baseline.v1.json',import.meta.url),'utf8'));
   assert.equal(baseline.tables.length,170);
   const originalNames=new Set(baseline.tables.map((t:any)=>t.name));
@@ -297,8 +298,13 @@ test('M07-G14-ALL-170-TABLES-HAVE-EXPLICIT-SURFACES',()=>usingSupport(f=>{
   const original234=JSON.parse(readFileSync(new URL('../fixtures/inventory-planning/storage-baseline.v1.json',import.meta.url),'utf8'));
   assert.equal(original234.tables.length,234);assert.equal(original234.protected_base,'8096abe27043852d86295b15d4708875fd1434de');
   const original234Names=new Set(original234.tables.map((t:any)=>t.name));
+  const original254=JSON.parse(readFileSync(new URL('../fixtures/ecosystem/storage-baseline.v1.json',import.meta.url),'utf8'));
+  assert.equal(original254.tables.length,254);assert.equal(original254.protected_base,'e36dbcd7cf392d04f21d082e834698bbc6a1ac79');
+  const original254Names=new Set(original254.tables.map((t:any)=>t.name));
+  assert.deepEqual(r.tables.filter((t:any)=>original254Names.has(t.name)).map((t:any)=>({name:t.name,surface:t.surface,handling:t.handling})).sort((a:any,b:any)=>a.name.localeCompare(b.name)),original254.tables);
+  assert.deepEqual(r.tables.filter((t:any)=>!original254Names.has(t.name)).map((t:any)=>t.name).sort(),ECOSYSTEM_TABLES);
   assert.deepEqual(r.tables.filter((t:any)=>original234Names.has(t.name)).map((t:any)=>({name:t.name,surface:t.surface,handling:t.handling})).sort((a:any,b:any)=>a.name.localeCompare(b.name)),original234.tables);
-  assert.deepEqual(r.tables.filter((t:any)=>!original234Names.has(t.name)).map((t:any)=>t.name).sort(),INVENTORY_PLANNING_TABLES);
+  assert.deepEqual(r.tables.filter((t:any)=>original254Names.has(t.name)&&!original234Names.has(t.name)).map((t:any)=>t.name).sort(),INVENTORY_PLANNING_TABLES);
   assert.deepEqual(r.tables.filter((t:any)=>original209Names.has(t.name)).map((t:any)=>({name:t.name,surface:t.surface,handling:t.handling})).sort((a:any,b:any)=>a.name.localeCompare(b.name)),original209.tables);
   assert.deepEqual(r.tables.filter((t:any)=>original234Names.has(t.name)&&!original209Names.has(t.name)).map((t:any)=>t.name).sort(),EXTENDED_SERVICE_TABLES);
   assert.deepEqual(r.tables.filter((t:any)=>original186Names.has(t.name)).map((t:any)=>({name:t.name,surface:t.surface,handling:t.handling})).sort((a:any,b:any)=>a.name.localeCompare(b.name)),original186.tables);
@@ -376,4 +382,4 @@ test('M07-G14-UNINSTALL-DISCONNECTS-AND-RETAINS-NAMED-LIMITS',async()=>{await us
   assertErased(f.db,f.a.tenant,f.a.store,x.order.id);
   assert.equal(f.db.prepare('SELECT envelope,revoked FROM commerce_secrets').get().envelope,'{}');assert.equal(f.db.prepare('SELECT envelope,revoked FROM commerce_secrets').get().revoked,1);
   assert.throws(()=>f.kernel.require(f.owner.scope),/ACCESS_DENIED/);assert.equal(f.source.calls,0);
-});await extendedServicesUninstall();await inventoryPlanningUninstall();});
+});await extendedServicesUninstall();await inventoryPlanningUninstall();await ecosystemUninstall();});
