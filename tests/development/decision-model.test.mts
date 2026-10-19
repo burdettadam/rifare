@@ -193,9 +193,14 @@ test('M13-G03-CREDENTIAL-REVOKED-IN-FLIGHT',async()=>{
 
 test('M13-G03-CONFIGURATION-AND-USAGE-BOUNDARY',async()=>{
   let seen='';const config=options({allowLiveTest:true,capabilities:{max_request_bytes:4096},fixtureTransport:async(url:any)=>{seen=String(url);return response();}});
-  const reader=workersAIReader(config);config.account_id='bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb';config.approved_account_ids.length=0;
+  const reader=workersAIReader(config),configurationDigest=reader.configuration_digest;
+  assert.match(configurationDigest,/^[a-f0-9]{64}$/);assert.equal(reader.serving_configuration_ref,'decision-fixture');
+  assert.equal(workersAIReader(options({allowLiveTest:true,capabilities:{max_request_bytes:4096}})).configuration_digest,configurationDigest);
+  assert.notEqual(workersAIReader(options({allowLiveTest:true,capabilities:{max_request_bytes:4095}})).configuration_digest,configurationDigest);
+  config.account_id='bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb';config.approved_account_ids.length=0;
   config.model_id='unapproved';config.capabilities.max_request_bytes=999999;config.fixtureTransport=async()=>{throw new Error('CONFIGURATION_MUTATED');};
   const result=await execute(reader);assert.equal(result.status,'usable');assert.ok(seen.includes('/'+ACCOUNT+'/'));assert.equal(reader.capabilities.max_request_bytes,4096);
+  assert.equal(reader.configuration_digest,configurationDigest);
   assert.equal(reader.evidence_kind,'synthetic_wire_fixture');assert.equal(result.evidence_kind,'synthetic_wire_fixture');
   assert.throws(()=>Object.assign(reader,{evidence_kind:'live_test_unqualified'}));
   assert.throws(()=>workersAIReader(options({evidence_kind:'live_test_unqualified'})),/DECISION_REQUEST_INVALID/);
