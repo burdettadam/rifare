@@ -65,6 +65,8 @@ test('CASE-M14-G04-02',()=>{
 });
 
 test('CASE-M14-G04-03',async()=>{
+  const backboneOnly=fixture('artifact-attestation');delete backboneOnly.joint_head_sha256;delete backboneOnly.joint_head_loaded;
+  const rejected=readiness(backboneOnly);assert.equal(rejected.status,'missing_evidence');assert.equal(rejected.qualified,false);
   const reader=systemOneReader(options()),result=await execute(reader);
   assert.equal(result.status,'usable');assert.equal((result.answers!.intent as any).confidence.value,0.6);
   assert.deepEqual((result.answers!.intent as any).probabilities,{'return':0.8,other:0.2});
