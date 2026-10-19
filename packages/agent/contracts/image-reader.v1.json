@@ -57,6 +57,16 @@
   },
   "result": {
     "contract": "decision-model.v1",
+    "private_brand": {
+      "actual_reader_instance": true,
+      "exact_invocation_object_identity": true,
+      "new_invocation_object_per_execution": true,
+      "verify_raw_vault_result_before_json_clone": true,
+      "deeply_frozen": true,
+      "copied_result_is_branded": false,
+      "weak_keys_for_invocation_and_result": true,
+      "non_object_invocation_verifiable": false
+    },
     "fixture_evidence_kind": "synthetic_wire_fixture",
     "unconfigured_live_evidence_kind": "live_test_unqualified",
     "unconfigured_live_failure": "DECISION_CAPABILITY_UNAVAILABLE",

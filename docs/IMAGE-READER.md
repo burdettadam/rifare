@@ -16,6 +16,21 @@ configuration digest. Options, reader metadata and capability arrays cannot
 widen a constructed reader. `isImageReader` checks membership in a private
 WeakSet; copying its public properties does not create a branded reader.
 
+`verifyImageReaderResult(reader, invocation, result)` additionally binds the
+actual returned result to that reader instance and the exact invocation object.
+The canonical service creates a new invocation object for every execution,
+passes it directly through `SecretVault.invokeReader`, and verifies the raw
+returned object before calling a JSON validator that creates a copy. A copied
+result, a different invocation, or another reader with the same configuration
+digest fails this identity check. Returned usable and unusable results are
+deeply frozen. Guard exceptions still propagate without a returned result.
+
+The private result index uses weak keys for both invocation and result; the
+provenance index does not retain media requests through a retained result.
+This is process-local execution provenance, not a serialized signature, media
+approval or model-quality attestation. Non-object inputs cannot receive a
+verifiable invocation identity. These checks add no asynchronous boundary.
+
 The media envelope supplies `request`, `image`, the expected configuration
 digest, a trusted current-authority `guard`, and an actual `AbortSignal`.
 Top-level properties must be own data properties with exactly the declared
@@ -96,7 +111,7 @@ trusted installed code, not a sandbox or a source of provider identity evidence.
 
 The ten permanent native cases and independently declared fixtures cover wire
 shape, clear and ambiguous normalization, strict media, complete context,
-configuration/branding, malformed output, no retries, stream bounds, total
+configuration/reader/result branding, malformed output, no retries, stream bounds, total
 deadline and authority/cancellation races. The author performs static source
 review only under ADR-0051; root records actual candidate execution and valid
 targeted fault evidence. No current test pass, live model result, task accuracy,

@@ -55,6 +55,25 @@ const readers=new WeakSet<object>();
 export function isImageReader(value:unknown):value is ImageReader {
   return !!value&&typeof value==='object'&&readers.has(value);
 }
+// Both identities are weak keys. Retaining a result must not retain the input's
+// base64, case state, guard closure or signal through a provenance record.
+const resultsByInvocation=new WeakMap<object,WeakMap<object,ImageReader>>();
+export function verifyImageReaderResult(reader:ImageReader,invocation:unknown,result:unknown):boolean {
+  if(!isImageReader(reader)||!invocation||typeof invocation!=='object'||!result||typeof result!=='object')return false;
+  return resultsByInvocation.get(invocation)?.get(result)===reader;
+}
+function freezeResult<T>(value:T):T {
+  if(value&&typeof value==='object'){Object.values(value).forEach(freezeResult);Object.freeze(value);}return value;
+}
+function issuedResult(reader:ImageReader,invocation:unknown,result:DecisionResult):DecisionResult {
+  freezeResult(result);
+  if(invocation&&typeof invocation==='object'){
+    let issued=resultsByInvocation.get(invocation);
+    if(!issued){issued=new WeakMap<object,ImageReader>();resultsByInvocation.set(invocation,issued);}
+    issued.set(result,reader);
+  }
+  return result;
+}
 const identifier=(value:unknown):value is string=>typeof value==='string'&&/^[A-Za-z0-9_.-]{1,100}$/.test(value)
   &&!['__proto__','constructor','prototype'].includes(value);
 const sha256=(value:unknown):value is string=>typeof value==='string'&&/^[a-f0-9]{64}$/.test(value);
@@ -176,6 +195,8 @@ export function imageReader(options:ImageReaderOptions):ImageReader {
   const reader:ImageReader={provider:'cloudflare',capabilities,evidence_kind:evidenceKind,
     serving_configuration_ref:servingConfigurationRef,configuration_digest:configurationDigest,
     execute:async(credential,input):Promise<DecisionResult>=>{
+      let boundInvocation=input;
+      const issued=(result:DecisionResult)=>issuedResult(reader,boundInvocation,result);
       let request:DecisionRequest|undefined,encoded='',secret='',guard:()=>void,callerSignal:AbortSignal;
       try {
         // These are trusted process-local callbacks, not JSON. Validate every
@@ -184,17 +205,17 @@ export function imageReader(options:ImageReaderOptions):ImageReader {
         if(!sha256(invocation.expected_configuration_digest)||typeof invocation.guard!=='function'
           ||!(invocation.signal instanceof AbortSignal))throw new Error('DECISION_REQUEST_INVALID');
         signalAborted(invocation.signal);guard=invocation.guard;callerSignal=invocation.signal;
-        if(invocation.expected_configuration_digest!==configurationDigest)return unusableDecision('DECISION_CONFIGURATION_CHANGED',evidenceKind);
+        if(invocation.expected_configuration_digest!==configurationDigest)return issued(unusableDecision('DECISION_CONFIGURATION_CHANGED',evidenceKind));
         request=validateDecisionRequest(invocation.request);
-        if(request.serving_configuration_ref!==servingConfigurationRef)return unusableDecision('DECISION_CONFIGURATION_CHANGED',evidenceKind);
+        if(request.serving_configuration_ref!==servingConfigurationRef)return issued(unusableDecision('DECISION_CONFIGURATION_CHANGED',evidenceKind));
         encoded=encodedBody(request,validatedImage(invocation.image));
-      } catch(error){return unusableDecision(requestFailure(error),evidenceKind);}
+      } catch(error){return issued(unusableDecision(requestFailure(error),evidenceKind));}
       input=undefined;
       // There is deliberately no global fetch reference, fallback or live flag.
-      if(!fixtureTransport)return unusableDecision('DECISION_CAPABILITY_UNAVAILABLE',evidenceKind);
-      if(!Buffer.isBuffer(credential)||credential.length>4096)return unusableDecision('DECISION_CREDENTIAL_UNAVAILABLE',evidenceKind);
+      if(!fixtureTransport)return issued(unusableDecision('DECISION_CAPABILITY_UNAVAILABLE',evidenceKind));
+      if(!Buffer.isBuffer(credential)||credential.length>4096)return issued(unusableDecision('DECISION_CREDENTIAL_UNAVAILABLE',evidenceKind));
       secret=credential.toString('utf8');
-      if(!/^[\x21-\x7e]{1,4096}$/.test(secret))return unusableDecision('DECISION_CREDENTIAL_UNAVAILABLE',evidenceKind);
+      if(!/^[\x21-\x7e]{1,4096}$/.test(secret))return issued(unusableDecision('DECISION_CREDENTIAL_UNAVAILABLE',evidenceKind));
 
       const controller=new AbortController(),deadline=performance.now()+timeoutMs;
       let timedOut=false,callerAborted=false,closed=false,guardFailed=false,guardError:unknown;
@@ -246,7 +267,7 @@ export function imageReader(options:ImageReaderOptions):ImageReader {
             checkpoint();return nativeResult(request!,wire,evidenceKind);
           } catch(error){if(!responseReader)cancelBody(response);throw error;}
         })();
-        const result=await Promise.race([pending,timeout,cancellation]);checkpoint();return result;
+        const result=await Promise.race([pending,timeout,cancellation]);checkpoint();return issued(result);
       } catch(error){
         // Authority failures retain the exact trusted exception. Turning a
         // revoked task into an ordinary late model result would lose its fence.
@@ -254,7 +275,7 @@ export function imageReader(options:ImageReaderOptions):ImageReader {
         checkGuard();
         const reason=callerAborted||signalAborted(callerSignal)?'DECISION_AUTHORITY_CHANGED':timedOut?'DECISION_TIMEOUT':
           error instanceof TransportFailure?error.code:'DECISION_UNAVAILABLE';
-        return unusableDecision(reason,evidenceKind);
+        return issued(unusableDecision(reason,evidenceKind));
       } finally {
         closed=true;if(timer!==undefined)clearTimeout(timer);
         EventTarget.prototype.removeEventListener.call(callerSignal,'abort',onAbort);
@@ -262,7 +283,7 @@ export function imageReader(options:ImageReaderOptions):ImageReader {
         // A fixture that ignores cancellation cannot extend the return deadline.
         try{void responseReader?.cancel().catch(()=>{});}catch{}
         responseReader=undefined;for(const chunk of chunks)chunk.fill(0);chunks.length=0;
-        request=undefined;encoded='';secret='';guard=()=>{};callerSignal=controller.signal;
+        request=undefined;encoded='';secret='';guard=()=>{};callerSignal=controller.signal;boundInvocation=undefined;
       }
     }
   };

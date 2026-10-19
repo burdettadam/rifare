@@ -66,3 +66,33 @@ Rollback before integration is to leave the recovery/M17-reader commits out
 of the integration branch. Preserve this branch and fixture-first commit for
 review and later reconciliation. No remote, release tag, publication or
 artifact upload was performed by this author.
+
+## Assigned compatibility follow-up
+
+Root requested a read-only author compatibility check of the uncommitted image
+service after cherry-picking the initial reader. This was not an independent
+candidate review. The check identified a mismatch between accepted reported
+usage and the service's reservation, and the separate vault-reader/catalog-reader
+installation identity boundary. Root subsequently added its own per-invocation
+usage check; that change is outside this author worktree and is not a recorded
+execution result here.
+
+Root separately assigned a result-branding follow-up confined to the original
+new reader paths. Commit ce0679d62147ab40a75e988371820116408e220b adds assertions
+to the existing M17-IMAGE-WIRE-01 case before implementation, preserving all
+previous expected assertions and the total of ten native cases. The assertions
+cover the real reader versus an equal-configuration reader, copied readers,
+copied results, different invocation objects, deeply frozen nested answers,
+and a branded credential-refusal result.
+
+The implementation exports `verifyImageReaderResult` and uses private weak
+keys for both the actual invocation and returned result. Only results produced
+by this reader's execution receive its identity. The canonical service verifies
+the original object returned unchanged through SecretVault before normalization.
+No extra asynchronous boundary is introduced, guard failures still propagate,
+and the index does not retain request/base64/guard objects through a result.
+Callers must construct a fresh invocation object for each execution. The result
+is deeply frozen, and serializing or copying it does not preserve its brand.
+
+The author again ran no product execution. Root owns actual behavioral evidence,
+the divergent-vault service test, independent reviews and milestone decisions.
