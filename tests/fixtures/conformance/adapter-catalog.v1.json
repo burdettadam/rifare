@@ -5533,7 +5533,7 @@
     },
     {
       "path": "packages/commerce/support-service.mts",
-      "sha256": "03719247e5c6c9d309b6a5b843f9b542ff191e8d3cf3571291639b099b5d8244"
+      "sha256": "bba838bce9493676692c1ee68d2df39d0a777085c07034abfe57fe34f2eb064c"
     },
     {
       "path": "packages/commerce/support-tracking.mts",
@@ -7234,6 +7234,22 @@
     {
       "path": "tests/development/shopper-memory-helpers.mts",
       "sha256": "491fb31df169ba5b843c35f07a0e0bfa63d30f96e755faba9dd0b9d4e599acdf"
+    },
+    {
+      "path": "packages/commerce/journey-readiness.mts",
+      "sha256": "fa9a906ecd906a4d18ff77ac1a5b346abf365b32a9c314ffbae66622b70da9ad"
+    },
+    {
+      "path": "packages/commerce/contracts/journey-readiness.v1.json",
+      "sha256": "2ef943387c9b9bcdd9a58828bf75712b6c463d80317977b28bda6a5f3c0edf8f"
+    },
+    {
+      "path": "tests/development/journey-readiness.test.mts",
+      "sha256": "d9126e17df31a9b1b32c53424e9a5fe396598e87932e832d008e4b748b37314b"
+    },
+    {
+      "path": "tests/development/journey-readiness-helpers.mts",
+      "sha256": "3e14441a3843e8afa1704193432c1e5a4b091a0f493eddbae95aed6d580ed341"
     }
   ]
 }

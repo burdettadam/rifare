@@ -1885,6 +1885,14 @@
       "contract_files": [
         "packages/commerce/contracts/shopper-memory.v1.json"
       ]
+    },
+    {
+      "id": "m18-journey-readiness-diagnostic",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/journey-readiness.v1.json"
+      ]
     }
   ],
   "tests": [
@@ -23692,6 +23700,146 @@
       "runner_case_id": "M18-G01-MANUAL-DISPATCH-AND-OWNERSHIP-HANDOVER",
       "source": "tests/development/shopper-memory.test.mts",
       "capability_id": "m18-shopper-memory-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M18-G02-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M18-G02-01",
+      "source": "tests/development/journey-readiness.test.mts",
+      "capability_id": "m18-journey-readiness-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M18-G02-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M18-G02-02",
+      "source": "tests/development/journey-readiness.test.mts",
+      "capability_id": "m18-journey-readiness-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M18-G02-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M18-G02-03",
+      "source": "tests/development/journey-readiness.test.mts",
+      "capability_id": "m18-journey-readiness-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G02-STRICT-INPUT-AND-OWNER-BINDING",
+      "suite": "runtime",
+      "runner_case_id": "M18-G02-STRICT-INPUT-AND-OWNER-BINDING",
+      "source": "tests/development/journey-readiness.test.mts",
+      "capability_id": "m18-journey-readiness-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G02-EXACT-CASE-CHANNEL-TENANT-AND-RESOURCE",
+      "suite": "runtime",
+      "runner_case_id": "M18-G02-EXACT-CASE-CHANNEL-TENANT-AND-RESOURCE",
+      "source": "tests/development/journey-readiness.test.mts",
+      "capability_id": "m18-journey-readiness-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G02-CURRENT-CUSTOMER-PROOF-AND-REVOCATION",
+      "suite": "runtime",
+      "runner_case_id": "M18-G02-CURRENT-CUSTOMER-PROOF-AND-REVOCATION",
+      "source": "tests/development/journey-readiness.test.mts",
+      "capability_id": "m18-journey-readiness-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G02-FRESH-SESSION-CANNOT-REPLACE-CASE-PROOF",
+      "suite": "runtime",
+      "runner_case_id": "M18-G02-FRESH-SESSION-CANNOT-REPLACE-CASE-PROOF",
+      "source": "tests/development/journey-readiness.test.mts",
+      "capability_id": "m18-journey-readiness-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G02-CURRENT-CONTACT-AND-CHANNEL",
+      "suite": "runtime",
+      "runner_case_id": "M18-G02-CURRENT-CONTACT-AND-CHANNEL",
+      "source": "tests/development/journey-readiness.test.mts",
+      "capability_id": "m18-journey-readiness-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G02-CURRENT-PERMISSIONS",
+      "suite": "runtime",
+      "runner_case_id": "M18-G02-CURRENT-PERMISSIONS",
+      "source": "tests/development/journey-readiness.test.mts",
+      "capability_id": "m18-journey-readiness-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G02-CURRENT-OWNERSHIP-GENERATION",
+      "suite": "runtime",
+      "runner_case_id": "M18-G02-CURRENT-OWNERSHIP-GENERATION",
+      "source": "tests/development/journey-readiness.test.mts",
+      "capability_id": "m18-journey-readiness-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G02-SOURCE-FRESHNESS-AND-EXPLICIT-HISTORY",
+      "suite": "runtime",
+      "runner_case_id": "M18-G02-SOURCE-FRESHNESS-AND-EXPLICIT-HISTORY",
+      "source": "tests/development/journey-readiness.test.mts",
+      "capability_id": "m18-journey-readiness-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G02-REGISTRY-QUALIFICATION-AND-CONNECTION-REVISION",
+      "suite": "runtime",
+      "runner_case_id": "M18-G02-REGISTRY-QUALIFICATION-AND-CONNECTION-REVISION",
+      "source": "tests/development/journey-readiness.test.mts",
+      "capability_id": "m18-journey-readiness-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G02-REVOKED-SENDER-REFUSES-STALE-DISPLAY",
+      "suite": "runtime",
+      "runner_case_id": "M18-G02-REVOKED-SENDER-REFUSES-STALE-DISPLAY",
+      "source": "tests/development/journey-readiness.test.mts",
+      "capability_id": "m18-journey-readiness-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G02-CONSENT-AND-NATIVE-FINAL-SEND",
+      "suite": "runtime",
+      "runner_case_id": "M18-G02-CONSENT-AND-NATIVE-FINAL-SEND",
+      "source": "tests/development/journey-readiness.test.mts",
+      "capability_id": "m18-journey-readiness-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G02-MISSING-OWNERS-AND-REQUIRED-INPUT",
+      "suite": "runtime",
+      "runner_case_id": "M18-G02-MISSING-OWNERS-AND-REQUIRED-INPUT",
+      "source": "tests/development/journey-readiness.test.mts",
+      "capability_id": "m18-journey-readiness-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G02-EDIT-SETTINGS-AND-WAREHOUSE-QUALIFICATION",
+      "suite": "runtime",
+      "runner_case_id": "M18-G02-EDIT-SETTINGS-AND-WAREHOUSE-QUALIFICATION",
+      "source": "tests/development/journey-readiness.test.mts",
+      "capability_id": "m18-journey-readiness-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G02-CART-SOURCE-CHANGES-REQUIRE-NEW-PREVIEW",
+      "suite": "runtime",
+      "runner_case_id": "M18-G02-CART-SOURCE-CHANGES-REQUIRE-NEW-PREVIEW",
+      "source": "tests/development/journey-readiness.test.mts",
+      "capability_id": "m18-journey-readiness-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G02-EXCHANGE-BROWSE-USES-EXISTING-ALLOCATION",
+      "suite": "runtime",
+      "runner_case_id": "M18-G02-EXCHANGE-BROWSE-USES-EXISTING-ALLOCATION",
+      "source": "tests/development/journey-readiness.test.mts",
+      "capability_id": "m18-journey-readiness-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G02-INTEGRITY-FAILURES-NEVER-PROMOTE-AVAILABILITY",
+      "suite": "runtime",
+      "runner_case_id": "M18-G02-INTEGRITY-FAILURES-NEVER-PROMOTE-AVAILABILITY",
+      "source": "tests/development/journey-readiness.test.mts",
+      "capability_id": "m18-journey-readiness-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G02-QUARANTINE-EGRESS-AND-READ-ONLY-DISPATCH",
+      "suite": "runtime",
+      "runner_case_id": "M18-G02-QUARANTINE-EGRESS-AND-READ-ONLY-DISPATCH",
+      "source": "tests/development/journey-readiness.test.mts",
+      "capability_id": "m18-journey-readiness-diagnostic"
     }
   ],
   "protected_files": [
@@ -24215,7 +24363,11 @@
     "packages/commerce/shopper-memory-records.mts",
     "packages/commerce/shopper-memory.mts",
     "tests/development/shopper-memory-helpers.mts",
-    "tests/development/shopper-memory.test.mts"
+    "tests/development/shopper-memory.test.mts",
+    "packages/commerce/contracts/journey-readiness.v1.json",
+    "packages/commerce/journey-readiness.mts",
+    "tests/development/journey-readiness-helpers.mts",
+    "tests/development/journey-readiness.test.mts"
   ],
   "source_count_fixture": "tests/fixtures/licensing/artifact-oracle.v1.json",
   "source_inventory": "planning/component-inventory.json"

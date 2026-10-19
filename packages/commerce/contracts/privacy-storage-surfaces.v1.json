@@ -1063,7 +1063,7 @@
     },
     {
       "path": "packages/commerce/support-service.mts",
-      "sha256": "03719247e5c6c9d309b6a5b843f9b542ff191e8d3cf3571291639b099b5d8244"
+      "sha256": "bba838bce9493676692c1ee68d2df39d0a777085c07034abfe57fe34f2eb064c"
     },
     {
       "path": "packages/commerce/support-tracking.mts",
@@ -1236,6 +1236,10 @@
     {
       "path": "packages/commerce/shopper-memory-privacy.mts",
       "sha256": "ddcc3db18b45c1d2074544abc5233299aa31f0fdccbc9254d5d65b9dd17c21eb"
+    },
+    {
+      "path": "packages/commerce/journey-readiness.mts",
+      "sha256": "fa9a906ecd906a4d18ff77ac1a5b346abf365b32a9c314ffbae66622b70da9ad"
     }
   ],
   "surfaces": [

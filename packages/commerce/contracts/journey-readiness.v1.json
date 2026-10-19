@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "id": "rifare-journey-readiness-v1",
+  "qualification": "synthetic_local_named_steps_only",
+  "input": ["case_id", "link_id", "expected_generation", "allocation_id", "cart_id", "sender_id"],
+  "nullable_inputs": ["allocation_id", "cart_id", "sender_id"],
+  "actions": ["tracking.read", "return.refund.form", "return.exchange.form", "exchange.offers", "order.edit.context", "shopping.cart.context", "followup.queue", "remote.continue"],
+  "statuses": ["available", "disabled", "needs_configuration", "unsupported", "temporarily_unavailable", "unverified"],
+  "availability_means": "current named local inspection, form or queue step; exact native quote and approval remain required",
+  "readiness_descriptor_accepted_as_authority": false,
+  "creates_business_or_context_records": false,
+  "model_thread_required": false,
+  "execution_authorized": false,
+  "production_qualified": false,
+  "remote_qualification": "missing"
+}

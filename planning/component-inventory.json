@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "id": "rifare-source-inventory",
-  "revision": 27,
+  "revision": 28,
   "status": "proposed",
   "components": [
     {
@@ -129,6 +129,7 @@
         "docs/INSTANT-EXCHANGES.md",
         "docs/INTEGRATION-REVIEW.md",
         "docs/INVENTORY-RECONCILIATION.md",
+        "docs/JOURNEY-READINESS.md",
         "docs/LICENSING.md",
         "docs/LOCAL-ENVIRONMENT.md",
         "docs/LOCALE-PRESENTATION.md",
@@ -255,6 +256,7 @@
         "docs/decisions/0051-m17-recovery-image-assistance.md",
         "docs/decisions/0052-m17-portable-image-suppression.md",
         "docs/decisions/0053-m18-verified-shopper-memory.md",
+        "docs/decisions/0054-m18-current-journey-readiness.md",
         "docs/decisions/README.md",
         "docs/exchange-depth.md",
         "docs/exchange-money.md",
@@ -719,6 +721,7 @@
         "packages/commerce/contracts/inventory-forecasts.v1.json",
         "packages/commerce/contracts/inventory-reconciliation.v1.json",
         "packages/commerce/contracts/inventory-transfers.v1.json",
+        "packages/commerce/contracts/journey-readiness.v1.json",
         "packages/commerce/contracts/location-inventory.v1.json",
         "packages/commerce/contracts/marketing-segments.v1.json",
         "packages/commerce/contracts/network-alerts.v1.json",
@@ -822,6 +825,7 @@
         "packages/commerce/inventory-planning-privacy.mts",
         "packages/commerce/inventory-reconciliation.mts",
         "packages/commerce/inventory-transfers.mts",
+        "packages/commerce/journey-readiness.mts",
         "packages/commerce/kernel.mts",
         "packages/commerce/knowledge.mts",
         "packages/commerce/lifecycle-gateway.mts",
@@ -1170,6 +1174,8 @@
         "tests/development/inventory-planning-privacy-helpers.mts",
         "tests/development/inventory-reconciliation-helpers.mts",
         "tests/development/inventory-reconciliation.test.mts",
+        "tests/development/journey-readiness-helpers.mts",
+        "tests/development/journey-readiness.test.mts",
         "tests/development/local-model-helpers.mts",
         "tests/development/local-model.test.mts",
         "tests/development/locale-presentation.test.mts",
@@ -1659,6 +1665,7 @@
         "work/records/M17-recovery-assignment.md",
         "work/records/M17-recovery-checkpoint.md",
         "work/records/M17-suppression-checkpoint.md",
+        "work/records/M18-journey-checkpoint.md",
         "work/records/M18-memory-checkpoint.md"
       ],
       "notices": []
