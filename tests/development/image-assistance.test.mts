@@ -15,6 +15,8 @@ import {createRecoverySnapshot,restoreRecoverySnapshot} from '../../packages/com
 import {exportMerchant,exportMerchantSuppression,importMerchant,merchantSnapshotDigest} from '../../packages/commerce/merchant-portability.mts';
 import {SupportOwnership} from '../../packages/commerce/support-core.mts';
 import {ExecutionStops} from '../../packages/commerce/execution-stops.mts';
+import {SecretVault} from '../../packages/commerce/secrets.mts';
+import {IMAGE_ADAPTER} from '../../packages/agent/image-reader.mts';
 
 test('M17-IMAGES-DEFAULT-MANUAL-01',()=>usingImages(async f=>{
   f.images.configure(f.owner.scope,f.configuration({expected_version:1,enabled:false}));
@@ -52,6 +54,10 @@ test('M17-IMAGES-PRINCIPAL-BOUNDARIES-04',()=>usingImages(async f=>{
   await assert.rejects(()=>f.images.execute(f.a.scope,{}),/IMAGE_PREPARATION_INVALID/);
   assert.throws(()=>new ImageAssistance(f.kernel,f.reads,f.imageVault,f.evidence,[{...f.imageConfigurations[0],reader:Object.freeze({...f.imageReader})}]),/IMAGE_CONFIGURATION_INVALID/);
   assert.equal(f.imageRequests.length,0);
+  const genuine=await f.images.run(f.a.scope,f.imageInput(approval));
+  const divergentVault=new SecretVault(f.kernel,{activeId:'image_fixture_key',get:()=>Buffer.alloc(32,6)},{},{[IMAGE_ADAPTER]:{provider:'cloudflare',execute:async()=>structuredClone(genuine.result)}});
+  const divergent=new ImageAssistance(f.kernel,f.reads,divergentVault,f.evidence,f.imageConfigurations),untrusted=await divergent.run(f.a.scope,f.imageInput(approval));
+  assert.equal(untrusted.result.status,'unusable');assert.equal(untrusted.result.reason,'DECISION_OUTPUT_INVALID');assert.equal(untrusted.provenance.dispatch,'transport_unconfirmed');assert.equal(f.imageRequests.length,1);
 }));
 test('M17-IMAGES-EXACT-SOURCE-BINDING-05',async()=>{
   await usingImages(async f=>{const {evidence,approval}=await f.approve();
