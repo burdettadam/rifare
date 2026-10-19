@@ -57,10 +57,11 @@ Root ran that complete 15-case helper file and observed the specific failure
 exact 57-target set as 44 unique original targets plus 13 adopted targets.
 Both actual failure runs and the initial green remain in checkpoint evidence.
 
-The final focused selection includes the complete `tests/test_plan_tools.py`
+The corrected coherent selection includes the complete `tests/test_plan_tools.py`
 (30 cases), `tests/test_browser_plan_adoption.py` (13 cases) and retained
 `tests/test_repository.py` (15 cases): 58 actual cases, three whole files, one
-60-second invocation deadline. The expansion addresses the concrete review
+60-second invocation deadline. All 58 passed on candidate
+`5c1d5e5587871f136c17f3604524de0462acb0d5`. The expansion addresses the concrete review
 finding without changing any existing test. Root also checks canonical
 planning, local repository links/metadata, generated-view freshness and Git
 whitespace. Independent preservation review covers the old records and cards,
@@ -72,6 +73,18 @@ The only inherited bookkeeping repairs are the closed 57-target catalogue
 helper registrations, registration of the 13 new helper cases, and additive
 source inventory/count maintenance. The 69 browser specifications do not become
 executable registrations or evidence of execution.
+
+Final project-summary reconciliation updates the unlabeled `project.json`
+counts to the canonical totals and retains its complete old count object under
+`initial_catalogue_counts`. Every other existing field remains unchanged;
+explicit notes distinguish initial starter flags from current work records.
+ADR-0044 records this narrow authority before the metadata edit. Read-only
+consumer review confirms that the changed count fields do not affect product
+code or the existing helper assertions. The final evidence carries the 43
+planning cases only with unchanged source/input bindings and rechecks the
+complete affected 15-case repository-helper file plus final metadata/layout.
+This avoids relabeling a previous command as a new execution. Source membership,
+all existing assertions and the protected file list remain unchanged.
 
 ## Evidence, review and recovery
 

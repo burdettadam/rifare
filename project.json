@@ -19,12 +19,12 @@
     "qualification_record": "docs/WORKFLOW-ADOPTION.md"
   },
   "counts": {
-    "milestones": 13,
-    "worker_goals": 190,
-    "acceptance_gates": 13,
-    "requirements": 151,
-    "test_specifications": 676,
-    "capability_targets": 44
+    "milestones": 26,
+    "worker_goals": 255,
+    "acceptance_gates": 26,
+    "requirements": 216,
+    "test_specifications": 949,
+    "capability_targets": 57
   },
   "development_checkpoint": "M00-diagnostic-reviewed-integration",
   "runtime_smoke_profile": {
@@ -32,5 +32,15 @@
     "target_stack_qualified": false,
     "goal_accepted": false,
     "instructions": "docs/LOCAL-ENVIRONMENT.md"
-  }
+  },
+  "initial_catalogue_counts": {
+    "milestones": 13,
+    "worker_goals": 190,
+    "acceptance_gates": 13,
+    "requirements": 151,
+    "test_specifications": 676,
+    "capability_targets": 44
+  },
+  "counts_note": "Current canonical planning catalogue after ADR-0042 and ADR-0044. The original starter totals remain in initial_catalogue_counts; these counts do not claim implementation or executed product tests.",
+  "baseline_metadata_note": "The stage, initial goal, implementation/test flags, development_checkpoint and smoke profile retain the initial starter snapshot. Current observed development and remaining qualification are recorded in work/ and docs/M14-QUALIFICATION.md."
 }
