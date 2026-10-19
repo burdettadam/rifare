@@ -178,3 +178,35 @@ guard and must make unchanged behavioral assertions fail (a cached label proposa
 while an actual replacement is unknown is suitable). Never integrate the fault.
 Two independent reviews bind the clean executed candidate. Formal M18-G99 and
 real M15 remote/channel/target-host gates remain separately blocked.
+
+## Preimplementation native-owner and projection clarification
+
+Independent source review established that ReturnIntake.prepare owns the pending
+request's exact preview binding; a separate gateway.prepare cannot create that
+request. Therefore journey prepare explicitly excludes diagnostic.return.submit
+(JOURNEY_ACTION_UNSUPPORTED). Pending intake is created/revised by the existing
+ReturnIntake owner; attach retains its original immutable preview, and execute
+may consume that exact preview through the unchanged gateway. Direct return_request
+references are allowed only in submitted/native_unknown/native_created states;
+awaiting_review returns JOURNEY_REFERENCE_MUTABLE because its digest can change
+legitimately during native revision. Successful journey execute may append the
+now-submitted canonical request reference. No native owner is altered.
+
+Top context status is missing, active, forgotten, restored or unavailable.
+Current active documents yield active. The projection also includes
+retained_under_hold and configuration_current booleans. An intent has id, kind,
+references, state, restricted and observations. Reference values are exact
+{kind,id,digest}; observations are allowlisted {reference,state,native_id,
+qualification}, never raw payloads or copied addresses. State is restricted,
+unknown, handoff, available (current tracking), awaiting_approval (preview only),
+recorded (request/receipt/approval provenance) or observed (known native effect).
+Observation state retains the native effect stage; cart purchased is distinct
+from an unpurchased committed cart. These states never assert financial settlement.
+
+Unresolved rows contain family, id, state and handoff_required:true. Family is
+generic, native_return, resolution, fulfillment, edit or cart. Native-return rows
+may add request_id; edit rows use original edit id and edit_steps containing the
+original operation_id, stage and state. Private-restricted readers see no refs,
+observations or unresolved IDs; handoff_required still reflects hidden uncertainty.
+Expected-version conflicts use JOURNEY_VERSION_CHANGED; request replay uses
+JOURNEY_REQUEST_REPLAY. These clarifications precede new tests and runtime.
