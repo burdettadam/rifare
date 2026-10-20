@@ -5181,19 +5181,19 @@
               "id": "CASE-M20-G02-01",
               "name": "CASE-M20-G02-01",
               "path": "tests/development/dropoff-credentials.test.mts",
-              "sha256": "3a2f62c85f9b949a76dc33c856a42b72ffe4213f60b5a77c682a6841e302f0eb"
+              "sha256": "5cb0929a77641bcd618bf4e6d51607544df12bc206902985a721b47d0e2e0388"
             },
             {
               "id": "CASE-M20-G02-02",
               "name": "CASE-M20-G02-02",
               "path": "tests/development/dropoff-credentials.test.mts",
-              "sha256": "3a2f62c85f9b949a76dc33c856a42b72ffe4213f60b5a77c682a6841e302f0eb"
+              "sha256": "5cb0929a77641bcd618bf4e6d51607544df12bc206902985a721b47d0e2e0388"
             },
             {
               "id": "CASE-M20-G02-03",
               "name": "CASE-M20-G02-03",
               "path": "tests/development/dropoff-credentials.test.mts",
-              "sha256": "3a2f62c85f9b949a76dc33c856a42b72ffe4213f60b5a77c682a6841e302f0eb"
+              "sha256": "5cb0929a77641bcd618bf4e6d51607544df12bc206902985a721b47d0e2e0388"
             }
           ],
           "direct_fixtures": []
@@ -5209,7 +5209,7 @@
               "id": "CASE-M20-G02-06",
               "name": "CASE-M20-G02-06",
               "path": "tests/development/dropoff-credentials.test.mts",
-              "sha256": "3a2f62c85f9b949a76dc33c856a42b72ffe4213f60b5a77c682a6841e302f0eb"
+              "sha256": "5cb0929a77641bcd618bf4e6d51607544df12bc206902985a721b47d0e2e0388"
             }
           ],
           "direct_fixtures": []
@@ -5225,19 +5225,19 @@
               "id": "CASE-M20-G02-01",
               "name": "CASE-M20-G02-01",
               "path": "tests/development/dropoff-credentials.test.mts",
-              "sha256": "3a2f62c85f9b949a76dc33c856a42b72ffe4213f60b5a77c682a6841e302f0eb"
+              "sha256": "5cb0929a77641bcd618bf4e6d51607544df12bc206902985a721b47d0e2e0388"
             },
             {
               "id": "CASE-M20-G02-02",
               "name": "CASE-M20-G02-02",
               "path": "tests/development/dropoff-credentials.test.mts",
-              "sha256": "3a2f62c85f9b949a76dc33c856a42b72ffe4213f60b5a77c682a6841e302f0eb"
+              "sha256": "5cb0929a77641bcd618bf4e6d51607544df12bc206902985a721b47d0e2e0388"
             },
             {
               "id": "CASE-M20-G02-03",
               "name": "CASE-M20-G02-03",
               "path": "tests/development/dropoff-credentials.test.mts",
-              "sha256": "3a2f62c85f9b949a76dc33c856a42b72ffe4213f60b5a77c682a6841e302f0eb"
+              "sha256": "5cb0929a77641bcd618bf4e6d51607544df12bc206902985a721b47d0e2e0388"
             }
           ],
           "direct_fixtures": []
@@ -5253,19 +5253,19 @@
               "id": "CASE-M20-G02-01",
               "name": "CASE-M20-G02-01",
               "path": "tests/development/dropoff-credentials.test.mts",
-              "sha256": "3a2f62c85f9b949a76dc33c856a42b72ffe4213f60b5a77c682a6841e302f0eb"
+              "sha256": "5cb0929a77641bcd618bf4e6d51607544df12bc206902985a721b47d0e2e0388"
             },
             {
               "id": "CASE-M20-G02-02",
               "name": "CASE-M20-G02-02",
               "path": "tests/development/dropoff-credentials.test.mts",
-              "sha256": "3a2f62c85f9b949a76dc33c856a42b72ffe4213f60b5a77c682a6841e302f0eb"
+              "sha256": "5cb0929a77641bcd618bf4e6d51607544df12bc206902985a721b47d0e2e0388"
             },
             {
               "id": "CASE-M20-G02-03",
               "name": "CASE-M20-G02-03",
               "path": "tests/development/dropoff-credentials.test.mts",
-              "sha256": "3a2f62c85f9b949a76dc33c856a42b72ffe4213f60b5a77c682a6841e302f0eb"
+              "sha256": "5cb0929a77641bcd618bf4e6d51607544df12bc206902985a721b47d0e2e0388"
             }
           ],
           "direct_fixtures": []
@@ -5281,19 +5281,19 @@
               "id": "CASE-M20-G02-01",
               "name": "CASE-M20-G02-01",
               "path": "tests/development/dropoff-credentials.test.mts",
-              "sha256": "3a2f62c85f9b949a76dc33c856a42b72ffe4213f60b5a77c682a6841e302f0eb"
+              "sha256": "5cb0929a77641bcd618bf4e6d51607544df12bc206902985a721b47d0e2e0388"
             },
             {
               "id": "CASE-M20-G02-02",
               "name": "CASE-M20-G02-02",
               "path": "tests/development/dropoff-credentials.test.mts",
-              "sha256": "3a2f62c85f9b949a76dc33c856a42b72ffe4213f60b5a77c682a6841e302f0eb"
+              "sha256": "5cb0929a77641bcd618bf4e6d51607544df12bc206902985a721b47d0e2e0388"
             },
             {
               "id": "CASE-M20-G02-03",
               "name": "CASE-M20-G02-03",
               "path": "tests/development/dropoff-credentials.test.mts",
-              "sha256": "3a2f62c85f9b949a76dc33c856a42b72ffe4213f60b5a77c682a6841e302f0eb"
+              "sha256": "5cb0929a77641bcd618bf4e6d51607544df12bc206902985a721b47d0e2e0388"
             }
           ],
           "direct_fixtures": []
@@ -5309,19 +5309,19 @@
               "id": "CASE-M20-G02-01",
               "name": "CASE-M20-G02-01",
               "path": "tests/development/dropoff-credentials.test.mts",
-              "sha256": "3a2f62c85f9b949a76dc33c856a42b72ffe4213f60b5a77c682a6841e302f0eb"
+              "sha256": "5cb0929a77641bcd618bf4e6d51607544df12bc206902985a721b47d0e2e0388"
             },
             {
               "id": "CASE-M20-G02-02",
               "name": "CASE-M20-G02-02",
               "path": "tests/development/dropoff-credentials.test.mts",
-              "sha256": "3a2f62c85f9b949a76dc33c856a42b72ffe4213f60b5a77c682a6841e302f0eb"
+              "sha256": "5cb0929a77641bcd618bf4e6d51607544df12bc206902985a721b47d0e2e0388"
             },
             {
               "id": "CASE-M20-G02-03",
               "name": "CASE-M20-G02-03",
               "path": "tests/development/dropoff-credentials.test.mts",
-              "sha256": "3a2f62c85f9b949a76dc33c856a42b72ffe4213f60b5a77c682a6841e302f0eb"
+              "sha256": "5cb0929a77641bcd618bf4e6d51607544df12bc206902985a721b47d0e2e0388"
             }
           ],
           "direct_fixtures": []
@@ -6365,7 +6365,7 @@
     },
     {
       "path": "tests/fixtures/conformance/expected-coverage.v1.json",
-      "sha256": "0bba7f8e52745c00f22addd33b4b86ad44a97c8be5a31762ee9dceb896d4acd0"
+      "sha256": "cc842ad67925a6b6acc59e64445fd7320d136da9a910dfb50c76364a053b9f8a"
     },
     {
       "path": "tests/fixtures/conformance/source-inputs.v1.json",
@@ -8013,7 +8013,7 @@
     },
     {
       "path": "tests/development/dropoff-credentials.test.mts",
-      "sha256": "3a2f62c85f9b949a76dc33c856a42b72ffe4213f60b5a77c682a6841e302f0eb"
+      "sha256": "5cb0929a77641bcd618bf4e6d51607544df12bc206902985a721b47d0e2e0388"
     },
     {
       "path": "tests/development/dropoff-credentials-helpers.mts",

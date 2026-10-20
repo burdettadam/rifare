@@ -2937,25 +2937,25 @@
       "id": "CASE-M20-G02-01",
       "name": "CASE-M20-G02-01",
       "path": "tests/development/dropoff-credentials.test.mts",
-      "sha256": "3a2f62c85f9b949a76dc33c856a42b72ffe4213f60b5a77c682a6841e302f0eb"
+      "sha256": "5cb0929a77641bcd618bf4e6d51607544df12bc206902985a721b47d0e2e0388"
     },
     {
       "id": "CASE-M20-G02-02",
       "name": "CASE-M20-G02-02",
       "path": "tests/development/dropoff-credentials.test.mts",
-      "sha256": "3a2f62c85f9b949a76dc33c856a42b72ffe4213f60b5a77c682a6841e302f0eb"
+      "sha256": "5cb0929a77641bcd618bf4e6d51607544df12bc206902985a721b47d0e2e0388"
     },
     {
       "id": "CASE-M20-G02-03",
       "name": "CASE-M20-G02-03",
       "path": "tests/development/dropoff-credentials.test.mts",
-      "sha256": "3a2f62c85f9b949a76dc33c856a42b72ffe4213f60b5a77c682a6841e302f0eb"
+      "sha256": "5cb0929a77641bcd618bf4e6d51607544df12bc206902985a721b47d0e2e0388"
     },
     {
       "id": "CASE-M20-G02-06",
       "name": "CASE-M20-G02-06",
       "path": "tests/development/dropoff-credentials.test.mts",
-      "sha256": "3a2f62c85f9b949a76dc33c856a42b72ffe4213f60b5a77c682a6841e302f0eb"
+      "sha256": "5cb0929a77641bcd618bf4e6d51607544df12bc206902985a721b47d0e2e0388"
     },
     {
       "id": "M01-G04-01",
