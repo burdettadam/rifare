@@ -11,6 +11,7 @@ import { imageSuppressionState,validateImageSuppression,prepareImageSuppression,
 import { preflightShopperMemory,revokeShopperMemoryForRestore } from './shopper-memory-privacy.mts';
 import { preflightJourneys,revokeJourneysForRestore } from './journey-privacy.mts';
 import { preflightFollowups,revokeFollowupsForRestore } from './journey-followup-privacy.mts';
+import {preflightLoyaltyRedemptions,revokeLoyaltyRedemptionsForRestore} from './loyalty-redemption-privacy.mts';
 
 const LIMIT=64*1024*1024, MAX_ROWS=10000;
 const LOCAL_KINDS=new Set(['migration_binding','merchant_import','merchant_credential_binding']);
@@ -208,9 +209,11 @@ export function importMerchant(k:CommerceKernel,scope:Scope,value:unknown,expect
     preflightShopperMemory(k,s,x.rows);
     preflightJourneys(k,s,x.rows);
     preflightFollowups(k,s,x.rows);
+    preflightLoyaltyRedemptions(k,s,x.rows);
     if(prior){const state=k.db.prepare('SELECT * FROM commerce_recovery_state WHERE id=1').get() as Row;
       if(prior.snapshot_id!==m.snapshot_id||prior.digest!==expected_digest||!state||state.restore_id!==m.snapshot_id||state.source_digest!==expected_digest)throw new Error('PORTABILITY_IMPORT_CONFLICT');
       const imageReplay=prepareImageSuppression(k,cp.checkpoint,s,x.rows);
+      revokeLoyaltyRedemptionsForRestore(k,s,cp.checkpoint);
       applySuppression(k,s,cp.checkpoint);
       applyImageSuppression(k,imageReplay);revokeImagesForRestore(k,s.tenant_id,s.store_id);
       revokeShopperMemoryForRestore(k,s.tenant_id,s.store_id);
@@ -235,6 +238,8 @@ export function importMerchant(k:CommerceKernel,scope:Scope,value:unknown,expect
     const erased=k.db.prepare(`SELECT r.payload,r.customer_id FROM commerce_resources r JOIN commerce_privacy_resources p USING(tenant_id,store_id) WHERE p.resource_id=r.id`).all() as Row[];
     if(erased.some(r=>r.payload!=='{"redacted":true}'||r.customer_id!==null))throw new Error('PORTABILITY_SUPPRESSION_INVALID');
     const imageReplay=prepareImageSuppression(k,cp.checkpoint,s,x.rows);
+    preflightLoyaltyRedemptions(k,s,x.rows);
+    revokeLoyaltyRedemptionsForRestore(k,s,cp.checkpoint);
     preflightShopperMemory(k,s,x.rows);
     preflightJourneys(k,s,x.rows);
     preflightFollowups(k,s,x.rows);

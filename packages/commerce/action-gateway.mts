@@ -19,10 +19,13 @@ import { CaseConfigurations,WRITE_CONTRACT,WRITE_CONTRACT_DIGEST } from './case-
 import { money } from './money.mts';
 import { permissionDecision } from './authorization.mts';
 import { assertGiftOutcome,assertGiftAction,verifiedGiftCase } from './gift-proof.mts';
+import {LoyaltyRedemptions,assertLoyaltyRedemptionOwner,loyaltyGatewayQuote,commitLoyaltyRedemption} from './loyalty-redemptions.mts';
+import {LOYALTY_REDEEM_ACTION,redemptionHuman} from './loyalty-redemption-values.mts';
+import {loyaltyQuoteRecord} from './loyalty-redemption-records.mts';
 
 export class ActionGateway {
-  #k:CommerceKernel;readonly cases:CaseConfigurations;
-  constructor(kernel:CommerceKernel){this.#k=kernel;this.cases=new CaseConfigurations(kernel);}
+  #k:CommerceKernel;readonly cases:CaseConfigurations;readonly loyalty:LoyaltyRedemptions|null;
+  constructor(kernel:CommerceKernel,options:{loyalty?:LoyaltyRedemptions}={}){this.#k=kernel;this.cases=new CaseConfigurations(kernel);this.loyalty=options.loyalty===undefined?null:assertLoyaltyRedemptionOwner(kernel,options.loyalty);}
   configure(scope:Scope,input:unknown){
     const k=this.#k,s=k.authorize(scope,'action.configure'),p=exact(jsonValue(input),['enabled','expected_revision','profile_id','policy_id']);integer(p.expected_revision);id(p.profile_id);id(p.policy_id);
     if(typeof p.enabled!=='boolean')throw new Error('INVALID_INPUT');
@@ -40,7 +43,7 @@ export class ActionGateway {
     const r=this.#k.db.prepare('SELECT revision,resolution,amount_minor,currency FROM commerce_case_effects WHERE tenant_id=? AND store_id=? AND case_id=?').get(s.tenant_id,s.store_id,c.id) as Row;
     return {case_id:c.id,...(r??{revision:0,resolution:'none',amount_minor:'0',currency:null}),effect:'local_case_plan_only',financial_effect:false};}
   #proposal(input:unknown){const p=exact(jsonValue(input),['case_id','action','arguments']);id(p.case_id);
-    if(p.action===EDIT_ACTION||Object.values(INSTANT_ACTIONS).includes(p.action)||Object.values(FULFILLMENT_ACTIONS).includes(p.action)||Object.values(LIFECYCLE_ACTIONS).includes(p.action)){const a=exact(p.arguments,['quote_id','quote_digest']);id(a.quote_id);if(typeof a.quote_digest!=='string'||!/^[a-f0-9]{64}$/.test(a.quote_digest))throw new Error('INVALID_INPUT');return p;}
+    if(p.action===LOYALTY_REDEEM_ACTION||p.action===EDIT_ACTION||Object.values(INSTANT_ACTIONS).includes(p.action)||Object.values(FULFILLMENT_ACTIONS).includes(p.action)||Object.values(LIFECYCLE_ACTIONS).includes(p.action)){const a=exact(p.arguments,['quote_id','quote_digest']);id(a.quote_id);if(typeof a.quote_digest!=='string'||!/^[a-f0-9]{64}$/.test(a.quote_digest))throw new Error('INVALID_INPUT');return p;}
     if(p.action===RESOLVE_ACTION){const a=exact(p.arguments,['quote_id','quote_digest']);id(a.quote_id);if(typeof a.quote_digest!=='string'||!/^[a-f0-9]{64}$/.test(a.quote_digest))throw new Error('INVALID_INPUT');return p;}
     if(p.action===INTAKE_ACTION){const a=exact(p.arguments,['quote_id','quote_digest','override_id']);id(a.quote_id);if(typeof a.quote_digest!=='string'||!/^[a-f0-9]{64}$/.test(a.quote_digest))throw new Error('INVALID_INPUT');if(a.override_id!==null)id(a.override_id);return p;}
     if(p.action!=='diagnostic.resolution.set')throw new Error('UNSUPPORTED_ACTION');
@@ -51,6 +54,7 @@ export class ActionGateway {
   }
   #baseQuote(scope:Scope,p:Row,quotedAt:number){
     assertGiftAction(this.#k,scope,p.case_id,p.action);
+    if(p.action===LOYALTY_REDEEM_ACTION){redemptionHuman(this.#k,scope);if(!this.loyalty)throw new Error('LOYALTY_REDEMPTION_NOT_CONFIGURED');return loyaltyGatewayQuote(this.loyalty,scope,p,quotedAt);}
     const scopeRow=this.#k.require(scope),request=this.#k.db.prepare('SELECT id FROM commerce_return_requests WHERE tenant_id=? AND store_id=? AND case_id=?').get(scopeRow.tenant_id,scopeRow.store_id,p.case_id) as Row;
     if(request&&!Object.values(LIFECYCLE_ACTIONS).includes(p.action)&&p.action!==FULFILLMENT_ACTIONS.void)assertReturnWritable(this.#k,scopeRow,request.id);
     if(Object.values(INSTANT_ACTIONS).includes(p.action))return instantGatewayQuote(this.#k,scope,p,quotedAt);
@@ -86,7 +90,7 @@ export class ActionGateway {
   }
   #preview(scope:Scope,previewId:string){const s=this.#k.require(scope);id(previewId);
     const r=this.#k.db.prepare('SELECT * FROM commerce_action_previews WHERE tenant_id=? AND store_id=? AND id=?').get(s.tenant_id,s.store_id,previewId) as Row;
-    if(!r)throw new Error('NOT_FOUND');const b=JSON.parse(r.body);
+    if(!r)throw new Error('NOT_FOUND');const b=JSON.parse(r.body);if(b.action===LOYALTY_REDEEM_ACTION)redemptionHuman(this.#k,scope);
     this.cases.inspect(scope,r.case_id);
     if(contentDigest(b)!==r.digest||b.tenant_id!==s.tenant_id||b.store_id!==s.store_id||b.case_id!==r.case_id)throw new Error('PREVIEW_INTEGRITY');return {...r,preview:b};}
   #current(scope:Scope,r:Row){
@@ -95,9 +99,11 @@ export class ActionGateway {
     if(contentDigest(q)!==r.digest)throw new Error('PREVIEW_STALE');return q;
   }
   prepare(scope:Scope,input:unknown){
-    const k=this.#k,p=this.#proposal(input),c=this.cases.inspect(scope,p.case_id),s=k.authorize(scope,p.action===INTAKE_ACTION?'return.request':'action.propose',c.resource_id);
+    const k=this.#k,p=this.#proposal(input);if(p.action===LOYALTY_REDEEM_ACTION)redemptionHuman(k,scope);
+    const c=this.cases.inspect(scope,p.case_id),s=k.authorize(scope,p.action===INTAKE_ACTION?'return.request':'action.propose',c.resource_id);
     return k.transaction(()=>{
       k.authorize(scope,p.action===INTAKE_ACTION?'return.request':'action.propose',c.resource_id);assertCaseWorkerScope(k,scope,c.id);
+      if(p.action===LOYALTY_REDEEM_ACTION&&loyaltyQuoteRecord(k,s,p.arguments.quote_id).body.terms?.owner!==s.actor_id)throw new Error('SUPPORT_OWNERSHIP_CHANGED');
       const preview=this.#quote(scope,p,k.clock());assertSupportAutomation(k,scope,preview,'propose');const ref='preview_'+token().slice(0,32),hash=contentDigest(preview);
       k.db.prepare('INSERT INTO commerce_action_previews VALUES(?,?,?,?,?,?,?)').run(s.tenant_id,s.store_id,ref,p.case_id,canonical(preview),hash,s.actor_id);
       return {id:ref,digest:hash,preview,approval_required:true,execution_authorized:false};
@@ -134,6 +140,7 @@ export class ActionGateway {
       const consumed=k.db.prepare('UPDATE commerce_action_approvals SET uses=1 WHERE tenant_id=? AND store_id=? AND id=? AND uses=0 AND revoked=0').run(s.tenant_id,s.store_id,a.id);
       if(consumed.changes!==1)throw new Error('APPROVAL_UNAVAILABLE');
       const receiptId='receipt_'+token().slice(0,32);
+      if(q.action===LOYALTY_REDEEM_ACTION){if(!this.loyalty)throw new Error('LOYALTY_REDEMPTION_NOT_CONFIGURED');return commitLoyaltyRedemption(this.loyalty,scope,q,r,a,receiptId);}
       const instantId=Object.values(INSTANT_ACTIONS).includes(q.action)?commitInstant(k,s,q,receiptId):null;
       const editId=q.action===EDIT_ACTION?commitOrderEdit(k,s,q,receiptId):null;
       const returnId=q.action===INTAKE_ACTION?commitReturnRequest(k,s,{...q,preview_id:r.id},receiptId):null;
@@ -155,5 +162,5 @@ export class ActionGateway {
   receipt(scope:Scope,receiptId:string){const s=this.#k.require(scope);id(receiptId);
     const r=this.#k.db.prepare('SELECT * FROM commerce_action_receipts WHERE tenant_id=? AND store_id=? AND id=?').get(s.tenant_id,s.store_id,receiptId) as Row;
     if(!r)throw new Error('NOT_FOUND');this.cases.inspect(scope,r.case_id);
-    const result=JSON.parse(r.body);if(contentDigest(result)!==r.digest)throw new Error('RECEIPT_INTEGRITY');return result;}
+    const result=JSON.parse(r.body);if(result.loyalty_operation_id)redemptionHuman(this.#k,scope);if(contentDigest(result)!==r.digest)throw new Error('RECEIPT_INTEGRITY');return result;}
 }

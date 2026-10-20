@@ -6,17 +6,27 @@ import { OperationReceipts } from './operation-receipts.mts';
 import { Reconciliation } from './reconciliation.mts';
 import { ExecutionStops,controlState } from './execution-stops.mts';
 import type { SyntheticJournal } from '../adapters/reliability/synthetic-journal.mts';
+import {LoyaltyRedemptions,assertLoyaltyRedemptionOwner} from './loyalty-redemptions.mts';
+import {loyaltyOperationRecord,authorizeLoyaltyRead} from './loyalty-redemption-records.mts';
 export type JournalResolver=(tenant:string,store:string,identity:string)=>SyntheticJournal|undefined;
 
 export class ExceptionQueue {
-  #k:CommerceKernel;#resolve?:JournalResolver;
-  constructor(k:CommerceKernel,resolve?:JournalResolver){this.#k=k;this.#resolve=resolve;}
+  #k:CommerceKernel;#resolve?:JournalResolver;#loyalty:LoyaltyRedemptions|null;
+  constructor(k:CommerceKernel,resolve?:JournalResolver,options:{loyalty?:LoyaltyRedemptions}={}){this.#k=k;this.#resolve=resolve;this.#loyalty=options.loyalty===undefined?null:assertLoyaltyRedemptionOwner(k,options.loyalty);}
   #source(s:Row,op:Row){const t=this.#k.db.prepare('SELECT provider_identity FROM commerce_operation_targets WHERE tenant_id=? AND store_id=? AND operation_id=?').get(s.tenant_id,s.store_id,op.id) as Row;
     return t?this.#resolve?.(s.tenant_id,s.store_id,t.provider_identity):undefined;}
   list(scope:Scope,limit=50){integer(limit,1);if(limit>100)throw new Error('INVALID_INPUT');const k=this.#k,s=k.authorize(scope,'exception.read');
     const rows=k.db.prepare("SELECT * FROM commerce_operations WHERE tenant_id=? AND store_id=? AND state<>'succeeded' ORDER BY created_at,id LIMIT 501").all(s.tenant_id,s.store_id) as Row[];
     const items=[] as Row[];
     for(const op of rows.slice(0,500)){
+      if(items.length>=limit)break;
+      const loyalty=loyaltyOperationRecord(k,s,op.id);
+      if(loyalty){
+        const b=loyalty.record.body;if(!['reserved','unknown'].includes(b.state))continue;
+        try{authorizeLoyaltyRead(k,scope,loyalty);}catch(error){if(error instanceof Error&&error.message==='ACCESS_DENIED')continue;throw error;}
+        const canReconcile=b.state==='unknown'&&!!this.#loyalty&&permissionDecision(k.db,s,'operation.reconcile',b.resource_id).allowed;
+        items.push({operation_id:b.id,case_id:b.personal?.case_id??null,resource_id:b.resource_id,state:b.state,reason:b.reason,operation_revision:b.native_revision,owner:null,previous_owner:null,generation:null,controls:null,actions:[{name:'reconcile',enabled:canReconcile},{name:'reauthorize',enabled:false},{name:'retry',enabled:false}],timeline:loyalty.history.map((r:Row)=>({code:r.code,state:r.state,observed_at:r.observed_at,receipt_id:r.id})),source_state:b.state,points:{unit:'points',quantity:b.points},automatic_retry:false,financial_effect:false});continue;
+      }
       if(items.length>=limit)break;if(!permissionDecision(k.db,s,'operation.read',op.resource_id).allowed||!permissionDecision(k.db,s,'resource.read',op.resource_id).allowed)continue;
       const value=new BusinessOperations(k).read(scope,op.id),control=controlState(k,s,JSON.parse(op.command).action),stamp=k.db.prepare('SELECT stamp FROM commerce_operation_controls WHERE tenant_id=? AND store_id=? AND operation_id=?').get(s.tenant_id,s.store_id,op.id) as Row;
       const caseRow=op.source_kind==='case'?k.db.prepare('SELECT c.id FROM commerce_action_receipts r JOIN commerce_cases c ON c.tenant_id=r.tenant_id AND c.store_id=r.store_id AND c.id=r.case_id WHERE r.tenant_id=? AND r.store_id=? AND r.id=? AND c.resource_id=?').get(s.tenant_id,s.store_id,op.source_id,op.resource_id) as Row:null;
@@ -43,6 +53,7 @@ export class ExceptionQueue {
     return {items,scan_limit:500,truncated:rows.length>500||work.length>500||items.length>=limit,qualification:'synthetic_operations_only',refreshed_at:k.clock(),execution_authorized:false};
   }
   async reconcile(scope:Scope,operationId:string){const s=this.#k.authorize(scope,'exception.read'),op=operationRow(this.#k,s,id(operationId));
+    if(loyaltyOperationRecord(this.#k,s,op.id)){if(!this.#loyalty)throw new Error('LOYALTY_REDEMPTION_NOT_CONFIGURED');return this.#loyalty.reconcile(scope,op.id);}
     this.#k.authorize(scope,'operation.reconcile',op.resource_id);const journal=this.#source(s,op);if(!journal)throw new Error('SOURCE_UNAVAILABLE');
     return new Reconciliation(this.#k).one(scope,operationId,journal);
   }

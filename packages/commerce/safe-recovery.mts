@@ -14,6 +14,7 @@ import { validateImageSuppression,prepareImageSuppression,applyImageSuppression 
 import { preflightShopperMemory,revokeShopperMemoryForRestore } from './shopper-memory-privacy.mts';
 import { preflightJourneys,revokeJourneysForRestore } from './journey-privacy.mts';
 import { preflightFollowups,revokeFollowupsForRestore } from './journey-followup-privacy.mts';
+import {preflightLoyaltyRedemptions,revokeLoyaltyRedemptionsForRestore} from './loyalty-redemption-privacy.mts';
 
 const LIMIT=64*1024*1024;
 function pathCheck(path:string,mustExist=false) {
@@ -71,6 +72,8 @@ export function restoreRecoverySnapshot(input:{snapshot:string;destination:strin
       preflightShopperMemory(k);
       preflightJourneys(k);
       preflightFollowups(k);
+      preflightLoyaltyRedemptions(k);
+      revokeLoyaltyRedemptionsForRestore(k,undefined,cp);
       const imageReplay=prepareImageSuppression(k,cp);
       db!.prepare('INSERT OR REPLACE INTO commerce_recovery_state VALUES(1,?,?,?,?,?)').run(restoreId,'quarantine',m.database_sha256,input.suppression_sha256,clock());
       for(const [table,clause] of [['commerce_sessions','revoked=1'],['commerce_worker_grants','revoked=1'],['commerce_secrets','revoked=1'],['commerce_credential_slots','active=0'],['commerce_webhook_routes','enabled=0'],['commerce_execution_settings','enabled=0'],['commerce_action_readiness','revoked=1'],['commerce_action_approvals','revoked=1'],['commerce_shipping_label_approvals','revoked=1'],['commerce_inventory_transfer_approvals','revoked=1'],['commerce_case_work',"state='revoked',expires_at=0"]])db!.exec(`UPDATE ${table} SET ${clause}`);

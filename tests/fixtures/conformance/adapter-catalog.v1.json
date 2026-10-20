@@ -30,6 +30,7 @@
     "packages/adapters/instant-exchange-fixture-source.mts",
     "packages/adapters/loyalty-accrual-fixture-source.mts",
     "packages/adapters/loyalty-fixture-source.mts",
+    "packages/adapters/loyalty-redemption-fixture-source.mts",
     "packages/adapters/marketing-fixture-source.mts",
     "packages/adapters/native-change-fixture-source.mts",
     "packages/adapters/optional-provider-fixture-source.mts",
@@ -4921,6 +4922,108 @@
           "direct_fixtures": []
         }
       ]
+    },
+    {
+      "id": "loyalty_redemption_source",
+      "kind": "diagnostic",
+      "source_files": [
+        {
+          "path": "packages/adapters/loyalty-redemption-fixture-source.mts",
+          "sha256": "cb98ee1a03e457b3ac6f2fc272fb34fedee562c879c0d0635ade29192877c7fe"
+        }
+      ],
+      "version": "source-sha256:cb98ee1a03e457b3ac6f2fc272fb34fedee562c879c0d0635ade29192877c7fe",
+      "api_version": "rifare-loyalty-redemption-fixture-v1",
+      "external_version": null,
+      "external_account": null,
+      "external_scopes_attested": false,
+      "source_oracle": "Separate synthetic G01 database with explicitly anchored complete original-ID redemption history and atomic immutable snapshot debits. Independent literal tests verify concurrent capacity, uncertain before/after effects, exact lookup, actual worker refund independence, retained erasure, restore and import. No connected or production provider qualification.",
+      "operations": [
+        {
+          "id": "loyalty.redemption.reserve",
+          "semantics": "composed",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M19-G03-01",
+              "name": "CASE-M19-G03-01",
+              "path": "tests/development/loyalty-redemption.test.mts",
+              "sha256": "8a1a21ed375799a242675debca1d35a3f6af510ab4a0a309a77a2819164cd20a"
+            },
+            {
+              "id": "CASE-M19-G03-02",
+              "name": "CASE-M19-G03-02",
+              "path": "tests/development/loyalty-redemption.test.mts",
+              "sha256": "8a1a21ed375799a242675debca1d35a3f6af510ab4a0a309a77a2819164cd20a"
+            },
+            {
+              "id": "CASE-M19-G03-03",
+              "name": "CASE-M19-G03-03",
+              "path": "tests/development/loyalty-redemption.test.mts",
+              "sha256": "8a1a21ed375799a242675debca1d35a3f6af510ab4a0a309a77a2819164cd20a"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "loyalty.redemption.redeem",
+          "semantics": "composed",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M19-G03-01",
+              "name": "CASE-M19-G03-01",
+              "path": "tests/development/loyalty-redemption.test.mts",
+              "sha256": "8a1a21ed375799a242675debca1d35a3f6af510ab4a0a309a77a2819164cd20a"
+            },
+            {
+              "id": "CASE-M19-G03-02",
+              "name": "CASE-M19-G03-02",
+              "path": "tests/development/loyalty-redemption.test.mts",
+              "sha256": "8a1a21ed375799a242675debca1d35a3f6af510ab4a0a309a77a2819164cd20a"
+            },
+            {
+              "id": "CASE-M19-G03-03",
+              "name": "CASE-M19-G03-03",
+              "path": "tests/development/loyalty-redemption.test.mts",
+              "sha256": "8a1a21ed375799a242675debca1d35a3f6af510ab4a0a309a77a2819164cd20a"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "loyalty.redemption.reconcile",
+          "semantics": "composed",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M19-G03-01",
+              "name": "CASE-M19-G03-01",
+              "path": "tests/development/loyalty-redemption.test.mts",
+              "sha256": "8a1a21ed375799a242675debca1d35a3f6af510ab4a0a309a77a2819164cd20a"
+            },
+            {
+              "id": "CASE-M19-G03-02",
+              "name": "CASE-M19-G03-02",
+              "path": "tests/development/loyalty-redemption.test.mts",
+              "sha256": "8a1a21ed375799a242675debca1d35a3f6af510ab4a0a309a77a2819164cd20a"
+            },
+            {
+              "id": "CASE-M19-G03-03",
+              "name": "CASE-M19-G03-03",
+              "path": "tests/development/loyalty-redemption.test.mts",
+              "sha256": "8a1a21ed375799a242675debca1d35a3f6af510ab4a0a309a77a2819164cd20a"
+            }
+          ],
+          "direct_fixtures": []
+        }
+      ]
     }
   ],
   "fixture_administration": "Seed, injected faults, and source observation setters are fixture administration, not remote provider operations. Unnamed real gateway/carrier/warehouse/ERP adapters are unavailable.",
@@ -5187,7 +5290,7 @@
     },
     {
       "path": "packages/commerce/action-gateway.mts",
-      "sha256": "af5944ee783f8679ad114e7b613f9783812714e7cff0b429194747ad850b6ae7"
+      "sha256": "d3e33f262c02b032a74c865baf80775a95ec28d20fabf4e568e11e4403e6b168"
     },
     {
       "path": "packages/commerce/authorization.mts",
@@ -5279,7 +5382,7 @@
     },
     {
       "path": "packages/commerce/durable-work.mts",
-      "sha256": "c898d3b826914663df493a60ce22eca32edceab38737be7b81f6c55cc47fa5a8"
+      "sha256": "041abdfe134f08894791d9ef56eb00d550b99bc3e092ce992f1b4b964c4ce50e"
     },
     {
       "path": "packages/commerce/event-processing.mts",
@@ -5287,7 +5390,7 @@
     },
     {
       "path": "packages/commerce/exception-queue.mts",
-      "sha256": "c9194323b59adf225930467609f74e9d518c69557be29ee7db711a3030e20b98"
+      "sha256": "e191cff9802ed5f9a41695646fdc1246f610bbcccfb1dffa92c8f9e7d18e9138"
     },
     {
       "path": "packages/commerce/exchange-currency.mts",
@@ -5311,7 +5414,7 @@
     },
     {
       "path": "packages/commerce/execution-stops.mts",
-      "sha256": "ced98bf127d4ba380a0ec706baadff34e6f18128b5da9b4fa942b2795dae974e"
+      "sha256": "4987fc917c376d9d7a23bcd578801b5f7592911157cb63da17fad8006d3c29bf"
     },
     {
       "path": "packages/commerce/fulfillment-execution.mts",
@@ -5363,11 +5466,11 @@
     },
     {
       "path": "packages/commerce/operation-receipts.mts",
-      "sha256": "2d101161d4636d1af89db8fa698dafcb28e063578ab780d9ae0d3281812fff01"
+      "sha256": "dfc77d033f67fc97167788c890f7315b7ef54a5e14a620e4b97e498b0334cab6"
     },
     {
       "path": "packages/commerce/operation-store.mts",
-      "sha256": "c7ff7f2ee9da036fff8f310f110e2d52f31a439024f20f77f7b3a1fd98304924"
+      "sha256": "2a3f59b2e0801dcc1e1e60ed437cce05c8d1391982efe10d408531b2fcd99928"
     },
     {
       "path": "packages/commerce/order-edit-core.mts",
@@ -5391,7 +5494,7 @@
     },
     {
       "path": "packages/commerce/privacy-lifecycle.mts",
-      "sha256": "bb7a956a808dcd241bbe5fe60684bb9492237ee395b3f47a4e2916657cb75329"
+      "sha256": "daf71c257bef53f968f50bed8fe388a1d27be9b83d711ec155db93e656f2d316"
     },
     {
       "path": "packages/commerce/profile-editor.mts",
@@ -5415,7 +5518,7 @@
     },
     {
       "path": "packages/commerce/reconciliation.mts",
-      "sha256": "5e9401c20bdd38d1bdd825af1b225e9f80af3e195d77e04c6211d4bd961de9b5"
+      "sha256": "13173b7cadbc5a02171b4809fba7613d82c98c435c66be9af14f0a1f1db27186"
     },
     {
       "path": "packages/commerce/refund-quotes.mts",
@@ -5527,7 +5630,7 @@
     },
     {
       "path": "packages/commerce/safe-recovery.mts",
-      "sha256": "00335ef3e1acee4a38ee5dadc08ae42d69e6f7c4f72b2a24459dc6d15f7f6889"
+      "sha256": "82d734b73a5b7602c143219c9a8c687c439604fc9e9dc1c741fa70cf94136109"
     },
     {
       "path": "packages/commerce/secrets.mts",
@@ -5655,7 +5758,7 @@
     },
     {
       "path": "packages/commerce/support-service.mts",
-      "sha256": "03f8fceb0fa070ce6e96ec4532813b0d8bcbc83a07fd95ca4d992040b9dfe30d"
+      "sha256": "d74528c0a236fb93ed2aa574b9ef9e5963ca1486d268f498c7e3bfde1908d4db"
     },
     {
       "path": "packages/commerce/support-tracking.mts",
@@ -5671,7 +5774,7 @@
     },
     {
       "path": "packages/commerce/work-leases.mts",
-      "sha256": "d0eb3555dec59fd051b73e7a6b06de22e8df85d399b8e726e71755c700aa6b4c"
+      "sha256": "3113bad58474b90ff69fcb4d80a21f63edba817535a9a44326def6d744d268b8"
     },
     {
       "path": "packages/commerce/worker-api.mts",
@@ -5959,7 +6062,7 @@
     },
     {
       "path": "tests/fixtures/conformance/expected-coverage.v1.json",
-      "sha256": "85be906fc2d3d0a482f2df1f8512dbbae688f711deca45ea7b1cd811be98ec64"
+      "sha256": "6daa44f747e502e9b76b470f23c3090c3b89b1b14766d63a961ce84cd83198bc"
     },
     {
       "path": "tests/fixtures/conformance/source-inputs.v1.json",
@@ -6139,7 +6242,7 @@
     },
     {
       "path": "packages/commerce/merchant-portability.mts",
-      "sha256": "9dc78766cb7453bf8c0b0f74d83288d88a34ccbcde9dbf23042504675b708ac5"
+      "sha256": "f2eb65d7df3740fbffd75cdf8ba89d545f3860769576dc519a73acdc5c4bd1cc"
     },
     {
       "path": "packages/commerce/contracts/carrier-quotes.v1.json",
@@ -7488,6 +7591,46 @@
     {
       "path": "tests/fixtures/loyalty-accrual/independent-values.json",
       "sha256": "b5289b6b8a5920e4acec80073596610453ae8dc9f3e5acac5824e970aeb7352e"
+    },
+    {
+      "path": "packages/adapters/loyalty-redemption-fixture-source.mts",
+      "sha256": "cb98ee1a03e457b3ac6f2fc272fb34fedee562c879c0d0635ade29192877c7fe"
+    },
+    {
+      "path": "packages/commerce/loyalty-redemption-values.mts",
+      "sha256": "2ef9c7e3008dda6ae4c847b09d72d19234d1f35e777ac4870df3720265635cb0"
+    },
+    {
+      "path": "packages/commerce/loyalty-redemption-records.mts",
+      "sha256": "0aaf8f380478896dd1b8ad39b23ee7020494dc3b8f59363eb1ac85adf53dfe82"
+    },
+    {
+      "path": "packages/commerce/loyalty-redemptions.mts",
+      "sha256": "ec18779e3a000a87868cf4cd66cd6887ac65bba13a5817010e96f420edd8f373"
+    },
+    {
+      "path": "packages/commerce/loyalty-redemption-privacy.mts",
+      "sha256": "e6ebdf3bfd20f4b517185a47575fa7bba6ccd7130292095468d85fc9dc660158"
+    },
+    {
+      "path": "tests/development/loyalty-redemption.test.mts",
+      "sha256": "8a1a21ed375799a242675debca1d35a3f6af510ab4a0a309a77a2819164cd20a"
+    },
+    {
+      "path": "tests/development/loyalty-redemption-helpers.mts",
+      "sha256": "c60d8ae6454a63c5ec01fc5aad76b21a66f6493d7a92f678f3f994ee677b585f"
+    },
+    {
+      "path": "tests/development/loyalty-redemption-race-worker.mts",
+      "sha256": "8e29aa890421bbad34fbced6fb819451f157c14f1e5d048afca1668a00917c9f"
+    },
+    {
+      "path": "tests/fixtures/loyalty-redemption/independent-values.json",
+      "sha256": "acd322d4e9a467821faabbe4dda8107b1295489c0d63d37329af86237a71b458"
+    },
+    {
+      "path": "packages/commerce/contracts/loyalty-redemption.v1.json",
+      "sha256": "48c47ba27ee8bf6a5c972c4777aab6a385d7b9d1b33b2796e6448072b98fdcb1"
     }
   ]
 }

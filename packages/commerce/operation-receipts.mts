@@ -3,7 +3,7 @@ import type { Scope,Row } from './kernel.mts';
 import { canonical,contentDigest,jsonValue } from './configuration-values.mts';
 
 export const RECEIPT_CODES=Object.freeze(['queued','dispatch_started','retry_scheduled','outcome_unknown','source_confirmed',
-  'provider_rejected','retry_exhausted','lease_recovered','linked_correction','payload_attached','payload_erased']);
+  'provider_rejected','retry_exhausted','lease_recovered','linked_correction','payload_attached','payload_erased','reservation_released']);
 const reference=(x:unknown)=>x===null?null:id(x);
 const hash=(x:unknown)=>{if(typeof x!=='string'||!/^[a-f0-9]{64}$/.test(x))throw new Error('RECEIPT_INPUT');return x;};
 

@@ -10,12 +10,13 @@ const WORK_ACTIONS=Object.freeze(['work.claim','resource.read','case.read','skil
 const RETURN_WORK_ACTIONS=Object.freeze([...WORK_ACTIONS,'return.read','return.request','operation.dispatch','operation.reconcile']);
 export const WORK_MAX_DEADLINE_MS=60000;
 function duration(ms:number){integer(ms,10);if(ms>30000)throw new Error('INVALID_INPUT');return ms;}
+import {loyaltyOperationRecord} from './loyalty-redemption-records.mts';
 export function unresolvedEffects(k:CommerceKernel,s:Row,resource:string){
   const diagnostic=k.db.prepare("SELECT id,state FROM commerce_operations WHERE tenant_id=? AND store_id=? AND resource_id=? AND state IN ('unknown','sending') ORDER BY created_at,id")
     .all(s.tenant_id,s.store_id,resource) as Row[];
   const financial=k.db.prepare("SELECT id,state,kind AS operation_kind FROM commerce_resolution_operations WHERE tenant_id=? AND store_id=? AND resource_id=? AND state='unknown' ORDER BY observed_at,id")
     .all(s.tenant_id,s.store_id,resource) as Row[];
-  return [...diagnostic,...financial.map(row=>({...row,kind:'resolution'}))];
+  return [...diagnostic.filter(row=>!loyaltyOperationRecord(k,s,row.id)),...financial.map(row=>({...row,kind:'resolution'}))];
 }
 export function assertCaseWorkerScope(k:CommerceKernel,scope:Scope,caseId:string,permittedOperationId?:string){
   const s=k.require(scope),identity=k.workerIdentity(scope);

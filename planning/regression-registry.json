@@ -1934,6 +1934,14 @@
       "contract_files": [
         "packages/commerce/contracts/loyalty-accrual.v1.json"
       ]
+    },
+    {
+      "id": "m19-loyalty-redemption-diagnostic",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/loyalty-redemption.v1.json"
+      ]
     }
   ],
   "tests": [
@@ -24476,6 +24484,146 @@
       "runner_case_id": "M19-G02-PRIVACY-RECOVERY-AND-NO-CACHE",
       "source": "tests/development/loyalty-accrual.test.mts",
       "capability_id": "m19-loyalty-accrual-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M19-G03-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M19-G03-01",
+      "source": "tests/development/loyalty-redemption.test.mts",
+      "capability_id": "m19-loyalty-redemption-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M19-G03-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M19-G03-02",
+      "source": "tests/development/loyalty-redemption.test.mts",
+      "capability_id": "m19-loyalty-redemption-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M19-G03-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M19-G03-03",
+      "source": "tests/development/loyalty-redemption.test.mts",
+      "capability_id": "m19-loyalty-redemption-diagnostic"
+    },
+    {
+      "id": "runtime:M19-G03-EXACT-OVERLAP-AND-CUMULATIVE-DEBITS",
+      "suite": "runtime",
+      "runner_case_id": "M19-G03-EXACT-OVERLAP-AND-CUMULATIVE-DEBITS",
+      "source": "tests/development/loyalty-redemption.test.mts",
+      "capability_id": "m19-loyalty-redemption-diagnostic"
+    },
+    {
+      "id": "runtime:M19-G03-ANCHOR-AND-COMPLETE-SOURCE-HISTORY",
+      "suite": "runtime",
+      "runner_case_id": "M19-G03-ANCHOR-AND-COMPLETE-SOURCE-HISTORY",
+      "source": "tests/development/loyalty-redemption.test.mts",
+      "capability_id": "m19-loyalty-redemption-diagnostic"
+    },
+    {
+      "id": "runtime:M19-G03-UNSENT-EXPIRY-AND-EXACT-QUOTE-CONSUMPTION",
+      "suite": "runtime",
+      "runner_case_id": "M19-G03-UNSENT-EXPIRY-AND-EXACT-QUOTE-CONSUMPTION",
+      "source": "tests/development/loyalty-redemption.test.mts",
+      "capability_id": "m19-loyalty-redemption-diagnostic"
+    },
+    {
+      "id": "runtime:M19-G03-CORE-AND-SOURCE-ATOMIC-CUTS",
+      "suite": "runtime",
+      "runner_case_id": "M19-G03-CORE-AND-SOURCE-ATOMIC-CUTS",
+      "source": "tests/development/loyalty-redemption.test.mts",
+      "capability_id": "m19-loyalty-redemption-diagnostic"
+    },
+    {
+      "id": "runtime:M19-G03-EXACT-APPROVAL-AND-SERVICE-TERMS",
+      "suite": "runtime",
+      "runner_case_id": "M19-G03-EXACT-APPROVAL-AND-SERVICE-TERMS",
+      "source": "tests/development/loyalty-redemption.test.mts",
+      "capability_id": "m19-loyalty-redemption-diagnostic"
+    },
+    {
+      "id": "runtime:M19-G03-CURRENT-AUTHORITY-AND-HUMAN-BOUNDARY",
+      "suite": "runtime",
+      "runner_case_id": "M19-G03-CURRENT-AUTHORITY-AND-HUMAN-BOUNDARY",
+      "source": "tests/development/loyalty-redemption.test.mts",
+      "capability_id": "m19-loyalty-redemption-diagnostic"
+    },
+    {
+      "id": "runtime:M19-G03-FINAL-TERMS-AND-NONSPENDABLE-POINTS",
+      "suite": "runtime",
+      "runner_case_id": "M19-G03-FINAL-TERMS-AND-NONSPENDABLE-POINTS",
+      "source": "tests/development/loyalty-redemption.test.mts",
+      "capability_id": "m19-loyalty-redemption-diagnostic"
+    },
+    {
+      "id": "runtime:M19-G03-NATIVE-OWNERS-PHYSICAL-AND-SCOPE-ISOLATION",
+      "suite": "runtime",
+      "runner_case_id": "M19-G03-NATIVE-OWNERS-PHYSICAL-AND-SCOPE-ISOLATION",
+      "source": "tests/development/loyalty-redemption.test.mts",
+      "capability_id": "m19-loyalty-redemption-diagnostic"
+    },
+    {
+      "id": "runtime:M19-G03-STRICT-ORIGINAL-SOURCE-RESULTS",
+      "suite": "runtime",
+      "runner_case_id": "M19-G03-STRICT-ORIGINAL-SOURCE-RESULTS",
+      "source": "tests/development/loyalty-redemption.test.mts",
+      "capability_id": "m19-loyalty-redemption-diagnostic"
+    },
+    {
+      "id": "runtime:M19-G03-STRICT-CORE-AND-GENERIC-MUTATION-FENCES",
+      "suite": "runtime",
+      "runner_case_id": "M19-G03-STRICT-CORE-AND-GENERIC-MUTATION-FENCES",
+      "source": "tests/development/loyalty-redemption.test.mts",
+      "capability_id": "m19-loyalty-redemption-diagnostic"
+    },
+    {
+      "id": "runtime:M19-G03-WORKER-REFUND-STREAM-INDEPENDENCE",
+      "suite": "runtime",
+      "runner_case_id": "M19-G03-WORKER-REFUND-STREAM-INDEPENDENCE",
+      "source": "tests/development/loyalty-redemption.test.mts",
+      "capability_id": "m19-loyalty-redemption-diagnostic"
+    },
+    {
+      "id": "runtime:M19-G03-EXCEPTION-QUEUE-DEDICATED-LOOKUP",
+      "suite": "runtime",
+      "runner_case_id": "M19-G03-EXCEPTION-QUEUE-DEDICATED-LOOKUP",
+      "source": "tests/development/loyalty-redemption.test.mts",
+      "capability_id": "m19-loyalty-redemption-diagnostic"
+    },
+    {
+      "id": "runtime:M19-G03-ERASURE-AND-RETAINED-LATE-LOOKUP",
+      "suite": "runtime",
+      "runner_case_id": "M19-G03-ERASURE-AND-RETAINED-LATE-LOOKUP",
+      "source": "tests/development/loyalty-redemption.test.mts",
+      "capability_id": "m19-loyalty-redemption-diagnostic"
+    },
+    {
+      "id": "runtime:M19-G03-HISTORICAL-ONLY-HOLD-AND-SUPPRESSION",
+      "suite": "runtime",
+      "runner_case_id": "M19-G03-HISTORICAL-ONLY-HOLD-AND-SUPPRESSION",
+      "source": "tests/development/loyalty-redemption.test.mts",
+      "capability_id": "m19-loyalty-redemption-diagnostic"
+    },
+    {
+      "id": "runtime:M19-G03-UNINSTALL-REVOKES-WITH-HOLD-AWARE-RETENTION",
+      "suite": "runtime",
+      "runner_case_id": "M19-G03-UNINSTALL-REVOKES-WITH-HOLD-AWARE-RETENTION",
+      "source": "tests/development/loyalty-redemption.test.mts",
+      "capability_id": "m19-loyalty-redemption-diagnostic"
+    },
+    {
+      "id": "runtime:M19-G03-PHYSICAL-RESTORE-RETAINS-COPIED-UNCERTAINTY",
+      "suite": "runtime",
+      "runner_case_id": "M19-G03-PHYSICAL-RESTORE-RETAINS-COPIED-UNCERTAINTY",
+      "source": "tests/development/loyalty-redemption.test.mts",
+      "capability_id": "m19-loyalty-redemption-diagnostic"
+    },
+    {
+      "id": "runtime:M19-G03-MERCHANT-IMPORT-AND-REPLAY-SUPPRESSION",
+      "suite": "runtime",
+      "runner_case_id": "M19-G03-MERCHANT-IMPORT-AND-REPLAY-SUPPRESSION",
+      "source": "tests/development/loyalty-redemption.test.mts",
+      "capability_id": "m19-loyalty-redemption-diagnostic"
     }
   ],
   "protected_files": [
@@ -25032,7 +25180,17 @@
     "packages/commerce/contracts/loyalty-accrual.v1.json",
     "tests/development/loyalty-accrual.test.mts",
     "tests/development/loyalty-accrual-helpers.mts",
-    "tests/fixtures/loyalty-accrual/independent-values.json"
+    "tests/fixtures/loyalty-accrual/independent-values.json",
+    "packages/adapters/loyalty-redemption-fixture-source.mts",
+    "packages/commerce/loyalty-redemption-values.mts",
+    "packages/commerce/loyalty-redemption-records.mts",
+    "packages/commerce/loyalty-redemptions.mts",
+    "packages/commerce/loyalty-redemption-privacy.mts",
+    "tests/development/loyalty-redemption.test.mts",
+    "tests/development/loyalty-redemption-helpers.mts",
+    "tests/development/loyalty-redemption-race-worker.mts",
+    "tests/fixtures/loyalty-redemption/independent-values.json",
+    "packages/commerce/contracts/loyalty-redemption.v1.json"
   ],
   "source_count_fixture": "tests/fixtures/licensing/artifact-oracle.v1.json",
   "source_inventory": "planning/component-inventory.json"

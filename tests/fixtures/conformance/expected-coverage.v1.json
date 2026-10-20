@@ -888,6 +888,20 @@
         "semantics": "composed",
         "qualification": "sandbox-only"
       }
+    },
+    "loyalty_redemption_source": {
+      "loyalty.redemption.reserve": {
+        "semantics": "composed",
+        "qualification": "sandbox-only"
+      },
+      "loyalty.redemption.redeem": {
+        "semantics": "composed",
+        "qualification": "sandbox-only"
+      },
+      "loyalty.redemption.reconcile": {
+        "semantics": "composed",
+        "qualification": "sandbox-only"
+      }
     }
   },
   "declarations": [
@@ -903,6 +917,7 @@
     "packages/adapters/instant-exchange-fixture-source.mts",
     "packages/adapters/loyalty-accrual-fixture-source.mts",
     "packages/adapters/loyalty-fixture-source.mts",
+    "packages/adapters/loyalty-redemption-fixture-source.mts",
     "packages/adapters/marketing-fixture-source.mts",
     "packages/adapters/native-change-fixture-source.mts",
     "packages/adapters/optional-provider-fixture-source.mts",
@@ -2060,6 +2075,24 @@
           "scope_kind": "server_local_fixture_only"
         }
       }
+    },
+    "loyalty_redemption_source": {
+      "version": "source-sha256:cb98ee1a03e457b3ac6f2fc272fb34fedee562c879c0d0635ade29192877c7fe",
+      "api_version": "rifare-loyalty-redemption-fixture-v1",
+      "operations": {
+        "loyalty.redemption.reserve": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "loyalty.redemption.redeem": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "loyalty.redemption.reconcile": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        }
+      }
     }
   },
   "native_cases": [
@@ -2722,6 +2755,24 @@
       "name": "CASE-M19-G02-03",
       "path": "tests/development/loyalty-accrual.test.mts",
       "sha256": "7dd9c66ef81a543c80a40f76d57c38f1c5fcc7ebb38d17ddcc2c9598bec18361"
+    },
+    {
+      "id": "CASE-M19-G03-01",
+      "name": "CASE-M19-G03-01",
+      "path": "tests/development/loyalty-redemption.test.mts",
+      "sha256": "8a1a21ed375799a242675debca1d35a3f6af510ab4a0a309a77a2819164cd20a"
+    },
+    {
+      "id": "CASE-M19-G03-02",
+      "name": "CASE-M19-G03-02",
+      "path": "tests/development/loyalty-redemption.test.mts",
+      "sha256": "8a1a21ed375799a242675debca1d35a3f6af510ab4a0a309a77a2819164cd20a"
+    },
+    {
+      "id": "CASE-M19-G03-03",
+      "name": "CASE-M19-G03-03",
+      "path": "tests/development/loyalty-redemption.test.mts",
+      "sha256": "8a1a21ed375799a242675debca1d35a3f6af510ab4a0a309a77a2819164cd20a"
     },
     {
       "id": "M01-G04-01",

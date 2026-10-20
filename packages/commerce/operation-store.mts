@@ -3,6 +3,7 @@ import { CommerceKernel,exact,id,integer } from './kernel.mts';
 import type { Scope,Row } from './kernel.mts';
 import { canonical,contentDigest,jsonValue } from './configuration-values.mts';
 import { appendReceipt,receiptFields } from './operation-receipts.mts';
+import {loyaltyOperationRecord} from './loyalty-redemption-records.mts';
 
 export function operationRow(k:CommerceKernel,s:Row,operationId:string):Row {
   id(operationId);const r=k.db.prepare('SELECT * FROM commerce_operations WHERE tenant_id=? AND store_id=? AND id=?').get(s.tenant_id,s.store_id,operationId) as Row;
@@ -33,16 +34,19 @@ export function transitionOperation(k:CommerceKernel,s:Row,operationId:string,st
 }
 export function blockingOperation(k:CommerceKernel,s:Row,op:Row):string|null {
   const support=['customer.message','helpdesk.write'].includes(JSON.parse(op.command).action);
+  const loyalty=!!loyaltyOperationRecord(k,s,op.id);
   const stream=support?"AND json_extract(earlier.command,'$.action') IN ('customer.message','helpdesk.write')":"AND json_extract(earlier.command,'$.action') NOT IN ('customer.message','helpdesk.write')";
-  const r=k.db.prepare(`SELECT earlier.id FROM commerce_operations earlier
+  const candidates=k.db.prepare(`SELECT earlier.id FROM commerce_operations earlier
     JOIN commerce_operation_work w ON w.tenant_id=earlier.tenant_id AND w.store_id=earlier.store_id AND w.operation_id=earlier.id
     WHERE earlier.tenant_id=? AND earlier.store_id=? AND earlier.resource_id=? AND earlier.id<>?
     ${stream} AND w.state NOT IN ('done','dead') AND (
       w.state IN ('leased','sending') OR
       (SELECT min(seq) FROM commerce_operation_receipts WHERE tenant_id=earlier.tenant_id AND store_id=earlier.store_id AND operation_id=earlier.id)
        < (SELECT min(seq) FROM commerce_operation_receipts WHERE tenant_id=? AND store_id=? AND operation_id=?))
-    ORDER BY earlier.created_at,earlier.id LIMIT 1`).get(s.tenant_id,s.store_id,op.resource_id,op.id,s.tenant_id,s.store_id,op.id) as Row;
-  return r?.id??null;
+    ORDER BY earlier.created_at,earlier.id LIMIT 1001`).all(s.tenant_id,s.store_id,op.resource_id,op.id,s.tenant_id,s.store_id,op.id) as Row[];
+  if(candidates.length>1000)throw new Error('OPERATION_SCAN_LIMIT');
+  for(const candidate of candidates)if(!!loyaltyOperationRecord(k,s,candidate.id)===loyalty)return candidate.id;
+  return null;
 }
 export class BusinessOperations {
   #k:CommerceKernel;constructor(kernel:CommerceKernel){this.#k=kernel;}
