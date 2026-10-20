@@ -36,6 +36,11 @@ Documentation: this ADR, docs/LOYALTY-BALANCES.md, PLANS.md and
 work/records/M19-recovery-checkpoint.md. Root owns necessary additive component,
 source/test/capability inventory and runtime/oracle pins. No migrations, kernel
 permissions, worker grants, canonical goal/acceptance records or dependencies.
+The conformance catalogue may add one diagnostic loyalty source entry with only
+balance inspection and nonauthorizing quotation; all 38 existing adapter objects
+and their declarations remain unchanged. No accrue/reserve/redeem/reverse effect
+operation is registered. Existing transient-memory and synthetic-fixture privacy
+surfaces gain the new paths without a new surface ID or commerce table.
 
 ## Source contract fixed before tests
 
