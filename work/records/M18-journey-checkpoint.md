@@ -101,3 +101,41 @@ independent test author before correcting runtime:
 Only the assigned new test file changes. All 23 native IDs and original assertions
 remain. No old test, native owner, goal criterion, permission or budget changes.
 The next corrected candidate receives fresh focused evidence and round-2 review.
+
+## G03 local outcome and continuation
+
+Clean product 861a4bc0aaea93a0ed7c052268ab2ff8be403738, tree
+8a692eefd4ff88624147a2ed1ef89b1a8bab62d6, resolves the round-1 projection finding.
+Independent assertions 4873c35e1082408f9b121af1bf244eb45aa8da8a were integrated
+unchanged as 993bb77 before the runtime correction. Authorized/proposed work stays
+recorded; a preview without its original executed receipt takes awaiting-approval
+priority over earlier observations. Unknown and unavailable-owner states remain
+conservative. Native stage distinctions and authority are unchanged.
+
+Actual attempt-03 passed all 60 assigned native cases in 29.403 seconds: 23
+composition, 15 return-portability, eight support-workflow and 14 merchant-
+portability cases. No failures, errors or skips occurred. All 1,822 report source
+hashes and 310 runtime/619 oracle pins match. All prior test objects, capability
+objects, protected paths, 38 adapters, 15 privacy surfaces, 262 tables, native
+action owners, worker grants, canonical goals and acceptance ledger are retained.
+The earlier failed attempt and both fixture corrections remain recorded above.
+
+Fresh isolated fault b9469cc2db0ef42d931d98d48e333c6e9abe90fe has the exact
+product as parent. Only the uncertainty refusal and two pins changed. All 23
+unchanged cases executed: 17 passed and six failed behaviorally in 16.565 seconds.
+The earlier fault and this fault are outside the integrated ancestry. Actual
+reports, both fault patches, hash comparisons and review dispositions are retained
+under evidence/M18-composition/.
+
+Both independent nonauthor reviewers, /root/m18_authority_scope and
+/root/m18_regression_scope, approved this exact product in round 2, with no
+remaining blocking finding. Root records bounded local G03 integration under
+the owner's existing delegation. The 100-row store-wide native-return/edit-child
+capacity refusal is an explicit limit. This closure changes documentation only;
+executed runtime, tests, contracts and pins remain identical to 861a4bc.
+
+Continue to a separate prior G04 assignment for journey-aware suppression through
+the existing rule and delivery owners, then bounded G05 caller continuity and an
+honest G99 assessment. Formal M07/M09/M15/M18 acceptance, real remote and connected
+channel qualification, target-host evidence and missing-source reconciliation
+remain open. Protected main stays a33c4ad; no release or external effect occurs.

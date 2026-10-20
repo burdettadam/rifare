@@ -282,3 +282,15 @@ native owners and grant no action authority. G03 composition now receives its
 separate ADR-0055 assignment; follow-up and real remote/formal gates remain open.
 See [the journey checkpoint](work/records/M18-journey-checkpoint.md) for exact
 source identities, evidence, preservation and continuation scope.
+
+## Current M18 composition
+
+G03 is locally implemented and independently reviewed at 861a4bc. The current
+focused selection passed all 60 native cases in 29.403 seconds. Independent
+round-1 review found a misleading pending/observed intent summary; independently
+authored assertions and the corrected projection resolved it. Both reviewers
+approved round 2. A fresh isolated uncertainty fault was caught by six of 23
+unchanged cases and is not integrated. Actual attempts and reviews are retained
+in the journey checkpoint record. G04 follow-ups receive the next concrete
+assignment; G05 local continuity and G99 assessment follow without inferring
+formal, remote, connected-provider or target-host qualification.
