@@ -71,6 +71,13 @@ test('CASE-M19-G04-04',async()=>{
     const lower=quote(f,{benefit_id:'synthetic_reward_200'});assert.equal(lower.quote.points.quantity,200);assert.equal(f.incentives.validate(f.scope,lower).valid,true);
     f.incentiveSource.configure({revision:3,expires_at:f.now()+60000,combinations:E.combinations});assert.throws(()=>f.incentives.validate(f.scope,lower));
     const q=quote(f),forged=structuredClone(q);forged.quote.discount.discount_minor='2000';forged.digest=contentDigest(forged.quote);assert.throws(()=>f.incentives.validate(f.scope,forged));assert.equal(providerJournal(f).length,0);
+    const native=f.shop.native.order(f.order().id),alternate={...f.shop.native.catalog('basic'),id:'other-shirt'};
+    f.shop.native.seed({...native,resource_id:'applicability-other-order',lines:native.lines.map((line:Value)=>({...line,variant_id:'other-shirt'}))},[alternate]);
+    f.shop.source.fixtureListing({variant_id:'other-shirt',expected_revision:0,title:'Another native shirt',description:'Another cotton shirt.',approved_descriptions:['Another cotton shirt.'],terms:{id:'standard',revision:1,text:'No promotional discount.'}});
+    assert.equal(f.shop.carts.currentPreview(f.scope,f.shop.cart_id).preview_digest,q.quote.cart_digest);
+    f.incentiveSource.configure({revision:4,expires_at:f.now()+60000,combinations:[{benefit_id:'synthetic_reward_400',offer_id:'offer-five',eligible_variant_ids:['other-shirt']}]});
+    const beforeExclusion=effects(f),beforeQuotes=quoteRows(f).length;assert.throws(()=>quote(f),undefined,'a valid pair cannot authorize an undeclared cart variant');assert.equal(quoteRows(f).length,beforeQuotes);assert.deepEqual(effects(f),beforeExclusion);
+    f.incentiveSource.configure({revision:5,expires_at:f.now()+60000,combinations:E.combinations});assert.equal(quote(f).quote.points.quantity,400);assert.deepEqual(effects(f),beforeExclusion);
   },{extraOffer:true});
   await usingFixture(f=>{
     const q=quote(f),item=f.shop.source.item('basic');f.shop.source.fixtureListing({variant_id:'basic',expected_revision:item.listing_revision,title:item.title,description:item.description,approved_descriptions:item.approved_descriptions,terms:{id:'standard',revision:2,text:'Changed native item terms.'}});
