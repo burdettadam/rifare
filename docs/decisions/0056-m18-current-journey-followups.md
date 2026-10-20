@@ -317,3 +317,18 @@ hour) remain unchanged despite the follow-up's possible seven-day horizon.
 Positive edit fixtures use actual released/cancelled methods. The native
 abandoned terminal reason is retained without fabricating an unavailable public
 abandonment transition or claiming that positive observation.
+
+Permanent guard retirement also terminally cancels an exactly associated,
+provably unattempted direct delivery so it cannot block later support-stream
+work. In the same transaction, require operation queued, work pending with zero
+attempts and no lease/owner, no native observation/provider reference, and no
+contradictory dispatch/confirmation history. Use the existing work dead /
+FINAL_AUTHORIZATION_DENIED and transitionOperation failed / provider_rejected
+outcome, preserving original command, payload, target, operation ID and pins.
+Use the actual actor when available or the explicit journey_followup_lifecycle
+internal actor for restoration; never fabricate a session. Repeat retirement is
+idempotent. Leased, sending, retrying, unknown, succeeded or otherwise attempted
+work keeps its existing final-send/reconciliation path. An eligible direct queue
+whose rule job is only waiting remains untouched by the pre-claim refusal.
+The independent author covers retirement of a pending direct queue, release of
+its native stream blocker and immutable replay within the assigned 19 cases.
