@@ -364,3 +364,34 @@ native same-kernel owner. Generic ExecutionStops.reauthorize also refuses valid
 typed loyalty work; a changed stop cannot renew its original points approval.
 Keep existing gift restrictions, then route loyalty before return-writability
 checks. No human proof's last_seen or expiry is refreshed by quote revalidation.
+
+## Native state and receipt mapping
+
+The new gateway preview and action receipt use points={unit:'points',quantity:N}
+and benefit={id,points,unit:'points',kind:'synthetic_reward'}. The receipt's
+original-operation field is loyalty_operation_id, its effect is
+synthetic_loyalty_authorized, and its state is reserved. There is no amount,
+currency, amount_ceiling or financial resolution substitution.
+
+The typed operation body fields for economic state and dispatch attempts are
+state and attempt_count. native_revision binds commerce_operations.revision.
+Native mappings are reserved=queued/pending, unknown=unknown/unknown,
+redeemed=succeeded/done, rejected=failed/dead and released=failed/dead, where each
+pair names operation/work state. Rejected and released remain distinct typed
+states with distinct reasons. The one initial dispatch sets attempt_count and
+work.attempts to1 before source invocation. No second attempt is permitted.
+Restored reserved work becomes unknown with attempt_count0; this records copied
+uncertainty without falsely claiming the original snapshot observed a dispatch.
+
+Add only reservation_released to operation-receipts.mts RECEIPT_CODES; that file
+is an additional narrowly assigned integration path. Live unsent release records
+this code, not provider_rejected or source_confirmed. Existing queued,
+outcome_unknown, source_confirmed and provider_rejected codes retain their
+semantics. Native schema and immutable receipt/operation-identity triggers stay
+unchanged.
+
+The wrapper methods redeem, lookup and setMode and the owner methods context,
+quote, read, dispatch, reconcile and expire are synchronous. Existing async
+service/exception adapters may await their results. Timeout modes are deliberate
+synthetic transport faults before/after an actual source transaction, not claims
+of measured remote network behavior.
