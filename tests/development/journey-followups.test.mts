@@ -20,7 +20,20 @@ import type {Value} from './journey-followups-helpers.mts';
 
 // Independent ADR-0056 specifications: nineteen native cases, no subtest expansion.
 const customerId=(f:any)=>order(f).customer_id;
-const deny=(f:any,action:string,actor='operator',role='operator')=>f.permissions.change(f.owner.scope,{actor_id:actor,role,expected_revision:0,actions:ROLE_ACTIONS[role as keyof typeof ROLE_ACTIONS].filter(a=>a!==action),resource_ids:null});
+// Native permission overrides are bounded; retain the complete action set these fixtures use.
+const FOLLOWUP_OPERATOR_ACTIONS:readonly string[]=[
+  'support.read','support.reply','support.link','support.ingest','support.takeover','support.send','support.note','support.analytics',
+  'resource.read','attachment.read','knowledge.read','skill.read','profile.read','task.read','model.run','capability.read','policy.read','case.read','case.create','return.read',
+  'action.propose','action.execute','operation.read','operation.dispatch','operation.reconcile','work.claim','work.manage','audit.read','return.request','return.evidence',
+];
+const deny=(f:any,action:string,actor='operator',role='operator')=>{
+  const baseline=role==='operator'?FOLLOWUP_OPERATOR_ACTIONS:ROLE_ACTIONS[role as keyof typeof ROLE_ACTIONS],caller=role==='operator'?f.a.scope:f.reviewer.scope,resource=order(f).id;
+  assert.ok(baseline.includes(action),'the fixture deliberately removes a currently allowed action');
+  for(const allowed of baseline)assert.equal(f.permissions.preview(caller,allowed,resource).allowed,true,'initial permission '+allowed);
+  const changed=f.permissions.change(f.owner.scope,{actor_id:actor,role,expected_revision:0,actions:baseline.filter(a=>a!==action),resource_ids:null});
+  for(const allowed of baseline)assert.equal(f.permissions.preview(caller,allowed,resource).allowed,allowed!==action,'current permission '+allowed);
+  return changed;
+};
 const personal=(f:any)=>[f.link.id,f.customerBearer,'shopper-apparel@example.invalid'];
 const due=(f:any,id:string)=>{const at=job(f,id).due_at;if(at>f.now())f.advance(at-f.now());};
 const newJourney=(f:any,extra:Value={})=>f.journeys.context(f.a.scope,f.customer,common(f,extra));
