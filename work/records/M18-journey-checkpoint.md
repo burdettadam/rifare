@@ -139,3 +139,38 @@ the existing rule and delivery owners, then bounded G05 caller continuity and an
 honest G99 assessment. Formal M07/M09/M15/M18 acceptance, real remote and connected
 channel qualification, target-host evidence and missing-source reconciliation
 remain open. Protected main stays a33c4ad; no release or external effect occurs.
+
+## G04 prior assignment and initial candidate
+
+Root assigned ADR-0056 from the reviewed G03 documentation checkpoint
+e7ae55378260e2ab1133fe863c53515b2c037197 on recovery/M18-followups. Initial prior
+assignment 2864a09787b9d3ebb80bd584caccee51c32accc8 and clarifications edbfc95,
+24ae1c2 and 4684015 all precede runtime. Both nonauthor reviewers confirmed the
+clarified contract; those assessments are not product approvals.
+
+/root/m18_memory_tests independently froze exactly 19 cases in
+b0a5739c3699dfc3a2d7876b4173c49a6ac442ce. Root cherry-picked the two assigned files
+unchanged at 3972871fa4c5239804c230cf9488e1675e859a18 before writing runtime. The
+author performed source inspection only. Root remains the sole product executor
+and runtime author; /root/m18_authority_scope and /root/m18_regression_scope remain
+the two independent product reviewers.
+
+The initial candidate adds four bounded follow-up modules and six assigned native
+hooks. It schedules one original transactional tracking rule job, validates
+current eligibility before waiting execution and immediately before native send,
+and retains unknown/observed delivery on the original lookup path. It adds no
+grants, native effect owner, operation ledger or migration. Exact retained subject
+identity selects guard histories and their original native copies even with zero
+current resources. Dynamic retirement preserves original pins and cancels only
+provably unattempted native pending work; restore/import context is scrubbed in
+place and never resumed.
+
+The planned focused selection is 19 follow-up, nine support-delivery, eight
+support-rules and 24 growth-marketing cases: 60 cases, four whole files and one
+60-second deadline through unchanged tools/dev_tests.py. Actual execution,
+targeted-fault evidence and product reviews are pending at this source checkpoint.
+All 3,158 prior test objects, 212 capabilities, 532 protected paths, 1,822 sources,
+38 adapters, 15 privacy surfaces and 262 tables remain required. Additive totals
+are 3,177 tests, 213 capabilities, 539 protected paths, 1,831 source members,
+314 runtime pins and 626 oracle pins, with inventory revision 30. These counts
+are source inventory, not a claim that every registered case was run.

@@ -294,3 +294,14 @@ unchanged cases and is not integrated. Actual attempts and reviews are retained
 in the journey checkpoint record. G04 follow-ups receive the next concrete
 assignment; G05 local continuity and G99 assessment follow without inferring
 formal, remote, connected-provider or target-host qualification.
+
+## Current M18 follow-up candidate
+
+ADR-0056 records the prior G04 assignment and independent contract clarifications.
+The independent author froze 19 native cases at b0a5739; root integrated them
+unchanged at 3972871 before runtime implementation. The candidate adds one guarded
+transactional tracking step through existing native rules and delivery, current
+journey/memory/source checks, original-identity replay and retained-subject cleanup.
+The assigned 60-case focused execution, isolated final-guard fault and two
+independent product reviews are pending. G05 bounded continuity and G99 assessment
+remain the next assigned local work; formal dependencies remain open.

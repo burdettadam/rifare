@@ -5,6 +5,9 @@ import {canonical,contentDigest,jsonValue} from './configuration-values.mts';
 import {supportCase,saveDocument,documentRow,checkedDocument,ownershipRow,supportEvent,assertSupportOwner} from './support-core.mts';
 import type {SupportDelivery} from './support-delivery.mts';
 import {assertCaseWorkerScope} from './work-leases.mts';
+import {followupJobId,followupPin} from './journey-followup-records.mts';
+import {fenceFollowupCounterpart,followupJobBinding,followupPrivate,followupReason,currentFollowupRule} from './journey-followup-guard.mts';
+import {retireFollowup} from './journey-followup-privacy.mts';
 const TRIGGERS=['message_received','shipment_exception','return_requested'] as const;
 const ACTIONS=['handoff_request','draft_return','queue_tracking'] as const;
 function validateRule(input:unknown){const p=exact(jsonValue(input),['id','expected_version','trigger','conditions','priority','wait_ms','calendar','action','expires_at']);
@@ -35,6 +38,7 @@ export class SupportRules {
   return this.k.transaction(()=>{const {s,c}=supportCase(this.k,scope,p.case_id,'support.reply'),ownership=assertSupportOwner(this.k,scope,c.id,p.expected_generation),r=this.selection(scope,{id:p.rule_id,version:p.rule_version,digest:p.rule_digest});assertCaseWorkerScope(this.k,scope,c.id);
    const now=this.k.clock(),due=nextRuleTime(now,r.body.calendar);if(due!==now)throw new Error('RULE_SELECTION_NOT_DUE');
    const event=this.#event({id:p.event_id,case_id:c.id,trigger:'return_requested',channel:'webchat',at:now,visited:[],depth:0,link_id:null,sender_id:null}),ref='sj_'+contentDigest([s.tenant_id,s.store_id,r.id,event.id]).slice(0,40);
+   fenceFollowupCounterpart(this.k,s,ref);
    const previous=this.k.db.prepare('SELECT * FROM commerce_support_rule_jobs WHERE tenant_id=? AND store_id=? AND id=?').get(s.tenant_id,s.store_id,ref) as Row;
    if(previous){if(previous.case_id!==c.id||previous.rule_digest!==r.digest||previous.version!==r.version||previous.generation!==ownership.owner.generation||previous.state!=='completed')throw new Error('RULE_EVENT_CONFLICT');return this.job(scope,ref);}
    this.k.db.prepare("INSERT INTO commerce_support_rule_jobs VALUES(?,?,?,?,?,?,?,?,?,?,?,?, 'waiting',NULL)").run(s.tenant_id,s.store_id,ref,c.id,c.resource_id,r.id,r.version,r.digest,event.id,canonical(event),ownership.owner.generation,due);
@@ -43,18 +47,33 @@ export class SupportRules {
  }
  #event(input:unknown){const e=exact(jsonValue(input),['id','case_id','trigger','channel','at','visited','depth','link_id','sender_id']);[e.id,e.case_id].forEach(id);integer(e.at);integer(e.depth);if(!TRIGGERS.includes(e.trigger)||!['email','webchat','helpdesk'].includes(e.channel)||e.at>this.k.clock()||!Array.isArray(e.visited)||e.visited.length>8||e.depth>8||new Set(e.visited).size!==e.visited.length)throw new Error('RULE_EVENT_INVALID');e.visited.forEach(id);if(e.link_id!==null)id(e.link_id);if(e.sender_id!==null)id(e.sender_id);return e;}
  #matches(p:Row,e:Row){return e.trigger===p.trigger&&(p.conditions.channel==='any'||p.conditions.channel===e.channel);}
- schedule(scope:Scope,input:unknown){const e=this.#event(input);return this.k.transaction(()=>{const {s,c}=supportCase(this.k,scope,e.case_id,'support.reply'),owner=ownershipRow(this.k,s,c.id);if(!owner)throw new Error('SUPPORT_OWNERSHIP_CHANGED');
+ schedule(scope:Scope,input:unknown,selected?:unknown){const e=this.#event(input),selection=selected===undefined?null:exact(jsonValue(selected,32768),['rule','journey_guard']);
+  if(selection){exact(selection.rule,['id','version','digest']);followupPin(selection.journey_guard);}
+  return this.k.transaction(()=>{const {s,c}=supportCase(this.k,scope,e.case_id,'support.reply'),owner=ownershipRow(this.k,s,c.id);if(!owner)throw new Error('SUPPORT_OWNERSHIP_CHANGED');
   if(e.depth>=4)return {jobs:[],loop_stopped:true};const rows=this.k.db.prepare("SELECT id,max(version) version FROM commerce_support_documents WHERE tenant_id=? AND store_id=? AND kind='support_rules' AND state='active' AND expires_at>? GROUP BY id LIMIT 100").all(s.tenant_id,s.store_id,this.k.clock()) as Row[];
-  const rules=rows.map(r=>checkedDocument(this.k,s,'support_rules',r.id,r.version)).filter(r=>this.#matches(r.body,e)&&!e.visited.includes(r.id)).sort((a,b)=>b.body.priority-a.body.priority||a.id.localeCompare(b.id));if(rules.length>20)throw new Error('RULE_MATCH_LIMIT');const jobs=[];
-  for(const r of rules){const ref='sj_'+contentDigest([s.tenant_id,s.store_id,r.id,e.id]).slice(0,40),old=this.k.db.prepare('SELECT * FROM commerce_support_rule_jobs WHERE tenant_id=? AND store_id=? AND id=?').get(s.tenant_id,s.store_id,ref) as Row;
+  const selectedRule=selection?currentFollowupRule(this.k,s,selection.rule,e):null;
+  if(selection&&!selectedRule)throw new Error('JOURNEY_FOLLOWUP_INELIGIBLE');if(selectedRule)validateRule(selectedRule.body);
+  const rules=selectedRule?[selectedRule]:rows.map(r=>checkedDocument(this.k,s,'support_rules',r.id,r.version)).filter(r=>this.#matches(r.body,e)&&!e.visited.includes(r.id)).sort((a,b)=>b.body.priority-a.body.priority||a.id.localeCompare(b.id));if(rules.length>20)throw new Error('RULE_MATCH_LIMIT');const jobs=[];
+  for(const r of rules){const legacy='sj_'+contentDigest([s.tenant_id,s.store_id,r.id,e.id]).slice(0,40),ref=selection?followupJobId(s.tenant_id,s.store_id,r.id,e.id):legacy;
+   if(selection){if(this.k.db.prepare('SELECT 1 FROM commerce_support_rule_jobs WHERE tenant_id=? AND store_id=? AND id=?').get(s.tenant_id,s.store_id,legacy))throw new Error('JOURNEY_FOLLOWUP_CONFLICT');}
+   else fenceFollowupCounterpart(this.k,s,legacy);
+   const old=this.k.db.prepare('SELECT * FROM commerce_support_rule_jobs WHERE tenant_id=? AND store_id=? AND id=?').get(s.tenant_id,s.store_id,ref) as Row;
    if(old){if(old.event_body!==canonical(e))throw new Error('RULE_EVENT_CONFLICT');jobs.push(this.job(scope,ref));continue;}
-   const due=nextRuleTime(e.at+r.body.wait_ms,r.body.calendar);this.k.db.prepare("INSERT INTO commerce_support_rule_jobs VALUES(?,?,?,?,?,?,?,?,?,?,?,?, 'waiting',NULL)").run(s.tenant_id,s.store_id,ref,c.id,c.resource_id,r.id,r.version,r.digest,e.id,canonical(e),owner.generation,due);jobs.push(this.job(scope,ref));}
+   const due=nextRuleTime(e.at+r.body.wait_ms,r.body.calendar);this.k.db.prepare("INSERT INTO commerce_support_rule_jobs VALUES(?,?,?,?,?,?,?,?,?,?,?,?, 'waiting',?)").run(s.tenant_id,s.store_id,ref,c.id,c.resource_id,r.id,r.version,r.digest,e.id,canonical(e),owner.generation,due,selection?canonical({journey_guard:selection.journey_guard}):null);
+   if(selection)followupJobBinding(this.k,s,ref);jobs.push(this.job(scope,ref));}
   return {jobs,loop_stopped:false};});}
- job(scope:Scope,ref:string){id(ref);const s=this.k.require(scope),r=this.k.db.prepare('SELECT * FROM commerce_support_rule_jobs WHERE tenant_id=? AND store_id=? AND id=?').get(s.tenant_id,s.store_id,ref) as Row;if(!r)throw new Error('NOT_FOUND');supportCase(this.k,scope,r.case_id);return {id:r.id,case_id:r.case_id,rule_id:r.rule_id,version:r.version,rule_digest:r.rule_digest,due_at:r.due_at,state:r.state,result:r.result?JSON.parse(r.result):null};}
+ job(scope:Scope,ref:string){id(ref);const s=this.k.require(scope),r=this.k.db.prepare('SELECT * FROM commerce_support_rule_jobs WHERE tenant_id=? AND store_id=? AND id=?').get(s.tenant_id,s.store_id,ref) as Row;if(!r)throw new Error('NOT_FOUND');supportCase(this.k,scope,r.case_id);
+  let result=r.result?JSON.parse(r.result):null;
+  if(ref.startsWith('sjf_')){followupJobBinding(this.k,s,ref);if(!followupPrivate(this.k,scope,r.resource_id))return {id:r.id,case_id:r.case_id,state:'restricted',result:null,restricted:true,execution_authorized:false};
+   if(result){const {journey_guard,...publicResult}=result;result=publicResult;}}
+  return {id:r.id,case_id:r.case_id,rule_id:r.rule_id,version:r.version,rule_digest:r.rule_digest,due_at:r.due_at,state:r.state,result};}
  execute(scope:Scope,ref:string){return this.k.transaction(()=>{const current=this.job(scope,ref),{s,c}=supportCase(this.k,scope,current.case_id,'support.reply'),r=this.k.db.prepare('SELECT * FROM commerce_support_rule_jobs WHERE tenant_id=? AND store_id=? AND id=?').get(s.tenant_id,s.store_id,ref) as Row;
-  if(r.state==='completed')return current;if(r.due_at>this.k.clock())throw new Error('RULE_NOT_DUE');const rule=checkedDocument(this.k,s,'support_rules',r.rule_id,r.version),owner=ownershipRow(this.k,s,c.id),event=JSON.parse(r.event_body);
+  const binding=ref.startsWith('sjf_')?followupJobBinding(this.k,s,ref):null;
+  if(r.state==='completed'||binding&&r.state==='cancelled')return current;if(r.due_at>this.k.clock())throw new Error('RULE_NOT_DUE');
+  if(binding){const reason=followupReason(this.k,scope,binding,this.delivery.followupOwners,this.delivery.tracking);if(reason){retireFollowup(this.k,s,binding.rows,reason);return this.job(scope,ref);}}
+  const rule=checkedDocument(this.k,s,'support_rules',r.rule_id,r.version),owner=ownershipRow(this.k,s,c.id),event=JSON.parse(r.event_body);
   if(rule.digest!==r.rule_digest||owner?.generation!==r.generation||owner.owner!==s.actor_id)throw new Error('RULE_CONTEXT_CHANGED');let result:any;
   if(rule.body.action==='queue_tracking'){if(!event.link_id||!event.sender_id)throw new Error('RULE_MESSAGE_ROUTE_MISSING');result=this.delivery.queue(scope,{case_id:c.id,link_id:event.link_id,sender_id:event.sender_id,event_id:ref,template_id:'tracking_status_v1',expected_generation:r.generation});}
   else{supportEvent(this.k,s,c.id,rule.body.action,r.generation,ref);result={kind:rule.body.action,case_id:c.id,execution_authorized:false,manual_action_required:true};}
-  const out={...result,visited:[...event.visited,rule.id],depth:event.depth+1};this.k.db.prepare("UPDATE commerce_support_rule_jobs SET state='completed',result=? WHERE tenant_id=? AND store_id=? AND id=?").run(canonical(out),s.tenant_id,s.store_id,ref);return this.job(scope,ref);});}
+  const out={...result,visited:[...event.visited,rule.id],depth:event.depth+1,...(binding?{journey_guard:binding.pin}:{})};this.k.db.prepare("UPDATE commerce_support_rule_jobs SET state='completed',result=? WHERE tenant_id=? AND store_id=? AND id=?").run(canonical(out),s.tenant_id,s.store_id,ref);return this.job(scope,ref);});}
 }

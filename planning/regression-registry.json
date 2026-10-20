@@ -1901,6 +1901,14 @@
       "contract_files": [
         "packages/commerce/contracts/commerce-journeys.v1.json"
       ]
+    },
+    {
+      "id": "m18-journey-followups-diagnostic",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/journey-followups.v1.json"
+      ]
     }
   ],
   "tests": [
@@ -24009,6 +24017,139 @@
       "runner_case_id": "M18-G03-MERCHANT-REIMPORT-AND-HELD-ATOMICITY",
       "source": "tests/development/commerce-journeys.test.mts",
       "capability_id": "m18-commerce-journeys-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M18-G04-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M18-G04-01",
+      "source": "tests/development/journey-followups.test.mts",
+      "capability_id": "m18-journey-followups-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M18-G04-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M18-G04-02",
+      "source": "tests/development/journey-followups.test.mts",
+      "capability_id": "m18-journey-followups-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M18-G04-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M18-G04-03",
+      "source": "tests/development/journey-followups.test.mts",
+      "capability_id": "m18-journey-followups-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G04-STRICT-INPUT-OWNERS-AND-BOUNDS",
+      "suite": "runtime",
+      "runner_case_id": "M18-G04-STRICT-INPUT-OWNERS-AND-BOUNDS",
+      "source": "tests/development/journey-followups.test.mts",
+      "capability_id": "m18-journey-followups-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G04-EXACT-SCOPE-PROOF-LINK-AND-SOURCE",
+      "suite": "runtime",
+      "runner_case_id": "M18-G04-EXACT-SCOPE-PROOF-LINK-AND-SOURCE",
+      "source": "tests/development/journey-followups.test.mts",
+      "capability_id": "m18-journey-followups-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G04-NATIVE-GUARD-CANNOT-BE-BYPASSED",
+      "suite": "runtime",
+      "runner_case_id": "M18-G04-NATIVE-GUARD-CANNOT-BE-BYPASSED",
+      "source": "tests/development/journey-followups.test.mts",
+      "capability_id": "m18-journey-followups-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G04-CURRENT-MEMORY-VERSION-AND-FORGET",
+      "suite": "runtime",
+      "runner_case_id": "M18-G04-CURRENT-MEMORY-VERSION-AND-FORGET",
+      "source": "tests/development/journey-followups.test.mts",
+      "capability_id": "m18-journey-followups-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G04-NATIVE-CART-STAGE-DISTINCTIONS",
+      "suite": "runtime",
+      "runner_case_id": "M18-G04-NATIVE-CART-STAGE-DISTINCTIONS",
+      "source": "tests/development/journey-followups.test.mts",
+      "capability_id": "m18-journey-followups-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G04-NATIVE-RETURN-AND-RESOLUTION-STAGES",
+      "suite": "runtime",
+      "runner_case_id": "M18-G04-NATIVE-RETURN-AND-RESOLUTION-STAGES",
+      "source": "tests/development/journey-followups.test.mts",
+      "capability_id": "m18-journey-followups-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G04-NATIVE-EDIT-AND-FULFILLMENT-STAGES",
+      "suite": "runtime",
+      "runner_case_id": "M18-G04-NATIVE-EDIT-AND-FULFILLMENT-STAGES",
+      "source": "tests/development/journey-followups.test.mts",
+      "capability_id": "m18-journey-followups-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G04-DELIVERY-UNKNOWN-ACCEPTED-DELIVERED",
+      "suite": "runtime",
+      "runner_case_id": "M18-G04-DELIVERY-UNKNOWN-ACCEPTED-DELIVERED",
+      "source": "tests/development/journey-followups.test.mts",
+      "capability_id": "m18-journey-followups-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G04-STALE-VERSION-AND-IMMUTABLE-EVENT-PINS",
+      "suite": "runtime",
+      "runner_case_id": "M18-G04-STALE-VERSION-AND-IMMUTABLE-EVENT-PINS",
+      "source": "tests/development/journey-followups.test.mts",
+      "capability_id": "m18-journey-followups-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G04-MANUAL-SERVICE-AND-READ-ONLY-CONTEXT",
+      "suite": "runtime",
+      "runner_case_id": "M18-G04-MANUAL-SERVICE-AND-READ-ONLY-CONTEXT",
+      "source": "tests/development/journey-followups.test.mts",
+      "capability_id": "m18-journey-followups-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G04-CURRENT-RULE-AUTHORITY-AND-SCHEDULE",
+      "suite": "runtime",
+      "runner_case_id": "M18-G04-CURRENT-RULE-AUTHORITY-AND-SCHEDULE",
+      "source": "tests/development/journey-followups.test.mts",
+      "capability_id": "m18-journey-followups-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G04-HISTORY-INTEGRITY-AND-RESTORE-PREFLIGHT",
+      "suite": "runtime",
+      "runner_case_id": "M18-G04-HISTORY-INTEGRITY-AND-RESTORE-PREFLIGHT",
+      "source": "tests/development/journey-followups.test.mts",
+      "capability_id": "m18-journey-followups-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G04-SUBJECT-EXPORT-ERASURE-AND-REASSIGNMENT",
+      "suite": "runtime",
+      "runner_case_id": "M18-G04-SUBJECT-EXPORT-ERASURE-AND-REASSIGNMENT",
+      "source": "tests/development/journey-followups.test.mts",
+      "capability_id": "m18-journey-followups-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G04-JOURNEY-FORGET-ALL-VERSIONS-AND-HOLDS",
+      "suite": "runtime",
+      "runner_case_id": "M18-G04-JOURNEY-FORGET-ALL-VERSIONS-AND-HOLDS",
+      "source": "tests/development/journey-followups.test.mts",
+      "capability_id": "m18-journey-followups-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G04-UNINSTALL-NATIVE-RESTORE-AND-SUPPRESSION",
+      "suite": "runtime",
+      "runner_case_id": "M18-G04-UNINSTALL-NATIVE-RESTORE-AND-SUPPRESSION",
+      "source": "tests/development/journey-followups.test.mts",
+      "capability_id": "m18-journey-followups-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G04-MERCHANT-REIMPORT-HELD-ATOMICITY",
+      "suite": "runtime",
+      "runner_case_id": "M18-G04-MERCHANT-REIMPORT-HELD-ATOMICITY",
+      "source": "tests/development/journey-followups.test.mts",
+      "capability_id": "m18-journey-followups-diagnostic"
     }
   ],
   "protected_files": [
@@ -24543,7 +24684,14 @@
     "packages/commerce/journey-records.mts",
     "packages/commerce/journey-references.mts",
     "tests/development/commerce-journeys-helpers.mts",
-    "tests/development/commerce-journeys.test.mts"
+    "tests/development/commerce-journeys.test.mts",
+    "packages/commerce/contracts/journey-followups.v1.json",
+    "packages/commerce/journey-followup-guard.mts",
+    "packages/commerce/journey-followup-privacy.mts",
+    "packages/commerce/journey-followup-records.mts",
+    "packages/commerce/journey-followups.mts",
+    "tests/development/journey-followups-helpers.mts",
+    "tests/development/journey-followups.test.mts"
   ],
   "source_count_fixture": "tests/fixtures/licensing/artifact-oracle.v1.json",
   "source_inventory": "planning/component-inventory.json"

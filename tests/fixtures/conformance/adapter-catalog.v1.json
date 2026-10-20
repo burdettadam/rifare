@@ -5269,7 +5269,7 @@
     },
     {
       "path": "packages/commerce/privacy-lifecycle.mts",
-      "sha256": "58c6356768dffcb4e46d92348cd797c76bf3679e834a4e9a9656510424571b37"
+      "sha256": "bb7a956a808dcd241bbe5fe60684bb9492237ee395b3f47a4e2916657cb75329"
     },
     {
       "path": "packages/commerce/profile-editor.mts",
@@ -5405,7 +5405,7 @@
     },
     {
       "path": "packages/commerce/safe-recovery.mts",
-      "sha256": "673850bcc8c1ab7eb7130b043efdd37844f4441f331a808eb1d7949b18f9103f"
+      "sha256": "00335ef3e1acee4a38ee5dadc08ae42d69e6f7c4f72b2a24459dc6d15f7f6889"
     },
     {
       "path": "packages/commerce/secrets.mts",
@@ -5513,7 +5513,7 @@
     },
     {
       "path": "packages/commerce/support-delivery.mts",
-      "sha256": "a9f2a733fdc17f193b2b2f03099fb400114e3691f9ead7bf0dfaa3019250acb6"
+      "sha256": "2610b16a44818e4decc814ea0a6f4bc03c18a0820c9ca89292abf6b0da04e940"
     },
     {
       "path": "packages/commerce/support-errors.mts",
@@ -5533,7 +5533,7 @@
     },
     {
       "path": "packages/commerce/support-service.mts",
-      "sha256": "58c24608974c3615c7bc59c26345dfe611d84c5a27e70823185a11f43f12a0ab"
+      "sha256": "56f8432bbad73537342fd299fc39128b3c97667822cf54ea10b852ed74fdcb12"
     },
     {
       "path": "packages/commerce/support-tracking.mts",
@@ -6017,7 +6017,7 @@
     },
     {
       "path": "packages/commerce/merchant-portability.mts",
-      "sha256": "9abcb6349fd7909273767c3d76482dc17af9946fc4a44b8e066026f0d5fbecff"
+      "sha256": "9dc78766cb7453bf8c0b0f74d83288d88a34ccbcde9dbf23042504675b708ac5"
     },
     {
       "path": "packages/commerce/contracts/carrier-quotes.v1.json",
@@ -7278,6 +7278,34 @@
     {
       "path": "tests/development/commerce-journeys-helpers.mts",
       "sha256": "b63afd655ecb517d87b775d54df339a8fa89b224999d3c7441cc67da1ea4cb31"
+    },
+    {
+      "path": "packages/commerce/journey-followups.mts",
+      "sha256": "18c65589e9145814aafa7ce21fc4d24cd19e1fd41e418c2d7e90c4b549b0a966"
+    },
+    {
+      "path": "packages/commerce/journey-followup-records.mts",
+      "sha256": "344cd2bf4f9bd941c7a3be5b554a693c74c69993bfe36008ac7412ac0a25b28e"
+    },
+    {
+      "path": "packages/commerce/journey-followup-guard.mts",
+      "sha256": "fed0836e74144b4609eefbc7b6870a9044e49edf4113f83756b102d4c4a175df"
+    },
+    {
+      "path": "packages/commerce/journey-followup-privacy.mts",
+      "sha256": "9c299394d1af0774b2725f10cc4921b2572904432dae7eedcf858a17f411b4df"
+    },
+    {
+      "path": "packages/commerce/contracts/journey-followups.v1.json",
+      "sha256": "83e609d4820d3413fe42b92774d1de02898eb50d88b091c8deedcce0604aec7c"
+    },
+    {
+      "path": "tests/development/journey-followups.test.mts",
+      "sha256": "edcf7b62256df793a6608334c9cd4bfb04a6cefcee590526360c0ac0dcbf0526"
+    },
+    {
+      "path": "tests/development/journey-followups-helpers.mts",
+      "sha256": "154a756909442f36aea4b917a54bb0a7f040881a0d3876da9d56966e65107a75"
     }
   ]
 }

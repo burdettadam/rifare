@@ -10,6 +10,9 @@ import {DurableWork,retryDelay,MAX_OPERATION_ATTEMPTS} from './durable-work.mts'
 import {assertExecution,assertOperationExecution} from './execution-stops.mts';
 import {assertRecoveryEgress} from './data-guards.mts';
 import type {SupportSource} from '../adapters/support-fixture-source.mts';
+import {nativeFollowupOwners,queueFollowupBinding,deliveryFollowupBinding,followupPrivate,followupReason,refuseFollowupEvent,
+  preclaimFollowup,finalFollowup,FollowupSuppressed,retireDeliveryFollowup} from './journey-followup-guard.mts';
+import type {FollowupOwners} from './journey-followup-guard.mts';
 
 export const SUPPORT_TEMPLATES=Object.freeze({tracking_status_v1:{purpose:'transactional'},support_status_v1:{purpose:'transactional'},marketing_test_v1:{purpose:'marketing'},return_refund_pending_v1:{purpose:'transactional'},return_refund_completed_v1:{purpose:'transactional'}});
 export interface RefundMessageReader {
@@ -22,8 +25,8 @@ export interface CampaignMessageReader {
  reserve(scope:Scope,campaignId:string,caseId:string,operationId:string):void;
 }
 export class SupportDelivery {
- readonly k:CommerceKernel;readonly consent:SupportConsent;readonly tracking:SupportTracking;readonly sources:ReadonlyMap<string,SupportSource>;readonly refunds:RefundMessageReader|null;readonly campaigns:CampaignMessageReader|null;
- constructor(k:CommerceKernel,tracking:SupportTracking,sources:SupportSource[]=[],refunds:RefundMessageReader|null=null,campaigns:CampaignMessageReader|null=null){if(refunds&&refunds.k!==k)throw new Error('REFUND_MESSAGE_SOURCE_UNAVAILABLE');if(campaigns&&campaigns.k!==k)throw new Error('CAMPAIGN_MESSAGE_SOURCE_UNAVAILABLE');this.k=k;this.tracking=tracking;this.refunds=refunds;this.campaigns=campaigns;this.consent=new SupportConsent(k);const map=new Map<string,SupportSource>();for(const source of sources){if(map.has(source.identity))throw new Error('SOURCE_IDENTITY_CONFLICT');map.set(source.identity,source);}this.sources=map;}
+ readonly k:CommerceKernel;readonly consent:SupportConsent;readonly tracking:SupportTracking;readonly sources:ReadonlyMap<string,SupportSource>;readonly refunds:RefundMessageReader|null;readonly campaigns:CampaignMessageReader|null;readonly followupOwners:FollowupOwners;
+ constructor(k:CommerceKernel,tracking:SupportTracking,sources:SupportSource[]=[],refunds:RefundMessageReader|null=null,campaigns:CampaignMessageReader|null=null,followupOwners:FollowupOwners={}){if(refunds&&refunds.k!==k)throw new Error('REFUND_MESSAGE_SOURCE_UNAVAILABLE');if(campaigns&&campaigns.k!==k)throw new Error('CAMPAIGN_MESSAGE_SOURCE_UNAVAILABLE');this.followupOwners=nativeFollowupOwners(k,followupOwners);this.k=k;this.tracking=tracking;this.refunds=refunds;this.campaigns=campaigns;this.consent=new SupportConsent(k);const map=new Map<string,SupportSource>();for(const source of sources){if(map.has(source.identity))throw new Error('SOURCE_IDENTITY_CONFLICT');map.set(source.identity,source);}this.sources=map;}
  #refund(scope:Scope,caseId:string,operationId:string,templateId:string){if(!this.refunds)throw new Error('REFUND_MESSAGE_SOURCE_UNAVAILABLE');return this.refunds.render(scope,caseId,operationId,templateId);}
  #source(s:Row,row:Row) {const source=this.sources.get(row.source_identity);if(!source||source.tenant!==s.tenant_id||source.store!==s.store_id||source.account!==row.account_id||source.contract!==row.source_contract)throw new Error('SUPPORT_SOURCE_UNAVAILABLE');return source;}
  #row(scope:Scope,opId:string,action='support.read') {const k=this.k,s=k.require(scope);id(opId);const row=k.db.prepare('SELECT * FROM commerce_support_deliveries WHERE tenant_id=? AND store_id=? AND operation_id=?').get(s.tenant_id,s.store_id,opId) as Row;
@@ -31,6 +34,7 @@ export class SupportDelivery {
  queue(scope:Scope,input:unknown){const p=exact(jsonValue(input),['case_id','link_id','sender_id','template_id','event_id','expected_generation']);id(p.event_id);id(p.sender_id);integer(p.expected_generation,1);
   if(!Object.hasOwn(SUPPORT_TEMPLATES,p.template_id))throw new Error('TEMPLATE_UNSUPPORTED');
   return this.k.transaction(()=>{const {s,c,owner}=assertSupportOwner(this.k,scope,p.case_id,p.expected_generation);this.k.authorize(scope,'support.send',c.resource_id);assertExecution(this.k,s,'customer.message');
+   const guard=queueFollowupBinding(this.k,scope,p);
    const link=new SupportConversations(this.k).linkRecord(scope,p.link_id);if(link.case_id!==c.id||link.channel!=='email')throw new Error('SUPPORT_CHANNEL_MISMATCH');
    const sender=checkedDocument(this.k,s,'sender',p.sender_id);this.#source(s,sender.body);
    const refund=['return_refund_pending_v1','return_refund_completed_v1'].includes(p.template_id);
@@ -38,13 +42,14 @@ export class SupportDelivery {
    // changes. Its event_id is the existing canonical refund operation, not a new key.
    const intentId='notify_'+contentDigest(refund?[s.tenant_id,s.store_id,c.id,p.template_id,p.event_id]:[s.tenant_id,s.store_id,c.id,p.link_id,p.sender_id,p.template_id,p.event_id]).slice(0,40);
    const existing=this.k.db.prepare("SELECT id FROM commerce_operations WHERE tenant_id=? AND store_id=? AND source_kind='event' AND source_id=?").get(s.tenant_id,s.store_id,intentId) as Row;
-   if(existing)return this.inspect(scope,existing.id);
+   if(existing){if(guard){const old=this.#row(scope,existing.id),bound=deliveryFollowupBinding(this.k,s,old.row,old.payload);if(bound?.job.id!==guard.job.id)throw new Error('JOURNEY_FOLLOWUP_INTEGRITY');}return this.inspect(scope,existing.id);}
+   if(guard){if(guard.job.due_at>this.k.clock())throw new Error('JOURNEY_FOLLOWUP_NOT_DUE');const reason=followupReason(this.k,scope,guard,this.followupOwners,this.tracking);if(reason)throw new FollowupSuppressed(reason);}
    const contact=this.k.db.prepare('SELECT * FROM commerce_support_contacts WHERE tenant_id=? AND store_id=? AND link_id=? AND erased=0').get(s.tenant_id,s.store_id,link.id) as Row;
    if(!contact||!contact.address||contentDigest(contact.address)!==contact.address_digest)throw new Error('CONTACT_VERIFICATION_REQUIRED');
    const view=refund?this.#refund(scope,c.id,p.event_id,p.template_id):this.tracking.read(scope,c.id);if(view.status!=='available')throw new Error(refund?'REFUND_MESSAGE_UNAVAILABLE':'TRACKING_UNAVAILABLE');
    const text=refund?view.text:p.template_id==='marketing_test_v1'?'Synthetic marketing test. No live campaign is configured.':view.shipments.map((r:any)=>`Package ${r.id}: ${r.status}. Source observed ${r.source.observed_at}.`).join('\n')||'Shipment status is unavailable. Please contact support.';
    const purpose=SUPPORT_TEMPLATES[p.template_id as keyof typeof SUPPORT_TEMPLATES].purpose;
-   const payload={kind:'email',account_id:sender.body.account_id,from:sender.body.address,to:contact.address,subject:refund?view.subject:p.template_id==='marketing_test_v1'?'Synthetic offer':'Your order status',text,purpose,template_id:p.template_id,case_id:c.id,link_id:link.id,resource_id:c.resource_id,source_digest:view.source_digest,contact_revision:contact.revision,...(refund?{refund_operation_id:p.event_id,financial_stage:view.financial_stage,qualification:view.qualification}: {})};
+   const payload={kind:'email',account_id:sender.body.account_id,from:sender.body.address,to:contact.address,subject:refund?view.subject:p.template_id==='marketing_test_v1'?'Synthetic offer':'Your order status',text,purpose,template_id:p.template_id,case_id:c.id,link_id:link.id,resource_id:c.resource_id,source_digest:view.source_digest,contact_revision:contact.revision,...(refund?{refund_operation_id:p.event_id,financial_stage:view.financial_stage,qualification:view.qualification}: {}),...(guard?{journey_followup:{job_id:guard.job.id,...guard.pin}}:{})};
    return this.#queue(s,c,owner,link,sender,payload,intentId);
   });
  }
@@ -64,6 +69,7 @@ export class SupportDelivery {
  }
  queueHelpdesk(scope:Scope,input:unknown){const p=exact(jsonValue(input),['case_id','link_id','sender_id','kind','event_id','expected_generation','assignee_id']);id(p.event_id);integer(p.expected_generation,1);if(!['note','handoff'].includes(p.kind)||p.kind==='note'&&p.assignee_id!==null)throw new Error('SUPPORT_INPUT_INVALID');if(p.assignee_id!==null)id(p.assignee_id);
   return this.k.transaction(()=>{const {s,c,owner}=assertSupportOwner(this.k,scope,p.case_id,p.expected_generation);this.k.authorize(scope,'support.note',c.resource_id);assertExecution(this.k,s,'helpdesk.write');
+   refuseFollowupEvent(this.k,s,p.event_id);
    const link=new SupportConversations(this.k).linkRecord(scope,p.link_id);if(link.case_id!==c.id||link.channel!=='helpdesk')throw new Error('SUPPORT_CHANNEL_MISMATCH');const sender=checkedDocument(this.k,s,'sender',p.sender_id);this.#source(s,sender.body);
    if(link.account_id!==sender.body.account_id)throw new Error('SUPPORT_CHANNEL_MISMATCH');
    const ref='help_'+contentDigest([s.tenant_id,s.store_id,c.id,link.id,p.kind,p.event_id]).slice(0,40);
@@ -81,7 +87,9 @@ export class SupportDelivery {
   k.db.prepare('INSERT INTO commerce_operation_targets VALUES(?,?,?,?,?,?)').run(s.tenant_id,s.store_id,op.id,sender.id,sender.body.source_identity,sender.body.source_contract);
   supportEvent(k,s,c.id,'delivery_queued',owner.generation,op.id);return {operation_id:op.id,state:'queued',customer_delivered:false,execution_authorized:false};
  }
- inspect(scope:Scope,opId:string){const {s,row,op}=this.#row(scope,opId),observation=row.observation?JSON.parse(row.observation):null;
+ inspect(scope:Scope,opId:string){const {s,row,op,payload}=this.#row(scope,opId);
+  if(deliveryFollowupBinding(this.k,s,row,payload)&&!followupPrivate(this.k,scope,row.resource_id))return {case_id:row.case_id,state:'restricted',restricted:true,customer_delivered:false,execution_authorized:false};
+  const observation=row.observation?JSON.parse(row.observation):null;
   if(observation&&contentDigest(observation)!==row.observation_digest)throw new Error('SUPPORT_DELIVERY_INTEGRITY');
   const w=this.k.db.prepare('SELECT last_code FROM commerce_operation_work WHERE tenant_id=? AND store_id=? AND operation_id=?').get(s.tenant_id,s.store_id,op.id) as Row;
   return {operation_id:op.id,case_id:row.case_id,kind:row.kind,purpose:row.purpose,state:op.state==='succeeded'?observation?.stage:op.state==='failed'&&w.last_code==='FINAL_AUTHORIZATION_DENIED'?'suppressed':op.state,operation_state:op.state,native_reference:op.provider_ref,source_stage:observation?.stage??null,customer_delivered:observation?.customer_delivered===true,source_identity:row.source_identity,created_at:row.created_at,expires_at:row.expires_at,execution_authorized:false};}
@@ -98,16 +106,19 @@ export class SupportDelivery {
    if(payload.campaign_id&&!this.campaigns)throw new Error('CAMPAIGN_MESSAGE_SOURCE_UNAVAILABLE');
    const current=payload.campaign_id?this.campaigns!.render(scope,payload.campaign_id,row.case_id,'send'):payload.refund_operation_id?this.#refund(scope,row.case_id,payload.refund_operation_id,payload.template_id):this.tracking.read(scope,row.case_id);if(current.source_digest!==payload.source_digest||current.status!=='available')throw new Error('MESSAGE_FACTS_CHANGED');
   }
+  finalFollowup(k,scope,row,payload,this.followupOwners,this.tracking);
   return {s,row,payload,op};
  }
  async dispatch(scope:Scope,opId:string,options:{beforeFinal?:()=>Promise<void>;timeout_ms?:number}={}) {
   const timeout=options.timeout_ms??1000;integer(timeout,1);if(timeout>5000)throw new Error('INVALID_INPUT');
-  const k=this.k,{s,row}=this.#row(scope,opId,'operation.dispatch');assertRecoveryEgress(k);const source=this.#source(s,row),work=new DurableWork(k),claim=work.claim(scope,opId,10000);
+  const k=this.k,{s,row,payload:queuedPayload}=this.#row(scope,opId,'operation.dispatch');assertRecoveryEgress(k);const source=this.#source(s,row),work=new DurableWork(k);
+  preclaimFollowup(k,s,row,queuedPayload);const claim=work.claim(scope,opId,10000);
   if(!claim)return this.inspect(scope,opId);if(options.beforeFinal)await options.beforeFinal();
   let payload:Row;
   try{payload=k.transaction(()=>{const ready=this.#final(scope,opId);work.beginSend(scope,opId,claim.lease_token);return ready.payload;});}
   catch(e){k.transaction(()=>{const w=k.db.prepare('SELECT * FROM commerce_operation_work WHERE tenant_id=? AND store_id=? AND operation_id=?').get(s.tenant_id,s.store_id,opId) as Row;
-    if(w.state==='leased'&&w.lease_token===claim.lease_token){k.db.prepare("UPDATE commerce_operation_work SET state='dead',lease_token=NULL,lease_until=NULL,owner=NULL,last_code='FINAL_AUTHORIZATION_DENIED' WHERE tenant_id=? AND store_id=? AND operation_id=?").run(s.tenant_id,s.store_id,opId);transitionOperation(k,s,opId,'failed','provider_rejected');}});throw e;}
+    if(w.state==='leased'&&w.lease_token===claim.lease_token){k.db.prepare("UPDATE commerce_operation_work SET state='dead',lease_token=NULL,lease_until=NULL,owner=NULL,last_code='FINAL_AUTHORIZATION_DENIED' WHERE tenant_id=? AND store_id=? AND operation_id=?").run(s.tenant_id,s.store_id,opId);transitionOperation(k,s,opId,'failed','provider_rejected');}
+    if(e instanceof FollowupSuppressed)retireDeliveryFollowup(k,s,row,queuedPayload,e.reason);});throw e;}
   // No asynchronous step between the final committed authorization and invoking this source.
   let result:any,timer:ReturnType<typeof setTimeout>|undefined;
   try{const attempt=source.send({tenant_id:s.tenant_id,store_id:s.store_id,operation_id:opId,payload_hash:contentDigest(payload),payload});result=await Promise.race([Promise.resolve(attempt),new Promise((_,reject)=>{timer=setTimeout(()=>reject(new Error('DELIVERY_TIMEOUT')),timeout);})]);}

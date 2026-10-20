@@ -10,6 +10,7 @@ import { revokeImagesForRestore } from './image-privacy.mts';
 import { imageSuppressionState,validateImageSuppression,prepareImageSuppression,applyImageSuppression } from './image-suppression.mts';
 import { preflightShopperMemory,revokeShopperMemoryForRestore } from './shopper-memory-privacy.mts';
 import { preflightJourneys,revokeJourneysForRestore } from './journey-privacy.mts';
+import { preflightFollowups,revokeFollowupsForRestore } from './journey-followup-privacy.mts';
 
 const LIMIT=64*1024*1024, MAX_ROWS=10000;
 const LOCAL_KINDS=new Set(['migration_binding','merchant_import','merchant_credential_binding']);
@@ -206,6 +207,7 @@ export function importMerchant(k:CommerceKernel,scope:Scope,value:unknown,expect
     const s=owner(k,scope),{x,m,included}=validate(k,s,value,expected_digest),cp=checkedSuppression(k,s,suppression,m.created_at),prior=receipt(k,s);
     preflightShopperMemory(k,s,x.rows);
     preflightJourneys(k,s,x.rows);
+    preflightFollowups(k,s,x.rows);
     if(prior){const state=k.db.prepare('SELECT * FROM commerce_recovery_state WHERE id=1').get() as Row;
       if(prior.snapshot_id!==m.snapshot_id||prior.digest!==expected_digest||!state||state.restore_id!==m.snapshot_id||state.source_digest!==expected_digest)throw new Error('PORTABILITY_IMPORT_CONFLICT');
       const imageReplay=prepareImageSuppression(k,cp.checkpoint,s,x.rows);
@@ -213,6 +215,7 @@ export function importMerchant(k:CommerceKernel,scope:Scope,value:unknown,expect
       applyImageSuppression(k,imageReplay);revokeImagesForRestore(k,s.tenant_id,s.store_id);
       revokeShopperMemoryForRestore(k,s.tenant_id,s.store_id);
       revokeJourneysForRestore(k,s.tenant_id,s.store_id);
+      revokeFollowupsForRestore(k,s.tenant_id,s.store_id);
       k.db.prepare('UPDATE commerce_recovery_state SET suppression_digest=? WHERE id=1').run(cp.digest);
       return {...prior,suppression_sha256:cp.digest};}
     if(Number((k.db.prepare('SELECT count(*) n FROM commerce_stores').get() as Row).n)!==1||k.db.prepare('SELECT 1 FROM commerce_recovery_state').get())throw new Error('PORTABILITY_TARGET_NOT_EMPTY');
@@ -234,6 +237,7 @@ export function importMerchant(k:CommerceKernel,scope:Scope,value:unknown,expect
     const imageReplay=prepareImageSuppression(k,cp.checkpoint,s,x.rows);
     preflightShopperMemory(k,s,x.rows);
     preflightJourneys(k,s,x.rows);
+    preflightFollowups(k,s,x.rows);
     applySuppression(k,s,cp.checkpoint);
     applyImageSuppression(k,imageReplay);
     if(k.db.prepare('PRAGMA foreign_key_check').all().length)throw new Error('PORTABILITY_FOREIGN_KEYS_INVALID');
@@ -249,6 +253,7 @@ export function importMerchant(k:CommerceKernel,scope:Scope,value:unknown,expect
     revokeImagesForRestore(k,s.tenant_id,s.store_id);
     revokeShopperMemoryForRestore(k,s.tenant_id,s.store_id);
     revokeJourneysForRestore(k,s.tenant_id,s.store_id);
+      revokeFollowupsForRestore(k,s.tenant_id,s.store_id);
     k.db.exec('INSERT OR IGNORE INTO commerce_restored_operations SELECT tenant_id,store_id,id FROM commerce_operations');
     k.db.exec("UPDATE commerce_operations SET state='unknown',revision=revision+1 WHERE state='sending'");
     k.db.exec("UPDATE commerce_operation_work SET state='unknown',lease_token=NULL,lease_until=NULL,last_code='merchant_import_uncertain' WHERE state IN ('sending','leased')");
