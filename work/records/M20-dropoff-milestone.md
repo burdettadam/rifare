@@ -148,10 +148,46 @@ the separate provider fixture, and retains minimized uncertainty through privacy
 and recovery. The canonical G01 review seam permits the actual independent
 approver to review the original owner's terms without impersonation or takeover.
 
-The independent specification will freeze14 cases before runtime implementation.
-The selected batch is58 cases/four whole files/one60-second deadline: new G02 14,
-unchanged G01 12, action-approvals18 and exception-queue14. One isolated exact-parent
+The independent specification will freeze 14 cases before runtime implementation.
+The selected batch is 58 cases/four whole files/one 60-second deadline: new G02 14,
+unchanged G01 12, action-approvals 18 and exception-queue 14. One isolated exact-parent
 fault will bypass both uncertainty/family fences and must actually mint a second
 native credential after lost acknowledgment; the unchanged independent oracle
 must detect it. No test or product execution has yet occurred for this assignment.
 Formal acceptance, connected/physical qualification and later M20 goals remain open.
+
+## G02 independent freeze and initial candidate
+
+Independent author commit b40fcd7391dc9327e9d10d005abe671977c4b335 freezes exactly
+14 cases plus its helper and literal oracle; integration commit
+370f940d5443495aeeb5dacdf17db03cd0c01e93 preserves all three files unchanged before
+runtime edits. Test SHA-256 is
+3a2f62c85f9b949a76dc33c856a42b72ffe4213f60b5a77c682a6841e302f0eb.
+Both prior protocol reviewers found the assignment and compact selection fit.
+
+The initial implementation adds the encrypted independent provider journal,
+canonical quote and operation validators, actual human approval review, durable
+unknown-before-effect dispatch, original-ID lookup, bounded delivery, expiry,
+revocation, replacement and known-unsent cancellation. Native generic workers
+cannot dispatch this family. Classification and stream isolation depend on core
+record integrity, without current proof, source attachment or key availability.
+
+Privacy and recovery reuse existing typed documents and lifecycle hooks. Held
+erasure revokes authority while retaining evidence. Detached source cleanup stays
+pending and is completed on exact owner attachment. Restore and import preserve
+original uncertainty, minimize under current suppression and revoke copied
+authority. Provider ciphertext forgetting does not assert provider revocation.
+
+The provider-only static review identified bidirectional journal/credential
+completeness, immutable payload-hash retention and consistent revocation time as
+necessary corrections. The initial candidate incorporates those corrections and
+validates current status within its bounded read interval. These were static
+findings before product execution; exact full-candidate review remains pending.
+
+Metadata adds one proposed diagnostic capability, 14 registrations, five runtime
+pins, nine protected/oracle paths and eleven source members. Current declared
+totals are 3,280 tests, 221 capabilities, 587 protected paths, 1,898 source members,
+335 runtime pins, 674 oracle pins, 44 adapters and 214 composed/native operation
+declarations. No existing test, capability, source member or operation is removed.
+The initial candidate has not yet been executed. The assigned focused batch and
+isolated two-fence fault remain the only planned product runs.

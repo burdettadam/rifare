@@ -3,8 +3,9 @@ import type { CommerceKernel,Scope,Row } from './kernel.mts';
 import { exact,id,integer } from './kernel.mts';
 import { contentDigest } from './configuration-values.mts';
 import {loyaltyOperationRecord} from './loyalty-redemption-records.mts';
+import {dropoffOperationRecord} from './dropoff-credential-records.mts';
 
-export const STOP_ACTIONS=Object.freeze(['diagnostic.loyalty.redeem','diagnostic.instant.authorize','diagnostic.instant.reauthorize','diagnostic.instant.capture','diagnostic.instant.cancel','helpdesk.write','diagnostic.order.edit','diagnostic.warehouse.receive','diagnostic.warehouse.disposition','diagnostic.return.cancel','diagnostic.exchange.create','diagnostic.label.purchase','diagnostic.label.void','diagnostic.return.resolve','diagnostic.resolution.set','diagnostic.return.submit','diagnostic.return.create','diagnostic.projection.record','model.run','customer.message','credential.probe','diagnostic.partner.service','diagnostic.warranty.claim','diagnostic.shipping.claim','diagnostic.dispute.submit','diagnostic.procurement.send','diagnostic.procurement.stock']);
+export const STOP_ACTIONS=Object.freeze(['diagnostic.dropoff.issue','diagnostic.dropoff.revoke','diagnostic.loyalty.redeem','diagnostic.instant.authorize','diagnostic.instant.reauthorize','diagnostic.instant.capture','diagnostic.instant.cancel','helpdesk.write','diagnostic.order.edit','diagnostic.warehouse.receive','diagnostic.warehouse.disposition','diagnostic.return.cancel','diagnostic.exchange.create','diagnostic.label.purchase','diagnostic.label.void','diagnostic.return.resolve','diagnostic.resolution.set','diagnostic.return.submit','diagnostic.return.create','diagnostic.projection.record','model.run','customer.message','credential.probe','diagnostic.partner.service','diagnostic.warranty.claim','diagnostic.shipping.claim','diagnostic.dispute.submit','diagnostic.procurement.send','diagnostic.procurement.stock']);
 export function controlAction(action:string){return action==='diagnostic.case.record'?'diagnostic.resolution.set':action;}
 const key=(tenant:string|null,store:string|null,action:string)=>JSON.stringify([tenant,store,action]);
 export function controlState(k:CommerceKernel,s:Row,action:string){
@@ -51,7 +52,7 @@ export class ExecutionStops {
   reauthorize(scope:Scope,operationId:string,expectedRevision:number){const k=this.#k;id(operationId);integer(expectedRevision,1);
     return k.transaction(()=>{
       const s=k.require(scope),op=k.db.prepare('SELECT * FROM commerce_operations WHERE tenant_id=? AND store_id=? AND id=?').get(s.tenant_id,s.store_id,operationId) as Row;
-      if(!op)throw new Error('NOT_FOUND');if(loyaltyOperationRecord(k,s,op.id))throw new Error('LOYALTY_DEDICATED_OWNER_REQUIRED');k.authorize(scope,'operation.reauthorize',op.resource_id);k.get(scope,op.resource_id);
+      if(!op)throw new Error('NOT_FOUND');if(loyaltyOperationRecord(k,s,op.id))throw new Error('LOYALTY_DEDICATED_OWNER_REQUIRED');if(dropoffOperationRecord(k,s,op.id))throw new Error('DROPOFF_DEDICATED_OWNER_REQUIRED');k.authorize(scope,'operation.reauthorize',op.resource_id);k.get(scope,op.resource_id);
       if(contentDigest(JSON.parse(op.command))!==op.payload_hash)throw new Error('OPERATION_INTEGRITY');
       const w=k.db.prepare('SELECT * FROM commerce_operation_work WHERE tenant_id=? AND store_id=? AND operation_id=?').get(s.tenant_id,s.store_id,op.id) as Row;
       if(op.revision!==expectedRevision)throw new Error('OPERATION_CHANGED');

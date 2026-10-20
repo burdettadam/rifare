@@ -23,6 +23,7 @@
     "packages/adapters/claims-source-guards.mts",
     "packages/adapters/delivery-trial-source-guards.mts",
     "packages/adapters/demand-fixture-source.mts",
+    "packages/adapters/dropoff-credential-fixture-source.mts",
     "packages/adapters/dropoff-fixture-source.mts",
     "packages/adapters/exchange-lineage-fixture-source.mts",
     "packages/adapters/exchange-lineage-source-guards.mts",
@@ -5113,10 +5114,10 @@
       "source_files": [
         {
           "path": "packages/adapters/dropoff-fixture-source.mts",
-          "sha256": "7b8ffe28745763989ec3b8c028ae0901f58b6a03a71eb2b23a4f8be40acf4872"
+          "sha256": "2babbfd2052e7971a2f63f6a18f0f7da2f2c1365209147734e6fd85e9eced1be"
         }
       ],
-      "version": "source-sha256:7b8ffe28745763989ec3b8c028ae0901f58b6a03a71eb2b23a4f8be40acf4872",
+      "version": "source-sha256:2babbfd2052e7971a2f63f6a18f0f7da2f2c1365209147734e6fd85e9eced1be",
       "api_version": "rifare-dropoff-fixture-v1",
       "external_version": null,
       "external_account": null,
@@ -5147,6 +5148,192 @@
               "name": "CASE-M20-G01-03",
               "path": "tests/development/dropoff-eligibility.test.mts",
               "sha256": "ed867364d38004d5ec31bbd2ef78861f17293cb588914b7d9567aedbc8c88b17"
+            }
+          ],
+          "direct_fixtures": []
+        }
+      ]
+    },
+    {
+      "id": "dropoff_credential_source",
+      "kind": "diagnostic",
+      "source_files": [
+        {
+          "path": "packages/adapters/dropoff-credential-fixture-source.mts",
+          "sha256": "d09c93f274b30327d353d377de21a766c446a4676c6468cce4f277bc6409c380"
+        }
+      ],
+      "version": "source-sha256:d09c93f274b30327d353d377de21a766c446a4676c6468cce4f277bc6409c380",
+      "api_version": "rifare-dropoff-credential-fixture-v1",
+      "external_version": null,
+      "external_account": null,
+      "external_scopes_attested": false,
+      "source_oracle": "Separate native partner fixture database with retained original-account identity, immutable original operation results, atomic family guard, and encrypted credential delivery. Independent literal cases cover lost acknowledgment, unknown-family denial, expiry and replacement, revoke, key loss, actual reopen, held/detached erasure, restore and merchant import. No live-provider, financial, custody or physical-handoff qualification.",
+      "operations": [
+        {
+          "id": "dropoff.credential.issue",
+          "semantics": "composed",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M20-G02-01",
+              "name": "CASE-M20-G02-01",
+              "path": "tests/development/dropoff-credentials.test.mts",
+              "sha256": "3a2f62c85f9b949a76dc33c856a42b72ffe4213f60b5a77c682a6841e302f0eb"
+            },
+            {
+              "id": "CASE-M20-G02-02",
+              "name": "CASE-M20-G02-02",
+              "path": "tests/development/dropoff-credentials.test.mts",
+              "sha256": "3a2f62c85f9b949a76dc33c856a42b72ffe4213f60b5a77c682a6841e302f0eb"
+            },
+            {
+              "id": "CASE-M20-G02-03",
+              "name": "CASE-M20-G02-03",
+              "path": "tests/development/dropoff-credentials.test.mts",
+              "sha256": "3a2f62c85f9b949a76dc33c856a42b72ffe4213f60b5a77c682a6841e302f0eb"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "dropoff.credential.revoke",
+          "semantics": "composed",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M20-G02-01",
+              "name": "CASE-M20-G02-01",
+              "path": "tests/development/dropoff-credentials.test.mts",
+              "sha256": "3a2f62c85f9b949a76dc33c856a42b72ffe4213f60b5a77c682a6841e302f0eb"
+            },
+            {
+              "id": "CASE-M20-G02-02",
+              "name": "CASE-M20-G02-02",
+              "path": "tests/development/dropoff-credentials.test.mts",
+              "sha256": "3a2f62c85f9b949a76dc33c856a42b72ffe4213f60b5a77c682a6841e302f0eb"
+            },
+            {
+              "id": "CASE-M20-G02-03",
+              "name": "CASE-M20-G02-03",
+              "path": "tests/development/dropoff-credentials.test.mts",
+              "sha256": "3a2f62c85f9b949a76dc33c856a42b72ffe4213f60b5a77c682a6841e302f0eb"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "dropoff.credential.lookup",
+          "semantics": "composed",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M20-G02-01",
+              "name": "CASE-M20-G02-01",
+              "path": "tests/development/dropoff-credentials.test.mts",
+              "sha256": "3a2f62c85f9b949a76dc33c856a42b72ffe4213f60b5a77c682a6841e302f0eb"
+            },
+            {
+              "id": "CASE-M20-G02-02",
+              "name": "CASE-M20-G02-02",
+              "path": "tests/development/dropoff-credentials.test.mts",
+              "sha256": "3a2f62c85f9b949a76dc33c856a42b72ffe4213f60b5a77c682a6841e302f0eb"
+            },
+            {
+              "id": "CASE-M20-G02-03",
+              "name": "CASE-M20-G02-03",
+              "path": "tests/development/dropoff-credentials.test.mts",
+              "sha256": "3a2f62c85f9b949a76dc33c856a42b72ffe4213f60b5a77c682a6841e302f0eb"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "dropoff.credential.status",
+          "semantics": "composed",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M20-G02-01",
+              "name": "CASE-M20-G02-01",
+              "path": "tests/development/dropoff-credentials.test.mts",
+              "sha256": "3a2f62c85f9b949a76dc33c856a42b72ffe4213f60b5a77c682a6841e302f0eb"
+            },
+            {
+              "id": "CASE-M20-G02-02",
+              "name": "CASE-M20-G02-02",
+              "path": "tests/development/dropoff-credentials.test.mts",
+              "sha256": "3a2f62c85f9b949a76dc33c856a42b72ffe4213f60b5a77c682a6841e302f0eb"
+            },
+            {
+              "id": "CASE-M20-G02-03",
+              "name": "CASE-M20-G02-03",
+              "path": "tests/development/dropoff-credentials.test.mts",
+              "sha256": "3a2f62c85f9b949a76dc33c856a42b72ffe4213f60b5a77c682a6841e302f0eb"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "dropoff.credential.deliver",
+          "semantics": "composed",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M20-G02-01",
+              "name": "CASE-M20-G02-01",
+              "path": "tests/development/dropoff-credentials.test.mts",
+              "sha256": "3a2f62c85f9b949a76dc33c856a42b72ffe4213f60b5a77c682a6841e302f0eb"
+            },
+            {
+              "id": "CASE-M20-G02-02",
+              "name": "CASE-M20-G02-02",
+              "path": "tests/development/dropoff-credentials.test.mts",
+              "sha256": "3a2f62c85f9b949a76dc33c856a42b72ffe4213f60b5a77c682a6841e302f0eb"
+            },
+            {
+              "id": "CASE-M20-G02-03",
+              "name": "CASE-M20-G02-03",
+              "path": "tests/development/dropoff-credentials.test.mts",
+              "sha256": "3a2f62c85f9b949a76dc33c856a42b72ffe4213f60b5a77c682a6841e302f0eb"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "dropoff.credential.verify",
+          "semantics": "composed",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M20-G02-01",
+              "name": "CASE-M20-G02-01",
+              "path": "tests/development/dropoff-credentials.test.mts",
+              "sha256": "3a2f62c85f9b949a76dc33c856a42b72ffe4213f60b5a77c682a6841e302f0eb"
+            },
+            {
+              "id": "CASE-M20-G02-02",
+              "name": "CASE-M20-G02-02",
+              "path": "tests/development/dropoff-credentials.test.mts",
+              "sha256": "3a2f62c85f9b949a76dc33c856a42b72ffe4213f60b5a77c682a6841e302f0eb"
+            },
+            {
+              "id": "CASE-M20-G02-03",
+              "name": "CASE-M20-G02-03",
+              "path": "tests/development/dropoff-credentials.test.mts",
+              "sha256": "3a2f62c85f9b949a76dc33c856a42b72ffe4213f60b5a77c682a6841e302f0eb"
             }
           ],
           "direct_fixtures": []
@@ -5418,7 +5605,7 @@
     },
     {
       "path": "packages/commerce/action-gateway.mts",
-      "sha256": "d3e33f262c02b032a74c865baf80775a95ec28d20fabf4e568e11e4403e6b168"
+      "sha256": "d3f9c6420079cb62064e66316e8ce9e35e9455c7aeb3941b4b6417350e1e1b97"
     },
     {
       "path": "packages/commerce/authorization.mts",
@@ -5510,7 +5697,7 @@
     },
     {
       "path": "packages/commerce/durable-work.mts",
-      "sha256": "041abdfe134f08894791d9ef56eb00d550b99bc3e092ce992f1b4b964c4ce50e"
+      "sha256": "05f89315f4c55b90fc85e14b8dfaab548aeb8d7ea5c1ceb32083aa9c627f94fd"
     },
     {
       "path": "packages/commerce/event-processing.mts",
@@ -5518,7 +5705,7 @@
     },
     {
       "path": "packages/commerce/exception-queue.mts",
-      "sha256": "e191cff9802ed5f9a41695646fdc1246f610bbcccfb1dffa92c8f9e7d18e9138"
+      "sha256": "569013414ba4e8b124d5fdb68e9f590e2d06c34442c6a01d4d33ac0a115d9014"
     },
     {
       "path": "packages/commerce/exchange-currency.mts",
@@ -5542,7 +5729,7 @@
     },
     {
       "path": "packages/commerce/execution-stops.mts",
-      "sha256": "4987fc917c376d9d7a23bcd578801b5f7592911157cb63da17fad8006d3c29bf"
+      "sha256": "3af4d7ac991f940d36790ff3fd8b5d1221041b75ee3c366e194e9368858aa07a"
     },
     {
       "path": "packages/commerce/fulfillment-execution.mts",
@@ -5594,11 +5781,11 @@
     },
     {
       "path": "packages/commerce/operation-receipts.mts",
-      "sha256": "71e9077309ff4cb8d7bd1253584948d970826086f57790ff32bd9f1d77d6a894"
+      "sha256": "8961c26be8ae9c01123ef5594de6f3766c83e9a95ee90118e7d8636ea28cc3c1"
     },
     {
       "path": "packages/commerce/operation-store.mts",
-      "sha256": "2a3f59b2e0801dcc1e1e60ed437cce05c8d1391982efe10d408531b2fcd99928"
+      "sha256": "56df66aa8ef55031f4d4b253f364c5e64dfb5aabdc47e8a037c8e6c79562d357"
     },
     {
       "path": "packages/commerce/order-edit-core.mts",
@@ -5622,7 +5809,7 @@
     },
     {
       "path": "packages/commerce/privacy-lifecycle.mts",
-      "sha256": "f61b5da359d95573023d756c4c4c2a0a63e323c5e80e08dfaaa9bbc3e00ca55c"
+      "sha256": "e24a0131ac8a1d94df7821e1dadca8b7f9bf94d3f13eb2af7e355352e76bc885"
     },
     {
       "path": "packages/commerce/profile-editor.mts",
@@ -5638,7 +5825,7 @@
     },
     {
       "path": "packages/commerce/qualified-return-destinations.mts",
-      "sha256": "e9d07c2bb5024e32d8960a050c975a463596e2f8cc2ea35b3aa5db160973e2e1"
+      "sha256": "40408f049022258466cb195a5cdc0524bd9f89d89ebd2b28461a0ad50c1ce2e4"
     },
     {
       "path": "packages/commerce/read-context.mts",
@@ -5646,7 +5833,7 @@
     },
     {
       "path": "packages/commerce/reconciliation.mts",
-      "sha256": "13173b7cadbc5a02171b4809fba7613d82c98c435c66be9af14f0a1f1db27186"
+      "sha256": "aadeadf5febcce04c302445109478ef78d6d58d091d0f6477be451d29c79d7b2"
     },
     {
       "path": "packages/commerce/refund-quotes.mts",
@@ -5758,7 +5945,7 @@
     },
     {
       "path": "packages/commerce/safe-recovery.mts",
-      "sha256": "82d734b73a5b7602c143219c9a8c687c439604fc9e9dc1c741fa70cf94136109"
+      "sha256": "702a19d7f49f4c3586c38d94e03e9ea10d8ddafdc2b0251ab87a7fc5ee235524"
     },
     {
       "path": "packages/commerce/secrets.mts",
@@ -5902,7 +6089,7 @@
     },
     {
       "path": "packages/commerce/work-leases.mts",
-      "sha256": "3113bad58474b90ff69fcb4d80a21f63edba817535a9a44326def6d744d268b8"
+      "sha256": "7cd3732fddbae6bab7c9b2097ea045f694610e5541a2b3616ceae2375e6e44de"
     },
     {
       "path": "packages/commerce/worker-api.mts",
@@ -6370,7 +6557,7 @@
     },
     {
       "path": "packages/commerce/merchant-portability.mts",
-      "sha256": "1d26a67273175db80b0369c1cc2f056a1a01d47eeb18bbbbb27ce5fa33d6c2df"
+      "sha256": "5351d2bd6e8ff80e1351e4f0b154ddef2500e815164a693cddbb7c7519bc019e"
     },
     {
       "path": "packages/commerce/contracts/carrier-quotes.v1.json",
@@ -7794,11 +7981,11 @@
     },
     {
       "path": "packages/adapters/dropoff-fixture-source.mts",
-      "sha256": "7b8ffe28745763989ec3b8c028ae0901f58b6a03a71eb2b23a4f8be40acf4872"
+      "sha256": "2babbfd2052e7971a2f63f6a18f0f7da2f2c1365209147734e6fd85e9eced1be"
     },
     {
       "path": "packages/commerce/dropoff-choices.mts",
-      "sha256": "b952732d051aac54ab4d0319dac92e656abe6b6a3e98939d12565d8d88ca4728"
+      "sha256": "e6de31a3a9dfe5667b230aa76055485f784a4384a1a546827393925fc4886e2c"
     },
     {
       "path": "tests/development/dropoff-eligibility.test.mts",
@@ -7815,6 +8002,42 @@
     {
       "path": "packages/commerce/contracts/dropoff-choices.v1.json",
       "sha256": "ffde0ffab9a42c4908248cb4a06869976d4e390f21983df61335d169bb4554d0"
+    },
+    {
+      "path": "packages/adapters/dropoff-credential-fixture-source.mts",
+      "sha256": "d09c93f274b30327d353d377de21a766c446a4676c6468cce4f277bc6409c380"
+    },
+    {
+      "path": "packages/commerce/dropoff-credential-values.mts",
+      "sha256": "4ebef678789b09f9f062ec23878b6d88d7f541dfc3f2503bb5f28687f0c61214"
+    },
+    {
+      "path": "packages/commerce/dropoff-credential-records.mts",
+      "sha256": "b038a0f2291e8cb2634f7a438e7cb045dcef8b71815fa57090f95bce5a9b4d4b"
+    },
+    {
+      "path": "packages/commerce/dropoff-credential-privacy.mts",
+      "sha256": "fdeaa70fc364d938ca22e98e28a6c435f0b825ddacbc8bc8d74f880252478752"
+    },
+    {
+      "path": "packages/commerce/dropoff-credentials.mts",
+      "sha256": "7062fba9d6a3b0c0839015376aacf3a5838ec27668a6e81a45f5271307133d16"
+    },
+    {
+      "path": "tests/development/dropoff-credentials.test.mts",
+      "sha256": "3a2f62c85f9b949a76dc33c856a42b72ffe4213f60b5a77c682a6841e302f0eb"
+    },
+    {
+      "path": "tests/development/dropoff-credentials-helpers.mts",
+      "sha256": "340dbeb51d80642d9e902a083db447e67e6d8d4ad3a42ab6983487a3fb88cf40"
+    },
+    {
+      "path": "tests/fixtures/dropoff-credentials/independent-values.json",
+      "sha256": "4af3b048a4a06785ebbcc0c906fd88d64104f141f95102746c96daf51793218f"
+    },
+    {
+      "path": "packages/commerce/contracts/dropoff-credentials.v1.json",
+      "sha256": "8c76ed37993a245a225ae663fa7bfb914ab6f726a3ed6c1be67ab0e3bc8f4a80"
     }
   ]
 }

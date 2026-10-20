@@ -15,9 +15,10 @@ export function appliedResult(input:any,op:Row){
     &&input.outcome==='synthetic_recorded'&&typeof input.provider_ref==='string'&&/^remote_[a-f0-9]{40}$/.test(input.provider_ref);
 }
 import {loyaltyOperationRecord} from './loyalty-redemption-records.mts';
+import {dropoffOperationRecord} from './dropoff-credential-records.mts';
 export class DurableWork {
   #k:CommerceKernel;constructor(kernel:CommerceKernel){this.#k=kernel;}
-  #auth(scope:Scope,opId:string){const k=this.#k,s=k.require(scope),op=operationRow(k,s,opId);if(loyaltyOperationRecord(k,s,op.id))throw new Error('LOYALTY_DEDICATED_OWNER_REQUIRED');k.authorize(scope,'operation.dispatch',op.resource_id);return {s,op};}
+  #auth(scope:Scope,opId:string){const k=this.#k,s=k.require(scope),op=operationRow(k,s,opId);if(loyaltyOperationRecord(k,s,op.id))throw new Error('LOYALTY_DEDICATED_OWNER_REQUIRED');if(dropoffOperationRecord(k,s,op.id))throw new Error('DROPOFF_DEDICATED_OWNER_REQUIRED');k.authorize(scope,'operation.dispatch',op.resource_id);return {s,op};}
   bind(scope:Scope,operationId:string,journal:SyntheticJournal){const k=this.#k;return k.transaction(()=>{
     const {s,op}=this.#auth(scope,operationId);verifyJournal(s,journal);
     const target=k.db.prepare('SELECT * FROM commerce_operation_targets WHERE tenant_id=? AND store_id=? AND operation_id=?').get(s.tenant_id,s.store_id,op.id) as Row;

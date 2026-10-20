@@ -3,7 +3,7 @@ import type { Scope,Row } from './kernel.mts';
 import { canonical,contentDigest,jsonValue } from './configuration-values.mts';
 
 export const RECEIPT_CODES=Object.freeze(['queued','dispatch_started','retry_scheduled','outcome_unknown','source_confirmed',
-  'provider_rejected','retry_exhausted','lease_recovered','linked_correction','payload_attached','payload_erased','reservation_released']);
+  'provider_rejected','retry_exhausted','lease_recovered','linked_correction','payload_attached','payload_erased','reservation_released','credential_cancelled']);
 const reference=(x:unknown)=>x===null?null:id(x);
 const hash=(x:unknown)=>{if(typeof x!=='string'||!/^[a-f0-9]{64}$/.test(x))throw new Error('RECEIPT_INPUT');return x;};
 
@@ -29,6 +29,10 @@ export function appendReceipt(k:CommerceKernel,s:Row,op:Row,input:unknown) {
   for(const key of ['configuration_digest','policy_digest'])if(p[key]!==null)hash(p[key]);
   if(op.tenant_id!==s.tenant_id||op.store_id!==s.store_id)throw new Error('ACCESS_DENIED');
   const action=JSON.parse(op.command).action;loyaltyReceiptBudget(k,s,op,action);
+  // Dedicated credentials have a bounded three-transition audit and no
+  // optional payload or correction surface. Full typed validation follows the
+  // native owner's atomic construction/transition, after all rows are present.
+  if(['diagnostic.dropoff.issue','diagnostic.dropoff.revoke'].includes(action)&&(!['queued','outcome_unknown','source_confirmed','provider_rejected','credential_cancelled'].includes(p.code)||p.payload_ref!==null||p.correction_of!==null||p.correction_reason!==null))throw new Error('DROPOFF_RECEIPT_EXTENSION_DENIED');
   const previous=k.db.prepare('SELECT digest FROM commerce_operation_receipts WHERE tenant_id=? AND store_id=? AND operation_id=? ORDER BY seq DESC LIMIT 1').get(s.tenant_id,s.store_id,op.id) as Row;
   const body={id:'orc_'+token().slice(0,32),tenant_id:s.tenant_id,store_id:s.store_id,operation_id:op.id,
     actor_ref:id(s.actor_id),resource_ref:id(op.resource_id),action,payload_hash:hash(op.payload_hash),

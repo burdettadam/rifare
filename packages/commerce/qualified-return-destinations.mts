@@ -93,7 +93,9 @@ export class QualifiedReturnDestinations {
   return {request_id:p.request_id,binding_revision:bound.row.revision,binding_digest:bound.row.digest,policy_revision:policy.revision,policy_version:policy.policy_version,policy_digest:policy.digest,
    state:value.state,recommended_destination_id:value.recommended_destination_id,destinations:value.destinations,source_identity:source.identity,qualification:'synthetic_only',selection_authorizes_label_purchase:false};
  }
- evaluateItems(scope:Scope,input:unknown){const p=exact(jsonValue(input),['request_id']),k=this.kernel,ctx=context(k,scope,p.request_id);k.authorize(scope,'action.propose',ctx.c.resource_id);
+ evaluateItems(scope:Scope,input:unknown){return this.#items(scope,input,'action.propose');}
+ reviewItems(scope:Scope,input:unknown){return this.#items(scope,input,'action.approve');}
+ #items(scope:Scope,input:unknown,permission:string){const p=exact(jsonValue(input),['request_id']),k=this.kernel,ctx=context(k,scope,p.request_id);k.authorize(scope,permission,ctx.c.resource_id);
   const {source,policy}=sourceFor(k,scope,ctx),bound=binding(k,scope,ctx,source);
   if(source!==this.source)throw new Error('DESTINATION_SOURCE_MISMATCH');
   const value=source.destinations.evaluateItems(p.request_id);

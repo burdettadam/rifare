@@ -4,6 +4,7 @@ import { operationRow,transitionOperation,BusinessOperations } from './operation
 import { SyntheticJournal } from '../adapters/reliability/synthetic-journal.mts';
 import { appliedResult,verifyJournal } from './durable-work.mts';
 import {loyaltyOperationRecord} from './loyalty-redemption-records.mts';
+import {dropoffOperationRecord} from './dropoff-credential-records.mts';
 
 export class Reconciliation {
   #k:CommerceKernel;constructor(kernel:CommerceKernel){this.#k=kernel;}
@@ -12,7 +13,7 @@ export class Reconciliation {
   #repair(scope:Scope,s:Row,input:Row,journal:SyntheticJournal){const k=this.#k;id(input.operation_id);
     const op=k.db.prepare('SELECT * FROM commerce_operations WHERE tenant_id=? AND store_id=? AND id=?').get(s.tenant_id,s.store_id,input.operation_id) as Row;
     if(!op){this.#drift(s,input.operation_id,'UNMAPPED_SOURCE','unmapped');return 'unmapped';}
-    if(loyaltyOperationRecord(k,s,op.id))throw new Error('LOYALTY_DEDICATED_OWNER_REQUIRED');
+    if(loyaltyOperationRecord(k,s,op.id))throw new Error('LOYALTY_DEDICATED_OWNER_REQUIRED');if(dropoffOperationRecord(k,s,op.id))throw new Error('DROPOFF_DEDICATED_OWNER_REQUIRED');
     k.authorize(scope,'operation.reconcile',op.resource_id);operationRow(k,s,op.id);
     const target=k.db.prepare('SELECT * FROM commerce_operation_targets WHERE tenant_id=? AND store_id=? AND operation_id=?').get(s.tenant_id,s.store_id,op.id) as Row;
     if(!target||target.provider_identity!==journal.identity||target.provider_id!==journal.providerId||target.contract!==journal.contract){this.#drift(s,op.id,'SOURCE_BINDING_CONFLICT',journal.identity);return 'conflict';}
@@ -26,7 +27,7 @@ export class Reconciliation {
     k.db.prepare("UPDATE commerce_operation_work SET state='done',lease_token=NULL,lease_until=NULL,owner=NULL,last_code='RECONCILED' WHERE tenant_id=? AND store_id=? AND operation_id=?").run(s.tenant_id,s.store_id,op.id);
     transitionOperation(k,s,op.id,'succeeded','source_confirmed',input.provider_ref);return 'repaired';
   }
-  async one(scope:Scope,operationId:string,journal:SyntheticJournal){const k=this.#k,s=k.require(scope),op=operationRow(k,s,operationId);if(loyaltyOperationRecord(k,s,op.id))throw new Error('LOYALTY_DEDICATED_OWNER_REQUIRED');k.authorize(scope,'operation.reconcile',op.resource_id);verifyJournal(s,journal);
+  async one(scope:Scope,operationId:string,journal:SyntheticJournal){const k=this.#k,s=k.require(scope),op=operationRow(k,s,operationId);if(loyaltyOperationRecord(k,s,op.id))throw new Error('LOYALTY_DEDICATED_OWNER_REQUIRED');if(dropoffOperationRecord(k,s,op.id))throw new Error('DROPOFF_DEDICATED_OWNER_REQUIRED');k.authorize(scope,'operation.reconcile',op.resource_id);verifyJournal(s,journal);
     let response:Row;try{response=journal.lookup(operationId);}catch{response={kind:'unconfirmed'};}
     return k.transaction(()=>{k.authorize(scope,'operation.reconcile',op.resource_id);const current=operationRow(k,s,op.id);
       let result='unconfirmed';if(response.kind==='applied')result=this.#repair(scope,s,response,journal);

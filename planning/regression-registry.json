@@ -1966,6 +1966,14 @@
       "contract_files": [
         "packages/commerce/contracts/dropoff-choices.v1.json"
       ]
+    },
+    {
+      "id": "m20-dropoff-credentials-diagnostic",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/dropoff-credentials.v1.json"
+      ]
     }
   ],
   "tests": [
@@ -24830,6 +24838,104 @@
       "runner_case_id": "CASE-M20-G01-12",
       "source": "tests/development/dropoff-eligibility.test.mts",
       "capability_id": "m20-dropoff-eligibility-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M20-G02-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M20-G02-01",
+      "source": "tests/development/dropoff-credentials.test.mts",
+      "capability_id": "m20-dropoff-credentials-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M20-G02-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M20-G02-02",
+      "source": "tests/development/dropoff-credentials.test.mts",
+      "capability_id": "m20-dropoff-credentials-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M20-G02-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M20-G02-03",
+      "source": "tests/development/dropoff-credentials.test.mts",
+      "capability_id": "m20-dropoff-credentials-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M20-G02-04",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M20-G02-04",
+      "source": "tests/development/dropoff-credentials.test.mts",
+      "capability_id": "m20-dropoff-credentials-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M20-G02-05",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M20-G02-05",
+      "source": "tests/development/dropoff-credentials.test.mts",
+      "capability_id": "m20-dropoff-credentials-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M20-G02-06",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M20-G02-06",
+      "source": "tests/development/dropoff-credentials.test.mts",
+      "capability_id": "m20-dropoff-credentials-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M20-G02-07",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M20-G02-07",
+      "source": "tests/development/dropoff-credentials.test.mts",
+      "capability_id": "m20-dropoff-credentials-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M20-G02-08",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M20-G02-08",
+      "source": "tests/development/dropoff-credentials.test.mts",
+      "capability_id": "m20-dropoff-credentials-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M20-G02-09",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M20-G02-09",
+      "source": "tests/development/dropoff-credentials.test.mts",
+      "capability_id": "m20-dropoff-credentials-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M20-G02-10",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M20-G02-10",
+      "source": "tests/development/dropoff-credentials.test.mts",
+      "capability_id": "m20-dropoff-credentials-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M20-G02-11",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M20-G02-11",
+      "source": "tests/development/dropoff-credentials.test.mts",
+      "capability_id": "m20-dropoff-credentials-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M20-G02-12",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M20-G02-12",
+      "source": "tests/development/dropoff-credentials.test.mts",
+      "capability_id": "m20-dropoff-credentials-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M20-G02-13",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M20-G02-13",
+      "source": "tests/development/dropoff-credentials.test.mts",
+      "capability_id": "m20-dropoff-credentials-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M20-G02-14",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M20-G02-14",
+      "source": "tests/development/dropoff-credentials.test.mts",
+      "capability_id": "m20-dropoff-credentials-diagnostic"
     }
   ],
   "protected_files": [
@@ -25410,7 +25516,16 @@
     "tests/development/dropoff-eligibility.test.mts",
     "tests/development/dropoff-eligibility-helpers.mts",
     "tests/fixtures/dropoff-eligibility/independent-values.json",
-    "packages/commerce/contracts/dropoff-choices.v1.json"
+    "packages/commerce/contracts/dropoff-choices.v1.json",
+    "packages/adapters/dropoff-credential-fixture-source.mts",
+    "packages/commerce/dropoff-credential-values.mts",
+    "packages/commerce/dropoff-credential-records.mts",
+    "packages/commerce/dropoff-credential-privacy.mts",
+    "packages/commerce/dropoff-credentials.mts",
+    "tests/development/dropoff-credentials.test.mts",
+    "tests/development/dropoff-credentials-helpers.mts",
+    "tests/fixtures/dropoff-credentials/independent-values.json",
+    "packages/commerce/contracts/dropoff-credentials.v1.json"
   ],
   "source_count_fixture": "tests/fixtures/licensing/artifact-oracle.v1.json",
   "source_inventory": "planning/component-inventory.json"

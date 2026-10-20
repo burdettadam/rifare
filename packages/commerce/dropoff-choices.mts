@@ -2,7 +2,9 @@ import {CommerceKernel,exact,id,integer} from './kernel.mts';
 import type {Scope,Row} from './kernel.mts';
 import {contentDigest,jsonValue} from './configuration-values.mts';
 import {CaseConfigurations} from './case-configurations.mts';
-import {assertSupportOwner} from './support-core.mts';
+import {assertSupportOwner,ownershipRow} from './support-core.mts';
+import {permissionDecision} from './authorization.mts';
+import {dropoffReviewContext} from './dropoff-credential-records.mts';
 import {assertRecoveryEgress} from './data-guards.mts';
 import {fulfillmentContext,fulfillmentSettings} from './return-fulfillment-core.mts';
 import {QualifiedReturnDestinations} from './qualified-return-destinations.mts';
@@ -41,14 +43,19 @@ export class DropoffChoices {
     DropoffFixtureSource.prototype.assertAttached.call(s,k.db);
     if(scope&&(scope.tenant_id!==s.tenant||scope.store_id!==s.store))throw new Error('DROPOFF_SOURCE_SCOPE');
   }
-  #authority(scope:Scope,requestId:string){
+  #authority(scope:Scope,requestId:string,review?:Row){
     const k=this.k,s=k.require(scope,['owner','operator','reviewer']);
     if(!['owner','operator','reviewer'].includes(s.role)||k.workerIdentity(scope)!==null)throw new Error('ACCESS_DENIED');
     assertRecoveryEgress(k);this.#owners(s);
     const row=k.db.prepare('SELECT case_id FROM commerce_return_requests WHERE tenant_id=? AND store_id=? AND id=?').get(s.tenant_id,s.store_id,requestId) as Row|undefined;
     if(!row)throw new Error('NOT_FOUND');
-    const ctx=fulfillmentContext(k,scope,row.case_id,requestId),{owner}=assertSupportOwner(k,scope,ctx.c.id);
-    k.authorize(scope,'support.read',ctx.c.resource_id);k.authorize(scope,'action.propose',ctx.c.resource_id);
+    const ctx=fulfillmentContext(k,scope,row.case_id,requestId);let owner:Row,actor=s.actor_id,role=s.role;
+    if(review){
+      const current=ownershipRow(k,s,ctx.c.id),member=k.db.prepare('SELECT * FROM commerce_members WHERE tenant_id=? AND store_id=? AND actor_id=? AND active=1').get(s.tenant_id,s.store_id,review.owner) as Row;
+      if(review.request_id!==requestId||review.case_id!==ctx.c.id||review.resource_id!==ctx.c.resource_id||!current||current.owner!==review.owner||current.mode!=='human'||current.generation!==review.ownership_generation||!member||member.role!==review.owner_role||!['owner','operator','reviewer'].includes(member.role)||!permissionDecision(k.db,member,'action.propose',ctx.c.resource_id).allowed||!permissionDecision(k.db,member,'support.read',ctx.c.resource_id).allowed)throw new Error('SUPPORT_OWNERSHIP_CHANGED');
+      owner=current;actor=member.actor_id;role=member.role;k.authorize(scope,'action.approve',ctx.c.resource_id);
+    }else {owner=assertSupportOwner(k,scope,ctx.c.id).owner;k.authorize(scope,'action.propose',ctx.c.resource_id);}
+    k.authorize(scope,'support.read',ctx.c.resource_id);
     const proof=new CaseConfigurations(k).verified(scope,ctx.c.id),settings=fulfillmentSettings(k,s),maxAge=integer(ctx.c.pins.composition.effective['data.max_age_seconds'])*1000,now=integer(k.clock());
     integer(maxAge);integer(ctx.c.order.observed_at);
     if(ctx.c.order.observed_at>now||now-ctx.c.order.observed_at>maxAge)throw new Error('DROPOFF_ORDER_STALE');
@@ -56,14 +63,14 @@ export class DropoffChoices {
     const session=proof.gift_recipient?null:k.db.prepare('SELECT ss.token_hash,ss.last_seen FROM commerce_cases c JOIN commerce_sessions ss ON c.verification_hash=ss.token_hash WHERE c.tenant_id=? AND c.store_id=? AND c.id=?').get(s.tenant_id,s.store_id,ctx.c.id) as Row|null;
     if(!proof.gift_recipient&&!session)throw new Error('CUSTOMER_VERIFICATION_REQUIRED');
     const expires_at=Math.min(proof.expires_at,session?integer(session.last_seen)+900000:proof.expires_at,ctx.c.order.observed_at+maxAge,settings.expires_at);
-    const pin={tenant_id:s.tenant_id,store_id:s.store_id,actor_id:s.actor_id,role:s.role,case_id:ctx.c.id,resource_id:ctx.c.resource_id,case_revision:ctx.c.revision,
+    const pin={tenant_id:s.tenant_id,store_id:s.store_id,actor_id:actor,role,case_id:ctx.c.id,resource_id:ctx.c.resource_id,case_revision:ctx.c.revision,
       configuration_digest:ctx.c.configuration_digest,order_digest:contentDigest(ctx.c.order),request_digest:ctx.request.digest,native_return_digest:ctx.native.native_digest,
       ownership_digest:contentDigest(owner),proof_digest:contentDigest(proof),verification_identity:session?.token_hash??contentDigest(proof),settings_digest:settings.digest,expires_at};
     return {case_id:ctx.c.id,pin,expires_at};
   }
-  #snapshot(scope:Scope,requestId:string){
+  #snapshot(scope:Scope,requestId:string,review=false){
     this.#owners();
-    const view=this.destinations.evaluateItems(scope,{request_id:requestId}),directory=this.source.observe(),partner=this.source.partnerConfiguration();
+    const view=review?this.destinations.reviewItems(scope,{request_id:requestId}):this.destinations.evaluateItems(scope,{request_id:requestId}),directory=this.source.observe(),partner=this.source.partnerConfiguration();
     const readiness=partner?new PartnerReadiness(this.k).inspect(scope,{service:'reverse_hub',account_id:partner.body.account_id,source_identity:this.source.partner.identity,source_config_digest:partner.digest,region:view.region,capability:'route'}):null;
     this.#owners();return {view,directory,partner,readiness};
   }
@@ -128,8 +135,15 @@ export class DropoffChoices {
   }
   quote(scope:Scope,input:unknown){
     const p=exact(jsonValue(input),['request_id']);id(p.request_id);
-    const authority=this.#authority(scope,p.request_id),first=this.#snapshot(scope,p.request_id),projection=this.#project(p.request_id,authority,first);
-    const nextAuthority=this.#authority(scope,p.request_id),second=this.#snapshot(scope,p.request_id),next=this.#project(p.request_id,nextAuthority,second),finalAuthority=this.#authority(scope,p.request_id);
+    return this.#current(scope,p.request_id);
+  }
+  review(scope:Scope,input:unknown){
+    const p=exact(jsonValue(input),['quote_id']),q=dropoffReviewContext(this.k,scope,id(p.quote_id));
+    return this.#current(scope,q.request_id,q);
+  }
+  #current(scope:Scope,requestId:string,review?:Row){
+    const authority=this.#authority(scope,requestId,review),first=this.#snapshot(scope,requestId,!!review),projection=this.#project(requestId,authority,first);
+    const nextAuthority=this.#authority(scope,requestId,review),second=this.#snapshot(scope,requestId,!!review),next=this.#project(requestId,nextAuthority,second),finalAuthority=this.#authority(scope,requestId,review);
     if(contentDigest(authority.pin)!==contentDigest(nextAuthority.pin)||contentDigest(authority.pin)!==contentDigest(finalAuthority.pin)||contentDigest(first)!==contentDigest(second)||contentDigest(projection)!==contentDigest(next))throw new Error('DROPOFF_OBSERVATION_CHANGED');
     return next;
   }

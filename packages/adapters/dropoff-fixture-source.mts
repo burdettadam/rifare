@@ -80,6 +80,7 @@ export class DropoffFixtureSource {
       return row;
     });return canonical(rows);
   }
+  assertIdentity(){this.#assertParents();}
   assertAttached(core:DatabaseSync){this.#assertParents();for(const db of [this.fulfillment.db,this.partner.db,this.warehouse.db])assertSeparateLoyaltyDatabases(core,db);}
   partnerConfiguration(){
     this.#assertParents();const value=this.partner.configuration('reverse_hub');if(value===null)return null;

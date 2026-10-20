@@ -918,6 +918,32 @@
         "semantics": "composed",
         "qualification": "sandbox-only"
       }
+    },
+    "dropoff_credential_source": {
+      "dropoff.credential.issue": {
+        "semantics": "composed",
+        "qualification": "sandbox-only"
+      },
+      "dropoff.credential.revoke": {
+        "semantics": "composed",
+        "qualification": "sandbox-only"
+      },
+      "dropoff.credential.lookup": {
+        "semantics": "composed",
+        "qualification": "sandbox-only"
+      },
+      "dropoff.credential.status": {
+        "semantics": "composed",
+        "qualification": "sandbox-only"
+      },
+      "dropoff.credential.deliver": {
+        "semantics": "composed",
+        "qualification": "sandbox-only"
+      },
+      "dropoff.credential.verify": {
+        "semantics": "composed",
+        "qualification": "sandbox-only"
+      }
     }
   },
   "declarations": [
@@ -926,6 +952,7 @@
     "packages/adapters/claims-source-guards.mts",
     "packages/adapters/delivery-trial-source-guards.mts",
     "packages/adapters/demand-fixture-source.mts",
+    "packages/adapters/dropoff-credential-fixture-source.mts",
     "packages/adapters/dropoff-fixture-source.mts",
     "packages/adapters/exchange-lineage-fixture-source.mts",
     "packages/adapters/exchange-lineage-source-guards.mts",
@@ -2127,10 +2154,40 @@
       }
     },
     "dropoff_fixture_source": {
-      "version": "source-sha256:7b8ffe28745763989ec3b8c028ae0901f58b6a03a71eb2b23a4f8be40acf4872",
+      "version": "source-sha256:2babbfd2052e7971a2f63f6a18f0f7da2f2c1365209147734e6fd85e9eced1be",
       "api_version": "rifare-dropoff-fixture-v1",
       "operations": {
         "dropoff.choices.quote": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        }
+      }
+    },
+    "dropoff_credential_source": {
+      "version": "source-sha256:d09c93f274b30327d353d377de21a766c446a4676c6468cce4f277bc6409c380",
+      "api_version": "rifare-dropoff-credential-fixture-v1",
+      "operations": {
+        "dropoff.credential.issue": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "dropoff.credential.revoke": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "dropoff.credential.lookup": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "dropoff.credential.status": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "dropoff.credential.deliver": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "dropoff.credential.verify": {
           "required_scopes": [],
           "scope_kind": "server_local_fixture_only"
         }
@@ -2875,6 +2932,24 @@
       "name": "CASE-M20-G01-03",
       "path": "tests/development/dropoff-eligibility.test.mts",
       "sha256": "ed867364d38004d5ec31bbd2ef78861f17293cb588914b7d9567aedbc8c88b17"
+    },
+    {
+      "id": "CASE-M20-G02-01",
+      "name": "CASE-M20-G02-01",
+      "path": "tests/development/dropoff-credentials.test.mts",
+      "sha256": "3a2f62c85f9b949a76dc33c856a42b72ffe4213f60b5a77c682a6841e302f0eb"
+    },
+    {
+      "id": "CASE-M20-G02-02",
+      "name": "CASE-M20-G02-02",
+      "path": "tests/development/dropoff-credentials.test.mts",
+      "sha256": "3a2f62c85f9b949a76dc33c856a42b72ffe4213f60b5a77c682a6841e302f0eb"
+    },
+    {
+      "id": "CASE-M20-G02-03",
+      "name": "CASE-M20-G02-03",
+      "path": "tests/development/dropoff-credentials.test.mts",
+      "sha256": "3a2f62c85f9b949a76dc33c856a42b72ffe4213f60b5a77c682a6841e302f0eb"
     },
     {
       "id": "M01-G04-01",

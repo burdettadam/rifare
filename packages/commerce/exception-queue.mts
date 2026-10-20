@@ -8,11 +8,13 @@ import { ExecutionStops,controlState } from './execution-stops.mts';
 import type { SyntheticJournal } from '../adapters/reliability/synthetic-journal.mts';
 import {LoyaltyRedemptions,assertLoyaltyRedemptionOwner} from './loyalty-redemptions.mts';
 import {loyaltyOperationRecord,authorizeLoyaltyRead} from './loyalty-redemption-records.mts';
+import {DropoffCredentials,assertDropoffCredentialOwner} from './dropoff-credentials.mts';
+import {dropoffOperationRecord,authorizeDropoffRead} from './dropoff-credential-records.mts';
 export type JournalResolver=(tenant:string,store:string,identity:string)=>SyntheticJournal|undefined;
 
 export class ExceptionQueue {
-  #k:CommerceKernel;#resolve?:JournalResolver;#loyalty:LoyaltyRedemptions|null;
-  constructor(k:CommerceKernel,resolve?:JournalResolver,options:{loyalty?:LoyaltyRedemptions}={}){this.#k=k;this.#resolve=resolve;this.#loyalty=options.loyalty===undefined?null:assertLoyaltyRedemptionOwner(k,options.loyalty);}
+  #k:CommerceKernel;#resolve?:JournalResolver;#loyalty:LoyaltyRedemptions|null;#dropoff:DropoffCredentials|null;
+  constructor(k:CommerceKernel,resolve?:JournalResolver,options:{loyalty?:LoyaltyRedemptions;dropoff?:DropoffCredentials}={}){this.#k=k;this.#resolve=resolve;this.#loyalty=options.loyalty===undefined?null:assertLoyaltyRedemptionOwner(k,options.loyalty);this.#dropoff=options.dropoff===undefined?null:assertDropoffCredentialOwner(k,options.dropoff);}
   #source(s:Row,op:Row){const t=this.#k.db.prepare('SELECT provider_identity FROM commerce_operation_targets WHERE tenant_id=? AND store_id=? AND operation_id=?').get(s.tenant_id,s.store_id,op.id) as Row;
     return t?this.#resolve?.(s.tenant_id,s.store_id,t.provider_identity):undefined;}
   list(scope:Scope,limit=50){integer(limit,1);if(limit>100)throw new Error('INVALID_INPUT');const k=this.#k,s=k.authorize(scope,'exception.read');
@@ -26,6 +28,13 @@ export class ExceptionQueue {
         try{authorizeLoyaltyRead(k,scope,loyalty);}catch(error){if(error instanceof Error&&error.message==='ACCESS_DENIED')continue;throw error;}
         const canReconcile=b.state==='unknown'&&!!this.#loyalty&&permissionDecision(k.db,s,'operation.reconcile',b.resource_id).allowed;
         items.push({operation_id:b.id,case_id:b.personal?.case_id??null,resource_id:b.resource_id,state:b.state,reason:b.reason,operation_revision:b.native_revision,owner:null,previous_owner:null,generation:null,controls:null,actions:[{name:'reconcile',enabled:canReconcile},{name:'reauthorize',enabled:false},{name:'retry',enabled:false}],timeline:loyalty.history.map((r:Row)=>({code:r.code,state:r.state,observed_at:r.observed_at,receipt_id:r.id})),source_state:b.state,points:{unit:'points',quantity:b.points},automatic_retry:false,financial_effect:false});continue;
+      }
+      const dropoff=dropoffOperationRecord(k,s,op.id);
+      if(dropoff){
+        const b=dropoff.record.body;if(!['authorized','unknown'].includes(b.state))continue;
+        try{authorizeDropoffRead(k,scope,dropoff);}catch(error){if(error instanceof Error&&error.message==='ACCESS_DENIED')continue;throw error;}
+        const canReconcile=b.state==='unknown'&&!!this.#dropoff&&permissionDecision(k.db,s,'operation.reconcile',b.resource_id).allowed;
+        items.push({operation_id:b.id,case_id:b.personal?.case_id??null,resource_id:b.resource_id,state:b.state,reason:b.reason,operation_revision:b.native_revision,owner:null,previous_owner:null,generation:b.generation,controls:null,actions:[{name:'reconcile',enabled:canReconcile},{name:'reauthorize',enabled:false},{name:'retry',enabled:false}],timeline:dropoff.history.map((r:Row)=>({code:r.code,state:r.state,observed_at:r.observed_at,receipt_id:r.id})),source_state:b.state,automatic_retry:false,financial_effect:false});continue;
       }
       if(items.length>=limit)break;if(!permissionDecision(k.db,s,'operation.read',op.resource_id).allowed||!permissionDecision(k.db,s,'resource.read',op.resource_id).allowed)continue;
       const value=new BusinessOperations(k).read(scope,op.id),control=controlState(k,s,JSON.parse(op.command).action),stamp=k.db.prepare('SELECT stamp FROM commerce_operation_controls WHERE tenant_id=? AND store_id=? AND operation_id=?').get(s.tenant_id,s.store_id,op.id) as Row;
@@ -54,6 +63,7 @@ export class ExceptionQueue {
   }
   async reconcile(scope:Scope,operationId:string){const s=this.#k.authorize(scope,'exception.read'),op=operationRow(this.#k,s,id(operationId));
     if(loyaltyOperationRecord(this.#k,s,op.id)){if(!this.#loyalty)throw new Error('LOYALTY_REDEMPTION_NOT_CONFIGURED');return this.#loyalty.reconcile(scope,op.id);}
+    if(dropoffOperationRecord(this.#k,s,op.id)){if(!this.#dropoff)throw new Error('DROPOFF_CREDENTIALS_NOT_CONFIGURED');return this.#dropoff.reconcile(scope,op.id);}
     this.#k.authorize(scope,'operation.reconcile',op.resource_id);const journal=this.#source(s,op);if(!journal)throw new Error('SOURCE_UNAVAILABLE');
     return new Reconciliation(this.#k).one(scope,operationId,journal);
   }

@@ -12,6 +12,7 @@ import { preflightShopperMemory,revokeShopperMemoryForRestore } from './shopper-
 import { preflightJourneys,revokeJourneysForRestore } from './journey-privacy.mts';
 import { preflightFollowups,revokeFollowupsForRestore } from './journey-followup-privacy.mts';
 import {preflightLoyaltyRedemptions,revokeLoyaltyRedemptionsForRestore} from './loyalty-redemption-privacy.mts';
+import {preflightDropoffCredentials,revokeDropoffCredentialsForRestore} from './dropoff-credential-privacy.mts';
 
 const LIMIT=64*1024*1024, MAX_ROWS=10000;
 const LOCAL_KINDS=new Set(['migration_binding','merchant_import','merchant_credential_binding']);
@@ -210,10 +211,12 @@ export function importMerchant(k:CommerceKernel,scope:Scope,value:unknown,expect
     preflightJourneys(k,s,x.rows);
     preflightFollowups(k,s,x.rows);
     preflightLoyaltyRedemptions(k,s,x.rows);
+    preflightDropoffCredentials(k,s,x.rows);
     if(prior){const state=k.db.prepare('SELECT * FROM commerce_recovery_state WHERE id=1').get() as Row;
       if(prior.snapshot_id!==m.snapshot_id||prior.digest!==expected_digest||!state||state.restore_id!==m.snapshot_id||state.source_digest!==expected_digest)throw new Error('PORTABILITY_IMPORT_CONFLICT');
       const imageReplay=prepareImageSuppression(k,cp.checkpoint,s,x.rows);
       revokeLoyaltyRedemptionsForRestore(k,s,cp.checkpoint);
+      revokeDropoffCredentialsForRestore(k,s,cp.checkpoint);
       applySuppression(k,s,cp.checkpoint);
       applyImageSuppression(k,imageReplay);revokeImagesForRestore(k,s.tenant_id,s.store_id);
       revokeShopperMemoryForRestore(k,s.tenant_id,s.store_id);
@@ -243,7 +246,9 @@ export function importMerchant(k:CommerceKernel,scope:Scope,value:unknown,expect
     // destination was already checked strictly before the prior-import branch.
     k.db.prepare('INSERT OR IGNORE INTO commerce_restored_operations SELECT tenant_id,store_id,id FROM commerce_operations WHERE tenant_id=? AND store_id=?').run(s.tenant_id,s.store_id);
     preflightLoyaltyRedemptions(k,s,x.rows);
+    preflightDropoffCredentials(k,s,x.rows);
     revokeLoyaltyRedemptionsForRestore(k,s,cp.checkpoint);
+      revokeDropoffCredentialsForRestore(k,s,cp.checkpoint);
     preflightShopperMemory(k,s,x.rows);
     preflightJourneys(k,s,x.rows);
     preflightFollowups(k,s,x.rows);
