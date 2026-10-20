@@ -66,6 +66,10 @@ native account_id, scope, parent identities, contract, schema_version=1 and
 qualification=synthetic_only. No customer, request, contact, proof or credential
 field is accepted. observe returns the strict hashed envelope, or null before
 configuration. Missing data is distinct from malformed/corrupt/foreign data.
+Envelope scope and parent fields are source_identity, tenant_id, store_id,
+fulfillment_source_identity, partner_source_identity, warehouse_source_identity
+and account_id; the existing configured fields remain top-level alongside
+schema_version, contract, qualification and digest.
 
 combinations contains one to 20 unique explicit site/destination/method triples.
 Each combination has exactly:
@@ -116,6 +120,8 @@ data in the new projection. Source items are the already-bound original items,
 not caller-supplied category, region or product claims. G01 supports at most
 20 selected lines and 64 current destinations; reject larger views rather than
 silently truncating them. The canonical 131072-byte output bound still applies.
+Check the line count and destination overflow before invoking legacy evaluate;
+do not materialize an unbounded legacy view first and reject it afterward.
 The per-item field is item_evaluations: an array of {line_id, destinations},
 where destinations contains {destination_id, eligible, reasons} for that line.
 
@@ -166,6 +172,8 @@ methods. Top state is eligible_choices when choices exist, otherwise unverified
 when any method is unverified (or the directory is missing), otherwise needs_review.
 Native references use site_id, destination_id and method_id. Each method's items
 array contains {line_id, item_id, category, quantity, state, eligible, reasons}.
+Each method also carries its explicit availability object or null, retaining
+the source observation/expiry rather than refreshing those values on read.
 Source configure/observe return the envelope fields with its digest (or null
 from observe before configuration), rather than a second nested body wrapper.
 
@@ -225,7 +233,8 @@ execution requires a concrete failure or material changed candidate.
 
 After the final product passes, one isolated exact-parent fault caches the
 destination view after a valid quotation and continues offering a method after
-current accepted-category revocation. Run only the unchanged new file, retain
+current destination accepted-category revocation, keeping current partner
+readiness, directory and customer proof otherwise valid. Run only the unchanged new file, retain
 actual behavioral failures and the patch, and never merge that fault. No broad
 suite, supplementary product probes or product restore campaign is assigned.
 Static inventory/pin comparison, independent review and recovery-archive checks
