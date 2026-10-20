@@ -71,3 +71,33 @@ behaviors, old tests/helpers/fixtures, native kernel/policy rules and formal gat
 remain intact. /root/m18_memory_tests remains the independent test author and does
 no execution. Root will retain both test revisions and run the corrected exact
 candidate before independent reviews and the isolated guard fault.
+
+### Round-1 projection finding and prior independent assertions
+
+Candidate e5044d7539c6a359d608211eace3872e76ad839d passed all 60 selected
+native cases in 29.656 seconds. Verification confirms all 1,822 source hashes,
+old registrations, adapter objects, native owners and schema are preserved.
+Isolated fault 17d69ec8a2af79371d978ce7d5df43732d4dd15b bypassed only the new
+resource-wide guard and refreshed its pins: six of 23 cases failed behaviorally,
+17 passed, none skipped, 17.163 seconds. It is not integrated.
+
+Independent regression round 1 identified an overbroad intent summary: authorized
+operations and proposed carts were classified as observed, and a prior native
+observation could outrank a new pending preview. The nested native stage remained
+visible, but this summary did not faithfully distinguish pending and observed
+work. Root accepts this finding and assigns the following additions to the
+independent test author before correcting runtime:
+
+- Preserve all existing assertions in the atomic-execution case, then require
+  the original native fulfillment state authorized and journey state recorded.
+- Before the cart case's actual confirmation, require native proposed and
+  journey recorded after its existing refusal/zero-effect assertions.
+- After all original CASE-M18-G03-01 assertions, require the reconciled intent
+  observed; append an actual label proposal under the current owner/generation-2
+  channel to the same exchange intent. Require version 4 and awaiting_approval,
+  the exact prior references plus new preview, the unchanged created observation,
+  one original fulfillment/replacement effect and zero label purchases.
+
+Only the assigned new test file changes. All 23 native IDs and original assertions
+remain. No old test, native owner, goal criterion, permission or budget changes.
+The next corrected candidate receives fresh focused evidence and round-2 review.
