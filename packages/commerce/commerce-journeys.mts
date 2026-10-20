@@ -57,8 +57,19 @@ export class CommerceJourneys {
     const references=new JourneyReferences(k,s,c),seen=new Set<string>();
     // Validate retained personal histories before cleaning revoked records; a hold
     // or unavailable owner cannot conceal corrupted canonical provenance.
-    for(const row of rows)for(const intent of row.body.intents)for(const r of intent.references) {
-      const key=canonical([intent.kind,r]);if(!seen.has(key)){references.resolve(r,intent.kind);seen.add(key);}
+    for(const row of rows)if(row.body.status==='current') {
+      const oldLink=k.db.prepare('SELECT * FROM commerce_support_links WHERE tenant_id=? AND store_id=? AND id=?')
+        .get(s.tenant_id,s.store_id,row.body.link_id) as Row;
+      const oldConfiguration=k.db.prepare('SELECT body FROM commerce_case_configurations WHERE tenant_id=? AND store_id=? AND case_id=? AND digest=?')
+        .get(s.tenant_id,s.store_id,c.id,row.body.configuration_digest) as Row;
+      const oldPins=oldConfiguration?JSON.parse(oldConfiguration.body):null;
+      if(!oldLink||oldLink.case_id!==c.id||oldLink.resource_id!==c.resource_id||oldLink.customer_id!==c.customer_id||
+        oldLink.source_revision<row.body.link_revision||row.body.ownership_generation>owner.generation||!oldConfiguration||
+        contentDigest(oldPins)!==row.body.configuration_digest||oldPins.case_id!==c.id||oldPins.resource_id!==c.resource_id||
+        oldPins.customer_id!==c.customer_id||oldPins.tenant_id!==s.tenant_id||oldPins.store_id!==s.store_id)throw new Error('JOURNEY_INTEGRITY');
+      for(const intent of row.body.intents)for(const r of intent.references) {
+        const key=canonical([intent.kind,r]);if(!seen.has(key)){references.resolve(r,intent.kind);seen.add(key);}
+      }
     }
     return {s,c,link,owner,identity,ref,rows,total:all.length,references};
   }
@@ -99,15 +110,16 @@ export class CommerceJourneys {
         for(const r of intent.references) {
           const artifact=b.references.resolve(r,intent.kind);
           if(privateView) {
-            try{const observation=this.#observation(scope,artifact);if(observation)observations.push(observation);else missing=true;}catch{missing=true;}
+            try{const observation=this.#observation(scope,artifact);if(observation)observations.push(observation);else missing=true;}
+            catch(error){if(error instanceof Error&&/INTEGRITY|MISMATCH|INVALID/.test(error.message))throw error;missing=true;}
           }
         }
         if(observations.some(o=>['unknown','sending'].includes(o.state)))state='unknown';
         else if(missing)state='handoff';
         else if(observations.some(o=>!['awaiting_approval','recorded','submitted','native_unknown','native_created'].includes(o.state)))state='observed';
         else if(intent.references.every((r:Row)=>r.kind==='preview'))state='awaiting_approval';
-        if(restricted)state='restricted';
       }
+      if(restricted)state='restricted';
       if(['handoff','unknown','restricted'].includes(state))handoff=true;
       return {id:intent.id,kind:intent.kind,references:restricted?[]:intent.references,state,restricted,observations:restricted?[]:observations};
     }):[];

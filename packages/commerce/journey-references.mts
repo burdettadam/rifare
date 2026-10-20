@@ -117,7 +117,8 @@ export class JourneyReferences {
   #cart(ref:string) {
     const row=this.row(TABLES.cart,ref,'cart_id'),b=body(row);
     check(b.cart_id===row.cart_id&&row.resource_id===this.c.resource_id&&b.resource_id===row.resource_id&&row.customer_id===this.c.customer_id&&
-      b.customer_id===row.customer_id&&contentDigest(b.preview)===b.preview_digest&&
+      b.customer_id===row.customer_id&&b.preview?.resource_id===row.resource_id&&b.preview.subject_id===row.customer_id&&
+      b.preview.source_identity===b.source_identity&&contentDigest(b.preview)===b.preview_digest&&
       b.operation_id==='cart_'+contentDigest([this.s.tenant_id,this.s.store_id,row.cart_id,b.preview_digest]).slice(0,40));
     id(b.source_identity);check(['proposed','unknown','committed'].includes(row.state));
     if(b.receipt) {
