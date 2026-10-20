@@ -40,8 +40,8 @@ function resourceRecords(k:CommerceKernel,t:string,s:string,resources:string[]) 
 export function loyaltyRedemptionResourceSubjects(k:CommerceKernel,t:string,s:string,resources:string[]) {
   return [...new Set(resourceRecords(k,t,s,resources).map(r=>r.body.subject_ref))];
 }
-// Only the new loyalty preview copies belong to this helper. An immutable
-// receipt still binds the consumed preview after its erasable body is retired.
+// Retire only selected loyalty previews and their operation receipt payloads.
+// An immutable receipt still binds a consumed preview after its erasable body is retired.
 // Replaying suppression also catches original previews restored beside already
 // minimized quotes, including quotes that never consumed an approval.
 function retireCopies(k:CommerceKernel,records:LoyaltyRecord[]) {

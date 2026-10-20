@@ -7610,7 +7610,7 @@
     },
     {
       "path": "packages/commerce/loyalty-redemption-privacy.mts",
-      "sha256": "fa281e99094378bf6d20f220fc02cbd15529e9de50d1b225bdde6f5e0352fd98"
+      "sha256": "bb39340fd567d5ecd2c09094f3506e5ceefe7bf2af7843bc3fab7e0237bced55"
     },
     {
       "path": "tests/development/loyalty-redemption.test.mts",

@@ -108,7 +108,7 @@ Provider storage and older source files require their own retention treatment.
 
 Historical holds also protect the original loyalty context when an order has
 since moved to another customer. Eligible erasure minimizes only the affected
-loyalty records and retires their own preview/approval copies, including when the
+loyalty records and retires their own preview/approval copies and receipt notes, including when the
 original customer has no current resources. It does not erase another customer's
 current order merely because that order appears in historical quote terms.
 
