@@ -37,3 +37,37 @@ review. G05 can demonstrate bounded local caller continuity; actual M15 remote,
 connected channel, target-host, missing-history reconciliation and formal M18
 acceptance remain open. Canonical goal snapshots and acceptance ledger stay
 unchanged. No live effect, release or publication is authorized or claimed.
+
+## G03 implementation and first observed attempt
+
+Independent test source fe62224afae5dc8bfa3f4390e3f24fd5f21549c0 was integrated
+unchanged as b472470 before the first runtime candidate. Product
+8c76d69518867ee5f10493bc36cf63c800076710 executed all 23 new native cases in
+evidence/M18-composition/attempt-01: 21 passed and two failed; none were skipped.
+The unchanged focused runner stopped after that failed whole file and did not run
+the other three selected files. Its report's zero actual_tests is the failed-file
+aggregate; the native XML/TAP records all 23 executions. The attempt is retained.
+All three permanent cases, all six uncertainty families and lifecycle cases passed
+on this attempt. This is not a passing candidate or independent acceptance.
+
+### Prior authorization for two independent fixture corrections
+
+Root inspected the actual failures and native contracts. The unsupported-action
+test built request IDs containing dots, which native kernel.id rejects before the
+action route. Its independent author may enumerate the same action list with
+valid unsupported_action_N request IDs while retaining the exact unsupported
+action assertion. The configuration test tried to publish at the existing policy
+activation time and used a pin_at_request case, so it did not establish a current
+configuration change. The author may instead import the existing CONTRACT_VERSION
+and configure the simulator connection with the existing contract, synthetic
+qualification and read_orders/read_shipments scopes. This native configuration
+increment invalidates the case's pinned connection, as the retained G02 fixture
+already demonstrates. Preserve the current-configuration-false, historical-ref,
+native-execution-refusal, unconsumed-approval and zero-effect assertions.
+
+This specific fixture-only correction is authorized before its implementation.
+Only the assigned new commerce-journeys.test.mts changes; all 23 IDs, expected
+behaviors, old tests/helpers/fixtures, native kernel/policy rules and formal gates
+remain intact. /root/m18_memory_tests remains the independent test author and does
+no execution. Root will retain both test revisions and run the corrected exact
+candidate before independent reviews and the isolated guard fault.
