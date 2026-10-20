@@ -87,6 +87,21 @@ cannot change the original award or its reversal. Pin creation is explicit
 fixture administration; a projection never creates a historical assertion.
 All stored bodies include source identity/scope and are strictly revalidated.
 
+The fixture schema is fixture_loyalty_accrual_identity(id INTEGER PRIMARY KEY
+CHECK(id=1), body TEXT, digest TEXT), fixture_loyalty_accrual_rules(revision
+INTEGER PRIMARY KEY, body TEXT, digest TEXT), and
+fixture_loyalty_accrual_originals(resource_id TEXT PRIMARY KEY, customer_id TEXT,
+rules_revision INTEGER, body TEXT, digest TEXT), all STRICT and non-null.
+publishRules returns an envelope with schema_version=1, source_identity,
+tenant_id, store_id, account_id, qualification=synthetic_only, rules (the exact
+input), and digest. pinOriginal returns the same envelope metadata plus the
+exact pin input fields and digest. Stored body excludes digest; row indexes
+must match body fields. readOriginal returns null when absent, otherwise
+{pin, rules}, each the complete independently validated envelope. Conflicting
+stored identity/scope throws LOYALTY_SCOPE_MISMATCH; other malformed or modified
+bodies fail closed. These tables are synthetic fixture storage, never imported
+as merchant-core data.
+
 The initial native original seed is synthetic paid-allocation evidence, not a
 real capture journal or proof of a historical provider points award. Outputs
 remain proposals and cannot claim that the provider already issued those points.
@@ -165,11 +180,16 @@ historical rule and kind; projection_digest binds the entire current result and
 source evidence. Targets are not executable delta commands. Unsupported provider
 targets remain ineligible and excluded from qualified totals; zero targets do
 not manufacture an operation. Returning a recommendation grants no authority.
+Unit numbers show the economic candidate target even when its provider capability
+is unsupported. Thus a limited provider for the complete fixture shows unit
+candidate reversal130 and ineligible reversal targets, but qualified totals
+earned320/reversal0/net320 with unsupported status.
 
 SupportService may accept an optional native loyaltyAccrual owner bound to its
 kernel and balance owner, with exactly one additive loyalty-accrual dispatcher
 action taking customer_token and input. Without configuration, that action is
-explicitly unavailable. No change to existing dispatchers or default source.
+rejected with LOYALTY_ACCRUAL_NOT_CONFIGURED. No change to existing dispatchers
+or default source.
 
 ## Independent oracle and verification envelope
 
