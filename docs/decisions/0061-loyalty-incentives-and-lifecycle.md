@@ -259,3 +259,26 @@ ancestry. No broad fault campaign or full regression follows automatically.
 Close only this bounded local implementation after both independent reviews.
 G99's local assessment will identify observed coverage and missing obligations;
 it cannot accept unperformed provider, messaging, target-host or full-suite work.
+
+## Pre-freeze clarifications from independent review
+
+The comparison's cart_digest is exactly ShoppingCart.currentPreview.preview_digest.
+G05 must compare the G01 and G03 snapshot digests and recheck the complete native
+redemption source-view digest before returning. A changed view is rejected rather
+than mixing old account totals with new capacity or source observations. Native
+G03 unsupported-provider errors remain errors; no fallback manufactures capacity.
+
+The retained path accepts only already-minimized G03 operations; live IDs fail
+LOYALTY_RETAINED_EVIDENCE_REQUIRED. Its support.analytics requirement can deny
+during recovery quarantine, even where direct native G03 retained reads remain
+permitted. That existing authorization distinction is intentional.
+
+The shared approvedOffer/render checks must preserve ordinary render permissions;
+do not call campaigns.read or put human-only restrictions in the shared helper.
+Any present loyalty_incentive field, including malformed/null values, requires
+native final validation. A worker denial without the needed native grants is
+evidence of that boundary only, not an otherwise-authorized human-fence probe.
+
+The selected G04 fault proves mandatory final-send validation. It does not claim
+to exercise the separately named goal fault for redemption/enrollment on offer
+selection. That unperformed fault remains a formal qualification gap.
