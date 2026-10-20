@@ -124,6 +124,13 @@ test('CASE-M20-G01-07',()=>usingFixture(f=>{
     reviseDestination(f,'main-destination',patch);const view=quote(f);noMain(view);assert.equal(method(view).state,'unavailable');assert.ok(method(view).reasons.includes(reason));
     reviseDestination(f,'main-destination',original);positive(f);
   }
+  for(const restriction of [{item_ids:['hat']},{category_ids:['accessory']}]){
+    publish(f,{combinations:directoryInput(f).combinations.map((c:Value)=>c.site_id==='main-site'?{...c,...restriction}:c)});
+    const restricted=quote(f),main=method(restricted);noMain(restricted);assert.equal(main.state,'unavailable');assert.deepEqual(choices(restricted),E.after_main_revocation_choices);
+    assert.deepEqual(main.items.map((i:Value)=>pick(i,['line_id','state','eligible'])),[{line_id:'alpha',state:'unavailable',eligible:false},{line_id:'beta',state:'eligible',eligible:true}]);
+    assert.deepEqual(f.destinations.evaluateItems(f.a.scope,{request_id:f.request.id}).item_evaluations.map((i:Value)=>i.destinations.find((d:Value)=>d.destination_id==='main-destination').eligible),[true,true]);
+    assert.equal(f.readiness.inspect(f.a.scope,partnerContext(f)).ready,true);publish(f);positive(f);
+  }
   reviseDestination(f,'main-destination',{capacity_units:2});const view=quote(f),main=method(view),native=f.destinations.evaluateItems(f.a.scope,{request_id:f.request.id});
   assert.equal(E.items.reduce((n:number,i:Value)=>n+i.quantity,0),E.capacity_control.selected_units);assert.equal(f.native.capacity('main-destination').available_units,E.capacity_control.available_units);
   assert.deepEqual(main.items.map((i:Value)=>i.eligible),E.capacity_control.per_line_eligible);assert.equal(main.eligible,E.capacity_control.whole_set_eligible);assert.equal(main.state,'unavailable');assert.ok(main.reasons.includes('CAPACITY_EXCEEDED'));noMain(view);
