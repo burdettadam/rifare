@@ -44,8 +44,12 @@ export function loyaltyRedemptionResourceSubjects(k:CommerceKernel,t:string,s:st
 // receipt still binds the consumed preview after its erasable body is retired.
 // Replaying suppression also catches original previews restored beside already
 // minimized quotes, including quotes that never consumed an approval.
-function retirePreviews(k:CommerceKernel,records:LoyaltyRecord[]) {
+function retireCopies(k:CommerceKernel,records:LoyaltyRecord[]) {
   for(const r of records){
+    if(r.kind===LOYALTY_OPERATION_KIND){
+      k.db.prepare('DELETE FROM commerce_receipt_payloads WHERE tenant_id=? AND store_id=? AND receipt_id IN (SELECT id FROM commerce_operation_receipts WHERE tenant_id=? AND store_id=? AND operation_id=?)').run(r.tenant_id,r.store_id,r.tenant_id,r.store_id,r.id);
+      continue;
+    }
     if(r.kind!==LOYALTY_QUOTE_KIND)continue;
     const q=r.body,receipt=q.consumed_by?loyaltyOperationRecord(k,r,q.consumed_by)!.receipt:null;
     const previews=k.db.prepare("SELECT * FROM commerce_action_previews WHERE tenant_id=? AND store_id=? AND (id=? OR (json_extract(body,'$.action')=? AND json_extract(body,'$.arguments.quote_id')=?))").all(r.tenant_id,r.store_id,receipt?.preview_id??'',LOYALTY_REDEEM_ACTION,r.id) as Row[];
@@ -93,13 +97,13 @@ function eraseRecords(k:CommerceKernel,records:LoyaltyRecord[],actor?:string) {
   // records still agree. Then minimize both kinds as one lifecycle transaction.
   for(const r of records)bodies.set(r.kind+':'+r.id,releaseLive(k,r,actor));
   for(const r of records)saveLoyaltyRecord(k,retained(bodies.get(r.kind+':'+r.id)!,true),true);
-  retirePreviews(k,records);
+  retireCopies(k,records);
 }
 export function revokeLoyaltyRedemptionsForUninstall(k:CommerceKernel,t:string,s:string) {
   const records=selected(k,t,s),bodies=new Map<string,Row>();
   for(const r of records)bodies.set(r.kind+':'+r.id,releaseLive(k,r));
   for(const r of records)saveLoyaltyRecord(k,retained(bodies.get(r.kind+':'+r.id)!,suppressed(k,r)||!held(k,r)),true);
-  retirePreviews(k,records.filter(r=>r.body.minimized||suppressed(k,r)||!held(k,r)));
+  retireCopies(k,records.filter(r=>r.body.minimized||suppressed(k,r)||!held(k,r)));
 }
 /** Invoke before copied quotes are retired or suppression can cancel queued
  * work. Reimport validates the destination and never recopies old native rows. */
@@ -116,5 +120,5 @@ export function revokeLoyaltyRedemptionsForRestore(k:CommerceKernel,scope?:Row,c
     bodies.set(r.kind+':'+r.id,b);
   }
   for(const r of records)saveLoyaltyRecord(k,retained(bodies.get(r.kind+':'+r.id)!,suppressed(k,r,checkpoint)||!held(k,r)),true);
-  retirePreviews(k,records.filter(r=>r.body.minimized||suppressed(k,r,checkpoint)||!held(k,r)));
+  retireCopies(k,records.filter(r=>r.body.minimized||suppressed(k,r,checkpoint)||!held(k,r)));
 }
