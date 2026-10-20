@@ -8,10 +8,23 @@ maintainer disposition are recorded in
 [the journey checkpoint](../work/records/M18-journey-checkpoint.md); the original
 planning packets and accepted-goal ledger remain unchanged.
 
-**G05 draft status at this source checkpoint:** execution of the three newly
-assigned local continuity cases and their isolated fault is pending. Their
-sequence and assertions below describe planned coverage. The existing reviewed
-G01-G04 observations remain separate; no new G05 demonstration is claimed yet.
+**Local G05 demonstration and G99 assessment are complete.** Clean candidate
+0eec014562e8bb10f733259da9594787e971f2b5 passed all 52 assigned native cases,
+including the three independently authored continuity cases, in 40.423 seconds.
+Both nonauthor reviewers approved round 1 without corrective product findings.
+The exact-parent isolated context-dependency fault produced three behavioral
+failures in 1.757 seconds at the first public context calls; later reopen/no-model
+stages were not reached under that fault. The complete scenarios passed on the
+product. Formal G05/G99 cases remain unperformed and formal M18 remains blocked.
+
+| Goal | Completed local work | Formal status |
+| --- | --- | --- |
+| M18-G01 | Shopper memory implemented, tested and independently reviewed | Unaccepted |
+| M18-G02 | Current readiness implemented, tested and independently reviewed | Unaccepted |
+| M18-G03 | Durable journey composition implemented, tested and independently reviewed | Unaccepted |
+| M18-G04 | Guarded follow-ups implemented, tested and independently reviewed | Unaccepted |
+| M18-G05 | Three local continuity demonstrations passed and independently reviewed | Partial evidence; qualified caller/channel sequence remains blocked |
+| M18-G99 | Maintainer assessment and actual support matrix complete | Formal milestone acceptance blocked |
 
 This support matrix separates the local diagnostic boundary from the complete
 M18-G05 caller qualification and M18-G99 exit criteria. A fixture source, native
@@ -67,22 +80,31 @@ The independent cases use these stable local IDs:
 | Native case | Required observation and independent oracle |
 | --- | --- |
 | M18-G05-LOCAL-TWO-CHANNEL-CONTINUITY | Same verified customer, case, resource and journey across email/webchat; current manual/agent/human ownership; preserved memory; native exchange and later cart identities; original fixture ledgers |
-| M18-G05-LOCAL-REOPEN-ORIGINAL-RECONCILIATION | Source replacement exists while the native operation is unknown; a fresh kernel/source owner discovers and reconciles that same operation once; persisted source effect count remains one; old grant/generation refuses new effects |
+| M18-G05-LOCAL-REOPEN-ORIGINAL-RECONCILIATION | Source replacement exists while the native operation is unknown; a fresh kernel/source owner discovers that same operation and reconciles its original identity twice; persisted source effect count remains one; old grant/generation refuses new effects |
 | M18-G05-LOCAL-NO-MODEL-OPTOUT-FINAL-STOP | Manual workflow/context stays usable with model access stopped; a real native G04 job queues the original follow-up; customer withdrawal at final send prevents additional message-source effects |
 
-The root executor's assigned development invocation selects these three cases,
+The root executor's actual development invocation selected these three cases,
 23 existing commerce-journey cases, 19 follow-up cases and seven conversation
 cases: **52 native cases in four whole files, with one 60-second deadline** under
-the unchanged tools/dev_tests.py. Actual native XML and reports determine what ran
-and passed. Registered inventory counts are not executed counts; failed whole-file
-aggregates do not erase cases shown in the native report. All attempts are retained.
+the unchanged tools/dev_tests.py. All 52 passed in 40.423 seconds with no failures,
+errors, skips or timeout. The clean candidate's 1,835 source hashes match the
+actual report; this focused invocation is not full regression or formal
+qualification. Registered inventory counts are not executed counts; failed
+whole-file aggregates do not erase cases shown in the native report. Actual
+reports, native XML and reviews are retained under evidence/M18-continuity/.
 
-The named isolated continuity fault adds a requirement for a prior provider
-conversation identifier before normal CommerceJourneys.context resume. The
-independent positive context/no-model cases must fail behaviorally when that
-requirement is introduced. Only its one runtime source and two existing pins
-change, with tests unchanged. The fault is evidence only and must never enter
-product ancestry. The checkpoint records its exact source and actual result.
+Isolated fault 380dc2d8c48aa22870bc07072023173ce4cca1e8 has the exact reviewed
+product as parent. It adds a provider conversation identifier requirement after
+the existing strict input validation and before normal CommerceJourneys.context
+handling. Only its one runtime source and two existing pins changed; test/helper
+bytes are unchanged. All three cases executed and failed behaviorally in 1.757
+seconds with JOURNEY_PROVIDER_THREAD_REQUIRED, with no skips or loader failures.
+Their first valid public context calls failed: initial email context, exchange
+preparation context and post-handover agent context, respectively. The later
+reopened-owner and no-model stages were not reached under this mutant. It proves
+local context dependency sensitivity; the positive product run supplies the
+complete scenario observations. This is not reopened-process or remote-client
+fault evidence. The fault is outside product ancestry and must never be integrated.
 
 G04 separately tests a final cart-purchase race in a transactional tracking
 message, without a campaign guard that could hide the fault. Removing the final
@@ -137,12 +159,12 @@ runtime is introduced solely for the G05 local demonstration.
 
 | Formal requirement | Current assessment | Evidence still required |
 | --- | --- | --- |
-| G05 qualified manual → built-in agent → independent remote client → human continuation | Planned local demonstration; execution pending and formal CASE-M18-G05-01 unperformed | Actual qualified callers, independent remote implementation and declared configuration evidence |
-| G05 old caller loses authority and late output cannot replay an effect | Planned local ownership/grant/generation assertions; execution pending and formal CASE-M18-G05-02 unperformed | Real qualified handover, client revocation and late-response observations |
-| G05 no-model operation and absence of a private-provider-thread dependency | Assigned local manual/reopened-context cases and targeted fault are pending; formal CASE-M18-G05-03 unperformed | The independent client's real continuation and required release evidence |
+| G05 qualified manual → built-in agent → independent remote client → human continuation | Local manual/deterministic-agent/human sequence and fresh local owners passed; independent remote step absent; formal CASE-M18-G05-01 unperformed | Actual qualified callers, independent remote implementation and declared configuration evidence |
+| G05 old caller loses authority and late output cannot replay an effect | Local ownership, old-grant and generation refusal passed without additional effects; formal CASE-M18-G05-02 unperformed | Real qualified handover, client revocation and late-response observations |
+| G05 no-model operation and absence of a private-provider-thread dependency | Local manual/reopened-context scenarios passed; isolated fault detected at first public context calls only; formal CASE-M18-G05-03 unperformed | The independent client's real continuation and required release evidence |
 | G99 two merchant profiles complete the text journey across two qualified channels | Not established | Two complete merchant/profile journeys with actual channel and reused-action qualification |
-| G99 privacy, correction, deletion, revocation, opt-out, stale source, handover and unknown identity | Reviewed local G01-G04 coverage is retained; G05 continuity is pending | Complete declared connected/target-host configuration evidence and applicable integration checks |
-| G99 support matrix matches actual observations | This matrix preserves local and missing evidence separately | Trusted formal assessment after all conjunctive requirements and independent reviews |
+| G99 privacy, correction, deletion, revocation, opt-out, stale source, handover and unknown identity | Reviewed local G01-G04 coverage and passed/reviewed G05 continuity are retained | Complete declared connected/target-host configuration evidence and applicable integration checks |
+| G99 support matrix matches actual observations | Local assessment and matrix complete with both independent reviews; formal gate open | Trusted formal assessment after all conjunctive requirements and independent reviews |
 | G99 assessment cases CASE-M18-G99-01/02/03 | Formal cases remain unperformed | Real required evidence, exact assessed candidate, applicable full gate and rejection of unsupported qualification claims |
 
 M18-G05 requires accepted M18-G01-G04, M07-G04, M05-G16, M07-G99, M09-G99
@@ -170,8 +192,12 @@ The following obligations remain open:
   missing from this recovered branch. M16/M23 are integration limits here; they
   are not invented direct G05 dependencies and are not reconstructed from a summary.
 
-The maintainer can close the bounded local development assessment after its exact
-evidence and independent reviews, while **formal M18 remains blocked**. No formal
+The maintainer closes the bounded local development assessment using its exact
+evidence and both independent reviews, while **formal M18 remains blocked**. All
+six formal cases CASE-M18-G05-01/02/03 and CASE-M18-G99-01/02/03 remain
+unperformed. The documentation closure changes only PLANS.md, the journey work
+record and this qualification document; executed runtime, tests, contracts,
+metadata and pins remain identical to 0eec014. No formal
 goal acceptance, release, publication, deployment, production or paid effect is
 recorded by this document. M19 and later milestones need their own concrete prior
 assignments and actual prerequisite evidence.

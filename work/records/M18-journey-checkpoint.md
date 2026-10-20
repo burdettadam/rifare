@@ -260,10 +260,11 @@ source members. Expected totals are 3,180 tests, 214 capabilities, 541 protected
 paths, 1,835 sources, 314 runtime pins, 628 oracle pins and inventory revision 31.
 All 3,177 old test objects, 213 capabilities, 539 protected paths, 1,831 sources,
 38 adapters, 15 privacy surfaces and 262 tables remain; all runtime and existing
-contract/test bytes remain exact. Actual execution, fault and reviews are pending.
+contract/test bytes remain exact. Execution, fault and reviews were pending at
+this prior-assignment checkpoint; their completed outcome is recorded below.
 
-The support matrix records the G05 local continuity sequence as planned until
-actual execution and its three formal cases as unperformed. G99's formal cases and exit criteria remain
+The initial support matrix recorded the G05 local continuity sequence as planned
+until actual execution and its three formal cases as unperformed. G99's formal cases and exit criteria remain
 blocked by accepted dependency, two complete merchant/qualified-channel journeys,
 independent remote client, connected configuration, target-host/full-gate and
 actual pilot requirements. Missing later M15/M16/M23 source remains missing;
@@ -276,8 +277,8 @@ The independent regression reviewer identified premature present-tense G05
 assessment wording in the initial qualification draft at 917bcf4. Before test
 freeze or execution, root corrected the document and this prior-scope statement
 to mark all three G05 local cases and their fault as pending. Reviewed G01-G04
-observations remain separate. Actual observations will replace those pending
-labels only after retained execution and independent review; no assertion,
+observations remained separate. Actual observations replace those pending
+labels only after the retained execution and independent reviews below; no assertion,
 fixture, native source, gate or permission changes are involved.
 
 ## G05 independent freeze and initial local candidate
@@ -301,4 +302,120 @@ pending-observation wording correction at 91792f2. Those dispositions are not
 product approval. Additive inventory now has 3,180 tests, 214 capabilities,
 541 protected paths, 1,835 sources, 314 unchanged runtime pins and 628 oracle
 pins, revision 31. Native execution, isolated fault and exact-product reviews
-remain pending until their actual reports and messages are retained.
+were pending at that initial candidate; the actual outcome follows.
+
+## G05 local outcome and completed G99 local assessment
+
+Clean product 0eec014562e8bb10f733259da9594787e971f2b5, tree
+585d1022af4a826719459aad04e16203e8f37b00, completes the assigned local
+continuity demonstration from G04 closure 286d24596c57d991e3b545992731d43229626549.
+The independent freeze 42747837c62c9c1dd04be3831d6d5591e2eb7431 was integrated
+unchanged as fd3080c. G05 required no runtime, existing test/helper, contract,
+schema, permission, work-grant or runner change. Only its prior decision,
+qualification document, two new test files and authorized additive metadata were
+introduced before the documentation closure.
+
+Actual attempt-01 passed all 52 native cases in 40.423 seconds: three continuity
+cases in 3.324 seconds, 23 commerce-journey cases in 18.975 seconds, 19 follow-up
+cases in 16.722 seconds and seven conversation cases in 1.318 seconds. The
+unchanged four-whole-file, 60-case maximum and one 60-second deadline were
+preserved. There were no failures, errors, skips, cancellations, todos or timeout;
+no corrective product attempt was needed. This is focused development evidence,
+not full regression or formal qualification.
+
+The three complete product scenarios establish:
+
+- Shared current context for the same verified shopper, resolution_case, order
+  and journey across local email/webchat records. Explicit memory retains its
+  original verified source; deterministic manual/agent/human steps use current
+  ownership generations. Human exchange retains the original native preview,
+  independent approval, receipt and fulfillment identity. A later proposed and
+  customer-confirmed native cart attaches to the same journey.
+- Recovery of the original uncertain fulfillment identity through fresh kernel,
+  database and source-owner objects. Fresh authorized context discovers the
+  reference without being handed the old operation or journey object. Two native
+  reconciliation lookups retain one persisted replacement effect and the same
+  original authorization artifacts. These are reopened objects/connections in
+  the same local process. Old worker grants and stale generations remain refused
+  without widening their allowlists or adding an effect.
+- Usable manual context/workflow after model.run is stopped. An earlier synthetic
+  tracking message remains accepted, customer_delivered false. A real native G04
+  rule/job retains its original queued operation, then current customer '*'
+  withdrawal at final dispatch yields DELIVERY_SUPPRESSED, consent_changed and
+  manual_action_required, with no additional message-source call or effect.
+
+The replacement remains created/unfulfilled with no shipment; the committed,
+active cart has no native order, checkout support or payment authorization.
+The source ledgers retain the original fixture return/native-return/allocation
+preconditions. These observations do not claim physical fulfillment, settlement,
+customer delivery, autonomous exchange or real connected-channel qualification.
+
+All 1,835 report source hashes match the clean product. Totals are 3,180 registered
+tests, 214 capabilities, 541 protected paths, 314 unchanged runtime pins and 628
+oracle pins, inventory revision 31. All prior 3,177 test objects, 213 capabilities,
+539 protected paths, 1,831 source members and 626 oracle pins are preserved,
+together with 38 adapters, 15 privacy surfaces and 262 tables. Existing runtime,
+test/helper, contract, grant, schema, runner and acceptance-ledger bytes remain
+unchanged from the assigned G04 base. Inventory totals are not executed counts.
+
+### G05 isolated fault and independent product reviews
+
+Fault 380dc2d8c48aa22870bc07072023173ce4cca1e8 has the exact product as parent.
+Only CommerceJourneys.context and its two existing source pins changed; after
+the original strict input validation it requires a provider conversation ID.
+All three unchanged local cases executed in 1.757 seconds: zero passed and three
+failed behaviorally with JOURNEY_PROVIDER_THREAD_REQUIRED. No cases were skipped,
+and the failures were not loader, syntax or zero-execution failures. The wrapper's
+zero successful whole-file aggregate does not erase these three native executions.
+
+Each fault failure occurs at the first ordinary valid public context call:
+initial email context, exchange preparation context and post-handover agent
+context respectively. The mutant does not reach the later reopened-owner or
+no-model stages. It demonstrates local context dependency sensitivity only; the
+complete scenarios pass on the product. It does not supply reopened-process or
+remote-client fault evidence. The fault remains isolated and is not integrated.
+
+Both independent nonauthor reviewers, /root/m18_authority_scope and
+/root/m18_regression_scope, approved exact product 0eec014 in round 1 with no
+corrective product findings. Their source/evidence-only reviews inspected the
+frozen test blobs, preserved source/metadata objects, actual native XML and fault
+stage limits; neither reviewer executed the product. Their closure condition was
+to replace pending reporting with the actual outcome and retain a documentation-
+only comparison. Root records their actual dispositions, not an inferred review.
+
+Reports, native XML/logs, source verification, fault patch and verification,
+independent review records, local decision and machine-readable milestone
+assessment are retained under evidence/M18-continuity/. The closure comparison
+proves that only PLANS.md, this work record and docs/M18-QUALIFICATION.md changed
+after the reviewed product. Runtime, tests, contracts, metadata and pins remain
+byte-identical; neither the G04 nor G05 fault is in product ancestry.
+
+### Local milestone disposition and remaining development boundary
+
+Root closes the assigned local M18 work under the owner's standing delegation:
+G01-G04 are implemented and independently reviewed; G05's three local
+demonstrations passed and were independently reviewed; G99's local assessment
+and actual support matrix are complete. **Formal M18 remains blocked and
+unaccepted.** CASE-M18-G05-01/02/03 and CASE-M18-G99-01/02/03 remain unperformed.
+
+The qualified manual → built-in agent → independent remote client → human
+sequence is incomplete. The local deterministic agent and reopened objects are
+not a qualified independent remote implementation; remote.continue remains
+unsupported. One full synthetic apparel journey and G02's second merchant
+refund-readiness profile do not establish two complete merchant journeys over
+two qualified channels. Accepted M18-G01-G04, M07-G04, M05-G16 and M07/M09/M15
+G99 prerequisites remain required; formal G99 also requires accepted G05.
+
+Connected platform/payment/messaging/model configuration, PostgreSQL/React
+target-host and isolation qualification, install/upgrade/restore and full
+applicable formal regression/integration evidence remain missing. M07's real
+pilot still requires three independent merchants, 100 in-scope live outcomes,
+30 consecutive days and seven-day follow-up. Missing later M15/M16/M23 source
+remains unreconciled; M16/M23 are integration limits, not invented direct G05
+dependencies. The complete limits and continuation guidance are in
+[M18 qualification](../../docs/M18-QUALIFICATION.md).
+
+The acceptance ledger and protected main a33c4ad57d13223c05ca985e5728404b671ab21a
+remain unchanged. No formal acceptance, release, publication, deployment, paid
+effect or external contact is recorded. Any next milestone needs its own concrete
+prior assignment and actual prerequisite evidence.

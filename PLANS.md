@@ -265,9 +265,9 @@ not integrated. Both independent reviewers approved the exact product candidate
 without corrective findings. The closing changes are milestone documentation
 only; all runtime, test, contract and pin bytes remain as executed and reviewed.
 
-M18-G02 readiness, G03 journey composition and G04 follow-ups consume this
-foundation in subsequent assignments. G05 independent remote-client/channel
-qualification and G99 assessment retain their actual prerequisites. This local
+M18-G02 readiness, G03 journey composition and G04 follow-ups now consume this
+foundation in their reviewed local increments. G05 independent remote-client/channel
+qualification and formal G99 acceptance retain their actual prerequisites. This local
 increment does not accept M07/M09/M15/M18 gates, recover missing implementation
 history, or expand any worker grant. Actual evidence and precise next-goal
 handoffs are in [the M18 memory record](work/records/M18-memory-checkpoint.md).
@@ -278,8 +278,9 @@ ADR-0054's G02 increment is locally implemented and independently reviewed at
 6743310. All 57 selected native cases passed in 10.131 seconds; the isolated
 readiness fault was caught by two behavioral cases. Both nonauthor reviews
 approved round 1 without findings. Eight fixed readiness rows recheck current
-native owners and grant no action authority. G03 composition now receives its
-separate ADR-0055 assignment; follow-up and real remote/formal gates remain open.
+native owners and grant no action authority. The subsequent ADR-0055 composition,
+G04 follow-up and G05 local continuity outcomes are recorded below; real remote
+and formal gates remain open.
 See [the journey checkpoint](work/records/M18-journey-checkpoint.md) for exact
 source identities, evidence, preservation and continuation scope.
 
@@ -291,9 +292,9 @@ round-1 review found a misleading pending/observed intent summary; independently
 authored assertions and the corrected projection resolved it. Both reviewers
 approved round 2. A fresh isolated uncertainty fault was caught by six of 23
 unchanged cases and is not integrated. Actual attempts and reviews are retained
-in the journey checkpoint record. G04 follow-ups receive the next concrete
-assignment; G05 local continuity and G99 assessment follow without inferring
-formal, remote, connected-provider or target-host qualification.
+in the journey checkpoint record. G04 follow-ups, G05 local continuity and the
+G99 local assessment are now complete as recorded below. Formal, remote,
+connected-provider and target-host qualification remain open.
 
 ## Current M18 follow-ups
 
@@ -307,25 +308,39 @@ product findings. Original jobs, operations and receipts survive replay,
 invalidation and uncertain outcomes; current authority and retained-subject
 privacy remain enforced through the native owners.
 
-This closure changes only project progress and the journey work record, leaving
-executed runtime/tests/contracts/pins identical. ADR-0057 will assign the three
-bounded local G05 continuity cases and honest G99 assessment. Formal acceptance,
+The G04 closure changed only project progress and the journey work record, leaving
+executed runtime/tests/contracts/pins identical. ADR-0057 subsequently assigned
+the three bounded local G05 continuity cases and the G99 assessment. Formal acceptance,
 independent remote/connected-channel qualification, the two-profile full journey,
 target-host evidence and missing later source reconciliation remain open.
 
-## Current M18 local continuity and assessment assignment
+## Current M18 local continuity and completed local assessment
 
-Prior ADR-0057 at 9a81445 assigns exactly three independent local continuity
-cases from reviewed G04 checkpoint 286d245. They cover shared text workflow and
+Prior ADR-0057 at 9a81445 assigned exactly three independent local continuity
+cases from reviewed G04 checkpoint 286d245. They demonstrate shared text workflow and
 verified email/webchat records, human native exchange and later cart, reopened
 durable context with original uncertain-operation reconciliation, old caller
 fencing and manual opt-out handling with model access stopped. The existing
-native owners remain; no runtime change or new grant is expected.
+native owners remain; G05 added no runtime change or new grant.
 
-The independent author owns two new test files. Root owns the support matrix,
-additive registration/pins and the unchanged focused 52-case selection, followed
-by the predeclared isolated provider-thread dependency fault and two independent
-reviews. Execution and review outcomes are pending. [M18 qualification](docs/M18-QUALIFICATION.md)
-records the formal G05/G99 obligations and the blocked milestone assessment.
-Local demonstration is separate from real remote/client/channel, two-profile
-complete journey, target-host and full formal-gate evidence.
+Independent tests froze at 4274783 before root integrated them unchanged. Clean
+product 0eec014 passed all 52 assigned native cases in 40.423 seconds: three new
+continuity cases, 23 commerce-journey, 19 follow-up and seven conversation cases.
+Both nonauthor reviewers approved round 1 without corrective product findings.
+The exact-parent isolated provider-thread fault was detected by all three
+unchanged local cases in 1.757 seconds. Each failed at its first ordinary public
+context call, before its later reopen/no-model stages; the complete sequences
+passed on the product. This fault is not integrated and does not demonstrate
+remote-client or reopened-process fault qualification.
+
+G01-G04 are locally implemented and reviewed, G05's three local demonstrations
+are complete, and G99's local milestone assessment is complete. **Formal M18
+remains blocked.** CASE-M18-G05-01/02/03 and CASE-M18-G99-01/02/03 remain
+unperformed. [M18 qualification](docs/M18-QUALIFICATION.md) records the actual
+support matrix and missing independent remote/client/channel, two-profile complete
+journey, accepted prerequisite, target-host/full-gate and pilot evidence.
+
+The final closure changes only this progress file, the journey work record and
+the qualification document; executed runtime, tests, contracts, metadata and pins
+remain identical to reviewed 0eec014. Main remains a33c4ad, the acceptance ledger
+is unchanged, and missing later M15/M16/M23 source is not reconstructed.
