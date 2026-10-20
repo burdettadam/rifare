@@ -48,6 +48,9 @@ existing helper or change native source constructors for this increment.
 
 The wrapper uses the separate partner database and only one customer-free table,
 fixture_dropoff_configuration, holding the latest hashed configuration. Its
+columns are singleton (primary key constrained to 1), revision, body and digest;
+the stored revision must match the envelope revision.
+Its
 identity binds contract rifare-dropoff-fixture-v1, tenant/store and the exact
 fulfillment, partner and warehouse native identities. Freeze the wrapper and
 retain stable parent handles; readonly TypeScript declarations alone do not
