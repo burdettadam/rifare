@@ -31,6 +31,11 @@ routes are outside this increment. SecretVault and CredentialLifecycle remain
 unchanged: deployment authentication slots are not customer handoff credentials.
 Root also owns this ADR, docs/DROPOFF-CREDENTIALS.md, PLANS.md, the M20 work record
 and necessary additive inventories/catalog declarations and exact source pins.
+One additive native identity-only method is assigned in
+packages/adapters/dropoff-fixture-source.mts: assertIdentity() invokes the existing
+private parent/durable-identity/physical-separation validator without reading any
+current directory or partner configuration. G02 uses it for historical access;
+existing G01 configure/observe/attachment semantics remain unchanged.
 
 ## Public owner and native approval
 
