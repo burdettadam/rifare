@@ -75,6 +75,17 @@ cleanup. Provider-side export, erasure and retention are not attested.
 
 ## Next boundaries
 
+The bounded local implementation at 2cc9211 passed the assigned 58-case native
+batch in 39.434 seconds. Both independent reviewers approved this scope. Seven
+of 20 unchanged G02 cases caught an isolated double-earning fault, and five
+separate executor probes verified corrections identified by review. The exact
+source and evidence are recorded in the milestone work record. This focused
+result does not establish a full regression pass or formal milestone acceptance.
+
+Native observation reads currently materialize rows before checking the
+projection's observation-count bound. Larger-volume or connected qualification
+must also bound retrieval.
+
 Durable points redemption, reservation, exact approval, original-ID recovery and
 privacy lifecycle belong to a separately assigned G03. Incentive comparison and
 current consent/send revalidation belong to G04. Lifecycle reconciliation,

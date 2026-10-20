@@ -373,15 +373,20 @@ qualification remain open. The acceptance ledger and protected main are
 unchanged. [The recovery and loyalty checkpoint](work/records/M19-recovery-checkpoint.md)
 records exact source identities, actual evidence, review decisions and continuation.
 
-## M19 original-unit loyalty projection candidate
+## M19 original-unit loyalty projection local checkpoint
 
 ADR-0059 assigned M19-G02 before the independent test freeze cc1d1dc, integrated
 unchanged as 797b842. The local candidate derives cumulative original-unit
 earning/reversal targets from pinned historical rules, exact native settlements
 and funded exchange ancestry. It exposes only a read-only support action and adds
 no points handler, financial mutation, core table, worker grant or acceptance.
-The frozen 20-case oracle and existing G01/lineage/post-edit files form the planned
-58-case focused batch. Verification, the carried-funding fault experiment and
-two independent exact-candidate reviews are pending; no G02 completion is claimed.
+Exact candidate 2cc9211 passed all 58 assigned native cases in 39.434 seconds:
+20 G02, 20 G01, 17 lineage and one post-edit case. Both nonauthor reviewers
+approved the bounded local scope after verifying the source, reports and five
+supplemental review probes. The isolated exact-parent carried-funding fault
+b00c03b was caught by seven of 20 unchanged cases, including all three permanent
+G02 cases; it is not integrated. Every prior test, capability and source member
+is preserved. Closing documentation leaves executed runtime/tests/contracts/pins
+unchanged. The full evidence and recovery history accompany the checkpoint.
 The separate G03 design records durable redemption and recovery constraints,
 without assigning or implementing that later goal.
