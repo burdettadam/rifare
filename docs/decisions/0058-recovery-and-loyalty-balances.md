@@ -40,6 +40,10 @@ permissions, worker grants, canonical goal/acceptance records or dependencies.
 ## Source contract fixed before tests
 
 LoyaltyFixtureSource(db, config, clock) uses a separate SQLite fixture database.
+Before any fixture DDL it rejects a database containing commerce_migrations.
+Service attachment also verifies distinct physical main-file identity, including
+device/inode aliases, in addition to distinct handles. account_id identifies the
+provider connection; customer_id is the separate authenticated customer binding.
 config has exactly tenant_id, store_id, account_id and provider; IDs use native
 id validation. provider is full or limited. The source has readonly db, tenant,
 store, account, provider, identity and contract. contract is
@@ -67,7 +71,9 @@ unit is points. Rules have a finite positive safe-integer expiry.
 
 Source snapshots are immutable versions in fixture_loyalty_snapshots with
 customer_id, source_revision, body and digest columns and a composite key.
-fixture_loyalty_identity stores its original source identity. Same-version
+fixture_loyalty_identity stores its original source identity, validated on every
+observe and publish. Publication comparison and insert share one transaction.
+Same-version
 identical publish is idempotent; conflicting or decreasing source revisions
 fail. Rules cannot decrease revision, or change content within a revision.
 observe(customer_id) returns null when absent, otherwise the highest snapshot
@@ -93,6 +99,9 @@ using an arbitrary source-shaped object is rejected.
 
 Every observed envelope is strictly revalidated by the service, including its
 digest, source identity, capabilities, units, coherent integer amounts and rules.
+Source/account/customer scope mismatches remain thrown errors outside the
+invalid-source fallback. The proof's actual role must be customer; native owner
+role compatibility must not substitute for that explicit check.
 No source yields needs_configuration/LOYALTY_SOURCE_NOT_CONFIGURED. No matching
 account snapshot yields unavailable/LOYALTY_ACCOUNT_NOT_FOUND. Invalid source
 content yields unverified/LOYALTY_SOURCE_INVALID. Incomplete yields
@@ -101,10 +110,14 @@ observation older than 300000 milliseconds or expired rule yields stale with
 LOYALTY_SOURCE_FUTURE, LOYALTY_SOURCE_EXPIRED, LOYALTY_SOURCE_STALE or
 LOYALTY_RULES_EXPIRED respectively. A valid current source yields
 available/LOYALTY_CURRENT_SOURCE. Expiry is inclusive (expires_at <= now).
+Freshness precedence is future observation, observation age, snapshot expiry,
+then rule expiry, after structural validity and completeness.
 
 Context includes schema_version, case_id, resource_id, ownership_generation,
 status, reason, snapshot, snapshot_digest, model_required=false,
-execution_authorized=false, production_qualified=false, context_digest. snapshot
+execution_authorized=false, production_qualified=false, context_digest. Context
+and quote digests bind canonical output plus tenant/store/current generation;
+they are never bearer grants. snapshot
 is the verified envelope without digest only when available; otherwise null.
 snapshot_digest is that envelope digest only when available; otherwise null.
 Source scope violations and current caller/proof failures throw, not unavailable
@@ -141,7 +154,9 @@ route, work grant or autonomous effect authority is added.
 
 Context and quotes are transient. No customer mappings, snapshot, points, rules,
 quote or transcript is persisted in commerce storage, logs, support documents,
-model memory or application caches. Existing private customer records retain
+model memory or application caches. Native session activity and authorization
+denial records retain their normal behavior and carry no loyalty snapshot.
+Existing private customer records retain
 their lifecycle owners. After erasure/uninstall/takeover/proof revocation,
 previously returned context cannot reopen access. Restored native databases keep
 their existing egress/customer-proof restrictions. The separate disposable
@@ -155,9 +170,11 @@ Freeze 20 independent native cases, including CASE-M19-G01-01/02/03, before
 runtime. Cover source freshness/integrity/units, provider differences, current
 proof/scope/ownership/permissions, exact quote binding/limits, dispatcher,
 erasure/uninstall/recovery, and absence of a persisted personal cache or effect.
-Select the new whole file plus existing support-conversations (7), growth-shopping
-(15) and privacy-lifecycle (9): planned 51 native cases, four files, one unchanged
-60-second deadline. Root runs once per coherent candidate; repeat only for a
+Following independent contract reviews, select the new whole file plus existing
+journey-readiness (20) and privacy-lifecycle (17): planned 57 native cases, three
+files within the unchanged four-file/60-case/60-second ceilings. Journey readiness
+directly exercises the existing SupportService dispatcher. Root runs once per
+coherent candidate; repeat only for a
 concrete failure or corrective review. A separate temporary freshness fault must
 be caught behaviorally by unchanged new tests and must never enter product.
 Independent reviewers inspect actual source/evidence; no duplicate test campaigns.
