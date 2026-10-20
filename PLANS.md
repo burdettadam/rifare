@@ -312,3 +312,20 @@ executed runtime/tests/contracts/pins identical. ADR-0057 will assign the three
 bounded local G05 continuity cases and honest G99 assessment. Formal acceptance,
 independent remote/connected-channel qualification, the two-profile full journey,
 target-host evidence and missing later source reconciliation remain open.
+
+## Current M18 local continuity and assessment assignment
+
+Prior ADR-0057 at 9a81445 assigns exactly three independent local continuity
+cases from reviewed G04 checkpoint 286d245. They cover shared text workflow and
+verified email/webchat records, human native exchange and later cart, reopened
+durable context with original uncertain-operation reconciliation, old caller
+fencing and manual opt-out handling with model access stopped. The existing
+native owners remain; no runtime change or new grant is expected.
+
+The independent author owns two new test files. Root owns the support matrix,
+additive registration/pins and the unchanged focused 52-case selection, followed
+by the predeclared isolated provider-thread dependency fault and two independent
+reviews. Execution and review outcomes are pending. [M18 qualification](docs/M18-QUALIFICATION.md)
+records the formal G05/G99 obligations and the blocked milestone assessment.
+Local demonstration is separate from real remote/client/channel, two-profile
+complete journey, target-host and full formal-gate evidence.

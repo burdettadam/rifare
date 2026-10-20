@@ -225,3 +225,47 @@ opt-out handling. No new runtime layer is expected. Real independent remote
 caller/channel qualification, two complete merchant journeys on qualified
 channels, target-host evidence, full applicable formal gates and missing later
 M15/M16/M23 source remain open. Main stays a33c4ad; no release or external effect.
+
+## G05 prior assignment and G99 assessment scope
+
+ADR-0057 commit 9a81445af435726bb651a3fad260df360862c8d6 precedes new tests
+and any implementation. It starts from G04 documentation closure
+286d24596c57d991e3b545992731d43229626549 and the reviewed product b8f9f4f.
+Root is the sole product executor/integration writer on recovery/M18-continuity.
+The independent test author /root/m18_memory_tests owns only the new
+journey-continuity.test.mts and journey-continuity-helpers.mts on the dedicated
+recovery/M18-continuity-tests worktree. Both existing nonauthor reviewers retain
+their independent roles and execute nothing.
+
+Exactly three local cases are assigned: M18-G05-LOCAL-TWO-CHANNEL-CONTINUITY,
+M18-G05-LOCAL-REOPEN-ORIGINAL-RECONCILIATION and
+M18-G05-LOCAL-NO-MODEL-OPTOUT-FINAL-STOP. They reuse resolution_case, its actual
+return/native-return/allocation fixture preconditions, shared support skills,
+current human effect authority, original native preview/approval/receipt and
+source ledgers. The source label fulfillment-one is retained on reopened source
+connections; the new instance discovers the original unknown reference from
+fresh authorized context. Native work grants keep their original action limits.
+
+No product change is expected. Any discovered runtime defect requires a separate
+prior corrective assignment with the independent assertions preserved. The
+focused selection is three continuity, 23 commerce-journey, 19 follow-up and
+seven conversation cases: 52 in four whole files under the unchanged 60-second
+runner deadline. The named isolated fault requires a private provider conversation
+identifier for ordinary journey context resume and must be caught behaviorally
+by unchanged local cases; it is never integrated.
+
+Root owns docs/M18-QUALIFICATION.md and the additive three registrations, one
+proposed-not-accepted capability, two protected test paths/oracle pins and four
+source members. Expected totals are 3,180 tests, 214 capabilities, 541 protected
+paths, 1,835 sources, 314 runtime pins, 628 oracle pins and inventory revision 31.
+All 3,177 old test objects, 213 capabilities, 539 protected paths, 1,831 sources,
+38 adapters, 15 privacy surfaces and 262 tables remain; all runtime and existing
+contract/test bytes remain exact. Actual execution, fault and reviews are pending.
+
+The support matrix records formal G05 as partially demonstrated locally and its
+three formal cases unperformed. G99's formal cases and exit criteria remain
+blocked by accepted dependency, two complete merchant/qualified-channel journeys,
+independent remote client, connected configuration, target-host/full-gate and
+actual pilot requirements. Missing later M15/M16/M23 source remains missing;
+M16/M23 are not invented direct G05 dependencies. No canonical goal snapshot or
+acceptance ledger changes, no protected-main advancement and no external effects.
