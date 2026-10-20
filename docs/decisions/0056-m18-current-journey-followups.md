@@ -299,3 +299,21 @@ guard pins or source-specific reasons. SupportService.context inherits the
 guarded delivery restriction. Strip the entire richer native result where
 necessary; removing only operation_id is insufficient after queue reuse.
 Unguarded legacy result shapes and permissions remain unchanged.
+
+The reserved event boundary also applies to direct delivery calls using an sj_
+counterpart of a retained sjf_ guard, and to queueHelpdesk: unsupported message
+routes cannot reuse a guarded event as an unguarded effect. A guarded native
+result is always restricted through legacy views when operation.read is absent.
+The delivery parent's existing restricted session is not widened; private native
+guard reads use the actual dispatch scope. Memory validation rechecks its own
+original source link as well as the selected follow-up link. All guard versions
+retain the same case/resource/subject/logical/request/job identity tuple.
+
+Exact scheduling replay follows current proof/scope/ownership validation but
+precedes new-work journey-version comparison. A caller after takeover uses
+inspect with the new generation; replay does not waive the generation binding.
+Native sender expiry (at most one day) and queued delivery expiry (at most one
+hour) remain unchanged despite the follow-up's possible seven-day horizon.
+Positive edit fixtures use actual released/cancelled methods. The native
+abandoned terminal reason is retained without fabricating an unavailable public
+abandonment transition or claiming that positive observation.
