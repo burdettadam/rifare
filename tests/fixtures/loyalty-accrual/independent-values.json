@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "qualification": "synthetic_only",
+  "oracle": "Literal expectations fixed before runtime. Three original units across exactly two original lines. Replacement retail and carried principal are not fresh purchases.",
+  "rules": {"revision":1,"currency":"USD","minor_per_point":"10","eligibility":"original_paid_total_v1","rounding":"floor_cumulative_per_original_unit_v1","retained_fees":"remain_eligible","store_credit":"unsupported"},
+  "paid_lines": [
+    {"id":"alpha","product_id":"shirt","variant_id":"shirt-small","quantity":2,"gross_minor":"2000","discount_minor":"0","tax_minor":"0","shipping_minor":"0","duties_minor":"0","resolved_units":[]},
+    {"id":"gamma","product_id":"shoe","variant_id":"shoe-small","quantity":1,"gross_minor":"1200","discount_minor":"200","tax_minor":"0","shipping_minor":"0","duties_minor":"0","resolved_units":[]}
+  ],
+  "initial_totals": {"earned_points":300,"reversal_points":0,"net_points":300},
+  "upgrade_totals": {"earned_points":320,"reversal_points":0,"net_points":320},
+  "alpha_pending_totals": {"earned_points":320,"reversal_points":30,"net_points":290},
+  "final_totals": {"earned_points":320,"reversal_points":130,"net_points":190},
+  "limited_totals": {"earned_points":320,"reversal_points":0,"net_points":320},
+  "final_units": [
+    {"original_line_id":"alpha","unit_index":1,"original_paid_minor":"1000","additional_paid_minor":"0","settled_refund_minor":"1000","earned_points":100,"reversal_points":100,"net_points":0},
+    {"original_line_id":"alpha","unit_index":2,"original_paid_minor":"1000","additional_paid_minor":"0","settled_refund_minor":"0","earned_points":100,"reversal_points":0,"net_points":100},
+    {"original_line_id":"gamma","unit_index":1,"original_paid_minor":"1000","additional_paid_minor":"200","settled_refund_minor":"300","earned_points":120,"reversal_points":30,"net_points":90}
+  ],
+  "journal_counts": {"financial_operations":3,"additional_captures":1,"imported_nodes":2},
+  "rounding": {
+    "minor_per_point":"300",
+    "initial_totals":{"earned_points":9,"reversal_points":0,"net_points":9},
+    "final_totals":{"earned_points":10,"reversal_points":4,"net_points":6},
+    "final_units":[
+      {"original_line_id":"alpha","unit_index":1,"original_paid_minor":"1000","additional_paid_minor":"0","settled_refund_minor":"1000","earned_points":3,"reversal_points":3,"net_points":0},
+      {"original_line_id":"alpha","unit_index":2,"original_paid_minor":"1000","additional_paid_minor":"0","settled_refund_minor":"0","earned_points":3,"reversal_points":0,"net_points":3},
+      {"original_line_id":"gamma","unit_index":1,"original_paid_minor":"1000","additional_paid_minor":"200","settled_refund_minor":"300","earned_points":4,"reversal_points":1,"net_points":3}
+    ]
+  },
+  "retained_fee": {"refund_minor":"900","totals":{"earned_points":300,"reversal_points":90,"net_points":210}},
+  "zero_paid": {"totals":{"earned_points":200,"reversal_points":0,"net_points":200},"physical_quantity":1,"retail_minor":"1500"}
+}
