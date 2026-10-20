@@ -421,3 +421,41 @@ Both nonauthor reviewers approved exact product 0ef6b5d for its bounded local
 scope, with no remaining material authority or regression blocker.
 G04 incentives, G05 lifecycle reporting and G99 local assessment remain future
 bounded assignments; connected-provider and production qualification remain open.
+
+## M19-G04/G05 local incentives and lifecycle checkpoint
+
+ADR-0061's next two bounded local goals are implemented at product 10b1f763,
+tree 36674997. G04 compares an exact native reward with an approved campaign
+offer for a committed cart, preserves the original G03 quote and validates it
+again at the existing final-send boundary. Selection creates no enrollment,
+redemption or messaging authority. G05 composes native balances, original-unit
+targets, observed redemption operations, financial evidence and campaign
+measurement. It keeps missing attributed award/reversal evidence visible and
+never infers loyalty reconciliation from a successful financial refund.
+
+The exact clean product passed all 38 focused native cases in 16.494 seconds:
+14 independently authored incentive/lifecycle cases and 24 unchanged marketing
+cases. A corrected run followed one actual old mutation-marker failure and two
+independent review findings. Runtime fixes preserve the old helper, bind final
+validation to the selected native recovery row, and reject every core-backed
+source before creating applicability storage. No previous assertion was weakened.
+
+One compact exact-parent fault b7766d1 ran 14 unchanged cases in 9.936 seconds;
+six behavioral failures detected omitted final validation after a balance change
+and false reconciliation after refund. The fault is isolated and never merged.
+All 29 static preservation/report checks passed. Prior tests, capabilities,
+adapter objects, permissions, worker grants, privacy surfaces and core schema
+remain intact. No broad suite or supplemental product probes were run.
+
+Both independent nonauthor reviewers approved exact product 10b1f763 for this
+bounded local scope, with no remaining material authority/privacy or regression
+blocker. The closing documentation leaves that product's runtime and evidence
+unchanged.
+
+G01-G05 now have bounded local synthetic implementations. The
+[M19 local assessment](docs/M19-LOCAL-ASSESSMENT.md) records the remaining
+qualification, and [the work record](work/records/M19-loyalty-milestone.md)
+preserves exact source, test-freeze and review identities. G99 has documentation
+assessment only; its behavioral/fault cases and formal M19 acceptance remain
+open. Attributable award/reversal observations are the next substantive loyalty
+development gap. Protected main and the acceptance ledger remain unchanged.

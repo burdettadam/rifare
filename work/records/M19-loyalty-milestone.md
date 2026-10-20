@@ -244,3 +244,159 @@ worktree. Both independent reviewers assessed this scope before implementation.
 Fourteen independent new cases plus the 24-case existing marketing file are the
 planned single coherent batch. No G04/G05 runtime or completion is claimed at
 this assignment checkpoint; tests must freeze before runtime changes.
+
+## G04/G05 local implementation and exact candidate
+
+The focused assignment is implemented at product
+10b1f763c3289dfc13f3244dadcdd98a51a5f49d, tree
+36674997c3c35239a3707bb46eda7108ed6d441e. Root was sole runtime writer and
+executor. The independent author used test/M19-loyalty-incentives-lifecycle;
+the two nonauthor reviewers inspected source and saved evidence without product
+or test execution. All execution evidence is under evidence/M19-G04-G05/.
+
+G04 adds a customer-free applicability declaration in the physically separate
+native marketing source, with stable shopping/redemption identities and explicit
+benefit/offer/variant pairs. Quotation requires a current human support owner,
+customer proof, committed native cart, scheduled approved offer, consent and
+current G03 capacity. It creates only the original native quote, retaining its
+creation time, proof and maximum ten-second lifetime. Point cost and discount
+terms remain separate quantities. Selection does not enroll, reserve, redeem,
+assign an experiment or send a message.
+
+Binding attaches the public comparison to one native recovery before any message
+operation. Its identity is immutable; validation neither replaces the quote nor
+renews proof. Final-send validation is mandatory in the existing CartRecovery
+and SupportDelivery path. The selected recovery row and current case must match
+the body's ID, cart, campaign, resource and customer before the canonical native
+owner validates it. Marked recoveries require a human caller; ordinary unmarked
+campaign behavior and its digest remain unchanged.
+
+G05 composes the same native G01/G02/G03 and optional measurement owners into a
+transient lifecycle report. Account totals, original-order/unit targets, exact
+original-ID redemptions, financial evidence, native campaign metrics and queue
+truncation flags retain their separate meanings. A lost-acknowledgment source
+booking is counted once without claiming that the unknown core state is resolved.
+Reports never retry or reconcile an operation. Missing attributed award/reversal
+evidence keeps status needs_reconciliation, reconciled=false and unproved
+valuation fields null, including after a successful financial refund.
+
+Current reports require human ownership, proof, analytics and original-resource
+access. Retained reports require already-minimized native operations plus current
+analytics/privacy/resource permissions, and do not consult customer or provider
+state. The existing native 1000-record and 131072-byte canonical-output bounds
+reject oversized reports. No new personal core table or report cache was added.
+SupportService exposes five optional native routes without implicit permissions.
+
+## G04/G05 independent freezes and concrete corrections
+
+The prior assignment is 34d73c2b9d2a05e8bd9247394aa4b6258f976549, with
+pre-freeze clarification fe70c14f688abee5ce37ce8d6e40d6eb1b83a407. Independent
+author freeze 101a35b368f6103d56bc6d5ab1c95ed2c7014a6e was integrated unchanged
+as 8e0740c0f4f6258b8013249630ac4037e8ae8548 before runtime changes. It owns
+14 executable cases, one helper and one literal oracle. Independent strengthening
+a85cd4ac5b7c07c869cc716e887c4f773993b794, integrated as c7b7368, added exactly
+seven lines proving that a valid explicit pair still rejects an unchanged native
+cart outside its variant list. It removed no expectations.
+
+Initial product a2dad1d30b0a3ce5f24821b3eef7bddba643e90d ran 38 selected cases
+in 17.192 seconds. All 14 new cases passed; the old marketing file passed 23 of
+24 and failed CASE-M09-G08-03 with FAULT_MARKER_NOT_UNIQUE. The unchanged old
+mutation helper relies on an exact eligible/return adjacency. Product structure
+was corrected to retain that marker while placing mandatory validation in the
+returned digest computation. The runner correctly credited only the wholly
+passing new file's 14 validated cases; the failed attempt is retained.
+
+Independent review identified two material defects before the corrected run:
+body-ID redirection could validate a different otherwise-valid recovery, and
+the one-sided fixture check could create applicability storage in a core-backed
+marketing database. The runtime correction binds all selected-row scalars and
+uses canonical row.id; bidirectional separation/fixture preflight checks every
+source before storage creation.
+
+Independent author correction fb76d0e97462860254a80135584d68a9499d93d1 was
+integrated unchanged as 812c46d359f782124f88a32a8381b08be2176257. It strengthens
+G04-05 with two real valid recoveries and a positive control, then redirects the
+selected body ID and removes its binding; it requires rejection and unchanged
+effects. G05-08 uses a real core-backed MarketingFixtureSource and requires
+constructor rejection before the new table exists. All 14 IDs and previous
+expectations remain. Final test SHA-256 is
+54fead376c5750f86070695f2a55521b0015489298950639258199ed4796fd85.
+The helper and literal oracle remain byte-identical to the original freeze.
+Both original and strengthened versions remain in Git; this is not represented
+as an unchanged original three-file freeze.
+
+## G04/G05 actual native execution and single fault campaign
+
+Exact clean product 10b1f763 passed all 38 selected native cases in 16.494 seconds:
+14 new cases in 10.451 seconds and 24 unchanged marketing cases in 5.935 seconds.
+Raw XML has exactly 38 unique IDs, with no errors, skips or timeouts. The report
+binds all 1878 source hashes to that product. The ordinary development budget
+remains 60 cases, four files and 60 seconds; the actual selection used two files.
+There was no broad suite, supplemental product probe or additional product
+restore campaign for this increment. Worker-negative cases demonstrate the
+existing grant boundary, whose workers lack the required support read/send
+grants; they do not separately prove an otherwise-authorized worker human fence.
+
+Fault b7766d1e7cf3b58e200077f700df4d67246ffd7e, tree
+8c5410315b89831306ae279c1dcf2c3bd5dc7df9, has exact product 10b1f763 as its
+immediate parent. The separate fault/M19-incentives-lifecycle worktree changes
+only two new-runtime predicates and their required pins. The new test, helper
+and oracle are unchanged, and all 1878 fault source hashes match its report.
+Its 14-case run took 9.936 seconds: eight passes and six ERR_ASSERTION behavioral
+failures, with no setup errors, skips or timeouts. The runner correctly credits
+zero validated cases for the failing file.
+
+G04-03 detects the deliberately omitted final validation after a native 400-point
+redemption changes the balance. This first failed assertion stops the case;
+later purchase/consent fault subscenarios receive no separate credit. G05-01,
+G05-02, G05-03, G05-05 and G05-07 detect a qualified financial refund being
+falsely reported as reconciled while attributable loyalty evidence is absent.
+The selected G04 fault does not substitute for the formal goal's separately
+named enrollment/redemption-on-selection fault. The fault patch and raw results
+are retained, and its ref remains outside product ancestry.
+
+## G04/G05 preservation and continuation
+
+Independent authority/privacy reviewer /root/checkpoint_audit and independent
+regression reviewer /root/loyalty_regression both approved exact product
+10b1f763c3289dfc13f3244dadcdd98a51a5f49d and tree
+36674997c3c35239a3707bb46eda7108ed6d441e for ADR-0061's bounded local scope.
+No material blocker remains in their assigned reviews. They independently
+inspected source/history and saved native/fault/preservation evidence without
+edits or product/test execution. The decisions are retained in
+evidence/M19-G04-G05/authority-review.md and regression-review.md, with the
+exact decision in decision.json. These decisions do not accept canonical G04,
+G05, M19 or G99 and require no additional product execution for this local scope.
+
+All 29 static preservation/report checks passed against G03 closure e9421d9.
+The 3240 prior test records, 217 capabilities, 564 protected paths, 1867 source
+members, 41 adapter objects and old native-catalog cases are retained. Final
+counts are 3254 registered cases, 219 capabilities, 572 protected paths, 1878
+source members, 328 runtime pins, 659 oracle pins, 42 adapters, 207 operations,
+67 source declarations and 278 native-catalog references. The native catalog
+validator passed with 47 direct fixtures and external/production qualification
+false. All 15 privacy surface IDs, the 262-table core schema, migrations,
+permissions, worker grants, protected main and acceptance ledger are unchanged.
+
+The closing changes are limited to PLANS.md, the incentive/lifecycle guide,
+the local assessment and this work record. Runtime, tests, contracts, metadata
+and pins remain those of the exact reviewed/tested product. The self-contained
+checkpoint preserves complete native Git history, all refs, cumulative evidence,
+earlier failures, independent freezes and a readable source snapshot. Ordinary
+bundle restoration and file-hash checks establish recoverability without another
+product test run. Previous checkpoints remain available.
+
+G01-G05 have bounded local synthetic implementations; G99 has a documentation
+assessment only. Formal M19 remains blocked by accepted prerequisite and full
+qualification gaps. No G99 behavioral case, G99 targeted fault, full current
+regression, merchant-owned provider/messaging qualification or production release
+is inferred. Missing later M15/M16/M23 source history remains unreconstructed.
+
+The next substantive loyalty work is an attributable award/reversal source
+protocol tied to original orders and units, with supported unknown/duplicate
+handling and remaining-balance reconciliation. Until then, lifecycle missing-
+evidence exceptions and null valuation stay explicit. Other limits remain:
+human-only bound sends with immutable short-lived quotes; G03 unexplained
+post-anchor balances blocking new spending; no administrative resolution for
+revoked unsent holds minimized without a source binding; native bounded retrieval
+and output limits; and separate provider, caller and old archive retention.

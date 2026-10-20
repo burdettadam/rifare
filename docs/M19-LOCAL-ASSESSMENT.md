@@ -9,10 +9,19 @@ fixture for a merchant-owned provider. The four-entry M00 acceptance ledger and
 protected main remain unchanged. Missing later M15/M16/M23 source history also
 remains a continuity gap, rather than being reconstructed from chat claims.
 
-G04/G05 are currently the assigned next local increment from G03 closure
-e9421d990489fdcdce5fbe080a3a1733669b797e. Their completion and exact evidence will
-be recorded only after implementation, native execution and both independent
-reviews. No G99 executable case or targeted fault is claimed by this document.
+G04/G05 are implemented at exact product
+10b1f763c3289dfc13f3244dadcdd98a51a5f49d, tree
+36674997c3c35239a3707bb46eda7108ed6d441e, from G03 closure
+e9421d990489fdcdce5fbe080a3a1733669b797e. The focused native batch passed all
+38 cases in 16.494 seconds. Exact reports, independent review decisions,
+preservation checks and the isolated fault are retained under
+evidence/M19-G04-G05/. No G99 executable case or targeted fault is claimed by
+this document.
+
+Both independent nonauthor reviewers approved that exact product for ADR-0061's
+bounded local scope. No material authority/privacy or regression blocker remains
+in their assigned reviews. This is a local development decision, not formal
+acceptance of any canonical M19 goal.
 
 ## Supported local scope and remaining obligations
 
@@ -21,14 +30,16 @@ reviews. No G99 executable case or targeted fault is claimed by this document.
 | G01 balance and rules | Reviewed source a417689; 57 focused native cases passed. Strict current source/account/customer context and nonauthorizing point quotations; old-balance fault detected. | Merchant-owned provider behavior, connected observations, supported production configurations and formal dependencies. |
 | G02 accrual and reversal | Reviewed source 2cc9211; 58 focused cases passed. Original-unit targets use historical earning rules, settled financial evidence and funded exchange lineage; replacement re-accrual fault detected. | Attributed provider award/reversal execution; specified multi-unit/store-credit behavior; bounded large-volume retrieval and provider qualification. |
 | G03 redemption | Reviewed source 0ef6b5d; 58 focused cases plus nine separately identified probes passed. Distinct human approval, original-ID source booking, unknown holds, financial independence and retained privacy/restore evidence; expiry-forgets-unknown fault detected. | Merchant-owned provider semantics, real concurrency/target-host qualification, complete formal goal acceptance and administrative resolution of no-source revoked reserved holds. |
-| G04 incentives | Assigned exact native offer/cart/applicability comparison, immutable original quote, mandatory existing-send validation and no selection effects. | Exact candidate evidence pending; goal-named selection-causes-enrollment/redemption fault not exercised by the assigned stale-offer fault; qualified outreach, enrollment and provider terms. |
-| G05 lifecycle | Assigned transient composition of account totals, original-order targets, observed redemptions, original financial IDs, explicit evidence gaps and native measurement. | Exact candidate evidence pending; no attributed award/reversal journal or monetary reward valuation; qualified complete purchase/redemption/return reconciliation. |
+| G04 incentives | Implemented at 10b1f763; six new cases plus the shared unchanged marketing regression passed. Exact native offer/cart/applicability comparison, immutable original quote, mandatory existing-send validation and no selection effects. The isolated stale-balance final-send fault was detected. | Goal-named selection-causes-enrollment/redemption fault remains unperformed; qualified outreach, enrollment and provider terms remain open. |
+| G05 lifecycle | Implemented at 10b1f763; eight new cases plus the shared unchanged marketing regression passed. Transient account totals, original-order targets, observed redemptions, original financial IDs, explicit evidence gaps and native measurement. Refund-success false reconciliation was detected by five cases in the compact fault run. | No attributed award/reversal journal or monetary reward valuation; qualified complete purchase/redemption/return reconciliation remains open. |
 | G99 assessment | This document preserves local scope and open obligations. | All three original G99 behavioral cases, its unsupported-qualification fault, required full applicable suite, actual external/target-host evidence and trusted formal decision remain unperformed. |
 
-The G01/G02/G03 counts refer to separate exact historical candidates, not one
-cumulative run. Their passing selections cannot be added together to claim a
-complete current suite. Historical failures, author freezes, corrective commits,
-fault branches and nonauthor decisions remain in the checkpoint evidence.
+The G01/G02/G03 counts refer to separate exact historical candidates. G04 and
+G05 share one 38-case result: six incentive cases, eight lifecycle cases and
+24 marketing cases. These selections cannot be added together to claim a
+complete current suite. Historical failures, author freezes and their independent
+strengthenings, corrective commits, fault branches and nonauthor decisions
+remain in the checkpoint evidence.
 
 ## What the lifecycle can and cannot establish
 
@@ -93,15 +104,34 @@ volume and physical deployment evidence beyond these disposable sources.
 ## Verification policy for this increment
 
 The owner's instruction is to keep test execution minimal in favor of progress.
-ADR-0061 therefore selects 14 independent new cases plus the 24 unchanged native
-marketing cases in one coherent two-file batch. Additional runs require an actual
-failure or material changed candidate. One compact isolated fault campaign tests
-mandatory final-send validation and refund-success false reconciliation with
-unchanged independent expectations. No broad suite or repeated restore campaign
-follows merely from writing this assessment.
+ADR-0061 selected 14 independent new cases plus the 24 unchanged native marketing
+cases in one coherent two-file batch. One corrected run followed a concrete old
+mutation-marker failure and two material review findings. The final batch passed
+38/38. No old test, helper, oracle or expected result was weakened.
+
+The single compact isolated fault ran 14 unchanged cases, with eight passes and
+six behavioral assertion failures in 9.936 seconds. It demonstrates the
+stale-balance final-send guard and refund-success false reconciliation. The G04
+balance assertion fails before later purchase/consent fault subscenarios, which
+receive no separate execution credit. There was no broad suite, supplemental
+product probe or repeated product restore campaign for this increment.
 
 The source/test/capability inventory is additive. Existing assertions, native
 IDs, protected paths, catalog entries, schema, privacy surface IDs, permissions
-and worker grants remain protected. Exact candidate reports and the two
-nonauthor reviews determine bounded local closure, while all formal claims above
-stay blocked until their own evidence and decision exist.
+and worker grants remain protected. All 29 static preservation/report checks
+passed, and the native catalog validator retained external and production
+qualification as false. Exact candidate reports and the two nonauthor reviews
+determine bounded local closure, while all formal claims above stay blocked
+until their own evidence and decision exist.
+
+## Next substantive development
+
+The next local loyalty implementation should define attributable provider award
+and reversal observations tied to original orders and units, including duplicate
+and unknown outcomes. That protocol would let lifecycle reporting distinguish
+targets from actual issued/reversed points and reconcile supported remaining
+balances. Until such evidence exists, the current missing-evidence exceptions
+must remain visible. The existing no-source retained-hold resolution and bounded
+large-volume retrieval also remain concrete follow-up work. Formal dependency,
+connected-provider and G99 qualification must retain their separate evidence
+and acceptance decisions.

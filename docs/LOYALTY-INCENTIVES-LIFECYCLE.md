@@ -2,10 +2,14 @@
 
 ## Scope and state
 
-ADR-0061 assigns M19-G04 and M19-G05 as one bounded local synthetic increment.
-The preceding G01 balance/rule, G02 original-unit proposal and G03 durable
-redemption owners remain canonical. This document describes the assigned
-protocol; the work record and exact-candidate evidence record completion.
+ADR-0061's M19-G04 and M19-G05 bounded local synthetic increment is implemented
+at product 10b1f763c3289dfc13f3244dadcdd98a51a5f49d, tree
+36674997c3c35239a3707bb46eda7108ed6d441e. The preceding G01 balance/rule, G02
+original-unit proposal and G03 durable redemption owners remain canonical.
+The work record and exact-candidate evidence record the execution and review.
+Both independent nonauthor reviewers approved this exact product for the
+assigned local scope, with no remaining material authority/privacy or regression
+blocker.
 Formal M19, connected/provider qualification and production acceptance remain open.
 
 ## Incentive comparison
@@ -14,7 +18,9 @@ Formal M19, connected/provider qualification and production acceptance remain op
 redemption source handles. Its customer-free applicability declaration lives in
 the separate marketing database. All three source databases are physically
 separate from each other and the core, and durable source identities are checked
-again whenever configuration is read or changed. A declaration authorizes an
+again whenever configuration is read or changed. Every source receives the
+fixture-only preflight before the wrapper can create configuration storage.
+A declaration authorizes an
 explicit benefit/offer pair and its eligible variant list. Every cart item must
 appear in that pair's list; unrelated allowlists cannot authorize combinations.
 
@@ -54,7 +60,10 @@ membership. Ordinary campaign output, permissions and source digests remain
 unchanged. `CartRecovery.final` requires the exact attached native incentive owner
 whenever a loyalty field is present, including a malformed field. The owner
 revalidates the persisted comparison before campaign rendering returns its
-source digest. Missing configuration fails closed.
+source digest. Validation is anchored to the selected native recovery row and
+its exact case, cart, campaign, resource and customer bindings; changing a body
+ID cannot redirect validation to a different valid recovery. Missing
+configuration fails closed.
 
 The unchanged `SupportDelivery` final boundary compares the queued source digest
 and checks current consent, contact, sender, ownership and controls before the
@@ -134,10 +143,24 @@ owners. Quote/report routes use the existing `{customer_token,input}` wrapper;
 bind, validate and retained routes pass their strict native inputs. No route
 configures a source or grants permissions implicitly.
 
-The planned focused execution is the 14 new independent cases plus the 24
-unchanged marketing cases in one native batch. A single isolated fault run uses
-the unchanged new cases to challenge mandatory final-send validation and false
-reconciliation after refund. The G04 fault is specifically a stale-offer guard
-fault; it does not substitute for the formal goal's enrollment/redemption-on-
-selection fault. Refer to `M19-LOCAL-ASSESSMENT.md` and the work record for exact
-observations, immutable candidates, independent reviews and remaining gaps.
+The exact clean product passed all 38 selected native cases in 16.494 seconds:
+14 new independent cases and all 24 unchanged marketing cases. One earlier
+candidate failed an old mutation helper's exact source marker. The product was
+restructured to preserve that marker and its assertion; the old test was not
+changed. Independent review also produced the selected-row binding and
+pre-write source-preflight corrections, with strengthened independent cases.
+
+One isolated fault on immediate parent 10b1f763 ran the same 14 new cases in
+9.936 seconds: eight passed and six failed behaviorally. G04-03 caught a send
+after a real native redemption changed the balance. Five G05 cases caught
+financial refund success being falsely labeled reconciled. The failing file
+correctly receives zero validated cases from the runner. The fault remains
+outside product ancestry; its raw report, patch and exact source hashes are
+retained under evidence/M19-G04-G05/.
+
+The G04 fault specifically demonstrates the stale-balance final-send guard.
+Its first failing assertion prevents separate credit for later purchase/consent
+subscenarios in that fault run. It does not substitute for the formal goal's
+enrollment/redemption-on-selection fault. No broader regression or G99
+qualification run was performed. Refer to `M19-LOCAL-ASSESSMENT.md` and the
+work record for independent review decisions and remaining obligations.
