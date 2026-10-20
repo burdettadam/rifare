@@ -70,13 +70,25 @@ Canonical JSON remains bounded to 131072 bytes; the service never silently retur
 an incomplete prefix. The public response omits customer/contact data, proof and
 session hashes, copied source envelopes and credential secrets.
 
+The local lifecycle checks demonstrate fresh-access denial after erasure,
+uninstall and quarantine. They do not attest physical deletion of independent
+fixture files, caller copies or external provider storage; the quarantine check
+is not a complete restore qualification.
+
 ## Validation and continuation
 
-The assigned focused batch contains 12 independently authored drop-off cases and
-21 unchanged qualified-destination cases. The single isolated fault caches the
-destination view and offers a method after that destination's accepted category
-is revoked, with other evidence kept valid. Actual candidate results and review
-identities belong in the [M20 work record](../work/records/M20-dropoff-milestone.md).
+Exact clean product 7e695fc05a51f6b3e7fb5a460b9c864f3be1206e passed all 12
+independently authored drop-off cases and 21 unchanged qualified-destination cases
+on the first run, in 16.670 seconds. A single isolated fault cached the native
+destination view and continued offering a method after accepted-category
+revocation. The unchanged 12-case file detected that fault with five behavioral
+failures in 7.465 seconds. No broad suite or supplemental product probes ran.
+
+Both independent nonauthor reviewers approved the exact product for its bounded
+local scope. All 30 static preservation/report checks passed. Exact source,
+independent freeze, review identities and fault limits are retained in the
+[M20 work record](../work/records/M20-dropoff-milestone.md). The faulty branch is
+not integrated; the passing product and its frozen tests remain unchanged.
 
 G02 needs a separate assignment for durable original credential identity, approval
 and final issuance checks, secret handling, unknown outcomes, revocation,

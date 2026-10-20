@@ -50,6 +50,85 @@ composed adapter operation. The existing return_destination_source adapter retai
 its four operation objects while its changed source hash/version pins are refreshed.
 The 15 privacy surface IDs and 262-table core schema remain unchanged.
 
-Native execution and exact-product reviews are pending at this source checkpoint.
-No product pass, behavioral fault result, formal acceptance or external
-qualification is claimed by the static work above.
+## Exact product and focused evidence
+
+The reviewed product is 7e695fc05a51f6b3e7fb5a460b9c864f3be1206e, tree
+8b7647da481322374fd2931d6d8f8cb592904977. Its clean first native run passed all
+33 assigned cases in 16.670 seconds: 12 new drop-off cases and the unchanged
+21-case destination file, with no failures, errors, skips or timeouts. The default
+60-case/four-file/60-second budget and NODE_OPTIONS=--test-isolation=none remain
+unchanged. All 1,887 report source hashes match the exact candidate and inventory.
+No broad suite, supplemental product probes or product restore campaign ran.
+
+The one assigned exact-parent fault is
+d4b7781889f61e2952c9ebd419850a14699b5cfb, tree
+af45c7d35f1beeea8c98fadca8afd2daea08653c. It changes only DropoffChoices to cache
+the first destination view across quotations and rereads. Its single unchanged
+12-case run took 7.465 seconds: seven cases passed and five failed behaviorally
+(03, 05, 07, 08, 10), without errors, skips or timeouts. CASE03 directly retained
+main-site/main-destination/qr-bag after current native category revocation, while
+the literal oracle allowed only the backup. The native runner credits zero
+validated cases for this failed file. All 1,887 actual fault source hashes and
+the unchanged independent artifacts were checked. The fault remains isolated
+outside product ancestry and is never merged.
+
+Fault assertions after each first failure are not separately credited. CASE05
+stops at the first account alteration and CASE07 at the first region exclusion.
+CASE08 detects a cached quote bypassing the current destination bound. CASE10
+detects bypass of the native reread; its cached view does not reach the later
+mutation hooks. Product pins intentionally remain unchanged on the broken branch;
+its raw source manifest identifies the code actually executed.
+
+All 30 static preservation/report checks passed. All 3,254 prior test objects,
+219 capabilities, 572 protected paths and 1,878 source members remain intact.
+Current totals are 3,266 tests, 220 capabilities, 578 protected paths and 1,887
+source members. All 330 runtime pins and 665 oracle pins match. The catalog has
+43 adapters, 208 operations, 68 source declarations and 281 native case
+declarations; its 47 direct fixtures are unchanged. All old operation objects
+remain intact, including the four destination operations; only that adapter's
+required source hash/version pins change. Core schema, privacy surface IDs,
+worker grants, permissions, protected main and the acceptance ledger are unchanged.
+
+## Independent review decision
+
+Both nonauthor reviewers approved the exact product for bounded local synthetic
+development, with no remaining material blocker:
+
+| Reviewer | Scope | Decision |
+|---|---|---|
+| /root/checkpoint_audit | Authority, privacy, identity/isolation and effect boundaries | Approved bounded local scope |
+| /root/loyalty_regression | Native composition, compatibility, preservation and actual evidence | Approved bounded local scope |
+
+Neither reviewer edited or executed product code, tests or probes. Each inspected
+the exact product, original independent freeze and strengthening, passing raw
+reports, isolated fault patch/ancestry and behavioral failures. The authority
+reviewer's raw-parent-constructor concern referenced a stale draft; both immutable
+commits already select the exact three parents, and the concern was retracted.
+No runtime correction or product rerun was needed. Both reviewers explicitly
+requested no further product execution for this bounded decision.
+
+Retained actual evidence is under evidence/M20-G01: native-candidate-1,
+cached-destination-fault, independent-freeze.json, assignment-reviews.json,
+preservation.json, fault-summary.json, fault.patch, authority-review.md,
+regression-review.md and decision.json. Review records are integration-owner
+transcriptions of actual independent agent messages, not external authenticated
+approval identities. Closing changes are documentation only and preserve the
+reviewed runtime, tests, contracts, metadata and pins.
+
+## Continuation and open qualification
+
+M20-G01 has a bounded local synthetic implementation; canonical goal and milestone
+acceptance remain open. M07/M08/M10 accepted prerequisites, connected partner,
+physical handoff, actual accessibility/device, target-host, financial-trigger and
+full milestone evidence remain outstanding. Access denial after local erasure,
+uninstall or quarantine does not attest physical deletion of fixture files,
+caller copies or provider storage. No physical restore qualification is claimed.
+
+The next increment is G02 credential issuance and lifecycle under its separate
+prior protocol: durable original operation identity, independent final approval
+and revalidation, secret payload handling, original-ID unknown-outcome lookup,
+authoritative revocation/replacement, privacy and restore quarantine. A G01 quote
+grants no issuance authority. G03/G04 must compose native custody and warehouse
+owners while retaining distinct handoff, movement, receipt, inspection, stock and
+settlement stages. M19's attributable provider award/reversal and other open
+qualification obligations remain independent of this work.

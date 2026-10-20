@@ -470,9 +470,17 @@ including aggregate capacity, packaging, availability and separate fee estimates
 
 The independent 12-case specification froze before runtime edits; a subsequent
 seven-line independent strengthening covers the method's own item/category
-restrictions without changing the case count or old tests. The implementation
-candidate is ready for the assigned 33-case focused batch and exact-product
-reviews. No broad suite or credential/physical/financial execution is assigned.
+restrictions without changing the case count or old tests. Exact clean product
+7e695fc05a51f6b3e7fb5a460b9c864f3be1206e passed all 33 assigned cases on its first
+run in 16.670 seconds: 12 new and 21 unchanged native destination cases.
+
+One isolated exact-parent cache fault d4b7781 ran the unchanged 12-case file in
+7.465 seconds. Five behavioral failures detected stale native destination data;
+CASE03 directly retained the main choice after its accepted category was revoked.
+The broken branch remains outside product ancestry. Both independent nonauthor
+reviewers approved the exact product for bounded local scope, and all 30 static
+preservation/report checks passed. No broad suite or supplemental product probes
+were run. Closing documentation leaves the executed runtime and tests unchanged.
 
 The [drop-off guide](docs/DROPOFF-ELIGIBILITY.md) describes the bounded contract;
 the [M20 work record](work/records/M20-dropoff-milestone.md) preserves exact source
