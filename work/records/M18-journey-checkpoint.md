@@ -262,10 +262,20 @@ All 3,177 old test objects, 213 capabilities, 539 protected paths, 1,831 sources
 38 adapters, 15 privacy surfaces and 262 tables remain; all runtime and existing
 contract/test bytes remain exact. Actual execution, fault and reviews are pending.
 
-The support matrix records formal G05 as partially demonstrated locally and its
-three formal cases unperformed. G99's formal cases and exit criteria remain
+The support matrix records the G05 local continuity sequence as planned until
+actual execution and its three formal cases as unperformed. G99's formal cases and exit criteria remain
 blocked by accepted dependency, two complete merchant/qualified-channel journeys,
 independent remote client, connected configuration, target-host/full-gate and
 actual pilot requirements. Missing later M15/M16/M23 source remains missing;
 M16/M23 are not invented direct G05 dependencies. No canonical goal snapshot or
 acceptance ledger changes, no protected-main advancement and no external effects.
+
+### G05 contract-review documentation correction
+
+The independent regression reviewer identified premature present-tense G05
+assessment wording in the initial qualification draft at 917bcf4. Before test
+freeze or execution, root corrected the document and this prior-scope statement
+to mark all three G05 local cases and their fault as pending. Reviewed G01-G04
+observations remain separate. Actual observations will replace those pending
+labels only after retained execution and independent review; no assertion,
+fixture, native source, gate or permission changes are involved.

@@ -8,6 +8,11 @@ maintainer disposition are recorded in
 [the journey checkpoint](../work/records/M18-journey-checkpoint.md); the original
 planning packets and accepted-goal ledger remain unchanged.
 
+**G05 draft status at this source checkpoint:** execution of the three newly
+assigned local continuity cases and their isolated fault is pending. Their
+sequence and assertions below describe planned coverage. The existing reviewed
+G01-G04 observations remain separate; no new G05 demonstration is claimed yet.
+
 This support matrix separates the local diagnostic boundary from the complete
 M18-G05 caller qualification and M18-G99 exit criteria. A fixture source, native
 receipt and lookup observation establish their stated local stage. They do not
@@ -132,11 +137,11 @@ runtime is introduced solely for the G05 local demonstration.
 
 | Formal requirement | Current assessment | Evidence still required |
 | --- | --- | --- |
-| G05 qualified manual → built-in agent → independent remote client → human continuation | Partially demonstrated locally; formal CASE-M18-G05-01 remains unperformed | Actual qualified callers, independent remote implementation and declared configuration evidence |
-| G05 old caller loses authority and late output cannot replay an effect | Local native ownership/grant/generation assertions; formal CASE-M18-G05-02 remains unperformed | Real qualified handover, client revocation and late-response observations |
-| G05 no-model operation and absence of a private-provider-thread dependency | Local manual/reopened-context cases and assigned targeted fault; formal CASE-M18-G05-03 remains unperformed | The independent client's real continuation and required release evidence |
+| G05 qualified manual → built-in agent → independent remote client → human continuation | Planned local demonstration; execution pending and formal CASE-M18-G05-01 unperformed | Actual qualified callers, independent remote implementation and declared configuration evidence |
+| G05 old caller loses authority and late output cannot replay an effect | Planned local ownership/grant/generation assertions; execution pending and formal CASE-M18-G05-02 unperformed | Real qualified handover, client revocation and late-response observations |
+| G05 no-model operation and absence of a private-provider-thread dependency | Assigned local manual/reopened-context cases and targeted fault are pending; formal CASE-M18-G05-03 unperformed | The independent client's real continuation and required release evidence |
 | G99 two merchant profiles complete the text journey across two qualified channels | Not established | Two complete merchant/profile journeys with actual channel and reused-action qualification |
-| G99 privacy, correction, deletion, revocation, opt-out, stale source, handover and unknown identity | Bounded local coverage is retained | Complete declared connected/target-host configuration evidence and applicable integration checks |
+| G99 privacy, correction, deletion, revocation, opt-out, stale source, handover and unknown identity | Reviewed local G01-G04 coverage is retained; G05 continuity is pending | Complete declared connected/target-host configuration evidence and applicable integration checks |
 | G99 support matrix matches actual observations | This matrix preserves local and missing evidence separately | Trusted formal assessment after all conjunctive requirements and independent reviews |
 | G99 assessment cases CASE-M18-G99-01/02/03 | Formal cases remain unperformed | Real required evidence, exact assessed candidate, applicable full gate and rejection of unsupported qualification claims |
 
