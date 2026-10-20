@@ -23,6 +23,7 @@
     "packages/adapters/claims-source-guards.mts",
     "packages/adapters/delivery-trial-source-guards.mts",
     "packages/adapters/demand-fixture-source.mts",
+    "packages/adapters/dropoff-fixture-source.mts",
     "packages/adapters/exchange-lineage-fixture-source.mts",
     "packages/adapters/exchange-lineage-source-guards.mts",
     "packages/adapters/exchange-money-fixture-source.mts",
@@ -2836,10 +2837,10 @@
       "source_files": [
         {
           "path": "packages/adapters/return-destination-fixture-source.mts",
-          "sha256": "b1207f123a954b32262f4dc989db32563bcacf4f18bed4def8510f7043302cd1"
+          "sha256": "ef0aace5d1163b3736f01e5746c42e190ca2ea4a041266a6c126f923aed11b38"
         }
       ],
-      "version": "source-sha256:b1207f123a954b32262f4dc989db32563bcacf4f18bed4def8510f7043302cd1",
+      "version": "source-sha256:ef0aace5d1163b3736f01e5746c42e190ca2ea4a041266a6c126f923aed11b38",
       "api_version": "local-qualified-destination-source",
       "external_version": null,
       "external_account": null,
@@ -5105,6 +5106,52 @@
           "direct_fixtures": []
         }
       ]
+    },
+    {
+      "id": "dropoff_fixture_source",
+      "kind": "diagnostic",
+      "source_files": [
+        {
+          "path": "packages/adapters/dropoff-fixture-source.mts",
+          "sha256": "7b8ffe28745763989ec3b8c028ae0901f58b6a03a71eb2b23a4f8be40acf4872"
+        }
+      ],
+      "version": "source-sha256:7b8ffe28745763989ec3b8c028ae0901f58b6a03a71eb2b23a4f8be40acf4872",
+      "api_version": "rifare-dropoff-fixture-v1",
+      "external_version": null,
+      "external_account": null,
+      "external_scopes_attested": false,
+      "source_oracle": "Explicit short-lived customer-free method/site/destination combinations in the native partner fixture database. Native per-item and complete-return eligibility, current independently reviewed partner readiness and availability determine a transient discovery view. No credential, capacity reservation, custody, stock, financial or live-provider effect.",
+      "operations": [
+        {
+          "id": "dropoff.choices.quote",
+          "semantics": "composed",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M20-G01-01",
+              "name": "CASE-M20-G01-01",
+              "path": "tests/development/dropoff-eligibility.test.mts",
+              "sha256": "ed867364d38004d5ec31bbd2ef78861f17293cb588914b7d9567aedbc8c88b17"
+            },
+            {
+              "id": "CASE-M20-G01-02",
+              "name": "CASE-M20-G01-02",
+              "path": "tests/development/dropoff-eligibility.test.mts",
+              "sha256": "ed867364d38004d5ec31bbd2ef78861f17293cb588914b7d9567aedbc8c88b17"
+            },
+            {
+              "id": "CASE-M20-G01-03",
+              "name": "CASE-M20-G01-03",
+              "path": "tests/development/dropoff-eligibility.test.mts",
+              "sha256": "ed867364d38004d5ec31bbd2ef78861f17293cb588914b7d9567aedbc8c88b17"
+            }
+          ],
+          "direct_fixtures": []
+        }
+      ]
     }
   ],
   "fixture_administration": "Seed, injected faults, and source observation setters are fixture administration, not remote provider operations. Unnamed real gateway/carrier/warehouse/ERP adapters are unavailable.",
@@ -5279,7 +5326,7 @@
     },
     {
       "path": "packages/adapters/return-destination-fixture-source.mts",
-      "sha256": "b1207f123a954b32262f4dc989db32563bcacf4f18bed4def8510f7043302cd1"
+      "sha256": "ef0aace5d1163b3736f01e5746c42e190ca2ea4a041266a6c126f923aed11b38"
     },
     {
       "path": "packages/adapters/shopify-return-fixture.mts",
@@ -5591,7 +5638,7 @@
     },
     {
       "path": "packages/commerce/qualified-return-destinations.mts",
-      "sha256": "6e51ff2819b8f9691ea8792201cee7875a4ee0a54e4ca95e0b53949a2d83dbf8"
+      "sha256": "e9d07c2bb5024e32d8960a050c975a463596e2f8cc2ea35b3aa5db160973e2e1"
     },
     {
       "path": "packages/commerce/read-context.mts",
@@ -5839,7 +5886,7 @@
     },
     {
       "path": "packages/commerce/support-service.mts",
-      "sha256": "06a21586ff5547fb250c4e6e7b3d70eaeea0016244cfd5b4494fb84230135eb3"
+      "sha256": "e0e9a0a6f742856e61a29b60bff0fa82de898193bce9e060f4edfa0ab0d96d49"
     },
     {
       "path": "packages/commerce/support-tracking.mts",
@@ -6143,7 +6190,7 @@
     },
     {
       "path": "tests/fixtures/conformance/expected-coverage.v1.json",
-      "sha256": "b26a2965ef5462650ea3355f11d73f8578570871dab0309d29d67b2d23bee93c"
+      "sha256": "59b5d4f7fc1f1e364af6be8e06fe33211e84d49fdb0d5178c76dcad9ed1c2dd8"
     },
     {
       "path": "tests/fixtures/conformance/source-inputs.v1.json",
@@ -7744,6 +7791,30 @@
     {
       "path": "packages/commerce/contracts/loyalty-lifecycle.v1.json",
       "sha256": "4fc3b84c4f474de9a13566ed7885fc59c10201d1bbbb3fd73d174e2fbacb6cd9"
+    },
+    {
+      "path": "packages/adapters/dropoff-fixture-source.mts",
+      "sha256": "7b8ffe28745763989ec3b8c028ae0901f58b6a03a71eb2b23a4f8be40acf4872"
+    },
+    {
+      "path": "packages/commerce/dropoff-choices.mts",
+      "sha256": "b952732d051aac54ab4d0319dac92e656abe6b6a3e98939d12565d8d88ca4728"
+    },
+    {
+      "path": "tests/development/dropoff-eligibility.test.mts",
+      "sha256": "ed867364d38004d5ec31bbd2ef78861f17293cb588914b7d9567aedbc8c88b17"
+    },
+    {
+      "path": "tests/development/dropoff-eligibility-helpers.mts",
+      "sha256": "5452efd82fa7c400f74be2d2e0e0e3a4840c80e422b81d92290aaaaa8300d694"
+    },
+    {
+      "path": "tests/fixtures/dropoff-eligibility/independent-values.json",
+      "sha256": "528656f5b0a3a32fda1a4f563a5a2d71f0bced6c6aae1ae5f77dc77f5bb08961"
+    },
+    {
+      "path": "packages/commerce/contracts/dropoff-choices.v1.json",
+      "sha256": "ffde0ffab9a42c4908248cb4a06869976d4e390f21983df61335d169bb4554d0"
     }
   ]
 }

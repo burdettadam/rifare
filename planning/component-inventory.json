@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "id": "rifare-source-inventory",
-  "revision": 35,
+  "revision": 36,
   "status": "proposed",
   "components": [
     {
@@ -111,6 +111,7 @@
         "docs/DEVELOPMENT-GOVERNANCE.md",
         "docs/DISPATCH-AND-PARALLELISM.md",
         "docs/DISTRIBUTION-REVIEW.md",
+        "docs/DROPOFF-ELIGIBILITY.md",
         "docs/EVIDENCE-CONTRACT.md",
         "docs/EVIDENCE-GATE.md",
         "docs/EXCHANGE-HISTORY-OPERATIONS.md",
@@ -273,6 +274,7 @@
         "docs/decisions/0059-loyalty-accrual-projections.md",
         "docs/decisions/0060-loyalty-redemption.md",
         "docs/decisions/0061-loyalty-incentives-and-lifecycle.md",
+        "docs/decisions/0062-dropoff-eligibility-foundation.md",
         "docs/decisions/README.md",
         "docs/exchange-depth.md",
         "docs/exchange-money.md",
@@ -637,6 +639,7 @@
         "packages/adapters/claims-source-guards.mts",
         "packages/adapters/delivery-trial-source-guards.mts",
         "packages/adapters/demand-fixture-source.mts",
+        "packages/adapters/dropoff-fixture-source.mts",
         "packages/adapters/exchange-lineage-fixture-source.mts",
         "packages/adapters/exchange-lineage-source-guards.mts",
         "packages/adapters/exchange-money-fixture-source.mts",
@@ -728,6 +731,7 @@
         "packages/commerce/contracts/demand-history.v1.json",
         "packages/commerce/contracts/dispute-evidence.v1.json",
         "packages/commerce/contracts/dispute-submissions.v1.json",
+        "packages/commerce/contracts/dropoff-choices.v1.json",
         "packages/commerce/contracts/duty-assessments.v1.json",
         "packages/commerce/contracts/email-action-links.v1.json",
         "packages/commerce/contracts/execution-api.openapi.json",
@@ -811,6 +815,7 @@
         "packages/commerce/demand-history.mts",
         "packages/commerce/dispute-evidence.mts",
         "packages/commerce/dispute-submissions.mts",
+        "packages/commerce/dropoff-choices.mts",
         "packages/commerce/durable-work.mts",
         "packages/commerce/duty-assessments.mts",
         "packages/commerce/ecosystem-privacy.mts",
@@ -1163,6 +1168,8 @@
         "tests/development/decision-systemone.test.mts",
         "tests/development/demand-planning-helpers.mts",
         "tests/development/demand-planning.test.mts",
+        "tests/development/dropoff-eligibility-helpers.mts",
+        "tests/development/dropoff-eligibility.test.mts",
         "tests/development/durable-work.test.mts",
         "tests/development/ecosystem-assurance-helpers.mts",
         "tests/development/ecosystem-assurance.test.mts",
@@ -1401,6 +1408,7 @@
         "tests/fixtures/decision-systemone/workers-ai-success.json",
         "tests/fixtures/delivery-trials/independent-values.json",
         "tests/fixtures/demand-planning/known-answer.v1.json",
+        "tests/fixtures/dropoff-eligibility/independent-values.json",
         "tests/fixtures/ecosystem-assurance/expected.v1.json",
         "tests/fixtures/ecosystem-assurance/sdk-pins.v1.json",
         "tests/fixtures/ecosystem-assurance/typed-source-pins.v1.json",
@@ -1731,7 +1739,8 @@
         "work/records/M18-journey-checkpoint.md",
         "work/records/M18-memory-checkpoint.md",
         "work/records/M19-loyalty-milestone.md",
-        "work/records/M19-recovery-checkpoint.md"
+        "work/records/M19-recovery-checkpoint.md",
+        "work/records/M20-dropoff-milestone.md"
       ],
       "notices": []
     },

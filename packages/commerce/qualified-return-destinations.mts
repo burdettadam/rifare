@@ -93,6 +93,16 @@ export class QualifiedReturnDestinations {
   return {request_id:p.request_id,binding_revision:bound.row.revision,binding_digest:bound.row.digest,policy_revision:policy.revision,policy_version:policy.policy_version,policy_digest:policy.digest,
    state:value.state,recommended_destination_id:value.recommended_destination_id,destinations:value.destinations,source_identity:source.identity,qualification:'synthetic_only',selection_authorizes_label_purchase:false};
  }
+ evaluateItems(scope:Scope,input:unknown){const p=exact(jsonValue(input),['request_id']),k=this.kernel,ctx=context(k,scope,p.request_id);k.authorize(scope,'action.propose',ctx.c.resource_id);
+  const {source,policy}=sourceFor(k,scope,ctx),bound=binding(k,scope,ctx,source);
+  if(source!==this.source)throw new Error('DESTINATION_SOURCE_MISMATCH');
+  const value=source.destinations.evaluateItems(p.request_id);
+  if(value.policy_digest!==policy.digest||value.request_digest!==bound.body.source_request_digest)throw new Error('DESTINATION_BINDING_CHANGED');
+  return jsonValue({request_id:p.request_id,binding_revision:bound.row.revision,binding_digest:bound.row.digest,policy_revision:policy.revision,policy_version:policy.policy_version,policy_digest:policy.digest,
+   state:value.state,recommended_destination_id:value.recommended_destination_id,destinations:value.destinations,source_identity:source.identity,qualification:'synthetic_only',selection_authorizes_label_purchase:false,
+   source_request_digest:value.request_digest,qualification_digest:value.qualification_digest,expires_at:Math.min(policy.expires_at,value.qualification.expires_at,fulfillmentSettings(k,ctx.s).expires_at),
+   source_items:value.request.items,region:value.request.region,disposition:value.request.disposition,item_evaluations:value.item_evaluations});
+ }
  select(scope:Scope,input:unknown){const p=exact(jsonValue(input),['request_id','destination_id','expected_revision']);id(p.request_id);id(p.destination_id);integer(p.expected_revision);const k=this.kernel;
   return k.transaction(()=>{const ctx=context(k,scope,p.request_id);k.authorize(scope,'action.configure',ctx.c.resource_id);assertCaseWorkerScope(k,scope,ctx.c.id);assertExecution(k,ctx.s,FULFILLMENT_ACTIONS.label);
    if(k.db.prepare("SELECT 1 FROM commerce_fulfillment_operations WHERE tenant_id=? AND store_id=? AND kind='label' AND state='unknown' AND json_extract(command,'$.request_id')=?").get(ctx.s.tenant_id,ctx.s.store_id,p.request_id))throw new Error('DESTINATION_RECONCILIATION_REQUIRED');

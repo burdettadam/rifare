@@ -459,3 +459,23 @@ preserves exact source, test-freeze and review identities. G99 has documentation
 assessment only; its behavioral/fault cases and formal M19 acceptance remain
 open. Attributable award/reversal observations are the next substantive loyalty
 development gap. Protected main and the acceptance ledger remain unchanged.
+
+## M20-G01 local drop-off discovery
+
+ADR-0062 assigns the next bounded local increment from M19 closure 90433e2.
+M20-G01 composes original return/destination bindings, current reverse-hub terms
+and independent partner readiness with explicit short-lived site/method
+declarations. It separates per-item eligibility from complete-return eligibility,
+including aggregate capacity, packaging, availability and separate fee estimates.
+
+The independent 12-case specification froze before runtime edits; a subsequent
+seven-line independent strengthening covers the method's own item/category
+restrictions without changing the case count or old tests. The implementation
+candidate is ready for the assigned 33-case focused batch and exact-product
+reviews. No broad suite or credential/physical/financial execution is assigned.
+
+The [drop-off guide](docs/DROPOFF-ELIGIBILITY.md) describes the bounded contract;
+the [M20 work record](work/records/M20-dropoff-milestone.md) preserves exact source
+and review identities. Formal prerequisites and actual partner/physical
+qualification remain open. G02 requires a separate original-identity, final
+approval, secret, unknown-outcome, replacement, privacy and restore protocol.

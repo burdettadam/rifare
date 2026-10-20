@@ -11,12 +11,15 @@ import{LoyaltyAccrual}from'./loyalty-accrual.mts';
 import{LoyaltyRedemptions,assertLoyaltyRedemptionOwner}from'./loyalty-redemptions.mts';
 import{LoyaltyIncentives}from'./loyalty-incentives.mts';
 import{LoyaltyLifecycle}from'./loyalty-lifecycle.mts';
+import{DropoffChoices}from'./dropoff-choices.mts';
 export class SupportService {
  readonly k:CommerceKernel;readonly reads:ReadContext;readonly conversations:SupportConversations;readonly ownership:SupportOwnership;readonly consent:SupportConsent;readonly tracking:SupportTracking;readonly delivery:SupportDelivery;readonly rules:SupportRules;readonly metrics:SupportMetrics;readonly insights:SupportInsights;readonly qualification:SupportQualification;readonly workflows:SupportWorkflows;readonly branding:SupportBranding;
  readonly routing:SupportProviderRouting|null;readonly runner:ReadRunner|null;readonly helpdesk:SupportHelpdesk|null;
  readonly memory:ShopperMemory;readonly readiness:JourneyReadiness;readonly journeys:CommerceJourneys;readonly followups:JourneyFollowups;readonly loyalty:LoyaltyBalances;readonly loyaltyAccrual:LoyaltyAccrual|null;readonly loyaltyRedemptions:LoyaltyRedemptions|null;
  readonly loyaltyIncentives:LoyaltyIncentives|null;readonly loyaltyLifecycle:LoyaltyLifecycle|null;
- constructor(k:CommerceKernel,reads:ReadContext,options:{sources?:SupportSource[];routing?:SupportProviderRouting;runner?:ReadRunner;helpdesk?:SupportHelpdesk;refunds?:RefundMessageReader;journey?:Omit<JourneyReadinessOptions,'delivery'>;journeys?:Omit<JourneyOwners,'delivery'>;loyalty?:LoyaltyBalances;loyaltyAccrual?:LoyaltyAccrual;loyaltyRedemptions?:LoyaltyRedemptions;loyaltyIncentives?:LoyaltyIncentives;loyaltyLifecycle?:LoyaltyLifecycle}={}){
+ readonly dropoffChoices:DropoffChoices|null;
+ constructor(k:CommerceKernel,reads:ReadContext,options:{sources?:SupportSource[];routing?:SupportProviderRouting;runner?:ReadRunner;helpdesk?:SupportHelpdesk;refunds?:RefundMessageReader;journey?:Omit<JourneyReadinessOptions,'delivery'>;journeys?:Omit<JourneyOwners,'delivery'>;loyalty?:LoyaltyBalances;loyaltyAccrual?:LoyaltyAccrual;loyaltyRedemptions?:LoyaltyRedemptions;loyaltyIncentives?:LoyaltyIncentives;loyaltyLifecycle?:LoyaltyLifecycle;dropoffChoices?:DropoffChoices}={}){
+  this.dropoffChoices=options.dropoffChoices===undefined?null:DropoffChoices.assertOwner(k,options.dropoffChoices);
   if(options.loyalty!==undefined&&(!(options.loyalty instanceof LoyaltyBalances)||options.loyalty.k!==k))throw new Error('LOYALTY_SOURCE_OWNER_MISMATCH');
   this.loyalty=options.loyalty??new LoyaltyBalances(k);
   if(options.loyaltyAccrual!==undefined&&(!(options.loyaltyAccrual instanceof LoyaltyAccrual)||options.loyaltyAccrual.k!==k||options.loyaltyAccrual.balances!==this.loyalty))throw new Error('LOYALTY_SOURCE_OWNER_MISMATCH');
@@ -58,6 +61,7 @@ export class SupportService {
  case 'loyalty-incentive-bind':case 'loyalty-incentive-validate':{if(!this.loyaltyIncentives)throw new Error('LOYALTY_INCENTIVES_NOT_CONFIGURED');return this.loyaltyIncentives[action==='loyalty-incentive-bind'?'bind':'validate'](scope,input);}
  case 'loyalty-lifecycle-report':{const p=exact(jsonValue(input,32768),['customer_token','input']);if(typeof p.customer_token!=='string')throw new Error('CUSTOMER_VERIFICATION_REQUIRED');if(!this.loyaltyLifecycle)throw new Error('LOYALTY_LIFECYCLE_NOT_CONFIGURED');return this.loyaltyLifecycle.report(scope,this.k.authenticate(p.customer_token),p.input);}
  case 'loyalty-lifecycle-retained':{if(!this.loyaltyLifecycle)throw new Error('LOYALTY_LIFECYCLE_NOT_CONFIGURED');return this.loyaltyLifecycle.retained(scope,input);}
+ case 'dropoff-choices':{if(!this.dropoffChoices)throw new Error('DROPOFF_NOT_CONFIGURED');return this.dropoffChoices.quote(scope,input);}
  case 'takeover':return this.ownership.takeover(scope,input);
  case 'assign':return this.ownership.assign(scope,input);
  case 'consent':return this.consent.record(scope,input);

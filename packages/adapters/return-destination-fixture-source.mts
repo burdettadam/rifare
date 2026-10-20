@@ -116,6 +116,23 @@ export class ReturnDestinationFixtureSource {
   return {request:r,request_digest:contentDigest(r),policy:p,policy_digest:contentDigest(p),qualification:q,qualification_digest:contentDigest(q),destinations,
    state:destinations.some(d=>d.eligible)?'eligible_destinations':'needs_review',recommended_destination_id:destinations.find(d=>d.eligible)?.destination_id??null};
  }
+ evaluateItems(requestId:string){
+  const r=this.request(requestId);
+  if(!Array.isArray(r.items)||!r.items.length||r.items.length>20)throw new Error('DESTINATION_VIEW_TOO_LARGE');
+  // A bounded overflow sentinel precedes materialization. Keep the legacy read
+  // untouched, and reuse its decision predicate for both whole and item views.
+  const rows=this.db.prepare('SELECT d.body,d.digest FROM fixture_return_destinations d JOIN (SELECT destination_id,MAX(revision) revision FROM fixture_return_destinations GROUP BY destination_id) latest USING(destination_id,revision) LIMIT 65').all() as Row[];
+  if(rows.length>64)throw new Error('DESTINATION_VIEW_TOO_LARGE');
+  const q=this.#qualification(r.account_id),p=this.policy(r.account_id),current=rows.map(checked).filter(d=>d.account_id===r.account_id);
+  const destinations=current.map(d=>this.#decision(r,d,p)).sort((a,b)=>Number(!a.eligible)-Number(!b.eligible)||(minor(a.handling_fee_estimate_minor)<minor(b.handling_fee_estimate_minor)?-1:minor(a.handling_fee_estimate_minor)>minor(b.handling_fee_estimate_minor)?1:a.destination_id.localeCompare(b.destination_id)));
+  const item_evaluations=r.items.map((item:Row)=>({line_id:item.line_id,destinations:current.map(d=>{
+   // This is only the predicate's in-memory argument. No source request is
+   // created, rebound, revised or persisted to calculate a selected line.
+   const decision=this.#decision({...r,items:[item]},d,p);return {destination_id:decision.destination_id,eligible:decision.eligible,reasons:decision.reasons};
+  })}));
+  return jsonValue({request:r,request_digest:contentDigest(r),policy:p,policy_digest:contentDigest(p),qualification:q,qualification_digest:contentDigest(q),destinations,
+   state:destinations.some(d=>d.eligible)?'eligible_destinations':'needs_review',recommended_destination_id:destinations.find(d=>d.eligible)?.destination_id??null,item_evaluations});
+ }
  select(input:unknown){const p=exact(jsonValue(input),['request_id','destination_id','revision','policy_digest','parcel_digest','parcel_revision']);id(p.request_id);id(p.destination_id);integer(p.revision,1);integer(p.parcel_revision,1);
   for(const key of ['policy_digest','parcel_digest'])if(typeof p[key]!=='string'||!/^[a-f0-9]{64}$/.test(p[key]))throw new Error('INVALID_INPUT');
   return this.#tx(()=>{const current=this.evaluate(p.request_id),d=current.destinations.find(d=>d.destination_id===p.destination_id);if(!d?.eligible)throw new Error('DESTINATION_INELIGIBLE');

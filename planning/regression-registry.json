@@ -1958,6 +1958,14 @@
       "contract_files": [
         "packages/commerce/contracts/loyalty-lifecycle.v1.json"
       ]
+    },
+    {
+      "id": "m20-dropoff-eligibility-diagnostic",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/dropoff-choices.v1.json"
+      ]
     }
   ],
   "tests": [
@@ -24738,6 +24746,90 @@
       "runner_case_id": "CASE-M19-G05-08",
       "source": "tests/development/loyalty-incentives-lifecycle.test.mts",
       "capability_id": "m19-loyalty-lifecycle-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M20-G01-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M20-G01-01",
+      "source": "tests/development/dropoff-eligibility.test.mts",
+      "capability_id": "m20-dropoff-eligibility-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M20-G01-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M20-G01-02",
+      "source": "tests/development/dropoff-eligibility.test.mts",
+      "capability_id": "m20-dropoff-eligibility-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M20-G01-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M20-G01-03",
+      "source": "tests/development/dropoff-eligibility.test.mts",
+      "capability_id": "m20-dropoff-eligibility-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M20-G01-04",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M20-G01-04",
+      "source": "tests/development/dropoff-eligibility.test.mts",
+      "capability_id": "m20-dropoff-eligibility-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M20-G01-05",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M20-G01-05",
+      "source": "tests/development/dropoff-eligibility.test.mts",
+      "capability_id": "m20-dropoff-eligibility-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M20-G01-06",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M20-G01-06",
+      "source": "tests/development/dropoff-eligibility.test.mts",
+      "capability_id": "m20-dropoff-eligibility-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M20-G01-07",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M20-G01-07",
+      "source": "tests/development/dropoff-eligibility.test.mts",
+      "capability_id": "m20-dropoff-eligibility-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M20-G01-08",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M20-G01-08",
+      "source": "tests/development/dropoff-eligibility.test.mts",
+      "capability_id": "m20-dropoff-eligibility-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M20-G01-09",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M20-G01-09",
+      "source": "tests/development/dropoff-eligibility.test.mts",
+      "capability_id": "m20-dropoff-eligibility-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M20-G01-10",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M20-G01-10",
+      "source": "tests/development/dropoff-eligibility.test.mts",
+      "capability_id": "m20-dropoff-eligibility-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M20-G01-11",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M20-G01-11",
+      "source": "tests/development/dropoff-eligibility.test.mts",
+      "capability_id": "m20-dropoff-eligibility-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M20-G01-12",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M20-G01-12",
+      "source": "tests/development/dropoff-eligibility.test.mts",
+      "capability_id": "m20-dropoff-eligibility-diagnostic"
     }
   ],
   "protected_files": [
@@ -25312,7 +25404,13 @@
     "tests/development/loyalty-incentives-lifecycle-helpers.mts",
     "tests/fixtures/loyalty-incentives-lifecycle/independent-values.json",
     "packages/commerce/contracts/loyalty-incentives.v1.json",
-    "packages/commerce/contracts/loyalty-lifecycle.v1.json"
+    "packages/commerce/contracts/loyalty-lifecycle.v1.json",
+    "packages/adapters/dropoff-fixture-source.mts",
+    "packages/commerce/dropoff-choices.mts",
+    "tests/development/dropoff-eligibility.test.mts",
+    "tests/development/dropoff-eligibility-helpers.mts",
+    "tests/fixtures/dropoff-eligibility/independent-values.json",
+    "packages/commerce/contracts/dropoff-choices.v1.json"
   ],
   "source_count_fixture": "tests/fixtures/licensing/artifact-oracle.v1.json",
   "source_inventory": "planning/component-inventory.json"

@@ -912,6 +912,12 @@
         "semantics": "composed",
         "qualification": "sandbox-only"
       }
+    },
+    "dropoff_fixture_source": {
+      "dropoff.choices.quote": {
+        "semantics": "composed",
+        "qualification": "sandbox-only"
+      }
     }
   },
   "declarations": [
@@ -920,6 +926,7 @@
     "packages/adapters/claims-source-guards.mts",
     "packages/adapters/delivery-trial-source-guards.mts",
     "packages/adapters/demand-fixture-source.mts",
+    "packages/adapters/dropoff-fixture-source.mts",
     "packages/adapters/exchange-lineage-fixture-source.mts",
     "packages/adapters/exchange-lineage-source-guards.mts",
     "packages/adapters/exchange-money-fixture-source.mts",
@@ -1696,7 +1703,7 @@
       }
     },
     "return_destination_source": {
-      "version": "source-sha256:b1207f123a954b32262f4dc989db32563bcacf4f18bed4def8510f7043302cd1",
+      "version": "source-sha256:ef0aace5d1163b3736f01e5746c42e190ca2ea4a041266a6c126f923aed11b38",
       "api_version": "local-qualified-destination-source",
       "operations": {
         "destination.evaluate": {
@@ -2114,6 +2121,16 @@
           "scope_kind": "server_local_fixture_only"
         },
         "loyalty.lifecycle.report": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        }
+      }
+    },
+    "dropoff_fixture_source": {
+      "version": "source-sha256:7b8ffe28745763989ec3b8c028ae0901f58b6a03a71eb2b23a4f8be40acf4872",
+      "api_version": "rifare-dropoff-fixture-v1",
+      "operations": {
+        "dropoff.choices.quote": {
           "required_scopes": [],
           "scope_kind": "server_local_fixture_only"
         }
@@ -2840,6 +2857,24 @@
       "name": "CASE-M19-G05-04",
       "path": "tests/development/loyalty-incentives-lifecycle.test.mts",
       "sha256": "54fead376c5750f86070695f2a55521b0015489298950639258199ed4796fd85"
+    },
+    {
+      "id": "CASE-M20-G01-01",
+      "name": "CASE-M20-G01-01",
+      "path": "tests/development/dropoff-eligibility.test.mts",
+      "sha256": "ed867364d38004d5ec31bbd2ef78861f17293cb588914b7d9567aedbc8c88b17"
+    },
+    {
+      "id": "CASE-M20-G01-02",
+      "name": "CASE-M20-G01-02",
+      "path": "tests/development/dropoff-eligibility.test.mts",
+      "sha256": "ed867364d38004d5ec31bbd2ef78861f17293cb588914b7d9567aedbc8c88b17"
+    },
+    {
+      "id": "CASE-M20-G01-03",
+      "name": "CASE-M20-G01-03",
+      "path": "tests/development/dropoff-eligibility.test.mts",
+      "sha256": "ed867364d38004d5ec31bbd2ef78861f17293cb588914b7d9567aedbc8c88b17"
     },
     {
       "id": "M01-G04-01",
