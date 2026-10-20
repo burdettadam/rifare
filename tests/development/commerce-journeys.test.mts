@@ -39,6 +39,11 @@ test('CASE-M18-G03-01',()=>usingJourneys(async f=>{
   assert.deepEqual(Object.keys(observation).sort(),['native_id','qualification','reference','state']);assert.equal(observation.qualification,'synthetic_only');
   assert.deepEqual(rows(f),documents);assert.deepEqual(f.gateway.receipt(f.owner.scope,op.receipt.id),receipt);assert.equal(uses(f,op.approval.id),1);
   assert.equal(count(f.db,'commerce_cases'),caseCount);assert.equal(count(f.db,'commerce_fulfillment_operations'),1);assert.equal(f.fulfillmentSource.calls.replace,1);assert.equal(f.fulfillmentSource.calls.buy,0);assertSafe(result.journey);
+  assert.equal(intent(result.journey,'exchange_one').state,'observed');
+  const pending=coordinator.prepare(caller,f.customer,{...input,expected_version:3,request_id:'label_after_reconciliation',intent_id:'exchange_one',kind:'exchange',proposal:f.labels.quote(caller,{request_id:f.request.id,replaces:null}).proposal});
+  const progressed=intent(pending.journey,'exchange_one');assert.equal(pending.journey.version,4);assert.equal(progressed.state,'awaiting_approval');
+  assert.deepEqual(progressed.references,[...refs,reference(f,'preview',pending.native.id)]);assert.deepEqual(progressed.observations.find((x:Value)=>x.reference.id===op.id),observation);
+  assert.equal(count(f.db,'commerce_fulfillment_operations'),1);assert.equal(f.fulfillmentSource.calls.replace,1);assert.equal(f.fulfillmentSource.effects().length,1);assert.equal(f.fulfillmentSource.calls.buy,0);
 },'fulfillment'));
 
 test('CASE-M18-G03-02',async()=>{
@@ -183,6 +188,7 @@ test('M18-G03-EXACT-APPROVAL-RECEIPT-AND-ATOMIC-EXECUTION',()=>usingJourneys(f=>
   for(const expected of [reference(f,'preview',p.id),reference(f,'approval',a.id),reference(f,'receipt',result.native.id),reference(f,'fulfillment',op)])assert.ok(refs.some((r:Value)=>canonical(r)===canonical(expected)));
   assert.deepEqual(f.gateway.receipt(f.a.scope,result.native.id),result.native);assert.equal(uses(f,a.id),1);assert.equal(count(f.db,'commerce_fulfillment_operations'),1);assert.equal(f.fulfillmentSource.calls.buy,0);
   const after=effects(f);assert.throws(()=>execute(f,3,p,a,{request_id:'execute_2'}),/JOURNEY_REQUEST_REPLAY/);assert.throws(()=>execute(f,3,p,a,{request_id:'different_duplicate'}),/APPROVAL_UNAVAILABLE/);assert.deepEqual(effects(f),after);
+  assert.equal(f.execution.read(f.a.scope,op).state,'authorized');assert.equal(intent(context(f),'exchange_one').state,'recorded');
 },'fulfillment'));
 
 test('M18-G03-CURRENT-STOPS-READINESS-AND-APPROVAL',async()=>{
@@ -252,6 +258,7 @@ test('M18-G03-UNKNOWN-CART-RECONCILIATION-NEVER-COMMITS-PROPOSED',()=>usingJourn
   open(f);const cached=editProposal(f),cart=f.cart(),ref=reference(f,'cart',cart.cart_id);attach(f,1,'shopping',[ref]);
   const before=effects(f);await assert.rejects(()=>f.journeys.reconcile(f.a.scope,f.customer,reconcileInput(f,2,ref,{intent_id:'shopping_one'})),/JOURNEY_OPERATION_NOT_ATTEMPTED/);
   await assert.rejects(()=>f.journeys.reconcile(f.customer,f.customer,reconcileInput(f,2,ref,{intent_id:'shopping_one'})),/ACCESS_DENIED/);assert.deepEqual(effects(f),before);assert.equal(count(f.sourceDb,'growth_source_cart_effects'),0);
+  assert.equal(cart.state,'proposed');assert.equal(intent(context(f),'shopping_one').state,'recorded');
   f.catalogSource.fault='after';const native=await f.carts.confirm(f.customer,{cart_id:cart.cart_id,preview_digest:cart.preview_digest});assert.equal(native.state,'unknown');assert.equal(count(f.sourceDb,'growth_source_cart_effects'),1);
   const blocked=context(f);assertBlocker(blocked,'cart',native.operation_id);assert.equal(blocked.unresolved.find((x:Value)=>x.id===native.operation_id).cart_id,cart.cart_id);
   assert.throws(()=>prepare(f,2,cached,{kind:'edit',intent_id:'edit_one'}),/JOURNEY_RECONCILIATION_REQUIRED/);
