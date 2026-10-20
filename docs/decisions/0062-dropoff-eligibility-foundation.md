@@ -116,6 +116,8 @@ data in the new projection. Source items are the already-bound original items,
 not caller-supplied category, region or product claims. G01 supports at most
 20 selected lines and 64 current destinations; reject larger views rather than
 silently truncating them. The canonical 131072-byte output bound still applies.
+The per-item field is item_evaluations: an array of {line_id, destinations},
+where destinations contains {destination_id, eligible, reasons} for that line.
 
 ## Scoped transient choices
 
@@ -162,6 +164,10 @@ whole-set state/reasons and eligible boolean. State values for a method or item
 are eligible, unavailable and unverified. choices contains only whole-set eligible
 methods. Top state is eligible_choices when choices exist, otherwise unverified
 when any method is unverified (or the directory is missing), otherwise needs_review.
+Native references use site_id, destination_id and method_id. Each method's items
+array contains {line_id, item_id, category, quantity, state, eligible, reasons}.
+Source configure/observe return the envelope fields with its digest (or null
+from observe before configuration), rather than a second nested body wrapper.
 
 Each method's fees keeps partner_fee {amount_minor,currency,basis:per_handoff}
 and destination_handling_estimate {amount_minor,currency,basis:per_handoff}
