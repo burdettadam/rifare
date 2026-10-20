@@ -231,3 +231,16 @@ durable synthetic redemption are now locally implemented. The next separate
 increments are G04 incentives using native offer/consent/send owners, G05 loyalty
 lifecycle reporting and G99 assessment of the supported local envelope. Formal
 M19 and connected/provider/target-host/full-regression acceptance remain open.
+
+## G04/G05 focused continuation assignment
+
+The owner's renewed instruction prioritizes progress and minimum useful test
+execution. ADR-0061 assigns the next bounded local increment from G03 closure
+e9421d990489fdcdce5fbe080a3a1733669b797e: native incentive comparison with mandatory
+existing-send validation, and transient lifecycle/economic reporting that keeps
+missing award/reversal evidence explicit. Root remains sole runtime writer and
+executor; the independent author owns three new test artifacts in a separate
+worktree. Both independent reviewers assessed this scope before implementation.
+Fourteen independent new cases plus the 24-case existing marketing file are the
+planned single coherent batch. No G04/G05 runtime or completion is claimed at
+this assignment checkpoint; tests must freeze before runtime changes.
