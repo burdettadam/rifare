@@ -1,0 +1,48 @@
+{
+  "fixture_id": "FIX-M20-G01-01-02-03",
+  "qualification": "synthetic_only",
+  "oracle_basis": "Two original lines contain three selected units: two fragile shirts and one accessory hat. Two declared methods accept the whole return; an accessory-only destination accepts the hat but cannot accept either shirt. Partner fees and destination handling estimates are separate per-handoff amounts, never a total or a charge.",
+  "customer_id": "C-1001",
+  "case_id": "case_one",
+  "region": "US-CO",
+  "disposition": "inspect_then_restock",
+  "fulfillment_account_id": "carrier-dropoff",
+  "partner_account_id": "reverse_hub_account",
+  "contract_version": "dropoff-merchant-destination-v1",
+  "capabilities": ["item_routing", "category_routing", "region_routing", "capacity_admission", "handling_fee_estimate", "native_label_destination"],
+  "directory_ttl_ms": 60000,
+  "availability_ttl_ms": 30000,
+  "original_paid_minor": "4000",
+  "items": [
+    {"line_id":"alpha","fulfillment_line_id":"gid://shopify/FulfillmentLineItem/101","item_id":"shirt","category":"fragile","quantity":2,"required_handling":["fragile"]},
+    {"line_id":"beta","fulfillment_line_id":"gid://shopify/FulfillmentLineItem/102","item_id":"hat","category":"accessory","quantity":1,"required_handling":["standard"]}
+  ],
+  "paid_lines": [
+    {"id":"alpha","product_id":"shirt","variant_id":"shirt-small","quantity":2,"gross_minor":"2000","discount_minor":"0","tax_minor":"0","shipping_minor":"0","duties_minor":"0","resolved_units":[]},
+    {"id":"beta","product_id":"hat","variant_id":"hat-small","quantity":1,"gross_minor":"2000","discount_minor":"0","tax_minor":"0","shipping_minor":"0","duties_minor":"0","resolved_units":[]}
+  ],
+  "destination_defaults": {"enabled":true,"ownership":"contracted","agreement_id":"synthetic-destination-agreement","accepted_item_ids":["shirt","hat"],"accepted_categories":["fragile","accessory"],"accepted_regions":["US-CO"],"handling_capabilities":["fragile","standard"],"dispositions":["inspect_then_restock"],"capacity_units":10,"occupied_units":0,"currency":"USD"},
+  "destinations": [
+    {"destination_id":"main-destination","address_ref":"main-address","handling_fee_estimate_minor":"150"},
+    {"destination_id":"accessory-destination","address_ref":"accessory-address","accepted_categories":["accessory"],"handling_fee_estimate_minor":"80"},
+    {"destination_id":"backup-destination","address_ref":"backup-address","handling_fee_estimate_minor":"250"}
+  ],
+  "sites": [
+    {"site_id":"main-site","location_id":"warehouse-main","categories":["fragile","accessory"]},
+    {"site_id":"accessory-site","location_id":"warehouse-accessory","categories":["fragile","accessory"]},
+    {"site_id":"backup-site","location_id":"warehouse-backup","categories":["fragile","accessory"]}
+  ],
+  "combinations": [
+    {"site_id":"main-site","destination_id":"main-destination","method_id":"qr-bag","item_ids":["shirt","hat"],"category_ids":["fragile","accessory"],"packaging":"provider_packaging","label_required":false,"credential_kind":"qr","instructions_ref":"main-instructions","accessible_alternative":"printed_code"},
+    {"site_id":"accessory-site","destination_id":"accessory-destination","method_id":"counter-code","item_ids":["shirt","hat"],"category_ids":["fragile","accessory"],"packaging":"box_required","label_required":true,"credential_kind":"code","instructions_ref":"accessory-instructions","accessible_alternative":"staff_assisted_code"},
+    {"site_id":"backup-site","destination_id":"backup-destination","method_id":"qr-box","item_ids":["shirt","hat"],"category_ids":["fragile","accessory"],"packaging":"box_required","label_required":false,"credential_kind":"qr","instructions_ref":"backup-instructions","accessible_alternative":"printed_code"}
+  ],
+  "expected_methods": [
+    {"site_id":"accessory-site","destination_id":"accessory-destination","method_id":"counter-code","state":"unavailable","eligible":false,"packaging":"box_required","label_required":true,"credential_kind":"code","instructions_ref":"accessory-instructions","accessible_alternative":"staff_assisted_code","fees":{"partner_fee":{"amount_minor":"250","currency":"USD","basis":"per_handoff"},"destination_handling_estimate":{"amount_minor":"80","currency":"USD","basis":"per_handoff"},"total_minor":null,"charged":false},"items":[{"line_id":"alpha","item_id":"shirt","category":"fragile","quantity":2,"state":"unavailable","eligible":false},{"line_id":"beta","item_id":"hat","category":"accessory","quantity":1,"state":"eligible","eligible":true}]},
+    {"site_id":"backup-site","destination_id":"backup-destination","method_id":"qr-box","state":"eligible","eligible":true,"packaging":"box_required","label_required":false,"credential_kind":"qr","instructions_ref":"backup-instructions","accessible_alternative":"printed_code","fees":{"partner_fee":{"amount_minor":"250","currency":"USD","basis":"per_handoff"},"destination_handling_estimate":{"amount_minor":"250","currency":"USD","basis":"per_handoff"},"total_minor":null,"charged":false},"items":[{"line_id":"alpha","item_id":"shirt","category":"fragile","quantity":2,"state":"eligible","eligible":true},{"line_id":"beta","item_id":"hat","category":"accessory","quantity":1,"state":"eligible","eligible":true}]},
+    {"site_id":"main-site","destination_id":"main-destination","method_id":"qr-bag","state":"eligible","eligible":true,"packaging":"provider_packaging","label_required":false,"credential_kind":"qr","instructions_ref":"main-instructions","accessible_alternative":"printed_code","fees":{"partner_fee":{"amount_minor":"250","currency":"USD","basis":"per_handoff"},"destination_handling_estimate":{"amount_minor":"150","currency":"USD","basis":"per_handoff"},"total_minor":null,"charged":false},"items":[{"line_id":"alpha","item_id":"shirt","category":"fragile","quantity":2,"state":"eligible","eligible":true},{"line_id":"beta","item_id":"hat","category":"accessory","quantity":1,"state":"eligible","eligible":true}]}
+  ],
+  "expected_choices": ["backup-site/backup-destination/qr-box","main-site/main-destination/qr-bag"],
+  "after_main_revocation_choices": ["backup-site/backup-destination/qr-box"],
+  "capacity_control": {"selected_units":3,"available_units":2,"per_line_eligible":[true,true],"whole_set_eligible":false}
+}
