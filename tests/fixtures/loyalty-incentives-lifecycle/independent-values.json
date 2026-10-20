@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "provenance": "Independent preimplementation literal expectations for ADR-0061. Points and USD minor units are separate instruments; historical order targets are not attributed provider issues.",
+  "customer_id": "C-1001",
+  "cart": {
+    "variant_id": "basic",
+    "product_id": "shirt",
+    "quantity": 1,
+    "unit_minor": "2000",
+    "tax_minor": "0",
+    "total_minor": "2000",
+    "currency": "USD"
+  },
+  "discount": {
+    "offer_id": "offer-five",
+    "text": "Five dollars off an eligible purchase.",
+    "currency": "USD",
+    "discount_minor": "500",
+    "catalog_ref": "synthetic-approved-offer"
+  },
+  "benefits": [
+    {"id": "synthetic_reward_400", "points": 400, "unit": "points", "kind": "synthetic_reward"},
+    {"id": "synthetic_reward_200", "points": 200, "unit": "points", "kind": "synthetic_reward"}
+  ],
+  "combinations": [
+    {"benefit_id": "synthetic_reward_400", "offer_id": "offer-five", "eligible_variant_ids": ["basic"]},
+    {"benefit_id": "synthetic_reward_200", "offer_id": "offer-five", "eligible_variant_ids": ["basic"]}
+  ],
+  "quote_ttl_ms": 10000,
+  "account": {"unit": "points", "pending": 900, "earned": 1000, "reserved": 150, "redeemed": 200, "reversed": 50, "available": 600},
+  "after_redemption": {"unit": "points", "pending": 900, "earned": 1000, "reserved": 150, "redeemed": 600, "reversed": 50, "available": 200},
+  "capacity": {
+    "initial": {"provider_available_points": 600, "held_points": 0, "accounted_held_points": 0, "effective_available_points": 600},
+    "reserved": {"provider_available_points": 600, "held_points": 400, "accounted_held_points": 0, "effective_available_points": 200},
+    "unknown_after_effect": {"provider_available_points": 200, "held_points": 400, "accounted_held_points": 400, "effective_available_points": 200},
+    "redeemed": {"provider_available_points": 200, "held_points": 0, "accounted_held_points": 0, "effective_available_points": 200}
+  },
+  "original_paid_minor": "3000",
+  "partial_refund_minor": "1000",
+  "initial_targets": {"earned_points": 300, "reversal_points": 0, "net_points": 300},
+  "settled_targets": {"earned_points": 300, "reversal_points": 100, "net_points": 200},
+  "settled_units": [
+    {"original_line_id": "alpha", "unit_index": 1, "original_paid_minor": "1000", "additional_paid_minor": "0", "settled_refund_minor": "1000", "earned_points": 100, "reversal_points": 100, "net_points": 0},
+    {"original_line_id": "alpha", "unit_index": 2, "original_paid_minor": "1000", "additional_paid_minor": "0", "settled_refund_minor": "0", "earned_points": 100, "reversal_points": 0, "net_points": 100},
+    {"original_line_id": "gamma", "unit_index": 1, "original_paid_minor": "1000", "additional_paid_minor": "0", "settled_refund_minor": "0", "earned_points": 100, "reversal_points": 0, "net_points": 100}
+  ],
+  "missing_evidence": [
+    {"code": "LOYALTY_AWARD_EVIDENCE_MISSING", "operation_id": null},
+    {"code": "LOYALTY_REVERSAL_EVIDENCE_MISSING", "operation_id": null}
+  ],
+  "campaign": {"budget_reserved_minor": "3", "estimated_accepted_cost_minor": "3", "actual_provider_cost_minor": null, "provider_accepted": 1, "delivered": 0},
+  "measurement": {
+    "seed_hex": "0000000000000000000000000000000000000000000000000000000000000000",
+    "experiment_id": "checkout-one",
+    "denominators": {"treatment": 2, "holdout": 2},
+    "purchases": 2,
+    "attributed_revenue_minor": "10000",
+    "holdout_estimated_incremental_revenue_minor": "0",
+    "gross_revenue_minor": "20000",
+    "refunds_minor": "3000",
+    "costs_minor": "3000",
+    "net_margin_minor": "14000",
+    "incremental_margin_minor": "-4000"
+  }
+}
