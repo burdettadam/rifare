@@ -132,3 +132,26 @@ grants no issuance authority. G03/G04 must compose native custody and warehouse
 owners while retaining distinct handoff, movement, receipt, inspection, stock and
 settlement stages. M19's attributable provider award/reversal and other open
 qualification obligations remain independent of this work.
+
+## G02 prior local assignment
+
+ADR-0063 assigns synthetic credential issuance/revocation/replacement from G01
+closure 599b29f461d1b09f8d7ca48b4c121c9a9a11a1ee. Root is sole runtime writer and
+executor in Rifare-M20-credentials / goal/M20-dropoff-credentials. The independent
+author owns only three new credential test artifacts in a separate worktree;
+authority/privacy and regression reviewers remain read-only nonauthors.
+
+The preimplementation protocol separates immutable operation outcomes from current
+credential usability, records original-ID uncertainty before effect, requires
+distinct native approval and current final authority, encrypts payload only in
+the separate provider fixture, and retains minimized uncertainty through privacy
+and recovery. The canonical G01 review seam permits the actual independent
+approver to review the original owner's terms without impersonation or takeover.
+
+The independent specification will freeze14 cases before runtime implementation.
+The selected batch is58 cases/four whole files/one60-second deadline: new G02 14,
+unchanged G01 12, action-approvals18 and exception-queue14. One isolated exact-parent
+fault will bypass both uncertainty/family fences and must actually mint a second
+native credential after lost acknowledgment; the unchanged independent oracle
+must detect it. No test or product execution has yet occurred for this assignment.
+Formal acceptance, connected/physical qualification and later M20 goals remain open.
