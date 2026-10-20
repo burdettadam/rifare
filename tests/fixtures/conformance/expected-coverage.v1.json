@@ -902,6 +902,16 @@
         "semantics": "composed",
         "qualification": "sandbox-only"
       }
+    },
+    "loyalty_incentive_source": {
+      "loyalty.incentive.quote": {
+        "semantics": "composed",
+        "qualification": "sandbox-only"
+      },
+      "loyalty.lifecycle.report": {
+        "semantics": "composed",
+        "qualification": "sandbox-only"
+      }
     }
   },
   "declarations": [
@@ -917,6 +927,7 @@
     "packages/adapters/instant-exchange-fixture-source.mts",
     "packages/adapters/loyalty-accrual-fixture-source.mts",
     "packages/adapters/loyalty-fixture-source.mts",
+    "packages/adapters/loyalty-incentive-fixture-source.mts",
     "packages/adapters/loyalty-redemption-fixture-source.mts",
     "packages/adapters/marketing-fixture-source.mts",
     "packages/adapters/native-change-fixture-source.mts",
@@ -2093,6 +2104,20 @@
           "scope_kind": "server_local_fixture_only"
         }
       }
+    },
+    "loyalty_incentive_source": {
+      "version": "source-sha256:4183d4c41a84c6dff4363a7bc926e90f7b5b6496fa444488631280fb32245770",
+      "api_version": "rifare-loyalty-incentive-fixture-v1",
+      "operations": {
+        "loyalty.incentive.quote": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "loyalty.lifecycle.report": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        }
+      }
     }
   },
   "native_cases": [
@@ -2773,6 +2798,48 @@
       "name": "CASE-M19-G03-03",
       "path": "tests/development/loyalty-redemption.test.mts",
       "sha256": "8a1a21ed375799a242675debca1d35a3f6af510ab4a0a309a77a2819164cd20a"
+    },
+    {
+      "id": "CASE-M19-G04-01",
+      "name": "CASE-M19-G04-01",
+      "path": "tests/development/loyalty-incentives-lifecycle.test.mts",
+      "sha256": "ebd24cdf197374bffca4415c8a83ed1962b39e4371565fdececb122e0e153bdf"
+    },
+    {
+      "id": "CASE-M19-G04-02",
+      "name": "CASE-M19-G04-02",
+      "path": "tests/development/loyalty-incentives-lifecycle.test.mts",
+      "sha256": "ebd24cdf197374bffca4415c8a83ed1962b39e4371565fdececb122e0e153bdf"
+    },
+    {
+      "id": "CASE-M19-G04-03",
+      "name": "CASE-M19-G04-03",
+      "path": "tests/development/loyalty-incentives-lifecycle.test.mts",
+      "sha256": "ebd24cdf197374bffca4415c8a83ed1962b39e4371565fdececb122e0e153bdf"
+    },
+    {
+      "id": "CASE-M19-G05-01",
+      "name": "CASE-M19-G05-01",
+      "path": "tests/development/loyalty-incentives-lifecycle.test.mts",
+      "sha256": "ebd24cdf197374bffca4415c8a83ed1962b39e4371565fdececb122e0e153bdf"
+    },
+    {
+      "id": "CASE-M19-G05-02",
+      "name": "CASE-M19-G05-02",
+      "path": "tests/development/loyalty-incentives-lifecycle.test.mts",
+      "sha256": "ebd24cdf197374bffca4415c8a83ed1962b39e4371565fdececb122e0e153bdf"
+    },
+    {
+      "id": "CASE-M19-G05-03",
+      "name": "CASE-M19-G05-03",
+      "path": "tests/development/loyalty-incentives-lifecycle.test.mts",
+      "sha256": "ebd24cdf197374bffca4415c8a83ed1962b39e4371565fdececb122e0e153bdf"
+    },
+    {
+      "id": "CASE-M19-G05-04",
+      "name": "CASE-M19-G05-04",
+      "path": "tests/development/loyalty-incentives-lifecycle.test.mts",
+      "sha256": "ebd24cdf197374bffca4415c8a83ed1962b39e4371565fdececb122e0e153bdf"
     },
     {
       "id": "M01-G04-01",

@@ -1942,6 +1942,22 @@
       "contract_files": [
         "packages/commerce/contracts/loyalty-redemption.v1.json"
       ]
+    },
+    {
+      "id": "m19-loyalty-incentives-diagnostic",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/loyalty-incentives.v1.json"
+      ]
+    },
+    {
+      "id": "m19-loyalty-lifecycle-diagnostic",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/loyalty-lifecycle.v1.json"
+      ]
     }
   ],
   "tests": [
@@ -24624,6 +24640,104 @@
       "runner_case_id": "M19-G03-MERCHANT-IMPORT-AND-REPLAY-SUPPRESSION",
       "source": "tests/development/loyalty-redemption.test.mts",
       "capability_id": "m19-loyalty-redemption-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M19-G04-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M19-G04-01",
+      "source": "tests/development/loyalty-incentives-lifecycle.test.mts",
+      "capability_id": "m19-loyalty-incentives-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M19-G04-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M19-G04-02",
+      "source": "tests/development/loyalty-incentives-lifecycle.test.mts",
+      "capability_id": "m19-loyalty-incentives-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M19-G04-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M19-G04-03",
+      "source": "tests/development/loyalty-incentives-lifecycle.test.mts",
+      "capability_id": "m19-loyalty-incentives-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M19-G04-04",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M19-G04-04",
+      "source": "tests/development/loyalty-incentives-lifecycle.test.mts",
+      "capability_id": "m19-loyalty-incentives-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M19-G04-05",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M19-G04-05",
+      "source": "tests/development/loyalty-incentives-lifecycle.test.mts",
+      "capability_id": "m19-loyalty-incentives-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M19-G04-06",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M19-G04-06",
+      "source": "tests/development/loyalty-incentives-lifecycle.test.mts",
+      "capability_id": "m19-loyalty-incentives-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M19-G05-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M19-G05-01",
+      "source": "tests/development/loyalty-incentives-lifecycle.test.mts",
+      "capability_id": "m19-loyalty-lifecycle-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M19-G05-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M19-G05-02",
+      "source": "tests/development/loyalty-incentives-lifecycle.test.mts",
+      "capability_id": "m19-loyalty-lifecycle-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M19-G05-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M19-G05-03",
+      "source": "tests/development/loyalty-incentives-lifecycle.test.mts",
+      "capability_id": "m19-loyalty-lifecycle-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M19-G05-04",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M19-G05-04",
+      "source": "tests/development/loyalty-incentives-lifecycle.test.mts",
+      "capability_id": "m19-loyalty-lifecycle-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M19-G05-05",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M19-G05-05",
+      "source": "tests/development/loyalty-incentives-lifecycle.test.mts",
+      "capability_id": "m19-loyalty-lifecycle-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M19-G05-06",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M19-G05-06",
+      "source": "tests/development/loyalty-incentives-lifecycle.test.mts",
+      "capability_id": "m19-loyalty-lifecycle-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M19-G05-07",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M19-G05-07",
+      "source": "tests/development/loyalty-incentives-lifecycle.test.mts",
+      "capability_id": "m19-loyalty-lifecycle-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M19-G05-08",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M19-G05-08",
+      "source": "tests/development/loyalty-incentives-lifecycle.test.mts",
+      "capability_id": "m19-loyalty-lifecycle-diagnostic"
     }
   ],
   "protected_files": [
@@ -25190,7 +25304,15 @@
     "tests/development/loyalty-redemption-helpers.mts",
     "tests/development/loyalty-redemption-race-worker.mts",
     "tests/fixtures/loyalty-redemption/independent-values.json",
-    "packages/commerce/contracts/loyalty-redemption.v1.json"
+    "packages/commerce/contracts/loyalty-redemption.v1.json",
+    "packages/adapters/loyalty-incentive-fixture-source.mts",
+    "packages/commerce/loyalty-incentives.mts",
+    "packages/commerce/loyalty-lifecycle.mts",
+    "tests/development/loyalty-incentives-lifecycle.test.mts",
+    "tests/development/loyalty-incentives-lifecycle-helpers.mts",
+    "tests/fixtures/loyalty-incentives-lifecycle/independent-values.json",
+    "packages/commerce/contracts/loyalty-incentives.v1.json",
+    "packages/commerce/contracts/loyalty-lifecycle.v1.json"
   ],
   "source_count_fixture": "tests/fixtures/licensing/artifact-oracle.v1.json",
   "source_inventory": "planning/component-inventory.json"

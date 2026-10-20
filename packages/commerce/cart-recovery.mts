@@ -5,11 +5,14 @@ import { growthBody } from './growth-marketing-core.mts';
 import { supportCase } from './support-core.mts';
 import { assertRecoveryEgress } from './data-guards.mts';
 import type { GrowthCampaigns } from './growth-campaigns.mts';
+import {LoyaltyIncentives,assertLoyaltyIncentiveOwner} from './loyalty-incentives.mts';
 
 export interface CurrentCartReader {readonly kernel?:CommerceKernel;readonly k?:CommerceKernel;readCart(scope:Scope,cartId:string):Row;}
 export class CartRecovery {
   readonly k:CommerceKernel;readonly carts:CurrentCartReader;readonly campaigns:GrowthCampaigns;
+  #incentives:LoyaltyIncentives|null=null;
   constructor(k:CommerceKernel,carts:CurrentCartReader,campaigns:GrowthCampaigns){if((carts.kernel??carts.k)!==k||campaigns.k!==k)throw new Error('RECOVERY_CART_BOUNDARY');this.k=k;this.carts=carts;this.campaigns=campaigns;}
+  attachIncentives(value:LoyaltyIncentives){const owner=assertLoyaltyIncentiveOwner(this.k,value);if(owner.recovery!==this||owner.carts!==this.carts||owner.campaigns!==this.campaigns||this.#incentives&&this.#incentives!==owner)throw new Error('LOYALTY_SOURCE_OWNER_MISMATCH');this.#incentives=owner;}
   #eligible(cart:Row,after:number){
     if(cart.status==='purchased')throw new Error('RECOVERY_PURCHASED');
     if(cart.status!=='active'||cart.committed!==true)throw new Error('RECOVERY_CART_UNCOMMITTED');
@@ -38,6 +41,7 @@ export class CartRecovery {
     const cart=this.carts.readCart(scope,b.cart_id);
     if(cart.resource_id!==c.resource_id||cart.subject_id!==c.customer_id)throw new Error('RECOVERY_CART_SCOPE');
     this.#eligible(cart,campaign.body.recovery_after_ms);
+    if(Object.hasOwn(b,'loyalty_incentive')){if(!this.#incentives)throw new Error('LOYALTY_INCENTIVES_NOT_CONFIGURED');this.#incentives.final(scope,b.id);}
     return {id:b.id,digest:row.digest,cart_id:b.cart_id,purchase_observed:false,discount_applied:false};
   }
 }

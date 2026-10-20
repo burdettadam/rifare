@@ -30,6 +30,7 @@
     "packages/adapters/instant-exchange-fixture-source.mts",
     "packages/adapters/loyalty-accrual-fixture-source.mts",
     "packages/adapters/loyalty-fixture-source.mts",
+    "packages/adapters/loyalty-incentive-fixture-source.mts",
     "packages/adapters/loyalty-redemption-fixture-source.mts",
     "packages/adapters/marketing-fixture-source.mts",
     "packages/adapters/native-change-fixture-source.mts",
@@ -5024,6 +5025,86 @@
           "direct_fixtures": []
         }
       ]
+    },
+    {
+      "id": "loyalty_incentive_source",
+      "kind": "diagnostic",
+      "source_files": [
+        {
+          "path": "packages/adapters/loyalty-incentive-fixture-source.mts",
+          "sha256": "4183d4c41a84c6dff4363a7bc926e90f7b5b6496fa444488631280fb32245770"
+        }
+      ],
+      "version": "source-sha256:4183d4c41a84c6dff4363a7bc926e90f7b5b6496fa444488631280fb32245770",
+      "api_version": "rifare-loyalty-incentive-fixture-v1",
+      "external_version": null,
+      "external_account": null,
+      "external_scopes_attested": false,
+      "source_oracle": "Customer-free explicit native benefit/offer/variant applicability in the separate marketing fixture database. Composed native comparison/final-send and lifecycle projections preserve point, financial, source-observation and measurement distinctions. No live provider or production qualification.",
+      "operations": [
+        {
+          "id": "loyalty.incentive.quote",
+          "semantics": "composed",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M19-G04-01",
+              "name": "CASE-M19-G04-01",
+              "path": "tests/development/loyalty-incentives-lifecycle.test.mts",
+              "sha256": "ebd24cdf197374bffca4415c8a83ed1962b39e4371565fdececb122e0e153bdf"
+            },
+            {
+              "id": "CASE-M19-G04-02",
+              "name": "CASE-M19-G04-02",
+              "path": "tests/development/loyalty-incentives-lifecycle.test.mts",
+              "sha256": "ebd24cdf197374bffca4415c8a83ed1962b39e4371565fdececb122e0e153bdf"
+            },
+            {
+              "id": "CASE-M19-G04-03",
+              "name": "CASE-M19-G04-03",
+              "path": "tests/development/loyalty-incentives-lifecycle.test.mts",
+              "sha256": "ebd24cdf197374bffca4415c8a83ed1962b39e4371565fdececb122e0e153bdf"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "loyalty.lifecycle.report",
+          "semantics": "composed",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M19-G05-01",
+              "name": "CASE-M19-G05-01",
+              "path": "tests/development/loyalty-incentives-lifecycle.test.mts",
+              "sha256": "ebd24cdf197374bffca4415c8a83ed1962b39e4371565fdececb122e0e153bdf"
+            },
+            {
+              "id": "CASE-M19-G05-02",
+              "name": "CASE-M19-G05-02",
+              "path": "tests/development/loyalty-incentives-lifecycle.test.mts",
+              "sha256": "ebd24cdf197374bffca4415c8a83ed1962b39e4371565fdececb122e0e153bdf"
+            },
+            {
+              "id": "CASE-M19-G05-03",
+              "name": "CASE-M19-G05-03",
+              "path": "tests/development/loyalty-incentives-lifecycle.test.mts",
+              "sha256": "ebd24cdf197374bffca4415c8a83ed1962b39e4371565fdececb122e0e153bdf"
+            },
+            {
+              "id": "CASE-M19-G05-04",
+              "name": "CASE-M19-G05-04",
+              "path": "tests/development/loyalty-incentives-lifecycle.test.mts",
+              "sha256": "ebd24cdf197374bffca4415c8a83ed1962b39e4371565fdececb122e0e153bdf"
+            }
+          ],
+          "direct_fixtures": []
+        }
+      ]
     }
   ],
   "fixture_administration": "Seed, injected faults, and source observation setters are fixture administration, not remote provider operations. Unnamed real gateway/carrier/warehouse/ERP adapters are unavailable.",
@@ -5758,7 +5839,7 @@
     },
     {
       "path": "packages/commerce/support-service.mts",
-      "sha256": "d74528c0a236fb93ed2aa574b9ef9e5963ca1486d268f498c7e3bfde1908d4db"
+      "sha256": "06a21586ff5547fb250c4e6e7b3d70eaeea0016244cfd5b4494fb84230135eb3"
     },
     {
       "path": "packages/commerce/support-tracking.mts",
@@ -6062,7 +6143,7 @@
     },
     {
       "path": "tests/fixtures/conformance/expected-coverage.v1.json",
-      "sha256": "6daa44f747e502e9b76b470f23c3090c3b89b1b14766d63a961ce84cd83198bc"
+      "sha256": "0b5b4b2ce372244afaf8496216e9c77d935caa67ecd73d2e3464559b45fd0ee3"
     },
     {
       "path": "tests/fixtures/conformance/source-inputs.v1.json",
@@ -6410,7 +6491,7 @@
     },
     {
       "path": "packages/commerce/cart-recovery.mts",
-      "sha256": "ea3cc0f6f5e988bb73e7d695235b02a142d5529735c1d681f6563f5f8810049b"
+      "sha256": "f7383259c8666dae7328b569158f61b56d7b8c69417aaba5787200877aa221b1"
     },
     {
       "path": "packages/commerce/catalog-growth.mts",
@@ -6486,7 +6567,7 @@
     },
     {
       "path": "packages/commerce/growth-campaigns.mts",
-      "sha256": "991303f00f8c528f788efc0eca4ed005c369d858c024adada146db3d6e7ea7d1"
+      "sha256": "adc046feb45268c00495eebc932ad24c7690fed43a82efdd53a24168170b0c45"
     },
     {
       "path": "packages/commerce/growth-marketing-core.mts",
@@ -7631,6 +7712,38 @@
     {
       "path": "packages/commerce/contracts/loyalty-redemption.v1.json",
       "sha256": "48c47ba27ee8bf6a5c972c4777aab6a385d7b9d1b33b2796e6448072b98fdcb1"
+    },
+    {
+      "path": "packages/adapters/loyalty-incentive-fixture-source.mts",
+      "sha256": "4183d4c41a84c6dff4363a7bc926e90f7b5b6496fa444488631280fb32245770"
+    },
+    {
+      "path": "packages/commerce/loyalty-incentives.mts",
+      "sha256": "4c0d588ca769a98b1220bcb3c464dae17c0e791777ee9991292661495bcb40e9"
+    },
+    {
+      "path": "packages/commerce/loyalty-lifecycle.mts",
+      "sha256": "c29b67bc1c35b5726e86933f22775be457d061818fb69069235c4137433d1c31"
+    },
+    {
+      "path": "tests/development/loyalty-incentives-lifecycle.test.mts",
+      "sha256": "ebd24cdf197374bffca4415c8a83ed1962b39e4371565fdececb122e0e153bdf"
+    },
+    {
+      "path": "tests/development/loyalty-incentives-lifecycle-helpers.mts",
+      "sha256": "4f5aab673d2d19155a48f05a4b875f0280a5519ddb535c4c4462f3f9bd13d2dd"
+    },
+    {
+      "path": "tests/fixtures/loyalty-incentives-lifecycle/independent-values.json",
+      "sha256": "474fe57eaa437384bf1c1b2719b8d205346c8bbc9071bf66db6a2cd6876708be"
+    },
+    {
+      "path": "packages/commerce/contracts/loyalty-incentives.v1.json",
+      "sha256": "6cddeed8e9f8dd27fd357f3b41f22cc3d45eed1225fab5b13d8aebaa9c730db4"
+    },
+    {
+      "path": "packages/commerce/contracts/loyalty-lifecycle.v1.json",
+      "sha256": "4fc3b84c4f474de9a13566ed7885fc59c10201d1bbbb3fd73d174e2fbacb6cd9"
     }
   ]
 }

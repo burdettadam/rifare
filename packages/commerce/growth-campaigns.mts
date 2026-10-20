@@ -87,12 +87,20 @@ export class GrowthCampaigns {
     if(!recipients.length)this.#approval(s,row);
     k.db.prepare("UPDATE commerce_growth_campaigns SET state='scheduled' WHERE tenant_id=? AND store_id=? AND id=?").run(s.tenant_id,s.store_id,row.id);return this.read(scope,campaignId);
   });}
-  render(scope:Scope,campaignId:string,caseId:string,phase:'queue'|'send'){
+  #approvedRecipient(scope:Scope,campaignId:string,caseId:string){
     const {s,c}=supportCase(this.k,scope,caseId),row=this.#row(s,campaignId),body=growthBody(row),approval=this.#approval(s,row,c.resource_id);
     if(row.state!=='scheduled')throw new Error('CAMPAIGN_NOT_SCHEDULED');
-    this.#current(scope,s,row,body);
+    const current=this.#current(scope,s,row,body);
     const recipient=this.k.db.prepare('SELECT * FROM commerce_growth_campaign_recipients WHERE tenant_id=? AND store_id=? AND campaign_id=? AND resource_id=?').get(s.tenant_id,s.store_id,row.id,c.resource_id) as Row,value=growthBody(recipient);
     if(value.campaign_digest!==row.digest||value.case_id!==c.id||value.customer_id!==c.customer_id)throw new Error('CAMPAIGN_RECIPIENT_SCOPE');
+    return {s,c,row,body,approval,current};
+  }
+  approvedOffer(scope:Scope,campaignId:string,caseId:string){
+    const {c,row,body,approval,current}=this.#approvedRecipient(scope,campaignId,caseId);
+    return {campaign_id:row.id,campaign_digest:row.digest,case_id:c.id,resource_id:c.resource_id,sender_id:body.sender_id,offer_id:body.offer_id,offer:current.copy.offer,source_identity:current.copy.source_identity,source_facts_digest:current.copy.source_digest,starts_at:body.starts_at,ends_at:body.ends_at,approval_expires_at:approval.body.expires_at,offer_expires_at:current.copy.expires_at,recovery_after_ms:body.recovery_after_ms};
+  }
+  render(scope:Scope,campaignId:string,caseId:string,phase:'queue'|'send'){
+    const {c,row,body,approval}=this.#approvedRecipient(scope,campaignId,caseId);
     if(phase==='send'&&this.k.clock()<body.starts_at)throw new Error('CAMPAIGN_NOT_DUE');
     if(body.experiment_id){const exp=this.experiments.inspect(scope,body.experiment_id),assignment=this.experiments.assign(scope,{experiment_id:body.experiment_id,case_id:c.id,frontend_variants:['holdout','treatment']});
       if(assignment.arm==='holdout')throw new Error('CAMPAIGN_HOLDOUT_EXCLUDED');
