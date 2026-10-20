@@ -5269,7 +5269,7 @@
     },
     {
       "path": "packages/commerce/privacy-lifecycle.mts",
-      "sha256": "433917596d0260167cfbb734d9311b793036d857c6874414b36d89b90ef91844"
+      "sha256": "58c6356768dffcb4e46d92348cd797c76bf3679e834a4e9a9656510424571b37"
     },
     {
       "path": "packages/commerce/profile-editor.mts",
@@ -5405,7 +5405,7 @@
     },
     {
       "path": "packages/commerce/safe-recovery.mts",
-      "sha256": "e9089a1bb1b9a29de302ac06e918c88799c3dde3921ff3b6657282de5bb5821c"
+      "sha256": "673850bcc8c1ab7eb7130b043efdd37844f4441f331a808eb1d7949b18f9103f"
     },
     {
       "path": "packages/commerce/secrets.mts",
@@ -5533,7 +5533,7 @@
     },
     {
       "path": "packages/commerce/support-service.mts",
-      "sha256": "bba838bce9493676692c1ee68d2df39d0a777085c07034abfe57fe34f2eb064c"
+      "sha256": "58c24608974c3615c7bc59c26345dfe611d84c5a27e70823185a11f43f12a0ab"
     },
     {
       "path": "packages/commerce/support-tracking.mts",
@@ -6017,7 +6017,7 @@
     },
     {
       "path": "packages/commerce/merchant-portability.mts",
-      "sha256": "264753c282ba38484ebb2b6dc10fbea564f2d44351a0080d730373789f0ec27b"
+      "sha256": "9abcb6349fd7909273767c3d76482dc17af9946fc4a44b8e066026f0d5fbecff"
     },
     {
       "path": "packages/commerce/contracts/carrier-quotes.v1.json",
@@ -7250,6 +7250,34 @@
     {
       "path": "tests/development/journey-readiness-helpers.mts",
       "sha256": "3e14441a3843e8afa1704193432c1e5a4b091a0f493eddbae95aed6d580ed341"
+    },
+    {
+      "path": "packages/commerce/commerce-journeys.mts",
+      "sha256": "68161efe874321e05c8e9ef2ae336eab27105174b342691a2a534e7b0812da2a"
+    },
+    {
+      "path": "packages/commerce/journey-records.mts",
+      "sha256": "9f4cd5dbf814c4cc587328d750cef525a31b5d035cd1664c787822574c47158d"
+    },
+    {
+      "path": "packages/commerce/journey-references.mts",
+      "sha256": "8b969830ea31b97fd0ed1c821156871c051bf25118863f4e8868112dc7aae359"
+    },
+    {
+      "path": "packages/commerce/journey-privacy.mts",
+      "sha256": "9b307497a2abe9bcd0f3e150d17cbd585ad1d3037cca0b5d24d4f76669ce0785"
+    },
+    {
+      "path": "packages/commerce/contracts/commerce-journeys.v1.json",
+      "sha256": "ae23fde44cb0284e4fa74d9043a219873b2a8d869b077cc47080c926689d2027"
+    },
+    {
+      "path": "tests/development/commerce-journeys.test.mts",
+      "sha256": "5213e4eaa89c1c2eecc1221032104fb71f49350e7018375edfea7c0ccf924107"
+    },
+    {
+      "path": "tests/development/commerce-journeys-helpers.mts",
+      "sha256": "b63afd655ecb517d87b775d54df339a8fa89b224999d3c7441cc67da1ea4cb31"
     }
   ]
 }

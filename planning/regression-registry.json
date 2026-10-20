@@ -1893,6 +1893,14 @@
       "contract_files": [
         "packages/commerce/contracts/journey-readiness.v1.json"
       ]
+    },
+    {
+      "id": "m18-commerce-journeys-diagnostic",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/commerce-journeys.v1.json"
+      ]
     }
   ],
   "tests": [
@@ -23840,6 +23848,167 @@
       "runner_case_id": "M18-G02-QUARANTINE-EGRESS-AND-READ-ONLY-DISPATCH",
       "source": "tests/development/journey-readiness.test.mts",
       "capability_id": "m18-journey-readiness-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M18-G03-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M18-G03-01",
+      "source": "tests/development/commerce-journeys.test.mts",
+      "capability_id": "m18-commerce-journeys-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M18-G03-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M18-G03-02",
+      "source": "tests/development/commerce-journeys.test.mts",
+      "capability_id": "m18-commerce-journeys-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M18-G03-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M18-G03-03",
+      "source": "tests/development/commerce-journeys.test.mts",
+      "capability_id": "m18-commerce-journeys-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G03-STRICT-INPUT-OWNERS-AND-FINITE-BOUNDS",
+      "suite": "runtime",
+      "runner_case_id": "M18-G03-STRICT-INPUT-OWNERS-AND-FINITE-BOUNDS",
+      "source": "tests/development/commerce-journeys.test.mts",
+      "capability_id": "m18-commerce-journeys-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G03-EXACT-SCOPE-LINK-CUSTOMER-AND-CONTACT",
+      "suite": "runtime",
+      "runner_case_id": "M18-G03-EXACT-SCOPE-LINK-CUSTOMER-AND-CONTACT",
+      "source": "tests/development/commerce-journeys.test.mts",
+      "capability_id": "m18-commerce-journeys-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G03-CURRENT-PROOF-PERMISSION-AND-LATE-OWNERSHIP",
+      "suite": "runtime",
+      "runner_case_id": "M18-G03-CURRENT-PROOF-PERMISSION-AND-LATE-OWNERSHIP",
+      "source": "tests/development/commerce-journeys.test.mts",
+      "capability_id": "m18-commerce-journeys-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G03-CANONICAL-REFERENCE-ASSOCIATIONS",
+      "suite": "runtime",
+      "runner_case_id": "M18-G03-CANONICAL-REFERENCE-ASSOCIATIONS",
+      "source": "tests/development/commerce-journeys.test.mts",
+      "capability_id": "m18-commerce-journeys-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G03-EXPLICIT-HANDOFF-HISTORY-AND-MISSING-OWNERS",
+      "suite": "runtime",
+      "runner_case_id": "M18-G03-EXPLICIT-HANDOFF-HISTORY-AND-MISSING-OWNERS",
+      "source": "tests/development/commerce-journeys.test.mts",
+      "capability_id": "m18-commerce-journeys-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G03-CONTIGUOUS-VERSIONS-AND-REQUEST-REPLAY",
+      "suite": "runtime",
+      "runner_case_id": "M18-G03-CONTIGUOUS-VERSIONS-AND-REQUEST-REPLAY",
+      "source": "tests/development/commerce-journeys.test.mts",
+      "capability_id": "m18-commerce-journeys-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G03-NATIVE-PREPARE-AND-INTAKE-OWNER",
+      "suite": "runtime",
+      "runner_case_id": "M18-G03-NATIVE-PREPARE-AND-INTAKE-OWNER",
+      "source": "tests/development/commerce-journeys.test.mts",
+      "capability_id": "m18-commerce-journeys-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G03-EXACT-APPROVAL-RECEIPT-AND-ATOMIC-EXECUTION",
+      "suite": "runtime",
+      "runner_case_id": "M18-G03-EXACT-APPROVAL-RECEIPT-AND-ATOMIC-EXECUTION",
+      "source": "tests/development/commerce-journeys.test.mts",
+      "capability_id": "m18-commerce-journeys-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G03-CURRENT-STOPS-READINESS-AND-APPROVAL",
+      "suite": "runtime",
+      "runner_case_id": "M18-G03-CURRENT-STOPS-READINESS-AND-APPROVAL",
+      "source": "tests/development/commerce-journeys.test.mts",
+      "capability_id": "m18-commerce-journeys-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G03-UNKNOWN-GENERIC-RESOURCE-SCOPE",
+      "suite": "runtime",
+      "runner_case_id": "M18-G03-UNKNOWN-GENERIC-RESOURCE-SCOPE",
+      "source": "tests/development/commerce-journeys.test.mts",
+      "capability_id": "m18-commerce-journeys-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G03-UNKNOWN-NATIVE-RETURN-AND-ORPHAN-GUARD",
+      "suite": "runtime",
+      "runner_case_id": "M18-G03-UNKNOWN-NATIVE-RETURN-AND-ORPHAN-GUARD",
+      "source": "tests/development/commerce-journeys.test.mts",
+      "capability_id": "m18-commerce-journeys-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G03-UNKNOWN-RESOLUTION-PRESERVES-ORIGINAL-OPERATION",
+      "suite": "runtime",
+      "runner_case_id": "M18-G03-UNKNOWN-RESOLUTION-PRESERVES-ORIGINAL-OPERATION",
+      "source": "tests/development/commerce-journeys.test.mts",
+      "capability_id": "m18-commerce-journeys-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G03-UNKNOWN-EDIT-CHILD-AND-PARENT-CONSERVATISM",
+      "suite": "runtime",
+      "runner_case_id": "M18-G03-UNKNOWN-EDIT-CHILD-AND-PARENT-CONSERVATISM",
+      "source": "tests/development/commerce-journeys.test.mts",
+      "capability_id": "m18-commerce-journeys-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G03-UNKNOWN-CART-RECONCILIATION-NEVER-COMMITS-PROPOSED",
+      "suite": "runtime",
+      "runner_case_id": "M18-G03-UNKNOWN-CART-RECONCILIATION-NEVER-COMMITS-PROPOSED",
+      "source": "tests/development/commerce-journeys.test.mts",
+      "capability_id": "m18-commerce-journeys-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G03-RESTRICTED-PROJECTION-AND-MANUAL-DISPATCH",
+      "suite": "runtime",
+      "runner_case_id": "M18-G03-RESTRICTED-PROJECTION-AND-MANUAL-DISPATCH",
+      "source": "tests/development/commerce-journeys.test.mts",
+      "capability_id": "m18-commerce-journeys-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G03-HISTORICAL-INTEGRITY-AND-RESTORE-PREFLIGHT",
+      "suite": "runtime",
+      "runner_case_id": "M18-G03-HISTORICAL-INTEGRITY-AND-RESTORE-PREFLIGHT",
+      "source": "tests/development/commerce-journeys.test.mts",
+      "capability_id": "m18-commerce-journeys-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G03-SCOPED-SUBJECT-EXPORT-ERASURE-AND-REASSIGNMENT",
+      "suite": "runtime",
+      "runner_case_id": "M18-G03-SCOPED-SUBJECT-EXPORT-ERASURE-AND-REASSIGNMENT",
+      "source": "tests/development/commerce-journeys.test.mts",
+      "capability_id": "m18-commerce-journeys-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G03-FORGET-ALL-VERSIONS-HOLDS-AND-NATIVE-LEDGERS",
+      "suite": "runtime",
+      "runner_case_id": "M18-G03-FORGET-ALL-VERSIONS-HOLDS-AND-NATIVE-LEDGERS",
+      "source": "tests/development/commerce-journeys.test.mts",
+      "capability_id": "m18-commerce-journeys-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G03-UNINSTALL-AND-NATIVE-RESTORE-SUPPRESSION",
+      "suite": "runtime",
+      "runner_case_id": "M18-G03-UNINSTALL-AND-NATIVE-RESTORE-SUPPRESSION",
+      "source": "tests/development/commerce-journeys.test.mts",
+      "capability_id": "m18-commerce-journeys-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G03-MERCHANT-REIMPORT-AND-HELD-ATOMICITY",
+      "suite": "runtime",
+      "runner_case_id": "M18-G03-MERCHANT-REIMPORT-AND-HELD-ATOMICITY",
+      "source": "tests/development/commerce-journeys.test.mts",
+      "capability_id": "m18-commerce-journeys-diagnostic"
     }
   ],
   "protected_files": [
@@ -24367,7 +24536,14 @@
     "packages/commerce/contracts/journey-readiness.v1.json",
     "packages/commerce/journey-readiness.mts",
     "tests/development/journey-readiness-helpers.mts",
-    "tests/development/journey-readiness.test.mts"
+    "tests/development/journey-readiness.test.mts",
+    "packages/commerce/commerce-journeys.mts",
+    "packages/commerce/contracts/commerce-journeys.v1.json",
+    "packages/commerce/journey-privacy.mts",
+    "packages/commerce/journey-records.mts",
+    "packages/commerce/journey-references.mts",
+    "tests/development/commerce-journeys-helpers.mts",
+    "tests/development/commerce-journeys.test.mts"
   ],
   "source_count_fixture": "tests/fixtures/licensing/artifact-oracle.v1.json",
   "source_inventory": "planning/component-inventory.json"

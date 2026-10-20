@@ -675,7 +675,7 @@
     },
     {
       "path": "packages/commerce/merchant-portability.mts",
-      "sha256": "264753c282ba38484ebb2b6dc10fbea564f2d44351a0080d730373789f0ec27b"
+      "sha256": "9abcb6349fd7909273767c3d76482dc17af9946fc4a44b8e066026f0d5fbecff"
     },
     {
       "path": "packages/commerce/migration-cutover.mts",
@@ -771,7 +771,7 @@
     },
     {
       "path": "packages/commerce/privacy-lifecycle.mts",
-      "sha256": "433917596d0260167cfbb734d9311b793036d857c6874414b36d89b90ef91844"
+      "sha256": "58c6356768dffcb4e46d92348cd797c76bf3679e834a4e9a9656510424571b37"
     },
     {
       "path": "packages/commerce/procurement-approvals.mts",
@@ -951,7 +951,7 @@
     },
     {
       "path": "packages/commerce/safe-recovery.mts",
-      "sha256": "e9089a1bb1b9a29de302ac06e918c88799c3dde3921ff3b6657282de5bb5821c"
+      "sha256": "673850bcc8c1ab7eb7130b043efdd37844f4441f331a808eb1d7949b18f9103f"
     },
     {
       "path": "packages/commerce/secrets.mts",
@@ -1063,7 +1063,7 @@
     },
     {
       "path": "packages/commerce/support-service.mts",
-      "sha256": "bba838bce9493676692c1ee68d2df39d0a777085c07034abfe57fe34f2eb064c"
+      "sha256": "58c24608974c3615c7bc59c26345dfe611d84c5a27e70823185a11f43f12a0ab"
     },
     {
       "path": "packages/commerce/support-tracking.mts",
@@ -1240,6 +1240,22 @@
     {
       "path": "packages/commerce/journey-readiness.mts",
       "sha256": "fa9a906ecd906a4d18ff77ac1a5b346abf365b32a9c314ffbae66622b70da9ad"
+    },
+    {
+      "path": "packages/commerce/commerce-journeys.mts",
+      "sha256": "68161efe874321e05c8e9ef2ae336eab27105174b342691a2a534e7b0812da2a"
+    },
+    {
+      "path": "packages/commerce/journey-records.mts",
+      "sha256": "9f4cd5dbf814c4cc587328d750cef525a31b5d035cd1664c787822574c47158d"
+    },
+    {
+      "path": "packages/commerce/journey-references.mts",
+      "sha256": "8b969830ea31b97fd0ed1c821156871c051bf25118863f4e8868112dc7aae359"
+    },
+    {
+      "path": "packages/commerce/journey-privacy.mts",
+      "sha256": "9b307497a2abe9bcd0f3e150d17cbd585ad1d3037cca0b5d24d4f76669ce0785"
     }
   ],
   "surfaces": [
@@ -1325,11 +1341,15 @@
         "packages/commerce/decision-resources.mts",
         "packages/commerce/shopper-memory.mts",
         "packages/commerce/shopper-memory-records.mts",
-        "packages/commerce/shopper-memory-privacy.mts"
+        "packages/commerce/shopper-memory-privacy.mts",
+        "packages/commerce/commerce-journeys.mts",
+        "packages/commerce/journey-records.mts",
+        "packages/commerce/journey-references.mts",
+        "packages/commerce/journey-privacy.mts"
       ],
       "export": "Subject conversations, contacts, attempts/deliveries, current consent and consent events are scoped to the customer and cases. Campaign recipients are subject scoped; canonical SupportDelivery remains the message owner.",
-      "erasure": "Redact messages and delivery bodies, null contacts, withdraw/pseudonymize consent, revoke session ownership and cancel rule jobs. Revoke affected campaign approvals and suppress recipient bodies, preserving original send IDs. ADR-0053 adds same-case support_journey preferences from explicit current verified customer requests. All historical shopper_memory values and source links are scrubbed on correction, expiry, forgetting and subject erasure when unheld; held retired values remain revoked and absent from ordinary context. Subject export is a retained-memory allowlist scoped to tenant/store/subject, including historical subjects with zero current resources.",
-      "retention": "Delivery references and operational observations remain minimized; an already delivered provider copy cannot be recalled. Provider acceptance stays distinct from observed delivery; no new effect is created by minimization. M13 snapshots select currently authorized incoming public text; partial history remains a gap and an exceeded complete-message bound cannot dispatch a prefix. Memory expiry is at most 30 days from observation. Current customer/source/link/generation checks precede context access; no transcript, original request ID or caller session is retained. Released holds permit retired-value cleanup on the next current access or mutation.",
+      "erasure": "Redact messages and delivery bodies, null contacts, withdraw/pseudonymize consent, revoke session ownership and cancel rule jobs. Revoke affected campaign approvals and suppress recipient bodies, preserving original send IDs. ADR-0053 adds same-case support_journey preferences from explicit current verified customer requests. All historical shopper_memory values and source links are scrubbed on correction, expiry, forgetting and subject erasure when unheld; held retired values remain revoked and absent from ordinary context. Subject export is a retained-memory allowlist scoped to tenant/store/subject, including historical subjects with zero current resources. ADR-0055 commerce_journey documents retain only canonical intent references. Exact retained subject identity selects all versions for allowlisted export and erasure, including subjects with no current resources. Forgotten, superseded and uninstalled personal references scrub when unheld; held versions remain revoked and inaccessible.",
+      "retention": "Delivery references and operational observations remain minimized; an already delivered provider copy cannot be recalled. Provider acceptance stays distinct from observed delivery; no new effect is created by minimization. M13 snapshots select currently authorized incoming public text; partial history remains a gap and an exceeded complete-message bound cannot dispatch a prefix. Memory expiry is at most 30 days from observation. Current customer/source/link/generation checks precede context access; no transcript, original request ID or caller session is retained. Released holds permit retired-value cleanup on the next current access or mutation. Original operation, preview, approval and receipt owners retain their own records. Journey restoration/import preflights original and destination histories and scrubs restored personal references; current erasure suppression precedes held-content refusal. No journey, source or message automatically resumes.",
       "observation_required": "Exercise real conversation/contact/consent APIs and verify local copy fields and blocked subsequent access. Observe campaign copies plus existing delivery, consent, contact and source outbox records."
     },
     {
@@ -1453,11 +1473,15 @@
         "packages/commerce/agency-reports.mts",
         "packages/commerce/shopper-memory.mts",
         "packages/commerce/shopper-memory-records.mts",
-        "packages/commerce/shopper-memory-privacy.mts"
+        "packages/commerce/shopper-memory-privacy.mts",
+        "packages/commerce/commerce-journeys.mts",
+        "packages/commerce/journey-records.mts",
+        "packages/commerce/journey-references.mts",
+        "packages/commerce/journey-privacy.mts"
       ],
       "export": "Subject cost/completion and return assistance records export; mixed-customer metric documents expose only owned members. Other aggregate and unbound configuration text requires scope review. Project only the subject assignment, exposure and native observations plus relevant seed-free experiment metadata. M11 aggregate source snapshots and forecasts contain no order or customer data. Agency aggregates allow only customer-free metric counts and explicit denominators.",
-      "erasure": "Support metrics recheck case access when rebuilt; erased members remain unavailable in the frozen denominator. Insight drafts revoke. Bound prevention/risk bodies and customer IDs redact. Remove customer text and outcomes while retaining frozen assigned-arm denominators; missing/erased results remain unavailable. Rebuild explicit nested field allowlists even for empty resource lists and hash-only erasure. Every refresh recomputes current store authorization and the canonical subject-minimized metrics. The existing commerce_support_documents table also owns ADR-0053 shopper_memory records. Their exact case/resource/subject identity, explicit preference values and source references have dedicated all-version cleanup and allowlisted subject export; this kind is not treated as nonpersonal configuration.",
-      "retention": "The support_documents table also carries merchant configuration, qualification and migration/import control. Do not bulk-delete it. Frozen denominator and minimized financial facts remain; no legal retention duration is inferred. Experiment counts and immutable source/prompt/catalog/model digests are audit, not causal-lift or placement guarantees. Keep frozen observations, declared cohorts, metrics, uncertainty limits and original digests when facts are unchanged. No agency aggregate cache is persisted. Minimized revoked revision/request-hash records retain replay refusal after personal values are removed. Context never falls back to an older version; held historical values are visible only in an explicitly scoped privacy export.",
+      "erasure": "Support metrics recheck case access when rebuilt; erased members remain unavailable in the frozen denominator. Insight drafts revoke. Bound prevention/risk bodies and customer IDs redact. Remove customer text and outcomes while retaining frozen assigned-arm denominators; missing/erased results remain unavailable. Rebuild explicit nested field allowlists even for empty resource lists and hash-only erasure. Every refresh recomputes current store authorization and the canonical subject-minimized metrics. The existing commerce_support_documents table also owns ADR-0053 shopper_memory records. Their exact case/resource/subject identity, explicit preference values and source references have dedicated all-version cleanup and allowlisted subject export; this kind is not treated as nonpersonal configuration. ADR-0055 commerce_journey documents retain only canonical intent references. Exact retained subject identity selects all versions for allowlisted export and erasure, including subjects with no current resources. Forgotten, superseded and uninstalled personal references scrub when unheld; held versions remain revoked and inaccessible.",
+      "retention": "The support_documents table also carries merchant configuration, qualification and migration/import control. Do not bulk-delete it. Frozen denominator and minimized financial facts remain; no legal retention duration is inferred. Experiment counts and immutable source/prompt/catalog/model digests are audit, not causal-lift or placement guarantees. Keep frozen observations, declared cohorts, metrics, uncertainty limits and original digests when facts are unchanged. No agency aggregate cache is persisted. Minimized revoked revision/request-hash records retain replay refusal after personal values are removed. Context never falls back to an older version; held historical values are visible only in an explicitly scoped privacy export. Original operation, preview, approval and receipt owners retain their own records. Journey restoration/import preflights original and destination histories and scrubs restored personal references; current erasure suppression precedes held-content refusal. No journey, source or message automatically resumes.",
       "observation_required": "Rebuild the actual metric report after erasure and current-checkpoint import; inspect unbound document data before claiming subject completeness. Observe native event deduplication, cost coverage, erased unavailable units and catalog observation copies. Observe source availability cutoffs and retained zero, missing and censored demand denominators. Verify exact known-answer counts, denied drilldown and immediate exclusion after store revocation."
     },
     {
@@ -1812,11 +1836,15 @@
         "packages/commerce/image-suppression.mts",
         "packages/commerce/shopper-memory.mts",
         "packages/commerce/shopper-memory-records.mts",
-        "packages/commerce/shopper-memory-privacy.mts"
+        "packages/commerce/shopper-memory-privacy.mts",
+        "packages/commerce/commerce-journeys.mts",
+        "packages/commerce/journey-records.mts",
+        "packages/commerce/journey-references.mts",
+        "packages/commerce/journey-privacy.mts"
       ],
       "export": "Merchant transfer includes scoped suppression controls; ordinary subject export does not disclose other subject hashes or installation-wide recovery rows. Canonical growth export obeys the same privacy authority and scope. Canonical M10 export uses the existing privacy authority and merchant scope. Canonical M11 handling reuses existing tenant/store privacy authority. Canonical M12 handling shares the existing tenant/store privacy authority.",
-      "erasure": "Retain subject/resource tombstones. Restore/import requires a separately retained current checkpoint, applies erasure before exposure and leaves execution quarantined. Current suppression also minimizes packing/shipping payloads and revokes label approvals while retaining original monetary and package identities. Current suppression preserves the minimum global inventory cores, minimizes warehouse event histories and revokes transfer approvals; quarantine blocks new observation imports and source effect dispatch. Apply growth allowlists even for hash-only and already-redacted imported records. Apply each M10 allowlist for hash-only and already-redacted suppression replay. Every M11 area receives canonical erasure including empty resource lists and repeated hash-only requests. Every new table receives canonical erasure and repeated empty-resource hash-only handling. M17 image authority never reactivates on restore/import; held image content fails closed for separate retention administration. Existing subject suppression is retained; individual-image backup suppression remains pending. ADR-0052 adds explicit v2 image suppression, strict retained-control validation and atomic exact-identity replay before held-image invalidation. Independently committed deletion supersedes obsolete copied holds; unselected held image records still refuse restore/import. Media-free v1 remains unchanged. ADR-0053 validates memory before suppression replay and unconditionally scrubs all restored/imported shopper_memory values, including repeat merchant import. Current subject suppression precedes held-content refusal, preserving already-authorized source erasure and exact operation identities.",
-      "retention": "Suppression hashes are linkable control data, not claimed anonymous; current checkpoint freshness and delivery remain explicit caller duties. All growth controls are revoked before restored data can be exposed; quarantine remains local and no source effect is performed. Revoke all new authority before restored data is exposed; perform no external or source effect. All new approvals are revoked before restored data can execute effects, independently of erasure tombstones. Revoke restored agency/template/extension authority without requiring a customer tombstone. Retained image_suppression documents are monotonic privacy controls, effective in recorded or revoked state. Latest-checkpoint trust, source quiescence and independent delivery are still caller duties. Memory adds no checkpoint version or table. Unselected held personal memory causes atomic restore/import refusal; quarantine and existing revoked authorities remain. A fresh verified customer statement is required to establish memory after restore.",
+      "erasure": "Retain subject/resource tombstones. Restore/import requires a separately retained current checkpoint, applies erasure before exposure and leaves execution quarantined. Current suppression also minimizes packing/shipping payloads and revokes label approvals while retaining original monetary and package identities. Current suppression preserves the minimum global inventory cores, minimizes warehouse event histories and revokes transfer approvals; quarantine blocks new observation imports and source effect dispatch. Apply growth allowlists even for hash-only and already-redacted imported records. Apply each M10 allowlist for hash-only and already-redacted suppression replay. Every M11 area receives canonical erasure including empty resource lists and repeated hash-only requests. Every new table receives canonical erasure and repeated empty-resource hash-only handling. M17 image authority never reactivates on restore/import; held image content fails closed for separate retention administration. Existing subject suppression is retained; individual-image backup suppression remains pending. ADR-0052 adds explicit v2 image suppression, strict retained-control validation and atomic exact-identity replay before held-image invalidation. Independently committed deletion supersedes obsolete copied holds; unselected held image records still refuse restore/import. Media-free v1 remains unchanged. ADR-0053 validates memory before suppression replay and unconditionally scrubs all restored/imported shopper_memory values, including repeat merchant import. Current subject suppression precedes held-content refusal, preserving already-authorized source erasure and exact operation identities. ADR-0055 commerce_journey documents retain only canonical intent references. Exact retained subject identity selects all versions for allowlisted export and erasure, including subjects with no current resources. Forgotten, superseded and uninstalled personal references scrub when unheld; held versions remain revoked and inaccessible.",
+      "retention": "Suppression hashes are linkable control data, not claimed anonymous; current checkpoint freshness and delivery remain explicit caller duties. All growth controls are revoked before restored data can be exposed; quarantine remains local and no source effect is performed. Revoke all new authority before restored data is exposed; perform no external or source effect. All new approvals are revoked before restored data can execute effects, independently of erasure tombstones. Revoke restored agency/template/extension authority without requiring a customer tombstone. Retained image_suppression documents are monotonic privacy controls, effective in recorded or revoked state. Latest-checkpoint trust, source quiescence and independent delivery are still caller duties. Memory adds no checkpoint version or table. Unselected held personal memory causes atomic restore/import refusal; quarantine and existing revoked authorities remain. A fresh verified customer statement is required to establish memory after restore. Original operation, preview, approval and receipt owners retain their own records. Journey restoration/import preflights original and destination histories and scrubs restored personal references; current erasure suppression precedes held-content refusal. No journey, source or message automatically resumes.",
       "observation_required": "Use one old snapshot with a later independently retained suppression checkpoint; verify no restored active subject payloads or analytics exposure. Observe canonical erasure, merchant import, snapshot restore and uninstall calls. Observe canonical erasure, merchant import, snapshot recovery and uninstall calls. Observe canonical subject export/erase, merchant import, recovery and uninstall wiring. Observe canonical export, erase, import, recovery and uninstall composition for all eight new tables."
     },
     {
