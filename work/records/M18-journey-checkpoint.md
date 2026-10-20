@@ -174,3 +174,54 @@ All 3,158 prior test objects, 212 capabilities, 532 protected paths, 1,822 sourc
 are 3,177 tests, 213 capabilities, 539 protected paths, 1,831 source members,
 314 runtime pins and 626 oracle pins, with inventory revision 30. These counts
 are source inventory, not a claim that every registered case was run.
+
+## G04 local outcome and continuity handoff
+
+Clean reviewed product b8f9f4f7895c0be39964c34ca9dc2cb0b4b47b6d, tree
+c58f028d135c8fb5dd4fcb7898d05fd98da38f32, completes the assigned bounded local
+follow-up increment from e7ae55378260e2ab1133fe863c53515b2c037197. The initial
+f0de7f4 attempt executed 19 cases: 16 passed and three failed during the shared
+permission-denial fixture, before their intended permission paths. The native
+30-action limit was correctly enforced. Remaining selected files did not run;
+the wrapper's zero successful whole-file total is not zero native executions.
+This 14.557-second failed attempt remains retained.
+
+Prior authorization bbaaaa1 assigned only that fixture correction. Independent
+commit 291e0a79dd65d60fd1b8d572642190b9a3d6d27c, integrated unchanged as e3dd483,
+uses 30 valid operator actions and preserves 29 after the deliberate denial.
+Native permission previews verify the initial and remaining authority for the
+actual scoped caller/resource. All 19 original case bodies and the helper are
+byte-identical; runtime did not change in response to the setup failure.
+
+Actual attempt-02 passed all 60 selected native cases in 25.241 seconds: 19
+follow-ups, nine support-delivery, eight support-rules and 24 growth-marketing.
+There were no failures, errors, skips or timeout. All 1,831 report source hashes
+and current pins match. All old test/capability/protected objects, source members,
+38 adapters, 15 privacy surfaces, 262 tables, native owners, work grants, canonical
+goals and the acceptance ledger are retained. Current totals are 3,177 tests,
+213 capabilities, 539 protected paths, 314 runtime pins and 626 oracle pins,
+with inventory revision 30. These are inventory totals, not a full-suite claim.
+
+Isolated fault 640a370de32361ae4a3f615bcdeda8644a2237df has this exact product
+as parent. Only the finalFollowup call inside SupportDelivery.#final and two
+existing source pins changed. All 19 unchanged cases executed in 14.541 seconds:
+17 passed and two failed behaviorally. The actual cart-purchase and memory-change
+final races lost their required suppression rejection. Every source hash and
+test/helper identity was verified; this fault is outside product ancestry.
+
+Both nonauthor reviewers, /root/m18_authority_scope and
+/root/m18_regression_scope, approved this exact candidate in round 1 with no
+blocking product findings. Actual independent dispositions, source comparisons,
+reports, native XML/TAP and the isolated fault are retained under
+evidence/M18-followups/. Root records bounded local G04 integration under the
+owner's standing delegation. This closure changes only PLANS.md and this record;
+executed runtime, tests, contracts and pins remain identical to b8f9f4f.
+
+The next separate prior assignment is ADR-0057: three independent local G05
+continuity cases and an honest G99 assessment. Use existing manual/deterministic
+workflows, current human native effect authority, two local channel records,
+reopened durable context and original-operation reconciliation, and no-model
+opt-out handling. No new runtime layer is expected. Real independent remote
+caller/channel qualification, two complete merchant journeys on qualified
+channels, target-host evidence, full applicable formal gates and missing later
+M15/M16/M23 source remain open. Main stays a33c4ad; no release or external effect.

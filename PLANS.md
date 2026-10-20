@@ -295,13 +295,20 @@ in the journey checkpoint record. G04 follow-ups receive the next concrete
 assignment; G05 local continuity and G99 assessment follow without inferring
 formal, remote, connected-provider or target-host qualification.
 
-## Current M18 follow-up candidate
+## Current M18 follow-ups
 
-ADR-0056 records the prior G04 assignment and independent contract clarifications.
-The independent author froze 19 native cases at b0a5739; root integrated them
-unchanged at 3972871 before runtime implementation. The candidate adds one guarded
-transactional tracking step through existing native rules and delivery, current
-journey/memory/source checks, original-identity replay and retained-subject cleanup.
-The assigned 60-case focused execution, isolated final-guard fault and two
-independent product reviews are pending. G05 bounded continuity and G99 assessment
-remain the next assigned local work; formal dependencies remain open.
+G04 is locally implemented and independently reviewed at b8f9f4f. All 60 assigned
+native cases passed in 25.241 seconds. The retained first attempt exposed only
+three shared permission-fixture setup failures; the independent correction
+preserved every case body and the native permission limit. An exact-parent
+isolated final-guard fault was caught by two of 19 unchanged cases, including the
+actual final cart-purchase race. Both nonauthor reviewers approved round 1 without
+product findings. Original jobs, operations and receipts survive replay,
+invalidation and uncertain outcomes; current authority and retained-subject
+privacy remain enforced through the native owners.
+
+This closure changes only project progress and the journey work record, leaving
+executed runtime/tests/contracts/pins identical. ADR-0057 will assign the three
+bounded local G05 continuity cases and honest G99 assessment. Formal acceptance,
+independent remote/connected-channel qualification, the two-profile full journey,
+target-host evidence and missing later source reconciliation remain open.
