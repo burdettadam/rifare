@@ -1926,6 +1926,14 @@
       "contract_files": [
         "packages/commerce/contracts/loyalty-balances.v1.json"
       ]
+    },
+    {
+      "id": "m19-loyalty-accrual-diagnostic",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/loyalty-accrual.v1.json"
+      ]
     }
   ],
   "tests": [
@@ -24328,6 +24336,146 @@
       "runner_case_id": "M19-G01-NO-PERSISTENT-PERSONAL-CACHE",
       "source": "tests/development/loyalty-balances.test.mts",
       "capability_id": "m19-loyalty-balances-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M19-G02-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M19-G02-01",
+      "source": "tests/development/loyalty-accrual.test.mts",
+      "capability_id": "m19-loyalty-accrual-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M19-G02-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M19-G02-02",
+      "source": "tests/development/loyalty-accrual.test.mts",
+      "capability_id": "m19-loyalty-accrual-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M19-G02-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M19-G02-03",
+      "source": "tests/development/loyalty-accrual.test.mts",
+      "capability_id": "m19-loyalty-accrual-diagnostic"
+    },
+    {
+      "id": "runtime:M19-G02-CUMULATIVE-INTEGER-ROUNDING",
+      "suite": "runtime",
+      "runner_case_id": "M19-G02-CUMULATIVE-INTEGER-ROUNDING",
+      "source": "tests/development/loyalty-accrual.test.mts",
+      "capability_id": "m19-loyalty-accrual-diagnostic"
+    },
+    {
+      "id": "runtime:M19-G02-HISTORICAL-RULE-AND-PIN",
+      "suite": "runtime",
+      "runner_case_id": "M19-G02-HISTORICAL-RULE-AND-PIN",
+      "source": "tests/development/loyalty-accrual.test.mts",
+      "capability_id": "m19-loyalty-accrual-diagnostic"
+    },
+    {
+      "id": "runtime:M19-G02-PAID-COMPONENTS-ZERO-AND-FEES",
+      "suite": "runtime",
+      "runner_case_id": "M19-G02-PAID-COMPONENTS-ZERO-AND-FEES",
+      "source": "tests/development/loyalty-accrual.test.mts",
+      "capability_id": "m19-loyalty-accrual-diagnostic"
+    },
+    {
+      "id": "runtime:M19-G02-MISSING-HISTORICAL-EVIDENCE",
+      "suite": "runtime",
+      "runner_case_id": "M19-G02-MISSING-HISTORICAL-EVIDENCE",
+      "source": "tests/development/loyalty-accrual.test.mts",
+      "capability_id": "m19-loyalty-accrual-diagnostic"
+    },
+    {
+      "id": "runtime:M19-G02-HISTORICAL-SOURCE-INTEGRITY",
+      "suite": "runtime",
+      "runner_case_id": "M19-G02-HISTORICAL-SOURCE-INTEGRITY",
+      "source": "tests/development/loyalty-accrual.test.mts",
+      "capability_id": "m19-loyalty-accrual-diagnostic"
+    },
+    {
+      "id": "runtime:M19-G02-REFUND-TERMINAL-EVIDENCE",
+      "suite": "runtime",
+      "runner_case_id": "M19-G02-REFUND-TERMINAL-EVIDENCE",
+      "source": "tests/development/loyalty-accrual.test.mts",
+      "capability_id": "m19-loyalty-accrual-diagnostic"
+    },
+    {
+      "id": "runtime:M19-G02-ADDITIONAL-CAPTURE-EVIDENCE",
+      "suite": "runtime",
+      "runner_case_id": "M19-G02-ADDITIONAL-CAPTURE-EVIDENCE",
+      "source": "tests/development/loyalty-accrual.test.mts",
+      "capability_id": "m19-loyalty-accrual-diagnostic"
+    },
+    {
+      "id": "runtime:M19-G02-SOURCE-SIDE-COMPLETENESS",
+      "suite": "runtime",
+      "runner_case_id": "M19-G02-SOURCE-SIDE-COMPLETENESS",
+      "source": "tests/development/loyalty-accrual.test.mts",
+      "capability_id": "m19-loyalty-accrual-diagnostic"
+    },
+    {
+      "id": "runtime:M19-G02-UNSUPPORTED-MULTIUNIT-ATTRIBUTION",
+      "suite": "runtime",
+      "runner_case_id": "M19-G02-UNSUPPORTED-MULTIUNIT-ATTRIBUTION",
+      "source": "tests/development/loyalty-accrual.test.mts",
+      "capability_id": "m19-loyalty-accrual-diagnostic"
+    },
+    {
+      "id": "runtime:M19-G02-ROOT-AND-DESCENDANT-PERMISSIONS",
+      "suite": "runtime",
+      "runner_case_id": "M19-G02-ROOT-AND-DESCENDANT-PERMISSIONS",
+      "source": "tests/development/loyalty-accrual.test.mts",
+      "capability_id": "m19-loyalty-accrual-diagnostic"
+    },
+    {
+      "id": "runtime:M19-G02-CURRENT-CALLER-PROOF-AND-INPUT",
+      "suite": "runtime",
+      "runner_case_id": "M19-G02-CURRENT-CALLER-PROOF-AND-INPUT",
+      "source": "tests/development/loyalty-accrual.test.mts",
+      "capability_id": "m19-loyalty-accrual-diagnostic"
+    },
+    {
+      "id": "runtime:M19-G02-OWNERSHIP-AND-CURRENT-AUTHORITY",
+      "suite": "runtime",
+      "runner_case_id": "M19-G02-OWNERSHIP-AND-CURRENT-AUTHORITY",
+      "source": "tests/development/loyalty-accrual.test.mts",
+      "capability_id": "m19-loyalty-accrual-diagnostic"
+    },
+    {
+      "id": "runtime:M19-G02-NATIVE-OWNER-AND-PHYSICAL-BOUNDARIES",
+      "suite": "runtime",
+      "runner_case_id": "M19-G02-NATIVE-OWNER-AND-PHYSICAL-BOUNDARIES",
+      "source": "tests/development/loyalty-accrual.test.mts",
+      "capability_id": "m19-loyalty-accrual-diagnostic"
+    },
+    {
+      "id": "runtime:M19-G02-CAPABILITIES-FRESHNESS-AND-CURRENCY",
+      "suite": "runtime",
+      "runner_case_id": "M19-G02-CAPABILITIES-FRESHNESS-AND-CURRENCY",
+      "source": "tests/development/loyalty-accrual.test.mts",
+      "capability_id": "m19-loyalty-accrual-diagnostic"
+    },
+    {
+      "id": "runtime:M19-G02-EDITED-FACTS-AND-UNATTRIBUTED-CHANGES",
+      "suite": "runtime",
+      "runner_case_id": "M19-G02-EDITED-FACTS-AND-UNATTRIBUTED-CHANGES",
+      "source": "tests/development/loyalty-accrual.test.mts",
+      "capability_id": "m19-loyalty-accrual-diagnostic"
+    },
+    {
+      "id": "runtime:M19-G02-DISPATCHER-NO-EFFECT-AUTHORITY",
+      "suite": "runtime",
+      "runner_case_id": "M19-G02-DISPATCHER-NO-EFFECT-AUTHORITY",
+      "source": "tests/development/loyalty-accrual.test.mts",
+      "capability_id": "m19-loyalty-accrual-diagnostic"
+    },
+    {
+      "id": "runtime:M19-G02-PRIVACY-RECOVERY-AND-NO-CACHE",
+      "suite": "runtime",
+      "runner_case_id": "M19-G02-PRIVACY-RECOVERY-AND-NO-CACHE",
+      "source": "tests/development/loyalty-accrual.test.mts",
+      "capability_id": "m19-loyalty-accrual-diagnostic"
     }
   ],
   "protected_files": [
@@ -24877,7 +25025,14 @@
     "packages/adapters/loyalty-fixture-source.mts",
     "packages/commerce/contracts/loyalty-balances.v1.json",
     "tests/development/loyalty-balances.test.mts",
-    "tests/development/loyalty-balances-helpers.mts"
+    "tests/development/loyalty-balances-helpers.mts",
+    "packages/commerce/loyalty-accrual.mts",
+    "packages/commerce/loyalty-accrual-evidence.mts",
+    "packages/adapters/loyalty-accrual-fixture-source.mts",
+    "packages/commerce/contracts/loyalty-accrual.v1.json",
+    "tests/development/loyalty-accrual.test.mts",
+    "tests/development/loyalty-accrual-helpers.mts",
+    "tests/fixtures/loyalty-accrual/independent-values.json"
   ],
   "source_count_fixture": "tests/fixtures/licensing/artifact-oracle.v1.json",
   "source_inventory": "planning/component-inventory.json"

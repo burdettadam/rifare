@@ -16,8 +16,10 @@ Independent test author owns the three new loyalty-accrual test/fixture paths on
 test/M19-loyalty-accrual in a separate worktree. Root owns runtime and is sole
 executor. Independent authority and regression reviewers are nonauthors.
 
-State: tests-first preparation. No G02 runtime result, pass or completion is
-claimed at this checkpoint. The intended focused selection is 20 new G02 cases,
+State: independent tests frozen, runtime candidate implemented, verification
+pending. Freeze cc1d1dcc825a852118fca4f84ae0ccff87efdecf was integrated unchanged
+as 797b842b352053564e3bb26ff2096341707d45d9 before runtime. No G02 pass or local
+completion is claimed at this checkpoint. The focused selection is 20 new G02 cases,
 20 existing G01 cases, 17 existing exchange-lineage cases and the one existing
 post-edit allocation invalidation case: 58 cases/four whole files under the
 unchanged 60-second native deadline. Exact final IDs and measured results will
@@ -28,7 +30,16 @@ with no points or financial effects. Historical earning rules are pinned;
 source-side and core evidence must both match. The independent two-line oracle
 is 320 earned, 130 reversed and 190 net after two gamma exchanges and one alpha
 unit refund. A merely accepted alpha refund leaves 320/30/290 with pending
-evidence. These are fixture expectations, not executed observations yet.
+evidence. These remain fixture expectations until the exact candidate runs.
+
+The candidate adds a native historical fixture owner, bounded read-only evidence
+projection and one optional SupportService action. Current G01 scope and proof,
+physical source isolation, original-unit arithmetic, both native journals and
+actual current staff permissions are revalidated. Metadata preserves all prior
+3200 tests, 215 capabilities, 547 protected paths, 1844 source members, 39 adapters,
+201 operations and 265 conformance cases, adding 20 tests, one capability, seven
+protected paths, eleven source members, one adapter, one operation and three
+conformance cases. All 15 privacy surface IDs and the core schema remain unchanged.
 
 ## Remaining local and formal work
 

@@ -372,3 +372,16 @@ reversal proposals. Later operations and formal/provider/remote/target-host
 qualification remain open. The acceptance ledger and protected main are
 unchanged. [The recovery and loyalty checkpoint](work/records/M19-recovery-checkpoint.md)
 records exact source identities, actual evidence, review decisions and continuation.
+
+## M19 original-unit loyalty projection candidate
+
+ADR-0059 assigned M19-G02 before the independent test freeze cc1d1dc, integrated
+unchanged as 797b842. The local candidate derives cumulative original-unit
+earning/reversal targets from pinned historical rules, exact native settlements
+and funded exchange ancestry. It exposes only a read-only support action and adds
+no points handler, financial mutation, core table, worker grant or acceptance.
+The frozen 20-case oracle and existing G01/lineage/post-edit files form the planned
+58-case focused batch. Verification, the carried-funding fault experiment and
+two independent exact-candidate reviews are pending; no G02 completion is claimed.
+The separate G03 design records durable redemption and recovery constraints,
+without assigning or implementing that later goal.

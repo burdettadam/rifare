@@ -28,6 +28,7 @@
     "packages/adapters/exchange-money-fixture-source.mts",
     "packages/adapters/fulfillment-fixture-source.mts",
     "packages/adapters/instant-exchange-fixture-source.mts",
+    "packages/adapters/loyalty-accrual-fixture-source.mts",
     "packages/adapters/loyalty-fixture-source.mts",
     "packages/adapters/marketing-fixture-source.mts",
     "packages/adapters/native-change-fixture-source.mts",
@@ -4874,6 +4875,52 @@
           "direct_fixtures": []
         }
       ]
+    },
+    {
+      "id": "loyalty_accrual_source",
+      "kind": "diagnostic",
+      "source_files": [
+        {
+          "path": "packages/adapters/loyalty-accrual-fixture-source.mts",
+          "sha256": "a38f828c142856a5a9415f6eadce15b12e6258f650fdfc78eaf1fb0c2b335592"
+        }
+      ],
+      "version": "source-sha256:a38f828c142856a5a9415f6eadce15b12e6258f650fdfc78eaf1fb0c2b335592",
+      "api_version": "rifare-loyalty-accrual-fixture-v1",
+      "external_version": null,
+      "external_account": null,
+      "external_scopes_attested": false,
+      "source_oracle": "Independent synthetic historical rules and original-unit paid allocation pins in the separate loyalty fixture database. Composed read-only proposals require exact native financial observations, source commands/results, captures and exchange ancestry. No accrue, reverse, reserve, redeem, enrollment or send handler. No external provider qualification.",
+      "operations": [
+        {
+          "id": "loyalty.accrual.project",
+          "semantics": "composed",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M19-G02-01",
+              "name": "CASE-M19-G02-01",
+              "path": "tests/development/loyalty-accrual.test.mts",
+              "sha256": "7dd9c66ef81a543c80a40f76d57c38f1c5fcc7ebb38d17ddcc2c9598bec18361"
+            },
+            {
+              "id": "CASE-M19-G02-02",
+              "name": "CASE-M19-G02-02",
+              "path": "tests/development/loyalty-accrual.test.mts",
+              "sha256": "7dd9c66ef81a543c80a40f76d57c38f1c5fcc7ebb38d17ddcc2c9598bec18361"
+            },
+            {
+              "id": "CASE-M19-G02-03",
+              "name": "CASE-M19-G02-03",
+              "path": "tests/development/loyalty-accrual.test.mts",
+              "sha256": "7dd9c66ef81a543c80a40f76d57c38f1c5fcc7ebb38d17ddcc2c9598bec18361"
+            }
+          ],
+          "direct_fixtures": []
+        }
+      ]
     }
   ],
   "fixture_administration": "Seed, injected faults, and source observation setters are fixture administration, not remote provider operations. Unnamed real gateway/carrier/warehouse/ERP adapters are unavailable.",
@@ -5608,7 +5655,7 @@
     },
     {
       "path": "packages/commerce/support-service.mts",
-      "sha256": "6f8518440b50e8780e7f20c9808ca25f1738758ad27a2e3997444cff9c206995"
+      "sha256": "03f8fceb0fa070ce6e96ec4532813b0d8bcbc83a07fd95ca4d992040b9dfe30d"
     },
     {
       "path": "packages/commerce/support-tracking.mts",
@@ -5912,7 +5959,7 @@
     },
     {
       "path": "tests/fixtures/conformance/expected-coverage.v1.json",
-      "sha256": "98449679b35d89de7e4675fe63c00af487c19215235f4e29ae0743f6582bd155"
+      "sha256": "85be906fc2d3d0a482f2df1f8512dbbae688f711deca45ea7b1cd811be98ec64"
     },
     {
       "path": "tests/fixtures/conformance/source-inputs.v1.json",
@@ -7413,6 +7460,34 @@
     {
       "path": "tests/development/loyalty-balances-helpers.mts",
       "sha256": "627d7f0b260f4bd8b94213b00f535fbc0f92e673fa3e19c08ec646fb900bfba9"
+    },
+    {
+      "path": "packages/commerce/loyalty-accrual.mts",
+      "sha256": "bb8ac823d9488ab83c32b97a60f804669826ddc5da80200eb5ac234630cdcf19"
+    },
+    {
+      "path": "packages/commerce/loyalty-accrual-evidence.mts",
+      "sha256": "45ce725fe67f5fd87af96f16f4754f2330a67dd97beccef1cbe6b721cc7015e4"
+    },
+    {
+      "path": "packages/adapters/loyalty-accrual-fixture-source.mts",
+      "sha256": "a38f828c142856a5a9415f6eadce15b12e6258f650fdfc78eaf1fb0c2b335592"
+    },
+    {
+      "path": "packages/commerce/contracts/loyalty-accrual.v1.json",
+      "sha256": "d590b784895a7de21012a01c225f60942886e84d9154a642d9ed64849557b32c"
+    },
+    {
+      "path": "tests/development/loyalty-accrual.test.mts",
+      "sha256": "7dd9c66ef81a543c80a40f76d57c38f1c5fcc7ebb38d17ddcc2c9598bec18361"
+    },
+    {
+      "path": "tests/development/loyalty-accrual-helpers.mts",
+      "sha256": "ca4176a6f1534d431eb901f67cbb98bdd04d0efc899889052b435029e925c58d"
+    },
+    {
+      "path": "tests/fixtures/loyalty-accrual/independent-values.json",
+      "sha256": "b5289b6b8a5920e4acec80073596610453ae8dc9f3e5acac5824e970aeb7352e"
     }
   ]
 }

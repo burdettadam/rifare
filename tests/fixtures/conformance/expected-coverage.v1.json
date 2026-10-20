@@ -882,6 +882,12 @@
         "semantics": "composed",
         "qualification": "sandbox-only"
       }
+    },
+    "loyalty_accrual_source": {
+      "loyalty.accrual.project": {
+        "semantics": "composed",
+        "qualification": "sandbox-only"
+      }
     }
   },
   "declarations": [
@@ -895,6 +901,7 @@
     "packages/adapters/exchange-money-fixture-source.mts",
     "packages/adapters/fulfillment-fixture-source.mts",
     "packages/adapters/instant-exchange-fixture-source.mts",
+    "packages/adapters/loyalty-accrual-fixture-source.mts",
     "packages/adapters/loyalty-fixture-source.mts",
     "packages/adapters/marketing-fixture-source.mts",
     "packages/adapters/native-change-fixture-source.mts",
@@ -2043,6 +2050,16 @@
           "scope_kind": "server_local_fixture_only"
         }
       }
+    },
+    "loyalty_accrual_source": {
+      "version": "source-sha256:a38f828c142856a5a9415f6eadce15b12e6258f650fdfc78eaf1fb0c2b335592",
+      "api_version": "rifare-loyalty-accrual-fixture-v1",
+      "operations": {
+        "loyalty.accrual.project": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        }
+      }
     }
   },
   "native_cases": [
@@ -2687,6 +2704,24 @@
       "name": "CASE-M19-G01-03",
       "path": "tests/development/loyalty-balances.test.mts",
       "sha256": "e5443162bbf0127d958faf8940b1be66a50e25e61a1a5286c46a840e841ce162"
+    },
+    {
+      "id": "CASE-M19-G02-01",
+      "name": "CASE-M19-G02-01",
+      "path": "tests/development/loyalty-accrual.test.mts",
+      "sha256": "7dd9c66ef81a543c80a40f76d57c38f1c5fcc7ebb38d17ddcc2c9598bec18361"
+    },
+    {
+      "id": "CASE-M19-G02-02",
+      "name": "CASE-M19-G02-02",
+      "path": "tests/development/loyalty-accrual.test.mts",
+      "sha256": "7dd9c66ef81a543c80a40f76d57c38f1c5fcc7ebb38d17ddcc2c9598bec18361"
+    },
+    {
+      "id": "CASE-M19-G02-03",
+      "name": "CASE-M19-G02-03",
+      "path": "tests/development/loyalty-accrual.test.mts",
+      "sha256": "7dd9c66ef81a543c80a40f76d57c38f1c5fcc7ebb38d17ddcc2c9598bec18361"
     },
     {
       "id": "M01-G04-01",
