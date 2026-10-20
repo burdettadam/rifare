@@ -191,3 +191,128 @@ totals are 3,280 tests, 221 capabilities, 587 protected paths, 1,898 source memb
 declarations. No existing test, capability, source member or operation is removed.
 The initial candidate has not yet been executed. The assigned focused batch and
 isolated two-fence fault remain the only planned product runs.
+
+## G02 corrections and final independent assertions
+
+The first exact candidate 8b8930ef8119515b713c9dacc50f9fd55b62697f ran the new
+fourteen-case file in 12.296 seconds. Five cases passed and nine failed. Missing
+local kernel aliases in cancel/deliver and repeated native retired-preview
+normalization were corrected in b5658157c6d03d4deca669468efe7be856b638f2.
+The second selected run took 33.468 seconds: all fourteen credential, twelve
+eligibility and eighteen approval cases passed; the exception-queue file had
+thirteen native passes and its existing HTTP test failed because the sandbox
+denied listening on 127.0.0.1. The runner credits only the 44 fully passing-file
+cases. Neither earlier run is represented as a passing candidate.
+
+Independent review identified two further resource-linked privacy paths:
+repeated erasure after current ownership rows are redacted, and restore/import
+when a current case is relinked to a suppressed resource despite historical
+terms pointing elsewhere. Commit 927fb8996bafb9a64f893e33178e86a9d4dd9a43
+resolves both using actual retained/current resource markers, restricted
+canonical-quote normalization and complete graph validation. It also wraps
+denied gateway receipt/revokeApproval calls in native rollback, and checks the
+current account only for new issuance. Historical revoke/lookup independence
+and active-record validation remain intact.
+
+Independent author strengthening 4c2dcf59feefd559755c25d1cea17240aa38b348 is
+integrated unchanged as 97ff984bfa3fc5fc3347a64b340214661ff43d66: 31 added lines
+and three replaced lines in the test file only. All prior assertions and fourteen
+IDs remain; the helper and literal oracle are unchanged. CASE09's existing
+ten-millisecond original-proof delta makes accidental renewal observable.
+CASE13 isolates historical erasure through a retained resource marker after
+current customer ownership disappears. CASE14 isolates current-case resource
+suppression despite an original-subject hold through actual restore and first/
+repeated import. Test SHA-256 is
+5cb0929a77641bcd618bf4e6d51607544df12bc206902985a721b47d0e2e0388.
+The runtime writer did not change independent assertions. Both nonauthor
+reviewers inspected the precise setup before execution.
+
+## G02 exact product and focused evidence
+
+Final product 7e460fcc625d88a0f1b3d14ea771e97e0aa2f033, tree
+4509d1e16e29f030225d7ed35edf096317c327f8, includes the independent strengthening
+and refreshed pins. Its clean native run passed all 58 assigned cases in
+37.990 seconds: fourteen credentials, twelve eligibility, eighteen approvals
+and fourteen exception-queue cases. No failures, errors, skips or timeouts.
+The unchanged HTTP fixture passed with local loopback permitted. The original
+60-case/four-file/60-second budget and NODE_OPTIONS=--test-isolation=none remain.
+All 1,898 native source hashes match the exact candidate and source inventory.
+
+The isolated fault 6cb9bdcc1e7a973dd3e7cad625a859398b489efd, tree
+9d780abfa36ad73e25129c3bb83d7af1b435b360, has this exact product as its immediate
+parent. It deletes only the assigned core unresolved-family and provider
+family/generation/predecessor guards. Its one unchanged fourteen-case run took
+22.040 seconds: eleven passes and three behavioral ERR_ASSERTION failures
+(CASE02, CASE03, CASE06), without errors, skips or timeouts.
+
+CASE03 follows native quote, prepare, distinct approval, execute and dispatch
+after the original provider effect loses acknowledgment. Its first final native
+credential-row assertion observes two rows while the literal oracle requires
+one. This is an actual second credential. CASE02 permits a fresh quote during
+unknown issuance; CASE06 permits delivery during unknown revocation. Later
+assertions after each first failure are not separately credited. The runner
+credits zero validated cases to the failed whole file; native executions and
+passes are reported separately. All 1,898 actual fault hashes, unchanged
+independent artifacts, patch and evidence hashes were checked. Parent pins
+intentionally remain on the broken branch, whose raw manifest identifies the
+actual mutant. The fault remains outside product ancestry and is never merged.
+
+Only the three concrete candidate runs and this one assigned fault ran for G02.
+There was no broad suite or supplemental product probe. Static preservation,
+metadata/report checks and checkpoint integrity verification are not product
+test runs. Earlier raw results remain retained without rewriting their status.
+
+## G02 independent decision and preservation
+
+Both independent nonauthor reviewers approved the exact final product for bounded
+local scope, without a remaining material blocker or further execution request:
+
+| Reviewer | Scope | Decision |
+|---|---|---|
+| /root/checkpoint_audit | Authority, privacy, source integrity and recovery | Approved bounded local scope |
+| /root/loyalty_regression | Native composition, regression, preservation and actual evidence | Approved bounded local scope |
+
+Each inspected the exact candidate, independent artifacts, passing raw reports,
+exact-parent fault, actual duplicate assertion and source/evidence hashes.
+Neither reviewer edited or executed product code, tests or probes. Review
+records are integration-owner transcriptions of actual agent messages, not
+external authenticated approval identities.
+
+All 33 static preservation/report checks pass. All 3,266 prior test entries,
+220 capabilities, 578 protected paths and 1,887 source members are retained.
+Current totals are 3,280 tests, 221 capabilities, 587 protected paths and
+1,898 source members. All 335 runtime pins and 674 oracle pins match. The
+catalog has 44 adapters, 214 operations, 69 source declarations and 285 native
+case references; its 47 direct fixtures remain unchanged. All previous adapter
+operation arrays and native cases are unchanged. The G01 fixture's required
+source hash/version changes only for its assigned identity helper. Revocation
+correctly binds actual CASE06. Core schema, fifteen privacy surface IDs, worker
+grants, permissions, main and formal acceptance ledger remain unchanged.
+
+Evidence under evidence/M20-G02 includes all three native-candidate directories,
+duplicate-credential-fault, independent-freeze.json, execution-history.json,
+preservation.json, fault-summary.json, fault.patch, authority-review.md,
+regression-review.md and decision.json. Closing edits affect only PLANS.md,
+this record and docs/DROPOFF-CREDENTIALS.md, preserving the exact executed
+runtime, tests, contracts, metadata and pins. A complete native Git bundle,
+cumulative earlier evidence and bundle-only restore verification accompany
+the recoverable checkpoint.
+
+## G02 continuation and open qualification
+
+G02 provides a bounded local synthetic credential lifecycle. Formal goal and
+M20 acceptance remain open, along with accepted M07/M08/M10 prerequisites,
+connected partner, physical handoff, customer delivery/accessibility, device,
+target-host and financial qualification. Issued credentials alone establish no
+accepted item, custody, warehouse receipt, inspection, stock, fee or settlement.
+Injected-key storage and short fixture lifetimes establish only the local
+protocol. Ciphertext forgetting is not provider revocation, deletion of delivered
+copies or physical-media erasure. Unknown outcomes can remain unknown.
+
+Next is M20-G03 item-level handoff acceptance under its own prior assignment and
+independent specification, binding exact original items/quantities, site/method,
+credential state and original handoff event identity. Partial intake, mismatches,
+duplicates, replay, current authority and privacy/recovery need explicit rules.
+Then G04 carries custody continuity using existing native owners. Keep handoff,
+carrier movement, warehouse receipt/inspection, stock and settlement separate.
+M19's attributable provider award/reversal gap remains independently open.

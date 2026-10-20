@@ -485,5 +485,40 @@ were run. Closing documentation leaves the executed runtime and tests unchanged.
 The [drop-off guide](docs/DROPOFF-ELIGIBILITY.md) describes the bounded contract;
 the [M20 work record](work/records/M20-dropoff-milestone.md) preserves exact source
 and review identities. Formal prerequisites and actual partner/physical
-qualification remain open. G02 requires a separate original-identity, final
-approval, secret, unknown-outcome, replacement, privacy and restore protocol.
+qualification remain open. G02's separate original-identity, final approval,
+secret, unknown-outcome, replacement, privacy and restore protocol is ADR-0063.
+
+## M20-G02 local credential lifecycle
+
+ADR-0063's bounded synthetic implementation now binds exact G01 item/method/fee
+terms to distinct human approval, durable original operation identity and a
+physically separate encrypted provider fixture. Issuance records uncertainty
+before effect. Reconciliation uses the original ID without repeating commands;
+expiry, revocation and replacement remain separate from immutable issue history.
+Protected delivery rechecks current human authority and provider usability.
+
+The independent fourteen-case specification froze before runtime. Independent
+CASE09/13/14 strengthening adds denied-heartbeat and historical/current-resource
+suppression controls without changing case IDs, helpers, literal values or prior
+assertions. Exact clean product 7e460fcc625d88a0f1b3d14ea771e97e0aa2f033 passed
+all 58 assigned cases in 37.990 seconds: 14 credentials, 12 eligibility,
+18 native approvals and 14 exception-queue cases. Earlier concrete failures and
+the resolved sandbox HTTP restriction remain recorded separately. No broad suite.
+
+The one exact-parent two-guard fault 6cb9bdcc1e7a973dd3e7cad625a859398b489efd
+actually created a second native credential after lost acknowledgment. Unchanged
+CASE03 observed two credential rows where one was required. The fourteen-case
+fault run took 22.040 seconds, with eleven passes and three behavioral failures;
+the broken branch remains isolated outside product ancestry.
+
+The [credential guide](docs/DROPOFF-CREDENTIALS.md) and
+[M20 work record](work/records/M20-dropoff-milestone.md) bind the exact evidence
+and independent decisions. All 33 static preservation/report checks pass.
+All 3,266 prior test entries, 220 capabilities and 1,887 source members remain.
+Schema, privacy surface IDs, protected main and formal acceptance are unchanged.
+
+Next is G03 item-level handoff acceptance under its own prior assignment and
+independent specification, followed by G04 custody continuity. Compose existing
+native owners, retaining separate handoff, movement, warehouse receipt/inspection,
+stock and settlement stages. G01/G02 remain local synthetic increments;
+connected-provider, physical and formal M20 qualification remain open.

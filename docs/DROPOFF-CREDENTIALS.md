@@ -102,16 +102,32 @@ pending until the exact source confirms removal of its encrypted delivery copy.
 This local forgetting does not claim provider revocation, deletion of an already
 delivered copy or physical-media erasure.
 
+Suppression resolves both the historical resource and the current linked-case
+resource. Repeated erasure reuses persisted resource markers after current
+ownership rows have been redacted. An exact historical quote can be normalized
+only under actual suppression and complete graph validation; ordinary active
+record validation remains strict. Restore/import preserve current suppression
+even when the historical subject has an evidentiary hold.
+
+Denied gateway receipt reads and approval revocations cannot refresh the original
+customer proof. Native transaction rollback covers those rejected calls.
+
 ## Verification boundary
 
-The assigned independent specification contains fourteen cases. The routine
-selection adds unchanged G01 eligibility, native approval and exception-queue
-cases for fifty-eight cases across four whole files with one sixty-second
-deadline. No full regression or connected qualification is implied by that batch.
+The reviewed product is 7e460fcc625d88a0f1b3d14ea771e97e0aa2f033. Its final clean
+run passed all fourteen independent credential cases, twelve unchanged G01 cases,
+eighteen native approval cases and fourteen exception-queue cases: 58 passes in
+37.990 seconds, within the unchanged four-file/sixty-second focused budget.
+There were no failures, errors, skips or timeouts. Earlier concrete failures and
+their corrections are retained in the work record and native evidence. This
+selection does not establish a full regression or connected qualification.
 
-One isolated deliberate fault must actually create a second native credential
-after a lost issuance response; the unchanged original-ID/native-journal oracle
-must detect it. The fault branch is retained separately and never integrated.
+The isolated exact-parent fault 6cb9bdcc1e7a973dd3e7cad625a859398b489efd removes
+only the core and provider family guards. Its unchanged fourteen-case run has
+eleven passes and three behavioral failures in 22.040 seconds. CASE03 directly
+observes two native credential rows where one was required after lost issuance
+acknowledgment. The fault is retained separately and never integrated. Assertions
+after each first failure are not counted as additional fault coverage.
 
 Later M20 work must connect item acceptance and custody progression through the
 existing native warehouse and reverse-hub owners. Actual partner terms, physical
