@@ -116,6 +116,8 @@ post-edit paid allocations returns pending/LOYALTY_PAID_ALLOCATIONS_REQUIRED;
 do not restore pre-edit facts or infer payment from a changed order total.
 Changed original paid allocation/pin is discrepant. Unqualified edit/dispute or
 external financial changes are explicit restrictions, not invented point events.
+The historical earning-rule currency must equal the original paid currency;
+every descendant allocation and financial event must retain that currency.
 
 Each original (resource, line, unit ordinal) earns once. Descendant paid totals
 are carried funding, not purchases. Validate each native imported node against
@@ -125,6 +127,13 @@ child unit per exchange; ambiguous split/merged multi-unit lineage is explicitly
 unsupported. Multiple original units and independent single-unit branches are
 supported. Missing/unknown imports remain pending, conflicting ancestry remains
 discrepant. No implicit traversal outside the authorized root.
+Completeness checks enumerate both scoped core operations/imports and the native
+source effects/captures/descendants for this root graph. A source-only effect or
+capture, unknown/unimported descendant, missing mapping, or operation absent from
+one side keeps the result pending/discrepant. Duplicate child claims on the same
+parent unit or conflicting original operation identities are discrepant. A
+core-only scan must never claim a complete ready result while omitting an
+authoritative source-side effect. No unrelated tenant/customer is scanned.
 
 Only an exact settled additional-payment capture adds eligible funding. Only an
 exact settled refund subtracts eligible funding. Match the immutable core
