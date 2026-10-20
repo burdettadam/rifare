@@ -6,11 +6,14 @@ import{JourneyReadiness}from'./journey-readiness.mts';import type{JourneyReadine
 import{ShopperMemory}from'./shopper-memory.mts';import{jsonValue}from'./configuration-values.mts';
 import{CommerceJourneys}from'./commerce-journeys.mts';import type{JourneyOwners}from'./commerce-journeys.mts';
 import{JourneyFollowups}from'./journey-followups.mts';
+import{LoyaltyBalances}from'./loyalty-balances.mts';
 export class SupportService {
  readonly k:CommerceKernel;readonly reads:ReadContext;readonly conversations:SupportConversations;readonly ownership:SupportOwnership;readonly consent:SupportConsent;readonly tracking:SupportTracking;readonly delivery:SupportDelivery;readonly rules:SupportRules;readonly metrics:SupportMetrics;readonly insights:SupportInsights;readonly qualification:SupportQualification;readonly workflows:SupportWorkflows;readonly branding:SupportBranding;
  readonly routing:SupportProviderRouting|null;readonly runner:ReadRunner|null;readonly helpdesk:SupportHelpdesk|null;
- readonly memory:ShopperMemory;readonly readiness:JourneyReadiness;readonly journeys:CommerceJourneys;readonly followups:JourneyFollowups;
- constructor(k:CommerceKernel,reads:ReadContext,options:{sources?:SupportSource[];routing?:SupportProviderRouting;runner?:ReadRunner;helpdesk?:SupportHelpdesk;refunds?:RefundMessageReader;journey?:Omit<JourneyReadinessOptions,'delivery'>;journeys?:Omit<JourneyOwners,'delivery'>}={}){
+ readonly memory:ShopperMemory;readonly readiness:JourneyReadiness;readonly journeys:CommerceJourneys;readonly followups:JourneyFollowups;readonly loyalty:LoyaltyBalances;
+ constructor(k:CommerceKernel,reads:ReadContext,options:{sources?:SupportSource[];routing?:SupportProviderRouting;runner?:ReadRunner;helpdesk?:SupportHelpdesk;refunds?:RefundMessageReader;journey?:Omit<JourneyReadinessOptions,'delivery'>;journeys?:Omit<JourneyOwners,'delivery'>;loyalty?:LoyaltyBalances}={}){
+  if(options.loyalty!==undefined&&(!(options.loyalty instanceof LoyaltyBalances)||options.loyalty.k!==k))throw new Error('LOYALTY_SOURCE_OWNER_MISMATCH');
+  this.loyalty=options.loyalty??new LoyaltyBalances(k);
   const supplied=options.journeys??{},ownerDescriptors=Object.getOwnPropertyDescriptors(supplied),journeyOwners:Row={};
   for(const key of Reflect.ownKeys(ownerDescriptors)){const d=Object.getOwnPropertyDescriptor(supplied,key)!;if(typeof key!=='string'||!['cart','resolution','edits','fulfillment'].includes(key)||!Object.hasOwn(d,'value'))throw new Error('JOURNEY_FOLLOWUP_OWNER_MISMATCH');journeyOwners[key]=d.value;}
   this.k=k;this.reads=reads;this.conversations=new SupportConversations(k);this.ownership=new SupportOwnership(k);this.consent=new SupportConsent(k);this.tracking=new SupportTracking(k,reads);this.delivery=new SupportDelivery(k,this.tracking,options.sources??[],options.refunds??null,null,{cart:journeyOwners.cart,resolution:journeyOwners.resolution,edits:journeyOwners.edits});this.rules=new SupportRules(k,this.delivery);this.metrics=new SupportMetrics(k);this.insights=new SupportInsights(k);this.qualification=new SupportQualification(k);this.workflows=new SupportWorkflows(k,reads);this.branding=new SupportBranding(k);this.memory=new ShopperMemory(k);this.readiness=new JourneyReadiness(k,reads,{...options.journey,delivery:this.delivery});this.journeys=new CommerceJourneys(k,reads,{...journeyOwners,delivery:this.delivery});this.followups=new JourneyFollowups(k,this.journeys);this.routing=options.routing??null;this.runner=options.runner??null;this.helpdesk=options.helpdesk??null;}
@@ -34,6 +37,7 @@ export class SupportService {
  case 'memory-record':return this.memory.record(scope,input);
  case 'memory-forget':return this.memory.forget(scope,input);
  case 'memory-context':{const p=exact(jsonValue(input,32768),['customer_token','context']);if(typeof p.customer_token!=='string')throw new Error('CUSTOMER_VERIFICATION_REQUIRED');return this.memory.context(scope,this.k.authenticate(p.customer_token),p.context);}
+ case 'loyalty-context':case 'loyalty-quote':{const p=exact(jsonValue(input,32768),['customer_token','input']);if(typeof p.customer_token!=='string')throw new Error('CUSTOMER_VERIFICATION_REQUIRED');const method=action==='loyalty-context'?'context':'quote';return this.loyalty[method](scope,this.k.authenticate(p.customer_token),p.input);}
  case 'takeover':return this.ownership.takeover(scope,input);
  case 'assign':return this.ownership.assign(scope,input);
  case 'consent':return this.consent.record(scope,input);

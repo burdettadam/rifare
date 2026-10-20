@@ -1918,6 +1918,14 @@
         "packages/commerce/contracts/commerce-journeys.v1.json",
         "packages/commerce/contracts/journey-followups.v1.json"
       ]
+    },
+    {
+      "id": "m19-loyalty-balances-diagnostic",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/loyalty-balances.v1.json"
+      ]
     }
   ],
   "tests": [
@@ -24180,6 +24188,146 @@
       "runner_case_id": "M18-G05-LOCAL-NO-MODEL-OPTOUT-FINAL-STOP",
       "source": "tests/development/journey-continuity.test.mts",
       "capability_id": "m18-local-journey-continuity-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M19-G01-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M19-G01-01",
+      "source": "tests/development/loyalty-balances.test.mts",
+      "capability_id": "m19-loyalty-balances-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M19-G01-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M19-G01-02",
+      "source": "tests/development/loyalty-balances.test.mts",
+      "capability_id": "m19-loyalty-balances-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M19-G01-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M19-G01-03",
+      "source": "tests/development/loyalty-balances.test.mts",
+      "capability_id": "m19-loyalty-balances-diagnostic"
+    },
+    {
+      "id": "runtime:M19-G01-STALE-OBSERVATION",
+      "suite": "runtime",
+      "runner_case_id": "M19-G01-STALE-OBSERVATION",
+      "source": "tests/development/loyalty-balances.test.mts",
+      "capability_id": "m19-loyalty-balances-diagnostic"
+    },
+    {
+      "id": "runtime:M19-G01-FUTURE-AND-EXPIRED",
+      "suite": "runtime",
+      "runner_case_id": "M19-G01-FUTURE-AND-EXPIRED",
+      "source": "tests/development/loyalty-balances.test.mts",
+      "capability_id": "m19-loyalty-balances-diagnostic"
+    },
+    {
+      "id": "runtime:M19-G01-INCOMPLETE-SOURCE",
+      "suite": "runtime",
+      "runner_case_id": "M19-G01-INCOMPLETE-SOURCE",
+      "source": "tests/development/loyalty-balances.test.mts",
+      "capability_id": "m19-loyalty-balances-diagnostic"
+    },
+    {
+      "id": "runtime:M19-G01-STRICT-SNAPSHOT-INTEGRITY",
+      "suite": "runtime",
+      "runner_case_id": "M19-G01-STRICT-SNAPSHOT-INTEGRITY",
+      "source": "tests/development/loyalty-balances.test.mts",
+      "capability_id": "m19-loyalty-balances-diagnostic"
+    },
+    {
+      "id": "runtime:M19-G01-SOURCE-REVISION-REPLAY",
+      "suite": "runtime",
+      "runner_case_id": "M19-G01-SOURCE-REVISION-REPLAY",
+      "source": "tests/development/loyalty-balances.test.mts",
+      "capability_id": "m19-loyalty-balances-diagnostic"
+    },
+    {
+      "id": "runtime:M19-G01-RULES-VERSION-AND-EXPIRY",
+      "suite": "runtime",
+      "runner_case_id": "M19-G01-RULES-VERSION-AND-EXPIRY",
+      "source": "tests/development/loyalty-balances.test.mts",
+      "capability_id": "m19-loyalty-balances-diagnostic"
+    },
+    {
+      "id": "runtime:M19-G01-EXACT-QUOTE-BINDING",
+      "suite": "runtime",
+      "runner_case_id": "M19-G01-EXACT-QUOTE-BINDING",
+      "source": "tests/development/loyalty-balances.test.mts",
+      "capability_id": "m19-loyalty-balances-diagnostic"
+    },
+    {
+      "id": "runtime:M19-G01-REDEMPTION-LIMITS",
+      "suite": "runtime",
+      "runner_case_id": "M19-G01-REDEMPTION-LIMITS",
+      "source": "tests/development/loyalty-balances.test.mts",
+      "capability_id": "m19-loyalty-balances-diagnostic"
+    },
+    {
+      "id": "runtime:M19-G01-CASE-TENANT-CUSTOMER-BINDING",
+      "suite": "runtime",
+      "runner_case_id": "M19-G01-CASE-TENANT-CUSTOMER-BINDING",
+      "source": "tests/development/loyalty-balances.test.mts",
+      "capability_id": "m19-loyalty-balances-diagnostic"
+    },
+    {
+      "id": "runtime:M19-G01-CURRENT-PROOF",
+      "suite": "runtime",
+      "runner_case_id": "M19-G01-CURRENT-PROOF",
+      "source": "tests/development/loyalty-balances.test.mts",
+      "capability_id": "m19-loyalty-balances-diagnostic"
+    },
+    {
+      "id": "runtime:M19-G01-OWNERSHIP-AND-PERMISSIONS",
+      "suite": "runtime",
+      "runner_case_id": "M19-G01-OWNERSHIP-AND-PERMISSIONS",
+      "source": "tests/development/loyalty-balances.test.mts",
+      "capability_id": "m19-loyalty-balances-diagnostic"
+    },
+    {
+      "id": "runtime:M19-G01-SOURCE-BOUNDARY",
+      "suite": "runtime",
+      "runner_case_id": "M19-G01-SOURCE-BOUNDARY",
+      "source": "tests/development/loyalty-balances.test.mts",
+      "capability_id": "m19-loyalty-balances-diagnostic"
+    },
+    {
+      "id": "runtime:M19-G01-MISSING-SOURCE-AND-ACCOUNT",
+      "suite": "runtime",
+      "runner_case_id": "M19-G01-MISSING-SOURCE-AND-ACCOUNT",
+      "source": "tests/development/loyalty-balances.test.mts",
+      "capability_id": "m19-loyalty-balances-diagnostic"
+    },
+    {
+      "id": "runtime:M19-G01-DISPATCHER-NO-AUTHORITY",
+      "suite": "runtime",
+      "runner_case_id": "M19-G01-DISPATCHER-NO-AUTHORITY",
+      "source": "tests/development/loyalty-balances.test.mts",
+      "capability_id": "m19-loyalty-balances-diagnostic"
+    },
+    {
+      "id": "runtime:M19-G01-ERASURE-AND-UNINSTALL",
+      "suite": "runtime",
+      "runner_case_id": "M19-G01-ERASURE-AND-UNINSTALL",
+      "source": "tests/development/loyalty-balances.test.mts",
+      "capability_id": "m19-loyalty-balances-diagnostic"
+    },
+    {
+      "id": "runtime:M19-G01-RESTORE-GUARD",
+      "suite": "runtime",
+      "runner_case_id": "M19-G01-RESTORE-GUARD",
+      "source": "tests/development/loyalty-balances.test.mts",
+      "capability_id": "m19-loyalty-balances-diagnostic"
+    },
+    {
+      "id": "runtime:M19-G01-NO-PERSISTENT-PERSONAL-CACHE",
+      "suite": "runtime",
+      "runner_case_id": "M19-G01-NO-PERSISTENT-PERSONAL-CACHE",
+      "source": "tests/development/loyalty-balances.test.mts",
+      "capability_id": "m19-loyalty-balances-diagnostic"
     }
   ],
   "protected_files": [
@@ -24723,7 +24871,13 @@
     "tests/development/journey-followups-helpers.mts",
     "tests/development/journey-followups.test.mts",
     "tests/development/journey-continuity-helpers.mts",
-    "tests/development/journey-continuity.test.mts"
+    "tests/development/journey-continuity.test.mts",
+    "packages/commerce/loyalty-values.mts",
+    "packages/commerce/loyalty-balances.mts",
+    "packages/adapters/loyalty-fixture-source.mts",
+    "packages/commerce/contracts/loyalty-balances.v1.json",
+    "tests/development/loyalty-balances.test.mts",
+    "tests/development/loyalty-balances-helpers.mts"
   ],
   "source_count_fixture": "tests/fixtures/licensing/artifact-oracle.v1.json",
   "source_inventory": "planning/component-inventory.json"

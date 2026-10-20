@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "id": "rifare-source-inventory",
-  "revision": 31,
+  "revision": 32,
   "status": "proposed",
   "components": [
     {
@@ -1688,7 +1688,16 @@
         "work/records/M17-recovery-checkpoint.md",
         "work/records/M17-suppression-checkpoint.md",
         "work/records/M18-journey-checkpoint.md",
-        "work/records/M18-memory-checkpoint.md"
+        "work/records/M18-memory-checkpoint.md",
+        "packages/commerce/loyalty-values.mts",
+        "packages/commerce/loyalty-balances.mts",
+        "packages/adapters/loyalty-fixture-source.mts",
+        "packages/commerce/contracts/loyalty-balances.v1.json",
+        "tests/development/loyalty-balances.test.mts",
+        "tests/development/loyalty-balances-helpers.mts",
+        "docs/decisions/0058-recovery-and-loyalty-balances.md",
+        "docs/LOYALTY-BALANCES.md",
+        "work/records/M19-recovery-checkpoint.md"
       ],
       "notices": []
     },

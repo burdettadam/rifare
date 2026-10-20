@@ -28,6 +28,7 @@
     "packages/adapters/exchange-money-fixture-source.mts",
     "packages/adapters/fulfillment-fixture-source.mts",
     "packages/adapters/instant-exchange-fixture-source.mts",
+    "packages/adapters/loyalty-fixture-source.mts",
     "packages/adapters/marketing-fixture-source.mts",
     "packages/adapters/native-change-fixture-source.mts",
     "packages/adapters/optional-provider-fixture-source.mts",
@@ -4799,6 +4800,80 @@
           "direct_fixtures": []
         }
       ]
+    },
+    {
+      "id": "loyalty_balance_source",
+      "kind": "diagnostic",
+      "source_files": [
+        {
+          "path": "packages/adapters/loyalty-fixture-source.mts",
+          "sha256": "9703b912e78974612196ebb84aaa1818186b4b7e7f239d8df92fe7d2ff106a54"
+        }
+      ],
+      "version": "source-sha256:9703b912e78974612196ebb84aaa1818186b4b7e7f239d8df92fe7d2ff106a54",
+      "api_version": "rifare-loyalty-fixture-v1",
+      "external_version": null,
+      "external_account": null,
+      "external_scopes_attested": false,
+      "source_oracle": "Independent synthetic point/rule observations in a separate fixture database. Current authenticated customer and support ownership are required. Full and limited capability declarations install no effect handlers; quotes authorize no reservation, redemption, enrollment, conversion or send. No external provider qualification.",
+      "operations": [
+        {
+          "id": "loyalty.balance.read",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M19-G01-01",
+              "name": "CASE-M19-G01-01",
+              "path": "tests/development/loyalty-balances.test.mts",
+              "sha256": "e5443162bbf0127d958faf8940b1be66a50e25e61a1a5286c46a840e841ce162"
+            },
+            {
+              "id": "CASE-M19-G01-02",
+              "name": "CASE-M19-G01-02",
+              "path": "tests/development/loyalty-balances.test.mts",
+              "sha256": "e5443162bbf0127d958faf8940b1be66a50e25e61a1a5286c46a840e841ce162"
+            },
+            {
+              "id": "CASE-M19-G01-03",
+              "name": "CASE-M19-G01-03",
+              "path": "tests/development/loyalty-balances.test.mts",
+              "sha256": "e5443162bbf0127d958faf8940b1be66a50e25e61a1a5286c46a840e841ce162"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "loyalty.quote",
+          "semantics": "composed",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M19-G01-01",
+              "name": "CASE-M19-G01-01",
+              "path": "tests/development/loyalty-balances.test.mts",
+              "sha256": "e5443162bbf0127d958faf8940b1be66a50e25e61a1a5286c46a840e841ce162"
+            },
+            {
+              "id": "CASE-M19-G01-02",
+              "name": "CASE-M19-G01-02",
+              "path": "tests/development/loyalty-balances.test.mts",
+              "sha256": "e5443162bbf0127d958faf8940b1be66a50e25e61a1a5286c46a840e841ce162"
+            },
+            {
+              "id": "CASE-M19-G01-03",
+              "name": "CASE-M19-G01-03",
+              "path": "tests/development/loyalty-balances.test.mts",
+              "sha256": "e5443162bbf0127d958faf8940b1be66a50e25e61a1a5286c46a840e841ce162"
+            }
+          ],
+          "direct_fixtures": []
+        }
+      ]
     }
   ],
   "fixture_administration": "Seed, injected faults, and source observation setters are fixture administration, not remote provider operations. Unnamed real gateway/carrier/warehouse/ERP adapters are unavailable.",
@@ -5533,7 +5608,7 @@
     },
     {
       "path": "packages/commerce/support-service.mts",
-      "sha256": "56f8432bbad73537342fd299fc39128b3c97667822cf54ea10b852ed74fdcb12"
+      "sha256": "6f8518440b50e8780e7f20c9808ca25f1738758ad27a2e3997444cff9c206995"
     },
     {
       "path": "packages/commerce/support-tracking.mts",
@@ -5837,7 +5912,7 @@
     },
     {
       "path": "tests/fixtures/conformance/expected-coverage.v1.json",
-      "sha256": "93cb6c2014df3117cbb64fa213957086a63a3bec60ec2e3cc959e5c9991ba838"
+      "sha256": "98449679b35d89de7e4675fe63c00af487c19215235f4e29ae0743f6582bd155"
     },
     {
       "path": "tests/fixtures/conformance/source-inputs.v1.json",
@@ -7314,6 +7389,30 @@
     {
       "path": "tests/development/journey-continuity-helpers.mts",
       "sha256": "30a8770e7b0d17e194743c78fa50db839cfe13c08e9e5eee4fa6498bbe00e45a"
+    },
+    {
+      "path": "packages/commerce/loyalty-values.mts",
+      "sha256": "5fdc4d00d4c4c790e0124a7d01449547fd2c5629179f9636c44489a5ef4c26f5"
+    },
+    {
+      "path": "packages/commerce/loyalty-balances.mts",
+      "sha256": "8be06ebc247181bc37ee351bcab581d7371a07a4b342f763205d9179db88abb2"
+    },
+    {
+      "path": "packages/adapters/loyalty-fixture-source.mts",
+      "sha256": "9703b912e78974612196ebb84aaa1818186b4b7e7f239d8df92fe7d2ff106a54"
+    },
+    {
+      "path": "packages/commerce/contracts/loyalty-balances.v1.json",
+      "sha256": "6ee958e29b66a76511303a61f62f019a4e33f4facb10b9799f54c5d2f07aca9f"
+    },
+    {
+      "path": "tests/development/loyalty-balances.test.mts",
+      "sha256": "e5443162bbf0127d958faf8940b1be66a50e25e61a1a5286c46a840e841ce162"
+    },
+    {
+      "path": "tests/development/loyalty-balances-helpers.mts",
+      "sha256": "627d7f0b260f4bd8b94213b00f535fbc0f92e673fa3e19c08ec646fb900bfba9"
     }
   ]
 }

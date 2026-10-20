@@ -872,6 +872,16 @@
         "semantics": "native",
         "qualification": "sandbox-only"
       }
+    },
+    "loyalty_balance_source": {
+      "loyalty.balance.read": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      },
+      "loyalty.quote": {
+        "semantics": "composed",
+        "qualification": "sandbox-only"
+      }
     }
   },
   "declarations": [
@@ -885,6 +895,7 @@
     "packages/adapters/exchange-money-fixture-source.mts",
     "packages/adapters/fulfillment-fixture-source.mts",
     "packages/adapters/instant-exchange-fixture-source.mts",
+    "packages/adapters/loyalty-fixture-source.mts",
     "packages/adapters/marketing-fixture-source.mts",
     "packages/adapters/native-change-fixture-source.mts",
     "packages/adapters/optional-provider-fixture-source.mts",
@@ -2018,6 +2029,20 @@
           "scope_kind": "server_local_fixture_only"
         }
       }
+    },
+    "loyalty_balance_source": {
+      "version": "source-sha256:9703b912e78974612196ebb84aaa1818186b4b7e7f239d8df92fe7d2ff106a54",
+      "api_version": "rifare-loyalty-fixture-v1",
+      "operations": {
+        "loyalty.balance.read": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "loyalty.quote": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        }
+      }
     }
   },
   "native_cases": [
@@ -2644,6 +2669,24 @@
       "name": "CASE-M14-G04-04",
       "path": "tests/development/decision-systemone.test.mts",
       "sha256": "4f4b01ea4525d4d8eb918f351cd3907fb8bd9320ec60ea48c5584493396fa8a5"
+    },
+    {
+      "id": "CASE-M19-G01-01",
+      "name": "CASE-M19-G01-01",
+      "path": "tests/development/loyalty-balances.test.mts",
+      "sha256": "e5443162bbf0127d958faf8940b1be66a50e25e61a1a5286c46a840e841ce162"
+    },
+    {
+      "id": "CASE-M19-G01-02",
+      "name": "CASE-M19-G01-02",
+      "path": "tests/development/loyalty-balances.test.mts",
+      "sha256": "e5443162bbf0127d958faf8940b1be66a50e25e61a1a5286c46a840e841ce162"
+    },
+    {
+      "id": "CASE-M19-G01-03",
+      "name": "CASE-M19-G01-03",
+      "path": "tests/development/loyalty-balances.test.mts",
+      "sha256": "e5443162bbf0127d958faf8940b1be66a50e25e61a1a5286c46a840e841ce162"
     },
     {
       "id": "M01-G04-01",
