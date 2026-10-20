@@ -4,6 +4,7 @@ import {CommerceJourneys} from '../../packages/commerce/commerce-journeys.mts';
 import {SupportService} from '../../packages/commerce/support-service.mts';
 import {PrivacyLifecycle} from '../../packages/commerce/privacy-lifecycle.mts';
 import {ExecutionStops} from '../../packages/commerce/execution-stops.mts';
+import {CONTRACT_VERSION} from '../../packages/commerce/capabilities.mts';
 import {IntegrationReadiness,DRAFT_ACTION} from '../../packages/commerce/integration-readiness.mts';
 import {canonical,contentDigest} from '../../packages/commerce/configuration-values.mts';
 import {restoreRecoverySnapshot} from '../../packages/commerce/safe-recovery.mts';
@@ -138,7 +139,7 @@ test('M18-G03-EXPLICIT-HANDOFF-HISTORY-AND-MISSING-OWNERS',()=>usingJourneys(asy
   const web=f.conversations.link(f.a.scope,f.customer,{case_id:f.caseId,channel:'webchat',account_id:'widget',external_id:'missing_history',history:'unavailable',source_revision:3});
   const handoff=attach(f,2,'handoff',[],{link_id:web.id});assert.equal(intent(handoff,'handoff_one').state,'handoff');assert.equal(handoff.history.status,'unavailable');assert.equal(handoff.history.source_revision,3);
   assert.throws(()=>attach(f,3,'voice',[],{request_id:'unsupported_intent'}));assert.throws(()=>attach(f,3,'return',[]));
-  for(const action of ['diagnostic.return.submit','diagnostic.resolution.set','diagnostic.instant.exchange','arbitrary.execute'])assert.throws(()=>prepare(f,3,{case_id:f.caseId,action,arguments:{}},{request_id:'unsupported_'+action}),/JOURNEY_ACTION_UNSUPPORTED/);
+  for(const [index,action] of ['diagnostic.return.submit','diagnostic.resolution.set','diagnostic.instant.exchange','arbitrary.execute'].entries())assert.throws(()=>prepare(f,3,{case_id:f.caseId,action,arguments:{}},{request_id:'unsupported_action_'+index}),/JOURNEY_ACTION_UNSUPPORTED/);
   assert.equal(f.fulfillmentSource.calls.replace,0);assertSafe(context(f));
 },'fulfillment'));
 
@@ -188,7 +189,7 @@ test('M18-G03-CURRENT-STOPS-READINESS-AND-APPROVAL',async()=>{
   for(const control of ['stop','readiness','approval','configuration'])await usingJourneys(f=>{
     open(f);const p=prepare(f,1,labelProposal(f)).native,a=approval(f,p),display=context(f);assert.equal(intent(display,'exchange_one').state,'awaiting_approval');
     if(control==='stop')stop(f,'diagnostic.label.purchase');else if(control==='readiness')new IntegrationReadiness(f.kernel).revoke(f.owner.scope,{action:DRAFT_ACTION});else if(control==='approval')f.gateway.revokeApproval(f.reviewer.scope,a.id);else{
-      f.publish({expected_version:2,rules:{window_days:20,require_evidence:false,excluded_tags:['final-sale'],outcomes:['refund','exchange','store_credit']}});
+      f.caps.configure(f.a.scope,{adapter:'simulator',contract_version:CONTRACT_VERSION,granted_scopes:['read_orders','read_shipments'],qualification:'synthetic'});
       const current=context(f);assert.equal(current.configuration_current,false);assert.deepEqual(intent(current,'exchange_one').references,intent(display,'exchange_one').references);
     }
     const before=effects(f);assert.throws(()=>execute(f,2,p,a),control==='stop'?/EXECUTION_STOPPED/:control==='readiness'?/INTEGRATION_NOT_READY/:control==='approval'?/APPROVAL_UNAVAILABLE/:/CHANGED|REPREVIEW/);
