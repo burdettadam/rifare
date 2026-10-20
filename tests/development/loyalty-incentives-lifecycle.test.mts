@@ -101,6 +101,16 @@ test('CASE-M19-G04-05',async()=>{
   await usingFixture(f=>{
     const q=quote(f),queued=f.queue();assert.equal(queued.state,'queued');assert.throws(()=>bind(f,q));assert.equal(Object.hasOwn(JSON.parse(recoveryRow(f).body),'loyalty_incentive'),false);assert.equal(f.source.calls,0);assert.equal(opRows(f).length,0);
   });
+  await usingFixture(async f=>{
+    bind(f,quote(f));const cart=f.shop.carts.propose(f.scope,{cart_id:'second-recovery-cart',resource_id:f.order().id,items:[{variant_id:'basic',quantity:1}]});
+    assert.equal((await f.shop.carts.confirm(f.customer,{cart_id:cart.cart_id,preview_digest:cart.preview_digest})).committed,true);f.advance(101);
+    const second=f.recovery.propose(f.scope,{cart_id:cart.cart_id,campaign_id:f.campaign.id}),secondQuote=quote(f,{cart_id:cart.cart_id});f.incentives.bind(f.scope,{recovery_id:second.id,quote:secondQuote});
+    const selected=f.recovery.final(f.scope,f.campaign.id,f.caseId);assert.ok([f.recoveryId,second.id].includes(selected.id));const target=selected.id===f.recoveryId?second.id:f.recoveryId;assert.notEqual(target,selected.id);assert.doesNotThrow(()=>f.incentives.final(f.scope,target));
+    const row=f.db.prepare('SELECT * FROM commerce_cart_recoveries WHERE id=?').get(selected.id) as Value,before=effects(f),redirected={...JSON.parse(row.body),id:target,loyalty_incentive:null};
+    f.db.prepare('UPDATE commerce_cart_recoveries SET body=?,digest=? WHERE id=?').run(canonical(redirected),contentDigest(redirected),row.id);
+    try{assert.throws(()=>f.recovery.final(f.scope,f.campaign.id,f.caseId),'another valid binding cannot authorize a corrupted selected recovery');assert.deepEqual(effects(f),before);}finally{f.db.prepare('UPDATE commerce_cart_recoveries SET body=?,digest=? WHERE id=?').run(row.body,row.digest,row.id);}
+    assert.equal(f.recovery.final(f.scope,f.campaign.id,f.caseId).id,selected.id);assert.deepEqual(effects(f),before);
+  });
 });
 
 test('CASE-M19-G04-06',async()=>{
@@ -203,7 +213,10 @@ test('CASE-M19-G05-08',()=>usingFixture(async f=>{
   const options={accrual:f.projectionOwner,redemptions:f.redemptions,incentives:f.incentives,campaigns:f.campaigns,measurement:f.measurement};
   assert.throws(()=>new LoyaltyLifecycle(f.kernel,{...options,accrual:{...f.projectionOwner} as any}));assert.throws(()=>new LoyaltyIncentives(f.kernel,{redemptions:f.redemptions,carts:f.shop.carts,campaigns:f.campaigns,recovery:f.recovery,source:f.incentiveSource}),'a second owner cannot replace the recovery validator');
   assert.throws(()=>new LoyaltyIncentiveFixtureSource({marketing:{...f.marketingSource} as any,shopping:f.shop.source,redemption:f.redemptionSource}));
-  const otherDb=new DatabaseSync(':memory:');try{const otherKernel=new CommerceKernel(otherDb,f.now);assert.throws(()=>new LoyaltyLifecycle(otherKernel,options));}finally{otherDb.close();}
+  const otherDb=new DatabaseSync(':memory:');try{const otherKernel=new CommerceKernel(otherDb,f.now);assert.throws(()=>new LoyaltyLifecycle(otherKernel,options));
+    const coreMarketing=new MarketingFixtureSource(otherDb,{tenant:f.a.tenant,store:f.a.store,account:f.marketingSource.account},f.now);assert.throws(()=>new LoyaltyIncentiveFixtureSource({marketing:coreMarketing,shopping:f.shop.source,redemption:f.redemptionSource}));
+    assert.equal(otherDb.prepare("SELECT count(*) n FROM sqlite_master WHERE type='table' AND name='fixture_loyalty_incentive_configuration'").get().n,0,'reject a core-backed source before adding wrapper schema');
+  }finally{otherDb.close();}
   const cohabiting=new MarketingFixtureSource(f.loyaltyDb,{tenant:f.a.tenant,store:f.a.store,account:'merchant_mail'},f.now);assert.throws(()=>new LoyaltyIncentiveFixtureSource({marketing:cohabiting,shopping:f.shop.source,redemption:f.redemptionSource}),'sources cannot share the same database');
   const identity=f.marketingDb.prepare('SELECT * FROM marketing_source_identity WHERE id=1').get() as Value,changed={...JSON.parse(identity.body),account:'another_account'};f.marketingDb.prepare('UPDATE marketing_source_identity SET body=?,digest=? WHERE id=1').run(canonical(changed),contentDigest(changed));
   try{assert.throws(()=>f.incentiveSource.observe());assert.throws(()=>f.incentiveSource.configure({revision:2,expires_at:f.now()+60000,combinations:E.combinations}));}finally{f.marketingDb.prepare('UPDATE marketing_source_identity SET body=?,digest=? WHERE id=1').run(identity.body,identity.digest);}
