@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "id": "rifare-source-inventory",
-  "revision": 30,
+  "revision": 31,
   "status": "proposed",
   "components": [
     {
@@ -149,6 +149,7 @@
         "docs/M12-QUALIFICATION.md",
         "docs/M13-QUALIFICATION.md",
         "docs/M14-QUALIFICATION.md",
+        "docs/M18-QUALIFICATION.md",
         "docs/MERCHANT-DATA-BOUNDARY.md",
         "docs/MERCHANT-PORTABILITY.md",
         "docs/MODEL-POLICY-FOUNDATIONS.md",
@@ -261,6 +262,7 @@
         "docs/decisions/0054-m18-current-journey-readiness.md",
         "docs/decisions/0055-m18-durable-commerce-journeys.md",
         "docs/decisions/0056-m18-current-journey-followups.md",
+        "docs/decisions/0057-m18-local-journey-continuity.md",
         "docs/decisions/README.md",
         "docs/exchange-depth.md",
         "docs/exchange-money.md",
@@ -1190,6 +1192,8 @@
         "tests/development/inventory-planning-privacy-helpers.mts",
         "tests/development/inventory-reconciliation-helpers.mts",
         "tests/development/inventory-reconciliation.test.mts",
+        "tests/development/journey-continuity-helpers.mts",
+        "tests/development/journey-continuity.test.mts",
         "tests/development/journey-followups-helpers.mts",
         "tests/development/journey-followups.test.mts",
         "tests/development/journey-readiness-helpers.mts",

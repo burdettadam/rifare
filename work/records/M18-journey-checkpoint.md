@@ -279,3 +279,26 @@ to mark all three G05 local cases and their fault as pending. Reviewed G01-G04
 observations remain separate. Actual observations will replace those pending
 labels only after retained execution and independent review; no assertion,
 fixture, native source, gate or permission changes are involved.
+
+## G05 independent freeze and initial local candidate
+
+The independent author froze 42747837c62c9c1dd04be3831d6d5591e2eb7431 after
+source-only inspection. Exactly two new files contain three local native cases
+and their helper, 240 lines total. Root integrated them unchanged before any
+new native invocation. No runtime, old test/helper, native grant, permission,
+contract, schema or runner change is needed for this initial candidate.
+
+The separate ledger oracle covers the original fixture identities, native
+fulfillment source effect, actual later cart effect and message-source effect.
+Reopened owners receive only filenames, scope/public case/link/generation, clock
+and current bearers; they discover the original uncertain reference from fresh
+context. The no-model case preserves an earlier accepted synthetic tracking
+send and requires the later native guarded send to add no effect after current
+customer '*' withdrawal. Acceptance is not customer delivery.
+
+Both source-only contract reviewers found no remaining blockers after the
+pending-observation wording correction at 91792f2. Those dispositions are not
+product approval. Additive inventory now has 3,180 tests, 214 capabilities,
+541 protected paths, 1,835 sources, 314 unchanged runtime pins and 628 oracle
+pins, revision 31. Native execution, isolated fault and exact-product reviews
+remain pending until their actual reports and messages are retained.

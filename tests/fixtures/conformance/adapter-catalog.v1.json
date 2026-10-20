@@ -7306,6 +7306,14 @@
     {
       "path": "tests/development/journey-followups-helpers.mts",
       "sha256": "154a756909442f36aea4b917a54bb0a7f040881a0d3876da9d56966e65107a75"
+    },
+    {
+      "path": "tests/development/journey-continuity.test.mts",
+      "sha256": "9912cbc256c72ba009f91a08ba319030e24cab99956d578eee36b607fc3a9288"
+    },
+    {
+      "path": "tests/development/journey-continuity-helpers.mts",
+      "sha256": "30a8770e7b0d17e194743c78fa50db839cfe13c08e9e5eee4fa6498bbe00e45a"
     }
   ]
 }

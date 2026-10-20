@@ -1909,6 +1909,15 @@
       "contract_files": [
         "packages/commerce/contracts/journey-followups.v1.json"
       ]
+    },
+    {
+      "id": "m18-local-journey-continuity-diagnostic",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/commerce-journeys.v1.json",
+        "packages/commerce/contracts/journey-followups.v1.json"
+      ]
     }
   ],
   "tests": [
@@ -24150,6 +24159,27 @@
       "runner_case_id": "M18-G04-MERCHANT-REIMPORT-HELD-ATOMICITY",
       "source": "tests/development/journey-followups.test.mts",
       "capability_id": "m18-journey-followups-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G05-LOCAL-TWO-CHANNEL-CONTINUITY",
+      "suite": "runtime",
+      "runner_case_id": "M18-G05-LOCAL-TWO-CHANNEL-CONTINUITY",
+      "source": "tests/development/journey-continuity.test.mts",
+      "capability_id": "m18-local-journey-continuity-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G05-LOCAL-REOPEN-ORIGINAL-RECONCILIATION",
+      "suite": "runtime",
+      "runner_case_id": "M18-G05-LOCAL-REOPEN-ORIGINAL-RECONCILIATION",
+      "source": "tests/development/journey-continuity.test.mts",
+      "capability_id": "m18-local-journey-continuity-diagnostic"
+    },
+    {
+      "id": "runtime:M18-G05-LOCAL-NO-MODEL-OPTOUT-FINAL-STOP",
+      "suite": "runtime",
+      "runner_case_id": "M18-G05-LOCAL-NO-MODEL-OPTOUT-FINAL-STOP",
+      "source": "tests/development/journey-continuity.test.mts",
+      "capability_id": "m18-local-journey-continuity-diagnostic"
     }
   ],
   "protected_files": [
@@ -24691,7 +24721,9 @@
     "packages/commerce/journey-followup-records.mts",
     "packages/commerce/journey-followups.mts",
     "tests/development/journey-followups-helpers.mts",
-    "tests/development/journey-followups.test.mts"
+    "tests/development/journey-followups.test.mts",
+    "tests/development/journey-continuity-helpers.mts",
+    "tests/development/journey-continuity.test.mts"
   ],
   "source_count_fixture": "tests/fixtures/licensing/artifact-oracle.v1.json",
   "source_inventory": "planning/component-inventory.json"
