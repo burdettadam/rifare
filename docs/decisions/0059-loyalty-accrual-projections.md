@@ -24,6 +24,12 @@ PLANS.md, work/records/M19-loyalty-milestone.md and necessary additive inventori
 and pins. No financial-owner, permission, worker-grant, migration, accepted-goal
 or canonical planning-baseline changes. G03-G05 require their own prior bounded
 assignments; this record does not preclaim them.
+The conformance catalogue may add one diagnostic loyalty_accrual_source entry,
+the new fixture-source path, and only the composed loyalty.accrual.project
+operation, bound to the three new obligation cases. Keep all 39 prior adapter
+objects, 201 operations and prior native case declarations. No earning/reversal
+effect handler is advertised. Extend the existing transient-memory and synthetic
+fixture privacy surfaces; retain their 15 IDs and unchanged core schema.
 
 ## Native sources and authority
 
