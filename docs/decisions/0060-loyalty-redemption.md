@@ -419,3 +419,22 @@ A live release requires attempt_count=0, restored=false, no prior dispatch/outco
 receipt and no contradictory original-ID source booking. Restoration's unknown
 with attempts0 is explicitly ineligible for live release. Historical completion
 and minimization update existing rows, so admission capacity cannot prevent them.
+
+## Pre-freeze interface confirmations
+
+Both stored typed record kinds use boolean minimized and authority_revoked
+fields. Quote terms use numeric points with unit='points'; gateway previews and
+receipts use the separate typed points={unit:'points',quantity:N} projection.
+After required current authorization and stored-evidence validation, dispatch of
+a redeemed, rejected or released operation returns its unchanged terminal
+projection. It creates no attempt, provider call, receipt or typed record.
+A consumed quote may be rejected during preparation, approval or execution, but
+cannot create a second reservation. Concurrent admission failure reports
+LOYALTY_INSUFFICIENT_POINTS and consumes neither the losing quote nor approval.
+
+Explicit pinAccount may anchor a valid complete limited-provider snapshot.
+Anchoring is evidence capture, not spending authority: reserve=false still
+prevents spendable redemption context and quotes. The disposable source tables
+retain their native fixture corruption seam; isolated tests may change and
+restore their own journal/anchor rows. Core immutable command, target and receipt
+triggers remain unchanged.
