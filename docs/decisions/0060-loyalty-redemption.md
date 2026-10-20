@@ -438,3 +438,11 @@ prevents spendable redemption context and quotes. The disposable source tables
 retain their native fixture corruption seam; isolated tests may change and
 restore their own journal/anchor rows. Core immutable command, target and receipt
 triggers remain unchanged.
+
+The retained exception is limited to read and reconcile. expire keeps ordinary
+operation.dispatch, resource and recovery authorization; it does not bypass
+quarantine or erased-resource write fences. A denied retained expiry attempt
+leaves the unknown state, attempt count and held quantity unchanged, observable
+through authorized retained read. An ordinary live authorized unknown still
+returns its unchanged projection from expire. Terminal dispatch replay likewise
+remains subject to ordinary current dispatch/execution authorization.
