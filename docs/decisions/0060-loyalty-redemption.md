@@ -311,3 +311,56 @@ balance alone must not mask the defect. Preserve the fault separately, actual
 native reports/source hashes and both nonauthor decisions. Close only the bounded
 local scope. Formal G03/M19 and connected/provider/target-host/full qualification
 remain open. G04, G05 and G99 need separate bounded assignments.
+
+## Frozen API shape details
+
+The source wrapper's public readonly fields are balanceSource, db, tenant, store,
+account, identity and contract. The native owner exposes k, balances and source.
+Its binding includes tenant_id, store_id, source_account_id, balance_source_identity,
+source_identity and source_contract. pinAccount returns a hashed envelope with
+account_key, subject_ref, customer_id and snapshot (the full original G01 envelope).
+observeAccount returns schema_version, the source binding, account_key, subject_ref,
+anchor, current (full G01 envelope), benefits (current catalog), journal and digest.
+Each journal entry contains its seq, original command/command_digest, result and
+row-bound digest. Catalog envelopes contain schema_version, source binding,
+revision, expires_at, benefits and digest.
+
+A source terminal result has exactly schema_version, source_identity,
+source_account_id, account_key, operation_id, command_digest, points, unit,
+benefit_id, benefit_digest, state, reason, provider_ref, before_revision,
+before_digest, after_revision, after_digest, observed_at and digest. state is
+redeemed or rejected; a rejected provider_ref is null. A redeemed provider_ref is
+`reward_` plus the first 40 hex characters of the original command digest.
+Terminal reason codes are LOYALTY_REDEEMED, LOYALTY_INSUFFICIENT_POINTS,
+LOYALTY_REDEMPTION_UNSUPPORTED, LOYALTY_SNAPSHOT_CHANGED, LOYALTY_RULES_CHANGED,
+LOYALTY_BENEFIT_CHANGED or LOYALTY_TERMS_EXPIRED as applicable. Hash all fields
+except digest. Lookup returns this original result; no new timestamp on replay.
+
+context exposes schema_version, case_id, resource_id, account_key, source_identity,
+snapshot_digest, status, reason, provider_available_points, held_points,
+accounted_held_points, effective_available_points, benefits, execution_authorized
+and production_qualified. Available status is available/LOYALTY_CURRENT_ENTITLEMENT;
+invalid or incomplete evidence cannot produce a spendable numeric result.
+quote.quote is its immutable terms and quote.digest is contentDigest(terms).
+A reservation-insufficient quote throws LOYALTY_INSUFFICIENT_POINTS; it creates
+no quote. Immutable terms do not include changing local held totals.
+
+read/dispatch/expire return a minimized operation projection: schema_version,
+operation_id, state, reason, points, unit, provider_ref, held_points,
+authority_revoked, restored, minimized, command_digest, source_identity,
+observation, execution_authorized=false, production_qualified=false and
+financial_effect=false. Reconcile returns {disposition,operation,command_repeated:false},
+where disposition is unconfirmed, reconciled or unchanged and operation is that
+same projection. Null lookup gives unconfirmed and preserves unknown. expire
+returns unchanged unknown; for an expired live never-sent reservation it releases
+only after checking no contradictory source booking. Replays do not create rows.
+The independent accounting oracle credits overlap only when observeAccount has
+already supplied exact original-ID journal proof; unknown status itself is not
+confirmation. Without that proof the full local hold continues to subtract.
+
+ActionGateway(kernel,{loyalty}) and ExceptionQueue(kernel,resolver?,{loyalty})
+retain their existing defaults. Their optional loyalty reference must be the
+native same-kernel owner. Generic ExecutionStops.reauthorize also refuses valid
+typed loyalty work; a changed stop cannot renew its original points approval.
+Keep existing gift restrictions, then route loyalty before return-writability
+checks. No human proof's last_seen or expiry is refreshed by quote revalidation.
