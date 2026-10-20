@@ -1,9 +1,10 @@
 # M19-G03 integration design for the next bounded assignment
 
-This is source-derived preparation, not a G03 assignment, implementation or
-qualification. G02 must close its local review first. The owner has authorized
-continued local development; a new bounded prior assignment should fix the
-concrete API, paths and independent oracle below before runtime changes.
+This source-derived preparation informed the separately committed
+[ADR-0060 assignment](decisions/0060-loyalty-redemption.md), following reviewed
+G02 closure c8e8240. ADR-0060 is the controlling concrete API, path and independent
+oracle contract. This design itself is not implementation or qualification
+evidence; current progress belongs in the milestone work record.
 
 ## Intended result
 
