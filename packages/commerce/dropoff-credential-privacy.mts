@@ -12,7 +12,9 @@ const sourceKey=(t:string,s:string,identity:string)=>canonical([t,s,identity]);
 function held(k:CommerceKernel,r:DropoffRecord){return !!k.db.prepare('SELECT 1 FROM commerce_privacy_holds WHERE tenant_id=? AND store_id=? AND subject_hash=? AND released=0 AND expires_at>?').get(r.tenant_id,r.store_id,r.body.subject_ref,k.clock());}
 function suppressed(k:CommerceKernel,r:DropoffRecord,checkpoint?:Row){
   if(k.db.prepare('SELECT 1 FROM commerce_privacy_subjects WHERE tenant_id=? AND store_id=? AND subject_hash=?').get(r.tenant_id,r.store_id,r.body.subject_ref)||checkpoint?.subjects?.some((s:Row)=>s.tenant_id===r.tenant_id&&s.store_id===r.store_id&&s.subject_hash===r.body.subject_ref))return true;
-  return !!k.db.prepare('SELECT 1 FROM commerce_privacy_resources WHERE tenant_id=? AND store_id=? AND resource_id=?').get(r.tenant_id,r.store_id,r.body.resource_id)||!!checkpoint?.resources?.some((s:Row)=>s.tenant_id===r.tenant_id&&s.store_id===r.store_id&&s.resource_id===r.body.resource_id);
+  const resources=new Set([r.body.resource_id]),caseId=r.body.terms?.case_id??r.body.personal?.case_id;
+  if(caseId){const current=k.db.prepare('SELECT resource_id FROM commerce_cases WHERE tenant_id=? AND store_id=? AND id=?').get(r.tenant_id,r.store_id,caseId) as Row|undefined;if(current)resources.add(current.resource_id);}
+  return [...resources].some(resource=>!!k.db.prepare('SELECT 1 FROM commerce_privacy_resources WHERE tenant_id=? AND store_id=? AND resource_id=?').get(r.tenant_id,r.store_id,resource)||!!checkpoint?.resources?.some((s:Row)=>s.tenant_id===r.tenant_id&&s.store_id===r.store_id&&s.resource_id===resource));
 }
 function retained(body:Row,minimize:boolean){
   const b={...body,authority_revoked:true,minimized:body.minimized||minimize,source_cleanup:body.source_cleanup==='forgotten'?'forgotten':'pending'};
@@ -84,7 +86,13 @@ function eraseRecords(k:CommerceKernel,records:DropoffRecord[],minimize=true){
   const scopes=new Map(records.map(r=>[canonical([r.tenant_id,r.store_id]),r]));for(const s of scopes.values())cleanupPending(k,selected(k,s.tenant_id,s.store_id).filter(r=>records.some(old=>old.kind===r.kind&&old.id===r.id)));
 }
 export function eraseDropoffCredentialSubject(k:CommerceKernel,t:string,s:string,subject:string,minimize=true){repairSuppressedQuotes(k,t,s,subject);eraseRecords(k,selected(k,t,s,subject),minimize);}
-export function eraseDropoffCredentialResources(k:CommerceKernel,t:string,s:string,resources:string[],minimize=true){eraseRecords(k,resourceRecords(k,t,s,resources),minimize);}
+export function eraseDropoffCredentialResources(k:CommerceKernel,t:string,s:string,resources:string[],minimize=true){
+  if(!resources.length)return;
+  const ids=new Set(resources),cases=new Set((k.db.prepare('SELECT id,resource_id FROM commerce_cases WHERE tenant_id=? AND store_id=?').all(t,s) as Row[]).filter(r=>ids.has(r.resource_id)).map(r=>r.id));
+  const raw=k.db.prepare('SELECT * FROM commerce_support_documents WHERE tenant_id=? AND store_id=? AND kind IN (?,?)').all(t,s,DROPOFF_QUOTE_KIND,DROPOFF_OPERATION_KIND) as Row[],records=raw.map(checkedDropoffRow);
+  for(const subject of new Set(records.filter(r=>ids.has(r.body.resource_id)||cases.has(r.body.terms?.case_id??r.body.personal?.case_id)).map(r=>r.body.subject_ref)))repairSuppressedQuotes(k,t,s,subject);
+  eraseRecords(k,resourceRecords(k,t,s,resources),minimize);
+}
 export function revokeDropoffCredentialsForUninstall(k:CommerceKernel,t:string,s:string){
   const records=selected(k,t,s);for(const r of records)saveDropoffRecord(k,retained(r.body,suppressed(k,r)||!held(k,r)),true);
   retireCopies(k,records.filter(r=>r.body.minimized||suppressed(k,r)||!held(k,r)),true);retireCopies(k,records.filter(r=>!r.body.minimized&&!suppressed(k,r)&&held(k,r)),false);cleanupPending(k,selected(k,t,s));

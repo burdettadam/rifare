@@ -126,10 +126,10 @@ export class ActionGateway {
       return {id:ref,preview_id:r.id,preview_digest:r.digest,max_uses:1,expires_at:r.preview.expires_at,financial_authorization:false};
     });
   }
-  revokeApproval(scope:Scope,approvalId:string){const k=this.#k,s=k.require(scope);id(approvalId);
+  revokeApproval(scope:Scope,approvalId:string){const k=this.#k;return k.transaction(()=>{const s=k.require(scope);id(approvalId);
     const r=k.db.prepare('SELECT * FROM commerce_action_approvals WHERE tenant_id=? AND store_id=? AND id=?').get(s.tenant_id,s.store_id,approvalId) as Row;
     if(!r)throw new Error('NOT_FOUND');const p=this.#preview(scope,r.preview_id);k.authorize(scope,'action.approve',p.preview.resource_id);
-    k.db.prepare('UPDATE commerce_action_approvals SET revoked=1 WHERE tenant_id=? AND store_id=? AND id=?').run(s.tenant_id,s.store_id,approvalId);return {revoked:true};}
+    k.db.prepare('UPDATE commerce_action_approvals SET revoked=1 WHERE tenant_id=? AND store_id=? AND id=?').run(s.tenant_id,s.store_id,approvalId);return {revoked:true};});}
   execute(scope:Scope,input:unknown){
     const k=this.#k,p=exact(jsonValue(input),['preview_id','preview_digest','approval_id']);id(p.approval_id);
     return k.transaction(()=>{
@@ -165,8 +165,8 @@ export class ActionGateway {
       return receipt;
     });
   }
-  receipt(scope:Scope,receiptId:string){const s=this.#k.require(scope);id(receiptId);
+  receipt(scope:Scope,receiptId:string){return this.#k.transaction(()=>{const s=this.#k.require(scope);id(receiptId);
     const r=this.#k.db.prepare('SELECT * FROM commerce_action_receipts WHERE tenant_id=? AND store_id=? AND id=?').get(s.tenant_id,s.store_id,receiptId) as Row;
     if(!r)throw new Error('NOT_FOUND');this.cases.inspect(scope,r.case_id);
-    const result=JSON.parse(r.body);if(result.loyalty_operation_id)redemptionHuman(this.#k,scope);if(result.dropoff_operation_id)dropoffHuman(this.#k,scope);if(contentDigest(result)!==r.digest)throw new Error('RECEIPT_INTEGRITY');return result;}
+    const result=JSON.parse(r.body);if(result.loyalty_operation_id)redemptionHuman(this.#k,scope);if(result.dropoff_operation_id)dropoffHuman(this.#k,scope);if(contentDigest(result)!==r.digest)throw new Error('RECEIPT_INTEGRITY');return result;});}
 }

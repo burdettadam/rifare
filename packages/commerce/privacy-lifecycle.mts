@@ -403,7 +403,11 @@ export class PrivacyLifecycle {
       for(const subject of dropoffCredentialResourceSubjects(k,s.tenant_id,s.store_id,owned.map(r=>r.id)))hashes.add(subject);
       const hold=[...hashes].map(subject=>k.db.prepare('SELECT reason,authority_ref,expires_at FROM commerce_privacy_holds WHERE tenant_id=? AND store_id=? AND subject_hash=? AND released=0 AND expires_at>?').get(s.tenant_id,s.store_id,subject,k.clock())).find(Boolean);
       if(hold){for(const subject of hashes)eraseDropoffCredentialSubject(k,s.tenant_id,s.store_id,subject,false);eraseDropoffCredentialResources(k,s.tenant_id,s.store_id,owned.map(r=>r.id),false);event(k,s,hash,'erasure_held','configured_hold');return {status:'held',hold,erased:false};}
-      if(k.db.prepare('SELECT 1 FROM commerce_privacy_subjects WHERE tenant_id=? AND store_id=? AND subject_hash=?').get(s.tenant_id,s.store_id,hash)){eraseDropoffCredentialSubject(k,s.tenant_id,s.store_id,hash);return {status:'already_erased'};}
+      if(k.db.prepare('SELECT 1 FROM commerce_privacy_subjects WHERE tenant_id=? AND store_id=? AND subject_hash=?').get(s.tenant_id,s.store_id,hash)){
+        const retained=k.db.prepare('SELECT resource_id FROM commerce_privacy_resources WHERE tenant_id=? AND store_id=? AND subject_hash=?').all(s.tenant_id,s.store_id,hash) as Row[];
+        eraseDropoffCredentialResources(k,s.tenant_id,s.store_id,[...new Set([...owned.map(r=>r.id),...retained.map(r=>r.resource_id)])]);
+        eraseDropoffCredentialSubject(k,s.tenant_id,s.store_id,hash);return {status:'already_erased'};
+      }
       const rs=resources(k,s,customer),giftCount=all(k,'commerce_resources',s.tenant_id,s.store_id).filter(r=>r.kind==='order'&&JSON.parse(r.payload).gift_facts?.recipient_customer_id===customer).length+all(k,'commerce_gift_cases',s.tenant_id,s.store_id).filter(r=>JSON.parse(r.body).recipient_customer_id===customer).length;if(!rs.length&&!giftCount&&!hasShopperMemorySubject(k,s.tenant_id,s.store_id,hash)&&!hasJourneySubject(k,s.tenant_id,s.store_id,hash)&&!hasFollowupSubject(k,s.tenant_id,s.store_id,hash)&&!hasLoyaltyRedemptionSubject(k,s.tenant_id,s.store_id,hash)&&!hasDropoffCredentialSubject(k,s.tenant_id,s.store_id,hash))throw new Error('NOT_FOUND');return eraseSelected(k,s,rs.map(r=>r.id),hash,k.clock());});
   }
   uninstall(scope:Scope) {

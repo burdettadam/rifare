@@ -58,7 +58,8 @@ function currentTerms(owner:DropoffCredentials,scope:Scope,record:Row,operation:
   if(sourceCheck){
     if(q.action===DROPOFF_ISSUE_ACTION){
       const view=s.actor_id===q.owner?owner.choices.quote(scope,{request_id:q.request_id}):owner.choices.review(scope,{quote_id:q.quote_id}),method=view.choices.find((m:Row)=>m.choice_id===q.method.choice_id);
-      if(view.source_digest!==q.source_digest||!method||contentDigest(method)!==q.method_digest||contentDigest(view.items)!==q.items_digest)throw new Error('DROPOFF_CHOICE_CHANGED');issueFamily(owner,s,q,operation?.native.id??null);
+      if(view.source_digest!==q.source_digest||!method||contentDigest(method)!==q.method_digest||contentDigest(view.items)!==q.items_digest)throw new Error('DROPOFF_CHOICE_CHANGED');
+      if(owner.source.directory.partnerConfiguration()?.body.account_id!==q.source_account_id)throw new Error('DROPOFF_SOURCE_ACCOUNT_CHANGED');issueFamily(owner,s,q,operation?.native.id??null);
     }else {
       const {latest}=family(owner,s,q.family_ref,operation?.native.id??null),issued=dropoffOperationRecord(k,s,q.issue_operation_id);
       if(!issued||latest?.native.id!==issued.native.id||issued.record.body.authority_revoked||issued.record.body.restored||issued.record.body.minimized)throw new Error('DROPOFF_REVOKE_UNAVAILABLE');

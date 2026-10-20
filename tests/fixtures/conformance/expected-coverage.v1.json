@@ -2952,6 +2952,12 @@
       "sha256": "3a2f62c85f9b949a76dc33c856a42b72ffe4213f60b5a77c682a6841e302f0eb"
     },
     {
+      "id": "CASE-M20-G02-06",
+      "name": "CASE-M20-G02-06",
+      "path": "tests/development/dropoff-credentials.test.mts",
+      "sha256": "3a2f62c85f9b949a76dc33c856a42b72ffe4213f60b5a77c682a6841e302f0eb"
+    },
+    {
       "id": "M01-G04-01",
       "name": "M01-G04-01",
       "path": "tests/development/commerce-capabilities.test.mts",

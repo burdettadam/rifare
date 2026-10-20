@@ -5206,20 +5206,8 @@
           "scope_kind": "server_local_fixture_only",
           "native_cases": [
             {
-              "id": "CASE-M20-G02-01",
-              "name": "CASE-M20-G02-01",
-              "path": "tests/development/dropoff-credentials.test.mts",
-              "sha256": "3a2f62c85f9b949a76dc33c856a42b72ffe4213f60b5a77c682a6841e302f0eb"
-            },
-            {
-              "id": "CASE-M20-G02-02",
-              "name": "CASE-M20-G02-02",
-              "path": "tests/development/dropoff-credentials.test.mts",
-              "sha256": "3a2f62c85f9b949a76dc33c856a42b72ffe4213f60b5a77c682a6841e302f0eb"
-            },
-            {
-              "id": "CASE-M20-G02-03",
-              "name": "CASE-M20-G02-03",
+              "id": "CASE-M20-G02-06",
+              "name": "CASE-M20-G02-06",
               "path": "tests/development/dropoff-credentials.test.mts",
               "sha256": "3a2f62c85f9b949a76dc33c856a42b72ffe4213f60b5a77c682a6841e302f0eb"
             }
@@ -5605,7 +5593,7 @@
     },
     {
       "path": "packages/commerce/action-gateway.mts",
-      "sha256": "d3f9c6420079cb62064e66316e8ce9e35e9455c7aeb3941b4b6417350e1e1b97"
+      "sha256": "b2f00084f23b53c0be0e2d69426dd5186393927c76d7d592acf141b35796a65c"
     },
     {
       "path": "packages/commerce/authorization.mts",
@@ -5809,7 +5797,7 @@
     },
     {
       "path": "packages/commerce/privacy-lifecycle.mts",
-      "sha256": "e24a0131ac8a1d94df7821e1dadca8b7f9bf94d3f13eb2af7e355352e76bc885"
+      "sha256": "b4a1724c316d6f43dac11d33609d942e01df3a38ce178dc0527fb2d56820a8d1"
     },
     {
       "path": "packages/commerce/profile-editor.mts",
@@ -8017,11 +8005,11 @@
     },
     {
       "path": "packages/commerce/dropoff-credential-privacy.mts",
-      "sha256": "ad7b0386d5c2a7ed57e767bff946abde30f0b8fb34342127e6fc6562354b1db7"
+      "sha256": "714ef53fe5004c39901b6f97bd284c21d7e31eab0e96ea26ec317211d2090954"
     },
     {
       "path": "packages/commerce/dropoff-credentials.mts",
-      "sha256": "4b5cc7f3289effe87640fc374b1f2de52c953e50618fd5efbe82875cb75af112"
+      "sha256": "626356e8a242985d2664afb93ad382e809395af590c36c6ff1dc3ddf41b9333a"
     },
     {
       "path": "tests/development/dropoff-credentials.test.mts",
