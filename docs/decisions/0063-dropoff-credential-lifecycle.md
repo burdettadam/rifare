@@ -226,6 +226,17 @@ delivery_available, observed_at and digest. Corruption tests may patch existing
 prototype methods to return independently rehashed malformed observations;
 strict rejection must not depend only on a stale envelope hash.
 
+The persisted identity body is {schema_version:1,contract,source_identity,
+source_account_id,directory_identity,tenant_id,store_id}; source_identity hashes
+the other fields. On first creation resolve the current native partner account;
+on reopen retain the persisted original account after validating parent/scope
+identity. Historical lookup/journal/status does not depend on current eligibility,
+directory presence, partner configuration expiry/account or decryption keys.
+Current account/directory checks belong only to new issuance. Revoke has its own
+canonical original-issued-command/result and current-credential revalidation,
+shared by prepare/approve/execute/final dispatch; it never invokes current G01
+eligibility. Parent physical/identity integrity remains mandatory in every path.
+
 ## Native isolation, privacy and recovery
 
 Generic DurableWork, Reconciliation and ExecutionStops reauthorization reject
@@ -245,6 +256,26 @@ delivery copies; preserve minimized immutable IDs/commands/outcomes/unknown fenc
 Restore never revives authority or permits unsent cancellation of uncertain work.
 Retained read/reconcile requires actual human privacy.manage plus original-resource
 operation.read/operation.reconcile. No secret is returned through retained paths.
+
+Use a transient WeakMap keyed by actual CommerceKernel and immutable source
+scope/identity, registered only by the native credential owner. It is not a
+durable registry. Core revocation/minimization must complete even if no source is
+attached or source cleanup is unavailable. Both typed records carry
+source_cleanup=not_requested, pending or forgotten; retained views/exports report
+pending without claiming provider ciphertext deletion. Attached cleanup calls
+forgetSubject and marks forgotten only on confirmed success. Restore/import
+require no source and retain pending cleanup explicitly. Attaching the exact
+source may finish pending cleanup; it grants no delivery or issuance authority.
+
+Creating an evidentiary hold alone does not revoke a live credential. An erasure
+request blocked by that hold must still revoke G02 issue/delivery authority and
+its approvals, while retaining personal evidence; handle the native erase early
+return explicitly. Ordinary erasure minimizes; hold-blocked erasure sets
+authority_revoked=true without minimization. Neither path claims provider
+revocation. Repeated erasure with an existing tombstone must still replay G02
+subject/resource suppression. All strict operation classification is core-only;
+generic/support/loyalty/dropoff streams remain distinct even with no provider
+attachment, unavailable lookup, expired current G01 terms or missing keys.
 
 ## Independent specification, selection and exact fault
 
