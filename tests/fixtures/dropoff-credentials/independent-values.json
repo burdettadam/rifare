@@ -1,0 +1,46 @@
+{
+  "fixture_id": "FIX-M20-G02-01-02-03",
+  "qualification": "synthetic_only",
+  "oracle_basis": "One original request has two fragile shirts and one accessory hat. Issue acknowledgment loss never authorizes a second credential. Original issuance remains an immutable fact, while provider expiry or confirmed revocation controls current usability and separately approved replacement.",
+  "case_id": "case_one",
+  "customer_id": "C-1001",
+  "quote_ttl_ms": 5000,
+  "credential_ttl_ms": 20000,
+  "after_quote_expiry_ms": 5001,
+  "after_credential_expiry_ms": 20001,
+  "items": [
+    {"line_id":"alpha","item_id":"shirt","category":"fragile","quantity":2},
+    {"line_id":"beta","item_id":"hat","category":"accessory","quantity":1}
+  ],
+  "method": {
+    "site_id":"main-site",
+    "destination_id":"main-destination",
+    "method_id":"qr-bag",
+    "packaging":"provider_packaging",
+    "label_required":false,
+    "credential_kind":"qr",
+    "instructions_ref":"main-instructions",
+    "accessible_alternative":"printed_code",
+    "fees":{
+      "partner_fee":{"amount_minor":"250","currency":"USD","basis":"per_handoff"},
+      "destination_handling_estimate":{"amount_minor":"150","currency":"USD","basis":"per_handoff"},
+      "total_minor":null,
+      "charged":false
+    }
+  },
+  "provider_account_id":"reverse_hub_account",
+  "native_states":{
+    "authorized":{"operation":"queued","work":"pending"},
+    "unknown":{"operation":"unknown","work":"unknown"},
+    "issued":{"operation":"succeeded","work":"done"},
+    "revoked":{"operation":"succeeded","work":"done"},
+    "rejected":{"operation":"failed","work":"dead"},
+    "cancelled":{"operation":"failed","work":"dead"}
+  },
+  "source_counts":{
+    "lost_before":{"journal":0,"credentials":0},
+    "lost_after":{"journal":1,"credentials":1},
+    "expired_replacement":{"journal":2,"credentials":2,"usable":1},
+    "revoked_replacement":{"journal":3,"credentials":2,"usable":1}
+  }
+}
