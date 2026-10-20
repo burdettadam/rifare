@@ -388,5 +388,7 @@ b00c03b was caught by seven of 20 unchanged cases, including all three permanent
 G02 cases; it is not integrated. Every prior test, capability and source member
 is preserved. Closing documentation leaves executed runtime/tests/contracts/pins
 unchanged. The full evidence and recovery history accompany the checkpoint.
-The separate G03 design records durable redemption and recovery constraints,
-without assigning or implementing that later goal.
+The separate G03 design records durable redemption and recovery constraints.
+ADR-0060 now assigns that bounded next goal from G02 closure c8e8240; its
+independent tests must freeze before runtime. No G03 execution/completion is
+claimed by the G02 checkpoint.

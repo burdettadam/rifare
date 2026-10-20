@@ -88,3 +88,14 @@ Formal M19 remains blocked by missing accepted entry dependencies, merchant-owne
 provider and messaging qualification, connected and target-host evidence, a
 current applicable full gate and trusted formal acceptance. A bounded local
 development batch does not satisfy those requirements.
+
+## M19-G03 prior bounded assignment
+
+ADR-0060 assigns durable synthetic redemption from G02 closure c8e8240, under the
+same owner instruction. It fixes exact human approval, account-level reservation,
+native receipt identity, complete source booking, unknown-outcome accounting,
+independent financial execution, typed exception reconciliation and first-class
+privacy/restore/import behavior. Root is sole runtime writer/executor; the
+independent author owns only the new redemption tests/fixtures in a separate
+worktree. No G03 runtime is implemented or executed at this assignment checkpoint.
+The intended focused batch is 20 new + 21 action-gateway + 17 privacy cases.
