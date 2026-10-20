@@ -35,13 +35,19 @@ export class CartRecovery {
     });
   }
   inspect(scope:Scope,recoveryId:string){const s=this.k.require(scope),row=this.k.db.prepare('SELECT * FROM commerce_cart_recoveries WHERE tenant_id=? AND store_id=? AND id=?').get(s.tenant_id,s.store_id,id(recoveryId)) as Row,b=growthBody(row);this.k.get(scope,row.resource_id);return {...b,digest:row.digest,execution_authorized:false,attribution_is_not_incrementality:true};}
+  #finalDigest(scope:Scope,b:Row,row:Row,c:Row){
+    if(Object.hasOwn(b,'loyalty_incentive')){
+      if(b.id!==row.id||b.cart_id!==row.cart_id||b.campaign_id!==row.campaign_id||b.resource_id!==row.resource_id||b.customer_id!==row.customer_id||b.case_id!==c.id||b.resource_id!==c.resource_id||b.customer_id!==c.customer_id)throw new Error('LOYALTY_INCENTIVE_CHANGED');
+      if(!this.#incentives)throw new Error('LOYALTY_INCENTIVES_NOT_CONFIGURED');this.#incentives.final(scope,row.id);
+    }
+    return row.digest;
+  }
   final(scope:Scope,campaignId:string,caseId:string){
     const {s,c}=supportCase(this.k,scope,caseId),campaign=this.campaigns.read(scope,campaignId),row=this.k.db.prepare('SELECT * FROM commerce_cart_recoveries WHERE tenant_id=? AND store_id=? AND campaign_id=? AND resource_id=?').get(s.tenant_id,s.store_id,campaignId,c.resource_id) as Row,b=growthBody(row);
     if(b.state!=='proposed'||b.campaign_digest!==campaign.digest)throw new Error('RECOVERY_PROPOSAL_CHANGED');
     const cart=this.carts.readCart(scope,b.cart_id);
     if(cart.resource_id!==c.resource_id||cart.subject_id!==c.customer_id)throw new Error('RECOVERY_CART_SCOPE');
     this.#eligible(cart,campaign.body.recovery_after_ms);
-    if(Object.hasOwn(b,'loyalty_incentive')){if(!this.#incentives)throw new Error('LOYALTY_INCENTIVES_NOT_CONFIGURED');this.#incentives.final(scope,b.id);}
-    return {id:b.id,digest:row.digest,cart_id:b.cart_id,purchase_observed:false,discount_applied:false};
+    return {id:b.id,digest:this.#finalDigest(scope,b,row,c),cart_id:b.cart_id,purchase_observed:false,discount_applied:false};
   }
 }

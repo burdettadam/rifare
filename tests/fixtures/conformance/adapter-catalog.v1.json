@@ -5032,10 +5032,10 @@
       "source_files": [
         {
           "path": "packages/adapters/loyalty-incentive-fixture-source.mts",
-          "sha256": "4183d4c41a84c6dff4363a7bc926e90f7b5b6496fa444488631280fb32245770"
+          "sha256": "08036f8bee81d7eec68cc5fb507d864e0c924842a7d88b74dc8a454466743f91"
         }
       ],
-      "version": "source-sha256:4183d4c41a84c6dff4363a7bc926e90f7b5b6496fa444488631280fb32245770",
+      "version": "source-sha256:08036f8bee81d7eec68cc5fb507d864e0c924842a7d88b74dc8a454466743f91",
       "api_version": "rifare-loyalty-incentive-fixture-v1",
       "external_version": null,
       "external_account": null,
@@ -5053,19 +5053,19 @@
               "id": "CASE-M19-G04-01",
               "name": "CASE-M19-G04-01",
               "path": "tests/development/loyalty-incentives-lifecycle.test.mts",
-              "sha256": "ebd24cdf197374bffca4415c8a83ed1962b39e4371565fdececb122e0e153bdf"
+              "sha256": "54fead376c5750f86070695f2a55521b0015489298950639258199ed4796fd85"
             },
             {
               "id": "CASE-M19-G04-02",
               "name": "CASE-M19-G04-02",
               "path": "tests/development/loyalty-incentives-lifecycle.test.mts",
-              "sha256": "ebd24cdf197374bffca4415c8a83ed1962b39e4371565fdececb122e0e153bdf"
+              "sha256": "54fead376c5750f86070695f2a55521b0015489298950639258199ed4796fd85"
             },
             {
               "id": "CASE-M19-G04-03",
               "name": "CASE-M19-G04-03",
               "path": "tests/development/loyalty-incentives-lifecycle.test.mts",
-              "sha256": "ebd24cdf197374bffca4415c8a83ed1962b39e4371565fdececb122e0e153bdf"
+              "sha256": "54fead376c5750f86070695f2a55521b0015489298950639258199ed4796fd85"
             }
           ],
           "direct_fixtures": []
@@ -5081,25 +5081,25 @@
               "id": "CASE-M19-G05-01",
               "name": "CASE-M19-G05-01",
               "path": "tests/development/loyalty-incentives-lifecycle.test.mts",
-              "sha256": "ebd24cdf197374bffca4415c8a83ed1962b39e4371565fdececb122e0e153bdf"
+              "sha256": "54fead376c5750f86070695f2a55521b0015489298950639258199ed4796fd85"
             },
             {
               "id": "CASE-M19-G05-02",
               "name": "CASE-M19-G05-02",
               "path": "tests/development/loyalty-incentives-lifecycle.test.mts",
-              "sha256": "ebd24cdf197374bffca4415c8a83ed1962b39e4371565fdececb122e0e153bdf"
+              "sha256": "54fead376c5750f86070695f2a55521b0015489298950639258199ed4796fd85"
             },
             {
               "id": "CASE-M19-G05-03",
               "name": "CASE-M19-G05-03",
               "path": "tests/development/loyalty-incentives-lifecycle.test.mts",
-              "sha256": "ebd24cdf197374bffca4415c8a83ed1962b39e4371565fdececb122e0e153bdf"
+              "sha256": "54fead376c5750f86070695f2a55521b0015489298950639258199ed4796fd85"
             },
             {
               "id": "CASE-M19-G05-04",
               "name": "CASE-M19-G05-04",
               "path": "tests/development/loyalty-incentives-lifecycle.test.mts",
-              "sha256": "ebd24cdf197374bffca4415c8a83ed1962b39e4371565fdececb122e0e153bdf"
+              "sha256": "54fead376c5750f86070695f2a55521b0015489298950639258199ed4796fd85"
             }
           ],
           "direct_fixtures": []
@@ -6143,7 +6143,7 @@
     },
     {
       "path": "tests/fixtures/conformance/expected-coverage.v1.json",
-      "sha256": "0b5b4b2ce372244afaf8496216e9c77d935caa67ecd73d2e3464559b45fd0ee3"
+      "sha256": "b26a2965ef5462650ea3355f11d73f8578570871dab0309d29d67b2d23bee93c"
     },
     {
       "path": "tests/fixtures/conformance/source-inputs.v1.json",
@@ -6491,7 +6491,7 @@
     },
     {
       "path": "packages/commerce/cart-recovery.mts",
-      "sha256": "f7383259c8666dae7328b569158f61b56d7b8c69417aaba5787200877aa221b1"
+      "sha256": "5560afc3443fb31ff7b2840e1a4f353809064b8384e85a88cbc804ddb7846dd7"
     },
     {
       "path": "packages/commerce/catalog-growth.mts",
@@ -7715,7 +7715,7 @@
     },
     {
       "path": "packages/adapters/loyalty-incentive-fixture-source.mts",
-      "sha256": "4183d4c41a84c6dff4363a7bc926e90f7b5b6496fa444488631280fb32245770"
+      "sha256": "08036f8bee81d7eec68cc5fb507d864e0c924842a7d88b74dc8a454466743f91"
     },
     {
       "path": "packages/commerce/loyalty-incentives.mts",
@@ -7727,7 +7727,7 @@
     },
     {
       "path": "tests/development/loyalty-incentives-lifecycle.test.mts",
-      "sha256": "ebd24cdf197374bffca4415c8a83ed1962b39e4371565fdececb122e0e153bdf"
+      "sha256": "54fead376c5750f86070695f2a55521b0015489298950639258199ed4796fd85"
     },
     {
       "path": "tests/development/loyalty-incentives-lifecycle-helpers.mts",

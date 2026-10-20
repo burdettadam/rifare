@@ -57,7 +57,9 @@ export class LoyaltyIncentiveFixtureSource {
     if(m.db!==refs.marketing_db||s.db!==refs.shopping_db||r.db!==refs.loyalty_db||s.source!==refs.edit||s.source.db!==s.db||s.source.identity!==s.identity||s.source.clock!==refs.shopping_clock||m.clock!==refs.marketing_clock||s.clock!==refs.shopping_clock||r.balanceSource.db!==r.db)throw new Error('LOYALTY_SOURCE_OWNER_MISMATCH');
     for(const source of [m,s,s.source,r,r.balanceSource])if(source.tenant!==this.tenant||source.store!==this.store)throw new Error('LOYALTY_SOURCE_SCOPE_MISMATCH');
     if(m.account!==this.account||m.identity!==b.marketing_source_identity||s.identity!==b.shopping_source_identity||r.identity!==b.redemption_source_identity||r.account!==b.loyalty_account_id||r.balanceSource.identity!==b.balance_source_identity)throw new Error('LOYALTY_SOURCE_SCOPE_MISMATCH');
-    const databases=[m.db,s.db,r.db];for(let i=0;i<databases.length;i++)for(let j=i+1;j<databases.length;j++)assertSeparateLoyaltyDatabases(databases[i],databases[j]);
+    // The native helper checks that its second argument is a fixture database.
+    // Check both directions so no source can add configuration to a core DB.
+    const databases=[m.db,s.db,r.db];for(let i=0;i<databases.length;i++)for(let j=i+1;j<databases.length;j++){assertSeparateLoyaltyDatabases(databases[i],databases[j]);assertSeparateLoyaltyDatabases(databases[j],databases[i]);}
     this.#hashedIdentity(m.db,'marketing_source_identity',{tenant:this.tenant,store:this.store,account:this.account,identity:m.identity});
     if(this.#durableShopping()!==this.#shoppingIdentity)throw new Error('LOYALTY_SOURCE_SCOPE_MISMATCH');
     const parent=loyaltyBinding({tenant_id:this.tenant,store_id:this.store,account_id:r.account,provider:r.balanceSource.provider});
