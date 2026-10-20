@@ -20,7 +20,10 @@ function held(k:CommerceKernel,r:LoyaltyRecord) {
   return !!k.db.prepare('SELECT 1 FROM commerce_privacy_holds WHERE tenant_id=? AND store_id=? AND subject_hash=? AND released=0 AND expires_at>?').get(r.tenant_id,r.store_id,r.body.subject_ref,k.clock());
 }
 function suppressed(k:CommerceKernel,r:LoyaltyRecord,checkpoint?:Row) {
-  return !!k.db.prepare('SELECT 1 FROM commerce_privacy_subjects WHERE tenant_id=? AND store_id=? AND subject_hash=?').get(r.tenant_id,r.store_id,r.body.subject_ref)||!!checkpoint?.subjects?.some((s:Row)=>s.tenant_id===r.tenant_id&&s.store_id===r.store_id&&s.subject_hash===r.body.subject_ref);
+  if(k.db.prepare('SELECT 1 FROM commerce_privacy_subjects WHERE tenant_id=? AND store_id=? AND subject_hash=?').get(r.tenant_id,r.store_id,r.body.subject_ref)||checkpoint?.subjects?.some((s:Row)=>s.tenant_id===r.tenant_id&&s.store_id===r.store_id&&s.subject_hash===r.body.subject_ref))return true;
+  const resources=new Set([r.body.resource_id]),caseId=r.body.terms?.case_id??r.body.personal?.case_id;
+  if(caseId){const c=k.db.prepare('SELECT resource_id FROM commerce_cases WHERE tenant_id=? AND store_id=? AND id=?').get(r.tenant_id,r.store_id,caseId) as Row|undefined;if(c)resources.add(c.resource_id);}
+  return [...resources].some(resource=>!!k.db.prepare('SELECT 1 FROM commerce_privacy_resources WHERE tenant_id=? AND store_id=? AND resource_id=?').get(r.tenant_id,r.store_id,resource)||!!checkpoint?.resources?.some((s:Row)=>s.tenant_id===r.tenant_id&&s.store_id===r.store_id&&s.resource_id===resource));
 }
 function retained(body:Row,minimize:boolean) {
   const b={...body,authority_revoked:true,minimized:body.minimized||minimize};
