@@ -395,3 +395,27 @@ quote, read, dispatch, reconcile and expire are synchronous. Existing async
 service/exception adapters may await their results. Timeout modes are deliberate
 synthetic transport faults before/after an actual source transaction, not claims
 of measured remote network behavior.
+
+## Final authority and concurrency clarifications
+
+Every owner/gateway G03 entry requires actual owner/operator/reviewer role AND
+kernel.workerIdentity(scope)===null. An operator-parent restricted worker scope
+still has role operator and must not inherit redemption or retained-administration
+access. Quote additionally requires action.propose; dispatch requires both
+operation.dispatch and action.execute; read requires operation.read; reconcile
+requires operation.read and operation.reconcile. expire requires operation.dispatch.
+Current context uses existing support/resource access and customer proof. Retained
+read/reconcile additionally requires privacy.manage with the same human restriction.
+
+Dispatch commits unknown in its first core transaction. It then holds a new core
+BEGIN IMMEDIATE across the final current-authority checks, synchronous native
+redeem invocation and validated completion update. This prevents another core
+connection changing approval/ownership/control between the final check and call.
+The provider still has its separate atomic transaction: a provider throw or a
+second-phase core rollback leaves the previously committed unknown intact.
+This is not a claim of a distributed atomic transaction.
+
+A live release requires attempt_count=0, restored=false, no prior dispatch/outcome
+receipt and no contradictory original-ID source booking. Restoration's unknown
+with attempts0 is explicitly ineligible for live release. Historical completion
+and minimization update existing rows, so admission capacity cannot prevent them.
