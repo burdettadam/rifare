@@ -47,11 +47,10 @@ in both directions where their fixture-only check is one-sided. Do not loosen an
 existing helper or change native source constructors for this increment.
 
 The wrapper uses the separate partner database and only one customer-free table,
-fixture_dropoff_configuration, holding the latest hashed configuration. Its
+fixture_dropoff_configuration, holding the latest hashed configuration. The
 columns are singleton (primary key constrained to 1), revision, body and digest;
 the stored revision must match the envelope revision.
-Its
-identity binds contract rifare-dropoff-fixture-v1, tenant/store and the exact
+Its identity binds contract rifare-dropoff-fixture-v1, tenant/store and the exact
 fulfillment, partner and warehouse native identities. Freeze the wrapper and
 retain stable parent handles; readonly TypeScript declarations alone do not
 establish runtime identity. Public fields are fulfillment, partner, warehouse,
@@ -179,12 +178,16 @@ Each method also carries its explicit availability object or null, retaining
 the source observation/expiry rather than refreshing those values on read.
 Source configure/observe return the envelope fields with its digest (or null
 from observe before configuration), rather than a second nested body wrapper.
+Without a directory, directory_revision is 0, directory_digest and observed_at
+are null, methods and choices are empty, and state is unverified.
 
 Each method's fees keeps partner_fee {amount_minor,currency,basis:per_handoff}
 and destination_handling_estimate {amount_minor,currency,basis:per_handoff}
 separate. The latter remains an estimate. total_minor is null and charged=false;
 the amounts may overlap and are not summed, multiplied by item rows, converted
 or treated as collected fees. Native source terms determine amounts/currencies.
+When the corresponding current native terms are absent, that fee slot is null;
+never invent a zero amount or currency to fill missing evidence.
 
 The response always carries qualification=synthetic_only, external_qualified=false,
 physical_handoff_qualified=false, credential_issued=false, execution_authorized=false,
