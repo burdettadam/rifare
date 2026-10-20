@@ -243,3 +243,59 @@ After a coherent candidate, run an isolated final-guard fault with unchanged
 tests, preserving the behavioral failure and never integrating it. Two
 independent exact-candidate reviews are required, at most three corrective rounds.
 Local approval is separate from formal G04/G05/G99 or external qualification.
+
+## Prior clarifications from independent contract review
+
+These decisions precede runtime and the independent test freeze. An attached
+canonical proposed cart may have a waiting transactional tracking follow-up;
+inspection leaves it proposed and creates no cart-source effect. Waiting native
+rule execution returns state cancelled on ineligibility; follow-up inspection
+returns suppressed with the exact guard reason. The final purchase race throws
+JOURNEY_FOLLOWUP_SUPPRESSED and native delivery inspection reports suppressed.
+manual_action_required is false for waiting/queued/accepted/delivered and for
+suppression because of cart_purchased, refund_settled, credit_issued or a terminal
+edit outcome. It is true for unknown, restricted and other ineligibility/failure
+conditions that need current human review. Accepted never implies delivered.
+
+Native schedule must check both sj_ and sjf_ counterparts for each selected
+[tenant,store,rule,event] identity. Ordinary scheduling cannot create an sj_
+duplicate when the guarded counterpart or its retained guard exists, including
+after deletion of the original job/result. Guarded scheduling refuses an already
+existing legacy counterpart. A conflicting original event body also refuses.
+These checks do not change unrelated legacy scheduling or event identities.
+
+Before due_at, direct guarded queue refuses without creating an operation. At or
+after due time it can retain a valid queued operation while the job is waiting.
+For such not-yet-attempted work, dispatch checks that the job is completed with
+this exact operation before DurableWork.claim, and repeats the same requirement
+in #final. An early refusal leaves operation/work/guard untouched; it must not
+consume a lease or mark the operation permanently failed. Native rules.execute
+can then reuse that original queue, complete the job atomically and dispatch once.
+Already-attempted unknown/succeeded work preserves native replay/reconciliation
+behavior. No new internal queue token, callback or permission is needed.
+
+Retirement changes personal guard bodies and therefore their digests. Keep
+original job and delivery payload pins immutable. Validate every retained row
+and exact guard/job identity, then recognize a legitimately revoked/redacted
+guard as permanently ineligible even if its old redacted digest differs from
+the original pin. Any active new queue/final send still requires the exact
+latest original version/digest. A tombstone is never repinned as eligible.
+Restore preflight is structural and allows legitimately stale journey references
+to reach retirement. To isolate the new held-content refusal, the independent
+fixture may forget G03 while unheld, then create a hold and snapshot without
+reading/retiring the still-personal guard.
+
+The exact-subject privacy hook selects its original guarded native job and
+guarded delivery copies by retained job/operation identity even when the subject
+owns zero current resources. Apply the existing logical-redaction/cancellation
+semantics to those copies without rewriting an attempted operation ID or stage.
+Ordinary event immutability does not prohibit established privacy erasure.
+Restore/uninstall cancel waiting jobs and never call a message source.
+
+Restricted projections apply through legacy owners too. For guarded jobs and
+deliveries only, current customers or callers without operation.read receive a
+finite restricted result with no operation/native/source IDs, private stages,
+guard pins or source-specific reasons. SupportService.context inherits the
+guarded delivery restriction. Strip the entire richer native result where
+necessary; removing only operation_id is insufficient after queue reuse.
+Unguarded legacy result shapes and permissions remain unchanged.
