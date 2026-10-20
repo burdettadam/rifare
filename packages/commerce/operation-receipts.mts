@@ -7,6 +7,19 @@ export const RECEIPT_CODES=Object.freeze(['queued','dispatch_started','retry_sch
 const reference=(x:unknown)=>x===null?null:id(x);
 const hash=(x:unknown)=>{if(typeof x!=='string'||!/^[a-f0-9]{64}$/.test(x))throw new Error('RECEIPT_INPUT');return x;};
 
+// Loyalty's strict audit reader has a 1000-receipt bound. Optional payload work
+// must leave room for every outstanding payload's erasure and the remaining
+// native transitions. Attach/erase mutate their payload in the same transaction
+// before this check, so a denied append rolls that mutation back as well.
+function loyaltyReceiptBudget(k:CommerceKernel,s:Row,op:Row,action:string) {
+  if(action!=='diagnostic.loyalty.redeem')return;
+  const remaining=({queued:2,unknown:1,succeeded:0,failed:0} as Row)[op.state];
+  if(remaining===undefined)throw new Error('LOYALTY_RECEIPT_LIMIT');
+  const receipts=k.db.prepare('SELECT count(*) n FROM (SELECT 1 FROM commerce_operation_receipts WHERE tenant_id=? AND store_id=? AND operation_id=? LIMIT 1001)').get(s.tenant_id,s.store_id,op.id) as Row;
+  const payloads=k.db.prepare('SELECT count(*) n FROM (SELECT 1 FROM commerce_receipt_payloads p JOIN commerce_operation_receipts r ON r.tenant_id=p.tenant_id AND r.store_id=p.store_id AND r.id=p.receipt_id WHERE r.tenant_id=? AND r.store_id=? AND r.operation_id=? LIMIT 1001)').get(s.tenant_id,s.store_id,op.id) as Row;
+  if(Number(receipts.n)+1+Number(payloads.n)+remaining>1000)throw new Error('LOYALTY_RECEIPT_LIMIT');
+}
+
 // Internal transaction helper. Only trusted state transitions call this; never a public append endpoint.
 export function appendReceipt(k:CommerceKernel,s:Row,op:Row,input:unknown) {
   const p=exact(jsonValue(input),['code','source_ref','approval_ref','configuration_digest','policy_digest','correction_of','correction_reason','payload_ref']);
@@ -15,9 +28,10 @@ export function appendReceipt(k:CommerceKernel,s:Row,op:Row,input:unknown) {
   for(const key of ['source_ref','approval_ref','correction_of','payload_ref'])reference(p[key]);
   for(const key of ['configuration_digest','policy_digest'])if(p[key]!==null)hash(p[key]);
   if(op.tenant_id!==s.tenant_id||op.store_id!==s.store_id)throw new Error('ACCESS_DENIED');
+  const action=JSON.parse(op.command).action;loyaltyReceiptBudget(k,s,op,action);
   const previous=k.db.prepare('SELECT digest FROM commerce_operation_receipts WHERE tenant_id=? AND store_id=? AND operation_id=? ORDER BY seq DESC LIMIT 1').get(s.tenant_id,s.store_id,op.id) as Row;
   const body={id:'orc_'+token().slice(0,32),tenant_id:s.tenant_id,store_id:s.store_id,operation_id:op.id,
-    actor_ref:id(s.actor_id),resource_ref:id(op.resource_id),action:JSON.parse(op.command).action,payload_hash:hash(op.payload_hash),
+    actor_ref:id(s.actor_id),resource_ref:id(op.resource_id),action,payload_hash:hash(op.payload_hash),
     state:op.state,operation_revision:op.revision,...p,previous_digest:previous?.digest??null,observed_at:integer(k.clock()),financial_effect:false};
   k.db.prepare('INSERT INTO commerce_operation_receipts(tenant_id,store_id,operation_id,id,body,digest) VALUES(?,?,?,?,?,?)')
     .run(s.tenant_id,s.store_id,op.id,body.id,canonical(body),contentDigest(body));

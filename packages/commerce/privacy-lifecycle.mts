@@ -3,7 +3,7 @@ import type { CommerceKernel,Scope,Row } from './kernel.mts';
 import { exact,id,integer } from './kernel.mts';
 import { canonical,contentDigest } from './configuration-values.mts';
 import { subjectHash } from './data-guards.mts';
-import {hasLoyaltyRedemptionSubject,exportLoyaltyRedemptionSubject,eraseLoyaltyRedemptionSubject,revokeLoyaltyRedemptionsForUninstall} from './loyalty-redemption-privacy.mts';
+import {hasLoyaltyRedemptionSubject,exportLoyaltyRedemptionSubject,eraseLoyaltyRedemptionSubject,eraseLoyaltyRedemptionResources,loyaltyRedemptionResourceSubjects,revokeLoyaltyRedemptionsForUninstall} from './loyalty-redemption-privacy.mts';
 import { eraseGiftRecipient } from './gift-proof.mts';
 import { inventoryMovementCore,inventorySnapshotCore,inventoryRow,INVENTORY_FIELDS } from './location-inventory.mts';
 import { exportGrowthSubject,eraseGrowthSubject,revokeGrowthForRestore } from './growth-privacy.mts';
@@ -265,6 +265,10 @@ export function eraseSelected(k:CommerceKernel,s:Row,ids:string[],hash:string,at
   eraseShopperMemorySubject(k,t,st,hash);
   eraseJourneySubject(k,t,st,hash);
   eraseLoyaltyRedemptionSubject(k,t,st,hash,s.actor_id);
+  // A source correction can attach the same resource/case to a new subject.
+  // Minimize its affected historical loyalty copies before native case scrub,
+  // without adding an erasure tombstone for any unrelated historical subject.
+  eraseLoyaltyRedemptionResources(k,t,st,ids,s.actor_id);
   if(ids.length) {
     const marks=where(ids),args=[t,st,...ids];
     eraseShippingAndPacking(k,s,ids);
@@ -390,13 +394,18 @@ export class PrivacyLifecycle {
   erase(scope:Scope,customer:string) {id(customer);const k=this.#k;
     return k.transaction(()=>{const s=k.authorize(scope,'privacy.manage');storageInventoryCurrent(k);const hash=subjectHash(s.tenant_id,s.store_id,customer);
       const owned=resources(k,s,customer),related=new Set([customer,...recipientResources(k,s,customer).map(r=>r.customer_id),...owned.map(r=>JSON.parse(r.payload).gift_facts?.recipient_customer_id),...all(k,'commerce_gift_cases',s.tenant_id,s.store_id).filter(r=>owned.some(o=>o.id===r.resource_id)).map(r=>JSON.parse(r.body).recipient_customer_id)].filter(Boolean));
-      const hold=[...related].map(c=>k.db.prepare('SELECT reason,authority_ref,expires_at FROM commerce_privacy_holds WHERE tenant_id=? AND store_id=? AND subject_hash=? AND released=0 AND expires_at>?').get(s.tenant_id,s.store_id,subjectHash(s.tenant_id,s.store_id,c),k.clock())).find(Boolean);
+      const hashes=new Set([...related].map(c=>subjectHash(s.tenant_id,s.store_id,c)));
+      for(const subject of loyaltyRedemptionResourceSubjects(k,s.tenant_id,s.store_id,owned.map(r=>r.id)))hashes.add(subject);
+      const hold=[...hashes].map(subject=>k.db.prepare('SELECT reason,authority_ref,expires_at FROM commerce_privacy_holds WHERE tenant_id=? AND store_id=? AND subject_hash=? AND released=0 AND expires_at>?').get(s.tenant_id,s.store_id,subject,k.clock())).find(Boolean);
       if(hold){event(k,s,hash,'erasure_held','configured_hold');return {status:'held',hold,erased:false};}
       if(k.db.prepare('SELECT 1 FROM commerce_privacy_subjects WHERE tenant_id=? AND store_id=? AND subject_hash=?').get(s.tenant_id,s.store_id,hash))return {status:'already_erased'};
       const rs=resources(k,s,customer),giftCount=all(k,'commerce_resources',s.tenant_id,s.store_id).filter(r=>r.kind==='order'&&JSON.parse(r.payload).gift_facts?.recipient_customer_id===customer).length+all(k,'commerce_gift_cases',s.tenant_id,s.store_id).filter(r=>JSON.parse(r.body).recipient_customer_id===customer).length;if(!rs.length&&!giftCount&&!hasShopperMemorySubject(k,s.tenant_id,s.store_id,hash)&&!hasJourneySubject(k,s.tenant_id,s.store_id,hash)&&!hasFollowupSubject(k,s.tenant_id,s.store_id,hash)&&!hasLoyaltyRedemptionSubject(k,s.tenant_id,s.store_id,hash))throw new Error('NOT_FOUND');return eraseSelected(k,s,rs.map(r=>r.id),hash,k.clock());});
   }
   uninstall(scope:Scope) {
     const k=this.#k;return k.transaction(()=>{const s=k.authorize(scope,'privacy.manage');storageInventoryCurrent(k);
+      // Historical loyalty can refer to a case now attached to another subject.
+      // Validate/minimize it before that current subject's native preview erasure.
+      revokeLoyaltyRedemptionsForUninstall(k,s.tenant_id,s.store_id);
       const rs=all(k,'commerce_resources',s.tenant_id,s.store_id);const customers=[...new Set(rs.flatMap(r=>r.customer_id?[r.customer_id]:r.kind==='customer'?[r.external_id]:[]))];
       const results=customers.map(c=>this.erase(scope,c));
       revokeGrowthForRestore(k,s.tenant_id,s.store_id);
@@ -407,7 +416,6 @@ export class PrivacyLifecycle {
       revokeShopperMemoryForUninstall(k,s.tenant_id,s.store_id);
       revokeJourneysForUninstall(k,s.tenant_id,s.store_id);
       revokeFollowupsForUninstall(k,s.tenant_id,s.store_id);
-      revokeLoyaltyRedemptionsForUninstall(k,s.tenant_id,s.store_id);
       k.db.prepare('UPDATE commerce_secrets SET revoked=1,envelope=? WHERE tenant_id=? AND store_id=?').run('{}',s.tenant_id,s.store_id);
       for(const [table,clause] of [['commerce_sessions','revoked=1'],['commerce_worker_grants','revoked=1'],['commerce_credential_slots','active=0'],['commerce_webhook_routes','enabled=0'],['commerce_execution_settings','enabled=0'],['commerce_action_readiness','revoked=1']])
         k.db.prepare(`UPDATE ${table} SET ${clause} WHERE tenant_id=? AND store_id=?`).run(s.tenant_id,s.store_id);

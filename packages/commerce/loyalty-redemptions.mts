@@ -15,6 +15,7 @@ import {LoyaltyRedemptionFixtureSource} from '../adapters/loyalty-redemption-fix
 import {loyaltyBinding,loyaltyEnvelope,loyaltyFreshness} from './loyalty-values.mts';
 import {LOYALTY_REDEEM_ACTION,LOYALTY_REDEMPTION_CONTRACT,LOYALTY_QUOTE_KIND,LOYALTY_OPERATION_KIND,LOYALTY_RESERVATION_TTL,REDEMPTION_BINDING_FIELDS,redemptionShape,redemptionHash,redemptionHuman,redemptionBinding,redemptionBound,redemptionAccount,redemptionCatalog,redemptionBenefit,redemptionPoints,redemptionHistoryDigest,redemptionTerms,redemptionCommand,redemptionResult,redemptionOperationId} from './loyalty-redemption-values.mts';
 import {loyaltyRecords,loyaltyQuoteRecord,loyaltyOperationRecord,saveLoyaltyRecord,loyaltyView,authorizeLoyaltyRead,transitionLoyalty} from './loyalty-redemption-records.mts';
+import {bindLoyaltyPrivacySource} from './loyalty-redemption-privacy.mts';
 
 const CONTEXT=['case_id','link_id','expected_generation'];
 function contextInput(value:unknown,quote=false) {
@@ -95,7 +96,7 @@ export class LoyaltyRedemptions {
   constructor(k:CommerceKernel,owners:{balances:LoyaltyBalances;source:LoyaltyRedemptionFixtureSource}) {
     exact(owners,['balances','source']);
     if(!(owners.balances instanceof LoyaltyBalances)||owners.balances.k!==k||!(owners.balances.source instanceof LoyaltyFixtureSource)||!(owners.source instanceof LoyaltyRedemptionFixtureSource)||owners.source.balanceSource!==owners.balances.source)throw new Error('LOYALTY_SOURCE_OWNER_MISMATCH');
-    assertSeparateLoyaltyDatabases(k.db,owners.source.db);this.k=k;this.balances=owners.balances;this.source=owners.source;Object.freeze(this);
+    assertSeparateLoyaltyDatabases(k.db,owners.source.db);this.k=k;this.balances=owners.balances;this.source=owners.source;bindLoyaltyPrivacySource(k,this.source);Object.freeze(this);
   }
   #context(scope:Scope,proof:Scope,p:Row) {
     const k=this.k,s=redemptionHuman(k,scope),base=this.balances.context(scope,proof,{case_id:p.case_id,link_id:p.link_id,expected_generation:p.expected_generation});

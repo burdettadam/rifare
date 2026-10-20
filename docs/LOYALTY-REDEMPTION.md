@@ -106,6 +106,19 @@ point quantity and original command/source linkage needed for unresolved effects
 Configured holds retain the required context while authority remains revoked.
 Provider storage and older source files require their own retention treatment.
 
+Historical holds also protect the original loyalty context when an order has
+since moved to another customer. Eligible erasure minimizes only the affected
+loyalty records and retires their own preview/approval copies, including when the
+original customer has no current resources. It does not erase another customer's
+current order merely because that order appears in historical quote terms.
+
+Releasing an unsent reservation during erasure requires the configured native
+source to confirm that no original booking exists. Without that source binding,
+the record can be minimized and its authority revoked, but its points stay held.
+That retained reserved state has no current reconciliation route; reconciliation
+is for unknown outcomes. Restore converts copied reservations to unknown without
+requiring provider availability.
+
 An active-store human with privacy administration and original-resource operation
 permissions can reconcile a minimized original operation. That narrow path does
 not load erased customer content, renew proof, issue, retry or bypass worker
@@ -117,6 +130,15 @@ A dispatch could have occurred after that snapshot was taken. Physical restore
 and initial/repeated merchant import validate the original and destination rows,
 retain holds, revoke old authority, replay current suppression and preserve a
 previously reconciled destination outcome. Restored operations cannot dispatch.
+
+Merchant re-export omits local replay fences. A fresh import reconstructs its own
+fences before checking copied restored records; repeated import first validates
+the existing destination and rejects a missing fence there.
+
+The bounded audit chain also reserves room for completion. Optional customer
+notes and corrections cannot consume the receipts needed for remaining native
+transitions or for erasing outstanding notes. Other operation types retain their
+existing receipt behavior.
 
 ## Verification and qualification boundary
 

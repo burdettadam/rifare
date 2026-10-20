@@ -238,6 +238,10 @@ export function importMerchant(k:CommerceKernel,scope:Scope,value:unknown,expect
     const erased=k.db.prepare(`SELECT r.payload,r.customer_id FROM commerce_resources r JOIN commerce_privacy_resources p USING(tenant_id,store_id) WHERE p.resource_id=r.id`).all() as Row[];
     if(erased.some(r=>r.payload!=='{"redacted":true}'||r.customer_id!==null))throw new Error('PORTABILITY_SUPPRESSION_INVALID');
     const imageReplay=prepareImageSuppression(k,cp.checkpoint,s,x.rows);
+    // Portable originals intentionally omit this local replay fence. Rebuild
+    // it only after validated insertion into an empty destination; an existing
+    // destination was already checked strictly before the prior-import branch.
+    k.db.prepare('INSERT OR IGNORE INTO commerce_restored_operations SELECT tenant_id,store_id,id FROM commerce_operations WHERE tenant_id=? AND store_id=?').run(s.tenant_id,s.store_id);
     preflightLoyaltyRedemptions(k,s,x.rows);
     revokeLoyaltyRedemptionsForRestore(k,s,cp.checkpoint);
     preflightShopperMemory(k,s,x.rows);

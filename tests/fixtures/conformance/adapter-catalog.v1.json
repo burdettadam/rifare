@@ -5466,7 +5466,7 @@
     },
     {
       "path": "packages/commerce/operation-receipts.mts",
-      "sha256": "dfc77d033f67fc97167788c890f7315b7ef54a5e14a620e4b97e498b0334cab6"
+      "sha256": "71e9077309ff4cb8d7bd1253584948d970826086f57790ff32bd9f1d77d6a894"
     },
     {
       "path": "packages/commerce/operation-store.mts",
@@ -5494,7 +5494,7 @@
     },
     {
       "path": "packages/commerce/privacy-lifecycle.mts",
-      "sha256": "daf71c257bef53f968f50bed8fe388a1d27be9b83d711ec155db93e656f2d316"
+      "sha256": "f61b5da359d95573023d756c4c4c2a0a63e323c5e80e08dfaaa9bbc3e00ca55c"
     },
     {
       "path": "packages/commerce/profile-editor.mts",
@@ -6242,7 +6242,7 @@
     },
     {
       "path": "packages/commerce/merchant-portability.mts",
-      "sha256": "f2eb65d7df3740fbffd75cdf8ba89d545f3860769576dc519a73acdc5c4bd1cc"
+      "sha256": "1d26a67273175db80b0369c1cc2f056a1a01d47eeb18bbbbb27ce5fa33d6c2df"
     },
     {
       "path": "packages/commerce/contracts/carrier-quotes.v1.json",
@@ -7606,11 +7606,11 @@
     },
     {
       "path": "packages/commerce/loyalty-redemptions.mts",
-      "sha256": "ec18779e3a000a87868cf4cd66cd6887ac65bba13a5817010e96f420edd8f373"
+      "sha256": "62665aa220b317f46b56698b2a8cf95f004c0ca99cfe61a29ab97855376e9913"
     },
     {
       "path": "packages/commerce/loyalty-redemption-privacy.mts",
-      "sha256": "e6ebdf3bfd20f4b517185a47575fa7bba6ccd7130292095468d85fc9dc660158"
+      "sha256": "d7a4246a54725e5a9232a3329adfb5b062da1747842a9a4ee23fcdf6db406f23"
     },
     {
       "path": "tests/development/loyalty-redemption.test.mts",
@@ -7622,7 +7622,7 @@
     },
     {
       "path": "tests/development/loyalty-redemption-race-worker.mts",
-      "sha256": "8e29aa890421bbad34fbced6fb819451f157c14f1e5d048afca1668a00917c9f"
+      "sha256": "f9537d4b5205c2f99362e5735ced8f8af3a60e8a2bfeca6fbc8f29daa2bc80e5"
     },
     {
       "path": "tests/fixtures/loyalty-redemption/independent-values.json",
