@@ -1,0 +1,29 @@
+{
+  "fixture": "M19-G03-independent-entitlement-v1",
+  "qualification": "synthetic_only",
+  "customer_id": "C-1001",
+  "reservation_ttl_ms": 10000,
+  "advance_beyond_reservation_ms": 10001,
+  "benefits": [
+    { "id": "synthetic_reward_400", "points": 400, "unit": "points", "kind": "synthetic_reward" },
+    { "id": "synthetic_reward_200", "points": 200, "unit": "points", "kind": "synthetic_reward" }
+  ],
+  "baseline": { "unit": "points", "pending": 900, "earned": 1000, "reserved": 150, "redeemed": 200, "reversed": 50, "available": 600 },
+  "after_400": { "unit": "points", "pending": 900, "earned": 1000, "reserved": 150, "redeemed": 600, "reversed": 50, "available": 200 },
+  "after_400_and_200": { "unit": "points", "pending": 900, "earned": 1000, "reserved": 150, "redeemed": 800, "reversed": 50, "available": 0 },
+  "availability": {
+    "initial": { "provider_available_points": 600, "held_points": 0, "accounted_held_points": 0, "effective_available_points": 600 },
+    "reserved_400": { "provider_available_points": 600, "held_points": 400, "accounted_held_points": 0, "effective_available_points": 200 },
+    "unknown_before_effect": { "provider_available_points": 600, "held_points": 400, "accounted_held_points": 0, "effective_available_points": 200 },
+    "unknown_after_effect": { "provider_available_points": 200, "held_points": 400, "accounted_held_points": 400, "effective_available_points": 200 },
+    "second_reserved_with_overlap": { "provider_available_points": 200, "held_points": 600, "accounted_held_points": 400, "effective_available_points": 0 },
+    "second_reserved_after_reconciliation": { "provider_available_points": 200, "held_points": 200, "accounted_held_points": 0, "effective_available_points": 0 },
+    "reconciled_400": { "provider_available_points": 200, "held_points": 0, "accounted_held_points": 0, "effective_available_points": 200 },
+    "final": { "provider_available_points": 0, "held_points": 0, "accounted_held_points": 0, "effective_available_points": 0 }
+  },
+  "source_debits": [
+    { "seq": 1, "points": 400, "benefit_id": "synthetic_reward_400", "before_revision": 1, "after_revision": 2 },
+    { "seq": 2, "points": 200, "benefit_id": "synthetic_reward_200", "before_revision": 2, "after_revision": 3 }
+  ],
+  "worker_refund": { "amount_minor": "1940", "currency": "USD", "payment_id": "payment-one", "fixed_ceiling_minor": "6800", "unspent_after_settlement_minor": "4860", "effects": 1, "payment_captures": 0, "store_credit_instruments": 0 }
+}
