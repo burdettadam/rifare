@@ -344,3 +344,31 @@ The final closure changes only this progress file, the journey work record and
 the qualification document; executed runtime, tests, contracts, metadata and pins
 remain identical to reviewed 0eec014. Main remains a33c4ad, the acceptance ledger
 is unchanged, and missing later M15/M16/M23 source is not reconstructed.
+
+## Recovered development and current local M19 foundation
+
+The interrupted development was recovered from the complete roadmap Git bundle
+and the latest saved M18 continuity checkpoint `98b968c`. The older supplied
+shopper-memory checkpoint is an ancestor. Source/hash/ref verification and native
+Git integrity checks passed; later chat-only M19 work was not represented as
+recovered code. Full native history will accompany the new self-contained handoff.
+
+ADR-0058 assigned bounded local M19-G01. Independent tests froze before runtime;
+reviewed product `a417689` passed all 57 selected native cases in 11.264 seconds
+(20 loyalty, 20 journey readiness, 17 privacy). A retained first attempt was
+correctly rejected for a Node file-wrapper-only report; the successful attempt
+changed only the documented launch setting. An exact-parent isolated freshness
+fault was caught by three of 20 unchanged tests and is not integrated. Both
+nonauthor reviewers approved without corrective findings.
+
+The implementation provides current scoped points/rules and nonauthorizing
+quotes through existing customer-proof and support-ownership boundaries. It
+adds no commerce table, points effect handler, financial conversion, enrollment,
+send authority, HTTP route or worker grant. Prior tests/capabilities/adapters are
+preserved, and runtime/tests/contracts/pins are unchanged by this closing record.
+
+The next bounded local assignment is M19-G02's original-paid-line accrual and
+reversal proposals. Later operations and formal/provider/remote/target-host
+qualification remain open. The acceptance ledger and protected main are
+unchanged. [The recovery and loyalty checkpoint](work/records/M19-recovery-checkpoint.md)
+records exact source identities, actual evidence, review decisions and continuation.
