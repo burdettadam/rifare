@@ -23,6 +23,12 @@ import type {JourneyArtifact} from './journey-references.mts';
 export type JourneyOwners={fulfillment?:FulfillmentExecution;resolution?:ResolutionExecution;edits?:OrderEdits;cart?:ShoppingCart;delivery?:SupportDelivery};
 type Binding={s:Row;c:Row;link:Row;owner:Row;identity:Row;ref:string;rows:JourneyRecord[];total:number;references:JourneyReferences};
 const COMMON=['case_id','link_id','expected_generation'];
+const OBSERVED:Record<string,string[]>={
+  fulfillment:['created','purchased','void_requested','void_confirmed','void_rejected'],
+  resolution:['accepted','settled','issued','rejected','unpaid','partial','failed','expired','manual_external_settlement_pending'],
+  edit:['awaiting_invoice','awaiting_refund','ready_for_release','released','cancelled','abandoned'],
+  cart:['committed','purchased'],delivery:['accepted','delivered','bounced','failed','internal_note','assigned'],
+};
 function input(value:unknown,keys:string[]) {
   const p=exact(jsonValue(value,32768),[...COMMON,...keys]);id(p.case_id);id(p.link_id);integer(p.expected_generation,1);
   if(keys.includes('expected_version'))integer(p.expected_version);
@@ -106,9 +112,12 @@ export class CommerceJourneys {
       else if(intent.kind==='tracking') {
         try{state=new SupportTracking(k,this.reads).read(scope,b.c.id).status==='available'?'available':'handoff';}catch{state='handoff';}
       }else {
-        let missing=false;
+        let missing=false;const executedPreviews=new Set<string>();
         for(const r of intent.references) {
           const artifact=b.references.resolve(r,intent.kind);
+          const receipt=r.kind==='receipt'?artifact:artifact.row.receipt_id?
+            b.references.resolve(b.references.reference('receipt',artifact.row.receipt_id),intent.kind):null;
+          if(receipt)executedPreviews.add(canonical([receipt.body.preview_id,receipt.body.preview_digest]));
           if(privateView) {
             try{const observation=this.#observation(scope,artifact);if(observation)observations.push(observation);else missing=true;}
             catch(error){if(error instanceof Error&&/INTEGRITY|MISMATCH|INVALID/.test(error.message))throw error;missing=true;}
@@ -116,8 +125,9 @@ export class CommerceJourneys {
         }
         if(observations.some(o=>['unknown','sending'].includes(o.state)))state='unknown';
         else if(missing)state='handoff';
-        else if(observations.some(o=>!['awaiting_approval','recorded','submitted','native_unknown','native_created'].includes(o.state)))state='observed';
-        else if(intent.references.every((r:Row)=>r.kind==='preview'))state='awaiting_approval';
+        else if(intent.references.some((r:Row)=>r.kind==='preview'&&!executedPreviews.has(canonical([r.id,r.digest]))))state='awaiting_approval';
+        else if(observations.some(o=>OBSERVED[o.reference.kind]?.includes(o.state)&&
+          (o.reference.kind!=='delivery'||o.native_id!==null)))state='observed';
       }
       if(restricted)state='restricted';
       if(['handoff','unknown','restricted'].includes(state))handoff=true;

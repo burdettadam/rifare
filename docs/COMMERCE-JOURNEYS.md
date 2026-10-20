@@ -52,6 +52,9 @@ order, including other cases and intents. Generic sends, native returns,
 resolution operations, fulfillment, edit parents/steps and carts all participate.
 An unknown effect blocks a conflicting new preview or execution. Missing unknown
 child parents are an integrity failure, never an all-clear.
+Each scan refuses beyond 100 matching rows rather than truncating. Native-return
+and edit-child scans apply that cap across the store before parent/resource
+filtering, so another resource can trigger the explicit capacity refusal.
 
 `reconcile` addresses an original attached operation through the same native owner.
 Fulfillment, resolution, edits and delivery use lookup-only native methods. A cart
@@ -73,6 +76,10 @@ distinct from settlement. A replacement-created observation does not establish
 shipment. Confirming an unknown edit child does not finish the parent edit. A
 committed cart does not establish purchase, checkout, payment or stock reservation.
 Journey projections retain these native distinctions and claim no live effect.
+Authorized operations and proposed carts remain recorded. An attached preview
+without its original execution receipt takes awaiting-approval priority over an
+earlier observation in the same intent. Unknown outcomes and unavailable native
+owners retain their higher-priority uncertainty or handoff states.
 
 ## Privacy and recovery
 
