@@ -392,3 +392,32 @@ The separate G03 design records durable redemption and recovery constraints.
 ADR-0060 now assigns that bounded next goal from G02 closure c8e8240; its
 independent tests must freeze before runtime. No G03 execution/completion is
 claimed by the G02 checkpoint.
+
+## M19-G03 local redemption increment
+
+ADR-0060's bounded local redemption is implemented at product 0ef6b5d. The
+independent 20-case freeze preceded runtime; a separately reviewed, host-proven
+child-transport correction changed only the race worker, preserving every case,
+assertion and literal oracle. The exact clean product passed all 58 assigned
+native cases in 18.121 seconds: 20 redemption, 21 gateway and 17 privacy cases.
+Nine concrete executor-authored review probes passed in 5.820 seconds. They cover
+source-absence requirements, held historical context, exact preview/note cleanup,
+re-export/import fences, repeated resource suppression and audit capacity.
+
+Redemption uses current distinct-human approval, account-wide durable point
+reservations, atomic synthetic source debits and original-ID-only reconciliation.
+Unknown outcomes remain encumbered after expiry. Existing financial execution,
+native receipt identity and strict privacy/recovery boundaries remain in place.
+Exact-parent fault 14b50f7 was detected by two permanent cases: it wrongly exposed
+600 available points instead of 200 after forgetting a 400-point unknown hold.
+The fault changes one runtime condition and its two pins; it is not integrated.
+
+All prior inventory entries are retained. The candidate declares 3240 cases,
+217 capabilities, 1867 source members and 41 diagnostic/other adapter entries;
+the core schema and all 15 privacy surface IDs are unchanged. The focused result
+is not a full regression or formal acceptance. Final independent decisions,
+closure comparison and complete recovery history accompany the checkpoint.
+Both nonauthor reviewers approved exact product 0ef6b5d for its bounded local
+scope, with no remaining material authority or regression blocker.
+G04 incentives, G05 lifecycle reporting and G99 local assessment remain future
+bounded assignments; connected-provider and production qualification remain open.

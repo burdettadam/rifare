@@ -153,4 +153,10 @@ both independent decisions belong in the milestone work record and evidence.
 This synthetic local contract does not qualify a merchant-owned loyalty provider,
 formal M19 dependencies, production operation, connected messaging, target-host
 behavior or the full applicable regression gate. G04 incentive handling, G05
-lifecycle reporting and G99 assessment remain separately assigned work.
+lifecycle reporting and G99 assessment remain future bounded assignments.
+
+The final local product is 0ef6b5d. Its exact focused run passed 58/58 native
+cases in 18.121 seconds; nine concrete review probes also passed. The deliberate
+expired-unknown fault was detected by two permanent cases without changing the
+independent expectations. See the milestone work record and retained G03 evidence
+for candidate identities, independent decisions, preservation and limitations.
