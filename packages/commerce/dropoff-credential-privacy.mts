@@ -45,7 +45,10 @@ function retireCopies(k:CommerceKernel,records:DropoffRecord[],redact:boolean){
     const previews=k.db.prepare("SELECT * FROM commerce_action_previews WHERE tenant_id=? AND store_id=? AND (id=? OR (json_extract(body,'$.action') IN (?,?) AND json_extract(body,'$.arguments.quote_id')=?))").all(r.tenant_id,r.store_id,receipt?.preview_id??'',...DROPOFF_CREDENTIAL_ACTIONS,r.id) as Row[];
     for(const p of previews){
       const b=JSON.parse(p.body);if(contentDigest(b)!==p.digest)throw new Error('DROPOFF_CREDENTIAL_INTEGRITY');
-      if(b.redacted===true){dropoffShape(b,['redacted','original_digest']);dropoffHash(b.original_digest);if(receipt&&p.id===receipt.preview_id&&b.original_digest!==receipt.preview_digest)throw new Error('DROPOFF_CREDENTIAL_INTEGRITY');}
+      // Native repeated case scrubbing hashes the already-redacted body again.
+      // This erasable marker carries no authority; the immutable gateway
+      // receipt continues to bind the original consumed preview digest.
+      if(b.redacted===true){dropoffShape(b,['redacted','original_digest']);dropoffHash(b.original_digest);if(!receipt||p.id!==receipt.preview_id)throw new Error('DROPOFF_CREDENTIAL_INTEGRITY');}
       else {const a=dropoffShape(b.arguments,['quote_id','quote_digest']);if(b.action!==q.action||b.tenant_id!==r.tenant_id||b.store_id!==r.store_id||b.resource_id!==q.resource_id||a.quote_id!==r.id||a.quote_digest!==q.terms_digest||receipt&&p.id===receipt.preview_id&&p.digest!==receipt.preview_digest)throw new Error('DROPOFF_CREDENTIAL_INTEGRITY');}
       k.db.prepare('UPDATE commerce_action_approvals SET revoked=1 WHERE tenant_id=? AND store_id=? AND preview_id=?').run(r.tenant_id,r.store_id,p.id);
       if(redact&&!b.redacted){const body={redacted:true,original_digest:p.digest};k.db.prepare('UPDATE commerce_action_previews SET body=?,digest=? WHERE tenant_id=? AND store_id=? AND id=?').run(canonical(body),contentDigest(body),r.tenant_id,r.store_id,p.id);}

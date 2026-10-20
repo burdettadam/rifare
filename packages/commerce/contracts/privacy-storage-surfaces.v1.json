@@ -1351,11 +1351,11 @@
     },
     {
       "path": "packages/commerce/dropoff-credential-privacy.mts",
-      "sha256": "fdeaa70fc364d938ca22e98e28a6c435f0b825ddacbc8bc8d74f880252478752"
+      "sha256": "ad7b0386d5c2a7ed57e767bff946abde30f0b8fb34342127e6fc6562354b1db7"
     },
     {
       "path": "packages/commerce/dropoff-credentials.mts",
-      "sha256": "7062fba9d6a3b0c0839015376aacf3a5838ec27668a6e81a45f5271307133d16"
+      "sha256": "4b5cc7f3289effe87640fc374b1f2de52c953e50618fd5efbe82875cb75af112"
     }
   ],
   "surfaces": [

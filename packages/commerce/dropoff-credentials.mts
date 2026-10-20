@@ -138,7 +138,7 @@ export class DropoffCredentials {
     });
   }
   cancel(scope:Scope,input:unknown) {
-    const p=dropoffShape(input,['operation_id']);id(p.operation_id);return this.k.transaction(()=>{
+    const k=this.k,p=dropoffShape(input,['operation_id']);id(p.operation_id);return k.transaction(()=>{
       const {s,value}=this.#operation(scope,p.operation_id),b=value.record.body;k.authorize(scope,'operation.dispatch',b.resource_id);
       if(b.state!=='authorized'||b.attempt_count!==0||b.authority_revoked||b.minimized||b.restored||value.history.length!==1||value.history[0].code!=='queued')throw new Error('DROPOFF_CANCEL_UNCERTAIN');
       const {q}=currentTerms(this,scope,value.quote,value,false,true);if(q.owner!==s.actor_id)throw new Error('ACCESS_DENIED');
@@ -146,7 +146,7 @@ export class DropoffCredentials {
     });
   }
   deliver(scope:Scope,operationId:string) {
-    return this.k.transaction(()=>{
+    const k=this.k;return k.transaction(()=>{
       const {s,value}=this.#operation(scope,operationId),b=value.record.body;k.authorize(scope,'operation.read',b.resource_id);k.authorize(scope,'support.read',b.resource_id);
       if(b.state!=='issued'||b.authority_revoked||b.minimized||b.restored)throw new Error('DROPOFF_DELIVERY_UNAVAILABLE');
       const {q}=currentTerms(this,scope,value.quote,value,false,true);if(q.owner!==s.actor_id)throw new Error('ACCESS_DENIED');family(this,s,b.family_ref,b.id);
