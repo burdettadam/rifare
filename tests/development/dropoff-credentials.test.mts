@@ -135,11 +135,11 @@ test('CASE-M20-G02-08',async()=>{
 test('CASE-M20-G02-09',async()=>{
   await usingFixture(f=>{
     const proof=proofRow(f),current=f.choices.quote(f.a.scope,{request_id:f.request.id}),choice=current.choices.find((m:Value)=>m.site_id==='main-site'),input={request_id:f.request.id,choice_id:choice.choice_id,expected_source_digest:current.source_digest,replaces_operation_id:null},q=quote(f),p=prepared(f,q),worker=externalWorker(f);
-    const denied=[f.customer,f.agent.scope,f.a.worker,f.b.scope,f.c.scope,worker,{...f.a.scope}];
+    const denied=[f.customer,f.agent.scope,f.a.worker,f.b.scope,f.c.scope,worker,{...f.a.scope}];assert.ok(f.now()>proof.last_seen,'denied calls must have a detectable original-proof heartbeat delta');
     for(const scope of denied){assert.throws(()=>f.credentials.quote(scope,input));assert.throws(()=>f.gateway.prepare(scope,{case_id:E.case_id,action:ISSUE,arguments:{quote_id:q.id,quote_digest:q.digest}}));assert.throws(()=>f.gateway.approve(scope,{preview_id:p.p.id,preview_digest:p.p.digest}));}
-    const a=f.gateway.approve(f.reviewer.scope,{preview_id:p.p.id,preview_digest:p.p.digest}),x={...p,a};for(const scope of denied)assert.throws(()=>execute(f,x,scope));assert.equal(f.db.prepare('SELECT uses FROM commerce_action_approvals WHERE id=?').get(a.id).uses,0);
+    const a=f.gateway.approve(f.reviewer.scope,{preview_id:p.p.id,preview_digest:p.p.digest}),x={...p,a};for(const scope of denied){assert.throws(()=>execute(f,x,scope));assert.throws(()=>f.gateway.revokeApproval(scope,a.id));}assert.equal(f.db.prepare('SELECT uses FROM commerce_action_approvals WHERE id=?').get(a.id).uses,0);
     const operation=execute(f,x);for(const scope of denied)assert.throws(()=>f.credentials.dispatch(scope,operation.id));sourceCounts(f,0,0);assert.equal(f.credentials.dispatch(f.a.scope,operation.id).state,'issued');
-    for(const scope of denied){assert.throws(()=>f.credentials.deliver(scope,operation.id));assert.throws(()=>f.credentials.read(scope,operation.id));}assert.equal(f.credentials.deliver(f.a.scope,operation.id).operation_id,operation.id);assert.deepEqual(proofRow(f),proof);sourceCounts(f,1,1);
+    for(const scope of denied){assert.throws(()=>f.credentials.deliver(scope,operation.id));assert.throws(()=>f.credentials.read(scope,operation.id));assert.throws(()=>f.gateway.receipt(scope,operation.receipt.id));}assert.equal(f.credentials.deliver(f.a.scope,operation.id).operation_id,operation.id);assert.deepEqual(proofRow(f),proof);sourceCounts(f,1,1);
   });
   for(const changed of ['proof','ownership','approver','stop'])await usingFixture(f=>{
     const x=authorize(f);
@@ -204,6 +204,17 @@ test('CASE-M20-G02-13',async()=>{
     assert.equal(privacy.erase(detached.owner.scope,E.customer_id).status,'already_erased');minimized(attached.db,x.id);assert.equal(attached.kernel.get(attached.a.scope,f.resourceId).customer_id,'C-1002');sourceCounts(f,1,1);
   });
   await usingFixture(f=>{
+    const x=authorize(f);f.credentialSource.mode('issue','timeout_after_effect');f.credentials.dispatch(f.a.scope,x.id);const quoteRow=documentRows(f.db).find(r=>r.kind===QUOTE_KIND)!,subject=JSON.parse(quoteRow.body).subject_ref,provider=sourceRows(f),privacy=new PrivacyLifecycle(f.kernel);
+    retireSubject(f);assert.equal(f.order().customer_id,'C-1002');assert.equal(privacy.erase(f.owner.scope,'C-1002').status,'logically_erased');minimized(f.db,x.id);
+    assert.equal(f.db.prepare("SELECT count(*) n FROM commerce_resources WHERE tenant_id=? AND store_id=? AND (customer_id='C-1002' OR (kind='customer' AND external_id='C-1002'))").get(f.a.tenant,f.a.store).n,0);
+    const marker=f.db.prepare('SELECT * FROM commerce_privacy_resources WHERE tenant_id=? AND store_id=? AND resource_id=?').get(f.a.tenant,f.a.store,f.resourceId);assert.ok(marker);assert.notEqual(marker.subject_hash,subject);
+    assert.equal(f.db.prepare('SELECT count(*) n FROM commerce_privacy_subjects WHERE tenant_id=? AND store_id=? AND subject_hash=?').get(f.a.tenant,f.a.store,marker.subject_hash).n,1);assert.equal(f.db.prepare('SELECT count(*) n FROM commerce_privacy_subjects WHERE tenant_id=? AND store_id=? AND subject_hash=?').get(f.a.tenant,f.a.store,subject).n,0);
+    // Only the retained resource marker connects this canonical old quote to C-1002's tombstone.
+    f.db.prepare('UPDATE commerce_support_documents SET body=?,digest=?,state=?,expires_at=? WHERE tenant_id=? AND store_id=? AND kind=? AND id=? AND version=?').run(quoteRow.body,quoteRow.digest,quoteRow.state,quoteRow.expires_at,quoteRow.tenant_id,quoteRow.store_id,quoteRow.kind,quoteRow.id,quoteRow.version);
+    assert.equal(privacy.erase(f.owner.scope,'C-1002').status,'already_erased');assert.equal(minimized(f.db,x.id).state,'unknown');projection(f,x.id,'unknown',1,f.owner.scope);
+    const once=nativeState(f.db,x.id),quotes=documentRows(f.db);assert.equal(privacy.erase(f.owner.scope,'C-1002').status,'already_erased');assert.deepEqual(nativeState(f.db,x.id),once);assert.deepEqual(documentRows(f.db),quotes);assert.deepEqual(sourceRows(f),provider);sourceCounts(f,1,1);
+  });
+  await usingFixture(f=>{
     const x=authorize(f);f.credentialSource.mode('issue','timeout_before_effect');f.credentials.dispatch(f.a.scope,x.id);const privacy=new PrivacyLifecycle(f.kernel),other=f.kernel.list(f.b.scope,'order');privacy.hold(f.owner.scope,{customer_id:E.customer_id,reason:'dispute',authority_ref:'credential-uninstall-hold',expires_at:f.now()+600000});assert.equal(privacy.uninstall(f.owner.scope).status,'disconnected');
     const body=JSON.parse(operationRow(f.db,x.id).body);assert.equal(body.state,'unknown');assert.equal(body.attempt_count,1);assert.equal(body.authority_revoked,true);assert.equal(body.minimized,false);assert.throws(()=>f.credentials.read(f.owner.scope,x.id));assert.throws(()=>f.credentials.deliver(f.a.scope,x.id));assert.deepEqual(f.kernel.list(f.b.scope,'order'),other);sourceCounts(f,0,0);
   });
@@ -225,6 +236,23 @@ test('CASE-M20-G02-14',async()=>{
       transfer(f,destination,packed);const imported=projection(destination,x.id,'unknown',1,destination.scope);assert.equal(imported.restored,true);assert.equal(imported.authority_revoked,true);assert.throws(()=>destination.credentials.dispatch(destination.scope,x.id));assert.throws(()=>destination.credentials.cancel(destination.scope,{operation_id:x.id}));assert.throws(()=>destination.credentials.deliver(destination.scope,x.id));
       assert.equal(destination.credentials.reconcile(destination.scope,x.id).disposition,'reconciled');new PrivacyLifecycle(f.kernel).erase(f.owner.scope,E.customer_id);const latest=suppression(f);transfer(f,destination,packed,latest);assert.equal(minimized(destination.db,x.id).state,'issued');const once=nativeState(destination.db,x.id);transfer(f,destination,packed,latest);assert.deepEqual(nativeState(destination.db,x.id),once);
       assert.equal(documentRows(destination.db).length,2);assert.equal(destination.db.prepare("SELECT count(*) n FROM commerce_support_documents WHERE kind='merchant_import'").get().n,1);assert.equal(destination.db.prepare('SELECT suppression_digest FROM commerce_recovery_state WHERE id=1').get().suppression_digest,latest.suppression_sha256);assert.deepEqual(sourceRows(f),provider);sourceCounts(f,1,1);
+    }finally{destination.close();}
+  });
+  await usingFixture(f=>{
+    const x=authorize(f);f.credentialSource.mode('issue','timeout_after_effect');f.credentials.dispatch(f.a.scope,x.id);const originalBody=JSON.parse(operationRow(f.db,x.id).body),live=documentRows(f.db),provider=sourceRows(f),privacy=new PrivacyLifecycle(f.kernel),other=f.kernel.lookup(f.a.scope,'order','synthetic','ORD-1002');
+    assert.equal(other.customer_id,'C-1002');assert.notEqual(other.id,f.resourceId);privacy.hold(f.owner.scope,{customer_id:E.customer_id,reason:'retention_obligation',authority_ref:'credential-linked-resource-hold',expires_at:f.now()+600000});assert.equal(privacy.erase(f.owner.scope,'C-1002').status,'logically_erased');assert.deepEqual(documentRows(f.db),live,'unrelated erasure preserves the intact held credential graph');
+    assert.equal(f.db.prepare('SELECT count(*) n FROM commerce_privacy_resources WHERE tenant_id=? AND store_id=? AND resource_id=?').get(f.a.tenant,f.a.store,other.id).n,1);assert.equal(f.db.prepare('SELECT count(*) n FROM commerce_privacy_resources WHERE tenant_id=? AND store_id=? AND resource_id=?').get(f.a.tenant,f.a.store,f.resourceId).n,0);assert.equal(f.db.prepare('SELECT count(*) n FROM commerce_privacy_subjects WHERE tenant_id=? AND store_id=? AND subject_hash=?').get(f.a.tenant,f.a.store,originalBody.subject_ref).n,0);
+    // The current case link changes; immutable historical credential terms keep the original resource.
+    assert.equal(f.db.prepare('UPDATE commerce_cases SET resource_id=? WHERE tenant_id=? AND store_id=? AND id=?').run(other.id,f.a.tenant,f.a.store,E.case_id).changes,1);assert.deepEqual(documentRows(f.db),live);
+    const saved=backup(f),packed=merchant(f),latest=suppression(f),restored=restore(f,saved);
+    try{
+      const body=minimized(restored.db,x.id);assert.equal(body.resource_id,f.resourceId);assert.equal(body.subject_ref,originalBody.subject_ref);assert.equal(body.command_digest,originalBody.command_digest);projection(restored,x.id,'unknown',1,restored.scope);
+      assert.equal(restored.db.prepare('SELECT resource_id FROM commerce_cases WHERE tenant_id=? AND store_id=? AND id=?').get(f.a.tenant,f.a.store,E.case_id).resource_id,other.id);assert.equal(restored.db.prepare('SELECT released FROM commerce_privacy_holds WHERE authority_ref=?').get('credential-linked-resource-hold').released,0);
+    }finally{restored.close();}
+    const destination=target(f);try{
+      transfer(f,destination,packed,latest);const body=minimized(destination.db,x.id);assert.equal(body.resource_id,f.resourceId);assert.equal(body.subject_ref,originalBody.subject_ref);assert.equal(body.command_digest,originalBody.command_digest);projection(destination,x.id,'unknown',1,destination.scope);
+      assert.equal(destination.db.prepare('SELECT resource_id FROM commerce_cases WHERE tenant_id=? AND store_id=? AND id=?').get(f.a.tenant,f.a.store,E.case_id).resource_id,other.id);assert.equal(destination.db.prepare('SELECT released FROM commerce_privacy_holds WHERE authority_ref=?').get('credential-linked-resource-hold').released,0);
+      const once=nativeState(destination.db,x.id);transfer(f,destination,packed,latest);assert.deepEqual(nativeState(destination.db,x.id),once);minimized(destination.db,x.id);assert.deepEqual(sourceRows(f),provider);sourceCounts(f,1,1);
     }finally{destination.close();}
   });
 });
