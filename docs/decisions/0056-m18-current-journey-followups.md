@@ -332,3 +332,20 @@ work keeps its existing final-send/reconciliation path. An eligible direct queue
 whose rule job is only waiting remains untouched by the pre-claim refusal.
 The independent author covers retirement of a pending direct queue, release of
 its native stream blocker and immutable replay within the assigned 19 cases.
+
+## Prior fixture correction after the first actual invocation
+
+At product f0de7f4, attempt-01 executed all 19 new cases: 16 passed and three
+failed during permission-fixture construction. Permissions.change permits at
+most 30 actions; copying the complete operator ROLE_ACTIONS minus one exceeds
+that native limit and raises INVALID_PERMISSION before the intended denial.
+The other three selected files were not run. The runner's zero successful-batch
+count is not the native executed count.
+
+Before another invocation, root assigns the independent test author only the
+bounded operator action-list setup correction in the two already assigned test
+paths. Use an explicit valid set retaining the current case/context, follow-up
+and native dispatch permissions except the deliberately denied action. Keep
+all 19 IDs and every behavioral assertion; establish that the intended action,
+rather than an unrelated omitted permission, is the refusal. Native permission
+code, limits and existing tests remain unchanged. Preserve attempt-01 in full.
