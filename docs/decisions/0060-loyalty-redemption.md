@@ -446,3 +446,48 @@ leaves the unknown state, attempt count and held quantity unchanged, observable
 through authorized retained read. An ordinary live authorized unknown still
 returns its unchanged projection from expire. Terminal dispatch replay likewise
 remains subject to ordinary current dispatch/execution authorization.
+
+## Candidate-review corrections
+
+Independent review of initial product candidate 258d9cf identified that optional
+native receipt payloads could consume the bounded loyalty audit chain and prevent
+its required completion. Before implementing that correction, this assignment
+extends the existing operation-receipts.mts integration to a loyalty-action-only
+admission guard. Its 1000-receipt budget reserves two native transitions while
+queued, one while unknown, and one future erasure receipt for each outstanding
+payload attached to that exact operation. Every append checks the budget after
+the enclosing payload mutation; failure rolls that mutation back. Other actions,
+receipt schemas, codes and immutable triggers remain unchanged. The independent
+authority reviewer confirmed this accounting before implementation.
+
+Privacy live-release evidence includes the exact native source registered by the
+validated owner on that core kernel. Different source handles for the same durable
+identity are rejected. Physical separation and source identity/history are checked
+again on release. Without that transient binding, erasure may revoke and minimize
+the reserved record but must keep its original quantity held; it cannot invent a
+send attempt, restore flag or source absence. Such a revoked reserved operation
+cannot currently use the unknown-only reconciliation path. Recovery itself has no
+provider availability dependency and converts copied reservations to unknown.
+
+Historical loyalty subjects associated with resources about to be erased join the
+existing related-subject hold check by hash. An active hold preserves their native
+context. When erasure is eligible, minimize only the affected historical loyalty
+records and retire their own previews/approvals before generic case erasure; do not
+create an unrelated subject tombstone or erase that subject's other resources.
+Historical-only minimization must also retire those native preview copies even
+when the subject has zero current resources. A current suppression checkpoint
+remains authoritative over copied held context.
+
+Fresh merchant import reconstructs local operation replay fences after original
+package validation and insertion but before strict validation of the populated
+destination. Existing-destination and repeated-import preflight remain strict and
+precede any reconstruction. This permits a validated re-export whose deliberately
+excluded local fence table is absent without accepting missing destination fences.
+
+The initial independent test freeze b8134dec and failed native report remain
+evidence. A root-owned host transport probe demonstrated that child fd0 is a
+socket, but this host's Node standard-stream wrappers discard input/output;
+explicit fd-backed input and writes preserve the bytes. A narrowly independent
+fixture transport correction may use those descriptors while preserving all
+20 cases, literal values, process isolation, the start barrier, network-deny
+preload and deadlines. This does not relax any product expectation.
