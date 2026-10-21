@@ -1,0 +1,14 @@
+{
+  "name": "rifare-formatting",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Optional, pinned formatting tools for the reviewed commerce modules.",
+  "license": "Apache-2.0",
+  "scripts": {
+    "check": "prettier --config prettier.config.json --check \"../../packages/commerce/{kernel,authorization,action-gateway,operation-store,operation-receipts,resolution-execution,support-service,support-delivery,support-conversations}.mts\" \"../../packages/development/support-demo.mts\"",
+    "write": "prettier --config prettier.config.json --write \"../../packages/commerce/{kernel,authorization,action-gateway,operation-store,operation-receipts,resolution-execution,support-service,support-delivery,support-conversations}.mts\" \"../../packages/development/support-demo.mts\""
+  },
+  "devDependencies": {
+    "prettier": "3.9.10"
+  }
+}
