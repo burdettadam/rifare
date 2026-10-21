@@ -7,15 +7,23 @@ Run from the repository root. On Windows, use `py -3` or Python in Git Bash.
 ## Inventory and decision gate
 
 ```sh
+python3 tools/check_distribution.py --root . --licenses  # current applied license scope
 python3 tools/check_distribution.py --root .
 python3 tools/check_distribution.py --root . --public-release
 python3 -m unittest discover -s tests -p test_distribution.py -v
 ```
 
-The first command can pass a complete local review inventory. The second must exit
-1 with `result: blocked` while the owner, licenses, contribution terms and required
-reviews remain unresolved. `publication_authorized` and `legal_clearance` are always
-false. A JSON approved flag, version bump or a passing test cannot supply authority.
+The `--licenses` command verifies the current owner-authorized license application,
+installed texts, scope notice, DCO text, and retained upstream notice. It is also
+included in the normal source-inventory check. Its output keeps original-material
+scope and the limits of mechanical verification explicit.
+
+`--public-release` still exits 1 with `result: blocked`: applying source licenses
+does not accept a product release. `publication_authorized` and `legal_clearance`
+remain false. The `public_release_blockers` field preserves the original M00
+release contract, with an explicit historical basis; it is not a claim that the
+owner has yet to select or apply these license terms. See `current_license_application`
+for the current grant status. No JSON flag or version bump authenticates authority.
 
 The source inventory includes tracked files plus nonignored untracked files. It
 rejects omissions, duplicate ownership, unknown components, unresolved third-party
@@ -69,25 +77,36 @@ accept weaker licensing or privacy rules merely to make a branch green. Frozen
 policy/obligation fixtures are regression oracles, not authenticated owner decisions.
 The previous accepted governance and independent review still govern their changes.
 
-## Release checklist
+## Development dependencies and release duties
 
-The current proposal records nine unresolved requirements: accepted scope; owner and
-rights-holder license decision; installed applicable texts/attribution; resolved
-dependency/asset duties; exact artifact and source review; private-data/full-history
-review; contribution terms; independent reviews; and separately authorized publication.
-A metadata pass cannot verify all of these. No remote, tag or external intake is added.
+The root npm package remains dependency-free. The optional formatter in
+`tools/formatting/` has its own pinned package/lock, with Prettier as the sole
+development dependency. Its installed package, license, and bundled notices stay
+outside this source archive. Changing either manifest requires another review.
+The development-preview workflow references pinned checkout/setup-node Actions;
+they are not copied into Rifare. The checker accepts only these reviewed paths
+and exact references in addition to the original manual workflow.
 
-When actual packages appear, inventory direct/transitive and optional dependencies,
-vendored files, build outputs, base-image/OS packages, fonts, documentation assets,
-model weights and protocol assets for each shipping artifact. Inspect actual licenses
-and notices rather than registry strings alone. Preserve modified-file notices and
-source offers where required. Pin revisions, record provenance and qualify the exact
-built artifact. That work is blocked rather than silently skipped in this checkpoint.
+The frozen proposal retains nine original release requirements. The owner has
+now applied source licenses and contribution terms through ADR-0066, while exact
+artifact/source review, private-data/full-history review, dependency/asset duties,
+independent review, separate release authorization, and product qualification
+remain requirements for the actual release being assessed. This task does not
+turn a public source preview into a production release.
+
+For future shipping packages, inventory direct/transitive and optional
+dependencies, vendored files, build outputs, base images, fonts, model weights,
+and media in the actual artifact. Preserve their applicable licenses, notices,
+and source obligations. The source-only checker cannot qualify a new container,
+installer, or hosted service through a metadata change.
 
 ## Test bindings
 
 `CASE-M00-G03-01` binds to the exhaustive source inventory and a staged-source fixture;
-first-party grant selection remains an owner prerequisite to final public qualification.
+the original owner-decision requirement remains in the historical release contract.
+Current applied terms are verified separately under ADR-0066.
 `CASE-M00-G03-02` binds to unknown-license and private-profile injection rejection.
 `CASE-M00-G03-03` binds to removed notices and blocking retained-inventory diffs.
-The helper tests do not replace the actual human license decision in the goal packet.
+The helper tests do not authenticate the actual human instruction or replace
+independent review. Scope/text/DCO mutation tests ensure that an arbitrary new
+grant cannot be substituted for the reviewed application.

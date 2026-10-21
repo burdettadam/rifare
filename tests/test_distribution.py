@@ -20,6 +20,7 @@ from check_distribution import (
     build_manifest, checkout_paths, compare_inventory, dependency_path, load_pinned,
     private_path, read_json, read_regular, review_checkout, review_stage,
     safe_path, sha256, stage_paths, validate_inventory, validate_policy,
+    applied_license_for, validate_license_application, validate_optional_formatter,
 )
 
 FIX = ROOT / 'tests/fixtures/licensing'
@@ -93,7 +94,8 @@ class DistributionTests(unittest.TestCase):
         """CASE-M00-G03-01: inventory proof; final license selection still requires owner."""
         members = self.validate()
         self.assertEqual(len(members), self.expected['source_file_count'])
-        self.assertEqual(sorted(c['id'] for c in self.i['components']), self.expected['component_ids'])
+        self.assertEqual(sorted(c['id'] for c in self.i['components']),
+                         sorted(self.expected['component_ids'] + ['rifare-reproduced-license-documents']))
         self.assertEqual(set(members), set(checkout_paths(self.repo)))
         report = review_stage(self.repo, self.stage, self.manifest)
         self.assertEqual(report['artifact_files_verified'], self.expected['source_file_count'])
@@ -128,12 +130,15 @@ class DistributionTests(unittest.TestCase):
         self.assertEqual(report['observed_dependency_inputs'], [])
 
     def test_pending_owner_decision_stays_a_public_release_blocker(self):
+        """The retained release contract cannot silently accept the current candidate."""
         result = self.cli('--public-release')
         self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
         report = json.loads(result.stdout)
         self.assertEqual(report['result'], 'blocked')
         self.assertFalse(report['publication_authorized'])
         self.assertIn('explicit_owner_license_and_rights_holder_decision', report['public_release_blockers'])
+        self.assertEqual(report['current_license_application']['status'], 'applied')
+        self.assertIn('retained M00', report['public_release_blockers_basis'])
 
     def test_emit_manifest_has_exact_membership(self):
         result = self.cli('--emit-manifest')
@@ -308,10 +313,45 @@ class DistributionTests(unittest.TestCase):
 
     def test_root_license_cannot_be_installed_as_an_unapproved_grant(self):
         path = 'LICENSE'
-        self.component('rifare-project-material')['files'].append(path)
-        self.paths.append(path)
         with self.change(self.repo, path, 'Synthetic, unapproved license fixture.\n'):
-            self.bad('no root license grant may be installed')
+            self.bad('applied license text changed')
+
+    def test_applied_scope_keeps_application_and_separable_material_distinct(self):
+        application = read_json(self.repo / 'LICENSES/application.json')
+        for path, expected in {
+            'apps/commerce-api/server.mts': 'AGPL-3.0-only',
+            'packages/commerce/kernel.mts': 'AGPL-3.0-only',
+            'migrations/001-initial.sql': 'AGPL-3.0-only',
+            'clients/return_runtime.py': 'Apache-2.0',
+            'packages/commerce/skill-bundles/return-draft/SKILL.md': 'Apache-2.0',
+            'packages/commerce/contracts/return-intake.v1.json': 'Apache-2.0',
+            'docs/assets/rifare-hero.png': 'Apache-2.0',
+            '.agents/skills/work-goal/SKILL.md': 'MIT AND Apache-2.0',
+            'LICENSE': 'retained_document_copying_terms',
+        }.items():
+            with self.subTest(path=path):
+                self.assertEqual(applied_license_for(path, application), expected)
+        report = validate_license_application(self.repo, self.paths)
+        self.assertEqual(report['status'], 'applied')
+        self.assertFalse(report['publication_authorized'])
+        self.assertFalse(report['legal_clearance'])
+
+    def test_license_scope_and_dco_tampering_require_review(self):
+        path = 'LICENSES/application.json'
+        application = read_json(self.repo / path)
+        application['default_original_material_license'] = 'Apache-2.0'
+        with self.change(self.repo, path, json.dumps(application)):
+            with self.assertRaisesRegex(ValueError, 'scope or authority record changed'):
+                validate_license_application(self.repo, self.paths)
+        with self.change(self.repo, '.github/DCO.txt', 'Changed certification.\n'):
+            with self.assertRaisesRegex(ValueError, 'DCO certification text changed'):
+                validate_license_application(self.repo, self.paths)
+
+    def test_formatter_intake_rejects_an_unreviewed_dependency_manifest(self):
+        path = 'tools/formatting/package.json'
+        with self.change(self.repo, path, '{"devDependencies":{"unknown":"latest"}}\n'):
+            with self.assertRaisesRegex(ValueError, 'formatter.*(required|changed)'):
+                validate_optional_formatter(self.repo)
 
     def test_removed_component_diff_is_blocking(self):
         before = copy.deepcopy(self.i)

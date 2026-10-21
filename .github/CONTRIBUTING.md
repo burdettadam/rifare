@@ -1,10 +1,19 @@
 # Contributing to Rifare
 
-External contribution intake is not open while the owner license decision remains
-pending. [The M00-G03 proposal](../docs/LICENSING.md) describes component-scoped inbound
-terms and a possible DCO 1.1 process; neither is adopted by this document. No
-copyright assignment, commercial relicensing authority or retroactive signoff is
-assumed. Do not sign another person's or an assistant's work on their behalf.
+Contributions are welcome under the [applied component licenses](../LICENSE-STATUS.md).
+Use the license of the affected file and certify your submission under
+[DCO 1.1](DCO.txt). Contributors retain their rights; this is not a copyright
+assignment or a grant of commercial relicensing authority.
+
+Discuss a proposed change in an issue before taking on a substantial feature.
+Keep a pull request focused, explain its user-visible effect and verification,
+and preserve the development-preview and production-qualification boundaries.
+
+If you can make the DCO certification, sign off your own commits with `git commit -s`
+using your configured name and email. Check employer, third-party, and AI-assisted
+source provenance before certifying it. Do not sign another person's or an
+assistant's work on their behalf, and do not add retroactive signoffs to earlier
+project commits. A maintainer may request provenance details before accepting a PR.
 
 For authorized development, read `AGENTS.md`, use one assigned goal and an isolated
 worktree, and preserve existing regression contracts. For routine feedback run
