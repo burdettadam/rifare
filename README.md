@@ -1,415 +1,109 @@
-# Rifare
+![Rifare — merchant-owned commerce operations](docs/assets/rifare-hero.png)
 
-Merchant-owned commerce operations with tailorable skills and independently replaceable platforms, agents and models.
+# Own what happens after checkout.
 
-## Browser roadmap adopted: M23–M25
+**Rifare brings returns, exchanges, order changes, support, and reverse logistics into a merchant-controlled commerce platform.** Tailor the workflow to your store, keep the business records, and choose how much help you want from agents and models.
 
-The browser expansion is now decomposed into fifteen worker goals and three
-separate milestone assessments under
-[ADR-0044](docs/decisions/0044-browser-roadmap-adoption.md). M23 plans pinned
-Clef Flash Q8/Kevala text inference, M24 a separately verified compact
-Wllama/GGUF backend, and M25 browser image evidence after the M17 media gates.
-The current catalogue contains 26 milestones, 281 goal packets, 216 requirements
-and 949 behavioral specifications.
+[Try the local demos](#try-rifare) · [Explore the capabilities](#what-you-can-explore) · [See the design](#built-for-control-and-continuity) · [Project status](docs/PROJECT-STATUS.md)
 
-Start with [the browser worker handoff](docs/BROWSER-WORKER-HANDOFF.md),
-[the searchable goal catalogue](WORKER-GOALS.html) and
-[the updated architecture](ARCHITECTURE.md). Each new worker packet includes
-bounded scope, component and formal dependencies, proposed paths, behavioral
-oracles, a targeted fault, a small first verification slice and handoff evidence.
-M23-G01–G05 is the recommended next browser batch; all new goals remain
-unassigned. This planning update preserves the completed M14 local checkpoint
-and does not claim browser/model execution or formal acceptance.
+> **Public development preview.** This checkout contains working TypeScript/Node.js and SQLite demonstrations with synthetic data. The production application, connected services, and target React/PostgreSQL stack remain unqualified. [What works today →](docs/PROJECT-STATUS.md)
 
-## Current development milestone: M14 calibrated routing
+## Commerce keeps going after the sale
 
-M14 adds frozen calibration protocols, canonical measurement records, bounded
-diagnostic routing through one published manual-work rule, a SystemOne reader,
-and controlled serving activation/canary/rollback. The existing case, skill,
-policy, credential, budget, ownership and privacy owners remain authoritative.
-See [routing behavior](docs/DECISION-ROUTING.md),
-[qualification limits](docs/M14-QUALIFICATION.md), and
-[the integration record](work/records/M14-milestone-integration.md).
-Actual connected model qualification and formal acceptance remain pending.
-M15 is the next unassigned milestone. The earlier M13 checkpoint follows.
+A customer needs a different size. An order changes before it ships. A parcel arrives in pieces. A refund request times out, leaving someone to find out what actually happened.
 
-## Historical M13 decision-model shadow observations
+Rifare is being built to keep those moments connected. The same case can carry its order facts, policy, approvals, and operation history through support, returns, exchanges, and follow-up. A change of agent or model should not mean starting over—or losing track of an action already in progress.
 
-M13 adds optional bounded decision models and a source-bound return-intake
-shadow service under [ADR-0042](docs/decisions/0042-decision-model-shadow-milestone.md).
-One published question resource serves two declared merchant profile variants.
-Current case, task, source, credential and budget checks govern each observation;
-the existing manual workflow retains approval and execution authority.
+The design gives merchants three practical choices:
 
-The focused selection is 53 cases in four whole files within the unchanged
-60-case/four-file/60-second development limit. Actual native evidence and two
-independent reviews accompany the cumulative checkpoint. Read
-[decision models](docs/DECISION-MODELS.md), [shadow observations](docs/DECISION-SHADOW.md),
-[the M13 assessment](docs/M13-QUALIFICATION.md), and
-[the integration record](work/records/M13-milestone-integration.md).
-Live provider quality and formal milestone acceptance remain blocked. M14 is the
-next planning milestone and remains unassigned.
+- **Make the workflow yours.** Versioned policies, reusable skills, and merchant profiles adapt the experience to your products and rules.
+- **Keep people in control.** Staff can work without a model. Action previews, separate approvals, and current permission checks govern sensitive operations.
+- **Keep your options open.** Platforms, adapters, agent runtimes, and model providers have separate responsibilities and replacement boundaries.
 
-The preceding [M12 assessment](docs/M12-QUALIFICATION.md) retains agency access,
-extension preparation and its human/contributor qualification limits. Its original
-source, cumulative archive, formal gate and disabled code-mode outcome remain
-preserved. The separate M13–M22 handoff was adopted additively; the historical
-M11/M12 continuation statements below describe their earlier checkpoints.
+Read the [policy customization guide](docs/POLICY-CUSTOMIZATION.md), [support workflow](docs/SUPPORT-OPERATIONS.md), and [portability design](docs/SKILL-ARCHITECTURE.md) for the implementation and its limits.
 
-## Historical M11 inventory and procurement checkpoint
+## What you can explore
 
-All ten M11 worker goals and the G99 assessment are assigned under
-[ADR-0040](docs/decisions/0040-m11-inventory-procurement.md). They add historical
-demand, frozen temporal backtests, reviewed forecasts, explainable replenishment,
-supplier terms and versioned purchase orders, independent budget approval,
-partial receiving, additive supplier returns/corrections, nested BOMs and
-production preparation.
+These are implemented local development paths. Their guides distinguish synthetic behavior, unsupported operations, and the evidence still needed for connected use.
 
-The existing warehouse stock and movement owners remain canonical. Purchasing
-and stock effects require current independent approval, source/quantity pins
-and final execution checks. Unknown outcomes retain their original operation
-identities. Forecasts use deterministic quantitative methods and named baselines;
-their empirical error envelope claims no statistical or real-world qualification.
+| Workflow | What Rifare demonstrates | Explore |
+| --- | --- | --- |
+| **Returns and exchanges** | Per-item eligibility, original paid-value allocation, mixed refund/credit/exchange outcomes, and separate financial and fulfillment stages. | [Return resolution](docs/RETURN-RESOLUTION.md) · [Exchange depth](docs/exchange-depth.md) |
+| **Order changes** | Preview address, variant, and cancellation changes; require approval; track payment and warehouse holds before release. | [Order editing](docs/ORDER-EDITING.md) |
+| **Support and tracking** | Verified case context, individual shipment states, human takeover, and consent checks before a message is sent. | [Support operations](docs/SUPPORT-OPERATIONS.md) |
+| **Shipping and inventory** | Package obligations, scan-to-pack sessions, location transfers, warehouse return events, and stock reconciliation. | [Packing](docs/PACKING-SESSIONS.md) · [Inventory](docs/INVENTORY-RECONCILIATION.md) |
+| **Continuing customer journeys** | Durable references to earlier actions, shopper context, follow-ups, and loyalty quotes/redemption with their original operation identities. | [Journeys](docs/COMMERCE-JOURNEYS.md) · [Loyalty](docs/LOYALTY-REDEMPTION.md) |
+| **Drop-off handoffs** | Site/method eligibility, controlled credential issuance, and item-level acceptance, rejection, corrections, and disputes. | [Drop-off guide](docs/DROPOFF-HANDOFFS.md) |
 
-Canonical privacy and quarantined recovery cover 20 new merchant business tables
-while preserving all 234 preceding table obligations. Customer-free aggregate
-and catalog records are excluded from customer exports. Explicit nested
-allowlists remove unexpected copied facts; restore/import/uninstall revoke new
-authority even without customer tombstones. Separate source and historical
-copies retain their named cleanup duties.
+## Try Rifare
 
-The planned selection is 49 cases in four whole files, within the unchanged
-60-case/four-file/60-second development limit. Actual native results, independent
-reviews and the separate local integration decision accompany the cumulative
-checkpoint. Read [the M11 integration record](work/records/M11-inventory-procurement-integration.md),
-[the M11 assessment](docs/M11-QUALIFICATION.md), [demand planning](docs/DEMAND-PLANNING.md),
-[procurement](docs/PROCUREMENT.md), and [receiving and production](docs/PROCUREMENT-INVENTORY.md).
-Formal M07-G99, M08-G99 and M11 acceptance remain blocked. M12 is unassigned.
+Start with a small commerce demonstration. It runs entirely in memory, uses synthetic orders, and needs no API key, model download, Docker, or external account.
 
-The preceding [M10 integration](work/records/M10-extended-services-integration.md)
-retains partner readiness, warranties, claims, dispute drafts, custody and
-delivery-started trials. Read [its assessment](docs/M10-QUALIFICATION.md),
-[partner services](docs/PARTNER-SERVICES.md), [warranties and disputes](docs/WARRANTY-DISPUTES.md),
-and [delivery trials](docs/DELIVERY-TRIALS.md) for the preserved scope and limits.
-
-The preceding [M09 growth integration](work/records/M09-growth-integration.md)
-retains shopping, upsells, experiments, campaigns, catalog and optional media
-capabilities. Its [qualification assessment](docs/M09-QUALIFICATION.md) remains
-historical evidence; the present assignment does not accept those prerequisites.
-
-### Retained preceding development
-
-M07-G01 through M07-G15 now have bounded local development implementations.
-The first five added Woo return/refund handling, the shared staff and agent
-workflow, independent runtime clients, and reusable adapter conformance. The next
-five add evidence-bound compatibility limits, merchant export and quarantined
-import, exclusive migration ownership, executable operator recovery drills, and
-offline installation/upgrade preparation. Goals G11–G15 add measured recovery
-interlocks and durable intake backpressure, offline artifact/SBOM provenance
-checks, complete current storage-surface review and scoped privacy exports, and
-keyboard/error/focus improvements across six existing workflows.
-
-The earlier M07-G16, G17, G18, G99 and M08-G01 checkpoint added
-explicit locale/time-zone/currency presentation, frozen pilot
-instrumentation using the retained benchmark, real-pilot evidence intake
-preparation, the blocked M07 acceptance assessment and per-package carrier quote
-previews. The real-observation register remains empty. Formal M07 acceptance and
-M08 entry remain blocked.
-
-The preceding five planning entries were M08-G07, G08, G09, G10 and G99.
-They extend the retained shipping and packing services with warehouse return
-events and immutable corrections, shared per-location stock, conserved transfers,
-and shipment/partial-return reconciliation. G99 records the remaining milestone
-evidence gaps. The warehouse and carrier sources remain synthetic; original
-connected G07/G10 cases and formal M08 acceptance remain blocked. M09 development
-is separately assigned by ADR-0038; it does not accept those prerequisites.
-Read [the inventory integration record](work/records/M08-inventory-five-integration.md)
-and [the M08 assessment](docs/M08-QUALIFICATION.md).
-
-Read [the M07 assessment](docs/M07-QUALIFICATION.md),
-[compatibility limits](docs/COMPATIBILITY-LIMITS.md),
-[merchant transfer](docs/MERCHANT-PORTABILITY.md),
-[operator runbooks](docs/OPERATOR-RUNBOOKS.md), and
-[installation/upgrade](docs/INSTALL-UPGRADE.md),
-[recovery and load](docs/RECOVERY-LOAD.md),
-[release security](docs/RELEASE-SECURITY.md),
-[privacy coverage](docs/PRIVACY-COVERAGE.md), and
-[accessible workflows](docs/ACCESSIBLE-WORKFLOWS.md),
-[locale presentation](docs/LOCALE-PRESENTATION.md),
-[pilot protocol](docs/PILOT-PROTOCOL.md), and
-[carrier quotes](docs/CARRIER-QUOTES.md). Earlier support, return, exchange,
-edit and regression capabilities remain in the accumulated source; the
-[M06 assessment](docs/M06-QUALIFICATION.md) retains their qualification limits.
-
-Routine development uses a small affected-file selection:
+**Prerequisites:** Git and Node.js **24.x**, or **22.16+ within 22.x**, with npm. The supported ranges are declared in [package.json](package.json).
 
 ```sh
-make test-plan
-make test
-# An explicit full checkpoint remains available as make test-full.
-```
-
-The default budget is 60 actual cases across four whole files with one 60-second
-deadline. A development pass does not claim full regression or goal acceptance.
-The all-goals M11 development assignment does not automatically trigger full,
-browser, nested catalog, or restoration-audit campaigns. It selects the new
-forecast, procurement, stock and the existing privacy cases. See [development](DEVELOPMENT.md).
-
-The runtime remains a SQLite diagnostic with synthetic protocol sources.
-PostgreSQL/React, connected providers, live merchant migration, independent-machine
-installation, approved hardware load limits, authenticated release scans, human
-assistive-technology review and formal milestone acceptance remain unqualified. The previous
-full-test checkpoint and history remain recoverable. The later sections retain
-earlier explicit diagnostic commands.
-
-## Start
-
-```sh
-git status
-git log --graph --oneline --all -12
-python3 tools/dev_tests.py --plan
-python3 tools/dev_tests.py
-```
-
-The planning commands above use Git and Python 3.10+ with the standard library.
-The optional smoke runtime also requires Node and npm; see its prerequisites below.
-No API keys, paid model, container runtime or global initializer is required
-for these diagnostic commands. Windows users can use `py -3`; cross-platform
-qualification has not been performed by this checkpoint's Linux checks.
-
-Read [AGENTS.md](AGENTS.md), [GOVERNANCE.md](GOVERNANCE.md), [PLANS.md](PLANS.md)
-and [DEVELOPMENT.md](DEVELOPMENT.md). The delivered checkout is on `main`.
-Resume target-stack repair from this accumulated source, not an older goal branch.
-Check `git worktree list` before claiming a writer or starting another instance.
-
-For the explicit diagnostic runtime:
-
-```sh
+git clone --branch development https://github.com/burdettadam/rifare.git
+cd rifare
 npm ci --offline --ignore-scripts
-python3 tools/verify.py --runtime --harness
-npm run dev:smoke
-# In a second terminal in the same worktree:
-npm run stop:smoke
-```
-
-For the new commerce diagnostic (Ctrl-C to stop its own instance):
-
-```sh
-node --experimental-strip-types tools/dev-commerce.mts
-```
-
-Visit `/status` for the no-model order-status page or `/configuration` for
-configuration drafts and boundary simulations. Draft edits do not publish policy.
-
-Its output identifies the loopback URL and private local session file. Credentials
-are not printed or embedded in the UI. Use that session to inspect the two
-synthetic stores. See the foundation guide for the optional external wrapping key.
-
-For an isolated in-memory case/approval demonstration:
-
-```sh
-node --experimental-strip-types tools/demo-execution.mts
-node --experimental-strip-types tools/demo-execution.mts --serve
-```
-
-The second command prints the `/execution` URL and private temporary credential
-file. Only a synthetic local case-plan marker can change; no money is moved.
-
-`npm run dev` exits 2 until the target React/PostgreSQL setup is qualified.
-The smoke profile does not silently replace that target.
-
-Set your own repository-local Git identity before authoring your own commits.
-Do not restart accepted goals or infer assignments from the initial ready queue.
-
-## Development material
-
-| Material | Purpose |
-|---|---|
-| [Roadmap](ROADMAP.md) | 13 milestones, including the later qualified product release. |
-| [Goal catalogue](WORKER-GOALS.html) / [Markdown](WORKER-GOALS.md) | 190 worker goals and 13 acceptance gates. |
-| [Canonical goals](planning/goals.json) | Stable contracts and dependencies, not live task status. |
-| [Test specifications](planning/test-specifications.json) | 676 planned scenarios; commerce results remain not-run. |
-| [Requirement coverage](planning/requirement-coverage.json) | All 151 original requirements remain represented. |
-| [Charter](docs/CHARTER.md) | Adopted first-release support envelope. |
-| [Benchmark](docs/RELEASE-BENCHMARK.md) | Cohorts, denominators, numerical gates and pilot requirements. |
-| [Licensing](docs/LICENSING.md) | Selected component-scoped direction and publication boundary. |
-| [Workflow adoption](docs/WORKFLOW-ADOPTION.md) | Actual instruction versions, native commands and tested limits. |
-| [Workflow checks](docs/WORKFLOW-CHECKS.md) | Candidate-bound tests/reviews, writer ownership and release scope. |
-| [Skill architecture](docs/SKILL-ARCHITECTURE.md) | Merchant/platform-tailorable product skills, separate from development skills. |
-| [Regression strategy](docs/REGRESSION-STRATEGY.md) | Retained behavior and meaningful fault proof. |
-| [M00-G04 work record](work/records/M00-G04.md) | Accepted workflow foundation. |
-| [M00-G05 work record](work/records/M00-G05.md) | Partial runtime outcome, actual checks and remaining blockers. |
-| [Local environment](docs/LOCAL-ENVIRONMENT.md) | Runtime commands, isolation, recovery and qualification boundaries. |
-
-The goal cards/catalogue are generated from planning JSON. Live decisions belong
-under `work/`. Raw evidence stays ignored. No task database, worker scheduler,
-custom Git command protocol or mandatory agent provider has been added.
-
-## Verified development boundary
-
-The previous checkpoint had 1059 checks. This batch adds 108, for 1167 registered
-checks: 506 Python/helper, 633 native runtime, 15 unit harness, 7 database harness
-and 6 retained browser-component checks. Final source-bound execution and
-restoration results are recorded in the separate delivery report. The actual
-served-browser, target-stack and installed-model qualifications remain open.
-
-Controllers remain read-only and do not authenticate people, sandbox native code,
-merge branches or authorize releases. Models and external agents remain replaceable
-by design; none has been falsely counted as an independently qualified integration.
-
-## Source retention and publication
-
-The project ZIP contains a standalone `.git` history. The bundle can be cloned:
-
-```sh
-git clone -b main /path/to/Rifare-execution-controls.bundle Rifare
-cd Rifare
-git remote remove origin
-python3 tools/verify.py
-```
-
-There is no hosted remote, release tag or public publication. The selected
-licensing direction is AGPL-3.0-only for the future application and Apache-2.0
-for separable SDKs, public skills/templates and original developer documentation.
-Existing MIT-derived notices are retained. Exact license application and a
-candidate-specific distribution review remain necessary before public release;
-[LICENSE-STATUS.md](LICENSE-STATUS.md) is not itself a software license grant.
-Private merchant material and raw review evidence do not belong in source.
-
-## Deterministic diagnostic tests
-
-M00-G06 adds frozen synthetic fixtures, native unit/SQLite tests and in-memory
-Chromium component checks. Run `python3 tools/verify.py --runtime --harness` on a
-host meeting the [test-harness requirements](docs/TEST-HARNESS.md). Unit/database
-layers need no added npm dependencies; browser tests require the separately
-installed Playwright/Chromium tooling. These results do not close target-stack
-qualification or grant goal acceptance. See [the current work record](work/records/M00-G06.md).
-
-## Candidate-bound evidence
-
-M00-G08 adds a separately pinned evidence capture/verifier. It runs the retained
-native regression controller, records source/configuration/artifact identity and
-checks external review facts without granting acceptance. See
-[the evidence guide](docs/EVIDENCE-GATE.md) and
-[the current work record](work/records/M00-G08.md).
-The current registry has 1059 executable checks: all 945 prior checks plus
-114 policy, manifest, layered-settings, editor and installation regressions. Delegated local integration review
-is complete; full target-stack qualification remains open.
-All 676 commerce scenarios remain planning specifications.
-
-## Integrated M00 qualification
-
-The original M00-G99 assessment used 565 checks. The integrated source retains
-those checks, adds 17 review regressions and reuses the same evidence controllers.
-The milestone remains blocked by target-stack qualification and unaccepted
-prerequisites; a green diagnostic run is not milestone acceptance. See
-[qualification and repair order](docs/M00-QUALIFICATION.md) and
-[the exact existing-goal repair checklist](work/qualification/M00.json).
-Target-stack repair resumes M00-G05 on the accumulated source. M01-G01 through
-M01-G15 are implemented for local diagnostic integration, not full qualification.
-
-## Immediate engineering priority
-
-Resume **M00-G05** from this `main`: implement and install the target React/PostgreSQL
-stack, then extend M00-G06 to the actually served application. Preserve the entire registered
-diagnostic and commerce regression inventory. Do not add more governance machinery merely to postpone
-this implementation. The [qualification guide](docs/M00-QUALIFICATION.md) separates
-these engineering gaps from the completed local integration review.
-
-## Policy and skill customization
-
-See [the current guide](docs/POLICY-CUSTOMIZATION.md) for M02-G03 through M02-G07.
-Run the existing commerce diagnostic and open `/configuration` to edit/simulate a
-draft without a model. Publication review is a request, not automatic activation.
-`node --experimental-strip-types tools/demo-customization.mts` demonstrates the
-policy lifecycle, undo and a vetted instruction bundle in memory.
-
-## Durable operation reliability
-
-M02-G13 through M02-G17 add diagnostic event deduplication, durable outgoing work,
-stable operation identities, source-bound reconciliation and minimized receipts.
-See [the implementation guide](docs/OPERATION-RELIABILITY.md) and
-[the review](docs/OPERATION-RELIABILITY-REVIEW.md).
-
-```sh
-node --experimental-strip-types tools/demo-reliability.mts
-```
-
-The demo makes no network/model/payment call. PostgreSQL/React and live-provider
-qualification remain open; unknown outcomes never authorize speculative retries.
-
-## Worker control and recovery diagnostic
-
-```sh
-node --experimental-strip-types tools/demo-worker-controls.mts
-node --experimental-strip-types tools/demo-worker-controls.mts --serve
-```
-
-The serving variant prints the `/exceptions` URL and a private temporary session
-file. Unknown outcomes can be reconciled without resending. No live credential,
-provider, message or payment effect is configured. Ctrl-C removes the temporary
-session file and stops only that instance. The browser checks are component/API
-bridge tests, not direct served-browser or React qualification.
-
-## Mixed refund, credit and exchange diagnostic
-
-```sh
 node --experimental-strip-types tools/demo-return-resolution.mts
 ```
 
-The headless demo uses two isolated in-memory databases, original paid amounts,
-one-use approvals and source-bound reconciliation. No model or external call is
-needed. See [the guide](docs/RETURN-RESOLUTION.md) for the authenticated endpoints
-and explicitly unsupported financial and inventory operations.
+The demo allocates one return across a refund, store credit, and an exchange quotation. It then simulates a refund response being lost and reconciles the original operation. Look for:
 
-For the new headless, in-memory inventory/carrier demonstration:
+- `after_lost_response: "unknown"` followed by `after_lookup: "accepted"`.
+- `send_attempts: 1`: the uncertain refund is not sent a second time.
+- `external_calls: 0` and `production_qualified: false`.
+
+The separate fixture settlement step is labeled in the output; it does not move real money. The exchange in this demo is a quotation, not a committed replacement order.
+
+For an interactive support and shipment-tracking view:
 
 ```sh
-node --experimental-strip-types tools/demo-return-fulfillment.mts
+node --experimental-strip-types tools/demo-support.mts --serve
 ```
 
-## Shipping and warehouse development
+Open the printed URL and follow the [local session instructions](docs/TRY-RIFARE.md#open-the-support-and-tracking-views). The guide also covers policy customization, recovery demonstrations, the basic smoke environment, and stopping each instance.
 
-The preceding locally prepared goals are M08-G02 through M08-G06: per-package
-label obligations and repair, durable scan-to-pack, conserved split allocations,
-separate manifest/pickup/carrier stages, and a named warehouse fixture connector.
-Read [shipping batches](docs/SHIPPING-BATCHES.md), [packing sessions](docs/PACKING-SESSIONS.md)
-and [warehouse connector preparation](docs/WAREHOUSE-CONNECTOR.md). New durable
-records participate in scoped export, minimization and restored execution
-quarantine. Formal and connected qualification remain blocked. The existing
-60-case/four-file/60-second development defaults are unchanged.
+**Use these explicit demo commands.** `npm run dev` intentionally exits until the target application stack is qualified.
 
-## Warehouse inventory and cycle reconciliation
+## Built for control and continuity
 
-Native warehouse events retain request, item, sequence, grade and correction
-lineage. Absolute inventory snapshots anchor quantities once; source movements
-explain available, on-hand, reserved and in-transit stock. Approved transfers
-conserve units through reserve, dispatch, partial receipt, loss and correction.
-Unknown operations are observed through their original identities.
+### The merchant keeps the business state
 
-Reconciliation checks original packing, carrier acceptance, shipment deductions,
-return receipt and disposition records. Repair imports existing observations and
-leaves unexplained stock unresolved. Requested returns remain pending before
-receiving starts. Read [warehouse return events](docs/WAREHOUSE-RETURN-EVENTS.md),
-[location inventory and transfers](docs/LOCATION-INVENTORY.md), and
-[inventory reconciliation](docs/INVENTORY-RECONCILIATION.md), including the
-documented limitation when an unknown stock effect has not been imported before
-subject erasure. The blocked [M08 assessment](docs/M08-QUALIFICATION.md) preserves
-the original physical cycle and formal acceptance requirements.
+Cases, policy versions, previews, approvals, and receipts live in the commerce core. A provider's conversation thread is not the order ledger. [Commerce journeys](docs/COMMERCE-JOURNEYS.md) compose the existing records so a later interaction can reconnect to the original work.
 
+### Suggestions and execution have separate responsibilities
 
-## M12 agency and extension development
+Skills describe the work. Merchant profiles tailor it. Agents can propose actions. The [action gateway](packages/commerce/action-gateway.mts) checks current identity, policy, source facts, approval, and ownership before allowing an operation. Optional [decision models](docs/DECISION-MODELS.md) and [routing](docs/DECISION-ROUTING.md) build on that boundary; a model answer does not grant authority.
 
-The [M12 assignment](docs/decisions/0041-m12-agencies-extensions.md) covers
-store-specific agency delegation, independently accepted presentation templates,
-customer-free aggregate reports, pinned local extension artifacts and explicit
-version/migration/retirement preparation. Existing permissions, case pins,
-installer, release controls and recovery remain canonical.
+### Uncertainty is part of the workflow
 
-Read [the milestone assessment](docs/M12-QUALIFICATION.md) and
-[the integration record](work/records/M12-milestone-integration.md) for scope,
-evidence and formal blockers. The planned focused check is 44 cases across four
-files within the retained development limits. Actual candidate-bound reports and
-two nonauthor decisions accompany the cumulative checkpoint. Independent
-contribution and human governance/code decisions remain open; optional code
-execution remains deferred and disabled.
+A timeout can happen after a source accepts an operation. Rifare retains the original operation identity, records an unknown outcome, and reconciles before another effect is allowed. The [reliability demonstration](docs/OPERATION-RELIABILITY.md) makes that recovery behavior inspectable. A receipt distinguishes what was requested, accepted, and later observed.
+
+### Portability includes recovery
+
+[Merchant export/import](docs/MERCHANT-PORTABILITY.md), [privacy coverage](docs/PRIVACY-COVERAGE.md), and restored-environment controls are part of the design. Importing records does not reactivate their old execution authority. These are implemented diagnostic controls with documented limits, not compliance certifications.
+
+## Where the project stands
+
+The current development checkpoint reaches **M20-G03: item-level drop-off handoffs**. The source also contains local returns, support, shipping, inventory, customer-journey, and loyalty work. Milestone numbers describe development progress; they do not certify production readiness.
+
+The next recorded commerce increment is consolidation and custody continuity. Connected-provider qualification, the target application stack, independent deployment, and formal acceptance remain open. Browser inference is adopted roadmap work, not an available download in this preview.
+
+[Current status and evidence](docs/PROJECT-STATUS.md) · [Roadmap](ROADMAP.md) · [Detailed progress](PLANS.md)
+
+## Find your way around
+
+| If you want to… | Start here |
+| --- | --- |
+| Run the demos and understand their output | [Try Rifare](docs/TRY-RIFARE.md) |
+| Understand the product's boundaries | [Current status](docs/PROJECT-STATUS.md) · [Compatibility limits](docs/COMPATIBILITY-LIMITS.md) |
+| Inspect the engineering design | [Architecture](ARCHITECTURE.md) · [Skill architecture](docs/SKILL-ARCHITECTURE.md) |
+| Continue an assigned development task | [Development](DEVELOPMENT.md) · [Agent instructions](AGENTS.md) · [Worker goals](WORKER-GOALS.md) |
+| Review earlier decisions and milestones | [Decisions](docs/decisions/README.md) · [Work records](work/README.md) |
+
+## License and project access
+
+Rifare is a **public development preview**. The selected licensing direction is AGPL-3.0-only for the application and Apache-2.0 for separable SDKs, skills, and original developer documentation. License application and distribution review remain unfinished; this README does not grant those licenses. See [license status](LICENSE-STATUS.md), [licensing detail](docs/LICENSING.md), and [third-party notices](THIRD-PARTY-NOTICES.md).
+
+**Star Rifare to follow its development.** [Browse the latest changes →](https://github.com/burdettadam/rifare/commits/development/)
