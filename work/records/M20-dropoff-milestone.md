@@ -316,3 +316,35 @@ duplicates, replay, current authority and privacy/recovery need explicit rules.
 Then G04 carries custody continuity using existing native owners. Keep handoff,
 carrier movement, warehouse receipt/inspection, stock and settlement separate.
 M19's attributable provider award/reversal gap remains independently open.
+
+## G03 prior assignment and independent protocol review
+
+The owner renewed the instruction to proceed toward the next milestones while
+keeping testing focused. ADR-0064 assigns bounded local item-level drop-off
+acceptance from G02 closure 90e857dcc80794bdb43033a9a6e7c027d08861ea. Root owns
+runtime and execution on goal/M20-dropoff-handoff in Rifare-M20-handoff. Native
+InternationalHandoffs remains the custody owner, with typed initial observations
+in its existing table and an independent secretless source journal. No core
+schema change, stock, warehouse receipt, financial effect or connected provider
+is assigned. G02 runtime, source and independent tests remain unchanged.
+
+The authority/privacy reviewer /root/checkpoint_audit and regression reviewer
+/root/loyalty_regression independently inspected initial protocol 3d6f22d77f2645817f6e70f3201c6770c900b90f,
+tree 17a8c0b42ae26083deabcbfea313ed385e0c8854. Both found the bounded assignment
+implementable, with no remaining material blocker after the prior interface
+clarifications in ADR-0064. Source replay compares original intent and historical
+payload binding before new-scan usability; native duplicate import still checks
+current authorization and retirement. Family-wide unit identity, per-unit
+correction parents, disjoint rejected/disputed counts and typed privacy ordering
+are explicit. Reviewers performed no edits, product imports, tests or probes.
+
+/root/loyalty_tests owns exactly the new dropoff-handoffs.test.mts,
+dropoff-handoffs-helpers.mts and fixtures/dropoff-handoffs/independent-values.json
+in test/M20-dropoff-handoff, separate Rifare-M20-handoff-tests. The independent
+author will freeze twelve cases before root writes runtime. The unchanged G02
+fixture supplies two lines and three units; the named fault oracle requires one
+accepted and two outstanding. The planned whole-file batch is 12 new + 14 G02 +
+22 partner-service cases, within the unchanged 60-case/four-file/60-second budget.
+One isolated exact-parent materialization fault follows a passing candidate;
+no broad suite or unrelated downstream sweep is planned. Formal prerequisite
+acceptance, M20 acceptance, physical qualification and release remain open.

@@ -251,3 +251,48 @@ outside product ancestry and never merge it. No repeated fault campaign.
 Independent authority/privacy and regression review, exact evidence, preserved
 inventories and a complete recoverable checkpoint close this local assignment.
 G04 consolidation/custody continuity and G05 shopper experience remain separate.
+
+## Prior interface clarifications
+
+readDropoff projects the complete family across credential generations while
+issue_operation_id identifies the queried original issue. Its quantitative fields
+are totals {expected,accepted,rejected,disputed,outstanding}, items with line_id,
+item_id and the same five counts, and units with unit_ref, line_id, ordinal, state,
+reason, site_id, last_accepted_site_id, original_event_id, current_event_id and
+custody_uncertain. rejected and disputed are disjoint. Initially rejected and
+unobserved units have null sites; a disputed unit retains its last accepted site.
+history is the sequence-ordered array of exact source envelopes. The projection
+also contains schema_version, family_ref, resource_id, source_identity,
+authority_revoked, minimized and the stage/effect flags specified above.
+Minimized items is empty and unit line_id/ordinal are null. A retained issue with
+no imported G03 evidence cannot reconstruct deleted expected quantities and
+returns DROPOFF_HANDOFF_NOT_FOUND rather than inventing zero counts.
+
+Source event units are exactly {unit_ref,disposition,reason}. Both recording
+methods return the exact event envelope; journal returns an envelope array.
+An existing acceptance event ID is compared to normalized original caller intent
+and historical payload-to-issue binding before current credential usability is
+checked. Exact replay therefore returns the original admission after expiry or
+revocation. Native duplicate import still checks current human access, original
+mapping and retirement before returning; replay is not an authority bypass.
+
+Correction branching is assessed per unit: disjoint subsets of one parent may
+receive different correction events, but a unit whose parent has already changed
+cannot be corrected again from the stale parent. accepted-to-rejected yields
+disputed=1 and rejected=0 for that unit, retaining uncertain physical custody.
+
+The native typed body uses event for the exact source envelope, expected_units
+for sorted opaque unit references, and personal for the exact original
+{request_id,case_id,native_return_id,items} mapping or null. The remaining fields
+are schema_version, kind, tenant_id, store_id, id, resource_id, subject_ref,
+issue_operation_id, quote_id, quote_digest, command_digest, imported_by,
+imported_at, authority_revoked and minimized. Lifecycle transitions validate the
+complete original graph before paired G03/G02 retirement. Generic partner
+minimization does not replace this typed envelope or its original subject hash.
+Native row state is observed while active and revoked after any retirement.
+importDropoff returns the same projection shape as readDropoff. An unobserved
+unit has state outstanding and null reason/original_event_id/current_event_id.
+An acceptance envelope has parent_event_id=null. The unchanged three-unit fixture
+does not claim an otherwise-valid above-100-unit native positive control; the
+source/core bound is statically enforced and ordinary malformed quantity inputs
+are included in the independent cases.
