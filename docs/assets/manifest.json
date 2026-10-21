@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "project": "Rifare",
+  "purpose": "portfolio presentation artwork",
+  "generator": "built-in image-generation tool",
+  "prompts": "PROMPTS.md",
+  "assets": [
+    {
+      "path": "rifare-hero.png",
+      "width": 1774,
+      "height": 887,
+      "mode": "RGB",
+      "bytes": 1623541,
+      "sha256": "33e6bac4d04dfca85f4db735d1fa5c2bba4dd0b0402984b52784b0c85fdd0dca",
+      "transparent": false
+    },
+    {
+      "path": "rifare-logo.png",
+      "width": 2172,
+      "height": 724,
+      "mode": "RGBA",
+      "bytes": 362420,
+      "sha256": "25bebb68afb76843b11bce1fd2f0a990024f62707eeae9039f6eb2db5c0c361c",
+      "transparent": true
+    },
+    {
+      "path": "rifare-mark.png",
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "bytes": 528266,
+      "sha256": "311181e6a1d3a58b0e49f35f731408be93ac388e5767e55f43bcf63ca2d5c262",
+      "transparent": true
+    },
+    {
+      "path": "rifare-social.jpg",
+      "width": 1774,
+      "height": 887,
+      "mode": "RGB",
+      "bytes": 249095,
+      "sha256": "483e674251cdd55456f7165475e74c119375f68b76879aef584ade49e030bdec",
+      "transparent": false
+    },
+    {
+      "path": "rifare-social.png",
+      "width": 1774,
+      "height": 887,
+      "mode": "RGB",
+      "bytes": 1348788,
+      "sha256": "008f7f7bf9f0296320c38302b25737f9bbc9808aa65b905fc45a600ad498ebee",
+      "transparent": false
+    }
+  ]
+}

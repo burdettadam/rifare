@@ -101,6 +101,7 @@ The next recorded commerce increment is consolidation and custody continuity. Co
 | Inspect the engineering design | [Architecture](ARCHITECTURE.md) · [Skill architecture](docs/SKILL-ARCHITECTURE.md) |
 | Continue an assigned development task | [Development](DEVELOPMENT.md) · [Agent instructions](AGENTS.md) · [Worker goals](WORKER-GOALS.md) |
 | Review earlier decisions and milestones | [Decisions](docs/decisions/README.md) · [Work records](work/README.md) |
+| Use the logo and portfolio artwork | [Brand assets](docs/BRAND.md) · [Presentation handoff](docs/PORTFOLIO-HANDOFF.md) |
 
 ## License and project access
 

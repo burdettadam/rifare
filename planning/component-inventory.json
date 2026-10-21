@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "id": "rifare-source-inventory",
-  "revision": 38,
+  "revision": 39,
   "status": "proposed",
   "components": [
     {
@@ -1762,7 +1762,19 @@
         "work/records/M18-memory-checkpoint.md",
         "work/records/M19-loyalty-milestone.md",
         "work/records/M19-recovery-checkpoint.md",
-        "work/records/M20-dropoff-milestone.md"
+        "work/records/M20-dropoff-milestone.md",
+        "docs/BRAND.md",
+        "docs/PORTFOLIO-HANDOFF.md",
+        "docs/PROJECT-STATUS.md",
+        "docs/TRY-RIFARE.md",
+        "docs/assets/PROMPTS.md",
+        "docs/assets/manifest.json",
+        "docs/assets/rifare-hero.png",
+        "docs/assets/rifare-logo.png",
+        "docs/assets/rifare-mark.png",
+        "docs/assets/rifare-social.jpg",
+        "docs/assets/rifare-social.png",
+        "work/records/portfolio-presentation.md"
       ],
       "notices": []
     },
