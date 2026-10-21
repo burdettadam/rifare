@@ -3,7 +3,8 @@
 M01-G11 through M01-G15 add a task-bound MCP interface, a no-model status page,
 two provider wire adapters behind one interface, and separate Python orchestration.
 This remains the SQLite diagnostic implementation. PostgreSQL/React and live model
-qualification are open; there is no hosted remote or deployment.
+qualification remain open. Public source is hosted on GitHub; a qualified hosted
+application is not established by this diagnostic.
 
 ## Local setup
 

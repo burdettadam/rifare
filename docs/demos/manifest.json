@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "kind": "recorded_synthetic_terminal_demonstration",
+  "command": [
+    "node",
+    "--experimental-strip-types",
+    "tools/demo-return-resolution.mts",
+    "--guided"
+  ],
+  "source_commit": "b7102d3ffc121326a8475062eef9878c9b157893",
+  "source_tree": "ecc35319767e3a5ea9f1e065db0c4f5222501662",
+  "node": "v24.19.0",
+  "recorded_at_utc": "2026-10-21T07:33:16.903917+00:00",
+  "duration_seconds": 17.72085,
+  "exit_code": 0,
+  "raw_recording": "refund-recovery.cast",
+  "transcript": "refund-recovery.txt",
+  "source_file_sha256": "6852a18562734d0cf66892a45dc3544ee82348bf9972520683ba610a6701003b",
+  "limits": {
+    "synthetic_data": true,
+    "external_calls": 0,
+    "real_money_movement": false,
+    "production_qualified": false,
+    "exchange_committed": false
+  },
+  "capture": "Actual subprocess output recorded through a local pseudo-terminal; no output text fabricated.",
+  "presentation": {
+    "width": 1280,
+    "height": 720,
+    "scenes": 7,
+    "hold_seconds_per_scene": 4,
+    "total_seconds": 28,
+    "timing_note": "Every scene is the actual captured terminal text. Playback holds each completed scene for 4 seconds for readability; the .cast retains original timing. This is not a latency benchmark.",
+    "audio": false,
+    "font": "DejaVu Sans / DejaVu Sans Mono from the host; font files not bundled",
+    "rendering": "Pillow terminal replay and FFmpeg H.264 export; no generated product imagery."
+  },
+  "assets": [
+    {
+      "path": "README.md",
+      "bytes": 3072,
+      "sha256": "20aad6faf2c528b31b65e03ad25341152dae69cb25043609065148ca412942af"
+    },
+    {
+      "path": "refund-recovery-poster.png",
+      "bytes": 55981,
+      "sha256": "e4d06ef574776c7614980b00e6e5fa7ec3e12cb18861c6dc21a97ebff4189713"
+    },
+    {
+      "path": "refund-recovery.cast",
+      "bytes": 3112,
+      "sha256": "b8db843c744147e7e3e31133fb21e2060b49aa3e7b2ffd3ea5ebe4e563f8028f"
+    },
+    {
+      "path": "refund-recovery.gif",
+      "bytes": 256751,
+      "sha256": "cc77c80e7921245837e2ef8a63a3677d27e74e59ec083f1d73662a6193929bdf"
+    },
+    {
+      "path": "refund-recovery.mp4",
+      "bytes": 312666,
+      "sha256": "e0fb12115d8ebc29b902524274fec478b81441a3b67a26819845ba88eca1893c"
+    },
+    {
+      "path": "refund-recovery.txt",
+      "bytes": 3638,
+      "sha256": "cd8ea3b4705110d28bfba371ad6133c13321687d3825c29084e9e8cdd42433fd"
+    }
+  ]
+}

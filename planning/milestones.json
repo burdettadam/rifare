@@ -120,7 +120,7 @@
       "outcome": "Complete actual governance and contributor decisions; implement a sandbox only if the explicit need/risk decision authorizes it.",
       "deliverables": [
         "Record the responsible maintainers and actual extension governance/security decisions under the existing authority model.",
-        "Apply and review the selected application, SDK and documentation licensing terms against the exact distribution; preserve current notices and unresolved grants until then.",
+        "Review each future release or extension distribution against the applied component terms and retained third-party obligations; bind the review to the actual artifact and preserve required notices and source obligations.",
         "Have an actual independent contributor build and install the declared extension using published contracts and ordinary tooling.",
         "Run its conformance, security and compatible-update checks without private maintainer patches or a core fork, and retain attributable results.",
         "Measure unmet tasks against existing typed actions and document the proposed isolation, resource, filesystem, package and egress boundaries.",

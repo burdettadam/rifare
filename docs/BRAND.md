@@ -62,6 +62,8 @@ and replaceable providers. Use the [current status](PROJECT-STATUS.md) to qualif
 availability. Avoid production, deployment, live-provider, performance, or licensed
 open-source claims that the current source and project terms do not establish.
 
-These brand files follow the repository's existing [license status](../LICENSE-STATUS.md).
-Their presence does not apply a new software or artwork license or assert trademark
-clearance. No third-party font files, logos, or reference images were bundled.
+Original brand files and recorded demonstration media use Apache-2.0 to the extent
+copyright or other licensable rights exist, as described in the
+[component license map](../LICENSES/README.md). This does not assert trademark
+clearance or grant rights in third-party material. No third-party font files,
+logos, or reference images were bundled.

@@ -792,7 +792,7 @@
     {
       "id": "M12-G06",
       "milestone": "M12",
-      "title": "Complete governance and licensing adoption",
+      "title": "Complete governance and distribution review",
       "type": "worker_goal",
       "status": "not_started",
       "assignment_status": "unassigned",
@@ -818,10 +818,10 @@
           "contribution": "This goal contributes only its explicit deliverable; full requirement acceptance requires all mapped goals and the original milestone gate."
         }
       ],
-      "outcome": "Record the responsible maintainers and actual extension governance/security decisions under the existing authority model. Apply and review the selected application, SDK and documentation licensing terms against the exact distribution; preserve current notices and unresolved grants until then.",
+      "outcome": "Record the responsible maintainers and actual extension governance/security decisions under the existing authority model. Review each future release or extension distribution against the applied component terms and retained third-party obligations; bind the review to the actual artifact and preserve required notices and source obligations.",
       "scope": [
         "Record the responsible maintainers and actual extension governance/security decisions under the existing authority model.",
-        "Apply and review the selected application, SDK and documentation licensing terms against the exact distribution; preserve current notices and unresolved grants until then."
+        "Review each future release or extension distribution against the applied component terms and retained third-party obligations; bind the review to the actual artifact and preserve required notices and source obligations."
       ],
       "scope_note": "Only the unfinished portion is active. Reuse the landed foundation described above; the original criteria, test contracts and formal dependencies still apply.",
       "non_goals": [
@@ -840,7 +840,7 @@
         "Inspect the current source and qualification record linked from docs/ARCHITECTURE.md and docs/QUALIFICATION.md.",
         "Bind this remaining scope to a bounded assignment and existing native modules; preserve the landed implementation.",
         "Record the responsible maintainers and actual extension governance/security decisions under the existing authority model.",
-        "Apply and review the selected application, SDK and documentation licensing terms against the exact distribution; preserve current notices and unresolved grants until then.",
+        "Review each future release or extension distribution against the applied component terms and retained third-party obligations; bind the review to the actual artifact and preserve required notices and source obligations.",
         "Run the smallest meaningful verification for the changed behavior and obtain independent review. Report actual evidence and remaining prerequisites without inferring formal acceptance."
       ],
       "acceptance_criteria": [
@@ -1055,10 +1055,10 @@
       "original_milestone_exit_criteria": [],
       "gate_requirement_ids": [],
       "all_product_test_results": "not_run",
-      "landed_context": "Agency/extension assurance preparation and machine-readable review checks exist. They do not constitute the actual human governance and license decisions.",
+      "landed_context": "Agency/extension assurance preparation and machine-readable review checks exist. Source license terms and contribution terms are applied under ADR-0066; this does not accept M12 or replace remaining governance, independent-extension, or artifact-specific distribution evidence.",
       "remaining_work": [
         "Record the responsible maintainers and actual extension governance/security decisions under the existing authority model.",
-        "Apply and review the selected application, SDK and documentation licensing terms against the exact distribution; preserve current notices and unresolved grants until then."
+        "Review each future release or extension distribution against the applied component terms and retained third-party obligations; bind the review to the actual artifact and preserve required notices and source obligations."
       ]
     },
     {

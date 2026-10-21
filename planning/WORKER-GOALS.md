@@ -32,7 +32,7 @@ All **949 behavioral specifications** and **216 requirement contracts** remain i
 |---|---|
 | [M00-G05](goals/M00/M00-G05.md) | Implement the PostgreSQL and React application profile |
 | [M07-G18](goals/M07/M07-G18.md) | Collect authorized real pilot observations |
-| [M12-G06](goals/M12/M12-G06.md) | Complete governance and licensing adoption |
+| [M12-G06](goals/M12/M12-G06.md) | Complete governance and distribution review |
 | [M12-G07](goals/M12/M12-G07.md) | Qualify an independently contributed extension |
 | [M12-G08](goals/M12/M12-G08.md) | Make the code-execution need and risk decision |
 | [M12-G09](goals/M12/M12-G09.md) | Implement a sandbox only after an explicit go decision |

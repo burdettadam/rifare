@@ -72,7 +72,9 @@ remain M00-G05/M00-G06 work with real product commands.
 
 Use Git-discovered paths; `.git` may be a file. Keep source checkpoints and concise
 decisions, and preserve evidence separately while required. The repository and
-bundle are local retention only; no hosted remote/protection was configured.
+bundle were local retention at this historical checkpoint. Current public source
+and CI adoption are described in [development](DEVELOPMENT.md); the original
+rehearsal did not configure hosted protections.
 
 ## Governing baseline
 

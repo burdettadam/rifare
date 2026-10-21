@@ -2,6 +2,8 @@
 
 # Commerce operations, on your terms.
 
+[![Development preview](https://github.com/burdettadam/rifare/actions/workflows/development-preview.yml/badge.svg?branch=development)](https://github.com/burdettadam/rifare/actions/workflows/development-preview.yml)
+
 **Rifare is building a merchant-owned platform for returns, exchanges, order changes, support, fulfillment, and repeat business.** Your policies shape the experience. Your business records stay under your control. Your choice of agents and models can change as your business grows.
 
 Start with what happens after checkout. Connect it to the warehouse, the next conversation, and the next sale.
@@ -9,6 +11,23 @@ Start with what happens after checkout. Connect it to the warehouse, the next co
 [Explore the product](#the-product-we-are-building) · [Run the preview](#try-rifare) · [Explore the architecture](#built-to-give-merchants-control) · [Follow the roadmap](docs/ROADMAP.md)
 
 > **Development preview.** The capabilities below describe Rifare's target product. Runnable local implementations are available today; connected services and production qualification are still in development. [See what runs now →](docs/PROJECT-STATUS.md)
+
+## Watch a refund recover from a lost response
+
+The refund source accepts the request, but its response disappears. Rifare keeps
+the original operation, holds further dispatch, and reconciles what happened.
+**One send attempt. The original result recovered.**
+
+[![Recorded terminal demo: a synthetic refund goes from unknown to accepted with one send attempt](docs/demos/refund-recovery.gif)](docs/demos/refund-recovery.mp4)
+
+*Recorded from the running local implementation with synthetic data. No external
+calls or real money movement. Acceptance and fixture settlement are separate;
+the exchange remains an uncommitted quotation.*
+
+[Watch the MP4](docs/demos/refund-recovery.mp4) · [Read the transcript](docs/demos/refund-recovery.txt) · [Recording details](docs/demos/README.md) · [Run it yourself](#try-rifare)
+
+After the setup below, run `npm run demo:recovery` for this guided walkthrough or
+`npm run demo:returns` for its machine-readable result.
 
 ## The product we are building
 
@@ -120,7 +139,7 @@ Run a small return-resolution demonstration today. It uses synthetic orders enti
 git clone --branch development https://github.com/burdettadam/rifare.git
 cd rifare
 npm ci --offline --ignore-scripts
-node --experimental-strip-types tools/demo-return-resolution.mts
+npm run demo:returns
 ```
 
 The demo allocates one return across a refund, store credit, and an exchange quotation. It deliberately loses a refund response, then reconciles the original operation:
@@ -138,7 +157,7 @@ The separate fixture settlement step does not move real money; the exchange rema
 For an interactive support and shipment-tracking view:
 
 ```sh
-node --experimental-strip-types tools/demo-support.mts --serve
+npm run demo:support -- --serve
 ```
 
 Open the printed URL and follow the [local session instructions](docs/TRY-RIFARE.md#open-the-support-and-tracking-views). The guide also covers policy customization, recovery demonstrations, and the basic smoke environment. `npm run dev` intentionally exits until the target application stack is qualified; use the explicit demo commands above.
@@ -163,6 +182,6 @@ The next recorded commerce increment is consolidation and custody continuity. Co
 
 ### License
 
-License application is still in progress. The selected direction is AGPL-3.0-only for the application and Apache-2.0 for separable SDKs, skills, and original developer documentation; it is not yet an applied grant. See [license status](LICENSE-STATUS.md) and [third-party notices](THIRD-PARTY-NOTICES.md).
+Rifare's original application code is licensed under **AGPL-3.0-only**. Separable interfaces, public skills, and original developer documentation use **Apache-2.0**, as defined in the [component license map](LICENSES/README.md). Retained upstream material keeps its own terms and notices. See [license status](LICENSE-STATUS.md), [contribution terms](.github/CONTRIBUTING.md), and [third-party notices](THIRD-PARTY-NOTICES.md).
 
 **Star Rifare to follow a merchant-owned approach to commerce operations.** [Browse the latest development →](https://github.com/burdettadam/rifare/commits/development/)

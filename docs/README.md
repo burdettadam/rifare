@@ -8,7 +8,7 @@ exchanges, service, fulfillment, customer relationships, and the next purchase.
 | Your next step | Guide |
 | --- | --- |
 | Understand the product ambition | [Rifare overview](../README.md) |
-| Run a local demonstration | [Try Rifare](TRY-RIFARE.md) |
+| Run a local demonstration | [Try Rifare](TRY-RIFARE.md) · [Recorded recovery](demos/README.md) |
 | See what is implemented and what is still targeted | [Project status](PROJECT-STATUS.md) |
 | Understand how the platform fits together | [Architecture](ARCHITECTURE.md) |
 | Explore the product roadmap | [Roadmap](ROADMAP.md) |
@@ -51,7 +51,8 @@ Detailed documents and planning materials have their own destinations.
 | [`clients/`](../clients/) | Agent and protocol clients |
 | [`examples/`](../examples/) | Synthetic merchant profiles and workflow examples |
 | [`migrations/`](../migrations/) | Database migrations |
-| [`docs/`](./) | Product guides, architecture, decisions, and artwork |
+| [`docs/`](./) | Product guides, architecture, decisions, artwork, and recorded demos |
+| [`LICENSES/`](../LICENSES/) | License texts and explicit application scope |
 | [`planning/`](../planning/README.md) | Remaining work, compact integration follow-ups, retained behavioral contracts and templates |
 | [`tests/`](../tests/) | Executable checks and retained fixtures |
 | [`tools/`](../tools/) | Demo commands and development utilities |
