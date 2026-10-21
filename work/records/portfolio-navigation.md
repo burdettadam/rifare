@@ -66,5 +66,40 @@ The same command produces the same failure on the unchanged imported
 does not include the expanded capability catalogue. This pre-existing product
 planning inconsistency is recorded, not hidden or waived by the layout work.
 
-Focused exact-candidate checks and final independent reviews are pending.
-Raw output belongs in ignored `evidence/portfolio-navigation/`.
+### Exact-candidate results
+
+Reviewed candidate: `acedc26a49ae74f55b8145361d48799c929714bc`.
+Tree: `d6aca57c64626283ad5c463f2a4b1ede7066c817`.
+
+Repository/link, generated-view, planning, workflow, distribution, and whitespace
+checks all passed. One bounded invocation ran `test_repository` and
+`test_browser_plan_adoption`: **28 tests passed in 9.383 seconds**, with no skips
+or failures. No product suite or full regression gate was run. The planning check
+retains all 216 requirements, 949 specifications, 281 goals, and 67 original
+scenarios. Raw output and the candidate binding are in ignored
+`evidence/portfolio-navigation/verification.json` and neighboring logs.
+
+Both independent nonauthor reviewers approved this exact candidate with no
+material blocker for the presentation/navigation scope:
+
+- `/root/scope_review` verified target/current claims, authority boundaries,
+  license and notice preservation, all frozen reference bytes, component metadata,
+  relocated registry paths, and the refreshed instruction/control digests.
+- `/root/layout_audit` verified all 337 Git renames, exact inventory membership,
+  unchanged behavioral specifications and 3,292 test registration objects, all
+  284 unchanged development-test files, frozen inputs, controls, and the actual
+  focused-check report. It independently confirmed the earlier benchmark gap.
+
+### Full-gate path migration boundary
+
+The trusted regression controller intentionally compares exact historical paths
+and capability contract locations. An older pinned baseline will flag these
+authorized renames. A future integration owner must review the supplied relocation
+map when migrating that baseline; this task neither rewrites the independently
+retained baseline nor weakens the controller. Independent preservation review
+and focused helper checks here are not a claim that the full gate passed.
+
+The final closure updates documentation only. Application code, tests, generated
+views, inventories, policies, and reviewed digest pins remain those of the exact
+candidate above. Remote retention is still blocked by the previously recorded
+GitHub integration write restriction; the updated bundle is the handoff path.

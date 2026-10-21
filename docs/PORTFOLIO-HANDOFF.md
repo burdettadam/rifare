@@ -67,6 +67,25 @@ tracking branch. If `development` has progressed, review the actual comparison
 and preserve its new work before integration. Merge through the normal repository
 review path when ready. This handoff does not create a release or deploy a service.
 
+## Verification and integration notes
+
+The target-positioning and layout candidate passed 28 focused repository/planning
+tests plus repository links, generated views, planning preservation, workflow,
+distribution inventory, and whitespace checks. Two independent reviewers approved
+the candidate. The [navigation work record](../work/records/portfolio-navigation.md)
+binds these results to the exact commit and preserves the review findings.
+
+Two boundaries remain explicit for the next integration owner:
+
+- The release-benchmark document check has the same support-envelope coverage
+  failure on the original development checkout: 44 historical dispositions do
+  not cover the expanded 57-target catalogue. This presentation change does not
+  waive or repair that separate planning gap.
+- The trusted full regression gate compares exact historical source paths. Its
+  old pinned baseline needs a reviewed path migration for the 337 renames; the
+  external handoff includes `RELOCATIONS.json`. This task preserves the controller
+  and its baseline and does not claim a full-gate pass.
+
 ## Files to use
 
 | Purpose | File |
