@@ -67,7 +67,9 @@ In the repository's **Settings → General → Social preview**, upload
 documents the accepted formats and upload location.
 
 From your profile, use **Customize your pins** and select `rifare` after integrating
-the presentation change. These profile and repository settings are separate from
+the presentation change; see GitHub's
+[pinning guide](https://docs.github.com/en/account-and-profile/how-tos/profile-customization/pinning-items-to-your-profile).
+These profile and repository settings are separate from
 the committed source. The suggested description, topics, uploaded social preview,
 and profile pin should be checked in GitHub when preparing the portfolio link.
 

@@ -1,6 +1,6 @@
 # Portfolio presentation refresh
 
-State: ready_for_review
+State: reviewed presentation candidate; ready for repository integration
 
 Assigned scope: the owner's request to generate Rifare logo/art, make the README
 marketing and user facing, and track the improvements in Git for portfolio use
@@ -61,8 +61,38 @@ browser executable, and its browser download returned invalid archives. No
 browser-rendering pass or product screenshot is claimed. The README illustrates
 the brand with generated art and provides the actual supported local commands.
 
-Raw local command output stays in ignored evidence. Concise final static checks,
-review outcomes, and any remaining tooling limitations are recorded at closure.
+Raw local command output stays in ignored evidence. No private session values,
+raw reports, or browser binaries are tracked.
+
+## Independent reviews and closure
+
+Both nonauthor reviewers approved exact presentation candidate
+`f9b94c3ae789b16c3516294eb99e037e36043eed` against the imported base, with no
+material findings:
+
+- `product_audit`, authority/security: inspected all changed paths, source-backed
+  instructions, claims, license boundaries, author identities, artwork, and
+  credential handling. No product tests, server starts, or edits in the review.
+- `regression_review`, preservation: all 1,909 baseline files remain present;
+  1,907 preserve identical Git objects and modes. Only the original README and
+  inventory changed, with twelve presentation files added. All earlier ordered
+  inventory members and component obligations remain. All 97 local Markdown
+  links/anchors and five asset manifests validated. No product suites or servers.
+
+Root's repository/link and distribution-inventory checks passed. The latter
+reviewed 1,921 files and remains an inventory-only result, with legal clearance
+and production qualification false. A trailing blank line in the prompt file
+was removed after the initial whitespace check; the final `git diff --check`
+passed. The JPEG upload export is 249,095 bytes; asset sizes, dimensions, hashes,
+transparency, and single-file ownership were checked.
+
+This closure adds these actual observations and the official profile-pinning
+reference. The reviewed README, artwork, tour, status, and inventory are unchanged.
+Direct terminal push lacks GitHub authentication; the connected GitHub tools can
+publish a presentation snapshot with the same reviewed files and base ancestry.
+When published that way, verify its tree against the final local tree. Local
+authoring commit identities and the published snapshot may differ because the
+connector supplies commit metadata.
 
 ## Handoff and acceptance boundary
 
