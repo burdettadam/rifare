@@ -48,6 +48,12 @@ and review status. The focused 60-test selection passed, as did plan generation,
 links, workflow, distribution and whitespace checks. Original active criteria,
 formal dependencies, release thresholds and acceptance records remain unchanged.
 
+Independent authority/scope and regression reviewers approved cleanup candidate
+`006bde5a4d799f745caff34d6bbf17783199f8bc`. Their one continuation finding was
+resolved by documenting how a compact integration entry becomes a bounded packet
+before the existing evidence workflow uses it. The final documentation commit
+records those reviews without changing runtime behavior or planning contracts.
+
 **Delivery state:** the completed changes are committed locally. The GitHub
 connection rejected its write request with HTTP 403, `Resource not accessible by
 integration`; no remote presentation branch or pull request was created. The

@@ -72,7 +72,16 @@ the existing workflow/evidence tools correctly require a packet at their trusted
 base. Planning maintenance, dispatch, current-plan and agent guidance now require
 promoting only the selected original contract into a bounded active packet and
 committing that assignment before choosing the execution base. The controllers
-remain unchanged. Final review of this documentation correction is pending.
+remain unchanged.
+
+Both independent reviewers approved corrected candidate
+`006bde5a4d799f745caff34d6bbf17783199f8bc`
+(tree `4b9b093c2572adfa4e089d1e78aa87e5561c77c2`):
+`landed_foundation_audit` for authority/scope and `retirement_regression_review`
+for regression. The continuation finding is resolved with no outstanding
+blocking findings. Reviewers confirmed the correction changes only five
+documentation files, so no test rerun was needed. This final documentation
+closure records those decisions; it changes no implementation or planning data.
 
 ## Existing limits
 
