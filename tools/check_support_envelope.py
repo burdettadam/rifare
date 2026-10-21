@@ -229,7 +229,9 @@ def validate_envelope(document: Any, root: Path | None = None) -> list[str]:
         boundary_goals.extend(strings(boundary.get('goals'), 'boundaries.goals', nonempty=True))
     if root is not None:
         try:
-            goals = {g['id'] for g in load_document(root/'planning/goals.json')['goals']}
+            # Implemented packets leave the backlog; their behavioral contracts
+            # retain historical ownership without granting qualification.
+            goals = {t['goal_id'] for t in load_document(root/'planning/test-specifications.json')['tests']}
             targets = {c['id']:c for c in load_document(root/'planning/capability-targets.json')['capabilities']}
             invariants = {i['id'] for i in load_document(root/'planning/invariants.json')['invariants']}
             if set(disposition_index) != set(targets):

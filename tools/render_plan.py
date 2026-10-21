@@ -1,180 +1,264 @@
 #!/usr/bin/env python3
-"""Generate static planning views. Live progress stays in the existing workflow/tracker."""
-from pathlib import Path
-from collections import defaultdict
-import json, html, hashlib, re, textwrap
+"""Render the remaining backlog; retained contracts do not imply acceptance."""
+from __future__ import annotations
+
 import argparse
-parser=argparse.ArgumentParser(description='Regenerate catalogue/card views from this planning baseline; does not execute or accept goals.')
-parser.add_argument('--root',type=Path,default=Path(__file__).resolve().parents[1])
-OUT=parser.parse_args().root.resolve()
-def load(p):return json.loads((OUT/p).read_text(encoding="utf-8"))
-def text(p,s):
- q=OUT/p;q.parent.mkdir(parents=True,exist_ok=True);q.write_text(s.strip()+'\n',encoding='utf-8')
-def js(p,o):text(p,json.dumps(o,indent=2,ensure_ascii=False))
-goals=load('planning/goals.json')['goals']; by={g['id']:g for g in goals}
-tests=load('planning/test-specifications.json')['tests'];ti={t['id']:t for t in tests}
-ms=load('planning/milestones.json')['milestones'];coverage=load('planning/requirement-coverage.json');reqs=coverage['requirements']
-original_count=coverage['source_count'];adopted_count=coverage.get('adopted_source_count',0)
-invs=load('planning/invariants.json')['invariants']
-# Static scheduling waves: not an autonomous scheduler or a calendar estimate.
-remaining=set(by);complete=set();waves=[]
-while remaining:
- ready=sorted(g for g in remaining if set(by[g]['depends_on'])<=complete)
- if not ready:raise ValueError('DAG cannot progress')
- groups=defaultdict(list)
- for gid in ready:groups[by[gid]['lane']].append(gid)
- waves.append({'wave':len(waves)+1,'goal_ids':ready,'shared_lane_conflicts':{k:v for k,v in groups.items() if len(v)>1},'note':'Dependency-ready only. Actual execution needs accepted prerequisites, approved scope and nonoverlapping concrete write paths; a wave is not a duration estimate.'})
- remaining-=set(ready);complete|=set(ready)
-js('planning/dependency-waves.json',{'status':'planning_only','waves':waves})
-js('planning/initial-ready-queue.json',{'state':'not_started','can_begin_drafting':['M00-G01'],'note':'Only the initial charter goal has no dependencies. No goal is preaccepted, assigned or authorized for external side effects.'})
+import html
+import json
+from pathlib import Path
 
-# Worker cards. All contain exact test oracles and a bounded task, not a prose-only issue title.
-for g in goals:
- gid=g['id'];lines=[f'# {gid} — {g["title"]}',
-  f'**Milestone:** {g["milestone"]} · **Type:** {g["type"]} · **Lane:** {g["lane"]} · **Risk:** {g["risk"]}',
-  f'**State:** not started · **Owner:** unassigned · **Execution:** {g["execution_mode"]}',
-  '> Planning specification only. No application test, provider operation or feature completion is claimed.',
-  '## Outcome',g['outcome'],'## Dependencies']
- lines += ['; '.join(f'[{d}](../{d[:3]}/{d}.md)' for d in g['depends_on']) or 'None. Prepare the charter and seek the actual authorized human decision.']
- dependency_note='Dependencies must be **accepted**, not merely assigned or implemented. Inspect current accepted evidence before starting.'
- if g.get('implementation_plan'):
-  dependency_note='These dependencies retain the formal qualification gates. A maintainer may separately assign bounded local preparation using current evidence; that assignment cannot mark a dependency or this goal accepted. Inspect current work records before starting.'
- lines += [dependency_note,'## Bounded ownership']
- lines += ['\n'.join('- '+v for v in g['scope']),g['scope_note'],'## Before starting','\n'.join(f'{i+1}. {s}' for i,s in enumerate(g['prerequisites']))]
- lines += ['## Worker instructions','\n'.join(f'{i+1}. {s}' for i,s in enumerate(g['worker_steps']))]
- if g.get('implementation_plan'):
-  plan=g['implementation_plan'];selection=plan['first_verification_slice']
-  lines += ['## Implementation map for assignment',
-   '**Planning state:** `'+plan['planning_state']+'`',
-   '### Existing paths to inspect and reuse','\n'.join('- `'+p+'`' for p in plan['reuse_paths']),
-   '### Proposed owned paths',plan['proposed_paths_note'],'\n'.join('- `'+p+'`' for p in plan['proposed_paths']),
-   '### First verification slice',
-   '**State:** `'+selection['state']+'` · **Executor:** '+selection['executor'],
-   '**Proposed whole files:** '+', '.join('`'+p+'`' for p in selection['whole_files']),
-   '**Stable specification IDs:** '+', '.join('`'+p+'`' for p in selection['case_ids']),
-   f'**Slice ceiling:** {selection["max_actual_cases"]} actual cases, {selection["max_whole_files"]} whole files, one {selection["invocation_deadline_seconds"]}-second invocation deadline.',
-   selection['scope'],selection['qualification_boundary'],
-   '### Goal-specific handoff','\n'.join('- '+p for p in plan['handoff'])]
- lines += ['## Do not change','\n'.join('- '+v for v in g['non_goals'])]
- lines += ['## Required behavior and permanent tests']
- for tid in g['new_test_ids']:
-  t=ti[tid];lines += [f'### {tid} — {t["kind"]}',f'**Fixture:** `{t["fixture_id"]}` · **Layer:** {t["level"]}',
-    '**Arrange and act:** '+t['given_when'], '**Assert:** '+t['then'], '**Independent oracle:** '+t['oracle'],
-    '**Proposed implementation:** `'+t['suggested_test_path']+'` (bind to actual project commands and native runner cases).']
-  if t.get('mutation_to_detect'):lines+=['**Deliberately broken behavior the test must catch:** '+t['mutation_to_detect']]
-  lines+=['**Proof requirement:** '+t['mutation_or_red_proof']]
- if g['source_seed_test_ids'] or g['extension_seed_test_ids']:
-  lines+=['## Retained original scenario obligations']
-  for tid in dict.fromkeys(g['source_seed_test_ids']+g['extension_seed_test_ids']):
-   t=ti[tid];label='primary owner' if tid in g['source_seed_test_ids'] else 'later-path extension'
-   lines += [f'### {tid} — {t["title"]} ({label})', '**Scenario:** '+t['scenario'],'**Expected:** '+t['expected_result']]
-  lines+=['Keep original expectations. Early simulated boundaries do not qualify later connected money, media or physical operations.']
- lines += ['## Evidence to submit',f'Proposed bundle: `evidence/{gid}/<candidate-sha>/`','\n'.join('- '+e for e in g['required_evidence'])]
- lines+=['## Completion and regression protection',
-  'The author reports **ready for review**, never self-accepts. A trusted integration owner/maintainer accepts after independent regression/security review. A tagged/public release requires human authorization.',
-  '**Protected feature:** `'+g['regression_contract']['stable_capability_id']+'`',
-  '**Test obligations:** '+', '.join('`'+i+'`' for i in g['required_test_ids']),
-  g['regression_contract']['baseline_policy'],g['regression_contract']['cumulative_selection'],g['regression_contract']['semantic_weakening_policy'],
-  '**Introduced cross-cutting invariants to retain:** '+(', '.join(g['invariant_ids']) or 'Establish the initial invariant/evidence baseline; do not invent prior acceptance.'),
-  'A skipped test, a changed denominator, a mutable screenshot baseline or a self-authored pass report is not regression evidence. Changes to protected expectations need independent review; current integrated-candidate results supersede old branch results.']
- if g['source_requirements']:
-  lines+=['## Original requirement traceability']
-  for r in g['source_requirements']:
-   lines += [f'**{r["id"]} — {r["title"]}:** '+r['original_acceptance_criteria'],r['contribution']]
- if g['type']=='milestone_acceptance':
-  lines += ['## Original milestone exit criteria','\n'.join(f'{i+1}. {s}' for i,s in enumerate(g['original_milestone_exit_criteria'])),
-   '**Requirement closure:** '+', '.join('`'+r+'`' for r in g['gate_requirement_ids']),
-   'Every relevant requirement is conjunctive across its mapped goals. Full regression selection comes from the current protected accepted baseline, including parallel work—not only this goal’s static dependency list.',
-   'An explicit human-approved optional capability exclusion changes the supported release envelope and remains visibly excluded/disabled. It is not a passing feature. Missing required v1 pilot evidence means beta/RC, not silently passed M07.']
- lines+=['## Handoff template',
-  '```text\nGoal: '+gid+'\nState: ready_for_review | blocked | needs_changes\nCandidate / base SHA:\nConcrete files changed:\nTests: new / retained / full-suite / connected (actual counts, results, paths)\nBehavioral red or targeted fault caught:\nObserved source effects and financial/physical stage:\nSkill/profile/policy/model/runtime/adapter versions:\nKnown limits and blocked prerequisites:\nIndependent reviewer references:\nRollback / recovery:\nNext dependency-ready goal:\n```',
-  '[Worker contract](../../../docs/WORKER-CONTRACT.md) · [Regression strategy](../../../docs/REGRESSION-STRATEGY.md) · [Evidence contract](../../../docs/EVIDENCE-CONTRACT.md)']
- text(f'planning/goals/{g["milestone"]}/{gid}.md','\n\n'.join(lines))
 
-# Milestone summaries and complete compact catalogue.
-catalogue=['# Rifare — AI-worker goal catalogue','**Planning date:** October 15, 2026. **State:** proposed, not implemented.',
-'190 bounded worker goals + 13 integration/acceptance gates = **203 goal packets**. **676 acceptance/regression specifications** include all 67 original scenarios. All 151 original requirements are preserved and mapped; their acceptance criteria are retained verbatim.',
-'Each linked packet includes dependencies, allowed ownership, explicit success/negative/regression assertions, a deliberate fault to detect, source requirement links and required evidence. Product tests remain not run.','## How to dispatch',
-'Read `docs/WORKER-CONTRACT.md`, inspect the actual repository and installed git-agent version, then hand a worker one dependency-ready packet. Start with **M00-G01**. Use existing worktrees, test commands and reviewers; do not build another scheduler. Dependency readiness does not authorize spending, production writes or publication.',
-'**First competitive v1:** M07. M08–M12 are broader suite expansion; M11 also depends on M08. Optional partner/code-mode capability must be explicitly qualified or remain excluded/disabled.','## Milestone index',
-'| Milestone | Outcome | Worker goals | Acceptance gate |\n|---|---|---:|---|']
-for m in ms:
- catalogue.append(f'| [{m["id"]}](milestones/{m["id"]}.md) | {m["title"]} | {m["worker_goal_count"]} | [{m["acceptance_goal_id"]}](goals/{m["id"]}/{m["acceptance_goal_id"]}.md) |')
-for m in ms:
- members=[g for g in goals if g['milestone']==m['id']]
- block=[f'## {m["id"]} — {m["title"]}',m['outcome'],
-  '**Prerequisite milestone gates:** '+(', '.join(d+'-G99' for d in m['depends_on']) or 'None.'),
-  '| Goal | Deliverable | Dependencies | Proof mode |\n|---|---|---|---|']
- for g in members:
-  block.append(f'| [{g["id"]}](goals/{m["id"]}/{g["id"]}.md) | {g["title"]} | '+(', '.join(g['depends_on']) if not g['id'].endswith('G99') else 'All milestone worker goals + prior milestone gates')+f' | {g["execution_mode"]} |')
- catalogue+=block
- per=[f'# {m["id"]} — {m["title"]}',m['outcome'],f'**Worker goals:** {m["worker_goal_count"]} · **Integration gate:** [{m["acceptance_goal_id"]}](../goals/{m["id"]}/{m["acceptance_goal_id"]}.md)',
-       '**Entry:** '+(', '.join(p+'-G99 accepted' for p in m['depends_on']) or 'Prepare the initial charter and obtain the real decision.'),
-       '## Dispatchable components','| Goal | Outcome | Lane |\n|---|---|---|']
- for g in members:
-  per.append(f'| [{g["id"]}](../goals/{m["id"]}/{g["id"]}.md) | {g["title"]} | {g["lane"]} |')
- per += ['## Required integrated demonstration',m['required_demo'],'## Original exit criteria','\n'.join('- '+v for v in m['exit_criteria']),
-         '## Evidence gate',m['exit_rule'],m['exclusion_rule'],
-         'A prior accepted component does not prove the integrated candidate still works. Re-run current applicable accepted tests, introduced invariants, affected connected-provider qualifications and the complete milestone journey.']
- text(f'planning/milestones/{m["id"]}.md','\n\n'.join(per))
-catalogue[2]=f"{sum(g['type']=='worker_goal' for g in goals)} bounded worker goals + {len(ms)} integration/acceptance gates = **{len(goals)} goal packets**. **{len(tests)} acceptance/regression specifications** include all {sum(t.get('kind')=='retained_source_scenario' for t in tests)} original scenarios. All {original_count} original requirements and {adopted_count} separately adopted requirements are preserved and mapped; their acceptance criteria are retained verbatim."
-if coverage.get('browser_adopted_source_count'):
- catalogue.insert(4,'**Latest additive planning update: October 19, 2026.** M23–M25 add browser decision work under ADR-0044. Read [the browser worker handoff](../docs/BROWSER-WORKER-HANDOFF.md) for the recommended next browser batch and current M14 continuation boundary. The initial M00 queue below remains a historical planning snapshot; use current work records for assignment.')
-text('planning/WORKER-GOALS.md','\n\n'.join(catalogue))
+def render(root: Path) -> None:
+    def load(path: str):
+        return json.loads((root / path).read_text(encoding='utf-8'))
 
-# Single offline HTML view: searchable, no remote assets or dependencies.
-styles='''*{box-sizing:border-box}body{margin:0;background:#f5f7fa;color:#152435;font:16px/1.55 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}header{background:#102c3f;color:#fff;padding:40px max(20px,calc((100vw - 1180px)/2))}main{max-width:1220px;margin:auto;padding:24px 20px 70px}h1{font-size:34px;line-height:1.15;margin:0 0 14px}h2{font-size:25px;margin-top:38px}h3{font-size:19px}a{color:#075a79}header a{color:#c4e9f2}.meta{font-size:14px;opacity:.86}.notice{border-left:4px solid #a57819;background:#fff5da;padding:14px 18px;margin:20px 0}.stats{display:flex;flex-wrap:wrap;gap:12px;margin:20px 0}.stat{background:#fff;border:1px solid #d5dfe6;border-radius:9px;padding:14px 20px;min-width:160px}.stat b{font-size:27px;display:block}.toolbar{position:sticky;top:0;z-index:10;background:#f5f7faf2;backdrop-filter:blur(8px);padding:12px 0;display:flex;gap:10px;flex-wrap:wrap}input,select{font:inherit;padding:11px 13px;border:1px solid #a8bac7;border-radius:6px}input{flex:1;min-width:220px}table{width:100%;border-collapse:collapse;background:white}td,th{text-align:left;vertical-align:top;border-bottom:1px solid #dfe6eb;padding:10px}th{background:#e7eef3}.goal{background:white;border:1px solid #cfdbe3;border-radius:8px;margin:12px 0;overflow:hidden}.goal summary{cursor:pointer;padding:16px 18px;font-weight:650}.goal[open] summary{background:#edf4f7;border-bottom:1px solid #d7e2e9}.content{padding:4px 20px 20px}.chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:10px}.chip{font-size:12px;border:1px solid #b9ccd8;border-radius:4px;padding:2px 7px;color:#32576e}code{background:#edf2f5;border-radius:3px;padding:1px 4px;font-size:.88em;overflow-wrap:anywhere}.test{border-left:3px solid #4a8799;background:#f4f8fa;padding:10px 14px;margin:12px 0}.test p{margin:7px 0}.quiet{color:#4e6170}li{margin:7px 0}.hidden{display:none!important}@media(max-width:700px){header{padding:28px 18px}h1{font-size:28px}main{padding:18px 14px}td,th{padding:7px;font-size:13px}.content{padding:5px 14px 18px}}@media print{.toolbar{position:static}body{background:white}.goal{break-inside:avoid}.goal summary{font-size:16px}header{background:white;color:#111}a{color:#111}}'''
-H=html.escape
-header='''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Rifare — Worker Goals</title><style>'''+styles+'''</style></head><body><header><div class="meta">RIFARE · DEVELOPMENT STEERING · OCTOBER 15, 2026</div><h1>AI-worker goals and regression evidence</h1><p>Bounded work. Independent proof. Cumulative feature protection.</p><div class="meta">A decomposition of the existing roadmap, not a claim that the application has been built.</div></header><main>'''
-parts=[header,'<div class="stats"><div class="stat"><b>190</b>Worker goals</div><div class="stat"><b>13</b>Milestone gates</div><div class="stat"><b>676</b>Test specifications</div><div class="stat"><b>151 / 151</b>Requirements mapped</div></div>',
-'<div class="notice"><strong>This catalogue is a planning baseline.</strong> Its test specifications remain not run; actual development observations are recorded separately in work records and candidate-bound evidence. The original roadmap and the ADR-0042 additions retain separate source provenance. Source-system qualification, human decisions and actual pilot observations cannot be replaced with simulated success.</div>',
-'<p>Start with <a href="#M00-G01">M00-G01</a>. Give each worker one packet after its dependencies are accepted. Use the installed git-agent workflow, ordinary project commands and one writer per isolated worktree. Every accepted feature adds protected regression obligations.</p>',
-'<p><a href="WORKER-GOALS.md">Complete Markdown catalogue</a> · <a href="goals.json">Machine-readable goals</a> · <a href="../docs/WORKER-CONTRACT.md">Worker contract</a> · <a href="../docs/REGRESSION-STRATEGY.md">Regression strategy</a> · <a href="../docs/EVIDENCE-CONTRACT.md">Evidence contract</a></p>',
-'<div class="toolbar"><input id="search" aria-label="Search goals" placeholder="Search goal, requirement, behavior, or test…"><select id="milestone" aria-label="Filter milestone"><option value="">All milestones</option>'+''.join('<option>'+m['id']+'</option>' for m in ms)+'</select><select id="mode" aria-label="Filter execution mode"><option value="">All proof modes</option>'+''.join('<option>'+v+'</option>' for v in sorted({g['execution_mode'] for g in goals}))+'</select></div><p class="quiet" id="count">203 goals displayed</p>',
-'<table><thead><tr><th>Milestone</th><th>Outcome</th><th>Workers + gate</th></tr></thead><tbody>']
-for m in ms:parts.append(f'<tr><td><a href="#section-{m["id"]}">{m["id"]}</a></td><td>{H(m["title"])}</td><td>{m["worker_goal_count"]} + 1</td></tr>')
-parts.append('</tbody></table>')
-for m in ms:
- parts.append(f'<section class="milestone-section" id="section-{m["id"]}" data-milestone="{m["id"]}"><h2>{m["id"]} — {H(m["title"])}</h2><p>{H(m["outcome"])}</p>')
- for g in [x for x in goals if x['milestone']==m['id']]:
-  gid=g['id'];search=H(' '.join([gid,g['title'],g['outcome'],' '.join(g['requirement_ids']),' '.join(g['required_test_ids'])]+[ti[t]['given_when']+' '+ti[t]['then'] for t in g['new_test_ids']]).lower())
-  parts.append(f'<details class="goal" id="{gid}" data-milestone="{g["milestone"]}" data-mode="{g["execution_mode"]}" data-search="{search}"><summary>{gid} · {H(g["title"])}</summary><div class="content">')
-  parts.append('<div class="chips">'+''.join(f'<span class="chip">{H(v)}</span>' for v in [g['lane'],g['risk']+' risk',g['execution_mode'],'not started'])+'</div>')
-  parts.append('<p><strong>Outcome:</strong> '+H(g['outcome'])+'</p>')
-  parts.append('<p><strong>Depends on:</strong> '+(', '.join(f'<a href="#{d}">{d}</a>' for d in g['depends_on']) or 'No prior goal; obtain the actual charter decision.')+'</p>')
-  parts.append('<p><strong>Owned scope:</strong> '+H('; '.join(g['scope']))+'. Proposed modules; bind to real repository paths.</p>')
-  if g.get('implementation_plan'):
-   plan=g['implementation_plan'];selection=plan['first_verification_slice']
-   parts.append('<h3>Implementation map for assignment</h3><p><strong>Existing paths:</strong> '+H(', '.join(plan['reuse_paths']))+'</p><p><strong>Proposed paths:</strong> '+H(', '.join(plan['proposed_paths']))+'</p><p>'+H(plan['proposed_paths_note'])+'</p><p><strong>First planned verification:</strong> '+H(', '.join(selection['whole_files']))+'; '+H(', '.join(selection['case_ids']))+'. '+H(selection['scope'])+'</p><p>'+H(selection['qualification_boundary'])+'</p>')
-  parts.append('<h3>Required tests and independent oracles</h3>')
-  for tid in g['new_test_ids']:
-   t=ti[tid];parts.append('<div class="test"><strong>'+H(tid)+' · '+H(t['kind'])+'</strong><p><strong>Arrange / act:</strong> '+H(t['given_when'])+'</p><p><strong>Assert:</strong> '+H(t['then'])+'</p>')
-   if t['mutation_to_detect']:parts.append('<p><strong>Broken behavior to detect:</strong> '+H(t['mutation_to_detect'])+'</p>')
-   parts.append('</div>')
-  if g['source_seed_test_ids'] or g['extension_seed_test_ids']:
-   parts.append('<h3>Original scenarios retained</h3>')
-   for sid in dict.fromkeys(g['source_seed_test_ids']+g['extension_seed_test_ids']):
-    t=ti[sid];parts.append('<p><strong>'+H(sid)+' · '+H(t['title'])+'</strong><br>'+H(t['scenario'])+' <strong>Expected:</strong> '+H(t['expected_result'])+'</p>')
-  parts.append('<h3>Evidence and acceptance</h3><ul>'+''.join('<li>'+H(v)+'</li>' for v in g['required_evidence'])+'</ul>')
-  parts.append('<p><strong>Preserve:</strong> '+H(g['regression_contract']['cumulative_selection'])+'</p>')
-  if g['source_requirements']:
-   parts.append('<h3>Source requirements</h3>')
-   for r in g['source_requirements']:parts.append('<p><strong>'+H(r['id'])+' · '+H(r['title'])+'</strong><br>'+H(r['original_acceptance_criteria'])+'</p>')
-  if g['original_milestone_exit_criteria']:
-   parts.append('<h3>Original milestone exit criteria</h3><ul>'+''.join('<li>'+H(c)+'</li>' for c in g['original_milestone_exit_criteria'])+'</ul>')
-  parts.append(f'<p><a href="goals/{g["milestone"]}/{gid}.md">Open complete worker packet</a></p></div></details>')
- parts.append('</section>')
-parts.append('''<script>
-const search=document.getElementById('search'), ms=document.getElementById('milestone'), mode=document.getElementById('mode');
-function filter(){let count=0;const q=search.value.toLowerCase().trim();document.querySelectorAll('.goal').forEach(g=>{const ok=(!q||g.dataset.search.includes(q))&&(!ms.value||g.dataset.milestone===ms.value)&&(!mode.value||g.dataset.mode===mode.value);g.classList.toggle('hidden',!ok);if(ok)count++;});document.querySelectorAll('.milestone-section').forEach(s=>s.classList.toggle('hidden',!s.querySelector('.goal:not(.hidden)')));document.getElementById('count').textContent=count+' goals displayed';}
-[search,ms,mode].forEach(e=>e.addEventListener('input',filter));
-function reveal(){const id=decodeURIComponent(location.hash.slice(1)),e=document.getElementById(id);if(e&&e.classList.contains('goal')){search.value='';ms.value='';mode.value='';filter();e.open=true;e.scrollIntoView({block:'start'});}}
-window.addEventListener('hashchange',reveal);reveal();
-</script></main></body></html>''')
-markup='\n'.join(parts)
-markup=markup.replace('<b>190</b>Worker goals',f"<b>{sum(g['type']=='worker_goal' for g in goals)}</b>Worker goals").replace('<b>13</b>Milestone gates',f'<b>{len(ms)}</b>Milestone gates').replace('<b>676</b>Test specifications',f'<b>{len(tests)}</b>Test specifications').replace('<b>151 / 151</b>Requirements mapped',f'<b>{len(reqs)} / {len(reqs)}</b>Requirements mapped').replace('203 goals displayed',f'{len(goals)} goals displayed')
-if coverage.get('browser_adopted_source_count'):
- markup=markup.replace('The original roadmap and the ADR-0042 additions retain separate source provenance.','The original roadmap, ADR-0042 additions and ADR-0044 browser additions retain separate source provenance.')
- markup=markup.replace('<div class="toolbar">','<p><strong>Browser roadmap added October 19, 2026.</strong> Read <a href="../docs/BROWSER-WORKER-HANDOFF.md">the M23–M25 worker handoff</a> for current M14 progress and the recommended browser batch. The initial M00 dispatch text remains a historical baseline, not a reset of completed work.</p><div class="toolbar">',1)
-text('planning/WORKER-GOALS.html',markup)
-print('Rendered',len(goals),'goal packets,',len(ms),'milestone sheets and searchable HTML.')
+    def write(path: str, content: str) -> None:
+        target = root / path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(content.strip() + '\n', encoding='utf-8')
+
+    def bullets(items) -> str:
+        return '\n'.join('- ' + item for item in items)
+
+    def numbered(items: list[str]) -> str:
+        return '\n'.join(f'{number}. {item}' for number, item in enumerate(items, 1))
+
+    def cell(value: str) -> str:
+        return value.replace('|', '\\|').replace('\n', ' ')
+
+    plan = load('planning/goals.json')
+    goals = plan['goals']
+    by_id = {goal['id']: goal for goal in goals}
+    integration = plan.get('integration_work', [])
+    integration_by_goal = {}
+    for row in integration:
+        for goal_id in row['related_original_goal_ids']:
+            integration_by_goal.setdefault(goal_id, row['owner_goal_id'])
+    tests = load('planning/test-specifications.json')['tests']
+    by_test = {test['id']: test for test in tests}
+    milestones = load('planning/milestones.json')['milestones']
+    requirements = load('planning/requirement-coverage.json')['requirements']
+    worker_count = sum(goal['type'] == 'worker_goal' for goal in goals)
+    gate_count = sum(goal['type'] == 'milestone_acceptance' for goal in goals)
+
+    def dependency(goal_id: str, packet_prefix: str, catalogue: str) -> str:
+        if goal_id in by_id:
+            return f'[{goal_id}]({packet_prefix}{by_id[goal_id]["milestone"]}/{goal_id}.md)'
+        if goal_id in integration_by_goal:
+            owner = integration_by_goal[goal_id]
+            return f'[{goal_id} — remaining integration]({catalogue}#integration-{owner.lower()})'
+        return f'`{goal_id}` (historical contract)'
+
+    # Only active packets are generated. Retired implementation instructions live
+    # in Git; their executable tests and behavioral specifications remain current.
+    for goal in goals:
+        goal_id = goal['id']
+        followup = goal.get('remaining_work', [])
+        lines = [f'# {goal_id} — {goal["title"]}',
+                 f'**Milestone:** {goal["milestone"]} · **Type:** {goal["type"]} · '
+                 f'**Lane:** {goal["lane"]} · **Risk:** {goal["risk"]}',
+                 f'**State:** remaining work · **Execution:** {goal["execution_mode"]}',
+                 '> This packet describes outstanding work. Its presence, removal, or rendered state '
+                 'does not establish formal acceptance, production qualification, or executed tests.',
+                 '## Outcome', goal['outcome']]
+        if goal.get('landed_context'):
+            lines += ['## Existing implementation', goal['landed_context']]
+        if followup:
+            lines += ['## Remaining work', bullets(followup)]
+        lines += ['## Dependencies',
+                  '; '.join(dependency(item, '../', '../../WORKER-GOALS.md')
+                            for item in goal['depends_on']) or 'No prior goal dependency.',
+                  'Formal dependencies still require accepted evidence. A historical contract is not an '
+                  'accepted prerequisite; removal of an implementation packet does not close its qualification gate.',
+                  '[Architecture](../../../docs/ARCHITECTURE.md) · '
+                  '[Qualification](../../../docs/QUALIFICATION.md) · [Work records](../../../work/README.md)',
+                  '## Bounded ownership', bullets(goal['scope']), goal['scope_note']]
+        if not followup:
+            lines += ['## Before starting', numbered(goal['prerequisites']),
+                      '## Worker instructions', numbered(goal['worker_steps'])]
+        if goal.get('implementation_plan'):
+            implementation = goal['implementation_plan']
+            selection = implementation['first_verification_slice']
+            lines += ['## Implementation map for assignment',
+                      '**Planning state:** `' + implementation['planning_state'] + '`',
+                      '### Existing paths to inspect and reuse',
+                      bullets('`' + path + '`' for path in implementation['reuse_paths']),
+                      '### Proposed owned paths', implementation['proposed_paths_note'],
+                      bullets('`' + path + '`' for path in implementation['proposed_paths']),
+                      '### First verification slice',
+                      '**State:** `' + selection['state'] + '` · **Executor:** ' + selection['executor'],
+                      '**Proposed whole files:** ' + ', '.join('`' + path + '`' for path in selection['whole_files']),
+                      '**Stable specification IDs:** ' + ', '.join('`' + identity + '`' for identity in selection['case_ids']),
+                      f'**Slice ceiling:** {selection["max_actual_cases"]} actual cases, '
+                      f'{selection["max_whole_files"]} whole files, one '
+                      f'{selection["invocation_deadline_seconds"]}-second invocation deadline.',
+                      selection['scope'], selection['qualification_boundary'],
+                      '### Goal-specific handoff', bullets(implementation['handoff'])]
+        lines += ['## Do not change', bullets(goal['non_goals']),
+                  '## Preserved acceptance criteria', bullets(goal.get('acceptance_criteria', [])),
+                  '## Required behavior and permanent tests']
+        for identity in goal['new_test_ids']:
+            test = by_test[identity]
+            lines += [f'### {identity} — {test["kind"]}',
+                      f'**Fixture:** `{test["fixture_id"]}` · **Layer:** {test["level"]}',
+                      '**Arrange and act:** ' + test['given_when'],
+                      '**Assert:** ' + test['then'],
+                      '**Independent oracle:** ' + test['oracle'],
+                      '**Proposed implementation:** `' + test['suggested_test_path']
+                      + '` (bind to actual project commands and native runner cases).']
+            if test.get('mutation_to_detect'):
+                lines += ['**Deliberately broken behavior the test must catch:** ' + test['mutation_to_detect']]
+            lines += ['**Proof requirement:** ' + test['mutation_or_red_proof']]
+        seeds = list(dict.fromkeys(goal['source_seed_test_ids'] + goal['extension_seed_test_ids']))
+        if seeds:
+            lines += ['## Retained original scenario obligations']
+            for identity in seeds:
+                test = by_test[identity]
+                label = 'primary owner' if identity in goal['source_seed_test_ids'] else 'later-path extension'
+                lines += [f'### {identity} — {test["title"]} ({label})',
+                          '**Scenario:** ' + test['scenario'], '**Expected:** ' + test['expected_result']]
+        contract = goal['regression_contract']
+        lines += ['## Evidence and regression protection',
+                  f'Proposed bundle: `evidence/{goal_id}/<candidate-sha>/`',
+                  bullets(goal['required_evidence']),
+                  '**Protected feature:** `' + contract['stable_capability_id'] + '`',
+                  '**Test obligations:** ' + ', '.join('`' + identity + '`' for identity in goal['required_test_ids']),
+                  contract['baseline_policy'], contract['cumulative_selection'], contract['semantic_weakening_policy'],
+                  '**Cross-cutting invariants:** ' + (', '.join(goal['invariant_ids']) or 'Retain the current invariant baseline.'),
+                  'The author reports ready for review. A trusted maintainer accepts after the required independent '
+                  'reviews. Simulated boundaries do not qualify connected money, media, physical operations, or a release.']
+        if goal['source_requirements']:
+            lines += ['## Original requirement traceability']
+            for requirement in goal['source_requirements']:
+                lines += [f'**{requirement["id"]} — {requirement["title"]}:** '
+                          + requirement['original_acceptance_criteria'], requirement['contribution']]
+        if goal['type'] == 'milestone_acceptance':
+            lines += ['## Original milestone exit criteria', numbered(goal['original_milestone_exit_criteria']),
+                      '**Requirement closure:** ' + ', '.join('`' + identity + '`' for identity in goal['gate_requirement_ids']),
+                      'Requirements remain conjunctive across their mapped implementation and qualification obligations. '
+                      'An exclusion is not a passing feature; missing required evidence leaves the release unqualified.']
+        lines += ['[Worker contract](../../../docs/WORKER-CONTRACT.md) · '
+                  '[Regression strategy](../../../docs/REGRESSION-STRATEGY.md) · '
+                  '[Evidence contract](../../../docs/EVIDENCE-CONTRACT.md) · '
+                  '[Work record template](../../templates/GOAL-WORK-RECORD.md)']
+        write(f'planning/goals/{goal["milestone"]}/{goal_id}.md', '\n\n'.join(lines))
+
+    catalogue = ['# Rifare — remaining work',
+                 f'**{worker_count} worker follow-ups · {gate_count} integration/acceptance gates · '
+                 f'{len(integration)} connected-adapter follow-ups.** '
+                 f'{len(goals)} detailed packets across {len(milestones)} milestone groups.',
+                 'Implemented work is documented in [the architecture](../docs/ARCHITECTURE.md) and Git history. '
+                 'The backlog keeps unfinished implementation and qualification visible. '
+                 'Retiring a packet does not accept its historical dependencies or qualify a release.',
+                 f'All **{len(tests)} behavioral specifications** and **{len(requirements)} requirement contracts** remain '
+                 'in [the specification inventory](test-specifications.json) and '
+                 '[requirement traceability](requirement-coverage.json). Native tests and independent oracles remain protected.',
+                 '[Development guide](../docs/DEVELOPMENT.md) · [Qualification](../docs/QUALIFICATION.md) · '
+                 '[Work records](../work/README.md) · '
+                 '[Machine-readable backlog](goals.json) · [Searchable index](WORKER-GOALS.html)',
+                 '## Detailed follow-ups',
+                 '| Milestone group | Remaining workers | Active acceptance gate |\n|---|---:|---|']
+    for milestone in milestones:
+        identity = milestone['id']
+        gate = milestone.get('acceptance_goal_id')
+        gate_link = f'[{gate}](goals/{identity}/{gate}.md)' if gate else 'Qualification obligations retained separately'
+        catalogue[-1] += (f'\n| [{identity} — {cell(milestone["title"])}](milestones/{identity}.md) | '
+                          f'{milestone["worker_goal_count"]} | {gate_link} |')
+        members = [goal for goal in goals if goal['milestone'] == identity]
+        lines = [f'# {identity} — {milestone["title"]}', milestone['outcome'],
+                 f'**Remaining workers:** {milestone["worker_goal_count"]} · '
+                 + (f'**Active gate:** [{gate}](../goals/{identity}/{gate}.md)' if gate
+                    else '**Active gate:** none; historical release obligations remain below.'),
+                 '**Historical prerequisite milestones:** ' + (', '.join(milestone['depends_on']) or 'None.'),
+                 'Milestone membership tracks remaining work. It does not assert that predecessor gates or the '
+                 'original release criteria have been accepted.',
+                 '## Remaining packets', '| Goal | Deliverable | Lane |\n|---|---|---|']
+        for goal in members:
+            lines[-1] += (f'\n| [{goal["id"]}](../goals/{identity}/{goal["id"]}.md) | '
+                          f'{cell(goal["title"])} | {cell(goal["lane"])} |')
+        lines += ['## Preserved qualification obligations', milestone['required_demo'],
+                  bullets(milestone['exit_criteria']), milestone['exit_rule'], milestone['exclusion_rule'],
+                  '[Architecture](../../docs/ARCHITECTURE.md) · '
+                  '[Qualification](../../docs/QUALIFICATION.md) · [Work records](../../work/README.md) · '
+                  '[Remaining-work index](../WORKER-GOALS.md)']
+        write(f'planning/milestones/{identity}.md', '\n\n'.join(lines))
+    catalogue += ['## Packet index', '| Goal | Remaining deliverable |\n|---|---|']
+    for goal in goals:
+        catalogue[-1] += f'\n| [{goal["id"]}](goals/{goal["milestone"]}/{goal["id"]}.md) | {cell(goal["title"])} |'
+    if integration:
+        catalogue += ['## Integration follow-ups',
+                      'Reuse the landed lifecycle, authority, privacy, and regression code. These rows identify '
+                      'connections that still need implementation; fixture-backed source paths do not supply a live adapter. '
+                      'Original goal IDs identify preserved contracts, not new implementation packets.',
+                      '| Original owner | Remaining connection | Existing implementation and evidence |\n|---|---|---|']
+        for row in integration:
+            owner = row['owner_goal_id']
+            paths = '<br>'.join(f'[{path}](../{path})' for path in row['evidence_paths'])
+            catalogue[-1] += (f'\n| <a id="integration-{owner.lower()}"></a>`{owner}` | '
+                              f'{cell(row["remaining_outcome"])} | {paths} |')
+    write('planning/WORKER-GOALS.md', '\n\n'.join(catalogue))
+
+    # A compact, offline index links to the one detailed packet for each task.
+    escape = html.escape
+    styles = '''*{box-sizing:border-box}body{margin:0;background:#f5f7fa;color:#152435;font:16px/1.55 system-ui,sans-serif}header{background:#102c3f;color:white;padding:36px max(20px,calc((100vw - 1180px)/2))}main{max-width:1220px;margin:auto;padding:24px 20px 60px}h1{font-size:36px;line-height:1.15;margin:0 0 12px}h2{margin-top:32px}a{color:#075a79}.meta{font-size:14px;opacity:.85}.notice{border-left:4px solid #a57819;background:#fff5da;padding:12px 18px}.toolbar{display:flex;flex-wrap:wrap;gap:10px;margin:24px 0 12px}input,select{font:inherit;padding:10px;border:1px solid #a8bac7;border-radius:6px}input{flex:1;min-width:220px}table{width:100%;border-collapse:collapse;background:white}td,th{text-align:left;vertical-align:top;border-bottom:1px solid #dfe6eb;padding:12px}th{background:#e7eef3}code{font-size:.9em;overflow-wrap:anywhere}.quiet{color:#4e6170;font-size:14px}.hidden{display:none!important}@media(max-width:700px){header{padding:28px 18px}h1{font-size:28px}main{padding:18px 12px}td,th{padding:8px;font-size:14px}}'''
+    parts = ['<!doctype html><html lang="en"><head><meta charset="utf-8">'
+             '<meta name="viewport" content="width=device-width,initial-scale=1">'
+             '<title>Rifare — Remaining work</title><style>' + styles + '</style></head><body>',
+             '<header><div class="meta">RIFARE · DEVELOPMENT BACKLOG</div>'
+             '<h1>What remains to build and qualify</h1>'
+             f'<p>{len(goals)} detailed packets · {len(integration)} connected-adapter follow-ups · '
+             f'{len(tests)} retained behavioral specifications</p></header><main>',
+             '<p class="notice">Implemented work lives in the architecture and Git history. '
+             'Historical dependencies and release criteria remain obligations; removing a packet does not accept them.</p>',
+             '<p><a href="../docs/ARCHITECTURE.md">Architecture</a> · '
+             '<a href="../docs/QUALIFICATION.md">Qualification</a> · '
+             '<a href="../work/README.md">Work records</a> · '
+             '<a href="WORKER-GOALS.md">Markdown index</a> · '
+             '<a href="goals.json">Machine-readable backlog</a> · '
+             '<a href="test-specifications.json">Retained specifications</a></p>']
+    filters = sorted({goal['milestone'] for goal in goals} | {row['owner_goal_id'][:3] for row in integration})
+    parts += ['<div class="toolbar"><input id="search" aria-label="Search remaining work" '
+              'placeholder="Search capability, goal, or remaining connection…">'
+              '<select id="milestone" aria-label="Filter milestone"><option value="">All milestones</option>'
+              + ''.join('<option>' + escape(identity) + '</option>' for identity in filters)
+              + '</select></div><p class="quiet" id="count"></p>',
+              '<h2>Detailed follow-ups</h2><table><thead><tr><th>Goal</th><th>Remaining deliverable</th>'
+              '<th>Proof mode</th></tr></thead><tbody>']
+    for goal in goals:
+        search = escape(' '.join([goal['id'], goal['title'], goal['outcome']] + goal.get('remaining_work', [])).lower())
+        parts.append(f'<tr class="work-item" id="{goal["id"]}" data-milestone="{goal["milestone"]}" '
+                     f'data-search="{search}"><td><a href="goals/{goal["milestone"]}/{goal["id"]}.md">'
+                     f'{goal["id"]}</a></td><td>{escape(goal["title"])}'
+                     f'<div class="quiet">{escape(goal["outcome"])}</div></td>'
+                     f'<td>{escape(goal["execution_mode"])}</td></tr>')
+    parts.append('</tbody></table>')
+    if integration:
+        parts += ['<h2 id="integration-follow-ups">Integration follow-ups</h2><p>Reuse the landed lifecycle and protected native tests. '
+                  'Fixture-backed source paths do not supply a live adapter.</p>'
+                  '<table><thead><tr><th>Original owner</th><th>Remaining connection</th>'
+                  '<th>Existing implementation and evidence</th></tr></thead><tbody>']
+        for row in integration:
+            owner = row['owner_goal_id']
+            search = escape(' '.join([owner, row['remaining_outcome'], row['finding']]
+                                    + row['related_original_goal_ids']).lower())
+            paths = '<br>'.join(f'<a href="../{escape(path)}"><code>{escape(path)}</code></a>'
+                                for path in row['evidence_paths'])
+            parts.append(f'<tr class="work-item" id="integration-{owner.lower()}" '
+                         f'data-milestone="{owner[:3]}" data-search="{search}"><td><code>{owner}</code></td>'
+                         f'<td>{escape(row["remaining_outcome"])}<div class="quiet">{escape(row["finding"])}</div></td>'
+                         f'<td>{paths}</td></tr>')
+        parts.append('</tbody></table>')
+    parts.append('''<script>const search=document.getElementById('search'),milestone=document.getElementById('milestone'),items=[...document.querySelectorAll('.work-item')];function filter(){const query=search.value.toLowerCase().trim();let visible=0;for(const item of items){const show=(!milestone.value||item.dataset.milestone===milestone.value)&&(!query||item.dataset.search.includes(query));item.classList.toggle('hidden',!show);if(show)visible++;}document.getElementById('count').textContent=visible+' remaining-work entries shown';}search.addEventListener('input',filter);milestone.addEventListener('change',filter);filter();</script></main></body></html>''')
+    write('planning/WORKER-GOALS.html', '\n'.join(parts))
+    print(json.dumps({'rendered_goal_packets': len(goals), 'rendered_milestone_groups': len(milestones),
+                      'integration_followups': len(integration), 'retained_specifications': len(tests)}))
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--root', type=Path, default=Path(__file__).resolve().parents[1])
+    render(parser.parse_args().root.resolve())
+
+
+if __name__ == '__main__':
+    main()

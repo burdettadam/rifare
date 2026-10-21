@@ -1,6 +1,13 @@
 # Decisions
 
-No product decision is approved by this bootstrap. Create reviewed records from `templates/ADR.md`. Record the actual decision-maker, date, source/context, affected IDs and consequences. Do not replace earlier accepted controls retroactively.
+Create reviewed records from [`ADR.md`](../../planning/templates/ADR.md). Record the actual decision-maker, date, source/context, affected IDs and consequences. Preserve earlier decisions in their historical context rather than replacing accepted controls retroactively.
+
+## Current planning maintenance
+
+[ADR-0065](0065-retire-landed-planning.md) records the owner's instruction to retire
+landed implementation plans, keep unfinished code and qualification visible, and
+use current architecture plus Git history for continuity. It preserves the full
+behavioral and executable test contracts.
 
 
 ## Browser roadmap adoption

@@ -18,13 +18,24 @@ class PlanStructureTests(unittest.TestCase):
         self.d['coverage']['requirements'][0]['worker_goal_ids']=[]
         self.assertTrue(any('orphan' in e for e in validate_documents(self.d)))
     def test_cycle_fails(self):
-        self.d['goals']['goals'][0]['depends_on']=['M00-G99']
+        goal=self.d['goals']['goals'][0]
+        goal['depends_on']=[goal['id']]
         self.assertTrue(any('cycle' in e for e in validate_documents(self.d)))
     def test_unknown_dependency_fails(self):
         self.d['goals']['goals'][0]['depends_on']=['M99-G01']
         self.assertTrue(any('invalid dependency' in e for e in validate_documents(self.d)))
+        integration=copy.deepcopy(self.original)
+        integration['goals']['integration_work'][0]['owner_goal_id']='M99-G01'
+        self.assertTrue(any('invalid/duplicate integration owner' in e for e in validate_documents(integration)))
+        for path in ('../outside.mts','/absolute.mts'):
+            integration=copy.deepcopy(self.original)
+            integration['goals']['integration_work'][0]['evidence_paths']=[path]
+            self.assertTrue(any('invalid integration evidence paths' in e for e in validate_documents(integration)))
     def test_missing_negative_test_fails(self):
-        self.d['tests']['tests'][1]['kind']='positive'
+        goal=self.d['goals']['goals'][0]
+        negative=next(t for t in self.d['tests']['tests']
+                      if t['id'] in goal['new_test_ids'] and t['kind']=='negative')
+        negative['kind']='positive'
         self.assertTrue(any('missing positive/negative' in e for e in validate_documents(self.d)))
     def test_false_product_pass_fails(self):
         self.d['tests']['tests'][0]['executed']=True
@@ -38,9 +49,11 @@ class PlanStructureTests(unittest.TestCase):
         self.d['coverage']['requirements'][0]['acceptance_criteria']='No protection needed'
         self.assertTrue(any('original acceptance criterion changed' in e for e in validate_documents(self.d)))
     def test_gate_missing_component_fails(self):
-        gate=next(x for x in self.d['goals']['goals'] if x['id']=='M00-G99')
-        gate['depends_on'].remove('M00-G08')
-        self.assertTrue(any('gate omits' in e for e in validate_documents(self.d)))
+        for gate_id,worker_id in (('M23-G99','M23-G05'),('M20-G99','M20-G03')):
+            candidate=copy.deepcopy(self.original)
+            gate=next(x for x in candidate['goals']['goals'] if x['id']==gate_id)
+            gate['depends_on'].remove(worker_id)
+            self.assertTrue(any('gate omits' in e for e in validate_documents(candidate)))
     def test_missing_regression_fault_fails(self):
         self.d['tests']['tests'][2]['mutation_to_detect']=None
         self.assertTrue(any('missing fault' in e for e in validate_documents(self.d)))
@@ -57,6 +70,20 @@ class PlanStructureTests(unittest.TestCase):
     def test_frozen_addition_cannot_replace_an_original_requirement(self):
         self.d['adopted_requirements']['requirements'][0]['id']=self.d['original_requirements']['items'][0]['id']
         self.assertTrue(any('frozen addition changed' in e for e in validate_documents(self.d)))
+    def test_retired_packets_keep_historical_contract_validation(self):
+        contracts=copy.deepcopy(self.d['tests'])
+        coverage=copy.deepcopy(self.d['coverage'])
+        self.d['goals']['goals']=[g for g in self.d['goals']['goals'] if g['milestone']!='M23']
+        self.d['milestones']['milestones']=[m for m in self.d['milestones']['milestones'] if m['id']!='M23']
+        self.assertEqual(validate_documents(self.d),[])
+        self.assertEqual(self.d['tests'],contracts)
+        self.assertEqual(self.d['coverage'],coverage)
+        gate=next(g for g in self.d['goals']['goals'] if g['id']=='M24-G99')
+        self.assertIn('M23-G99',gate['depends_on'])
+    def test_followup_group_cannot_hide_present_integration_gate(self):
+        milestone=next(m for m in self.d['milestones']['milestones'] if m['id']=='M23')
+        milestone['acceptance_goal_id']=None
+        self.assertTrue(any('inconsistent integration gate' in e for e in validate_documents(self.d)))
 
 class InventoryTests(unittest.TestCase):
     def setUp(self):

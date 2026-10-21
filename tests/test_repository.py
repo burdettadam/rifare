@@ -1,4 +1,4 @@
-"""Tests of repository packaging and generated-plan integrity, not commerce behavior."""
+"""Tests of repository packaging and remaining-work views, not commerce behavior."""
 from __future__ import annotations
 
 import json
@@ -66,9 +66,11 @@ class RepositoryTests(unittest.TestCase):
         self.assert_mutation_rejected('planning/project.json', json.dumps(data), 'cannot claim product tests')
 
     def test_initial_assignment_cannot_be_fabricated(self):
-        data = json.loads((self.copy / 'planning/goal-state.json').read_text(encoding='utf-8'))
-        data['goals']['M00-G01']['owner'] = 'imaginary-worker'
-        self.assert_mutation_rejected('planning/goal-state.json', json.dumps(data), 'cannot claim assignment')
+        # The old assignment snapshot is retired. Its replacement reports actual
+        # backlog counts without inventing completion, ownership or execution.
+        data = json.loads((self.copy / 'planning/project.json').read_text(encoding='utf-8'))
+        data['counts']['worker_goals'] += 1
+        self.assert_mutation_rejected('planning/project.json', json.dumps(data), 'counts must match')
 
     def test_missing_capability_target_fails(self):
         data = json.loads((self.copy / 'planning/capability-targets.json').read_text(encoding='utf-8'))
@@ -95,7 +97,8 @@ class RepositoryTests(unittest.TestCase):
         self.assertEqual(check_generated(ROOT), [])
 
     def test_generated_packet_edit_is_detected(self):
-        path = self.copy / 'planning/goals/M00/M00-G01.md'
+        goal = json.loads((self.copy / 'planning/goals.json').read_text())['goals'][0]
+        path = self.copy / 'planning/goals' / goal['milestone'] / (goal['id'] + '.md')
         original = path.read_bytes()
         try:
             path.write_text('Changed only a generated packet.\n', encoding='utf-8')
@@ -105,6 +108,7 @@ class RepositoryTests(unittest.TestCase):
 
     def test_orphan_goal_packet_is_detected(self):
         path = self.copy / 'planning/goals/M00/M00-G98.md'
+        path.parent.mkdir(parents=True, exist_ok=True)
         try:
             path.write_text('Orphan rendered packet.\n', encoding='utf-8')
             self.assertTrue(any('Orphan generated view' in e for e in check_generated(self.copy)))

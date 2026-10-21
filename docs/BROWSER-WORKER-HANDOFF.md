@@ -2,9 +2,11 @@
 
 This is the development handoff for the adopted M23–M25 expansion. It builds on
 the reviewed M14 local checkpoint, `93769a3`, and preserves all earlier work.
-The adoption adds **15 worker goals, three G99 assessments, 15 requirements and
-69 behavioral specifications**. The complete project catalogue now contains
-26 milestones, 281 goal packets, 216 requirements and 949 specifications.
+The adoption added **15 worker goals, three G99 assessments, 15 requirements and
+69 behavioral specifications**. Those browser scopes remain active. Completed
+local plans elsewhere have since been retired under ADR-0065; the current
+[planning index](../planning/README.md) describes remaining work, while all 216
+requirement contracts and 949 behavioral specifications are retained.
 
 The specifications are development instructions, not executed tests. Browser
 implementation, model downloads, actual-device inference and formal acceptance
@@ -28,12 +30,11 @@ concrete nonoverlapping paths. Begin with the model/contract evidence and
 browser-safe boundary; the loader, server intake and privacy paths must agree
 on those contracts before integration.
 
-This recommendation is separate from the historical initial queue and the
-numerical roadmap. M15-G01 remains the earliest unassigned existing sequence
-entry. M15–M22 are retained and have not been skipped or accepted. M14 has a
-bounded local implementation; its formal and connected qualification remains
-open. The new browser goals are unassigned until the maintainer records the next
-bounded implementation batch under the owner's delegation.
+This recommendation identifies a browser lane, separate from the next commerce
+increment in [the current plan](PLANS.md). M15/M16 source remains missing from
+recovered history; local M17–M20 foundations now exist as mapped in the
+architecture. M14's formal and connected qualification remains open. Browser
+goals need their own bounded assignment under the owner's delegation.
 
 ### M23 — Browser Clef Flash with pinned Kevala Q8 text
 

@@ -198,7 +198,9 @@ def validate_benchmark(document: Any, root: Path) -> list[str]:
                 'backup interval exceeds proposed RPO')
         require(load['owner_role'] in roles, 'load owner role missing')
         string_list(load['owning_goals'], 'load owning goals')
-        goals = {g['id'] for g in load_document(root/'planning/goals.json')['goals']}
+        # Remaining-work packets are not the inventory of historical obligations.
+        # Keep retired implementation owners resolvable through retained contracts.
+        goals = {t['goal_id'] for t in load_document(root/'planning/test-specifications.json')['tests']}
         require(set(load['owning_goals']) <= goals, 'load goal does not exist')
         p = shape(b['pilot'], {'status':str,'recruited_merchants':int,'observations':int,'consent_status':str,
             'recruitment':str,'plan_goal':str,'observation_goal':str,'phases':list,'start_requirements':list,

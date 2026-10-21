@@ -4,11 +4,11 @@
 
 Read `docs/GOVERNANCE.md`, `docs/DEVELOPMENT.md`, `docs/ARCHITECTURE.md`, `docs/PLANS.md`, the assigned goal packet and applicable nested guidance. Use `.agents/skills/work-goal/SKILL.md` and `.agents/skills/worktree-flow/SKILL.md`. The rubrics under `.agents/rubrics/` refine evidence/review; they add no authority or scheduler.
 
-## Bootstrap boundary
+## Current development boundary
 
-This repository contains planning and developer helpers, not a commerce application. Initial planning snapshots remain unchanged; consult `work/accepted-goals.json` and ADR-0004 for current delegated development acceptance. Begin only an assigned goal. Do not implement subsequent milestones merely because their files exist.
+This repository contains a substantial local commerce implementation through M20-G03. Read `docs/ARCHITECTURE.md` for existing owners, `docs/ROADMAP.md` for remaining code and `docs/QUALIFICATION.md` for unresolved release evidence. The runnable diagnostic profile uses SQLite and plain browser surfaces; the target PostgreSQL/React application and real integrations remain open. Consult `work/accepted-goals.json` for formal development acceptance. Begin only an assigned scope; roadmap presence is not automatic assignment.
 
-Use Rifare as the sole project identity in code, documentation, generated views, Git metadata and issue text. Do not import external product research archives, vendor-named positioning or obsolete project branding. Keep requirements stated as Rifare targets rather than assertions that features already exist.
+Use Rifare as the sole project identity in code, documentation, generated views, Git metadata and issue text. Do not import external product research archives, vendor-named positioning or obsolete project branding. Distinguish implemented local behavior, missing code and qualified production capabilities accurately.
 
 ## Execution
 
@@ -24,4 +24,6 @@ Only the delegated maintainer can record acceptance under the actual owner instr
 
 ## Canonical records
 
-`planning/goals.json`, test specifications, coverage and milestones define the planning baseline. Render cards with `python3 tools/render_plan.py --root .`; do not edit only the generated packet. Track assignments and outcomes under `work/records/` through the integration owner. Keep raw evidence in ignored `evidence/`; preserve concise decisions, source commits and review links before cleaning owned artifacts.
+`planning/goals.json` and `planning/milestones.json` contain remaining work. The compact integration entries identify missing real adapters without duplicating landed workflow instructions. Render cards with `python3 tools/render_plan.py --root .`; do not edit only the generated packet. After implementation, retire completed instructions from the inputs and generated views, retaining concrete gaps concisely. Use architecture and Git history for implementation context; do not create a completed-goal archive.
+
+Behavioral specifications, frozen criteria, requirement coverage and native test registrations remain regression/qualification contracts. Retired IDs still express formal dependencies; retirement does not accept them. Track assignments and outcomes under `work/records/` through the integration owner. Keep raw evidence in ignored `evidence/`; preserve concise decisions, source commits and review links before cleaning owned artifacts. ADR-0065 records the owner-authorized planning retirement.

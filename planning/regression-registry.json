@@ -16,7 +16,7 @@
       "enabled": true,
       "qualification": "accepted_bootstrap",
       "contract_files": [
-        "planning/goals/M00/M00-G01.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -24,7 +24,7 @@
       "enabled": true,
       "qualification": "accepted_bootstrap",
       "contract_files": [
-        "planning/goals/M00/M00-G02.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -32,7 +32,7 @@
       "enabled": true,
       "qualification": "accepted_bootstrap",
       "contract_files": [
-        "planning/goals/M00/M00-G03.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -40,7 +40,7 @@
       "enabled": true,
       "qualification": "accepted_bootstrap",
       "contract_files": [
-        "planning/goals/M00/M00-G04.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -56,7 +56,7 @@
       "enabled": true,
       "qualification": "retained_diagnostic_not_accepted",
       "contract_files": [
-        "planning/goals/M00/M00-G06.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -64,7 +64,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M00/M00-G07.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -72,7 +72,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M00/M00-G08.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -80,7 +80,7 @@
       "enabled": true,
       "qualification": "retained_diagnostic_not_accepted",
       "contract_files": [
-        "planning/goals/M01/M01-G01.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -88,7 +88,7 @@
       "enabled": true,
       "qualification": "retained_diagnostic_not_accepted",
       "contract_files": [
-        "planning/goals/M01/M01-G02.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -96,7 +96,7 @@
       "enabled": true,
       "qualification": "retained_diagnostic_not_accepted",
       "contract_files": [
-        "planning/goals/M01/M01-G03.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -104,7 +104,7 @@
       "enabled": true,
       "qualification": "retained_diagnostic_not_accepted",
       "contract_files": [
-        "planning/goals/M01/M01-G04.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -112,7 +112,7 @@
       "enabled": true,
       "qualification": "retained_diagnostic_not_accepted",
       "contract_files": [
-        "planning/goals/M01/M01-G05.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -120,7 +120,7 @@
       "enabled": true,
       "qualification": "retained_diagnostic_not_accepted",
       "contract_files": [
-        "planning/goals/M01/M01-G06.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -128,7 +128,7 @@
       "enabled": true,
       "qualification": "retained_diagnostic_not_accepted",
       "contract_files": [
-        "planning/goals/M01/M01-G07.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -136,7 +136,7 @@
       "enabled": true,
       "qualification": "retained_diagnostic_not_accepted",
       "contract_files": [
-        "planning/goals/M01/M01-G08.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -144,7 +144,7 @@
       "enabled": true,
       "qualification": "retained_diagnostic_not_accepted",
       "contract_files": [
-        "planning/goals/M01/M01-G09.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -152,7 +152,7 @@
       "enabled": true,
       "qualification": "retained_diagnostic_not_accepted",
       "contract_files": [
-        "planning/goals/M01/M01-G10.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -160,7 +160,7 @@
       "enabled": true,
       "qualification": "retained_diagnostic_not_accepted",
       "contract_files": [
-        "planning/goals/M01/M01-G11.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -168,7 +168,7 @@
       "enabled": true,
       "qualification": "retained_diagnostic_not_accepted",
       "contract_files": [
-        "planning/goals/M01/M01-G12.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -176,7 +176,7 @@
       "enabled": true,
       "qualification": "retained_diagnostic_not_accepted",
       "contract_files": [
-        "planning/goals/M01/M01-G13.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -184,7 +184,7 @@
       "enabled": true,
       "qualification": "retained_diagnostic_not_accepted",
       "contract_files": [
-        "planning/goals/M01/M01-G14.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -192,7 +192,7 @@
       "enabled": true,
       "qualification": "retained_diagnostic_not_accepted",
       "contract_files": [
-        "planning/goals/M01/M01-G15.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -200,7 +200,7 @@
       "enabled": true,
       "qualification": "retained_diagnostic_not_accepted",
       "contract_files": [
-        "planning/goals/M01/M01-G16.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -208,7 +208,7 @@
       "enabled": true,
       "qualification": "retained_diagnostic_not_accepted",
       "contract_files": [
-        "planning/goals/M01/M01-G17.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -216,7 +216,7 @@
       "enabled": true,
       "qualification": "retained_diagnostic_not_accepted",
       "contract_files": [
-        "planning/goals/M01/M01-G18.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -224,7 +224,7 @@
       "enabled": true,
       "qualification": "retained_diagnostic_not_accepted",
       "contract_files": [
-        "planning/goals/M02/M02-G01.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -232,7 +232,7 @@
       "enabled": true,
       "qualification": "retained_diagnostic_not_accepted",
       "contract_files": [
-        "planning/goals/M02/M02-G02.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -240,7 +240,7 @@
       "enabled": true,
       "qualification": "retained_diagnostic_not_accepted",
       "contract_files": [
-        "planning/goals/M02/M02-G03.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -248,7 +248,7 @@
       "enabled": true,
       "qualification": "retained_diagnostic_not_accepted",
       "contract_files": [
-        "planning/goals/M02/M02-G04.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -256,7 +256,7 @@
       "enabled": true,
       "qualification": "retained_diagnostic_not_accepted",
       "contract_files": [
-        "planning/goals/M02/M02-G05.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -264,7 +264,7 @@
       "enabled": true,
       "qualification": "retained_diagnostic_not_accepted",
       "contract_files": [
-        "planning/goals/M02/M02-G06.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -272,7 +272,7 @@
       "enabled": true,
       "qualification": "retained_diagnostic_not_accepted",
       "contract_files": [
-        "planning/goals/M02/M02-G07.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -280,7 +280,7 @@
       "enabled": true,
       "qualification": "retained_diagnostic_not_accepted",
       "contract_files": [
-        "planning/goals/M02/M02-G08.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -288,7 +288,7 @@
       "enabled": true,
       "qualification": "retained_diagnostic_not_accepted",
       "contract_files": [
-        "planning/goals/M02/M02-G09.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -296,7 +296,7 @@
       "enabled": true,
       "qualification": "retained_diagnostic_not_accepted",
       "contract_files": [
-        "planning/goals/M02/M02-G10.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -304,7 +304,7 @@
       "enabled": true,
       "qualification": "retained_diagnostic_not_accepted",
       "contract_files": [
-        "planning/goals/M02/M02-G11.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -312,7 +312,7 @@
       "enabled": true,
       "qualification": "retained_diagnostic_not_accepted",
       "contract_files": [
-        "planning/goals/M02/M02-G12.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -320,7 +320,7 @@
       "enabled": true,
       "qualification": "retained_diagnostic_not_accepted",
       "contract_files": [
-        "planning/goals/M02/M02-G13.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -328,7 +328,7 @@
       "enabled": true,
       "qualification": "retained_diagnostic_not_accepted",
       "contract_files": [
-        "planning/goals/M02/M02-G14.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -336,7 +336,7 @@
       "enabled": true,
       "qualification": "retained_diagnostic_not_accepted",
       "contract_files": [
-        "planning/goals/M02/M02-G15.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -344,7 +344,7 @@
       "enabled": true,
       "qualification": "retained_diagnostic_not_accepted",
       "contract_files": [
-        "planning/goals/M02/M02-G16.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -352,7 +352,7 @@
       "enabled": true,
       "qualification": "retained_diagnostic_not_accepted",
       "contract_files": [
-        "planning/goals/M02/M02-G17.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -360,7 +360,7 @@
       "enabled": true,
       "qualification": "retained_diagnostic_not_accepted",
       "contract_files": [
-        "planning/goals/M02/M02-G18.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -368,7 +368,7 @@
       "enabled": true,
       "qualification": "retained_diagnostic_not_accepted",
       "contract_files": [
-        "planning/goals/M02/M02-G19.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -376,7 +376,7 @@
       "enabled": true,
       "qualification": "retained_diagnostic_not_accepted",
       "contract_files": [
-        "planning/goals/M02/M02-G20.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -384,7 +384,7 @@
       "enabled": true,
       "qualification": "retained_diagnostic_not_accepted",
       "contract_files": [
-        "planning/goals/M02/M02-G21.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -392,7 +392,7 @@
       "enabled": true,
       "qualification": "retained_diagnostic_not_accepted",
       "contract_files": [
-        "planning/goals/M02/M02-G22.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -400,7 +400,7 @@
       "enabled": true,
       "qualification": "retained_diagnostic_not_accepted",
       "contract_files": [
-        "planning/goals/M02/M02-G23.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -408,7 +408,7 @@
       "enabled": true,
       "qualification": "retained_diagnostic_not_accepted",
       "contract_files": [
-        "planning/goals/M02/M02-G24.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -416,7 +416,7 @@
       "enabled": true,
       "qualification": "retained_diagnostic_not_accepted",
       "contract_files": [
-        "planning/goals/M02/M02-G25.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -424,7 +424,7 @@
       "enabled": true,
       "qualification": "retained_diagnostic_not_accepted",
       "contract_files": [
-        "planning/goals/M02/M02-G26.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -432,7 +432,7 @@
       "enabled": true,
       "qualification": "retained_diagnostic_not_accepted",
       "contract_files": [
-        "planning/goals/M02/M02-G27.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -440,7 +440,7 @@
       "enabled": true,
       "qualification": "retained_diagnostic_not_accepted",
       "contract_files": [
-        "planning/goals/M03/M03-G01.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -448,7 +448,7 @@
       "enabled": true,
       "qualification": "retained_diagnostic_not_accepted",
       "contract_files": [
-        "planning/goals/M03/M03-G02.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -456,7 +456,7 @@
       "enabled": true,
       "qualification": "retained_diagnostic_not_accepted",
       "contract_files": [
-        "planning/goals/M03/M03-G03.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -464,7 +464,7 @@
       "enabled": true,
       "qualification": "retained_diagnostic_not_accepted",
       "contract_files": [
-        "planning/goals/M03/M03-G04.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -472,7 +472,7 @@
       "enabled": true,
       "qualification": "retained_diagnostic_not_accepted",
       "contract_files": [
-        "planning/goals/M03/M03-G05.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -480,7 +480,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M03/M03-G06.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -488,7 +488,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M03/M03-G07.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -496,7 +496,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M03/M03-G08.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -504,7 +504,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M03/M03-G09.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -512,7 +512,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M03/M03-G10.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -520,7 +520,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M03/M03-G11.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -528,7 +528,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M03/M03-G12.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -536,7 +536,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M03/M03-G13.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -544,7 +544,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M03/M03-G14.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -552,7 +552,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M03/M03-G15.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -560,7 +560,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M03/M03-G16.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -568,7 +568,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M03/M03-G17.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -576,7 +576,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M03/M03-G18.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -584,7 +584,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M03/M03-G19.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -592,7 +592,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M03/M03-G20.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -600,7 +600,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M03/M03-G21.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -608,7 +608,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M04/M04-G01.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -616,7 +616,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M04/M04-G02.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -624,7 +624,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M04/M04-G03.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -632,7 +632,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M04/M04-G04.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -640,7 +640,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M04/M04-G05.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -648,7 +648,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M04/M04-G06.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -656,7 +656,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M04/M04-G07.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -664,7 +664,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M04/M04-G08.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -672,7 +672,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M04/M04-G09.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -680,7 +680,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M04/M04-G10.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -688,7 +688,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M04/M04-G11.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -696,7 +696,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M04/M04-G99.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -704,7 +704,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M05/M05-G01.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -712,7 +712,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M05/M05-G02.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -720,7 +720,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M05/M05-G03.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -728,7 +728,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M05/M05-G04.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -736,7 +736,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M05/M05-G05.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -744,7 +744,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M05/M05-G06.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -752,7 +752,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M05/M05-G07.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -760,7 +760,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M05/M05-G08.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -768,7 +768,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M05/M05-G09.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -776,7 +776,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M05/M05-G10.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -784,7 +784,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M05/M05-G11.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -792,7 +792,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M05/M05-G12.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -800,7 +800,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M05/M05-G13.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -808,7 +808,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M05/M05-G14.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -816,7 +816,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M05/M05-G15.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -824,7 +824,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M05/M05-G16.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -832,7 +832,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M05/M05-G99.md"
+        "planning/test-specifications.json"
       ]
     },
     {
@@ -840,7 +840,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M06/M06-G01.md",
+        "planning/test-specifications.json",
         "packages/commerce/variant-exchanges.mts",
         "migrations/commerce/022_catalog_and_gift_returns.sql"
       ]
@@ -850,7 +850,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M06/M06-G02.md",
+        "planning/test-specifications.json",
         "packages/commerce/exchange-finance.mts",
         "packages/adapters/resolution-fixture-source.mts",
         "migrations/commerce/021_exchange_finance.sql",
@@ -862,7 +862,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M06/M06-G03.md",
+        "planning/test-specifications.json",
         "packages/commerce/exchange-finance.mts",
         "packages/commerce/refund-quotes.mts",
         "tests/fixtures/exchange-finance/independent-values.json"
@@ -873,7 +873,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M06/M06-G04.md",
+        "planning/test-specifications.json",
         "packages/commerce/resolution-ledger.mts",
         "tests/fixtures/exchange-finance/independent-values.json"
       ]
@@ -883,7 +883,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M06/M06-G05.md",
+        "planning/test-specifications.json",
         "packages/commerce/gift-proof.mts",
         "packages/commerce/gift-returns.mts",
         "migrations/commerce/023_gift_recipient_proofs.sql",
@@ -895,7 +895,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M06/M06-G06.md",
+        "planning/test-specifications.json",
         "packages/commerce/exchange-lineage.mts",
         "packages/adapters/exchange-lineage-fixture-source.mts",
         "packages/adapters/exchange-lineage-source-guards.mts",
@@ -909,7 +909,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M06/M06-G07.md",
+        "planning/test-specifications.json",
         "packages/commerce/exchange-currency.mts",
         "packages/adapters/exchange-money-fixture-source.mts",
         "migrations/commerce/025_exchange_money.sql",
@@ -921,7 +921,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M06/M06-G08.md",
+        "planning/test-specifications.json",
         "packages/commerce/exchange-fees.mts",
         "packages/adapters/exchange-money-fixture-source.mts",
         "migrations/commerce/025_exchange_money.sql",
@@ -933,7 +933,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M06/M06-G09.md",
+        "planning/test-specifications.json",
         "packages/commerce/instant-exchanges.mts",
         "packages/adapters/instant-exchange-fixture-source.mts",
         "migrations/commerce/026_instant_exchanges.sql",
@@ -945,7 +945,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M06/M06-G10.md",
+        "planning/test-specifications.json",
         "packages/commerce/instant-exchanges.mts",
         "packages/adapters/instant-exchange-fixture-source.mts",
         "migrations/commerce/026_instant_exchanges.sql",
@@ -957,7 +957,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M06/M06-G11.md",
+        "planning/test-specifications.json",
         "packages/commerce/risk-assistance.mts",
         "migrations/commerce/028_risk_prevention.sql",
         "tests/fixtures/assistance/risk-golden.v1.json"
@@ -968,7 +968,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M06/M06-G12.md",
+        "planning/test-specifications.json",
         "packages/commerce/qualified-return-destinations.mts",
         "packages/adapters/return-destination-fixture-source.mts",
         "migrations/commerce/027_qualified_return_destinations.sql",
@@ -980,7 +980,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M06/M06-G13.md",
+        "planning/test-specifications.json",
         "packages/commerce/return-prevention.mts",
         "packages/commerce/return-prevention-guards.mts",
         "packages/commerce/prevention-experiments.mts",
@@ -994,7 +994,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M06/M06-G14.md",
+        "planning/test-specifications.json",
         "packages/commerce/return-policy-packs.mts",
         "migrations/commerce/029_return_policy_packs.sql",
         "tests/fixtures/return-policy-packs/scenarios.v1.json"
@@ -1005,7 +1005,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M06/M06-G99.md",
+        "planning/test-specifications.json",
         "packages/commerce/return-economics.mts",
         "packages/commerce/return-depth-api.mts",
         "packages/commerce/contracts/storage-return-assistance-extension.v1.json",
@@ -1018,7 +1018,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M07/M07-G01.md",
+        "planning/test-specifications.json",
         "packages/adapters/woocommerce/return-contract.mts",
         "packages/adapters/woocommerce/return-source.mts",
         "migrations/commerce/030_woocommerce_return_sources.sql",
@@ -1030,7 +1030,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M07/M07-G02.md",
+        "planning/test-specifications.json",
         "packages/adapters/woocommerce/refund-contract.mts",
         "packages/adapters/woocommerce/refund-fixture-source.mts",
         "packages/adapters/woocommerce/refund-gateway-fixture.mts",
@@ -1046,7 +1046,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M07/M07-G03.md",
+        "planning/test-specifications.json",
         "packages/adapters/woocommerce/events.mts",
         "packages/commerce/refund-message-facts.mts",
         "packages/commerce/return-portability-api.mts",
@@ -1063,7 +1063,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M07/M07-G04.md",
+        "planning/test-specifications.json",
         "packages/commerce/worker-api.mts",
         "packages/commerce/work-leases.mts",
         "packages/commerce/contracts/return-worker.v1.json",
@@ -1077,7 +1077,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M07/M07-G05.md",
+        "planning/test-specifications.json",
         "packages/conformance/adapter-catalog.mts",
         "packages/conformance/adapter-fixtures.mts",
         "packages/conformance/catalog-fixtures.mts",
@@ -1093,7 +1093,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M07/M07-G06.md",
+        "planning/test-specifications.json",
         "packages/conformance/compatibility-matrix.mts",
         "tools/compatibility-matrix.mts",
         "docs/COMPATIBILITY-LIMITS.md"
@@ -1104,7 +1104,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M07/M07-G07.md",
+        "planning/test-specifications.json",
         "packages/commerce/merchant-portability.mts",
         "docs/MERCHANT-PORTABILITY.md"
       ]
@@ -1114,7 +1114,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M07/M07-G08.md",
+        "planning/test-specifications.json",
         "packages/commerce/migration-fence.mts",
         "packages/commerce/migration-cutover.mts",
         "packages/commerce/data-guards.mts",
@@ -1127,7 +1127,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M07/M07-G09.md",
+        "planning/test-specifications.json",
         "packages/commerce/operator-runbooks.mts",
         "tools/operator-drill-fixtures.mts",
         "tools/operator-drill.mts",
@@ -1139,7 +1139,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M07/M07-G10.md",
+        "planning/test-specifications.json",
         "packages/operations/installation-upgrade.mts",
         "tools/install-upgrade.mts",
         "docs/INSTALL-UPGRADE.md"
@@ -1150,7 +1150,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M07/M07-G11.md",
+        "planning/test-specifications.json",
         "packages/operations/recovery-rehearsal.mts",
         "tools/rehearse-recovery.mts",
         "docs/RECOVERY-LOAD.md"
@@ -1161,7 +1161,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M07/M07-G12.md",
+        "planning/test-specifications.json",
         "packages/operations/load-envelope.mts",
         "packages/operations/contracts/load-workload.v1.json",
         "packages/commerce/webhook-inbox.mts",
@@ -1174,7 +1174,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M07/M07-G13.md",
+        "planning/test-specifications.json",
         "packages/security/release-audit.mts",
         "packages/security/release-audit.py",
         "packages/security/contracts/release-audit.v1.json",
@@ -1187,7 +1187,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M07/M07-G14.md",
+        "planning/test-specifications.json",
         "packages/commerce/privacy-coverage.mts",
         "packages/commerce/contracts/privacy-storage-surfaces.v1.json",
         "tools/audit-privacy.mts",
@@ -1199,7 +1199,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M07/M07-G15.md",
+        "planning/test-specifications.json",
         "apps/commerce-api/accessibility-client.js",
         "apps/commerce-api/accessibility.css",
         "docs/ACCESSIBLE-WORKFLOWS.md"
@@ -1210,7 +1210,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M07/M07-G16.md",
+        "planning/test-specifications.json",
         "packages/presentation/locale-contract.v1.json",
         "packages/presentation/locale-presentation.js",
         "apps/commerce-api/locale-client.js",
@@ -1222,7 +1222,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M07/M07-G17.md",
+        "planning/test-specifications.json",
         "packages/pilot/contracts/protocol.v1.json",
         "packages/pilot/protocol.mts",
         "packages/pilot/protocol.py",
@@ -1249,7 +1249,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M08/M08-G01.md",
+        "planning/test-specifications.json",
         "packages/commerce/contracts/carrier-quotes.v1.json",
         "packages/commerce/carrier-quotes.mts",
         "packages/adapters/carrier-quote-fixture-source.mts",
@@ -1261,7 +1261,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M08/M08-G02.md",
+        "planning/test-specifications.json",
         "packages/commerce/contracts/shipping-batch-labels.v1.json",
         "packages/commerce/shipping-batch-labels.mts",
         "packages/adapters/shipping-carrier-fixture-source.mts",
@@ -1274,7 +1274,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M08/M08-G03.md",
+        "planning/test-specifications.json",
         "packages/commerce/contracts/packing-sessions.v1.json",
         "packages/commerce/packing-sessions.mts",
         "migrations/commerce/032_packing_sessions.sql",
@@ -1286,7 +1286,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M08/M08-G04.md",
+        "planning/test-specifications.json",
         "packages/commerce/contracts/packing-sessions.v1.json",
         "packages/commerce/packing-sessions.mts",
         "migrations/commerce/032_packing_sessions.sql",
@@ -1298,7 +1298,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M08/M08-G05.md",
+        "planning/test-specifications.json",
         "packages/commerce/contracts/shipping-manifests.v1.json",
         "packages/commerce/shipping-manifests.mts",
         "packages/adapters/shipping-carrier-fixture-source.mts",
@@ -1338,7 +1338,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M08/M08-G08.md",
+        "planning/test-specifications.json",
         "packages/commerce/contracts/location-inventory.v1.json",
         "packages/commerce/location-inventory.mts",
         "packages/adapters/warehouse-inventory-fixture-source.mts",
@@ -1352,7 +1352,7 @@
       "enabled": true,
       "qualification": "proposed_not_accepted",
       "contract_files": [
-        "planning/goals/M08/M08-G09.md",
+        "planning/test-specifications.json",
         "packages/commerce/contracts/inventory-transfers.v1.json",
         "packages/commerce/inventory-transfers.mts",
         "packages/adapters/warehouse-inventory-fixture-source.mts",
@@ -25028,6 +25028,20 @@
       "runner_case_id": "CASE-M20-G03-12",
       "source": "tests/development/dropoff-handoffs.test.mts",
       "capability_id": "m20-dropoff-handoffs-diagnostic"
+    },
+    {
+      "id": "python:test_plan_tools.PlanStructureTests.test_retired_packets_keep_historical_contract_validation",
+      "suite": "python",
+      "runner_case_id": "test_plan_tools.PlanStructureTests.test_retired_packets_keep_historical_contract_validation",
+      "source": "tests/test_plan_tools.py",
+      "capability_id": "FEATURE-BOOTSTRAP"
+    },
+    {
+      "id": "python:test_plan_tools.PlanStructureTests.test_followup_group_cannot_hide_present_integration_gate",
+      "suite": "python",
+      "runner_case_id": "test_plan_tools.PlanStructureTests.test_followup_group_cannot_hide_present_integration_gate",
+      "source": "tests/test_plan_tools.py",
+      "capability_id": "FEATURE-BOOTSTRAP"
     }
   ],
   "protected_files": [
@@ -25045,209 +25059,13 @@
     "examples/skills/handle-return/commerce-manifest.json",
     "examples/skills/handle-return/references/platform-notes.md",
     "examples/skills/handle-return/references/workflow.md",
-    "planning/goals/M00/M00-G01.md",
-    "planning/goals/M00/M00-G02.md",
-    "planning/goals/M00/M00-G03.md",
-    "planning/goals/M00/M00-G04.md",
+    "planning/test-specifications.json",
     "planning/goals/M00/M00-G05.md",
-    "planning/goals/M00/M00-G06.md",
-    "planning/goals/M00/M00-G07.md",
-    "planning/goals/M00/M00-G08.md",
-    "planning/goals/M00/M00-G99.md",
-    "planning/goals/M01/M01-G01.md",
-    "planning/goals/M01/M01-G02.md",
-    "planning/goals/M01/M01-G03.md",
-    "planning/goals/M01/M01-G04.md",
-    "planning/goals/M01/M01-G05.md",
-    "planning/goals/M01/M01-G06.md",
-    "planning/goals/M01/M01-G07.md",
-    "planning/goals/M01/M01-G08.md",
-    "planning/goals/M01/M01-G09.md",
-    "planning/goals/M01/M01-G10.md",
-    "planning/goals/M01/M01-G11.md",
-    "planning/goals/M01/M01-G12.md",
-    "planning/goals/M01/M01-G13.md",
-    "planning/goals/M01/M01-G14.md",
-    "planning/goals/M01/M01-G15.md",
-    "planning/goals/M01/M01-G16.md",
-    "planning/goals/M01/M01-G17.md",
-    "planning/goals/M01/M01-G18.md",
-    "planning/goals/M01/M01-G99.md",
-    "planning/goals/M02/M02-G01.md",
-    "planning/goals/M02/M02-G02.md",
-    "planning/goals/M02/M02-G03.md",
-    "planning/goals/M02/M02-G04.md",
-    "planning/goals/M02/M02-G05.md",
-    "planning/goals/M02/M02-G06.md",
-    "planning/goals/M02/M02-G07.md",
-    "planning/goals/M02/M02-G08.md",
-    "planning/goals/M02/M02-G09.md",
-    "planning/goals/M02/M02-G10.md",
-    "planning/goals/M02/M02-G11.md",
-    "planning/goals/M02/M02-G12.md",
-    "planning/goals/M02/M02-G13.md",
-    "planning/goals/M02/M02-G14.md",
-    "planning/goals/M02/M02-G15.md",
-    "planning/goals/M02/M02-G16.md",
-    "planning/goals/M02/M02-G17.md",
-    "planning/goals/M02/M02-G18.md",
-    "planning/goals/M02/M02-G19.md",
-    "planning/goals/M02/M02-G20.md",
-    "planning/goals/M02/M02-G21.md",
-    "planning/goals/M02/M02-G22.md",
-    "planning/goals/M02/M02-G23.md",
-    "planning/goals/M02/M02-G24.md",
-    "planning/goals/M02/M02-G25.md",
-    "planning/goals/M02/M02-G26.md",
-    "planning/goals/M02/M02-G27.md",
-    "planning/goals/M02/M02-G99.md",
-    "planning/goals/M03/M03-G01.md",
-    "planning/goals/M03/M03-G02.md",
-    "planning/goals/M03/M03-G03.md",
-    "planning/goals/M03/M03-G04.md",
-    "planning/goals/M03/M03-G05.md",
-    "planning/goals/M03/M03-G06.md",
-    "planning/goals/M03/M03-G07.md",
-    "planning/goals/M03/M03-G08.md",
-    "planning/goals/M03/M03-G09.md",
-    "planning/goals/M03/M03-G10.md",
-    "planning/goals/M03/M03-G11.md",
-    "planning/goals/M03/M03-G12.md",
-    "planning/goals/M03/M03-G13.md",
-    "planning/goals/M03/M03-G14.md",
-    "planning/goals/M03/M03-G15.md",
-    "planning/goals/M03/M03-G16.md",
-    "planning/goals/M03/M03-G17.md",
-    "planning/goals/M03/M03-G18.md",
-    "planning/goals/M03/M03-G19.md",
-    "planning/goals/M03/M03-G20.md",
-    "planning/goals/M03/M03-G21.md",
-    "planning/goals/M03/M03-G99.md",
-    "planning/goals/M04/M04-G01.md",
-    "planning/goals/M04/M04-G02.md",
-    "planning/goals/M04/M04-G03.md",
-    "planning/goals/M04/M04-G04.md",
-    "planning/goals/M04/M04-G05.md",
-    "planning/goals/M04/M04-G06.md",
-    "planning/goals/M04/M04-G07.md",
-    "planning/goals/M04/M04-G08.md",
-    "planning/goals/M04/M04-G09.md",
-    "planning/goals/M04/M04-G10.md",
-    "planning/goals/M04/M04-G11.md",
-    "planning/goals/M04/M04-G99.md",
-    "planning/goals/M05/M05-G01.md",
-    "planning/goals/M05/M05-G02.md",
-    "planning/goals/M05/M05-G03.md",
-    "planning/goals/M05/M05-G04.md",
-    "planning/goals/M05/M05-G05.md",
-    "planning/goals/M05/M05-G06.md",
-    "planning/goals/M05/M05-G07.md",
-    "planning/goals/M05/M05-G08.md",
-    "planning/goals/M05/M05-G09.md",
-    "planning/goals/M05/M05-G10.md",
-    "planning/goals/M05/M05-G11.md",
-    "planning/goals/M05/M05-G12.md",
-    "planning/goals/M05/M05-G13.md",
-    "planning/goals/M05/M05-G14.md",
-    "planning/goals/M05/M05-G15.md",
-    "planning/goals/M05/M05-G16.md",
-    "planning/goals/M05/M05-G99.md",
-    "planning/goals/M06/M06-G01.md",
-    "planning/goals/M06/M06-G02.md",
-    "planning/goals/M06/M06-G03.md",
-    "planning/goals/M06/M06-G04.md",
-    "planning/goals/M06/M06-G05.md",
-    "planning/goals/M06/M06-G06.md",
-    "planning/goals/M06/M06-G07.md",
-    "planning/goals/M06/M06-G08.md",
-    "planning/goals/M06/M06-G09.md",
-    "planning/goals/M06/M06-G10.md",
-    "planning/goals/M06/M06-G11.md",
-    "planning/goals/M06/M06-G12.md",
-    "planning/goals/M06/M06-G13.md",
-    "planning/goals/M06/M06-G14.md",
-    "planning/goals/M06/M06-G99.md",
-    "planning/goals/M07/M07-G01.md",
-    "planning/goals/M07/M07-G02.md",
-    "planning/goals/M07/M07-G03.md",
-    "planning/goals/M07/M07-G04.md",
-    "planning/goals/M07/M07-G05.md",
-    "planning/goals/M07/M07-G06.md",
-    "planning/goals/M07/M07-G07.md",
-    "planning/goals/M07/M07-G08.md",
-    "planning/goals/M07/M07-G09.md",
-    "planning/goals/M07/M07-G10.md",
-    "planning/goals/M07/M07-G11.md",
-    "planning/goals/M07/M07-G12.md",
-    "planning/goals/M07/M07-G13.md",
-    "planning/goals/M07/M07-G14.md",
-    "planning/goals/M07/M07-G15.md",
-    "planning/goals/M07/M07-G16.md",
-    "planning/goals/M07/M07-G17.md",
     "planning/goals/M07/M07-G18.md",
-    "planning/goals/M07/M07-G99.md",
-    "planning/goals/M08/M08-G01.md",
-    "planning/goals/M08/M08-G02.md",
-    "planning/goals/M08/M08-G03.md",
-    "planning/goals/M08/M08-G04.md",
-    "planning/goals/M08/M08-G05.md",
-    "planning/goals/M08/M08-G06.md",
-    "planning/goals/M08/M08-G07.md",
-    "planning/goals/M08/M08-G08.md",
-    "planning/goals/M08/M08-G09.md",
-    "planning/goals/M08/M08-G10.md",
-    "planning/goals/M08/M08-G99.md",
-    "planning/goals/M09/M09-G01.md",
-    "planning/goals/M09/M09-G02.md",
-    "planning/goals/M09/M09-G03.md",
-    "planning/goals/M09/M09-G04.md",
-    "planning/goals/M09/M09-G05.md",
-    "planning/goals/M09/M09-G06.md",
-    "planning/goals/M09/M09-G07.md",
-    "planning/goals/M09/M09-G08.md",
-    "planning/goals/M09/M09-G09.md",
-    "planning/goals/M09/M09-G10.md",
-    "planning/goals/M09/M09-G11.md",
-    "planning/goals/M09/M09-G12.md",
-    "planning/goals/M09/M09-G13.md",
-    "planning/goals/M09/M09-G14.md",
-    "planning/goals/M09/M09-G99.md",
-    "planning/goals/M10/M10-G01.md",
-    "planning/goals/M10/M10-G02.md",
-    "planning/goals/M10/M10-G03.md",
-    "planning/goals/M10/M10-G04.md",
-    "planning/goals/M10/M10-G05.md",
-    "planning/goals/M10/M10-G06.md",
-    "planning/goals/M10/M10-G07.md",
-    "planning/goals/M10/M10-G08.md",
-    "planning/goals/M10/M10-G09.md",
-    "planning/goals/M10/M10-G10.md",
-    "planning/goals/M10/M10-G11.md",
-    "planning/goals/M10/M10-G12.md",
-    "planning/goals/M10/M10-G13.md",
-    "planning/goals/M10/M10-G14.md",
-    "planning/goals/M10/M10-G99.md",
-    "planning/goals/M11/M11-G01.md",
-    "planning/goals/M11/M11-G02.md",
-    "planning/goals/M11/M11-G03.md",
-    "planning/goals/M11/M11-G04.md",
-    "planning/goals/M11/M11-G05.md",
-    "planning/goals/M11/M11-G06.md",
-    "planning/goals/M11/M11-G07.md",
-    "planning/goals/M11/M11-G08.md",
-    "planning/goals/M11/M11-G09.md",
-    "planning/goals/M11/M11-G10.md",
-    "planning/goals/M11/M11-G99.md",
-    "planning/goals/M12/M12-G01.md",
-    "planning/goals/M12/M12-G02.md",
-    "planning/goals/M12/M12-G03.md",
-    "planning/goals/M12/M12-G04.md",
-    "planning/goals/M12/M12-G05.md",
     "planning/goals/M12/M12-G06.md",
     "planning/goals/M12/M12-G07.md",
     "planning/goals/M12/M12-G08.md",
     "planning/goals/M12/M12-G09.md",
-    "planning/goals/M12/M12-G99.md",
     "packages/commerce/contracts/commerce-manifest.v2.schema.json",
     "packages/commerce/contracts/execution-api.openapi.json",
     "packages/commerce/contracts/read-api.openapi.json",
@@ -25259,7 +25077,6 @@
     "planning/licensing-policy.json",
     "planning/release-benchmark.json",
     "planning/support-envelope.json",
-    "planning/test-specifications.json",
     "planning/workflow-policy.json",
     "planning/templates/evidence-bundle.v1.schema.json",
     "tests/browser/component.py",

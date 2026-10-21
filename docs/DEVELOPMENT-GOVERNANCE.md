@@ -1,16 +1,16 @@
 # Development steering and release governance
 
-**Status:** proposed process. No repository was created, changed, published or pushed by this planning task.
+**Status:** development and release criteria. Current local implementation is mapped in [architecture](ARCHITECTURE.md); unresolved release evidence is summarized in [qualification](QUALIFICATION.md).
 
 ## Source of truth
 
-`planning/roadmap.json` defines milestone outcomes, dependencies and gates. `planning/backlog.json` assigns stable goal IDs and acceptance criteria. `planning/capability-targets.json` links all 44 previously researched capabilities to a milestone, partner dependency, optional module or non-feature decision. `planning/acceptance-tests.json` contains designed scenarios, all initially marked not run. `docs/ROADMAP.md` explains the accepted direction; preserve changes to it with an ADR or explicit product decision.
+`planning/goals.json` and `planning/milestones.json` define remaining work and formal dependencies. `planning/capability-targets.json` retains the 57 approved target identities. `planning/test-specifications.json`, requirement coverage and frozen reference criteria preserve the complete behavioral contract. Their specification status is not a report of current native test execution. `docs/ROADMAP.md` explains current direction; preserve substantive changes with an ADR or explicit product decision. Completed packet text and prior milestone plans remain in Git under ADR-0065.
 
 A milestone label is a release boundary, not one giant coding issue. Split a goal when a reviewer cannot verify its outcome independently. Preserve the parent ID and rationale. The completion milestone is the point where full acceptance is due; a read-only or simulator slice can ship earlier without being represented as complete.
 
 ## Work selection
 
-Begin with M00 and the first connected order-status slice. Keep one writer per worktree/branch. When capacity is limited, complete one customer-visible vertical slice at a time. A goal with unresolved API permissions, provider access, source-of-truth ownership or financial semantics starts with a bounded investigation goal whose result is an explicit decision.
+Select a remaining scope from the current plan and reuse its existing source owners. Keep one writer per worktree/branch. When capacity is limited, complete one customer-visible vertical slice at a time. A scope with unresolved API permissions, provider access, source-of-truth ownership or financial semantics starts with a bounded investigation whose result is an explicit decision.
 
 Recommended active lanes are core workflow, adapter/conformance and customer experience. Open only as many lanes as there are people able to integrate and review their work. Parallel agent runs do not remove human review or eliminate shared-schema conflicts.
 
@@ -57,7 +57,7 @@ Never mark a proposed test as passed because the design document says it should 
 | Economics | Cost per correctly resolved case, operator time, retained contribution margin and seven-day reopen rate are reported against the measured prior/manual workflow. | That exchanged revenue alone is profit or deflection alone is successful support. |
 | Release review | No unresolved critical/high release-blocking findings; accepted scope, known gaps, privacy, license and operations responsibilities are documented. | Removal of all commercial, legal or service risk. |
 
-The numeric thresholds above are proposed product gates, not measured results or industry benchmarks. At M00, define the support envelope, denominators, load profile and operational RPO/RTO/latency targets. Then freeze them for the evaluated release. Lowering a gate requires an explicit decision and an honest downgrade of the release claim, not a silent edit.
+The numeric thresholds above are proposed product gates, not measured results or industry benchmarks. The support envelope, benchmark, denominators, load profile and operational RPO/RTO/latency targets are retained in their existing frozen contracts. Lowering a gate requires an explicit decision and an honest downgrade of the release claim, not a silent edit. Retiring completed implementation plans does not alter those contracts.
 
 ## Metrics and decision rules
 

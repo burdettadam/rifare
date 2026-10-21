@@ -76,19 +76,19 @@ On Windows with the Python launcher, substitute `py -3` for `python3`. `make ver
 
 ## What is not configured
 
-M00-G05 adds a real local API/worker/browser diagnostic using SQLite. It is not the target PostgreSQL/React stack and contains no commerce adapter, model integration or deployment. Its full goal remains unaccepted. Use only the explicit smoke commands below; default target startup fails closed.
+The original M00-G05 diagnostic profile supplies isolated API/worker/plain-browser processes using SQLite. Substantial commerce modules, fixture adapters and model interfaces have since landed; see [architecture](ARCHITECTURE.md). The actual PostgreSQL/React application and its target-host qualification remain open. Default target startup fails closed; use the explicit diagnostic and demo commands for current local behavior.
 
 ## Worktrees and evidence
 
 Set your own local Git identity; the bootstrap uses an explicitly nonpersonal identity and future commits require explicit configuration. Discover state with `git status`, `git branch --show-current` and `git worktree list`.
 
 ```sh
-git worktree add ../Rifare-M00-G01 -b goal/M00-G01 main
-cd ../Rifare-M00-G01
+git worktree add ../Rifare-M20-G04 -b goal/M20-G04 development
+cd ../Rifare-M20-G04
 python3 tools/dev_tests.py
 ```
 
-Record ownership before starting. Code isolation is not runtime isolation: future instances need separate ports, databases, storage, queues, callback destinations and provider accounts. Qualify that behavior during the owning goal.
+The command above illustrates the next recorded commerce direction; substitute the assigned scope and actual reviewed base. Record ownership before starting. Code isolation is not runtime isolation: instances need separate ports, databases, storage, queues, callback destinations and provider accounts. Qualify that behavior during the owning goal.
 
 Raw reports/recordings go under ignored `evidence/<goal-id>/<candidate-sha>/`. Run `git status --short` and `git diff --cached` before committing. Retain only concise work decisions and source-controlled fixtures. Preserve durable review links and required release records before deleting owned temporary evidence after closure.
 

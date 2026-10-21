@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check starter layout and links; no provider calls or product-readiness claims."""
+"""Check repository layout, links and current development metadata."""
 from __future__ import annotations
 
 import argparse
@@ -13,10 +13,11 @@ EXCLUDED_PARTS = {'.git', '__pycache__', '.venv', 'node_modules', 'evidence', 'a
 REQUIRED_PATHS = (
     'README.md', 'AGENTS.md', 'docs/GOVERNANCE.md', 'docs/DEVELOPMENT.md', 'docs/ARCHITECTURE.md', 'docs/PLANS.md',
     'docs/ROADMAP.md', 'planning/project.json', 'LICENSE-STATUS.md', 'THIRD-PARTY-NOTICES.md',
-    'planning/WORKER-GOALS.html', 'planning/WORKER-GOALS.md', 'planning/goals/M00/M00-G01.md',
-    'docs/FIRST-DISPATCH.md', 'docs/WORKFLOW-ADOPTION.md', 'docs/REGRESSION-STRATEGY.md',
+    'planning/WORKER-GOALS.html', 'planning/WORKER-GOALS.md',
+    'docs/FIRST-DISPATCH.md', 'docs/WORKFLOW-ADOPTION.md', 'docs/REGRESSION-STRATEGY.md', 'docs/QUALIFICATION.md',
     '.agents/skills/work-goal/SKILL.md', '.agents/skills/worktree-flow/SKILL.md',
-    'planning/goals.json', 'planning/test-specifications.json', 'planning/capability-targets.json',
+    'planning/goals.json', 'planning/milestones.json', 'planning/test-specifications.json',
+    'planning/requirement-coverage.json', 'planning/capability-targets.json',
     'planning/templates/GOAL-WORK-RECORD.md', 'work/README.md', '.gitignore', '.gitattributes',
 )
 
@@ -112,23 +113,37 @@ def check(root: Path) -> list[str]:
         metadata = json.loads((root / 'planning/project.json').read_text(encoding='utf-8'))
         if metadata.get('name') != 'Rifare' or metadata.get('slug') != 'rifare':
             errors.append('Project identity must be Rifare / rifare')
-        if metadata.get('stage') != 'planning_starter' or metadata.get('product_implemented') is not False:
-            errors.append('This starter cannot claim product implementation')
-        if metadata.get('product_tests_executed') != 0:
-            errors.append('This starter cannot claim product tests executed')
-        goals = json.loads((root / 'planning/goals.json').read_text(encoding='utf-8'))['goals']
-        state = json.loads((root / 'planning/goal-state.json').read_text(encoding='utf-8'))['goals']
-        if set(state) != {g['id'] for g in goals}:
-            errors.append('Initial state snapshot must cover all goal IDs')
-        if any(x.get('state') != 'not_started' or x.get('owner') is not None for x in state.values()):
-            errors.append('Initial state snapshot cannot claim assignment or acceptance; use work records')
-        queue = json.loads((root / 'planning/initial-ready-queue.json').read_text(encoding='utf-8'))
-        if queue.get('can_begin_drafting') != ['M00-G01']:
-            errors.append('Initial draft queue must start at M00-G01')
+        if metadata.get('stage') != 'development_preview' or metadata.get('production_qualified') is not False:
+            errors.append('Development metadata cannot claim production qualification')
+        if 'product_implemented' in metadata:
+            errors.append('Backlog metadata cannot claim product implementation; use architecture and qualification records')
+        if 'product_tests_executed' in metadata:
+            errors.append('Backlog metadata cannot claim product tests executed; use candidate-bound evidence')
+        plan = json.loads((root / 'planning/goals.json').read_text(encoding='utf-8'))
+        goals = plan['goals']
+        milestones = json.loads((root / 'planning/milestones.json').read_text(encoding='utf-8'))['milestones']
+        specifications = json.loads((root / 'planning/test-specifications.json').read_text(encoding='utf-8'))['tests']
+        requirements = json.loads((root / 'planning/requirement-coverage.json').read_text(encoding='utf-8'))['requirements']
         caps = json.loads((root / 'planning/capability-targets.json').read_text(encoding='utf-8'))['capabilities']
+        expected_counts = {
+            'milestones': len(milestones),
+            'worker_goals': sum(g['type'] == 'worker_goal' for g in goals),
+            'acceptance_gates': sum(g['type'] == 'milestone_acceptance' for g in goals),
+            'requirements': len(requirements),
+            'test_specifications': len(specifications),
+            'capability_targets': len(caps),
+            'integration_followups': len(plan.get('integration_work', [])),
+        }
+        if any(metadata.get('counts', {}).get(key) != value for key, value in expected_counts.items()):
+            errors.append('Project counts must match remaining work and retained contracts')
+        for row in plan.get('integration_work', []):
+            for path in row.get('evidence_paths', []):
+                target = (root / path).resolve()
+                if not target.is_relative_to(root) or not target.is_file():
+                    errors.append(f'{row.get("owner_goal_id")}: missing integration evidence path: {path}')
         errors.extend(validate_capability_targets(caps))
     except (OSError, ValueError, KeyError, TypeError) as exc:
-        errors.append(f'Starter metadata/state error: {exc}')
+        errors.append(f'Project metadata error: {exc}')
     return errors
 
 
@@ -137,8 +152,8 @@ def main() -> int:
     parser.add_argument('--root', type=Path, default=Path(__file__).resolve().parents[1])
     args = parser.parse_args()
     errors = check(args.root)
-    print(json.dumps({'check': 'repository_starter_only', 'result': 'fail' if errors else 'pass',
-                      'errors': errors, 'product_tests_executed': 0}, indent=2))
+    print(json.dumps({'check': 'repository_structure_only', 'result': 'fail' if errors else 'pass',
+                      'errors': errors}, indent=2))
     return 1 if errors else 0
 
 

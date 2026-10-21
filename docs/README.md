@@ -35,7 +35,8 @@ with [project status](PROJECT-STATUS.md) when evaluating availability.
 [Decisions](decisions/README.md) · [Work records](../work/README.md)
 
 Read [governance](GOVERNANCE.md) for development authority and review,
-[detailed progress](PLANS.md) for historical checkpoints, and
+[the current plan](PLANS.md) for the next increment,
+[qualification](QUALIFICATION.md) for unresolved release evidence, and
 [the presentation handoff](PORTFOLIO-HANDOFF.md) to continue the portfolio work.
 
 ## Repository map
@@ -51,7 +52,7 @@ Detailed documents and planning materials have their own destinations.
 | [`examples/`](../examples/) | Synthetic merchant profiles and workflow examples |
 | [`migrations/`](../migrations/) | Database migrations |
 | [`docs/`](./) | Product guides, architecture, decisions, and artwork |
-| [`planning/`](../planning/README.md) | Canonical plans, generated goal cards, frozen references, and templates |
+| [`planning/`](../planning/README.md) | Remaining work, compact integration follow-ups, retained behavioral contracts and templates |
 | [`tests/`](../tests/) | Executable checks and retained fixtures |
 | [`tools/`](../tools/) | Demo commands and development utilities |
 | [`work/`](../work/README.md) | Development records and acceptance history |

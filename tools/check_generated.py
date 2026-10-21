@@ -11,7 +11,7 @@ import sys
 import tempfile
 
 INPUTS = ('goals.json', 'test-specifications.json', 'milestones.json',
-          'requirement-coverage.json', 'invariants.json')
+          'requirement-coverage.json')
 
 
 def check(root: Path) -> list[str]:

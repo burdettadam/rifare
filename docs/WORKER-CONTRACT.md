@@ -14,7 +14,7 @@ The direct prerequisites are **accepted**, their interfaces and relevant evidenc
 
 Absent credentials do not prevent writing isolated code and deterministic tests, but they do prevent accepting a goal whose outcome requires real connected qualification. Report partial implementation and the blocked qualification separately.
 
-The initial plan has no accepted goals. Only M00-G01 can begin its drafting work without a previous goal. No financial, production, publication, contact or contractual authority is implied by task readiness.
+Use the current work record and acceptance ledger rather than the original bootstrap state. A historical dependency may no longer have an active packet because its local implementation has landed; that does not supply formal acceptance. The retained behavioral contracts and Git preserve its original obligations. No financial, production, publication, contact or contractual authority is implied by task readiness.
 
 ## Required implementation sequence
 

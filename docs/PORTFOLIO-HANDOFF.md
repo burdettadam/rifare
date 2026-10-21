@@ -4,7 +4,8 @@
 
 This refresh makes the public repository easier to understand and demonstrate:
 an original logo and artwork, a target-focused product README, exact local demo
-instructions, a concise current-status guide, and a simpler repository root.
+instructions, a concise current-status guide, a simpler repository root, and
+an active development plan with landed implementation instructions retired.
 It is based on imported development checkpoint
 `c299065241b3bdf4928a83f9ff4decf749c6afaa` (M20-G03).
 
@@ -24,6 +25,28 @@ Path references, generated views, source inventories, and affected helper loader
 and test locators follow the moves. Application behavior, behavioral assertions,
 dependencies, licensing obligations, requirement criteria, historical workflow
 policy, and acceptance records are preserved.
+
+## Active-plan cleanup
+
+The owner subsequently requested retirement of goals and milestones whose code
+has landed. The catalogue now contains **55 active packets**, down from 281,
+plus **27 concise integration follow-ups** for missing real adapters. Ten packets
+are narrowed to their unfinished portions; 13 milestone/follow-up sheets remain
+instead of 26. The cleanup deletes 244 source files and adds three concise
+qualification/decision/work records, reducing the source inventory to 1,683.
+
+The [architecture](ARCHITECTURE.md) maps current source through M20-G03. The
+[current plan](PLANS.md), [roadmap](ROADMAP.md), and
+[qualification guide](QUALIFICATION.md) replace stale bootstrap directions and
+the chronological active-plan diary. Completed packet text remains in Git. All
+949 behavioral specifications, 216 requirement mappings, 57 target identities,
+284 native development test files and 3,292 prior test registrations are retained.
+Two focused plan-helper tests are added.
+
+The [cleanup record](../work/records/planning-retirement.md) contains verification
+and review status. The focused 60-test selection passed, as did plan generation,
+links, workflow, distribution and whitespace checks. Original active criteria,
+formal dependencies, release thresholds and acceptance records remain unchanged.
 
 **Delivery state:** the completed changes are committed locally. The GitHub
 connection rejected its write request with HTTP 403, `Resource not accessible by
@@ -83,8 +106,10 @@ Two boundaries remain explicit for the next integration owner:
   waive or repair that separate planning gap.
 - The trusted full regression gate compares exact historical source paths. Its
   old pinned baseline needs a reviewed path migration for the 337 renames; the
-  external handoff includes `RELOCATIONS.json`. This task preserves the controller
-  and its baseline and does not claim a full-gate pass.
+  external handoff includes `RELOCATIONS.json` and the retirement manifest.
+  Retired packet contracts now resolve through the retained behavioral
+  specifications. This task preserves the controller and its baseline and does
+  not claim a full-gate pass.
 
 ## Files to use
 
