@@ -296,3 +296,7 @@ An acceptance envelope has parent_event_id=null. The unchanged three-unit fixtur
 does not claim an otherwise-valid above-100-unit native positive control; the
 source/core bound is statically enforced and ordinary malformed quantity inputs
 are included in the independent cases.
+The fixture row body is the canonical complete returned event envelope, including
+its digest. The fixture row digest equals event.digest, which hashes that envelope
+without its digest field. The native custody row digest hashes its complete typed
+body, including the nested full source event.
