@@ -23,7 +23,7 @@ Evidence may be held in an authorized artifact store rather than Git. Store stab
 | `handoff.md` | Files/commands, limits, actual state, recovery/rollback, blocked external requirements and next dependency-ready work. |
 | Protected decision reference | Trusted reviewer/maintainer acceptance bound to the candidate; not a self-authored boolean in this bundle. |
 
-The supplied `templates/evidence-manifest.DRAFT.json` is intentionally incomplete. It is not passing evidence. `templates/evidence-manifest.schema.json` describes the proposed ready-for-review shape; M00-G08 must implement actual artifact/hash/path checking and protected identity integration in the real repository.
+The supplied `planning/templates/evidence-manifest.DRAFT.json` is intentionally incomplete. It is not passing evidence. `planning/templates/evidence-manifest.schema.json` describes the proposed ready-for-review shape; M00-G08 must implement actual artifact/hash/path checking and protected identity integration in the real repository.
 
 ## Native reports and fake green results
 

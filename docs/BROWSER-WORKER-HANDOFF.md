@@ -11,11 +11,11 @@ implementation, model downloads, actual-device inference and formal acceptance
 have not been performed by this planning update. Actual progress remains in
 work records and candidate-bound evidence.
 
-Read [the architecture](../ARCHITECTURE.md),
+Read [the architecture](ARCHITECTURE.md),
 [ADR-0044](decisions/0044-browser-roadmap-adoption.md),
 [current M14 qualification](M14-QUALIFICATION.md), and the selected goal packet.
-The [searchable catalogue](../WORKER-GOALS.html),
-[complete Markdown catalogue](../WORKER-GOALS.md),
+The [searchable catalogue](../planning/WORKER-GOALS.html),
+[complete Markdown catalogue](../planning/WORKER-GOALS.md),
 [canonical goals](../planning/goals.json) and
 [canonical specifications](../planning/test-specifications.json) contain the
 same stable goal and case identities.
@@ -43,12 +43,12 @@ identified client observations.
 
 | Goal | Worker deliverable | Evidence the worker must produce |
 | --- | --- | --- |
-| [M23-G01](../goals/M23/M23-G01.md) | Pin the complete Clef Flash conversion and reference contract. | An exact model/head/tokenizer/runtime/converter/pack manifest; an independently fixed comparison corpus and tolerances; a useful unavailable outcome when the pack cannot actually be prepared. |
-| [M23-G02](../goals/M23/M23-G02.md) | Load the pinned pack in a bounded desktop browser worker. | Explicit download/cache selection, integrity checks, progress/cancellation, bounded initialization and failures, and a truthful named-device capability record. |
-| [M23-G03](../goals/M23/M23-G03.md) | Add a browser adapter and separate client-observation ingestion. | Browser-safe logical contracts, a server-issued preparation identity, strict result validation, minimized server-owned observations and clear client provenance. |
-| [M23-G04](../goals/M23/M23-G04.md) | Apply purpose, privacy, cancellation and destination rules. | Current source/session/task checks, late-result rejection, model-cache separation, application cleanup boundaries and an explicit permitted mode change for hosted fallback. |
-| [M23-G05](../goals/M23/M23-G05.md) | Demonstrate real desktop fidelity and case shadow behavior. | Actual controlled browser/model observations on a named profile, comparison with the fixed reference, measured resources and a synthetic commerce shadow journey. |
-| [M23-G99](../goals/M23/M23-G99.md) | Assess the integrated browser text capability. | All five worker outcomes, actual required browser observations and the original exit criteria; missing evidence remains blocked. |
+| [M23-G01](../planning/goals/M23/M23-G01.md) | Pin the complete Clef Flash conversion and reference contract. | An exact model/head/tokenizer/runtime/converter/pack manifest; an independently fixed comparison corpus and tolerances; a useful unavailable outcome when the pack cannot actually be prepared. |
+| [M23-G02](../planning/goals/M23/M23-G02.md) | Load the pinned pack in a bounded desktop browser worker. | Explicit download/cache selection, integrity checks, progress/cancellation, bounded initialization and failures, and a truthful named-device capability record. |
+| [M23-G03](../planning/goals/M23/M23-G03.md) | Add a browser adapter and separate client-observation ingestion. | Browser-safe logical contracts, a server-issued preparation identity, strict result validation, minimized server-owned observations and clear client provenance. |
+| [M23-G04](../planning/goals/M23/M23-G04.md) | Apply purpose, privacy, cancellation and destination rules. | Current source/session/task checks, late-result rejection, model-cache separation, application cleanup boundaries and an explicit permitted mode change for hosted fallback. |
+| [M23-G05](../planning/goals/M23/M23-G05.md) | Demonstrate real desktop fidelity and case shadow behavior. | Actual controlled browser/model observations on a named profile, comparison with the fixed reference, measured resources and a synthetic commerce shadow journey. |
+| [M23-G99](../planning/goals/M23/M23-G99.md) | Assess the integrated browser text capability. | All five worker outcomes, actual required browser observations and the original exit criteria; missing evidence remains blocked. |
 
 Each worker has four stable case specifications. G99 has three assessment
 specifications. Those cases describe obligations; they do not establish that a
@@ -61,12 +61,12 @@ comparison and controlled replacement of the browser execution profile.
 
 | Goal | Worker deliverable | Evidence the worker must produce |
 | --- | --- | --- |
-| [M24-G01](../goals/M24/M24-G01.md) | Verify or repair Wllama's complete Clef joint path. | Exact supported joint-request behavior, trained-head/token/span handling, and a comparison that detects substitution with a generic text-generation path. |
-| [M24-G02](../goals/M24/M24-G02.md) | Package and load a verified compact Q4 candidate. | Pinned GGUF/runtime/converter identities, integrity and resource bounds, exact artifact availability and honest loading failures. |
-| [M24-G03](../goals/M24/M24-G03.md) | Normalize compact results through the browser observation boundary. | The same finite logical contract and untrusted client provenance, explicit numerical normalization, and unchanged server source/authority checks. |
-| [M24-G04](../goals/M24/M24-G04.md) | Run a predeclared paired browser evaluation. | A fixed same-task comparison reporting unavailable cases, memory, latency, numerical agreement and task-quality evidence separately. |
-| [M24-G05](../goals/M24/M24-G05.md) | Demonstrate controlled browser replacement and rollback. | Current-version activation, cancelled/stale work rejection, explicit profile switching, revoked-profile handling and rollback to the correct reviewed profile. |
-| [M24-G99](../goals/M24/M24-G99.md) | Assess the integrated compact browser capability. | Original exit criteria and actual comparison/qualification evidence, without treating smaller artifacts or plausible probabilities as acceptance. |
+| [M24-G01](../planning/goals/M24/M24-G01.md) | Verify or repair Wllama's complete Clef joint path. | Exact supported joint-request behavior, trained-head/token/span handling, and a comparison that detects substitution with a generic text-generation path. |
+| [M24-G02](../planning/goals/M24/M24-G02.md) | Package and load a verified compact Q4 candidate. | Pinned GGUF/runtime/converter identities, integrity and resource bounds, exact artifact availability and honest loading failures. |
+| [M24-G03](../planning/goals/M24/M24-G03.md) | Normalize compact results through the browser observation boundary. | The same finite logical contract and untrusted client provenance, explicit numerical normalization, and unchanged server source/authority checks. |
+| [M24-G04](../planning/goals/M24/M24-G04.md) | Run a predeclared paired browser evaluation. | A fixed same-task comparison reporting unavailable cases, memory, latency, numerical agreement and task-quality evidence separately. |
+| [M24-G05](../planning/goals/M24/M24-G05.md) | Demonstrate controlled browser replacement and rollback. | Current-version activation, cancelled/stale work rejection, explicit profile switching, revoked-profile handling and rollback to the correct reviewed profile. |
+| [M24-G99](../planning/goals/M24/M24-G99.md) | Assess the integrated compact browser capability. | Original exit criteria and actual comparison/qualification evidence, without treating smaller artifacts or plausible probabilities as acceptance. |
 
 M24 preserves M14-G04's existing SystemOne endpoint transport. A browser runtime
 is a separate execution profile; an endpoint or model name does not prove the
@@ -80,12 +80,12 @@ privacy owners, using an actually supported vision companion and decision API.
 
 | Goal | Worker deliverable | Evidence the worker must produce |
 | --- | --- | --- |
-| [M25-G01](../goals/M25/M25-G01.md) | Bind browser image scope to existing intake and privacy owners. | Purpose-specific exact-version media access, current permission/quarantine checks and rejection of evidence excluded from model access. |
-| [M25-G02](../goals/M25/M25-G02.md) | Qualify a compatible vision companion and decision API path. | Matching model/vision/preprocessing identities and an actual image-to-decision path; generic vision or chat support is insufficient. |
-| [M25-G03](../goals/M25/M25-G03.md) | Process exact authorized image bytes under explicit bounds. | Bounded preprocessing, source hashes, image/question alignment, explicit overflow/unsupported results and no silent source substitution. |
-| [M25-G04](../goals/M25/M25-G04.md) | Extend media privacy and cancellation through browser memory. | Current erasure and retention checks, application cleanup, cancellation, late-result rejection and no media leakage into model caches or telemetry. |
-| [M25-G05](../goals/M25/M25-G05.md) | Demonstrate scoped image evidence assistance on a real browser. | Named-device inference and measured image-task behavior using allowed media, with cannot-assess/manual outcomes and honest provenance. |
-| [M25-G99](../goals/M25/M25-G99.md) | Assess the integrated browser image capability. | M17/M23 prerequisites, all five component outcomes and actual required image-path evidence against the original exits. |
+| [M25-G01](../planning/goals/M25/M25-G01.md) | Bind browser image scope to existing intake and privacy owners. | Purpose-specific exact-version media access, current permission/quarantine checks and rejection of evidence excluded from model access. |
+| [M25-G02](../planning/goals/M25/M25-G02.md) | Qualify a compatible vision companion and decision API path. | Matching model/vision/preprocessing identities and an actual image-to-decision path; generic vision or chat support is insufficient. |
+| [M25-G03](../planning/goals/M25/M25-G03.md) | Process exact authorized image bytes under explicit bounds. | Bounded preprocessing, source hashes, image/question alignment, explicit overflow/unsupported results and no silent source substitution. |
+| [M25-G04](../planning/goals/M25/M25-G04.md) | Extend media privacy and cancellation through browser memory. | Current erasure and retention checks, application cleanup, cancellation, late-result rejection and no media leakage into model caches or telemetry. |
+| [M25-G05](../planning/goals/M25/M25-G05.md) | Demonstrate scoped image evidence assistance on a real browser. | Named-device inference and measured image-task behavior using allowed media, with cannot-assess/manual outcomes and honest provenance. |
+| [M25-G99](../planning/goals/M25/M25-G99.md) | Assess the integrated browser image capability. | M17/M23 prerequisites, all five component outcomes and actual required image-path evidence against the original exits. |
 
 M25 does not require all of M24. The selected vision implementation must prove
 its own runtime and image-path prerequisites. Browser-local image permission

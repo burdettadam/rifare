@@ -26578,7 +26578,7 @@
   "adopted_additions": {
     "authority": "ADR-0042",
     "adopted_on": "2026-10-19",
-    "frozen_requirements": "reference/additions/m13-m22-requirements.json",
+    "frozen_requirements": "planning/reference/additions/m13-m22-requirements.json",
     "frozen_requirements_sha256": "0d4218fabd39eeb1328de5a3d1f79cc620967ef761a6dc4a405ec403a280d7b2",
     "original_requirements": 151,
     "adopted_requirements": 50,
@@ -26591,9 +26591,9 @@
     "source_document": "browser-milestone-additions.json",
     "source_sha256": "8302245159ecadc0bcc69248624c8c820a5678656fa1b405dd93797f4ae9810e",
     "revised_handoff_archive_sha256": "d02bf8aab75decb5cb163a2f82a8e12a51f3e778bfb311d3135d71fb5f57befe",
-    "frozen_requirements": "reference/additions/m23-m25-requirements.json",
+    "frozen_requirements": "planning/reference/additions/m23-m25-requirements.json",
     "frozen_requirements_sha256": "41d109fb6e810bfe9b2c9f8458e0aaa8cb5d45176c96d80fc3c733ca07e11abe",
-    "protected_prior_requirements": "reference/additions/m13-m22-requirements.json",
+    "protected_prior_requirements": "planning/reference/additions/m13-m22-requirements.json",
     "protected_prior_requirements_sha256": "0d4218fabd39eeb1328de5a3d1f79cc620967ef761a6dc4a405ec403a280d7b2",
     "protected_current_product_base": "93769a3029ebd2a5204c756733a8f8cf48fb67cd",
     "prior_counts": {

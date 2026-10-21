@@ -142,10 +142,10 @@ def load_documents(root: Path) -> dict[str, Any]:
     paths = {
         'goals':'planning/goals.json', 'tests':'planning/test-specifications.json',
         'coverage':'planning/requirement-coverage.json', 'milestones':'planning/milestones.json',
-        'original_requirements':'reference/original-backlog.json',
-        'original_tests':'reference/original-acceptance-tests.json',
-        'adopted_requirements':'reference/additions/m13-m22-requirements.json',
-        'browser_requirements':'reference/additions/m23-m25-requirements.json'}
+        'original_requirements':'planning/reference/original-backlog.json',
+        'original_tests':'planning/reference/original-acceptance-tests.json',
+        'adopted_requirements':'planning/reference/additions/m13-m22-requirements.json',
+        'browser_requirements':'planning/reference/additions/m23-m25-requirements.json'}
     if hashlib.sha256((root / paths['adopted_requirements']).read_bytes()).hexdigest() != ADOPTED_SHA256:
         raise ValueError('ADR-0042 frozen addition changed')
     if hashlib.sha256((root / paths['browser_requirements']).read_bytes()).hexdigest() != BROWSER_ADOPTED_SHA256:

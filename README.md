@@ -90,7 +90,7 @@ The current development checkpoint reaches **M20-G03: item-level drop-off handof
 
 The next recorded commerce increment is consolidation and custody continuity. Connected-provider qualification, the target application stack, independent deployment, and formal acceptance remain open. Browser inference is adopted roadmap work, not an available download in this preview.
 
-[Current status and evidence](docs/PROJECT-STATUS.md) · [Roadmap](ROADMAP.md) · [Detailed progress](PLANS.md)
+[Current status and evidence](docs/PROJECT-STATUS.md) · [Roadmap](docs/ROADMAP.md) · [Detailed progress](docs/PLANS.md)
 
 ## Find your way around
 
@@ -98,8 +98,8 @@ The next recorded commerce increment is consolidation and custody continuity. Co
 | --- | --- |
 | Run the demos and understand their output | [Try Rifare](docs/TRY-RIFARE.md) |
 | Understand the product's boundaries | [Current status](docs/PROJECT-STATUS.md) · [Compatibility limits](docs/COMPATIBILITY-LIMITS.md) |
-| Inspect the engineering design | [Architecture](ARCHITECTURE.md) · [Skill architecture](docs/SKILL-ARCHITECTURE.md) |
-| Continue an assigned development task | [Development](DEVELOPMENT.md) · [Agent instructions](AGENTS.md) · [Worker goals](WORKER-GOALS.md) |
+| Inspect the engineering design | [Architecture](docs/ARCHITECTURE.md) · [Skill architecture](docs/SKILL-ARCHITECTURE.md) |
+| Continue an assigned development task | [Development](docs/DEVELOPMENT.md) · [Agent instructions](AGENTS.md) · [Worker goals](planning/WORKER-GOALS.md) |
 | Review earlier decisions and milestones | [Decisions](docs/decisions/README.md) · [Work records](work/README.md) |
 | Use the logo and portfolio artwork | [Brand assets](docs/BRAND.md) · [Presentation handoff](docs/PORTFOLIO-HANDOFF.md) |
 

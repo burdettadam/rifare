@@ -11,13 +11,13 @@ from urllib.parse import unquote, urlsplit
 
 EXCLUDED_PARTS = {'.git', '__pycache__', '.venv', 'node_modules', 'evidence', 'artifacts', 'validation', '.worktrees', 'runtime'}
 REQUIRED_PATHS = (
-    'README.md', 'AGENTS.md', 'GOVERNANCE.md', 'DEVELOPMENT.md', 'ARCHITECTURE.md', 'PLANS.md',
-    'ROADMAP.md', 'project.json', 'LICENSE-STATUS.md', 'THIRD-PARTY-NOTICES.md',
-    'WORKER-GOALS.html', 'WORKER-GOALS.md', 'goals/M00/M00-G01.md',
+    'README.md', 'AGENTS.md', 'docs/GOVERNANCE.md', 'docs/DEVELOPMENT.md', 'docs/ARCHITECTURE.md', 'docs/PLANS.md',
+    'docs/ROADMAP.md', 'planning/project.json', 'LICENSE-STATUS.md', 'THIRD-PARTY-NOTICES.md',
+    'planning/WORKER-GOALS.html', 'planning/WORKER-GOALS.md', 'planning/goals/M00/M00-G01.md',
     'docs/FIRST-DISPATCH.md', 'docs/WORKFLOW-ADOPTION.md', 'docs/REGRESSION-STRATEGY.md',
     '.agents/skills/work-goal/SKILL.md', '.agents/skills/worktree-flow/SKILL.md',
     'planning/goals.json', 'planning/test-specifications.json', 'planning/capability-targets.json',
-    'templates/GOAL-WORK-RECORD.md', 'work/README.md', '.gitignore', '.gitattributes',
+    'planning/templates/GOAL-WORK-RECORD.md', 'work/README.md', '.gitignore', '.gitattributes',
 )
 
 
@@ -109,7 +109,7 @@ def check(root: Path) -> list[str]:
             if error:
                 errors.append(error)
     try:
-        metadata = json.loads((root / 'project.json').read_text(encoding='utf-8'))
+        metadata = json.loads((root / 'planning/project.json').read_text(encoding='utf-8'))
         if metadata.get('name') != 'Rifare' or metadata.get('slug') != 'rifare':
             errors.append('Project identity must be Rifare / rifare')
         if metadata.get('stage') != 'planning_starter' or metadata.get('product_implemented') is not False:

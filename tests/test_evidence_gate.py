@@ -473,7 +473,7 @@ class ReviewBoundaryTests(EvidenceFixture):
 
 class AdditionalBoundaryTests(EvidenceFixture):
     def test_schema_matches_actual_capture_fields(self):
-        schema=json.loads((ROOT/'templates/evidence-bundle.v1.schema.json').read_text())
+        schema=json.loads((ROOT/'planning/templates/evidence-bundle.v1.schema.json').read_text())
         self.assertEqual(set(schema['required']),set(E.MANIFEST_KEYS))
         self.assertEqual(set(schema['properties']),set(E.MANIFEST_KEYS))
         self.assertFalse(schema['additionalProperties'])

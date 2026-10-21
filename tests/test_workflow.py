@@ -253,7 +253,7 @@ class WorkflowContracts(unittest.TestCase):
         self.blocked('exception scope expanded')
 
     def test_unresolved_template_cannot_complete(self):
-        self.record = json.loads((ROOT/'templates/WORKFLOW-CHECKPOINT.json').read_text())
+        self.record = json.loads((ROOT/'planning/templates/WORKFLOW-CHECKPOINT.json').read_text())
         self.blocked('checkpoint: stale')
 
     def test_declared_adoption_pins_actual_instruction_files(self):
@@ -273,7 +273,7 @@ class WorkflowContracts(unittest.TestCase):
         self.assertEqual(result['checkpoint']['goal_id'],'M00-G04')
 
     def test_cli_requires_explicit_policy_pin_for_checkpoint(self):
-        result=subprocess.run([sys.executable,str(ROOT/'tools/check_workflow.py'),'--root',str(ROOT),'--checkpoint',str(ROOT/'templates/WORKFLOW-CHECKPOINT.json')],capture_output=True,text=True,timeout=20)
+        result=subprocess.run([sys.executable,str(ROOT/'tools/check_workflow.py'),'--root',str(ROOT),'--checkpoint',str(ROOT/'planning/templates/WORKFLOW-CHECKPOINT.json')],capture_output=True,text=True,timeout=20)
         self.assertEqual(result.returncode,1,result.stdout+result.stderr)
         self.assertIn('exact prior policy commit required',result.stdout)
         self.assertNotIn('Traceback',result.stderr)

@@ -24,7 +24,7 @@ These rows describe local behavior. They do not establish live platform, payment
 
 The M20-G03 implementation records which individual units a synthetic drop-off source accepted or rejected. It preserves partial intake, corrections, disputes, and original family identity across credential replacement. Handoff acceptance remains separate from consolidation, movement, warehouse receipt/inspection, stock, and settlement.
 
-The next recorded commerce increment is **M20-G04: consolidation and custody continuity**, followed by G05 shopper experience. Those goals require their own assignment and evidence; a roadmap entry is not an instruction to begin work. See the end of [PLANS.md](../PLANS.md) and the [M20 work record](../work/records/M20-dropoff-milestone.md).
+The next recorded commerce increment is **M20-G04: consolidation and custody continuity**, followed by G05 shopper experience. Those goals require their own assignment and evidence; a roadmap entry is not an instruction to begin work. See the end of [docs/PLANS.md](PLANS.md) and the [M20 work record](../work/records/M20-dropoff-milestone.md).
 
 ## What the preview does not establish
 
@@ -44,6 +44,6 @@ For the original boundaries, see [local environment](LOCAL-ENVIRONMENT.md), [M18
 
 The default development line is `development`. `main` is an older protected baseline; do not infer current implementation from that branch alone. Preserve the current source and Git history when continuing the project.
 
-Several architecture, foundation, and milestone documents intentionally retain the wording of their original checkpoints. Read their date and scope alongside the latest work record and the end of [PLANS.md](../PLANS.md). The earlier [README at the imported checkpoint](https://github.com/burdettadam/rifare/blob/c299065241b3bdf4928a83f9ff4decf749c6afaa/README.md) remains available in Git history.
+Several architecture, foundation, and milestone documents intentionally retain the wording of their original checkpoints. Read their date and scope alongside the latest work record and the end of [docs/PLANS.md](PLANS.md). The earlier [README at the imported checkpoint](https://github.com/burdettadam/rifare/blob/c299065241b3bdf4928a83f9ff4decf749c6afaa/README.md) remains available in Git history.
 
 Canonical planning files and generated worker catalogues describe requirements and dependencies. Actual development outcomes belong in the [work records](../work/README.md) and [acceptance ledger](../work/accepted-goals.json). A feature inventory, milestone number, synthetic demo, or local passing check is not a production-readiness claim.

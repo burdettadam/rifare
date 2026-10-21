@@ -2,7 +2,7 @@
 
 ## Read before writing
 
-Read `GOVERNANCE.md`, `DEVELOPMENT.md`, `ARCHITECTURE.md`, `PLANS.md`, the assigned goal packet and applicable nested guidance. Use `.agents/skills/work-goal/SKILL.md` and `.agents/skills/worktree-flow/SKILL.md`. The rubrics under `skills/` refine evidence/review; they add no authority or scheduler.
+Read `docs/GOVERNANCE.md`, `docs/DEVELOPMENT.md`, `docs/ARCHITECTURE.md`, `docs/PLANS.md`, the assigned goal packet and applicable nested guidance. Use `.agents/skills/work-goal/SKILL.md` and `.agents/skills/worktree-flow/SKILL.md`. The rubrics under `.agents/rubrics/` refine evidence/review; they add no authority or scheduler.
 
 ## Bootstrap boundary
 
@@ -12,7 +12,7 @@ Use Rifare as the sole project identity in code, documentation, generated views,
 
 ## Execution
 
-Use one writer per assigned branch/worktree. Discover actual paths through Git; do not assume `.git` is a directory in a linked worktree. Ordinary local commands are in `DEVELOPMENT.md`. Do not introduce a worker scheduler, registry daemon, custom Git wrapper or mandatory model provider.
+Use one writer per assigned branch/worktree. Discover actual paths through Git; do not assume `.git` is a directory in a linked worktree. Ordinary local commands are in `docs/DEVELOPMENT.md`. Do not introduce a worker scheduler, registry daemon, custom Git wrapper or mandatory model provider.
 
 Scope changes, paid/production operations, remote publication, account administration and release tags need separate authorization. No credentials, customer data, model keys, database dumps or generated evidence in Git.
 

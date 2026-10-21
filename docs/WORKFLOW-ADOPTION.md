@@ -25,7 +25,7 @@ inferred from file presence. No model/provider is selected or required.
 
 | Responsibility | Rifare convention |
 |---|---|
-| Contract | `goals/<milestone>/<goal-id>.md` |
+| Contract | `planning/goals/<milestone>/<goal-id>.md` |
 | Writer branch | `goal/<goal-id>` from a recorded accepted base |
 | Progress | `work/records/<goal-id>.md` |
 | Evidence | ignored `evidence/<goal-id>/<candidate-sha>/` |

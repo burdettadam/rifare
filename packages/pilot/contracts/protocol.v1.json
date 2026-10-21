@@ -18,7 +18,7 @@
     },
     {
       "path": "tools/check_release_benchmark.py",
-      "sha256": "bd15ac8019e8c8c76707e74b5db02594fdf2b07a967c966e9602fd78c987d832"
+      "sha256": "74cbb4d2e5fd7dd4b27621dbc85f928c0d32bf50d92daa7d3df90232ce55f864"
     },
     {
       "path": "tools/check_support_envelope.py",

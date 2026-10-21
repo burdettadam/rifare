@@ -139,7 +139,7 @@ def validate_benchmark(document: Any, root: Path) -> list[str]:
         rows = index(inv['scenarios'], {k:str for k in ('id','goal_id','milestone','category','severity',
             'kind','layer','stage','specification_sha256','execution_status')}, 'scenarios')
         require(set(rows) == set(source), 'inventory: missing or invented scenario ID')
-        seeds = {s['id'] for s in load_document(root / 'reference/original-acceptance-tests.json')['tests']}
+        seeds = {s['id'] for s in load_document(root / 'planning/reference/original-acceptance-tests.json')['tests']}
         require(inventory_ref['scenario_count'] == len(rows), 'inventory scenario count mismatch')
         require(inventory_ref['retained_seed_count'] == len(seeds) and seeds <= set(rows), 'retained seeds mismatch')
         for identity, row in rows.items():

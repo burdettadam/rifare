@@ -4237,7 +4237,7 @@
         "CASE-M13-G01-03"
       ],
       "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing.",
-      "source_reference": "reference/additions/m13-m22-requirements.json",
+      "source_reference": "planning/reference/additions/m13-m22-requirements.json",
       "origin_acceptance_criteria": [
         "A fixed return-intake request can be represented without a Cloudflare model ID, proprietary thread, raw credential, or caller-selected business authority in its logical task contract.",
         "Missing answers, unknown options, unsupported question types, nonfinite values, and materially invalid distributions produce an unusable result rather than a classification eligible for later action.",
@@ -4270,7 +4270,7 @@
         "CASE-M13-G02-04"
       ],
       "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing.",
-      "source_reference": "reference/additions/m13-m22-requirements.json",
+      "source_reference": "planning/reference/additions/m13-m22-requirements.json",
       "origin_acceptance_criteria": [
         "Two synthetic merchant profiles resolve through one base skill and question resource without merchant-ID conditionals; disallowed rubric overrides fail.",
         "Cross-tenant or unpermitted case data cannot enter the input snapshot, and unavailable source data is represented as unavailable rather than verified absence.",
@@ -4304,7 +4304,7 @@
         "CASE-M13-G03-04"
       ],
       "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing.",
-      "source_reference": "reference/additions/m13-m22-requirements.json",
+      "source_reference": "planning/reference/additions/m13-m22-requirements.json",
       "origin_acceptance_criteria": [
         "The fixture captures the documented URL, authorization placement, model/state/questions body, and envelope normalization for a successful text-only request.",
         "Timeout, non-success response, invalid schema, oversized response, or credential revocation yields an explicit unusable/unavailable observation and does not trigger unapproved destination or billing fallback.",
@@ -4338,7 +4338,7 @@
         "CASE-M13-G04-04"
       ],
       "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing.",
-      "source_reference": "reference/additions/m13-m22-requirements.json",
+      "source_reference": "planning/reference/additions/m13-m22-requirements.json",
       "origin_acceptance_criteria": [
         "An authorized synthetic case completes case-to-snapshot-to-adapter-to-validated-receipt processing through the existing interface.",
         "A shadow result changes neither assignment nor eligibility, money, inventory, approval, or settlement state; the operator can continue the original manual workflow.",
@@ -4372,7 +4372,7 @@
         "CASE-M13-G05-04"
       ],
       "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing.",
-      "source_reference": "reference/additions/m13-m22-requirements.json",
+      "source_reference": "planning/reference/additions/m13-m22-requirements.json",
       "origin_acceptance_criteria": [
         "A clean local setup using current diagnostic fixtures completes the useful shadow path without Cloudflare credentials, paid inference, or live merchant data.",
         "The evaluation protocol and reference cohort are versioned before qualification outputs are examined; no target or exclusion is changed retrospectively to obtain a pass.",
@@ -4405,7 +4405,7 @@
         "CASE-M14-G01-04"
       ],
       "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing.",
-      "source_reference": "reference/additions/m13-m22-requirements.json",
+      "source_reference": "planning/reference/additions/m13-m22-requirements.json",
       "origin_acceptance_criteria": [
         "A reviewer can determine the pass/fail and permitted handling decisions from the frozen protocol before viewing qualification results.",
         "Changing a material question, locale, preprocessing, model, serving, or threshold configuration produces a new qualification identity rather than reusing old approval.",
@@ -4438,7 +4438,7 @@
         "CASE-M14-G02-04"
       ],
       "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing.",
-      "source_reference": "reference/additions/m13-m22-requirements.json",
+      "source_reference": "planning/reference/additions/m13-m22-requirements.json",
       "origin_acceptance_criteria": [
         "Actual inference receipts identify the submitted snapshots and serving configuration; fixture observations cannot satisfy the live-backend gate.",
         "The reported result follows the predeclared calibration and held-out procedure and retains all required cases and exclusions.",
@@ -4471,7 +4471,7 @@
         "CASE-M14-G03-04"
       ],
       "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing.",
-      "source_reference": "reference/additions/m13-m22-requirements.json",
+      "source_reference": "planning/reference/additions/m13-m22-requirements.json",
       "origin_acceptance_criteria": [
         "A current qualified result can perform only an allowed existing route; the same result cannot grant a financial action, approval, or expanded permission.",
         "Human takeover, revoked qualification, a kill switch, or stale relevant case facts fences a late routing result before it changes ownership or sends a message.",
@@ -4504,7 +4504,7 @@
         "CASE-M14-G04-04"
       ],
       "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing.",
-      "source_reference": "reference/additions/m13-m22-requirements.json",
+      "source_reference": "planning/reference/additions/m13-m22-requirements.json",
       "origin_acceptance_criteria": [
         "The existing skill, task, case schema, policy, and action contracts remain unchanged when selecting the second transport configuration.",
         "A Clef server that lacks trained-head evidence, an unsupported route, or an unrecorded effective context cap cannot receive a self-hosted-qualified label.",
@@ -4537,7 +4537,7 @@
         "CASE-M14-G05-04"
       ],
       "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing.",
-      "source_reference": "reference/additions/m13-m22-requirements.json",
+      "source_reference": "planning/reference/additions/m13-m22-requirements.json",
       "origin_acceptance_criteria": [
         "The application supports canary/rollback of the serving configuration while preserving case history, effective skill identity, policy, and existing operation receipts.",
         "A backend-portability claim requires real observations from two implementations on the same declared task; mocks or an unexercised endpoint cannot satisfy it.",
@@ -4570,7 +4570,7 @@
         "CASE-M15-G01-03"
       ],
       "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing.",
-      "source_reference": "reference/additions/m13-m22-requirements.json",
+      "source_reference": "planning/reference/additions/m13-m22-requirements.json",
       "origin_acceptance_criteria": [
         "The contract names one supported profile, trusted configuration sources, token/key binding and identity-to-task mapping; each field has an explicit trusted source or server lookup.",
         "Two synthetic tenants using the same public task shape still resolve to different permitted resources; forged tenant, customer, role or task claims cannot increase authority.",
@@ -4602,7 +4602,7 @@
         "CASE-M15-G02-03"
       ],
       "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing.",
-      "source_reference": "reference/additions/m13-m22-requirements.json",
+      "source_reference": "planning/reference/additions/m13-m22-requirements.json",
       "origin_acceptance_criteria": [
         "A properly bound token and proof reaches the existing permitted read/proposal path; the same token without a proof or with a different sender key is rejected before resource access.",
         "Wrong method, target URI, token hash, token audience, expired proof, disallowed algorithm and an untrusted proxy-origin substitution are rejected with bounded, non-secret diagnostics.",
@@ -4635,7 +4635,7 @@
         "CASE-M15-G03-04"
       ],
       "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing.",
-      "source_reference": "reference/additions/m13-m22-requirements.json",
+      "source_reference": "planning/reference/additions/m13-m22-requirements.json",
       "origin_acceptance_criteria": [
         "Two verifier processes race the same valid proof against the shared store: at most one request is admitted. A restart within the proof window does not make the proof reusable.",
         "Revoked membership/session, an expired task, a stop revision and a stale lease generation deny the relevant next operation or renewal even when the token and cryptographic proof are valid.",
@@ -4669,7 +4669,7 @@
         "CASE-M15-G04-04"
       ],
       "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing.",
-      "source_reference": "reference/additions/m13-m22-requirements.json",
+      "source_reference": "planning/reference/additions/m13-m22-requirements.json",
       "origin_acceptance_criteria": [
         "An independent client reads the permitted synthetic case and prepares a return proposal; a separate authorized operator can review it using the existing manual flow.",
         "Client replacement fences the previous owner's next operation and does not extend the original expiry, add a store or restore revoked permissions.",
@@ -4703,7 +4703,7 @@
         "CASE-M15-G05-04"
       ],
       "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing.",
-      "source_reference": "reference/additions/m13-m22-requirements.json",
+      "source_reference": "planning/reference/additions/m13-m22-requirements.json",
       "origin_acceptance_criteria": [
         "The evidence manifest identifies candidate/configuration, selected cases, results and omissions, and explicitly records focused checks as neither full regression nor goal acceptance.",
         "A synthetic-only result is labeled local development readiness. A live-qualified label requires observed behavior on the named actual deployment, including direct origin and shared replay enforcement.",
@@ -4736,7 +4736,7 @@
         "CASE-M16-G01-04"
       ],
       "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing.",
-      "source_reference": "reference/additions/m13-m22-requirements.json",
+      "source_reference": "planning/reference/additions/m13-m22-requirements.json",
       "origin_acceptance_criteria": [
         "The coverage matrix names the enforceable boundary for each route and resource, and explicitly marks external-host inference, network and storage behavior as outside Rifare's observation.",
         "A synthetic useful task can read allowed facts, call an approved model stub and prepare a proposal using only the typed broker; arbitrary destinations and direct adapter mutations are rejected.",
@@ -4769,7 +4769,7 @@
         "CASE-M16-G02-04"
       ],
       "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing.",
-      "source_reference": "reference/additions/m13-m22-requirements.json",
+      "source_reference": "planning/reference/additions/m13-m22-requirements.json",
       "origin_acceptance_criteria": [
         "From the real isolated runner, direct HTTP/TCP/DNS or alternate network paths in the supported threat model cannot reach the recording destination, while a permitted typed broker operation succeeds.",
         "The runner cannot read a secret canary held only by the broker, host-sensitive mounts or a sibling task's scratch; denied attempts do not expose the canary in logs.",
@@ -4802,7 +4802,7 @@
         "CASE-M16-G03-04"
       ],
       "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing.",
-      "source_reference": "reference/additions/m13-m22-requirements.json",
+      "source_reference": "planning/reference/additions/m13-m22-requirements.json",
       "origin_acceptance_criteria": [
         "A protected response is withheld until the durable restriction and all relevant acknowledgements are complete; a missing acknowledgement or stale version releases no protected payload.",
         "After narrowing, the removed export route fails even with a previously issued token/lease, while the named retained workflow operations remain usable.",
@@ -4835,7 +4835,7 @@
         "CASE-M16-G04-04"
       ],
       "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing.",
-      "source_reference": "reference/additions/m13-m22-requirements.json",
+      "source_reference": "planning/reference/additions/m13-m22-requirements.json",
       "origin_acceptance_criteria": [
         "When branch A requests protected data, branch B's stale removed route is fenced before that data is released, including an already-open channel in the supported transport.",
         "The timeout and restart cases fail closed, preserve the narrowed state and emit a reviewable reason without leaking protected payloads.",
@@ -4868,7 +4868,7 @@
         "CASE-M16-G05-04"
       ],
       "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing.",
-      "source_reference": "reference/additions/m13-m22-requirements.json",
+      "source_reference": "planning/reference/additions/m13-m22-requirements.json",
       "origin_acceptance_criteria": [
         "With the optional gateway disabled, the supported direct/stub model path and manual workflow remain available under the same broker authority, and no Cloudflare credential or service is required.",
         "For a selected optional profile, synthetic wire evidence shows the exact trusted logging/cache/route/billing settings; unauthorized header overrides and provider/billing fallback are rejected.",
@@ -4902,7 +4902,7 @@
         "CASE-M17-G01-04"
       ],
       "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing.",
-      "source_reference": "reference/additions/m13-m22-requirements.json",
+      "source_reference": "planning/reference/additions/m13-m22-requirements.json",
       "origin_acceptance_criteria": [
         "The current source-boundary behavior and each intake gap are recorded; no existing endpoint is assumed qualified solely because a contract or fixture exists.",
         "Only an opted-in declared image type within byte/pixel/decompression bounds can enter the scoped quarantine flow; unsupported media retains a usable manual explanation/path.",
@@ -4936,7 +4936,7 @@
         "CASE-M17-G02-04"
       ],
       "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing.",
-      "source_reference": "reference/additions/m13-m22-requirements.json",
+      "source_reference": "planning/reference/additions/m13-m22-requirements.json",
       "origin_acceptance_criteria": [
         "A cross-tenant reference, changed attachment hash, expired access grant, revoked purpose, or stale worker cannot release image bytes to the model adapter.",
         "Only the approved version enters bounded preprocessing, and every transformed derivative records its source hash and transformation version.",
@@ -4970,7 +4970,7 @@
         "CASE-M17-G03-04"
       ],
       "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing.",
-      "source_reference": "reference/additions/m13-m22-requirements.json",
+      "source_reference": "planning/reference/additions/m13-m22-requirements.json",
       "origin_acceptance_criteria": [
         "A scoped erasure/retention operation removes governed source and derivative content from every newly added product-controlled surface while preserving only permitted minimized audit linkage.",
         "A processing result arriving after revocation or erasure is fenced and cannot restore the deleted media or expose its content.",
@@ -5004,7 +5004,7 @@
         "CASE-M17-G04-04"
       ],
       "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing.",
-      "source_reference": "reference/additions/m13-m22-requirements.json",
+      "source_reference": "planning/reference/additions/m13-m22-requirements.json",
       "origin_acceptance_criteria": [
         "The same base return skill consumes the image question resource through approved merchant configuration and remains usable without image inference.",
         "Each observation points to the exact authorized source/derivative versions and states whether it was fixture-only or actual model inference.",
@@ -5038,7 +5038,7 @@
         "CASE-M17-G05-04"
       ],
       "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing.",
-      "source_reference": "reference/additions/m13-m22-requirements.json",
+      "source_reference": "planning/reference/additions/m13-m22-requirements.json",
       "origin_acceptance_criteria": [
         "The image qualification report follows its predeclared protocol, uses actual image inference for any quality claim, and separates cannot-assess handling from incorrect factual observations.",
         "Absent authorized images or a live vision backend, the implementation remains diagnostic/review-only and the required qualification is recorded as pending.",
@@ -5072,7 +5072,7 @@
         "CASE-M18-G01-03"
       ],
       "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing.",
-      "source_reference": "reference/additions/m13-m22-requirements.json",
+      "source_reference": "planning/reference/additions/m13-m22-requirements.json",
       "origin_acceptance_criteria": [
         "A verified returning shopper receives only memory permitted for the current tenant, channel and purpose; a similar name or unverified handle cannot select that memory.",
         "Each projected preference identifies its source, observed time and whether it was explicitly stated or inferred; missing history is represented as missing.",
@@ -5105,7 +5105,7 @@
         "CASE-M18-G02-03"
       ],
       "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing.",
-      "source_reference": "reference/additions/m13-m22-requirements.json",
+      "source_reference": "planning/reference/additions/m13-m22-requirements.json",
       "origin_acceptance_criteria": [
         "The same merchant action is available only when all required source, permission, integration and runtime qualifications are current.",
         "Disabled, needs-configuration, unsupported, temporarily unavailable and unverified actions remain distinguishable; an old descriptor cannot override the current handler.",
@@ -5138,7 +5138,7 @@
         "CASE-M18-G03-03"
       ],
       "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing.",
-      "source_reference": "reference/additions/m13-m22-requirements.json",
+      "source_reference": "planning/reference/additions/m13-m22-requirements.json",
       "origin_acceptance_criteria": [
         "A supported tracking-to-exchange or shopping-to-edit conversation preserves the original case and the exact underlying previews, approvals and receipts.",
         "Changing an item, amount, order or source version invalidates the affected preview before execution; a conversation acknowledgement cannot substitute for required approval.",
@@ -5171,7 +5171,7 @@
         "CASE-M18-G04-03"
       ],
       "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing.",
-      "source_reference": "reference/additions/m13-m22-requirements.json",
+      "source_reference": "planning/reference/additions/m13-m22-requirements.json",
       "origin_acceptance_criteria": [
         "A purchase, resolved return, changed fit preference or completed order edit updates or suppresses the corresponding waiting follow-up.",
         "Duplicate events create one logical follow-up; late events cannot reopen a completed recovery sequence or multiply its exposure metrics.",
@@ -5204,7 +5204,7 @@
         "CASE-M18-G05-03"
       ],
       "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing.",
-      "source_reference": "reference/additions/m13-m22-requirements.json",
+      "source_reference": "planning/reference/additions/m13-m22-requirements.json",
       "origin_acceptance_criteria": [
         "A new qualified caller continues an open journey from published facts and receipts without a private provider thread or the old runtime's checkpoint.",
         "The old caller loses its permitted actions after handover; a late response cannot send a message or replay a completed effect.",
@@ -5236,7 +5236,7 @@
         "CASE-M19-G01-03"
       ],
       "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing.",
-      "source_reference": "reference/additions/m13-m22-requirements.json",
+      "source_reference": "planning/reference/additions/m13-m22-requirements.json",
       "origin_acceptance_criteria": [
         "A balance snapshot identifies account, customer binding, source revision, observed time and supported operations; stale or incomplete balances cannot authorize redemption.",
         "Points, money and store credit retain separate units and ledgers; unsupported conversions are rejected.",
@@ -5268,7 +5268,7 @@
         "CASE-M19-G02-03"
       ],
       "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing.",
-      "source_reference": "reference/additions/m13-m22-requirements.json",
+      "source_reference": "planning/reference/additions/m13-m22-requirements.json",
       "origin_acceptance_criteria": [
         "A partial refund proposes the documented reversal for only its eligible original lines; repeated exchanges preserve their original lineage.",
         "Duplicate or reordered financial events do not accrue or reverse the same entitlement twice.",
@@ -5300,7 +5300,7 @@
         "CASE-M19-G03-03"
       ],
       "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing.",
-      "source_reference": "reference/additions/m13-m22-requirements.json",
+      "source_reference": "planning/reference/additions/m13-m22-requirements.json",
       "origin_acceptance_criteria": [
         "Two concurrent redemptions cannot spend the same available entitlement. An unknown redemption continues to encumber its points across reservation expiry, timeout and restart until authoritative reconciliation or cancellation resolves the outcome; another redemption cannot consume that reserved balance.",
         "A timeout after provider acceptance remains unknown and is reconciled by original operation ID without another redemption.",
@@ -5332,7 +5332,7 @@
         "CASE-M19-G04-03"
       ],
       "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing.",
-      "source_reference": "reference/additions/m13-m22-requirements.json",
+      "source_reference": "planning/reference/additions/m13-m22-requirements.json",
       "origin_acceptance_criteria": [
         "An incentive quote shows current earning or redemption terms, eligible items, expiration and source references; generated wording cannot improve those terms.",
         "Enrollment, redemption and message delivery require their separate existing authority; agreeing to a shopping recommendation grants none of them implicitly.",
@@ -5365,7 +5365,7 @@
         "CASE-M19-G05-04"
       ],
       "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing.",
-      "source_reference": "reference/additions/m13-m22-requirements.json",
+      "source_reference": "planning/reference/additions/m13-m22-requirements.json",
       "origin_acceptance_criteria": [
         "A declared end-to-end scenario ties local accrual/redemption/reversal records to the provider's observed balance and event identities.",
         "Unsupported or missing reversal evidence remains an exception, and an otherwise authorized customer refund continues through its own existing path.",
@@ -5399,7 +5399,7 @@
         "CASE-M20-G01-03"
       ],
       "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing.",
-      "source_reference": "reference/additions/m13-m22-requirements.json",
+      "source_reference": "planning/reference/additions/m13-m22-requirements.json",
       "origin_acceptance_criteria": [
         "A permitted item/category/geography receives only currently qualified methods and site choices with their actual packaging and fee terms.",
         "A revoked contract, unavailable site or excluded item removes the choice before credential issuance.",
@@ -5432,7 +5432,7 @@
         "CASE-M20-G02-03"
       ],
       "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing.",
-      "source_reference": "reference/additions/m13-m22-requirements.json",
+      "source_reference": "planning/reference/additions/m13-m22-requirements.json",
       "origin_acceptance_criteria": [
         "Issued credentials reference the approved item set and provider terms; a changed return or fee invalidates the unsent request.",
         "A timeout cannot trigger a second credential request with a new operation identity until the original outcome is reconciled.",
@@ -5465,7 +5465,7 @@
         "CASE-M20-G03-03"
       ],
       "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing.",
-      "source_reference": "reference/additions/m13-m22-requirements.json",
+      "source_reference": "planning/reference/additions/m13-m22-requirements.json",
       "origin_acceptance_criteria": [
         "A two-item credential with only one accepted item records that item's handoff and leaves the other outstanding.",
         "A duplicate or wrong-return scan cannot increase received quantity or move another customer's return.",
@@ -5498,7 +5498,7 @@
         "CASE-M20-G04-03"
       ],
       "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing.",
-      "source_reference": "reference/additions/m13-m22-requirements.json",
+      "source_reference": "planning/reference/additions/m13-m22-requirements.json",
       "origin_acceptance_criteria": [
         "Each accepted item is traceable through reported consolidation and receiving references without creating a second stock balance.",
         "Missing movement, rejected custody or partial arrival remains explicit; elapsed time cannot advance the return.",
@@ -5531,7 +5531,7 @@
         "CASE-M20-G05-03"
       ],
       "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing.",
-      "source_reference": "reference/additions/m13-m22-requirements.json",
+      "source_reference": "planning/reference/additions/m13-m22-requirements.json",
       "origin_acceptance_criteria": [
         "A shopper completes the qualified method using accurate site, fee, packaging and expiry instructions; an accessible alternative is available for the declared device profile.",
         "An outage before issuance or after handoff shows a recoverable state without inventing a replacement credential or final resolution.",
@@ -5563,7 +5563,7 @@
         "CASE-M21-G01-03"
       ],
       "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing.",
-      "source_reference": "reference/additions/m13-m22-requirements.json",
+      "source_reference": "planning/reference/additions/m13-m22-requirements.json",
       "origin_acceptance_criteria": [
         "Published topology refers to existing qualified locations and identifies disconnected or forbidden routes before planning.",
         "Changing a bin placement or access edge increments the topology revision and invalidates affected unsent route proposals.",
@@ -5595,7 +5595,7 @@
         "CASE-M21-G02-03"
       ],
       "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing.",
-      "source_reference": "reference/additions/m13-m22-requirements.json",
+      "source_reference": "planning/reference/additions/m13-m22-requirements.json",
       "origin_acceptance_criteria": [
         "A proposal references each allocated item, route stop and source revision and obeys the declared access and capacity constraints.",
         "Stock, hold, allocation or layout changes before claim invalidate the affected proposal rather than preserving a stale route.",
@@ -5627,7 +5627,7 @@
         "CASE-M21-G03-03"
       ],
       "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing.",
-      "source_reference": "reference/additions/m13-m22-requirements.json",
+      "source_reference": "planning/reference/additions/m13-m22-requirements.json",
       "origin_acceptance_criteria": [
         "Only the current picker may advance its claimed stops; two pickers cannot consume the same allocation.",
         "Wrong-bin, wrong-item or wrong-tote scans produce a discrepancy without inflating picked or packed quantity.",
@@ -5659,7 +5659,7 @@
         "CASE-M21-G04-03"
       ],
       "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing.",
-      "source_reference": "reference/additions/m13-m22-requirements.json",
+      "source_reference": "planning/reference/additions/m13-m22-requirements.json",
       "origin_acceptance_criteria": [
         "A configured physical-use event decrements the correct consumable and location once, using exact pack/unit conversions.",
         "Reprinting, voiding or retrying a label is not assumed to consume or restore stock without its declared source observation.",
@@ -5692,7 +5692,7 @@
         "CASE-M21-G05-04"
       ],
       "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing.",
-      "source_reference": "reference/additions/m13-m22-requirements.json",
+      "source_reference": "planning/reference/additions/m13-m22-requirements.json",
       "origin_acceptance_criteria": [
         "Without an explicitly active mandate capability, a threshold or schedule creates only one explainable PO draft. Repeated observations, open POs and partial receipts cannot duplicate the same uncovered need or authorize a supplier call.",
         "When the optional path is separately qualified, a principal with M11-G06 procurement approval authority approves its versioned mandate terms, preserving required separation of duties. The proposing or executing agent cannot activate or widen it. Each occurrence rechecks current mandate and authorizing authority, fixed merchant/supplier/SKU terms, stock and open-PO evidence, exact purchase preview, approved quantities and atomic per-order/aggregate spend reservations. Covered changes require new approval.",
@@ -5724,7 +5724,7 @@
         "CASE-M22-G01-03"
       ],
       "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing.",
-      "source_reference": "reference/additions/m13-m22-requirements.json",
+      "source_reference": "planning/reference/additions/m13-m22-requirements.json",
       "origin_acceptance_criteria": [
         "Two merchant profiles tailor a shared strategy without code forks or adding data outside their permitted purpose.",
         "A private support note, unverified inference or forbidden source field cannot be selected as campaign evidence.",
@@ -5755,7 +5755,7 @@
         "CASE-M22-G02-03"
       ],
       "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing.",
-      "source_reference": "reference/additions/m13-m22-requirements.json",
+      "source_reference": "planning/reference/additions/m13-m22-requirements.json",
       "origin_acceptance_criteria": [
         "Each retained variant identifies the facts and approved offer supporting its personalization; invented prices, claims or product IDs are rejected.",
         "Incomplete required history produces abstention, a permitted generic variant or manual review rather than invented preference or verified absence.",
@@ -5786,7 +5786,7 @@
         "CASE-M22-G03-03"
       ],
       "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing.",
-      "source_reference": "reference/additions/m13-m22-requirements.json",
+      "source_reference": "planning/reference/additions/m13-m22-requirements.json",
       "origin_acceptance_criteria": [
         "The approved manifest identifies each variant's content digest, source references, strategy version and current offer terms.",
         "Changing any covered content, recipient membership or material term invalidates the affected approval before scheduling.",
@@ -5817,7 +5817,7 @@
         "CASE-M22-G04-03"
       ],
       "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing.",
-      "source_reference": "reference/additions/m13-m22-requirements.json",
+      "source_reference": "planning/reference/additions/m13-m22-requirements.json",
       "origin_acceptance_criteria": [
         "An intervening purchase, opt-out, source correction or material offer change suppresses or returns the affected variant for review.",
         "Duplicate schedules and retries retain the same logical delivery identity and do not multiply campaign exposure.",
@@ -5848,7 +5848,7 @@
         "CASE-M22-G05-03"
       ],
       "test_mapping_note": "Representative seed scenarios; owner must add exact executable cases for the goal before acceptance. Empty mapping requires milestone-specific proof, not waived testing.",
-      "source_reference": "reference/additions/m13-m22-requirements.json",
+      "source_reference": "planning/reference/additions/m13-m22-requirements.json",
       "origin_acceptance_criteria": [
         "A declared held-out corpus reports invalid claims, required abstentions, rejected variants and correct generic alternatives separately.",
         "Campaign results preserve original holdout assignment, exposure identity and attribution windows; duplicated events cannot inflate measured effect.",
@@ -5880,7 +5880,7 @@
         "CASE-M23-G01-04"
       ],
       "test_mapping_note": "Exact source case IDs and expected behaviors are retained. These are unexecuted specifications; bind the independent fixtures and actual observations at implementation/qualification without treating local diagnostics as full browser evidence.",
-      "source_reference": "reference/additions/m23-m25-requirements.json",
+      "source_reference": "planning/reference/additions/m23-m25-requirements.json",
       "origin_acceptance_criteria": [
         "The manifest identifies an actual available pack or records its absence; an estimate, model name, generic Qwen checkpoint or unverified hosted URL cannot be marked prepared or qualified.",
         "Reference preparation preserves all questions together, option identities, token/span mapping and the trained head/readout. Omitting the head, replacing joint scoring with generated JSON, or changing the tokenizer fails the declared conformance check.",
@@ -5928,7 +5928,7 @@
         "CASE-M23-G02-04"
       ],
       "test_mapping_note": "Exact source case IDs and expected behaviors are retained. These are unexecuted specifications; bind the independent fixtures and actual observations at implementation/qualification without treating local diagnostics as full browser evidence.",
-      "source_reference": "reference/additions/m23-m25-requirements.json",
+      "source_reference": "planning/reference/additions/m23-m25-requirements.json",
       "origin_acceptance_criteria": [
         "The browser remains responsive through loading and cancellation; no model download begins merely because the ordinary commerce view opens, and an unapproved or corrupt artifact never reaches a ready state.",
         "An actual target browser can load, warm and unload the approved pack, or records a concrete unsupported/unavailable reason. A mocked adapter, navigator.gpu presence or successful file download alone cannot qualify inference.",
@@ -5976,7 +5976,7 @@
         "CASE-M23-G03-04"
       ],
       "test_mapping_note": "Exact source case IDs and expected behaviors are retained. These are unexecuted specifications; bind the independent fixtures and actual observations at implementation/qualification without treating local diagnostics as full browser evidence.",
-      "source_reference": "reference/additions/m23-m25-requirements.json",
+      "source_reference": "planning/reference/additions/m23-m25-requirements.json",
       "origin_acceptance_criteria": [
         "The minimal browser module compiles without Node-only commerce, crypto, filesystem, SQLite or Buffer dependencies and matches retained v1 UTF-8 sizing and result-validation behavior on boundary fixtures. The authorized request retains M13 question/answer IDs and exposes no provider secrets or hidden server-only evidence.",
         "A private M13 prepare() object cannot be serialized or copied into browser authority. A server-issued expiring preparation identity governs ingestion; a forged browser payload claiming fixture/live provenance, canonical branding, verified revision or execution is rejected or retained only as a client assertion in the new record kind.",
@@ -6024,7 +6024,7 @@
         "CASE-M23-G04-04"
       ],
       "test_mapping_note": "Exact source case IDs and expected behaviors are retained. These are unexecuted specifications; bind the independent fixtures and actual observations at implementation/qualification without treating local diagnostics as full browser evidence.",
-      "source_reference": "reference/additions/m23-m25-requirements.json",
+      "source_reference": "planning/reference/additions/m23-m25-requirements.json",
       "origin_acceptance_criteria": [
         "The declared local-only inference demonstration contains no model-input request to a hosted inference service; model downloads and authorized Rifare traffic are identified separately and carry no case text in model URLs or telemetry.",
         "Model failure leaves manual handling available. A hosted or self-hosted inference fallback requires an already approved current destination/purpose and explicit configured selection; it uses a new authorized server invocation rather than laundering a client result.",
@@ -6072,7 +6072,7 @@
         "CASE-M23-G05-04"
       ],
       "test_mapping_note": "Exact source case IDs and expected behaviors are retained. These are unexecuted specifications; bind the independent fixtures and actual observations at implementation/qualification without treating local diagnostics as full browser evidence.",
-      "source_reference": "reference/additions/m23-m25-requirements.json",
+      "source_reference": "planning/reference/additions/m23-m25-requirements.json",
       "origin_acceptance_criteria": [
         "The report binds actual browser inference to named hardware, exact runtime/pack/source hashes, input/question revisions and the protocol committed before execution. An imported upstream result or stub cannot satisfy it.",
         "Every request in the declared reference cohort is accounted for, including failures; any tolerance or performance target comes from the frozen protocol, and a missed target is not changed after seeing results.",
@@ -6121,7 +6121,7 @@
         "CASE-M24-G01-04"
       ],
       "test_mapping_note": "Exact source case IDs and expected behaviors are retained. These are unexecuted specifications; bind the independent fixtures and actual observations at implementation/qualification without treating local diagnostics as full browser evidence.",
-      "source_reference": "reference/additions/m23-m25-requirements.json",
+      "source_reference": "planning/reference/additions/m23-m25-requirements.json",
       "origin_acceptance_criteria": [
         "Source inspection identifies the exact joint execution route and build identities; a working generic chat completion, one-question decision or advertised WebGPU support cannot qualify multi-question Clef.",
         "A compact joint request matches the declared reference token/span/head layout or reports a specific unsupported path. A missing integration remains blocked rather than receiving a compatibility badge.",
@@ -6170,7 +6170,7 @@
         "CASE-M24-G02-04"
       ],
       "test_mapping_note": "Exact source case IDs and expected behaviors are retained. These are unexecuted specifications; bind the independent fixtures and actual observations at implementation/qualification without treating local diagnostics as full browser evidence.",
-      "source_reference": "reference/additions/m23-m25-requirements.json",
+      "source_reference": "planning/reference/additions/m23-m25-requirements.json",
       "origin_acceptance_criteria": [
         "The compact artifact is a pinned Clef-flash Q4 pack with the trained joint components, not a plain Qwen or unrelated smaller model; every loaded shard is bound to that manifest.",
         "A missing, duplicated, reordered, truncated or hash-mismatched shard produces a bounded load error and cannot be cached as a verified complete model.",
@@ -6219,7 +6219,7 @@
         "CASE-M24-G03-04"
       ],
       "test_mapping_note": "Exact source case IDs and expected behaviors are retained. These are unexecuted specifications; bind the independent fixtures and actual observations at implementation/qualification without treating local diagnostics as full browser evidence.",
-      "source_reference": "reference/additions/m23-m25-requirements.json",
+      "source_reference": "planning/reference/additions/m23-m25-requirements.json",
       "origin_acceptance_criteria": [
         "Both browser implementations accept the same declared logical task and merchant answer IDs, with no provider-specific branch in the base skill or business action contract.",
         "Invalid distributions, missing questions, reordered score meanings or unsupported response semantics remain unusable; result normalization never repairs a malformed answer into apparent confidence.",
@@ -6268,7 +6268,7 @@
         "CASE-M24-G04-04"
       ],
       "test_mapping_note": "Exact source case IDs and expected behaviors are retained. These are unexecuted specifications; bind the independent fixtures and actual observations at implementation/qualification without treating local diagnostics as full browser evidence.",
-      "source_reference": "reference/additions/m23-m25-requirements.json",
+      "source_reference": "planning/reference/additions/m23-m25-requirements.json",
       "origin_acceptance_criteria": [
         "Both named browser engines actually execute the same frozen cohort; mocks, a single engine with two wrappers or a previously imported result do not satisfy the paired comparison.",
         "Results report the declared denominators, failures, unknowns and differences, with no tolerance, quality target or winner rule invented after data. Failed goals stay failed or pending under the original protocol.",
@@ -6317,7 +6317,7 @@
         "CASE-M24-G05-04"
       ],
       "test_mapping_note": "Exact source case IDs and expected behaviors are retained. These are unexecuted specifications; bind the independent fixtures and actual observations at implementation/qualification without treating local diagnostics as full browser evidence.",
-      "source_reference": "reference/additions/m23-m25-requirements.json",
+      "source_reference": "planning/reference/additions/m23-m25-requirements.json",
       "origin_acceptance_criteria": [
         "A supported case can be evaluated by both actual browser implementations under the published profile without changing merchant skills, case identities or business-operation contracts.",
         "After replacement/revocation, an old worker's late result is rejected; rollback uses a currently approved configuration and cannot resurrect superseded evidence or a cached authority grant.",
@@ -6366,7 +6366,7 @@
         "CASE-M25-G01-04"
       ],
       "test_mapping_note": "Exact source case IDs and expected behaviors are retained. These are unexecuted specifications; bind the independent fixtures and actual observations at implementation/qualification without treating local diagnostics as full browser evidence.",
-      "source_reference": "reference/additions/m23-m25-requirements.json",
+      "source_reference": "planning/reference/additions/m23-m25-requirements.json",
       "origin_acceptance_criteria": [
         "While the applicable M17 image capability is disabled, unqualified or model_access:false, browser image inference remains unavailable and text/manual handling still works.",
         "The enabled profile names its exact purpose, actor/case scope, MIME/size/count limits and media ownership; cross-case media and expired/revoked versions cannot be prepared for inference.",
@@ -6415,7 +6415,7 @@
         "CASE-M25-G02-04"
       ],
       "test_mapping_note": "Exact source case IDs and expected behaviors are retained. These are unexecuted specifications; bind the independent fixtures and actual observations at implementation/qualification without treating local diagnostics as full browser evidence.",
-      "source_reference": "reference/additions/m23-m25-requirements.json",
+      "source_reference": "planning/reference/additions/m23-m25-requirements.json",
       "origin_acceptance_criteria": [
         "The manifest proves that the selected vision companion, decoder, processor and trained head belong to the same supported model/configuration; a mismatched companion is rejected before inference.",
         "A real browser request reaches the image-aware joint decision computation with all requested questions, or the capability stays unqualified. General runtime image support cannot substitute for this observation.",
@@ -6464,7 +6464,7 @@
         "CASE-M25-G03-04"
       ],
       "test_mapping_note": "Exact source case IDs and expected behaviors are retained. These are unexecuted specifications; bind the independent fixtures and actual observations at implementation/qualification without treating local diagnostics as full browser evidence.",
-      "source_reference": "reference/additions/m23-m25-requirements.json",
+      "source_reference": "planning/reference/additions/m23-m25-requirements.json",
       "origin_acceptance_criteria": [
         "Substitution of another case, image version, expired grant or changed content fails preparation or ingestion; a caller-supplied digest alone cannot establish authoritative attachment provenance.",
         "Malformed/unsupported images, decompression-size excess and input/context overflow fail within declared resource bounds rather than becoming an apparently valid result on partial evidence.",
@@ -6513,7 +6513,7 @@
         "CASE-M25-G04-04"
       ],
       "test_mapping_note": "Exact source case IDs and expected behaviors are retained. These are unexecuted specifications; bind the independent fixtures and actual observations at implementation/qualification without treating local diagnostics as full browser evidence.",
-      "source_reference": "reference/additions/m23-m25-requirements.json",
+      "source_reference": "planning/reference/additions/m23-m25-requirements.json",
       "origin_acceptance_criteria": [
         "Approved local-only processing sends no image inference payload to a hosted provider; permitted M17 uploads or Rifare observation submissions are explicit, separately authorized and accounted for.",
         "Correction, erasure, revocation or tenant switch during asynchronous image processing prevents accepting the late proposal, including after a tab is suspended and resumed.",
@@ -6562,7 +6562,7 @@
         "CASE-M25-G05-04"
       ],
       "test_mapping_note": "Exact source case IDs and expected behaviors are retained. These are unexecuted specifications; bind the independent fixtures and actual observations at implementation/qualification without treating local diagnostics as full browser evidence.",
-      "source_reference": "reference/additions/m23-m25-requirements.json",
+      "source_reference": "planning/reference/additions/m23-m25-requirements.json",
       "origin_acceptance_criteria": [
         "Actual browser inference uses the matched vision companion and complete decision head on the declared corpus; a text-only stub, native-server run or generic image chat cannot satisfy the image gate.",
         "The report binds source/companion/text/runtime hashes, preprocessing, hardware/browser, exact input counts and frozen criteria; every unsupported or failed image remains in the declared accounting.",
@@ -6589,7 +6589,7 @@
   "adopted_additions": {
     "authority": "ADR-0042",
     "adopted_on": "2026-10-19",
-    "frozen_requirements": "reference/additions/m13-m22-requirements.json",
+    "frozen_requirements": "planning/reference/additions/m13-m22-requirements.json",
     "frozen_requirements_sha256": "0d4218fabd39eeb1328de5a3d1f79cc620967ef761a6dc4a405ec403a280d7b2",
     "original_requirements": 151,
     "adopted_requirements": 50,
@@ -6602,9 +6602,9 @@
     "source_document": "browser-milestone-additions.json",
     "source_sha256": "8302245159ecadc0bcc69248624c8c820a5678656fa1b405dd93797f4ae9810e",
     "revised_handoff_archive_sha256": "d02bf8aab75decb5cb163a2f82a8e12a51f3e778bfb311d3135d71fb5f57befe",
-    "frozen_requirements": "reference/additions/m23-m25-requirements.json",
+    "frozen_requirements": "planning/reference/additions/m23-m25-requirements.json",
     "frozen_requirements_sha256": "41d109fb6e810bfe9b2c9f8458e0aaa8cb5d45176c96d80fc3c733ca07e11abe",
-    "protected_prior_requirements": "reference/additions/m13-m22-requirements.json",
+    "protected_prior_requirements": "planning/reference/additions/m13-m22-requirements.json",
     "protected_prior_requirements_sha256": "0d4218fabd39eeb1328de5a3d1f79cc620967ef761a6dc4a405ec403a280d7b2",
     "protected_current_product_base": "93769a3029ebd2a5204c756733a8f8cf48fb67cd",
     "prior_counts": {

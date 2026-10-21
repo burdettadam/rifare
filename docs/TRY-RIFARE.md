@@ -122,4 +122,4 @@ Ctrl-C in the owning foreground terminal also works. Data and completed attachme
 | A session is rejected | Use the private session file from the currently running demo and the specified case ID. Sessions from another run or store do not apply. |
 | A persistent diagnostic refuses startup | Inspect its own runtime and existing process using the local environment guide. Do not delete a database or take over an unknown process. |
 
-For development, start with [DEVELOPMENT.md](../DEVELOPMENT.md). Routine work uses focused checks; there is no need to run the full regression suite just to explore these examples. [Current status](PROJECT-STATUS.md) separates this local preview from the remaining production and integration work.
+For development, start with [docs/DEVELOPMENT.md](DEVELOPMENT.md). Routine work uses focused checks; there is no need to run the full regression suite just to explore these examples. [Current status](PROJECT-STATUS.md) separates this local preview from the remaining production and integration work.

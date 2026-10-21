@@ -3,14 +3,27 @@
 ## Scope
 
 This refresh makes the public repository easier to understand and demonstrate:
-an original logo and artwork, a product-first README, exact local demo instructions,
-and a concise current-status guide. It is based on imported development checkpoint
+an original logo and artwork, a target-focused product README, exact local demo
+instructions, a concise current-status guide, and a simpler repository root.
+It is based on imported development checkpoint
 `c299065241b3bdf4928a83f9ff4decf749c6afaa` (M20-G03).
 
-The working branch is `docs/portfolio-branding`. The change is limited to
-documentation, image assets, the source-file inventory, and its work record.
-Runtime behavior, tests, dependencies, licensing policy, milestones, and acceptance
-records are preserved.
+The working branch is `docs/portfolio-branding`. The README now presents six
+connected target capabilities, a customer journey, and the architectural choices
+that keep the merchant in control. Target scope is clearly distinguished from the
+runnable development preview.
+
+The navigation refresh reduces ordinary root entries from 32 to 17, including
+seven root files. Detailed guides now live in `docs/`; goal catalogues, generated
+cards, frozen references, templates, and project metadata live in `planning/`.
+Contributor/security policies live in `.github/`, and development rubrics live in
+`.agents/rubrics/`. The [documentation index](README.md#repository-map) explains
+the layout and the [planning index](../planning/README.md) provides the new paths.
+
+Path references, generated views, source inventories, and affected helper loaders
+and test locators follow the moves. Application behavior, behavioral assertions,
+dependencies, licensing obligations, requirement criteria, historical workflow
+policy, and acceptance records are preserved.
 
 **Delivery state:** the completed changes are committed locally. The GitHub
 connection rejected its write request with HTTP 403, `Resource not accessible by
@@ -61,21 +74,23 @@ review path when ready. This handoff does not create a release or deploy a servi
 | Repository landing page | [README](../README.md) |
 | Run a local demonstration | [Try Rifare](TRY-RIFARE.md) |
 | Interpret available features and open work | [Project status](PROJECT-STATUS.md) |
+| Navigate the repository | [Documentation index](README.md) · [Planning index](../planning/README.md) |
 | Reuse the identity and artwork | [Brand guide](BRAND.md) |
 | Upload the repository social preview | [rifare-social.jpg](assets/rifare-social.jpg) |
 | Continue the art direction | [Image prompts](assets/PROMPTS.md) |
 | Inspect this change's verification | [Presentation work record](../work/records/portfolio-presentation.md) |
+| Review the target-positioning and layout follow-up | [Navigation work record](../work/records/portfolio-navigation.md) |
 
 ## Repository profile copy
 
 Suggested **About** description:
 
-> Merchant-owned commerce after checkout. Returns, exchanges, support, and reverse logistics with optional agents. Development preview.
+> Merchant-owned commerce operations. Returns, exchanges, service, fulfillment, loyalty, and growth—with portable workflows and optional AI. Development preview.
 
 Suggested topics:
 
-`commerce`, `returns-management`, `reverse-logistics`, `typescript`, `nodejs`,
-`workflow`, `ai-agents`, `merchant-tools`
+`commerce`, `returns-management`, `reverse-logistics`, `customer-support`,
+`inventory-management`, `typescript`, `workflow`, `ai-agents`, `merchant-tools`
 
 Use the repository URL for the portfolio link until a separately verified hosted
 demo exists. The README provides local commands; this update creates no public
@@ -101,5 +116,5 @@ Continue with the recorded M20-G04 consolidation and custody-continuity goal und
 its own assignment. For portfolio demonstrations, the next major improvement is
 qualifying the intended application stack and a real served product tour.
 The presentation work does not change those existing obligations. See
-[current status](PROJECT-STATUS.md), [development](../DEVELOPMENT.md), and the
+[current status](PROJECT-STATUS.md), [development](DEVELOPMENT.md), and the
 [M20 record](../work/records/M20-dropoff-milestone.md).

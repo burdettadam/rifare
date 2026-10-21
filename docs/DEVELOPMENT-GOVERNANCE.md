@@ -4,7 +4,7 @@
 
 ## Source of truth
 
-`planning/roadmap.json` defines milestone outcomes, dependencies and gates. `planning/backlog.json` assigns stable goal IDs and acceptance criteria. `planning/capability-targets.json` links all 44 previously researched capabilities to a milestone, partner dependency, optional module or non-feature decision. `planning/acceptance-tests.json` contains designed scenarios, all initially marked not run. `ROADMAP.md` explains the accepted direction; preserve changes to it with an ADR or explicit product decision.
+`planning/roadmap.json` defines milestone outcomes, dependencies and gates. `planning/backlog.json` assigns stable goal IDs and acceptance criteria. `planning/capability-targets.json` links all 44 previously researched capabilities to a milestone, partner dependency, optional module or non-feature decision. `planning/acceptance-tests.json` contains designed scenarios, all initially marked not run. `docs/ROADMAP.md` explains the accepted direction; preserve changes to it with an ADR or explicit product decision.
 
 A milestone label is a release boundary, not one giant coding issue. Split a goal when a reviewer cannot verify its outcome independently. Preserve the parent ID and rationale. The completion milestone is the point where full acceptance is due; a read-only or simulator slice can ship earlier without being represented as complete.
 

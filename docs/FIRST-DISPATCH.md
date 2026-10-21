@@ -7,8 +7,8 @@ Start with **M00-G01 — Freeze the first-release support envelope**. No develop
 ```text
 Work only on M00-G01 in Rifare.
 
-Read AGENTS.md, PLANS.md, DEVELOPMENT.md and the retained work-goal/worktree-flow
-skills. Inspect docs/WORKFLOW-ADOPTION.md and actual client discovery. Then read goals/M00/M00-G01.md, docs/WORKER-CONTRACT.md,
+Read AGENTS.md, docs/PLANS.md, docs/DEVELOPMENT.md and the retained work-goal/worktree-flow
+skills. Inspect docs/WORKFLOW-ADOPTION.md and actual client discovery. Then read planning/goals/M00/M00-G01.md, docs/WORKER-CONTRACT.md,
 docs/REGRESSION-STRATEGY.md and docs/EVIDENCE-CONTRACT.md.
 
 Inspect the real repository before naming commands or source paths. Use the existing

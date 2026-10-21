@@ -13,7 +13,7 @@ local workflow configuration. It is not acceptance and never executes an action.
 
 ## Candidate-bound review
 
-Copy [the checkpoint template](../templates/WORKFLOW-CHECKPOINT.json) into ignored
+Copy [the checkpoint template](../planning/templates/WORKFLOW-CHECKPOINT.json) into ignored
 evidence and fill in actual source/base/configuration, author, command, run counts,
 report digest and review references. The template deliberately fails. A separate
 attestation index supplies the assignment snapshot, independently retained report

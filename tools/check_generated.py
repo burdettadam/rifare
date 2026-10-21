@@ -38,8 +38,8 @@ def check(root: Path) -> list[str]:
             elif actual.read_bytes() != (target / rel).read_bytes():
                 errors.append(f'Stale generated view: {rel.as_posix()}')
         for directory in ('goals', 'milestones'):
-            expected = {p for p in relative if p.parts[0] == directory}
-            observed = {p.relative_to(root) for p in (root / directory).rglob('*.md')}
+            expected = {p for p in relative if p.parts[:2] == ('planning', directory)}
+            observed = {p.relative_to(root) for p in (root / 'planning' / directory).rglob('*.md')}
             errors.extend(f'Orphan generated view: {p.as_posix()}' for p in sorted(observed - expected))
         return errors
 

@@ -74,7 +74,7 @@ helper registrations, registration of the 13 new helper cases, and additive
 source inventory/count maintenance. The 69 browser specifications do not become
 executable registrations or evidence of execution.
 
-Final project-summary reconciliation updates the unlabeled `project.json`
+Final project-summary reconciliation updates the unlabeled `planning/project.json`
 counts to the canonical totals and retains its complete old count object under
 `initial_catalogue_counts`. Every other existing field remains unchanged;
 explicit notes distinguish initial starter flags from current work records.

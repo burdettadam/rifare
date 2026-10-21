@@ -1,6 +1,6 @@
 {
-  "source_file_count": 1909,
-  "source_count_reason": "ADR-0064 adds eleven scoped handoff runtime, contract, independent test/oracle and documentation paths; all 1898 prior source members remain.",
+  "source_file_count": 1924,
+  "source_count_reason": "Portfolio presentation adds twelve documentation/artwork paths; navigation adds two indexes and one work record. All 1909 prior source members are retained through reviewed relocations; exact total is 1924.",
   "component_ids": [
     "git-agent-adaptations",
     "rifare-developer-helpers",
