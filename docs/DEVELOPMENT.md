@@ -94,7 +94,29 @@ Raw reports/recordings go under ignored `evidence/<goal-id>/<candidate-sha>/`. R
 
 ## Local-first review and optional CI
 
-Use local checks for iteration. The included GitHub workflow is **manual-dispatch only**, read-only, with no release, model or deployment steps. It does not run on pushes or pull requests. Hosting, protected branches, required checks and account permissions are not established in this local repository. Configure them through an authorized adoption decision.
+Use local checks for iteration. The **Development preview** workflow runs on
+pull requests, pushes to `development`, and manual dispatch. It performs the
+root offline install, executes the two documented synthetic demonstrations with
+assertions, and checks repository links, plan contracts, and generated views.
+It uses read-only repository permissions,
+pinned actions, bounded runtime, and no credentials, models, or deployment steps.
+Run its demo assertions locally with `npm run check:preview`.
+
+The existing **Rifare starter verification** workflow remains manual and retains
+the wider `tools/verify.py` diagnostics. Its known support-envelope and benchmark
+maintenance gaps are recorded in [qualification](QUALIFICATION.md). The small
+preview workflow does not replace product regression or release qualification.
+The badge reports GitHub's actual workflow state; committed workflow YAML alone
+does not establish a successful hosted run. See [the handoff](PORTFOLIO-HANDOFF.md)
+for applying the branch and observing the first public result.
+
+## Source formatting
+
+The optional [formatter workspace](../tools/formatting/README.md) pins Prettier
+and explicitly lists the central modules covered by this readability pass. Its
+packages are isolated under `tools/formatting/`; root demo setup remains offline
+and contains no third-party npm dependencies. Use its check/write commands when
+changing those modules. Formatting is not a substitute for behavioral checks.
 
 ## Restore
 

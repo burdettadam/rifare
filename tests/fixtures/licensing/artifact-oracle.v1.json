@@ -1,6 +1,6 @@
 {
-  "source_file_count": 1683,
-  "source_count_reason": "ADR-0065 owner-authorized planning retirement: remove 226 completed goal cards, 13 milestone sheets and five duplicate planning snapshots; add three concise architecture/qualification decision and continuation records. All component metadata, licensing blockers and executable behavior remain protected.",
+  "source_file_count": 1703,
+  "source_count_reason": "ADR-0066 owner-approved publication readiness adds 20 files: three reproduced legal documents, two license-scope records, one workflow, one preview helper, four optional-formatting files, seven recorded-demo files, and two authority/continuation records. Original six component metadata records and historical release blockers remain intact; current license application and the reproduced-documents component are reviewed separately.",
   "component_ids": [
     "git-agent-adaptations",
     "rifare-developer-helpers",

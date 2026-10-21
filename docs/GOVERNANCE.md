@@ -54,7 +54,12 @@ public publication, production and paid effects are not part of this execution.
 A tagged release requires a current, specifically scoped owner release decision,
 passing checks and the required independent reviews; a general delegation or a
 bootstrap exception is not that release record. Retain source before cleanup.
-Do not invent remote retention; this repository has no hosted remote or protections.
+The public source remote is `https://github.com/burdettadam/rifare`, with
+`development` as the current default branch. Public visibility and committed CI
+configuration do not establish protected branches, successful hosted checks, or
+a qualified deployment. [ADR-0066](decisions/0066-publication-readiness.md) records
+the owner-approved license application, bounded CI, and publication-readiness
+handoff; it does not authorize a tagged product release.
 
 ## Records and remaining duties
 

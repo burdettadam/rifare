@@ -1,0 +1,50 @@
+name: Development preview
+
+on:
+  push:
+    branches: [development]
+  pull_request:
+    branches: [development]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: development-preview-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  preview:
+    name: Synthetic demos and repository checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out source
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js 24
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24'
+          package-manager-cache: false
+
+      - name: Verify the dependency-free quickstart install
+        run: npm ci --offline --ignore-scripts
+
+      - name: Check the advertised synthetic demonstrations
+        run: python3 tools/check_publication_preview.py
+
+      - name: Check repository links and remaining-work views
+        run: |
+          python3 tools/check_repository.py --root .
+          python3 tools/validate_plan.py --root .
+          python3 tools/check_generated.py --root .
+
+      - name: Record the verification scope
+        run: |
+          echo '### Development preview' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Passed the two synthetic demos, local links, and remaining-work views.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'This check does not establish full regression, live-provider, or production qualification.' >> "$GITHUB_STEP_SUMMARY"

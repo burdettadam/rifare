@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "id": "rifare-license-application",
+  "status": "applied",
+  "authority": {
+    "record": "docs/decisions/0066-publication-readiness.md",
+    "prior_commit": "926d4dc8084f1eae32d15187b7e68d677171f453",
+    "record_sha256": "26285fdd9d63ace8439262228b1cee7d78e4ff41fc9974d9b7c8d5cc7d51adce",
+    "instruction": "I approve the needed changes. make them and give me the git passoff to hand to codex"
+  },
+  "licensors": "Adam Burdett and the respective Rifare contributors, each only to the extent of their rights",
+  "scope_notice": {
+    "path": "LICENSES/README.md",
+    "sha256": "db810d4aff13f0e849aac5bc2189bf89a58854d0c8783b1fe861144442176a6b"
+  },
+  "default_original_material_license": "AGPL-3.0-only",
+  "apache_2_0_exceptions": [
+    "clients/**",
+    "docs/**",
+    "examples/**",
+    "planning/**",
+    "tests/**",
+    "tools/**",
+    "work/**",
+    ".github/**",
+    ".vscode/**",
+    ".agents/rubrics/**",
+    "packages/commerce/skill-bundles/**",
+    "packages/*/contracts/*.json",
+    "packages/presentation/locale-contract.v1.json",
+    "LICENSES/**",
+    "AGENTS.md",
+    "LICENSE-STATUS.md",
+    "Makefile",
+    "README.md",
+    "package.json",
+    "package-lock.json",
+    ".editorconfig",
+    ".env.example",
+    ".gitattributes",
+    ".gitignore",
+    ".node-version",
+    ".npmrc"
+  ],
+  "retained_upstream": {
+    "files": [
+      ".agents/skills/work-goal/SKILL.md",
+      ".agents/skills/worktree-flow/SKILL.md",
+      "THIRD-PARTY-NOTICES.md"
+    ],
+    "expression": "MIT AND Apache-2.0",
+    "scope": "MIT for identified inherited text; Apache-2.0 for original Rifare modifications and explanatory text",
+    "notice": "THIRD-PARTY-NOTICES.md",
+    "notice_sha256": "985e079a38a492f31f57f94ffe354aec56dc948cafaf02d9c115de664387684d"
+  },
+  "reproduced_legal_documents": [
+    "LICENSE",
+    "LICENSES/Apache-2.0.txt",
+    ".github/DCO.txt"
+  ],
+  "license_texts": [
+    {
+      "id": "AGPL-3.0-only",
+      "path": "LICENSE",
+      "sha256": "d8a6cc31abc16b6748c7a21f21611f5a1ec33f67d22ca23d7da1c19b95496bee",
+      "official_url": "https://www.gnu.org/licenses/agpl-3.0.html",
+      "text_source": "https://raw.githubusercontent.com/spdx/license-list-data/31ba1a50e5397e00a304dbadc76531740e89ee48/text/AGPL-3.0-only.txt"
+    },
+    {
+      "id": "Apache-2.0",
+      "path": "LICENSES/Apache-2.0.txt",
+      "sha256": "074e6e32c86a4c0ef8b3ed25b721ca23aca83df277cd88106ef7177c354615ff",
+      "official_url": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "text_source": "https://raw.githubusercontent.com/spdx/license-list-data/31ba1a50e5397e00a304dbadc76531740e89ee48/text/Apache-2.0.txt"
+    }
+  ],
+  "contribution_terms": {
+    "inbound": "same terms as affected original component",
+    "certification": "DCO-1.1",
+    "text_path": ".github/DCO.txt",
+    "sha256": "dac2b0a921aaf4bcaf484dc082fbea072398bedecf5f1d4dcce7e122bbe5d2d5",
+    "source": "https://developercertificate.org/",
+    "retroactive_signoffs": false,
+    "copyright_assignment": false
+  },
+  "boundaries": [
+    "Original artwork is covered only to the extent rights exist.",
+    "No grant over third-party material, merchant data, credentials, trademarks, or external services is inferred.",
+    "Historical proposal and regression fixtures remain unchanged.",
+    "License application is not production qualification, release approval, or legal clearance."
+  ],
+  "inventory_component": {
+    "id": "rifare-reproduced-license-documents",
+    "origin": "reproduced_legal_document",
+    "license_declared": "LicenseRef-Verbatim-Legal-Documents",
+    "license_status": "identified_document_copying_permissions",
+    "disposition": "retain_verbatim_document_terms",
+    "copyright": "See the reproduced documents and their named authors; no Rifare authorship is asserted.",
+    "provenance": "Verbatim AGPL/Apache texts from the pinned SPDX source and DCO1.1 from developercertificate.org, identified in LICENSES/application.json.",
+    "classification": "project_source",
+    "files": [
+      ".github/DCO.txt",
+      "LICENSE",
+      "LICENSES/Apache-2.0.txt"
+    ],
+    "notices": [
+      ".github/DCO.txt",
+      "LICENSE",
+      "LICENSES/Apache-2.0.txt"
+    ]
+  }
+}

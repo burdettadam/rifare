@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "id": "rifare-source-inventory",
-  "revision": 41,
+  "revision": 43,
   "status": "proposed",
   "components": [
     {
@@ -1536,7 +1536,19 @@
         "work/records/portfolio-navigation.md",
         "docs/QUALIFICATION.md",
         "docs/decisions/0065-retire-landed-planning.md",
-        "work/records/planning-retirement.md"
+        "work/records/planning-retirement.md",
+        ".github/workflows/development-preview.yml",
+        "LICENSES/README.md",
+        "LICENSES/application.json",
+        "docs/decisions/0066-publication-readiness.md",
+        "docs/demos/README.md",
+        "docs/demos/manifest.json",
+        "docs/demos/refund-recovery-poster.png",
+        "docs/demos/refund-recovery.cast",
+        "docs/demos/refund-recovery.gif",
+        "docs/demos/refund-recovery.mp4",
+        "docs/demos/refund-recovery.txt",
+        "work/records/publication-readiness.md"
       ],
       "notices": []
     },
@@ -1690,7 +1702,12 @@
         "tools/unittest_report.py",
         "tools/validate_plan.py",
         "tools/verify.py",
-        "tests/test_browser_plan_adoption.py"
+        "tests/test_browser_plan_adoption.py",
+        "tools/check_publication_preview.py",
+        "tools/formatting/README.md",
+        "tools/formatting/package-lock.json",
+        "tools/formatting/package.json",
+        "tools/formatting/prettier.config.json"
       ],
       "notices": []
     },
@@ -1765,6 +1782,26 @@
       ],
       "notices": [
         "THIRD-PARTY-NOTICES.md"
+      ]
+    },
+    {
+      "id": "rifare-reproduced-license-documents",
+      "origin": "reproduced_legal_document",
+      "license_declared": "LicenseRef-Verbatim-Legal-Documents",
+      "license_status": "identified_document_copying_permissions",
+      "disposition": "retain_verbatim_document_terms",
+      "copyright": "See the reproduced documents and their named authors; no Rifare authorship is asserted.",
+      "provenance": "Verbatim AGPL/Apache texts from the pinned SPDX source and DCO1.1 from developercertificate.org, identified in LICENSES/application.json.",
+      "classification": "project_source",
+      "files": [
+        ".github/DCO.txt",
+        "LICENSE",
+        "LICENSES/Apache-2.0.txt"
+      ],
+      "notices": [
+        ".github/DCO.txt",
+        "LICENSE",
+        "LICENSES/Apache-2.0.txt"
       ]
     }
   ],

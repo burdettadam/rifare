@@ -2,6 +2,19 @@
 
 Run a local commerce demonstration, then explore the support and tracking views. These examples use synthetic data and the existing TypeScript/Node.js + SQLite implementation. They do not connect a real store, send a real message, or move money.
 
+## Watch the recorded recovery
+
+[Watch the terminal recording](demos/refund-recovery.mp4),
+[read its transcript](demos/refund-recovery.txt), or inspect the
+[capture provenance](demos/README.md). The recording uses the same implementation
+as the commands below. It shows a synthetic refund being accepted while its
+response is lost, a repeated dispatch remaining held, and reconciliation finding
+the original operation. A later fixture settlement is a separate observation.
+
+After preparing the checkout, `npm run demo:recovery` runs the guided terminal
+walkthrough. `npm run demo:returns` keeps the original JSON output, and
+`npm run demo:support -- --serve` opens the support/tracking fixture.
+
 ## Prepare the checkout
 
 You need Git and a Node.js version allowed by [package.json](../package.json): **24.x**, or **22.16+ within 22.x**, with npm. Python 3.10+ is needed for the separate development checks, not the demos below.

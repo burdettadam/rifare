@@ -2602,6 +2602,27 @@
       "capability_id": "FEATURE-M00-G03"
     },
     {
+      "id": "python:test_distribution.DistributionTests.test_applied_scope_keeps_application_and_separable_material_distinct",
+      "suite": "python",
+      "runner_case_id": "test_distribution.DistributionTests.test_applied_scope_keeps_application_and_separable_material_distinct",
+      "source": "tests/test_distribution.py",
+      "capability_id": "FEATURE-M00-G03"
+    },
+    {
+      "id": "python:test_distribution.DistributionTests.test_formatter_intake_rejects_an_unreviewed_dependency_manifest",
+      "suite": "python",
+      "runner_case_id": "test_distribution.DistributionTests.test_formatter_intake_rejects_an_unreviewed_dependency_manifest",
+      "source": "tests/test_distribution.py",
+      "capability_id": "FEATURE-M00-G03"
+    },
+    {
+      "id": "python:test_distribution.DistributionTests.test_license_scope_and_dco_tampering_require_review",
+      "suite": "python",
+      "runner_case_id": "test_distribution.DistributionTests.test_license_scope_and_dco_tampering_require_review",
+      "source": "tests/test_distribution.py",
+      "capability_id": "FEATURE-M00-G03"
+    },
+    {
       "id": "python:test_native_harness.CandidateIdentityTests.test_clean_identity_is_repeatable",
       "suite": "python",
       "runner_case_id": "test_native_harness.CandidateIdentityTests.test_clean_identity_is_repeatable",

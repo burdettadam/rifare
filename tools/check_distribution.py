@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 from collections import Counter
+from fnmatch import fnmatchcase
 import hashlib
 import json
 import os
@@ -18,6 +19,18 @@ POLICY_PATH = 'planning/licensing-policy.json'
 INVENTORY_PATH = 'planning/component-inventory.json'
 FIXED_POLICY = 'tests/fixtures/licensing/expected-policy.v1.json'
 FIXED_OBLIGATIONS = 'tests/fixtures/licensing/retained-obligations.v1.json'
+APPLIED_LICENSES = 'LICENSES/application.json'
+APPLIED_LICENSES_SHA256 = 'e04980a871d5d4fb8c5e00adbd0fa9b114cb77dba000ca7c3f7fb8c11ebc7a7b'
+FORMATTER_MANIFESTS = {
+    'tools/formatting/package.json': '16bbc9e206f0febb34587760fefdbf9aba7552cc495457657f189c521cf7c862',
+    'tools/formatting/package-lock.json': 'd978c368faf276d06827467bb7d98217c35c239f9c332d96780b6b7b37462aed',
+}
+PREVIEW_WORKFLOW_REFERENCES = [
+    {'path': '.github/workflows/development-preview.yml',
+     'reference': 'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683'},
+    {'path': '.github/workflows/development-preview.yml',
+     'reference': 'actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38'},
+]
 HEX64 = re.compile(r'[0-9a-f]{64}\Z')
 HEX40 = re.compile(r'[0-9a-f]{40}\Z')
 DEPENDENCY_NAMES = {
@@ -242,6 +255,81 @@ def validate_smoke_command_manifests(root: Path) -> set[str]:
             'dependency graph intake not implemented: nonempty or inconsistent lock')
     return {'package.json', 'package-lock.json'}
 
+
+def validate_optional_formatter(root: Path) -> set[str]:
+    """Review only the pinned, unbundled development tool approved in ADR-0066."""
+    present = {path for path in FORMATTER_MANIFESTS if (root / path).exists()}
+    if not present:
+        return set()
+    require(present == set(FORMATTER_MANIFESTS), 'formatter intake: both manifests are required')
+    for path, digest in FORMATTER_MANIFESTS.items():
+        require(sha256(read_regular(root, path)) == digest,
+                f'review_required:formatter manifest changed: {path}')
+    package = read_json(root / 'tools/formatting/package.json')
+    lock = read_json(root / 'tools/formatting/package-lock.json')
+    require(package['private'] is True
+            and package['devDependencies'] == {'prettier': '3.9.10'}
+            and set(package['scripts']) == {'check', 'write'},
+            'formatter intake: unexpected dependency or installation hook')
+    require(set(lock['packages']) == {'', 'node_modules/prettier'}
+            and lock['packages']['node_modules/prettier']['license'] == 'MIT'
+            and lock['packages']['node_modules/prettier']['dev'] is True,
+            'formatter intake: dependency graph changed')
+    return present
+
+
+def applied_license_for(path: str, application: dict) -> str:
+    if path in application['reproduced_legal_documents']:
+        return 'retained_document_copying_terms'
+    if path in application['retained_upstream']['files']:
+        return application['retained_upstream']['expression']
+    if any(fnmatchcase(path, pattern) for pattern in application['apache_2_0_exceptions']):
+        return 'Apache-2.0'
+    return application['default_original_material_license']
+
+
+def validate_license_application(root: Path, paths: list[str]) -> dict[str, Any]:
+    """Check recorded application, not legal title, human identity or release approval."""
+    raw = read_regular(root, APPLIED_LICENSES)
+    require(sha256(raw) == APPLIED_LICENSES_SHA256,
+            'review_required:license application scope or authority record changed')
+    application = decode_json(raw)
+    required = {APPLIED_LICENSES, application['scope_notice']['path'],
+                application['authority']['record'],
+                application['contribution_terms']['text_path'],
+                application['retained_upstream']['notice']}
+    required.update(application['retained_upstream']['files'])
+    required.update(item['path'] for item in application['license_texts'])
+    require(required <= set(paths), 'applied licensing: required texts or attribution are missing')
+    require(not any(private_path(path) for path in paths),
+            'applied licensing cannot include private or runtime paths')
+    for item in application['license_texts']:
+        require(sha256(read_regular(root, item['path'])) == item['sha256'],
+                f'applied license text changed: {item["path"]}')
+    scope = application['scope_notice']
+    require(sha256(read_regular(root, scope['path'])) == scope['sha256'],
+            'review_required:license scope notice changed')
+    authority = application['authority']
+    require(sha256(read_regular(root, authority['record'])) == authority['record_sha256'],
+            'review_required:prior owner instruction record changed')
+    retained = application['retained_upstream']
+    require(sha256(read_regular(root, retained['notice'])) == retained['notice_sha256'],
+            'required notice changed: THIRD-PARTY-NOTICES.md')
+    dco = application['contribution_terms']
+    require(sha256(read_regular(root, dco['text_path'])) == dco['sha256'],
+            'DCO certification text changed')
+    return {
+        'check': 'applied_license_consistency', 'result': 'pass',
+        'status': application['status'], 'authority_record': authority['record'],
+        'authority_checkpoint': authority['prior_commit'],
+        'source_files_in_scope': len(paths),
+        'license_scope_counts': dict(Counter(applied_license_for(path, application) for path in paths)),
+        'original_material_only': True, 'contribution_terms': 'inbound-matches-outbound with DCO-1.1',
+        'upstream_notice_retained': True, 'production_qualified': False,
+        'publication_authorized': False, 'legal_clearance': False,
+    }
+
+
 def validate_inventory(inventory: dict, paths: list[str], root: Path, policy: dict,
                        obligations: dict) -> dict[str, dict]:
     shape(inventory, {'schema_version': str, 'id': str, 'revision': int, 'status': str,
@@ -252,7 +340,9 @@ def validate_inventory(inventory: dict, paths: list[str], root: Path, policy: di
     require(type(inventory['revision']) is int and inventory['revision'] >= 1, 'invalid inventory revision')
     require(inventory['status'] == 'proposed', 'inventory is not an acceptance decision')
     require(inventory['dependency_inputs'] == [], 'dependency graph intake not implemented at this checkpoint')
-    reviewed_commands = validate_smoke_command_manifests(root)
+    reviewed_commands = validate_smoke_command_manifests(root) | validate_optional_formatter(root)
+    application = read_json(root / APPLIED_LICENSES)
+    document_component = application['inventory_component']
     require(inventory['planned_surfaces'] == obligations['planned_surfaces'], 'planned surface coverage changed')
     require(inventory['external_requirements'] == obligations['external_requirements'],
             'review_required:external_requirements_changed')
@@ -279,6 +369,9 @@ def validate_inventory(inventory: dict, paths: list[str], root: Path, policy: di
                     and comp['disposition'] == 'retain_notice_internal_review_only',
                     f'unknown or unreviewed third-party license: {comp["id"]}')
             require(bool(comp['notices']), f'missing required notice declaration: {comp["id"]}')
+        elif comp['origin'] == 'reproduced_legal_document':
+            require(comp == document_component,
+                    'review_required:reproduced legal document provenance changed')
         else:
             raise ValueError(f'unknown component origin: {comp["id"]}')
         for path in comp['files']:
@@ -293,16 +386,20 @@ def validate_inventory(inventory: dict, paths: list[str], root: Path, policy: di
             f'file inventory mismatch; unreviewed={sorted(set(paths)-set(members))}; '
             f'missing={sorted(set(members)-set(paths))}')
     require(len({p.casefold() for p in members}) == len(members), 'case-colliding inventory paths')
-    require(set(components) == set(obligations['components']), 'review_required:component set changed')
+    require(set(components) == set(obligations['components']) | {document_component['id']},
+            'review_required:component set changed')
     for identity, retained in obligations['components'].items():
         current = {k: v for k, v in components[identity].items() if k != 'files'}
         require(current == retained, f'review_required:component obligations changed:{identity}')
     for path, digest in obligations['required_notice_sha256'].items():
         require(path in members, f'missing required notice: {path}')
         require(sha256(read_regular(root, path)) == digest, f'required notice changed: {path}')
+    retained_notices = dict(obligations['required_notice_sha256'])
+    retained_notices.update({item['path']: item['sha256'] for item in application['license_texts']})
+    retained_notices[application['contribution_terms']['text_path']] = application['contribution_terms']['sha256']
     for comp in components.values():
         for notice in comp['notices']:
-            require(notice in members and notice in obligations['required_notice_sha256'],
+            require(notice in members and notice in retained_notices,
                     f'unretained required notice: {notice}')
     require(components['git-agent-adaptations']['files'] == obligations['upstream_files'],
             'review_required:upstream attribution remapped')
@@ -316,10 +413,12 @@ def validate_inventory(inventory: dict, paths: list[str], root: Path, policy: di
     for path, digest in examples.items():
         require(sha256(read_regular(root, path)) == digest,
                 f'synthetic example changed; privacy review required: {path}')
+    validate_license_application(root, paths)
     for path in paths:
-        require(not (PurePosixPath(path).parent == PurePosixPath('.')
-                     and PurePosixPath(path).name.casefold() in {'license', 'license.txt', 'license.md', 'copying', 'copying.txt', 'copying.md'}),
-                'owner decision pending: no root license grant may be installed')
+        if (PurePosixPath(path).parent == PurePosixPath('.')
+                and PurePosixPath(path).name.casefold() in
+                {'license', 'license.txt', 'license.md', 'copying', 'copying.txt', 'copying.md'}):
+            require(path == 'LICENSE', 'unreviewed additional root license grant')
     # The current workflow surface is deliberately small. Unknown forms need review.
     actual_actions = []
     for path in paths:
@@ -328,7 +427,11 @@ def validate_inventory(inventory: dict, paths: list[str], root: Path, policy: di
             for match in re.finditer(r'^\s*(?:-\s*)?uses:\s*(.*?)\s*$', text, flags=re.M):
                 value = match.group(1).split(' #', 1)[0].strip().strip('\"\'')
                 actual_actions.append({'path': path, 'reference': value})
-    require(sorted(actual_actions, key=lambda x: (x['path'], x['reference'])) == obligations['workflow_references'],
+    expected_actions = list(obligations['workflow_references'])
+    if '.github/workflows/development-preview.yml' in paths:
+        expected_actions.extend(PREVIEW_WORKFLOW_REFERENCES)
+    require(sorted(actual_actions, key=lambda x: (x['path'], x['reference']))
+            == sorted(expected_actions, key=lambda x: (x['path'], x['reference'])),
             'review_required:workflow dependency references changed')
     return members
 
@@ -347,10 +450,14 @@ def review_checkout(root: Path) -> dict[str, Any]:
         'reviewed_zero_dependency_command_manifests': ['package.json', 'package-lock.json'],
         'target_stack_qualified': False,
         'license_dispositions': dict(Counter(c['disposition'] for c in inventory['components'])),
+        'license_dispositions_basis': 'historical M00 proposal; see current_license_application for applied terms',
+        'current_license_application': validate_license_application(root, paths),
+        'optional_formatter_manifests': sorted(validate_optional_formatter(root)),
         'inventory_sha256': sha256(read_regular(root, INVENTORY_PATH)),
         'policy_sha256': sha256(read_regular(root, POLICY_PATH)),
         'publication_authorized': False, 'legal_clearance': False,
         'public_release_blockers': list(policy['release_requirements']),
+        'public_release_blockers_basis': 'retained M00 release contract; no current release acceptance is inferred',
     }
 
 
@@ -437,10 +544,17 @@ def main() -> int:
     parser.add_argument('--baseline', type=Path, help='Independently retained prior component inventory')
     parser.add_argument('--baseline-sha256')
     parser.add_argument('--public-release', action='store_true', help='Evaluate release blockers; currently always blocks')
+    parser.add_argument('--licenses', action='store_true', help='Check current applied texts and scope; no release approval')
     args = parser.parse_args()
     try:
         require(not args.root.is_symlink(), 'root symlink rejected')
         root = args.root.resolve()
+        if args.licenses:
+            require(not any((args.emit_manifest, args.stage, args.manifest, args.manifest_sha256,
+                             args.baseline, args.baseline_sha256, args.public_release)),
+                    '--licenses cannot be combined with artifact or release flags')
+            print(json.dumps(validate_license_application(root, checkout_paths(root)), indent=2, sort_keys=True))
+            return 0
         require(bool(args.baseline) == bool(args.baseline_sha256), 'baseline and expected hash must be supplied together')
         require(not any((args.stage, args.manifest, args.manifest_sha256))
                 or all((args.stage, args.manifest, args.manifest_sha256)), 'stage, manifest and expected hash must be supplied together')

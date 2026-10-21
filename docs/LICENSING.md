@@ -1,85 +1,74 @@
-> Current development decision: accepted under delegated bootstrap authority; see [ADR-0004](decisions/0004-delegated-development-authority.md). Original submission/proposal wording below is retained for audit and is not the current acceptance state. No product qualification or independent review is implied.
+# Licensing Rifare
 
-# Rifare licensing proposal
+Rifare applies the component terms selected in ADR-0004 under the owner's
+[publication-readiness approval](decisions/0066-publication-readiness.md).
+The complete grant, path exceptions, and attribution notice are in
+[LICENSES/README.md](../LICENSES/README.md); the root [LICENSE](../LICENSE)
+contains the complete AGPL version 3 text.
 
-Status: proposed for M00-G03; no owner decision, rights holder, public license grant,
-external contribution intake or publication is asserted. Read
-[ADR-0003](decisions/0003-licensing-and-distribution.md) and
-[the machine-readable policy](../planning/licensing-policy.json).
+## Applied scope
 
-## Proposed component policy
+| Surface | Terms |
+| --- | --- |
+| Application and in-process business implementation, including migrations | AGPL-3.0-only |
+| Separable clients and protocol schemas | Apache-2.0 |
+| Public workflow skills, synthetic templates, and examples | Apache-2.0 |
+| Original development helpers, tests, documentation, and original brand/demo media | Apache-2.0, only to the extent of the licensors' rights |
+| Identified upstream instruction text | Retained MIT terms; original Rifare modifications are Apache-2.0 |
 
-| Surface | Proposed terms | Current status |
-| --- | --- | --- |
-| Application and in-process business modules | AGPL-3.0-only | No application exists; owner decision required |
-| Independently usable SDKs and protocol schemas | Apache-2.0 | No SDK exists; separation and owner decision required |
-| Public workflow skills, platform guidance and synthetic templates | Apache-2.0 | Illustrative skills/configurations exist; not licensed by this proposal |
-| Original developer helpers, tests and documentation | Apache-2.0 | Present; owner decision and rights review pending |
-| Adapted upstream instructions | Preserve the upstream MIT portions and notices | Two instruction files are present; new local portions still need the owner's decision |
-| Merchant-specific material | No inferred redistribution grant | Excluded from public source/package inputs |
+The [machine-readable application record](../LICENSES/application.json) lists
+the exact exceptions to the default application license. It does not declare
+unknown third-party material first-party. Existing upstream notices retain their
+own copyright owners and terms. The license documents and DCO text retain their
+authors' stated copying permissions.
 
-AGPL-3.0-only is the proposed application option to retain reciprocal source duties
-for covered modifications. Section 13 addresses a modified program used through a
-network; it is not a promise that every external adapter or user data item becomes
-covered source. Boundaries depend on the actual work and integration, not folder
-names. Review source-delivery duties before enabling a hosted version. The
-[official AGPL page](https://www.gnu.org/licenses/agpl-3.0.pt-br.html) contains the
-English license text; the English endpoint timed out during this review.
+Application code copied into a separately named SDK does not acquire a permissive
+license through its directory name. Preserve the license of copied material and
+review its integration. Merchant data, credentials, private configuration, and
+provider logs are excluded from source distribution; a source license is not
+permission to redistribute them. No commercial relicensing rights or copyright
+assignment are assumed.
 
-Apache-2.0 is proposed for separately usable integration material and skills.
-Keep applicable licenses, attributions and modification notices; retain a required
-upstream NOTICE where one exists. A permissive SDK label cannot relicense copied
-copyleft application code. [Apache's text](https://www.apache.org/licenses/LICENSE-2.0.txt)
-is the source, not this summary.
+## Contributions
 
-A simpler alternative is Apache-2.0 for all original public material. Choose based
-on desired reciprocity versus permissive reuse; this document does not select on
-the owner's behalf. No extra noncommercial restriction is proposed. Dual licensing,
-copyright assignment and commercial relicensing rights are not assumed.
+Original contributions use the license already applicable to the affected file.
+The project adopts [DCO 1.1](../.github/DCO.txt), with the contributor personally
+certifying the provenance of the submitted work. Contributors retain their
+rights. Sign off only your own submission after checking that you can make the
+certification, including for AI-assisted or employer-owned work. Do not sign for
+another person, fabricate a human signoff, or amend old commits to suggest a
+certification that did not occur. See [Contributing](../.github/CONTRIBUTING.md).
 
-## Inventory, not a fabricated dependency graph
+## History and verification
 
-[The component inventory](../planning/component-inventory.json) assigns every current
-source file exactly once and separately records future surfaces and external tools.
-No application manifest, dependency lockfile, vendored runtime, model weights,
-font, image asset, executable initializer or SDK is included. Git and Python are
-host requirements. The checkout action is referenced in the manual workflow,
-not bundled. Redistributing any runtime/action/container requires a new inventory
-and dependency review; the current source-only check cannot qualify that package.
+`planning/licensing-policy.json`, the pending component dispositions in
+`planning/component-inventory.json`, and `tests/fixtures/licensing/` retain the
+original M00 proposal and regression contract. Their fields protect historical
+notice/privacy obligations; they are not the current source-license decision.
+The current application record deliberately sits beside these preserved inputs.
 
-`NOASSERTION` on original material records an unresolved licensing conclusion; it
-is not a license or a public-domain dedication. All such material has an explicit
-`internal_review_only` disposition and blocks public release. The adapted files
-have an identified MIT upstream license plus pending local-change terms. The
-source-only review can pass while public-release preflight correctly remains
-blocked. [SPDX distinguishes declared and concluded licenses](https://spdx.github.io/spdx-spec/v2.3.1/package-information/).
-This project-specific JSON is not an SPDX or CycloneDX SBOM.
+```sh
+python3 tools/check_distribution.py --root . --licenses
+python3 tools/check_distribution.py --root .
+```
 
-New dependency manifests/lockfiles, containers, vendored binaries or undeclared
-files require review, not a guessed permissive license. Do not label a dependency
-first-party to bypass that work. The helper deliberately has no full package-manager
-parser or license-compatibility solver. An unresolved third-party license is rejected.
+The first command checks installed texts, scope, attribution, and the recorded
+authority reference. The second also checks exact source membership, preserved
+notices, synthetic inputs, and reviewed development dependencies. Neither
+authenticates an owner's identity, proves all external rights, grants a license,
+or authorizes a product release. The grant is in the license notice and the
+owner's actual instruction. [Distribution review](DISTRIBUTION-REVIEW.md)
+explains the remaining artifact and release boundaries.
 
-## Contribution terms proposed for adoption
+## License sources
 
-Use inbound-equals-outbound terms for the affected component and an explicitly
-adopted [DCO 1.1](https://developercertificate.org/) provenance attestation.
-Contributors retain their rights; this is not an assignment or a new right to
-relicense other people's work. Do not retrospectively sign existing assistant
-commits, impersonate a human signatory, or infer that generated code is free of
-third-party obligations. Review employee/contractor rights and AI-assisted source
-provenance as applicable. No external contributions should be solicited until
-terms and the actual rights holder are approved.
+- [GNU AGPL version 3](https://www.gnu.org/licenses/agpl-3.0.html).
+- [Apache License, version 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt).
+- [Developer Certificate of Origin 1.1](https://developercertificate.org/).
+- Verbatim AGPL and Apache text copies are pinned to the SPDX license-list-data
+  revision recorded in [the application record](../LICENSES/application.json).
 
-## Decision still required
-
-The owner must approve the exact component licenses, determine who can grant them,
-confirm contribution terms and source-offer expectations, and authorize the actual
-candidate and publication destination separately. Install authoritative, unmodified
-license texts and scoped file attribution only after that decision. Obtain qualified
-legal review where integration or rights questions need it. This is a development
-proposal and mechanical audit, not legal advice or clearance.
-
-REUSE may be adopted later for file metadata after licenses are chosen. Its own
-[FAQ](https://reuse.software/faq/) explains that metadata checks do not decide
-compatibility. Neither our helper nor a passing REUSE check substitutes for review.
+Source-code licensing and operating a hosted commerce service are separate
+questions. Required corresponding-source, attribution, privacy, integration,
+and release duties depend on the actual artifact and deployment. This document
+does not claim a legal opinion or production qualification.

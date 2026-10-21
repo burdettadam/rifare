@@ -1,21 +1,29 @@
-> The licensing direction is now selected by [ADR-0004](docs/decisions/0004-delegated-development-authority.md). The historical proposal below remains the release-preflight baseline. License text/application and public distribution qualification remain separate work, not another request to decide the direction.
+# Rifare licenses
 
-# Rifare license status
+**License terms are applied to this source checkout.** The owner approved their
+application in [ADR-0066](docs/decisions/0066-publication-readiness.md), following
+the direction selected in ADR-0004.
 
-No application, SDK, original skill, contribution or public distribution license
-has been approved. M00-G03 now supplies a [component proposal](docs/LICENSING.md),
-[explicit inventory](planning/component-inventory.json) and
-[distribution checks](docs/DISTRIBUTION-REVIEW.md), not a license grant.
-The rights holder, accepted terms and publication destination remain unset.
+| Material | Applied terms |
+| --- | --- |
+| Original application code, in-process business modules, and migrations | [AGPL-3.0-only](LICENSE) |
+| Separable clients and protocol schemas, public skills, synthetic examples, original developer tools, tests, and documentation | [Apache-2.0](LICENSES/Apache-2.0.txt), within the [explicit file scope](LICENSES/README.md) |
+| Identified upstream instruction adaptations | Original MIT terms and notices are retained; original Rifare modifications use Apache-2.0 |
 
-Do not publish, install a root license grant or solicit third-party contributions
-until an authorized owner decision and applicable reviews establish the terms.
-The proposed application license is AGPL-3.0-only; Apache-2.0 is proposed for
-separable integration/skill material and original developer/documentation content.
-These names are alternatives for decision, not applied file licenses.
+[LICENSES/README.md](LICENSES/README.md) is the scope and attribution notice.
+[LICENSES/application.json](LICENSES/application.json) records the same scope and
+the exact license-text sources. These terms cover the licensors' respective
+rights; they do not assert ownership of third-party material, create copyright
+where none exists, or grant trademark rights. Original artwork is included on
+that same basis. Keep [third-party notices](THIRD-PARTY-NOTICES.md) intact.
 
-The separate MIT notice in `THIRD-PARTY-NOTICES.md` covers the identified
-upstream-derived workflow portions. It does not license unrelated Rifare material
-or establish rights over local changes. `NOASSERTION` in the inventory is an
-unresolved conclusion, not permission to redistribute. Local review can pass;
-public-release preflight remains blocked and never reports legal clearance.
+Contributions use the affected component's terms and a genuine
+[DCO 1.1](.github/DCO.txt) certification. See [Contributing](.github/CONTRIBUTING.md).
+No past author or assistant commit has been given a fabricated signoff.
+
+The old proposal and its frozen regression fixtures remain historical inputs.
+Their `NOASSERTION`, pending-owner fields, and internal-review dispositions are
+not the current license grant. A source-license grant does not establish
+production readiness or approve a release artifact. Candidate-specific review,
+dependency/asset obligations, and the [remaining product qualification](docs/QUALIFICATION.md)
+still apply. The checker reports metadata consistency, never legal clearance.

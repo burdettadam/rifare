@@ -36,7 +36,7 @@ The next recorded commerce increment is **M20-G04: consolidation and custody con
 | Remote clients and recovered history | Some local independent-client demonstrations exist. Later remote/managed/browser claims whose source was missing from recovery are not treated as recovered implementation. |
 | Browser inference | M23–M25 are adopted roadmap work. This preview does not provide a qualified browser model runner, download, or image-inference experience. |
 | Deployment and formal acceptance | Target-host deployment, independent installation, real pilot observations, and formal milestone gates remain open. Local review and focused tests do not close those gates. |
-| Licensing | A licensing direction is selected. Exact application and distribution review remain unfinished; the repository's public visibility is not an applied software license grant. |
+| Licensing | Source terms are applied: AGPL-3.0-only for original application code and Apache-2.0 for the separable material listed in the component license map. Retained upstream terms still apply. Any future release or extension distribution needs its own artifact review. |
 
 For the original boundaries, see [local environment](LOCAL-ENVIRONMENT.md), [M18 qualification](M18-QUALIFICATION.md), [browser handoff](BROWSER-WORKER-HANDOFF.md), [license status](../LICENSE-STATUS.md), and the per-milestone assessments.
 
