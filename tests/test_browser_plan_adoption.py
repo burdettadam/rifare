@@ -14,12 +14,12 @@ sys.path.insert(0, str(ROOT / 'tools'))
 import check_repository
 from validate_plan import load_documents, validate_documents
 
-BROWSER_SOURCE = 'reference/additions/m23-m25-requirements.json'
+BROWSER_SOURCE = 'planning/reference/additions/m23-m25-requirements.json'
 DOCUMENT_PATHS = (
     'planning/goals.json', 'planning/test-specifications.json',
     'planning/requirement-coverage.json', 'planning/milestones.json',
-    'reference/original-backlog.json', 'reference/original-acceptance-tests.json',
-    'reference/additions/m13-m22-requirements.json', BROWSER_SOURCE,
+    'planning/reference/original-backlog.json', 'planning/reference/original-acceptance-tests.json',
+    'planning/reference/additions/m13-m22-requirements.json', BROWSER_SOURCE,
 )
 
 

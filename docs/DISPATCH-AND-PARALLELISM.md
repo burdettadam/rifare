@@ -1,10 +1,10 @@
 # Dispatch, ownership and parallel work
 
-Use the existing `work-goal` and worktree conventions after inspecting their installed version. The JSON/Markdown files are a dependency graph and scope definition, not a new orchestration engine. Import IDs into an existing issue tracker only under separate authorization; external issue creation and remote publication require separate authorization. This repository has a local bootstrap commit only.
+Use the existing `work-goal` and worktree conventions after inspecting their installed version. The active JSON/Markdown files define remaining scopes and dependencies. Import IDs into an existing issue tracker only under separate authorization; external issue creation and remote publication require separate authorization.
 
 ## Selection rule
 
-Choose the earliest approved goal whose direct dependencies are accepted and whose real prerequisites exist. The static `planning/dependency-waves.json` groups nodes that are dependency-ready after prior waves; it does not predict elapsed time or authorize parallel writes. `planning/goal-state.json` starts with every goal unassigned and not started.
+Choose a bounded approved scope from the [current plan](PLANS.md) and [active catalogue](../planning/WORKER-GOALS.md). Inspect actual implementation, formal dependency acceptance and external prerequisites. The obsolete initial-state snapshot and static scheduling waves have been removed. Work records carry assignments; the architecture locates landed behavior.
 
 A worker can prepare isolated design/tests while a connected prerequisite is unavailable, but must not report the blocked goal accepted. Changing execution order or splitting a goal is permitted through recorded planning updates that preserve parent requirements, tests and evidence.
 
@@ -20,7 +20,7 @@ Never let two workers independently rewrite the same central policy/action/recei
 
 The integration owner rebases or merges accepted components into one candidate, checks newly accepted parallel features against the protected baseline and runs combined evidence. Tests from different commits do not establish a passing combined release.
 
-A milestone's `G99` goal depends on every component goal and the original predecessor milestone gates. It closes original requirements only when all mapped in-scope components and original exit criteria pass. It may not silently exclude a failed goal to make the milestone green.
+A future milestone's `G99` goal depends on every component goal and the original predecessor milestone gates. It closes original requirements only when all mapped in-scope components and original exit criteria pass. Retired historical `G99` packet text is in Git and its unresolved qualification is summarized in [qualification](QUALIFICATION.md). Original formal dependency IDs still apply; absence from the active catalogue does not mean accepted. A failed or missing outcome may not be silently excluded to make a milestone green.
 
 After M07, shipping (M08), marketing/conversion (M09), claims/partners (M10) and ecosystem (M12) can evolve independently if concrete scopes permit. Inventory/procurement (M11) also requires M08. Every branch must preserve the whole current accepted baseline, including siblings outside its static dependency ancestry.
 

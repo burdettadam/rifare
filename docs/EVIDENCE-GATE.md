@@ -7,7 +7,7 @@ local diagnostic source. It reuses the native regression controller and workflow
 policy checker. No agent/model service, compiler, identity provider, daemon,
 scheduler, package dependency, automatic merge or release command is introduced.
 The original draft manifest/schema remain unchanged historical planning artifacts.
-The executable capture uses [evidence-bundle.v1.schema.json](../templates/evidence-bundle.v1.schema.json).
+The executable capture uses [evidence-bundle.v1.schema.json](../planning/templates/evidence-bundle.v1.schema.json).
 
 Three different results are deliberately separate:
 

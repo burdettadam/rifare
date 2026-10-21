@@ -691,7 +691,7 @@
   "adopted_additions": {
     "authority": "ADR-0042",
     "adopted_on": "2026-10-19",
-    "frozen_requirements": "reference/additions/m13-m22-requirements.json",
+    "frozen_requirements": "planning/reference/additions/m13-m22-requirements.json",
     "frozen_requirements_sha256": "0d4218fabd39eeb1328de5a3d1f79cc620967ef761a6dc4a405ec403a280d7b2",
     "original_requirements": 151,
     "adopted_requirements": 50,

@@ -5,7 +5,7 @@ description: Create, resume, verify, checkpoint or clean an assigned Rifare Git 
 
 # Run an assigned worktree
 
-Adapted from the pinned workflow in `docs/WORKFLOW-ADOPTION.md`. Read `DEVELOPMENT.md`, `GOVERNANCE.md` and the assigned work record.
+Adapted from the pinned workflow in `docs/WORKFLOW-ADOPTION.md`. Read `docs/DEVELOPMENT.md`, `docs/GOVERNANCE.md` and the assigned work record.
 
 1. Discover repository/worktree with Git. Inspect status, branch, worktree listing, owner and base. A `.git` file is valid. Do not construct shared administration paths or disable Git's same-branch guard.
 2. Reconcile interrupted writers, uncommitted/staged changes and owned processes before takeover. Shared repository configuration/ref changes need the administration owner. Worktree locks are not agent semaphores.

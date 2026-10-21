@@ -63,7 +63,7 @@ uses a preexisting success report. There is no selector, skip, approve, force,
 rebaseline-on-success or release option.
 
 Routine iteration uses `python3 tools/dev_tests.py`, the bounded changed-file
-profile described in `DEVELOPMENT.md`. The existing offline
+profile described in `docs/DEVELOPMENT.md`. The existing offline
 `tools/verify.py --runtime --harness` remains available for explicit full local
 diagnostics (`make test-full`). Its presence does not substitute for the external
 controller or change any retained acceptance obligation.

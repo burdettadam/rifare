@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Validate planning structure, NOT commerce behavior or reviewer authorization."""
+"""Validate remaining work and retained behavioral contracts, not product acceptance."""
 from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import sys
 from collections import Counter
 from pathlib import Path
@@ -42,17 +43,43 @@ def validate_documents(docs: dict[str, Any]) -> list[str]:
                 errors.append(f'{name}: missing/duplicate ID {key!r}')
         indexes[name] = {x.get('id'): x for x in items}
     gi, ti, ri, mi = (indexes[k] for k in ('goals', 'tests', 'requirements', 'milestones'))
+    # The unchanged behavioral specifications retain ownership after implementation
+    # packets leave the active backlog. This is contract provenance, not acceptance.
+    historical_goals = {t.get('goal_id') for t in tests}
+    historical_milestones = {t.get('milestone') for t in tests}
+    if len(tests) != 949:
+        errors.append('Retained behavioral contract inventory must contain all 949 specifications')
+    integration_owners: set[str] = set()
+    for row in docs['goals'].get('integration_work', []):
+        owner = row.get('owner_goal_id')
+        if owner not in historical_goals or owner in integration_owners:
+            errors.append(f'{owner}: invalid/duplicate integration owner')
+        integration_owners.add(owner)
+        related = row.get('related_original_goal_ids', [])
+        if not related or owner not in related or not set(related) <= historical_goals:
+            errors.append(f'{owner}: invalid integration contract references')
+        if not all(isinstance(row.get(key), str) and row[key].strip()
+                   for key in ('kind', 'remaining_outcome', 'finding')):
+            errors.append(f'{owner}: missing integration scope or finding')
+        paths = row.get('evidence_paths', [])
+        if (not paths or any(not isinstance(path, str) or not path.strip()
+                             or Path(path).is_absolute() or '..' in Path(path).parts for path in paths)):
+            errors.append(f'{owner}: missing or invalid integration evidence paths')
     for g in goals:
         gid = g['id']
+        if gid not in historical_goals:
+            errors.append(f'{gid}: no retained behavioral contract')
         if g.get('milestone') not in mi:
             errors.append(f'{gid}: unknown milestone')
         for dep in g.get('depends_on', []):
-            if dep not in gi or dep == gid:
+            if dep not in historical_goals or dep == gid:
                 errors.append(f'{gid}: invalid dependency {dep}')
         for rid in g.get('requirement_ids', []):
             if rid not in ri:
                 errors.append(f'{gid}: unknown requirement {rid}')
         own = [ti[x] for x in g.get('new_test_ids', []) if x in ti]
+        if any(t.get('goal_id') != gid for t in own):
+            errors.append(f'{gid}: inconsistent test ownership')
         if not {'positive', 'negative', 'regression'} <= {t.get('kind') for t in own}:
             errors.append(f'{gid}: missing positive/negative/regression specification')
         for tid in g.get('required_test_ids', []):
@@ -61,11 +88,14 @@ def validate_documents(docs: dict[str, Any]) -> list[str]:
         if not g.get('required_evidence') or not g.get('regression_contract', {}).get('deliberate_break_to_detect'):
             errors.append(f'{gid}: missing evidence or deliberate regression fault')
         if g.get('type') == 'milestone_acceptance':
-            workers = {x['id'] for x in goals if x['milestone'] == g['milestone'] and x.get('type') == 'worker_goal'}
+            # A smaller backlog cannot shrink a formal gate's prerequisites.
+            # Retired implementation packets retain their original obligations.
+            workers = {t['goal_id'] for t in tests
+                       if t['milestone'] == g['milestone'] and not t['goal_id'].endswith('-G99')}
             if not workers <= set(g.get('depends_on', [])):
                 errors.append(f'{gid}: gate omits component dependency')
         if g.get('status') != 'not_started' or g.get('all_product_test_results') != 'not_run':
-            errors.append(f'{gid}: this planning baseline cannot claim implementation/acceptance')
+            errors.append(f'{gid}: remaining-work records cannot claim acceptance or test execution')
     active: set[str] = set()
     finished: set[str] = set()
     def visit(gid: str) -> None:
@@ -82,8 +112,13 @@ def validate_documents(docs: dict[str, Any]) -> list[str]:
     for gid in gi:
         visit(gid)
     for t in tests:
-        if t.get('goal_id') not in gi:
+        owner = t.get('goal_id')
+        if (not isinstance(owner, str) or re.fullmatch(r'M[0-9]{2}-G[0-9]{2}', owner) is None
+                or t.get('milestone') != owner[:3]):
             errors.append(f'{t["id"]}: missing owner')
+        if (t.get('kind') != 'retained_source_scenario'
+                and not t['id'].startswith(f'CASE-{owner}-')):
+            errors.append(f'{t["id"]}: behavioral contract owner changed')
         if t.get('executed') is not False or t.get('result') != 'not_run':
             errors.append(f'{t["id"]}: unexecuted specifications cannot claim a test result')
         if t.get('kind') != 'retained_source_scenario' and not all(t.get(k) for k in ('given_when','then','fixture_id','oracle')):
@@ -104,9 +139,10 @@ def validate_documents(docs: dict[str, Any]) -> list[str]:
         if not r.get('worker_goal_ids'):
             errors.append(f'{rid}: orphan requirement')
         for owner in r.get('worker_goal_ids', []):
-            if owner not in gi or rid not in gi[owner].get('requirement_ids', []):
+            if (owner not in historical_goals
+                    or (owner in gi and rid not in gi[owner].get('requirement_ids', []))):
                 errors.append(f'{rid}: inconsistent owner {owner}')
-        if r.get('acceptance_gate') not in gi:
+        if r.get('acceptance_gate') not in historical_goals:
             errors.append(f'{rid}: missing acceptance gate')
         if rid in originals and r.get('acceptance_criteria') != originals[rid].get('acceptance_criteria'):
             errors.append(f'{rid}: original acceptance criterion changed')
@@ -116,7 +152,7 @@ def validate_documents(docs: dict[str, Any]) -> list[str]:
             errors.append(f'{rid}: browser adopted acceptance criterion changed')
     for requirement in browser_reqs:
         gid = requirement['goal_id']
-        if (gid not in gi or gi[gid].get('acceptance_criteria')
+        if (gid in gi and gi[gid].get('acceptance_criteria')
                 != requirement['original_acceptance_criteria']):
             errors.append(f'{gid}: browser goal acceptance criterion changed')
     for t in original_tests:
@@ -127,14 +163,23 @@ def validate_documents(docs: dict[str, Any]) -> list[str]:
             errors.append(f'{tid}: original scenario expectation changed')
     for m in milestones:
         gate = m.get('acceptance_goal_id')
-        if gate not in gi:
-            errors.append(f'{m["id"]}: missing integration gate')
+        actual_workers = {g['id'] for g in goals
+                          if g['milestone'] == m['id'] and g.get('type') == 'worker_goal'}
+        actual_gates = {g['id'] for g in goals
+                        if g['milestone'] == m['id'] and g.get('type') == 'milestone_acceptance'}
+        if (gate is not None and (gate not in gi or actual_gates != {gate})) or (gate is None and actual_gates):
+            errors.append(f'{m["id"]}: missing or inconsistent integration gate')
+        if not actual_workers and not actual_gates:
+            errors.append(f'{m["id"]}: milestone has no remaining work')
         for predecessor in m.get('depends_on', []):
-            if predecessor not in mi:
+            if predecessor not in historical_milestones:
                 errors.append(f'{m["id"]}: missing predecessor milestone')
         for gid in m.get('worker_goal_ids', []):
             if gid not in gi or gi[gid]['milestone'] != m['id']:
                 errors.append(f'{m["id"]}: inconsistent goal {gid}')
+        if (set(m.get('worker_goal_ids', [])) != actual_workers
+                or m.get('worker_goal_count') != len(actual_workers)):
+            errors.append(f'{m["id"]}: worker membership/count differs from remaining work')
     return errors
 
 
@@ -142,10 +187,10 @@ def load_documents(root: Path) -> dict[str, Any]:
     paths = {
         'goals':'planning/goals.json', 'tests':'planning/test-specifications.json',
         'coverage':'planning/requirement-coverage.json', 'milestones':'planning/milestones.json',
-        'original_requirements':'reference/original-backlog.json',
-        'original_tests':'reference/original-acceptance-tests.json',
-        'adopted_requirements':'reference/additions/m13-m22-requirements.json',
-        'browser_requirements':'reference/additions/m23-m25-requirements.json'}
+        'original_requirements':'planning/reference/original-backlog.json',
+        'original_tests':'planning/reference/original-acceptance-tests.json',
+        'adopted_requirements':'planning/reference/additions/m13-m22-requirements.json',
+        'browser_requirements':'planning/reference/additions/m23-m25-requirements.json'}
     if hashlib.sha256((root / paths['adopted_requirements']).read_bytes()).hexdigest() != ADOPTED_SHA256:
         raise ValueError('ADR-0042 frozen addition changed')
     if hashlib.sha256((root / paths['browser_requirements']).read_bytes()).hexdigest() != BROWSER_ADOPTED_SHA256:
@@ -162,18 +207,19 @@ def main() -> int:
         docs = load_documents(args.root)
         errors = validate_documents(docs)
         goals = docs['goals']['goals']
-        report = {'validation_type':'planning_structure_only', 'result':'fail' if errors else 'pass',
+        report = {'validation_type':'remaining_work_and_retained_contracts', 'result':'fail' if errors else 'pass',
                   'worker_goals':sum(g['type']=='worker_goal' for g in goals),
                   'milestone_gates':sum(g['type']=='milestone_acceptance' for g in goals),
                   'goal_total':len(goals),'test_specifications':len(docs['tests']['tests']),
+                  'integration_followups':len(docs['goals'].get('integration_work', [])),
                   'source_requirements_preserved':len(docs['original_requirements']['items']),
                   'adopted_requirements_preserved':len(docs['adopted_requirements']['requirements']),
                   'browser_requirements_preserved':len(docs['browser_requirements']['requirements']),
                   'total_requirements_mapped':len(docs['coverage']['requirements']),
                   'source_scenarios_preserved':len(docs['original_tests']['tests']),
-                  'product_tests_executed':0, 'product_readiness':'not_assessed', 'errors':errors}
+                  'product_readiness':'not_assessed', 'errors':errors}
     except (OSError, ValueError, KeyError, TypeError) as exc:
-        report = {'validation_type':'planning_structure_only','result':'fail','errors':[str(exc)],'product_tests_executed':0}
+        report = {'validation_type':'remaining_work_and_retained_contracts','result':'fail','errors':[str(exc)]}
     text = json.dumps(report, indent=2) + '\n'
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)

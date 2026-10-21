@@ -1,5 +1,17 @@
 # Work records
 
-No product goal is assigned at bootstrap. The integration owner creates `records/<goal-id>.md` from `templates/GOAL-WORK-RECORD.md` when a goal is assigned. Store concise source revisions, decisions, ownership, blockers and durable review links. Raw generated evidence belongs in ignored `evidence/`, not here.
+These records preserve concise development decisions, source revisions,
+ownership, reviews and actual limits. Use the
+[current plan](../docs/PLANS.md) for today's continuation and the
+[architecture](../docs/ARCHITECTURE.md) for existing source owners.
 
-Planning specifications stay proposed; this folder is the source-controlled live-progress surface. There is no separate task database. Unassigned tasks do not authorize unattended work.
+When a remaining scope is assigned, create or update its record from
+[`GOAL-WORK-RECORD.md`](../planning/templates/GOAL-WORK-RECORD.md).
+Keep raw generated evidence under ignored `evidence/`. There is no separate task
+database or initial-state snapshot to maintain.
+
+Completed planning packets are retired from the active catalogue. Their original
+text remains in Git, and historical links point to that immutable version.
+Development outcomes and the [acceptance ledger](accepted-goals.json) retain
+their original meaning: local implementation or focused checks do not establish
+formal production qualification.

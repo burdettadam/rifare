@@ -1,6 +1,6 @@
 {
-  "source_file_count": 1909,
-  "source_count_reason": "ADR-0064 adds eleven scoped handoff runtime, contract, independent test/oracle and documentation paths; all 1898 prior source members remain.",
+  "source_file_count": 1683,
+  "source_count_reason": "ADR-0065 owner-authorized planning retirement: remove 226 completed goal cards, 13 milestone sheets and five duplicate planning snapshots; add three concise architecture/qualification decision and continuation records. All component metadata, licensing blockers and executable behavior remain protected.",
   "component_ids": [
     "git-agent-adaptations",
     "rifare-developer-helpers",

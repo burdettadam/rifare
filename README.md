@@ -1,415 +1,168 @@
-# Rifare
+![Rifare — merchant-owned commerce operations](docs/assets/rifare-hero.png)
 
-Merchant-owned commerce operations with tailorable skills and independently replaceable platforms, agents and models.
+# Commerce operations, on your terms.
 
-## Browser roadmap adopted: M23–M25
+**Rifare is building a merchant-owned platform for returns, exchanges, order changes, support, fulfillment, and repeat business.** Your policies shape the experience. Your business records stay under your control. Your choice of agents and models can change as your business grows.
 
-The browser expansion is now decomposed into fifteen worker goals and three
-separate milestone assessments under
-[ADR-0044](docs/decisions/0044-browser-roadmap-adoption.md). M23 plans pinned
-Clef Flash Q8/Kevala text inference, M24 a separately verified compact
-Wllama/GGUF backend, and M25 browser image evidence after the M17 media gates.
-The current catalogue contains 26 milestones, 281 goal packets, 216 requirements
-and 949 behavioral specifications.
+Start with what happens after checkout. Connect it to the warehouse, the next conversation, and the next sale.
 
-Start with [the browser worker handoff](docs/BROWSER-WORKER-HANDOFF.md),
-[the searchable goal catalogue](WORKER-GOALS.html) and
-[the updated architecture](ARCHITECTURE.md). Each new worker packet includes
-bounded scope, component and formal dependencies, proposed paths, behavioral
-oracles, a targeted fault, a small first verification slice and handoff evidence.
-M23-G01–G05 is the recommended next browser batch; all new goals remain
-unassigned. This planning update preserves the completed M14 local checkpoint
-and does not claim browser/model execution or formal acceptance.
+[Explore the product](#the-product-we-are-building) · [Run the preview](#try-rifare) · [Explore the architecture](#built-to-give-merchants-control) · [Follow the roadmap](docs/ROADMAP.md)
 
-## Current development milestone: M14 calibrated routing
+> **Development preview.** The capabilities below describe Rifare's target product. Runnable local implementations are available today; connected services and production qualification are still in development. [See what runs now →](docs/PROJECT-STATUS.md)
 
-M14 adds frozen calibration protocols, canonical measurement records, bounded
-diagnostic routing through one published manual-work rule, a SystemOne reader,
-and controlled serving activation/canary/rollback. The existing case, skill,
-policy, credential, budget, ownership and privacy owners remain authoritative.
-See [routing behavior](docs/DECISION-ROUTING.md),
-[qualification limits](docs/M14-QUALIFICATION.md), and
-[the integration record](work/records/M14-milestone-integration.md).
-Actual connected model qualification and formal acceptance remain pending.
-M15 is the next unassigned milestone. The earlier M13 checkpoint follows.
+## The product we are building
 
-## Historical M13 decision-model shadow observations
+Rifare targets technically capable merchants, commerce teams, and agencies that want a connected operation they can tailor and extend. The roadmap starts with post-purchase workflows and expands into fulfillment, retention, and inventory planning on the same foundation.
 
-M13 adds optional bounded decision models and a source-bound return-intake
-shadow service under [ADR-0042](docs/decisions/0042-decision-model-shadow-milestone.md).
-One published question resource serves two declared merchant profile variants.
-Current case, task, source, credential and budget checks govern each observation;
-the existing manual workflow retains approval and execution authority.
+### Returns that give every item the right outcome
 
-The focused selection is 53 cases in four whole files within the unchanged
-60-case/four-file/60-second development limit. Actual native evidence and two
-independent reviews accompany the cumulative checkpoint. Read
-[decision models](docs/DECISION-MODELS.md), [shadow observations](docs/DECISION-SHADOW.md),
-[the M13 assessment](docs/M13-QUALIFICATION.md), and
-[the integration record](work/records/M13-milestone-integration.md).
-Live provider quality and formal milestone acceptance remain blocked. M14 is the
-next planning milestone and remains unassigned.
+Build the return experience around the merchant's rules and the customer's options.
 
-The preceding [M12 assessment](docs/M12-QUALIFICATION.md) retains agency access,
-extension preparation and its human/contributor qualification limits. Its original
-source, cumulative archive, formal gate and disabled code-mode outcome remain
-preserved. The separate M13–M22 handoff was adopted additively; the historical
-M11/M12 continuation statements below describe their earlier checkpoints.
+- **Refund, exchange, or store credit by item.** Combine outcomes within a return; preserve original paid value, discounts, and the remaining balance.
+- **More ways to keep the sale.** Variant and catalog exchanges, stock-aware alternatives, incentives, and conditional instant exchanges.
+- **Policies that fit the business.** Return windows, product and customer attributes, partial bundles, returnless decisions, evidence requests, and exception review.
+- **A complete resolution journey.** Branded self-service intake, return labels, receipt and inspection, disposition, settlement, and replacement fulfillment.
 
-## Historical M11 inventory and procurement checkpoint
+[Return resolution](docs/RETURN-RESOLUTION.md) · [Exchange depth](docs/exchange-depth.md) · [Capability targets](planning/capability-targets.json)
 
-All ten M11 worker goals and the G99 assessment are assigned under
-[ADR-0040](docs/decisions/0040-m11-inventory-procurement.md). They add historical
-demand, frozen temporal backtests, reviewed forecasts, explainable replenishment,
-supplier terms and versioned purchase orders, independent budget approval,
-partial receiving, additive supplier returns/corrections, nested BOMs and
-production preparation.
+### Order changes that reach the warehouse
 
-The existing warehouse stock and movement owners remain canonical. Purchasing
-and stock effects require current independent approval, source/quantity pins
-and final execution checks. Unknown outcomes retain their original operation
-identities. Forecasts use deterministic quantitative methods and named baselines;
-their empirical error envelope claims no statistical or real-world qualification.
+Give customers a way to correct an order while there is still time to act.
 
-Canonical privacy and quarantined recovery cover 20 new merchant business tables
-while preserving all 234 preceding table obligations. Customer-free aggregate
-and catalog records are excluded from customer exports. Explicit nested
-allowlists remove unexpected copied facts; restore/import/uninstall revoke new
-authority even without customer tombstones. Separate source and historical
-copies retain their named cleanup duties.
+- **Eligible self-service edits.** Address, item, variant, discount, and cancellation flows with clear action windows.
+- **Payment-aware changes.** Quote differences, collect an additional balance when supported, and retain holds until the order is ready.
+- **Fulfillment coordination.** Recheck the current order and downstream hold state before release; keep packing and shipping aligned with the approved edit.
+- **Earlier intervention.** Detect potential multi-size over-ordering and propose customer-approved changes before fulfillment.
 
-The planned selection is 49 cases in four whole files, within the unchanged
-60-case/four-file/60-second development limit. Actual native results, independent
-reviews and the separate local integration decision accompany the cumulative
-checkpoint. Read [the M11 integration record](work/records/M11-inventory-procurement-integration.md),
-[the M11 assessment](docs/M11-QUALIFICATION.md), [demand planning](docs/DEMAND-PLANNING.md),
-[procurement](docs/PROCUREMENT.md), and [receiving and production](docs/PROCUREMENT-INVENTORY.md).
-Formal M07-G99, M08-G99 and M11 acceptance remain blocked. M12 is unassigned.
+[Order editing](docs/ORDER-EDITING.md) · [Product roadmap](docs/ROADMAP.md)
 
-The preceding [M10 integration](work/records/M10-extended-services-integration.md)
-retains partner readiness, warranties, claims, dispute drafts, custody and
-delivery-started trials. Read [its assessment](docs/M10-QUALIFICATION.md),
-[partner services](docs/PARTNER-SERVICES.md), [warranties and disputes](docs/WARRANTY-DISPUTES.md),
-and [delivery trials](docs/DELIVERY-TRIALS.md) for the preserved scope and limits.
+### Support that carries the relationship forward
 
-The preceding [M09 growth integration](work/records/M09-growth-integration.md)
-retains shopping, upsells, experiments, campaigns, catalog and optional media
-capabilities. Its [qualification assessment](docs/M09-QUALIFICATION.md) remains
-historical evidence; the present assignment does not accept those prerequisites.
+Give each conversation the order context, available actions, and history it needs.
 
-### Retained preceding development
+- **Service and action together.** Source-backed order answers, individual shipment tracking, returns, exchanges, edits, and a clear human handoff.
+- **Merchant-directed automation.** Copilot and bounded autonomous modes, published rules, inbox routing, waits, triggers, and escalation.
+- **Continuity across visits and channels.** Verified shopper context and durable journey records reconnect a later conversation to the original work.
+- **Loyalty that follows the purchase.** Earning, reversals, redemption, and recovery incentives stay connected to edits, exchanges, and returns.
 
-M07-G01 through M07-G15 now have bounded local development implementations.
-The first five added Woo return/refund handling, the shared staff and agent
-workflow, independent runtime clients, and reusable adapter conformance. The next
-five add evidence-bound compatibility limits, merchant export and quarantined
-import, exclusive migration ownership, executable operator recovery drills, and
-offline installation/upgrade preparation. Goals G11–G15 add measured recovery
-interlocks and durable intake backpressure, offline artifact/SBOM provenance
-checks, complete current storage-surface review and scoped privacy exports, and
-keyboard/error/focus improvements across six existing workflows.
+[Support operations](docs/SUPPORT-OPERATIONS.md) · [Commerce journeys](docs/COMMERCE-JOURNEYS.md) · [Loyalty](docs/LOYALTY-REDEMPTION.md)
 
-The earlier M07-G16, G17, G18, G99 and M08-G01 checkpoint added
-explicit locale/time-zone/currency presentation, frozen pilot
-instrumentation using the retained benchmark, real-pilot evidence intake
-preparation, the blocked M07 acceptance assessment and per-package carrier quote
-previews. The real-observation register remains empty. Formal M07 acceptance and
-M08 entry remain blocked.
+### Fulfillment and reverse logistics, connected
 
-The preceding five planning entries were M08-G07, G08, G09, G10 and G99.
-They extend the retained shipping and packing services with warehouse return
-events and immutable corrections, shared per-location stock, conserved transfers,
-and shipment/partial-return reconciliation. G99 records the remaining milestone
-evidence gaps. The warehouse and carrier sources remain synthetic; original
-connected G07/G10 cases and formal M08 acceptance remain blocked. M09 development
-is separately assigned by ADR-0038; it does not accept those prerequisites.
-Read [the inventory integration record](work/records/M08-inventory-five-integration.md)
-and [the M08 assessment](docs/M08-QUALIFICATION.md).
+Track the goods as carefully as the customer conversation.
 
-Read [the M07 assessment](docs/M07-QUALIFICATION.md),
-[compatibility limits](docs/COMPATIBILITY-LIMITS.md),
-[merchant transfer](docs/MERCHANT-PORTABILITY.md),
-[operator runbooks](docs/OPERATOR-RUNBOOKS.md), and
-[installation/upgrade](docs/INSTALL-UPGRADE.md),
-[recovery and load](docs/RECOVERY-LOAD.md),
-[release security](docs/RELEASE-SECURITY.md),
-[privacy coverage](docs/PRIVACY-COVERAGE.md), and
-[accessible workflows](docs/ACCESSIBLE-WORKFLOWS.md),
-[locale presentation](docs/LOCALE-PRESENTATION.md),
-[pilot protocol](docs/PILOT-PROTOCOL.md), and
-[carrier quotes](docs/CARRIER-QUOTES.md). Earlier support, return, exchange,
-edit and regression capabilities remain in the accumulated source; the
-[M06 assessment](docs/M06-QUALIFICATION.md) retains their qualification limits.
+- **Merchant-owned shipping relationships.** Rate comparisons, carrier and service rules, label workflows, customs information, and tracking.
+- **Item-level return custody.** Qualified drop-off sites, QR or equivalent credentials, partial acceptance, corrections, disputes, and onward movement.
+- **Warehouse execution.** Order batching, scan-to-pack, packing slips, location transfers, receipt, inspection, and stock reconciliation.
+- **Warehouse intelligence.** Planned layout-aware routes, coordinated pick waves, picker-to-packer handoffs, and supplies replenishment.
 
-Routine development uses a small affected-file selection:
+[Packing](docs/PACKING-SESSIONS.md) · [Drop-off handoffs](docs/DROPOFF-HANDOFFS.md) · [Warehouse roadmap](planning/milestones/M21.md)
+
+### Growth grounded in the actual customer journey
+
+Use permitted commerce context to make the next interaction useful.
+
+- **Shopping and recovery.** Conversational product discovery, cart proposals, rescue offers, and conditional post-payment upsells.
+- **Campaigns with context.** Email and SMS integrations, reviewable per-recipient variants, approved offers, and final-send consent and purchase checks.
+- **Measurable experiments.** Test offers, shipping, and messages; connect attribution and results to the experiment that produced them.
+- **Catalog intelligence.** Analyze return reasons, identify product or variant issues, and improve catalog accuracy and visibility in AI-assisted discovery.
+
+[Growth and shopping](docs/GROWTH-SHOPPING.md) · [Individualized campaigns](planning/milestones/M22.md)
+
+### Inventory and purchasing informed by operations
+
+Carry the consequences of sales, returns, and warehouse activity into the next buying decision.
+
+- **Planning and replenishment.** Demand forecasts, reorder proposals, multi-location stock, and purchase orders.
+- **Procurement assistance.** Natural-language purchase-order drafts and edits with explicit confirmation.
+- **Production and economics.** Bills of materials, assembly, landed cost, and item-level profitability.
+
+[Inventory and procurement](docs/PROCUREMENT-INVENTORY.md) · [Inventory reconciliation](docs/INVENTORY-RECONCILIATION.md)
+
+The wider scope also includes **warranty registration and claims, dispute evidence and deadlines, cross-border services, local return hubs, and agency/multi-store operations**. Conditional payment features and physical or regulated services depend on qualified integrations and partners. The [capability catalogue](planning/capability-targets.json) records those boundaries.
+
+## One journey, from return to repeat purchase
+
+The target experience connects these capabilities around the same business records:
+
+1. A shopper requests a different size and sees eligible replacement options.
+2. The merchant's policy determines the quote, evidence, approval, and fulfillment conditions.
+3. A supported drop-off records the units actually handed over; the customer can follow their progress.
+4. Receipt, inspection, stock, settlement, and replacement fulfillment advance through their own recorded stages.
+5. Loyalty and any permitted follow-up reflect the resulting purchase and return history.
+
+A later support interaction should pick up that history—even when another team member, channel, agent, or model takes over. That continuity is the purpose of the [commerce journey design](docs/COMMERCE-JOURNEYS.md).
+
+## Built to give merchants control
+
+The product scope rests on a few deliberate architectural choices.
+
+| Choice | What it means for a merchant |
+| --- | --- |
+| **Merchant-owned business state** | Cases, policies, approvals, operation identities, and receipts live in the commerce core, so changing an AI provider does not mean rebuilding the operational history. |
+| **Portable workflows and profiles** | Reusable skills describe the work; validated profiles tailor policy, language, and permitted settings to each merchant. |
+| **Independent integration boundaries** | Platform adapters, model providers, and agent runtimes have separate contracts, so each can evolve without redefining the order or return. |
+| **Optional AI** | Human and deterministic paths are part of the design. Models can assist with decisions and drafts while the core governs permitted actions. |
+| **Current checks before execution** | Sensitive actions use previews, required approvals, and fresh identity, policy, and source-state checks. |
+| **Recovery built into the operation** | An uncertain result retains its original identity and reservations until reconciliation establishes what happened. |
+
+The AI roadmap extends from optional decision models and measured routing to **opt-in image evidence assistance and on-device browser inference**. Browser inference is planned work; this checkout does not ship a browser model download. Each mode retains the same merchant-controlled action boundary.
+
+[Architecture](docs/ARCHITECTURE.md) · [Skill architecture](docs/SKILL-ARCHITECTURE.md) · [Operation reliability](docs/OPERATION-RELIABILITY.md) · [Merchant portability](docs/MERCHANT-PORTABILITY.md)
+
+## Try Rifare
+
+Run a small return-resolution demonstration today. It uses synthetic orders entirely in memory and needs no API key, model download, Docker, or external account.
+
+**Prerequisites:** Git and Node.js **24.x**, or **22.16+ within 22.x**, with npm. Supported versions are declared in [package.json](package.json).
 
 ```sh
-make test-plan
-make test
-# An explicit full checkpoint remains available as make test-full.
-```
-
-The default budget is 60 actual cases across four whole files with one 60-second
-deadline. A development pass does not claim full regression or goal acceptance.
-The all-goals M11 development assignment does not automatically trigger full,
-browser, nested catalog, or restoration-audit campaigns. It selects the new
-forecast, procurement, stock and the existing privacy cases. See [development](DEVELOPMENT.md).
-
-The runtime remains a SQLite diagnostic with synthetic protocol sources.
-PostgreSQL/React, connected providers, live merchant migration, independent-machine
-installation, approved hardware load limits, authenticated release scans, human
-assistive-technology review and formal milestone acceptance remain unqualified. The previous
-full-test checkpoint and history remain recoverable. The later sections retain
-earlier explicit diagnostic commands.
-
-## Start
-
-```sh
-git status
-git log --graph --oneline --all -12
-python3 tools/dev_tests.py --plan
-python3 tools/dev_tests.py
-```
-
-The planning commands above use Git and Python 3.10+ with the standard library.
-The optional smoke runtime also requires Node and npm; see its prerequisites below.
-No API keys, paid model, container runtime or global initializer is required
-for these diagnostic commands. Windows users can use `py -3`; cross-platform
-qualification has not been performed by this checkpoint's Linux checks.
-
-Read [AGENTS.md](AGENTS.md), [GOVERNANCE.md](GOVERNANCE.md), [PLANS.md](PLANS.md)
-and [DEVELOPMENT.md](DEVELOPMENT.md). The delivered checkout is on `main`.
-Resume target-stack repair from this accumulated source, not an older goal branch.
-Check `git worktree list` before claiming a writer or starting another instance.
-
-For the explicit diagnostic runtime:
-
-```sh
+git clone --branch development https://github.com/burdettadam/rifare.git
+cd rifare
 npm ci --offline --ignore-scripts
-python3 tools/verify.py --runtime --harness
-npm run dev:smoke
-# In a second terminal in the same worktree:
-npm run stop:smoke
-```
-
-For the new commerce diagnostic (Ctrl-C to stop its own instance):
-
-```sh
-node --experimental-strip-types tools/dev-commerce.mts
-```
-
-Visit `/status` for the no-model order-status page or `/configuration` for
-configuration drafts and boundary simulations. Draft edits do not publish policy.
-
-Its output identifies the loopback URL and private local session file. Credentials
-are not printed or embedded in the UI. Use that session to inspect the two
-synthetic stores. See the foundation guide for the optional external wrapping key.
-
-For an isolated in-memory case/approval demonstration:
-
-```sh
-node --experimental-strip-types tools/demo-execution.mts
-node --experimental-strip-types tools/demo-execution.mts --serve
-```
-
-The second command prints the `/execution` URL and private temporary credential
-file. Only a synthetic local case-plan marker can change; no money is moved.
-
-`npm run dev` exits 2 until the target React/PostgreSQL setup is qualified.
-The smoke profile does not silently replace that target.
-
-Set your own repository-local Git identity before authoring your own commits.
-Do not restart accepted goals or infer assignments from the initial ready queue.
-
-## Development material
-
-| Material | Purpose |
-|---|---|
-| [Roadmap](ROADMAP.md) | 13 milestones, including the later qualified product release. |
-| [Goal catalogue](WORKER-GOALS.html) / [Markdown](WORKER-GOALS.md) | 190 worker goals and 13 acceptance gates. |
-| [Canonical goals](planning/goals.json) | Stable contracts and dependencies, not live task status. |
-| [Test specifications](planning/test-specifications.json) | 676 planned scenarios; commerce results remain not-run. |
-| [Requirement coverage](planning/requirement-coverage.json) | All 151 original requirements remain represented. |
-| [Charter](docs/CHARTER.md) | Adopted first-release support envelope. |
-| [Benchmark](docs/RELEASE-BENCHMARK.md) | Cohorts, denominators, numerical gates and pilot requirements. |
-| [Licensing](docs/LICENSING.md) | Selected component-scoped direction and publication boundary. |
-| [Workflow adoption](docs/WORKFLOW-ADOPTION.md) | Actual instruction versions, native commands and tested limits. |
-| [Workflow checks](docs/WORKFLOW-CHECKS.md) | Candidate-bound tests/reviews, writer ownership and release scope. |
-| [Skill architecture](docs/SKILL-ARCHITECTURE.md) | Merchant/platform-tailorable product skills, separate from development skills. |
-| [Regression strategy](docs/REGRESSION-STRATEGY.md) | Retained behavior and meaningful fault proof. |
-| [M00-G04 work record](work/records/M00-G04.md) | Accepted workflow foundation. |
-| [M00-G05 work record](work/records/M00-G05.md) | Partial runtime outcome, actual checks and remaining blockers. |
-| [Local environment](docs/LOCAL-ENVIRONMENT.md) | Runtime commands, isolation, recovery and qualification boundaries. |
-
-The goal cards/catalogue are generated from planning JSON. Live decisions belong
-under `work/`. Raw evidence stays ignored. No task database, worker scheduler,
-custom Git command protocol or mandatory agent provider has been added.
-
-## Verified development boundary
-
-The previous checkpoint had 1059 checks. This batch adds 108, for 1167 registered
-checks: 506 Python/helper, 633 native runtime, 15 unit harness, 7 database harness
-and 6 retained browser-component checks. Final source-bound execution and
-restoration results are recorded in the separate delivery report. The actual
-served-browser, target-stack and installed-model qualifications remain open.
-
-Controllers remain read-only and do not authenticate people, sandbox native code,
-merge branches or authorize releases. Models and external agents remain replaceable
-by design; none has been falsely counted as an independently qualified integration.
-
-## Source retention and publication
-
-The project ZIP contains a standalone `.git` history. The bundle can be cloned:
-
-```sh
-git clone -b main /path/to/Rifare-execution-controls.bundle Rifare
-cd Rifare
-git remote remove origin
-python3 tools/verify.py
-```
-
-There is no hosted remote, release tag or public publication. The selected
-licensing direction is AGPL-3.0-only for the future application and Apache-2.0
-for separable SDKs, public skills/templates and original developer documentation.
-Existing MIT-derived notices are retained. Exact license application and a
-candidate-specific distribution review remain necessary before public release;
-[LICENSE-STATUS.md](LICENSE-STATUS.md) is not itself a software license grant.
-Private merchant material and raw review evidence do not belong in source.
-
-## Deterministic diagnostic tests
-
-M00-G06 adds frozen synthetic fixtures, native unit/SQLite tests and in-memory
-Chromium component checks. Run `python3 tools/verify.py --runtime --harness` on a
-host meeting the [test-harness requirements](docs/TEST-HARNESS.md). Unit/database
-layers need no added npm dependencies; browser tests require the separately
-installed Playwright/Chromium tooling. These results do not close target-stack
-qualification or grant goal acceptance. See [the current work record](work/records/M00-G06.md).
-
-## Candidate-bound evidence
-
-M00-G08 adds a separately pinned evidence capture/verifier. It runs the retained
-native regression controller, records source/configuration/artifact identity and
-checks external review facts without granting acceptance. See
-[the evidence guide](docs/EVIDENCE-GATE.md) and
-[the current work record](work/records/M00-G08.md).
-The current registry has 1059 executable checks: all 945 prior checks plus
-114 policy, manifest, layered-settings, editor and installation regressions. Delegated local integration review
-is complete; full target-stack qualification remains open.
-All 676 commerce scenarios remain planning specifications.
-
-## Integrated M00 qualification
-
-The original M00-G99 assessment used 565 checks. The integrated source retains
-those checks, adds 17 review regressions and reuses the same evidence controllers.
-The milestone remains blocked by target-stack qualification and unaccepted
-prerequisites; a green diagnostic run is not milestone acceptance. See
-[qualification and repair order](docs/M00-QUALIFICATION.md) and
-[the exact existing-goal repair checklist](work/qualification/M00.json).
-Target-stack repair resumes M00-G05 on the accumulated source. M01-G01 through
-M01-G15 are implemented for local diagnostic integration, not full qualification.
-
-## Immediate engineering priority
-
-Resume **M00-G05** from this `main`: implement and install the target React/PostgreSQL
-stack, then extend M00-G06 to the actually served application. Preserve the entire registered
-diagnostic and commerce regression inventory. Do not add more governance machinery merely to postpone
-this implementation. The [qualification guide](docs/M00-QUALIFICATION.md) separates
-these engineering gaps from the completed local integration review.
-
-## Policy and skill customization
-
-See [the current guide](docs/POLICY-CUSTOMIZATION.md) for M02-G03 through M02-G07.
-Run the existing commerce diagnostic and open `/configuration` to edit/simulate a
-draft without a model. Publication review is a request, not automatic activation.
-`node --experimental-strip-types tools/demo-customization.mts` demonstrates the
-policy lifecycle, undo and a vetted instruction bundle in memory.
-
-## Durable operation reliability
-
-M02-G13 through M02-G17 add diagnostic event deduplication, durable outgoing work,
-stable operation identities, source-bound reconciliation and minimized receipts.
-See [the implementation guide](docs/OPERATION-RELIABILITY.md) and
-[the review](docs/OPERATION-RELIABILITY-REVIEW.md).
-
-```sh
-node --experimental-strip-types tools/demo-reliability.mts
-```
-
-The demo makes no network/model/payment call. PostgreSQL/React and live-provider
-qualification remain open; unknown outcomes never authorize speculative retries.
-
-## Worker control and recovery diagnostic
-
-```sh
-node --experimental-strip-types tools/demo-worker-controls.mts
-node --experimental-strip-types tools/demo-worker-controls.mts --serve
-```
-
-The serving variant prints the `/exceptions` URL and a private temporary session
-file. Unknown outcomes can be reconciled without resending. No live credential,
-provider, message or payment effect is configured. Ctrl-C removes the temporary
-session file and stops only that instance. The browser checks are component/API
-bridge tests, not direct served-browser or React qualification.
-
-## Mixed refund, credit and exchange diagnostic
-
-```sh
 node --experimental-strip-types tools/demo-return-resolution.mts
 ```
 
-The headless demo uses two isolated in-memory databases, original paid amounts,
-one-use approvals and source-bound reconciliation. No model or external call is
-needed. See [the guide](docs/RETURN-RESOLUTION.md) for the authenticated endpoints
-and explicitly unsupported financial and inventory operations.
+The demo allocates one return across a refund, store credit, and an exchange quotation. It deliberately loses a refund response, then reconciles the original operation:
 
-For the new headless, in-memory inventory/carrier demonstration:
-
-```sh
-node --experimental-strip-types tools/demo-return-fulfillment.mts
+```text
+after_lost_response: "unknown"
+after_lookup: "accepted"
+send_attempts: 1
+external_calls: 0
+production_qualified: false
 ```
 
-## Shipping and warehouse development
+The separate fixture settlement step does not move real money; the exchange remains a quotation. The output makes the recovery behavior visible without an external integration.
 
-The preceding locally prepared goals are M08-G02 through M08-G06: per-package
-label obligations and repair, durable scan-to-pack, conserved split allocations,
-separate manifest/pickup/carrier stages, and a named warehouse fixture connector.
-Read [shipping batches](docs/SHIPPING-BATCHES.md), [packing sessions](docs/PACKING-SESSIONS.md)
-and [warehouse connector preparation](docs/WAREHOUSE-CONNECTOR.md). New durable
-records participate in scoped export, minimization and restored execution
-quarantine. Formal and connected qualification remain blocked. The existing
-60-case/four-file/60-second development defaults are unchanged.
+For an interactive support and shipment-tracking view:
 
-## Warehouse inventory and cycle reconciliation
+```sh
+node --experimental-strip-types tools/demo-support.mts --serve
+```
 
-Native warehouse events retain request, item, sequence, grade and correction
-lineage. Absolute inventory snapshots anchor quantities once; source movements
-explain available, on-hand, reserved and in-transit stock. Approved transfers
-conserve units through reserve, dispatch, partial receipt, loss and correction.
-Unknown operations are observed through their original identities.
+Open the printed URL and follow the [local session instructions](docs/TRY-RIFARE.md#open-the-support-and-tracking-views). The guide also covers policy customization, recovery demonstrations, and the basic smoke environment. `npm run dev` intentionally exits until the target application stack is qualified; use the explicit demo commands above.
 
-Reconciliation checks original packing, carrier acceptance, shipment deductions,
-return receipt and disposition records. Repair imports existing observations and
-leaves unexplained stock unresolved. Requested returns remain pending before
-receiving starts. Read [warehouse return events](docs/WAREHOUSE-RETURN-EVENTS.md),
-[location inventory and transfers](docs/LOCATION-INVENTORY.md), and
-[inventory reconciliation](docs/INVENTORY-RECONCILIATION.md), including the
-documented limitation when an unknown stock effect has not been imported before
-subject erasure. The blocked [M08 assessment](docs/M08-QUALIFICATION.md) preserves
-the original physical cycle and formal acceptance requirements.
+## What runs now, and what comes next
 
+The repository contains **TypeScript/Node.js and SQLite development implementations**, with the current commerce checkpoint at **M20-G03: item-level drop-off handoffs**. Local work covers returns, order editing, support, shipping, inventory, customer journeys, loyalty, and drop-off foundations.
 
-## M12 agency and extension development
+The next recorded commerce increment is consolidation and custody continuity. Connected-provider deployments, physical-service qualification, the target React/PostgreSQL application, and production release remain open. Local progress and product qualification are tracked separately in the [current status guide](docs/PROJECT-STATUS.md).
 
-The [M12 assignment](docs/decisions/0041-m12-agencies-extensions.md) covers
-store-specific agency delegation, independently accepted presentation templates,
-customer-free aggregate reports, pinned local extension artifacts and explicit
-version/migration/retirement preparation. Existing permissions, case pins,
-installer, release controls and recovery remain canonical.
+## Explore the project
 
-Read [the milestone assessment](docs/M12-QUALIFICATION.md) and
-[the integration record](work/records/M12-milestone-integration.md) for scope,
-evidence and formal blockers. The planned focused check is 44 cases across four
-files within the retained development limits. Actual candidate-bound reports and
-two nonauthor decisions accompany the cumulative checkpoint. Independent
-contribution and human governance/code decisions remain open; optional code
-execution remains deferred and disabled.
+| Start here | What you will find |
+| --- | --- |
+| [Documentation index](docs/README.md) | Product guides and a concise repository map |
+| [Try Rifare](docs/TRY-RIFARE.md) | Runnable demos, session setup, and expected results |
+| [Product roadmap](docs/ROADMAP.md) | Target functionality, sequencing, and capability boundaries |
+| [Architecture](docs/ARCHITECTURE.md) | The core, portable skills, integrations, and AI execution modes |
+| [Project status](docs/PROJECT-STATUS.md) | Current source, implemented local scope, and remaining qualification |
+| [Development guide](docs/DEVELOPMENT.md) | Contributor setup and focused local checks |
+| [Brand assets](docs/BRAND.md) | Logo, hero artwork, and social preview |
+
+### License
+
+License application is still in progress. The selected direction is AGPL-3.0-only for the application and Apache-2.0 for separable SDKs, skills, and original developer documentation; it is not yet an applied grant. See [license status](LICENSE-STATUS.md) and [third-party notices](THIRD-PARTY-NOTICES.md).
+
+**Star Rifare to follow a merchant-owned approach to commerce operations.** [Browse the latest development →](https://github.com/burdettadam/rifare/commits/development/)

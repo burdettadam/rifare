@@ -195,7 +195,7 @@ The following obligations remain open:
 The maintainer closes the bounded local development assessment using its exact
 evidence and both independent reviews, while **formal M18 remains blocked**. All
 six formal cases CASE-M18-G05-01/02/03 and CASE-M18-G99-01/02/03 remain
-unperformed. The documentation closure changes only PLANS.md, the journey work
+unperformed. The documentation closure changes only docs/PLANS.md, the journey work
 record and this qualification document; executed runtime, tests, contracts,
 metadata and pins remain identical to 0eec014. No formal
 goal acceptance, release, publication, deployment, production or paid effect is
@@ -219,5 +219,5 @@ Related contracts: [shopper memory](SHOPPER-MEMORY.md),
 [readiness](JOURNEY-READINESS.md), [commerce journeys](COMMERCE-JOURNEYS.md),
 [guarded follow-ups](JOURNEY-FOLLOWUPS.md),
 [prior G05 assignment](decisions/0057-m18-local-journey-continuity.md),
-[G05 specification](../goals/M18/M18-G05.md) and
-[G99 specification](../goals/M18/M18-G99.md).
+[G05 specification](https://github.com/burdettadam/rifare/blob/c299065241b3bdf4928a83f9ff4decf749c6afaa/goals/M18/M18-G05.md) and
+[G99 specification](https://github.com/burdettadam/rifare/blob/c299065241b3bdf4928a83f9ff4decf749c6afaa/goals/M18/M18-G99.md).

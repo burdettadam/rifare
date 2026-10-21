@@ -139,7 +139,7 @@ def validate_benchmark(document: Any, root: Path) -> list[str]:
         rows = index(inv['scenarios'], {k:str for k in ('id','goal_id','milestone','category','severity',
             'kind','layer','stage','specification_sha256','execution_status')}, 'scenarios')
         require(set(rows) == set(source), 'inventory: missing or invented scenario ID')
-        seeds = {s['id'] for s in load_document(root / 'reference/original-acceptance-tests.json')['tests']}
+        seeds = {s['id'] for s in load_document(root / 'planning/reference/original-acceptance-tests.json')['tests']}
         require(inventory_ref['scenario_count'] == len(rows), 'inventory scenario count mismatch')
         require(inventory_ref['retained_seed_count'] == len(seeds) and seeds <= set(rows), 'retained seeds mismatch')
         for identity, row in rows.items():
@@ -198,7 +198,9 @@ def validate_benchmark(document: Any, root: Path) -> list[str]:
                 'backup interval exceeds proposed RPO')
         require(load['owner_role'] in roles, 'load owner role missing')
         string_list(load['owning_goals'], 'load owning goals')
-        goals = {g['id'] for g in load_document(root/'planning/goals.json')['goals']}
+        # Remaining-work packets are not the inventory of historical obligations.
+        # Keep retired implementation owners resolvable through retained contracts.
+        goals = {t['goal_id'] for t in load_document(root/'planning/test-specifications.json')['tests']}
         require(set(load['owning_goals']) <= goals, 'load goal does not exist')
         p = shape(b['pilot'], {'status':str,'recruited_merchants':int,'observations':int,'consent_status':str,
             'recruitment':str,'plan_goal':str,'observation_goal':str,'phases':list,'start_requirements':list,

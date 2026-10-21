@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "id": "rifare-workflow-adoption",
-  "revision": 1,
+  "revision": 2,
   "upstream": {
     "repository": "ElevenID/git-agent",
     "version": "0.2.1",
@@ -12,16 +12,16 @@
     {
       "name": "work-goal",
       "path": ".agents/skills/work-goal/SKILL.md",
-      "sha256": "fc7d8ee00c5697747bb2395755a6ca12625bf01533e4714b03d411790e1607ef"
+      "sha256": "eb84b079b32e5adc49dfc156a5f12888b742ceef9c68af9ad0f57f8884c165f0"
     },
     {
       "name": "worktree-flow",
       "path": ".agents/skills/worktree-flow/SKILL.md",
-      "sha256": "c3ab044ebe06e0355ce9c7a4a06fb03d94a66bc0bd58ffc2d090363276e117cb"
+      "sha256": "692e171b0e6d572c76f68635cd8ea47c507a52701cf4c4133f5478bfdaf26e8c"
     }
   ],
   "goal_mapping": {
-    "packet": "goals/<milestone>/<goal-id>.md",
+    "packet": "planning/goals/<milestone>/<goal-id>.md",
     "branch": "goal/<goal-id>",
     "work_record": "work/records/<goal-id>.md",
     "evidence": "evidence/<goal-id>/<candidate-sha>/"

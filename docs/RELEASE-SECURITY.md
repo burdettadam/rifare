@@ -124,7 +124,7 @@ For a release, the existing owner/rights-holder license decisions, contribution
 terms, complete corresponding artifact/source and private-history reviews, current
 trusted scans, independent authority/regression decisions and a specifically scoped
 owner publication decision remain required. No JSON field grants those rights.
-Follow [security handling](../SECURITY.md) for private reporting and the retained
+Follow [security handling](../.github/SECURITY.md) for private reporting and the retained
 [distribution review](DISTRIBUTION-REVIEW.md) for its governing source restrictions.
 
 ## Development evidence

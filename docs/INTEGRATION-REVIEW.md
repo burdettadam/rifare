@@ -86,7 +86,7 @@ No report is made to contain its own commit hash.
 ## Explicit protected changes
 
 The old baseline is preserved and comparison is required before refresh. Protected
-changes are limited to `GOVERNANCE.md` (the owner's prior local review exception),
+changes are limited to `docs/GOVERNANCE.md` (the owner's prior local review exception),
 `tools/test_harness.py` (the demonstrated source-integrity correction), and
 `tests/fixtures/development/command-manifests.v1.json` (the npm command includes
 all new runtime cases). The source-count oracle changes only its count/reason for

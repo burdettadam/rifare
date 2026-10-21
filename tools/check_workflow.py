@@ -17,7 +17,7 @@ BINDING = ('candidate_sha', 'base_sha', 'configuration_sha256')
 HEX40 = re.compile(r'[0-9a-f]{40}\Z')
 HEX64 = re.compile(r'[0-9a-f]{64}\Z')
 CONFIGURATION_PATHS = (
-    'AGENTS.md', 'GOVERNANCE.md', 'DEVELOPMENT.md', 'planning/workflow-policy.json',
+    'AGENTS.md', 'docs/GOVERNANCE.md', 'docs/DEVELOPMENT.md', 'planning/workflow-policy.json',
     '.agents/skills/work-goal/SKILL.md', '.agents/skills/worktree-flow/SKILL.md',
 )
 
@@ -202,7 +202,7 @@ def inspect_adoption(root: Path) -> dict:
         require(sha256(data) == skill.get('sha256'), 'review_required: workflow skill changed')
         require(data.startswith(b'---\n') and f'name: {skill["name"]}\n'.encode() in data, 'invalid skill frontmatter')
     require(adoption.get('goal_mapping') == {
-        'packet': 'goals/<milestone>/<goal-id>.md', 'branch': 'goal/<goal-id>',
+        'packet': 'planning/goals/<milestone>/<goal-id>.md', 'branch': 'goal/<goal-id>',
         'work_record': 'work/records/<goal-id>.md', 'evidence': 'evidence/<goal-id>/<candidate-sha>/'}, 'goal mapping changed')
     validate_policy(read_json(root / 'planning/workflow-policy.json'))
     return {'result': 'pass', 'scope': 'installed_instruction_and_offline_workflow_contract',

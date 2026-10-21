@@ -388,7 +388,7 @@ class ReleaseBenchmarkTests(unittest.TestCase):
 
     def test_inventory_covers_every_existing_case_and_original_seed(self):
         inv = load_document(ROOT/'planning/benchmark-scenarios.json')['scenarios']
-        originals = load_document(ROOT/'reference/original-acceptance-tests.json')['tests']
+        originals = load_document(ROOT/'planning/reference/original-acceptance-tests.json')['tests']
         self.assertEqual(len(inv),676)
         self.assertEqual(len({x['id'] for x in inv}),676)
         self.assertEqual(len(originals),67)

@@ -1,52 +1,35 @@
-# First dispatch
+# Start the next development task
 
-Start with **M00-G01 — Freeze the first-release support envelope**. No development goal is already accepted or assigned.
+Read [the current plan](PLANS.md), [architecture](ARCHITECTURE.md) and
+[active catalogue](../planning/WORKER-GOALS.md). The initial M00 bootstrap is in
+Git history; do not restart it from the beginning.
 
-## Copyable first-worker instruction
+The next recorded commerce direction is M20-G04, followed by M20-G05. Target-stack,
+loyalty and real-adapter work are also open. Choose a bounded scope with the owner,
+then inspect the source and current dependencies before creating a worktree.
+A compact integration entry first needs the
+[bounded packet promotion](../planning/README.md#assign-a-compact-entry-or-qualify-a-retired-gate)
+committed to the current plan, so the existing workflow/evidence tools can resolve
+its original contract at the trusted execution base.
 
-```text
-Work only on M00-G01 in Rifare.
-
-Read AGENTS.md, PLANS.md, DEVELOPMENT.md and the retained work-goal/worktree-flow
-skills. Inspect docs/WORKFLOW-ADOPTION.md and actual client discovery. Then read goals/M00/M00-G01.md, docs/WORKER-CONTRACT.md,
-docs/REGRESSION-STRATEGY.md and docs/EVIDENCE-CONTRACT.md.
-
-Inspect the real repository before naming commands or source paths. Use the existing
-workflow and an isolated worktree; do not add an agent orchestrator.
-
-Produce the bounded charter/support-envelope outcome, its validation fixtures and
-its meaningful failure case. Preserve the original requirement IDs and acceptance
-criteria. Seek a genuine maintainer decision; do not invent approval.
-
-Report actual artifacts/tests/limits and submit independent review. Do not proceed
-to another goal, publish, contact people, spend funds or use production systems
-without explicit authorization. Mark missing prerequisites blocked, not complete.
-```
-
-## Next dependency-ready work
-
-| Stage | Goal(s) | Required result |
-|---|---|---|
-| First | M00-G01 | Real scope/claim decision and capability matrix. |
-| After G01 | M00-G02, M00-G03, M00-G04 | Frozen benchmark/pilot definition, license/publication decision and adoption of actual installed workflow. They may be drafted independently where file scope permits. |
-| After workflow adoption | M00-G05 | Clean-checkout isolated API/worker/UI environment. |
-| After environment and benchmark | M00-G06 | Ordinary native test runners, deterministic fixture controls and no zero-test green. |
-| Then | M00-G07 | Trusted-baseline/expected-test inventory and protected-expectation review checks. |
-| Then | M00-G08 | Candidate-bound evidence, native-report provenance and review trust integration. |
-| Integration | M00-G99 | One clean environment/reviewed plan demonstration and complete M00 evidence. |
-| Next milestone | M01-G01 | Tenant-scoped canonical resources and customer-bound read foundations. |
-
-This is an execution sequence, not a calendar estimate. The complete graph is under `planning/`.
-
-## Subsequent worker instruction
+## Worker instruction
 
 ```text
-Assigned goal: <one exact goal ID>
-Read its complete packet and current accepted dependency evidence.
-Bind proposed scope and test IDs to actual repository files/native commands.
-Capture a meaningful red result or detect the packet's deliberate broken behavior.
-Implement only the bounded outcome; preserve accepted invariants and old journeys.
-Run required local, integration and explicitly authorized connected qualification.
-Submit candidate-bound evidence plus independent security/regression review.
-Report ready_for_review, blocked or needs_changes; do not self-accept.
+Assigned remaining scope: <one active goal ID; promote a compact entry first>
+Candidate base and owned paths: <exact commit and concrete paths>
+
+Read AGENTS.md, docs/PLANS.md, docs/ARCHITECTURE.md and docs/DEVELOPMENT.md.
+Inspect the active packet and current source.
+Use the existing work-goal/worktree-flow skills and ordinary project commands.
+Reuse landed owners, native contracts and regression tests.
+
+Implement only the remaining bounded outcome. Keep historical formal dependencies
+and qualification obligations separate from local development readiness.
+Run the smallest meaningful verification for the changed behavior and collect
+independent authority/security and regression review.
+Report actual source changes, evidence, remaining gaps and the next useful step.
 ```
+
+Use [dispatch and parallelism](DISPATCH-AND-PARALLELISM.md) for ownership and
+integration. [Qualification](QUALIFICATION.md) records external evidence that a
+local implementation cannot supply.
