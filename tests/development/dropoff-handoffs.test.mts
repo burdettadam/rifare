@@ -86,7 +86,7 @@ test('CASE-M20-G03-08',()=>usingFixture(f=>{
   const x=issue(f),event=acceptance(f,x,'authority-control',E.alpha_one),proof=proofRow(f),worker=externalWorker(f),denied=[f.customer,f.agent.scope,f.a.worker,f.b.scope,f.c.scope,worker,{...f.a.scope}];assert.ok(f.now()>proof.last_seen);
   for(const scope of denied){assert.throws(()=>importEvent(f,x,event,scope));assert.throws(()=>read(f,x,scope));}assert.throws(()=>f.handoffs.importDropoff(f.a.scope,{issue_operation_id:x.id,event_id:event.event_id,units:E.alpha_both}));assert.equal(nativeRows(f).length,0);
   const value=projection(f,x,importEvent(f,x,event),'alpha_one',[event]),stored=nativeRows(f);for(const scope of denied){assert.throws(()=>importEvent(f,x,event,scope));assert.throws(()=>read(f,x,scope));}assert.deepEqual(nativeRows(f),stored);projection(f,x,read(f,x,f.reviewer.scope),'alpha_one',[event]);secretless(f,x,[value,f.handoffSource.journal()]);assert.deepEqual(proofRow(f),proof);
-  const next=acceptance(f,x,'permission-control',E.beta_one);f.permissions.change(f.owner.scope,{actor_id:f.a.actor,role:'operator',actions:['operation.read','resource.read'],resource_ids:null,expected_revision:0});assert.throws(()=>importEvent(f,x,next));projection(f,x,read(f,x),'alpha_one',[event]);projection(f,x,importEvent(f,x,next,f.owner.scope),'alpha_one_beta',[event,next]);assert.deepEqual(proofRow(f),proof);
+  const next=acceptance(f,x,'permission-control',E.beta_one),actor=f.kernel.require(f.a.scope).actor_id,changed=f.permissions.change(f.owner.scope,{actor_id:actor,role:'operator',actions:['operation.read','resource.read'],resource_ids:null,expected_revision:0});assert.equal(changed.actor_id,actor);assert.equal(changed.revision,1);assert.throws(()=>importEvent(f,x,next));projection(f,x,read(f,x),'alpha_one',[event]);projection(f,x,importEvent(f,x,next,f.owner.scope),'alpha_one_beta',[event,next]);assert.deepEqual(proofRow(f),proof);
 }));
 
 test('CASE-M20-G03-09',async()=>{
@@ -100,13 +100,13 @@ test('CASE-M20-G03-09',async()=>{
     assert.ok(reads>=2,'native write must reread the selected original source event');assert.deepEqual(nativeRows(f),stored);assert.deepEqual(sourceRows(f),source);projection(f,x,importEvent(f,x,next),'alpha_one_beta',[event,next]);noDownstream(f,before);
   });
   for(const change of ['permission','stop','mapping'])await usingFixture(f=>{
-    const x=issue(f),event=acceptance(f,x,'final-'+change,E.alpha_one),source=sourceRows(f),credentials=preservedCredentialCopies(f),other=f.kernel.lookup(f.a.scope,'order','synthetic','ORD-1002');let lookups=0;
+    const x=issue(f),event=acceptance(f,x,'final-'+change,E.alpha_one),source=sourceRows(f),credentials=preservedCredentialCopies(f),other=f.kernel.lookup(f.a.scope,'order','synthetic','ORD-1002'),actor=f.kernel.require(f.a.scope).actor_id;let lookups=0,permissionChanged=false;
     withMethod(f.handoffSource,'event',(lookup,id)=>{const value=lookup(id);if(id===event.event_id&&++lookups===2){
-      if(change==='permission')f.permissions.change(f.owner.scope,{actor_id:f.a.actor,role:'operator',actions:['operation.read','resource.read'],resource_ids:null,expected_revision:0});
+      if(change==='permission'){const result=f.permissions.change(f.owner.scope,{actor_id:actor,role:'operator',actions:['operation.read','resource.read'],resource_ids:null,expected_revision:0});permissionChanged=result.actor_id===actor&&result.revision===1;}
       else if(change==='stop')new ExecutionStops(f.kernel).set(f.owner.scope,{action:ACTION,stopped:true,reason:'incident',expected_revision:0});
       else f.db.prepare('UPDATE commerce_cases SET resource_id=? WHERE tenant_id=? AND store_id=? AND id=?').run(other.id,f.a.tenant,f.a.store,E.case_id);
     }return value;},()=>assert.throws(()=>importEvent(f,x,event)));
-    assert.ok(lookups>=2);assert.equal(nativeRows(f).length,0);assert.deepEqual(sourceRows(f),source);assert.deepEqual(preservedCredentialCopies(f),credentials);assert.equal(f.db.prepare('SELECT resource_id FROM commerce_cases WHERE tenant_id=? AND store_id=? AND id=?').get(f.a.tenant,f.a.store,E.case_id).resource_id,f.resourceId);
+    assert.ok(lookups>=2);if(change==='permission')assert.equal(permissionChanged,true,'the actual operator permission change must succeed before final import denial');assert.equal(nativeRows(f).length,0);assert.deepEqual(sourceRows(f),source);assert.deepEqual(preservedCredentialCopies(f),credentials);assert.equal(f.db.prepare('SELECT resource_id FROM commerce_cases WHERE tenant_id=? AND store_id=? AND id=?').get(f.a.tenant,f.a.store,E.case_id).resource_id,f.resourceId);
     // The failed transaction also rolls back the injected authority/control change.
     projection(f,x,importEvent(f,x,event),'alpha_one',[event]);
   });
