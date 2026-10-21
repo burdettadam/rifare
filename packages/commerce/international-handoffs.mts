@@ -4,12 +4,21 @@ import { contentDigest, jsonValue } from './configuration-values.mts';
 import { PartnerReadiness } from './partner-readiness.mts';
 import { partnerResource, partnerRow, partnerBody, partnerInsert, partnerSource, serviceContext } from './partner-service-core.mts';
 import type { PartnerFixtureSource } from '../adapters/partner-fixture-source.mts';
+import type {DropoffHandoffFixtureSource} from '../adapters/dropoff-handoff-fixture-source.mts';
+import {DROPOFF_HANDOFF_PREFIX} from './dropoff-handoff-values.mts';
+import {dropoffHandoffRecords,isDropoffHandoffClaim} from './dropoff-handoff-records.mts';
+import {importDropoffHandoff,readDropoffHandoff} from './dropoff-handoffs.mts';
 
 export class InternationalHandoffs {
   readonly k: CommerceKernel; readonly source: PartnerFixtureSource;
-  constructor(k: CommerceKernel, source: PartnerFixtureSource) {this.k = k; this.source = source;}
+  #dropoff?:DropoffHandoffFixtureSource;#original:Row;
+  constructor(k: CommerceKernel, source: PartnerFixtureSource, options?:{dropoff:DropoffHandoffFixtureSource}) {this.k = k; this.source = source;this.#original={k,source,db:k.db,clock:k.clock};if(options){exact(options,['dropoff']);this.#dropoff=options.dropoff;}}
+  #dropoffOwner(){const o=this.#original;if(this.k!==o.k||this.source!==o.source||this.k.db!==o.db||this.k.clock!==o.clock)throw new Error('DROPOFF_HANDOFF_OWNER_MISMATCH');}
+  importDropoff(scope:Scope,input:unknown){this.#dropoffOwner();return importDropoffHandoff(this.k,this.source,this.#dropoff,scope,input);}
+  readDropoff(scope:Scope,issueId:string){this.#dropoffOwner();return readDropoffHandoff(this.k,scope,issueId);}
   plan(scope: Scope, input: unknown) {
     const p = exact(jsonValue(input), ['journey_id', 'resource_id', 'region', 'units', 'legs']); id(p.journey_id); id(p.resource_id); id(p.region);
+    if(p.journey_id.startsWith(DROPOFF_HANDOFF_PREFIX))throw new Error('DROPOFF_HANDOFF_DEDICATED_OWNER_REQUIRED');
     if (!Array.isArray(p.units) || !p.units.length || p.units.length > 100 || new Set(p.units).size !== p.units.length ||
       !Array.isArray(p.legs) || !p.legs.length || p.legs.length > 10) throw new Error('INVALID_INPUT'); p.units.forEach(id);
     return this.k.transaction(() => {
@@ -28,6 +37,7 @@ export class InternationalHandoffs {
     });
   }
   #events(row: Row) {
+    dropoffHandoffRecords(this.k,row);
     return (this.k.db.prepare('SELECT * FROM commerce_international_handoffs WHERE tenant_id=? AND store_id=? AND resource_id=? ORDER BY created_at,id')
       .all(row.tenant_id, row.store_id, row.resource_id) as Row[]).map(partnerBody).filter(r => r.body.kind === 'event' && r.body.journey_id === row.id)
       .map(r => r.body.event).sort((a: Row, b: Row) => a.sequence - b.sequence);
@@ -63,6 +73,7 @@ export class InternationalHandoffs {
     const p = exact(jsonValue(input), ['journey_id', 'event_id']); id(p.event_id);
     return this.k.transaction(() => {
       const row = partnerRow(this.k, scope, 'commerce_international_handoffs', p.journey_id, 'operation.reconcile'), b = row.body;
+      if(isDropoffHandoffClaim(row))throw new Error('DROPOFF_HANDOFF_DEDICATED_OWNER_REQUIRED');
       if (b.kind !== 'plan' || b.redacted || row.state !== 'planned') throw new Error('HANDOFF_PLAN_REVOKED');
       partnerSource(this.k, scope, this.source, b.context); new PartnerReadiness(this.k).assertReconcile(scope, b.context);
       const event = this.source.handoff(p.event_id);
@@ -76,6 +87,7 @@ export class InternationalHandoffs {
   }
   read(scope: Scope, ref: string) {
     const row = partnerRow(this.k, scope, 'commerce_international_handoffs', ref), b = row.body;
+    if(isDropoffHandoffClaim(row))throw new Error('DROPOFF_HANDOFF_DEDICATED_OWNER_REQUIRED');
     if (b.kind !== 'plan' || b.redacted) return {id: row.id, resource_id: row.resource_id, redacted: true, all_completed: false, events: [], stock_effects: 0};
     const events = this.#events(row), projection = this.#project(row, events), legs = projection.legs.map(({sent, received, rejected, ...leg}) => ({...leg, sent_units: [...sent], received_units: [...received]}));
     return {id: row.id, resource_id: row.resource_id, legs, events, current_custody: [...projection.custody.values()],

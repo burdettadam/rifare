@@ -5,6 +5,7 @@ import { canonical,contentDigest } from './configuration-values.mts';
 import { subjectHash } from './data-guards.mts';
 import {hasLoyaltyRedemptionSubject,exportLoyaltyRedemptionSubject,eraseLoyaltyRedemptionSubject,eraseLoyaltyRedemptionResources,loyaltyRedemptionResourceSubjects,revokeLoyaltyRedemptionsForUninstall} from './loyalty-redemption-privacy.mts';
 import {eraseDropoffCredentialSubject,eraseDropoffCredentialResources,dropoffCredentialResourceSubjects,exportDropoffCredentialSubject,hasDropoffCredentialSubject,revokeDropoffCredentialsForUninstall} from './dropoff-credential-privacy.mts';
+import {eraseDropoffHandoffs,revokeDropoffHandoffsForUninstall} from './dropoff-handoff-privacy.mts';
 import { eraseGiftRecipient } from './gift-proof.mts';
 import { inventoryMovementCore,inventorySnapshotCore,inventoryRow,INVENTORY_FIELDS } from './location-inventory.mts';
 import { exportGrowthSubject,eraseGrowthSubject,revokeGrowthForRestore } from './growth-privacy.mts';
@@ -259,6 +260,7 @@ export function eraseSelected(k:CommerceKernel,s:Row,ids:string[],hash:string,at
   for(const customer of recipients){eraseGiftCaseData(k,s,giftCases.filter(r=>JSON.parse(r.body).recipient_customer_id===customer).map(r=>r.case_id),hash);eraseGiftRecipient(k,s,String(customer));}
   for(const resource of ids)k.db.prepare('INSERT OR IGNORE INTO commerce_privacy_resources VALUES(?,?,?,?,?)').run(t,st,resource,hash,at);
   eraseGrowthSubject(k,t,st,ids,hash);
+  eraseDropoffHandoffs(k,t,st,[hash],ids);
   eraseExtendedServicesSubject(k,t,st,ids,hash);
   eraseInventoryPlanningSubject(k,t,st,ids,hash);
   eraseEcosystemSubject(k,t,st,ids,hash);
@@ -402,9 +404,10 @@ export class PrivacyLifecycle {
       for(const subject of loyaltyRedemptionResourceSubjects(k,s.tenant_id,s.store_id,owned.map(r=>r.id)))hashes.add(subject);
       for(const subject of dropoffCredentialResourceSubjects(k,s.tenant_id,s.store_id,owned.map(r=>r.id)))hashes.add(subject);
       const hold=[...hashes].map(subject=>k.db.prepare('SELECT reason,authority_ref,expires_at FROM commerce_privacy_holds WHERE tenant_id=? AND store_id=? AND subject_hash=? AND released=0 AND expires_at>?').get(s.tenant_id,s.store_id,subject,k.clock())).find(Boolean);
-      if(hold){for(const subject of hashes)eraseDropoffCredentialSubject(k,s.tenant_id,s.store_id,subject,false);eraseDropoffCredentialResources(k,s.tenant_id,s.store_id,owned.map(r=>r.id),false);event(k,s,hash,'erasure_held','configured_hold');return {status:'held',hold,erased:false};}
+      if(hold){eraseDropoffHandoffs(k,s.tenant_id,s.store_id,[...hashes],owned.map(r=>r.id),false);for(const subject of hashes)eraseDropoffCredentialSubject(k,s.tenant_id,s.store_id,subject,false);eraseDropoffCredentialResources(k,s.tenant_id,s.store_id,owned.map(r=>r.id),false);event(k,s,hash,'erasure_held','configured_hold');return {status:'held',hold,erased:false};}
       if(k.db.prepare('SELECT 1 FROM commerce_privacy_subjects WHERE tenant_id=? AND store_id=? AND subject_hash=?').get(s.tenant_id,s.store_id,hash)){
         const retained=k.db.prepare('SELECT resource_id FROM commerce_privacy_resources WHERE tenant_id=? AND store_id=? AND subject_hash=?').all(s.tenant_id,s.store_id,hash) as Row[];
+        eraseDropoffHandoffs(k,s.tenant_id,s.store_id,[hash],[...new Set([...owned.map(r=>r.id),...retained.map(r=>r.resource_id)])]);
         eraseDropoffCredentialResources(k,s.tenant_id,s.store_id,[...new Set([...owned.map(r=>r.id),...retained.map(r=>r.resource_id)])]);
         eraseDropoffCredentialSubject(k,s.tenant_id,s.store_id,hash);return {status:'already_erased'};
       }
@@ -415,6 +418,7 @@ export class PrivacyLifecycle {
       // Historical loyalty can refer to a case now attached to another subject.
       // Validate/minimize it before that current subject's native preview erasure.
       revokeLoyaltyRedemptionsForUninstall(k,s.tenant_id,s.store_id);
+      revokeDropoffHandoffsForUninstall(k,s.tenant_id,s.store_id);
       revokeDropoffCredentialsForUninstall(k,s.tenant_id,s.store_id);
       const rs=all(k,'commerce_resources',s.tenant_id,s.store_id);const customers=[...new Set(rs.flatMap(r=>r.customer_id?[r.customer_id]:r.kind==='customer'?[r.external_id]:[]))];
       const results=customers.map(c=>this.erase(scope,c));

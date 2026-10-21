@@ -348,3 +348,41 @@ accepted and two outstanding. The planned whole-file batch is 12 new + 14 G02 +
 One isolated exact-parent materialization fault follows a passing candidate;
 no broad suite or unrelated downstream sweep is planned. Formal prerequisite
 acceptance, M20 acceptance, physical qualification and release remain open.
+
+## G03 independent freeze and candidate implementation
+
+The twelve-case independent freeze is 54eca7dcdb89a224630c0d3ffee131fc5a1807b0,
+integrated unchanged as 5bf553ddacfbcc7804e59ae4ef8fdcbaa113a1cb. All three
+assigned artifacts retain their author hashes. There were no runtime edits or
+product executions before that freeze. Both independent nonauthor reviewers
+found no material static fixture or protocol defect and requested no extra cases.
+
+The candidate composes exact original credential admission with per-unit native
+custody observations. Partial intake, initial rejection, per-unit corrections,
+disputes and resolution preserve a complete family sequence across credential
+generations. The importer rechecks actual human permissions, source evidence,
+native return mapping, return writability and stop/recovery controls in the final
+transaction. Reads and projections use retained native records without source
+lookup, key access or customer-proof renewal. Generic handoff routes reserve the
+new typed prefix and keep their original projection and mutation marker.
+
+Paired privacy transitions retire G03 immediately before G02 and keep the original
+subject hash, opaque unit references and immutable event history. Erasure removes
+personal request/case/native-return/item mappings; held erasure retains mappings
+while revoking ingress. Restore and merchant import validate original and
+destination graphs, honor current case/resource suppression over copied holds,
+and repair a canonical historical personal copy only through actual suppression.
+
+Incremental source review identified a historical admission gap. The source now
+rejects admission strictly later than an immutable successful revocation or
+replacement and independently denies fresh scans after either terminal event.
+Equal timestamps preserve legitimate earlier observations; corrections inherit
+their original admission. G02 runtime and tests remain unchanged.
+
+Inventory additions are exactly eleven source members, twelve registered cases,
+one proposed capability, nine protected artifacts and five privacy runtime pins.
+There are 1,909 source members, 3,292 registered cases, 222 capabilities,
+596 protected paths, 340 privacy runtime pins and 683 conformance oracle pins.
+The 15 privacy surfaces and 262-table core schema remain unchanged. The candidate
+will run only the assigned 48-case, three-file batch under unchanged defaults,
+followed by the one independently specified isolated materialization fault.

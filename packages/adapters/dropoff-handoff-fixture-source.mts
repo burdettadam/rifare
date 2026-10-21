@@ -39,6 +39,9 @@ export class DropoffHandoffFixtureSource {
     if(rows.length>DROPOFF_HANDOFF_LIMIT)throw new Error('DROPOFF_HANDOFF_LIMIT');
     const events=rows.map(raw=>{const r=dropoffShape(raw,['event_id','family_ref','sequence','body','digest']),e=JSON.parse(r.body),original=credentials.find(c=>c.operation_id===e.issue_operation_id);
       if(!original)throw new Error('DROPOFF_HANDOFF_BINDING_INVALID');handoffBinding(e,original.command,original.result);
+      const terminal=credentials.filter(c=>c.result.state==='revoked'&&c.command.issue_operation_id===e.issue_operation_id||c.result.state==='issued'&&c.command.replaces_operation_id===e.issue_operation_id);
+      // Equal-clock observations preserve a legitimate earlier admission.
+      if(terminal.some(c=>e.admitted_at>c.result.observed_at))throw new Error('DROPOFF_HANDOFF_ADMISSION_INVALID');
       if(e.source_identity!==this.identity||r.event_id!==e.event_id||r.family_ref!==e.family_ref||r.sequence!==e.sequence||r.body!==canonical(e)||r.digest!==e.digest||e.observed_at>this.#clock())throw new Error('DROPOFF_HANDOFF_SOURCE_INTEGRITY');return e;
     });
     for(const family of new Set(events.map(e=>e.family_ref)))handoffHistory(events.filter(e=>e.family_ref===family));return events;
@@ -57,7 +60,7 @@ export class DropoffHandoffFixtureSource {
   recordAcceptance(input:unknown){
     const p=dropoffShape(input,['event_id','issue_operation_id','payload','items','units']);id(p.event_id);id(p.issue_operation_id);
     return this.#transaction(events=>{
-      const original=this.#assert().find(r=>r.operation_id===p.issue_operation_id);
+      const credentials=this.#assert(),original=credentials.find(r=>r.operation_id===p.issue_operation_id);
       if(!original||original.result.state!=='issued')throw new Error('DROPOFF_HANDOFF_CREDENTIAL_UNAVAILABLE');const c=original.command,r=original.result,expected=handoffManifest(p.items,c.family_ref,c.items_digest);
       if(!Array.isArray(p.units)||!p.units.length||p.units.length>100)throw new Error('DROPOFF_HANDOFF_UNITS_INVALID');
       const units=handoffUnits(p.units.map((raw:unknown)=>{const u=dropoffShape(raw,['line_id','ordinal','disposition','reason']);id(u.line_id);integer(u.ordinal,1);const member=expected.find(v=>v.line_id===u.line_id&&v.ordinal===u.ordinal);if(!member)throw new Error('DROPOFF_HANDOFF_UNITS_INVALID');return {unit_ref:member.unit_ref,disposition:u.disposition,reason:u.reason};}));
@@ -65,7 +68,7 @@ export class DropoffHandoffFixtureSource {
       if(verified.operation_id!==p.issue_operation_id||verified.credential_id!==r.credential_id||verified.generation!==c.generation)throw new Error('DROPOFF_HANDOFF_CREDENTIAL_UNAVAILABLE');
       // An exact historical retry remains retrievable after expiry, revocation or key loss.
       if(old){if(old.kind!=='acceptance'||old.issue_operation_id!==p.issue_operation_id||contentDigest(old.units)!==contentDigest(units)||old.items_digest!==contentDigest(p.items))throw new Error('DROPOFF_HANDOFF_EVENT_CONFLICT');return {event:old,existing:true};}
-      const now=integer(this.#clock());if(!verified.usable||now<r.observed_at||now>=c.credential_expires_at)throw new Error('DROPOFF_HANDOFF_CREDENTIAL_UNAVAILABLE');
+      const now=integer(this.#clock());if(!verified.usable||now<r.observed_at||now>=c.credential_expires_at||credentials.some(v=>v.result.state==='revoked'&&v.command.issue_operation_id===p.issue_operation_id||v.result.state==='issued'&&v.command.replaces_operation_id===p.issue_operation_id))throw new Error('DROPOFF_HANDOFF_CREDENTIAL_UNAVAILABLE');
       const body={schema_version:1,contract:this.contract,event_id:p.event_id,kind:'acceptance',sequence:events.filter(e=>e.family_ref===c.family_ref).length+1,tenant_id:c.tenant_id,store_id:c.store_id,source_identity:this.identity,credential_source_identity:c.source_identity,source_account_id:c.source_account_id,directory_identity:c.directory_identity,family_ref:c.family_ref,subject_ref:c.subject_ref,resource_id:c.resource_id,issue_operation_id:c.operation_id,command_digest:original.command_digest,credential_id:r.credential_id,generation:c.generation,items_digest:c.items_digest,method_digest:c.method_digest,site_id:c.site_id,destination_id:c.destination_id,method_id:c.method_id,credential_kind:c.credential_kind,credential_expires_at:c.credential_expires_at,admitted_at:now,observed_at:now,parent_event_id:null,units,qualification:'synthetic_only',physical_handoff_qualified:false,warehouse_effect:false,financial_effect:false};
       return {event:handoffBinding({...body,digest:contentDigest(body)},c,r),existing:false};
     });

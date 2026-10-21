@@ -16,6 +16,7 @@ import { preflightJourneys,revokeJourneysForRestore } from './journey-privacy.mt
 import { preflightFollowups,revokeFollowupsForRestore } from './journey-followup-privacy.mts';
 import {preflightLoyaltyRedemptions,revokeLoyaltyRedemptionsForRestore} from './loyalty-redemption-privacy.mts';
 import {preflightDropoffCredentials,revokeDropoffCredentialsForRestore} from './dropoff-credential-privacy.mts';
+import {preflightDropoffHandoffs,revokeDropoffHandoffsForRestore} from './dropoff-handoff-privacy.mts';
 
 const LIMIT=64*1024*1024;
 function pathCheck(path:string,mustExist=false) {
@@ -75,7 +76,9 @@ export function restoreRecoverySnapshot(input:{snapshot:string;destination:strin
       preflightFollowups(k);
       preflightLoyaltyRedemptions(k);
       preflightDropoffCredentials(k);
+      preflightDropoffHandoffs(k,undefined,undefined,cp);
       revokeLoyaltyRedemptionsForRestore(k,undefined,cp);
+      revokeDropoffHandoffsForRestore(k,undefined,cp);
       revokeDropoffCredentialsForRestore(k,undefined,cp);
       const imageReplay=prepareImageSuppression(k,cp);
       db!.prepare('INSERT OR REPLACE INTO commerce_recovery_state VALUES(1,?,?,?,?,?)').run(restoreId,'quarantine',m.database_sha256,input.suppression_sha256,clock());

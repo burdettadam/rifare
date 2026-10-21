@@ -25,6 +25,7 @@
     "packages/adapters/demand-fixture-source.mts",
     "packages/adapters/dropoff-credential-fixture-source.mts",
     "packages/adapters/dropoff-fixture-source.mts",
+    "packages/adapters/dropoff-handoff-fixture-source.mts",
     "packages/adapters/exchange-lineage-fixture-source.mts",
     "packages/adapters/exchange-lineage-source-guards.mts",
     "packages/adapters/exchange-money-fixture-source.mts",
@@ -5327,6 +5328,246 @@
           "direct_fixtures": []
         }
       ]
+    },
+    {
+      "id": "dropoff_handoff_source",
+      "kind": "diagnostic",
+      "source_files": [
+        {
+          "path": "packages/adapters/dropoff-handoff-fixture-source.mts",
+          "sha256": "544200fbca4c1ac8f7ec2c4adbd8a62df9d3cb7c61161d615f6c0fb924d94a7b"
+        }
+      ],
+      "version": "source-sha256:544200fbca4c1ac8f7ec2c4adbd8a62df9d3cb7c61161d615f6c0fb924d94a7b",
+      "api_version": "rifare-dropoff-handoff-fixture-v1",
+      "external_version": null,
+      "external_account": null,
+      "external_scopes_attested": false,
+      "source_oracle": "Separate native fixture journal with immutable original credential admission, exact opaque units and per-unit correction parents. Independent literal three-unit cases compare one reported source unit to actual native custody and projection, with no receiving, stock or financial materialization. Current human authority, historical replay, native rollback, reopen, privacy and recovery remain bounded synthetic evidence, not physical or connected provider qualification.",
+      "operations": [
+        {
+          "id": "dropoff.handoff.record_acceptance",
+          "semantics": "composed",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M20-G03-01",
+              "name": "CASE-M20-G03-01",
+              "path": "tests/development/dropoff-handoffs.test.mts",
+              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+            },
+            {
+              "id": "CASE-M20-G03-02",
+              "name": "CASE-M20-G03-02",
+              "path": "tests/development/dropoff-handoffs.test.mts",
+              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+            },
+            {
+              "id": "CASE-M20-G03-03",
+              "name": "CASE-M20-G03-03",
+              "path": "tests/development/dropoff-handoffs.test.mts",
+              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+            },
+            {
+              "id": "CASE-M20-G03-04",
+              "name": "CASE-M20-G03-04",
+              "path": "tests/development/dropoff-handoffs.test.mts",
+              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+            },
+            {
+              "id": "CASE-M20-G03-06",
+              "name": "CASE-M20-G03-06",
+              "path": "tests/development/dropoff-handoffs.test.mts",
+              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+            },
+            {
+              "id": "CASE-M20-G03-07",
+              "name": "CASE-M20-G03-07",
+              "path": "tests/development/dropoff-handoffs.test.mts",
+              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "dropoff.handoff.record_correction",
+          "semantics": "composed",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M20-G03-05",
+              "name": "CASE-M20-G03-05",
+              "path": "tests/development/dropoff-handoffs.test.mts",
+              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "dropoff.handoff.event",
+          "semantics": "composed",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M20-G03-06",
+              "name": "CASE-M20-G03-06",
+              "path": "tests/development/dropoff-handoffs.test.mts",
+              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+            },
+            {
+              "id": "CASE-M20-G03-07",
+              "name": "CASE-M20-G03-07",
+              "path": "tests/development/dropoff-handoffs.test.mts",
+              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+            },
+            {
+              "id": "CASE-M20-G03-09",
+              "name": "CASE-M20-G03-09",
+              "path": "tests/development/dropoff-handoffs.test.mts",
+              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "dropoff.handoff.journal",
+          "semantics": "composed",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M20-G03-03",
+              "name": "CASE-M20-G03-03",
+              "path": "tests/development/dropoff-handoffs.test.mts",
+              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+            },
+            {
+              "id": "CASE-M20-G03-06",
+              "name": "CASE-M20-G03-06",
+              "path": "tests/development/dropoff-handoffs.test.mts",
+              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+            },
+            {
+              "id": "CASE-M20-G03-10",
+              "name": "CASE-M20-G03-10",
+              "path": "tests/development/dropoff-handoffs.test.mts",
+              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "dropoff.handoff.import",
+          "semantics": "composed",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M20-G03-01",
+              "name": "CASE-M20-G03-01",
+              "path": "tests/development/dropoff-handoffs.test.mts",
+              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+            },
+            {
+              "id": "CASE-M20-G03-02",
+              "name": "CASE-M20-G03-02",
+              "path": "tests/development/dropoff-handoffs.test.mts",
+              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+            },
+            {
+              "id": "CASE-M20-G03-03",
+              "name": "CASE-M20-G03-03",
+              "path": "tests/development/dropoff-handoffs.test.mts",
+              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+            },
+            {
+              "id": "CASE-M20-G03-08",
+              "name": "CASE-M20-G03-08",
+              "path": "tests/development/dropoff-handoffs.test.mts",
+              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+            },
+            {
+              "id": "CASE-M20-G03-09",
+              "name": "CASE-M20-G03-09",
+              "path": "tests/development/dropoff-handoffs.test.mts",
+              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+            },
+            {
+              "id": "CASE-M20-G03-10",
+              "name": "CASE-M20-G03-10",
+              "path": "tests/development/dropoff-handoffs.test.mts",
+              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+            },
+            {
+              "id": "CASE-M20-G03-11",
+              "name": "CASE-M20-G03-11",
+              "path": "tests/development/dropoff-handoffs.test.mts",
+              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+            },
+            {
+              "id": "CASE-M20-G03-12",
+              "name": "CASE-M20-G03-12",
+              "path": "tests/development/dropoff-handoffs.test.mts",
+              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "dropoff.handoff.read",
+          "semantics": "composed",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "CASE-M20-G03-01",
+              "name": "CASE-M20-G03-01",
+              "path": "tests/development/dropoff-handoffs.test.mts",
+              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+            },
+            {
+              "id": "CASE-M20-G03-05",
+              "name": "CASE-M20-G03-05",
+              "path": "tests/development/dropoff-handoffs.test.mts",
+              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+            },
+            {
+              "id": "CASE-M20-G03-08",
+              "name": "CASE-M20-G03-08",
+              "path": "tests/development/dropoff-handoffs.test.mts",
+              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+            },
+            {
+              "id": "CASE-M20-G03-10",
+              "name": "CASE-M20-G03-10",
+              "path": "tests/development/dropoff-handoffs.test.mts",
+              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+            },
+            {
+              "id": "CASE-M20-G03-11",
+              "name": "CASE-M20-G03-11",
+              "path": "tests/development/dropoff-handoffs.test.mts",
+              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+            },
+            {
+              "id": "CASE-M20-G03-12",
+              "name": "CASE-M20-G03-12",
+              "path": "tests/development/dropoff-handoffs.test.mts",
+              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+            }
+          ],
+          "direct_fixtures": []
+        }
+      ]
     }
   ],
   "fixture_administration": "Seed, injected faults, and source observation setters are fixture administration, not remote provider operations. Unnamed real gateway/carrier/warehouse/ERP adapters are unavailable.",
@@ -5717,7 +5958,7 @@
     },
     {
       "path": "packages/commerce/execution-stops.mts",
-      "sha256": "3af4d7ac991f940d36790ff3fd8b5d1221041b75ee3c366e194e9368858aa07a"
+      "sha256": "9310141d4be6fdafae76728f730b6c34cc843ee6ebec8b5d00d4234b13da0259"
     },
     {
       "path": "packages/commerce/fulfillment-execution.mts",
@@ -5797,7 +6038,7 @@
     },
     {
       "path": "packages/commerce/privacy-lifecycle.mts",
-      "sha256": "b4a1724c316d6f43dac11d33609d942e01df3a38ce178dc0527fb2d56820a8d1"
+      "sha256": "e1edd8bc68833888d4d32b2a6b364374f48e0907d92d43f684ff3ce85ec18f50"
     },
     {
       "path": "packages/commerce/profile-editor.mts",
@@ -5933,7 +6174,7 @@
     },
     {
       "path": "packages/commerce/safe-recovery.mts",
-      "sha256": "702a19d7f49f4c3586c38d94e03e9ea10d8ddafdc2b0251ab87a7fc5ee235524"
+      "sha256": "13c588ca9d4dbfd3583c7f90cc08f3eb73aefe6d215d9f96eb89fc74f8f2fa81"
     },
     {
       "path": "packages/commerce/secrets.mts",
@@ -6365,7 +6606,7 @@
     },
     {
       "path": "tests/fixtures/conformance/expected-coverage.v1.json",
-      "sha256": "cc842ad67925a6b6acc59e64445fd7320d136da9a910dfb50c76364a053b9f8a"
+      "sha256": "1c3300d4c14a019711b044437d5d7b6efd31ff5938bb51632bcb0d51a0c5d536"
     },
     {
       "path": "tests/fixtures/conformance/source-inputs.v1.json",
@@ -6545,7 +6786,7 @@
     },
     {
       "path": "packages/commerce/merchant-portability.mts",
-      "sha256": "5351d2bd6e8ff80e1351e4f0b154ddef2500e815164a693cddbb7c7519bc019e"
+      "sha256": "56834166795b56b76d500c1af1a8574ec7fefbcbc6829126cfcc37ec78892b76"
     },
     {
       "path": "packages/commerce/contracts/carrier-quotes.v1.json",
@@ -7037,7 +7278,7 @@
     },
     {
       "path": "packages/commerce/international-handoffs.mts",
-      "sha256": "2bdaf8f9c2b41a115d1ac7424df93c71aae23bf3700684a262f8396994500919"
+      "sha256": "a22d864f75e37835b1f664a24314fe3508fd11757be6ac119da7e1ce339810c1"
     },
     {
       "path": "packages/commerce/network-alerts.mts",
@@ -7045,7 +7286,7 @@
     },
     {
       "path": "packages/commerce/partner-privacy.mts",
-      "sha256": "736027d34d44200ac83fec04d609c6111af49bc81afc69cc4ee1337c568ce9de"
+      "sha256": "761b6903081a68a9aff04c4c446f6feb0efd53ba9e3aaf92ed1950f15b5dea51"
     },
     {
       "path": "packages/commerce/partner-readiness.mts",
@@ -8026,6 +8267,42 @@
     {
       "path": "packages/commerce/contracts/dropoff-credentials.v1.json",
       "sha256": "8c76ed37993a245a225ae663fa7bfb914ab6f726a3ed6c1be67ab0e3bc8f4a80"
+    },
+    {
+      "path": "packages/adapters/dropoff-handoff-fixture-source.mts",
+      "sha256": "544200fbca4c1ac8f7ec2c4adbd8a62df9d3cb7c61161d615f6c0fb924d94a7b"
+    },
+    {
+      "path": "packages/commerce/dropoff-handoff-values.mts",
+      "sha256": "16c6ada90cfb4ff4e66b9d22819f3eeb21ffcc7309cb7842143b0f6d7cfecbf9"
+    },
+    {
+      "path": "packages/commerce/dropoff-handoff-records.mts",
+      "sha256": "ee0e5931fe437082918a8d1602c379f5c62723f9022c2417866b5c40fe936c68"
+    },
+    {
+      "path": "packages/commerce/dropoff-handoff-privacy.mts",
+      "sha256": "ae946af37deff3b247421d2d16c75b63ec30bb0a4e49ff340ca7176031f08561"
+    },
+    {
+      "path": "packages/commerce/dropoff-handoffs.mts",
+      "sha256": "7be9060136fcb0c20e60172bfc96222bd550266f318585ed1581d42bdba1f075"
+    },
+    {
+      "path": "tests/development/dropoff-handoffs.test.mts",
+      "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+    },
+    {
+      "path": "tests/development/dropoff-handoffs-helpers.mts",
+      "sha256": "635546eb3fc936426d1e978916d0b5e330411a19c5ea074a1be8887153f7a300"
+    },
+    {
+      "path": "tests/fixtures/dropoff-handoffs/independent-values.json",
+      "sha256": "7e54f3ad89193973dcfedfe6f2c54b4b58026acd55adc0adc606ef3fc124ca0d"
+    },
+    {
+      "path": "packages/commerce/contracts/dropoff-handoffs.v1.json",
+      "sha256": "539fecc28ce49ef7600d504db49ace7856e223c8ce3a21acae95d916d362cf01"
     }
   ]
 }

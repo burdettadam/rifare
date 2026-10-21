@@ -1,6 +1,6 @@
 {
-  "source_file_count": 1898,
-  "source_count_reason": "ADR-0063 adds eleven scoped credential runtime, contract, independent test/oracle and documentation paths; all 1887 prior source members remain.",
+  "source_file_count": 1909,
+  "source_count_reason": "ADR-0064 adds eleven scoped handoff runtime, contract, independent test/oracle and documentation paths; all 1898 prior source members remain.",
   "component_ids": [
     "git-agent-adaptations",
     "rifare-developer-helpers",

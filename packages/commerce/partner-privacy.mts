@@ -2,12 +2,15 @@ import type { CommerceKernel, Row } from './kernel.mts';
 import { canonical, contentDigest } from './configuration-values.mts';
 import { subjectHash } from './data-guards.mts';
 import { PARTNER_SUBJECT_TABLES } from './partner-service-core.mts';
+import {DROPOFF_HANDOFF_TABLE,isDropoffHandoffClaim,checkedHandoffRow} from './dropoff-handoff-records.mts';
+import {exportDropoffHandoffSubject} from './dropoff-handoff-privacy.mts';
 
 export const PARTNER_CONFIG_TABLES = Object.freeze(['commerce_partner_configurations', 'commerce_partner_approvals']);
 function rows(k: CommerceKernel, table: string, tenant: string, store: string): Row[] {
   return k.db.prepare(`SELECT * FROM ${table} WHERE tenant_id=? AND store_id=?`).all(tenant, store) as Row[];
 }
 function checked(row: Row) {const body = JSON.parse(row.body); if (contentDigest(body) !== row.digest) throw new Error('PARTNER_RECORD_INTEGRITY'); return body;}
+function typedHandoff(table:string,row:Row){if(table===DROPOFF_HANDOFF_TABLE&&isDropoffHandoffClaim(row)){checkedHandoffRow(row);return true;}return false;}
 function matches(row: Row, ids: Set<string>, tenant: string, store: string, hash: string, customer?: string) {
   const b = checked(row), candidates = [row.customer_id, b.customer_id, b.preview?.customer_id];
   return ids.has(row.resource_id) || row.subject_hash === hash || b.subject_hash === hash || candidates.some(value => typeof value === 'string' &&
@@ -32,10 +35,11 @@ export function exportPartnerSubject(k: CommerceKernel, tenant: string, store: s
   const ids = new Set(resourceIds), result: Record<string, Row[]> = Object.fromEntries([...PARTNER_CONFIG_TABLES, ...PARTNER_SUBJECT_TABLES].map(name => [name, []]));
   const contexts = new Set<string>();
   for (const table of PARTNER_SUBJECT_TABLES) {
-    const selected = rows(k, table, tenant, store).filter(row => matches(row, ids, tenant, store, hash, customer));
+    const selected = rows(k, table, tenant, store).filter(row => !typedHandoff(table,row)&&matches(row, ids, tenant, store, hash, customer));
     for (const row of selected) {const context = contextOf(checked(row)); if (context) contexts.add(JSON.stringify([context.service, context.account_id]));}
     result[table] = selected.map(row => projection(row));
   }
+  result[DROPOFF_HANDOFF_TABLE].push(...exportDropoffHandoffSubject(k,tenant,store,resourceIds,hash));
   for (const table of PARTNER_CONFIG_TABLES) result[table] = rows(k, table, tenant, store).filter(row => contexts.has(JSON.stringify([row.service, row.account_id])))
     .map(row => projection(row, table === 'commerce_partner_configurations' ? 'configuration' : 'approval'));
   return result;
@@ -65,7 +69,7 @@ function minimized(table: string, row: Row, b: Row, hash: string) {
 }
 export function erasePartnerSubject(k: CommerceKernel, tenant: string, store: string, resourceIds: readonly string[], hash: string) {
   const ids = new Set(resourceIds); let count = 0;
-  for (const table of PARTNER_SUBJECT_TABLES) for (const row of rows(k, table, tenant, store).filter(row => matches(row, ids, tenant, store, hash))) {
+  for (const table of PARTNER_SUBJECT_TABLES) for (const row of rows(k, table, tenant, store).filter(row => !typedHandoff(table,row)&&matches(row, ids, tenant, store, hash))) {
     const body = minimized(table, row, checked(row), hash), state = row.state === 'unknown' ? 'unknown' : 'erased';
     k.db.prepare(`UPDATE ${table} SET subject_hash=?,state=?,body=?,digest=? WHERE tenant_id=? AND store_id=? AND id=?`)
       .run(hash, state, canonical(body), contentDigest(body), tenant, store, row.id); count++;
@@ -79,6 +83,7 @@ export function revokePartnerForRestore(k: CommerceKernel, tenant?: string, stor
   for (const table of PARTNER_SUBJECT_TABLES) {
     const all = k.db.prepare('SELECT * FROM ' + table + where).all(...args) as Row[];
     for (const row of all) {
+      if(typedHandoff(table,row))continue;
       const original = checked(row); if (original.redacted) continue;
       let body = withoutAuthority(original), state = row.state;
       if (table === 'commerce_protection_confirmations') {body = {proposal_id: body.proposal_id, preview_digest: body.preview_digest, authority_revoked: true}; state = 'revoked_restore';}

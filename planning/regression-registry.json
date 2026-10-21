@@ -1974,6 +1974,14 @@
       "contract_files": [
         "packages/commerce/contracts/dropoff-credentials.v1.json"
       ]
+    },
+    {
+      "id": "m20-dropoff-handoffs-diagnostic",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/dropoff-handoffs.v1.json"
+      ]
     }
   ],
   "tests": [
@@ -24936,6 +24944,90 @@
       "runner_case_id": "CASE-M20-G02-14",
       "source": "tests/development/dropoff-credentials.test.mts",
       "capability_id": "m20-dropoff-credentials-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M20-G03-01",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M20-G03-01",
+      "source": "tests/development/dropoff-handoffs.test.mts",
+      "capability_id": "m20-dropoff-handoffs-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M20-G03-02",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M20-G03-02",
+      "source": "tests/development/dropoff-handoffs.test.mts",
+      "capability_id": "m20-dropoff-handoffs-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M20-G03-03",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M20-G03-03",
+      "source": "tests/development/dropoff-handoffs.test.mts",
+      "capability_id": "m20-dropoff-handoffs-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M20-G03-04",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M20-G03-04",
+      "source": "tests/development/dropoff-handoffs.test.mts",
+      "capability_id": "m20-dropoff-handoffs-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M20-G03-05",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M20-G03-05",
+      "source": "tests/development/dropoff-handoffs.test.mts",
+      "capability_id": "m20-dropoff-handoffs-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M20-G03-06",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M20-G03-06",
+      "source": "tests/development/dropoff-handoffs.test.mts",
+      "capability_id": "m20-dropoff-handoffs-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M20-G03-07",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M20-G03-07",
+      "source": "tests/development/dropoff-handoffs.test.mts",
+      "capability_id": "m20-dropoff-handoffs-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M20-G03-08",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M20-G03-08",
+      "source": "tests/development/dropoff-handoffs.test.mts",
+      "capability_id": "m20-dropoff-handoffs-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M20-G03-09",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M20-G03-09",
+      "source": "tests/development/dropoff-handoffs.test.mts",
+      "capability_id": "m20-dropoff-handoffs-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M20-G03-10",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M20-G03-10",
+      "source": "tests/development/dropoff-handoffs.test.mts",
+      "capability_id": "m20-dropoff-handoffs-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M20-G03-11",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M20-G03-11",
+      "source": "tests/development/dropoff-handoffs.test.mts",
+      "capability_id": "m20-dropoff-handoffs-diagnostic"
+    },
+    {
+      "id": "runtime:CASE-M20-G03-12",
+      "suite": "runtime",
+      "runner_case_id": "CASE-M20-G03-12",
+      "source": "tests/development/dropoff-handoffs.test.mts",
+      "capability_id": "m20-dropoff-handoffs-diagnostic"
     }
   ],
   "protected_files": [
@@ -25525,7 +25617,16 @@
     "tests/development/dropoff-credentials.test.mts",
     "tests/development/dropoff-credentials-helpers.mts",
     "tests/fixtures/dropoff-credentials/independent-values.json",
-    "packages/commerce/contracts/dropoff-credentials.v1.json"
+    "packages/commerce/contracts/dropoff-credentials.v1.json",
+    "packages/adapters/dropoff-handoff-fixture-source.mts",
+    "packages/commerce/dropoff-handoff-values.mts",
+    "packages/commerce/dropoff-handoff-records.mts",
+    "packages/commerce/dropoff-handoff-privacy.mts",
+    "packages/commerce/dropoff-handoffs.mts",
+    "tests/development/dropoff-handoffs.test.mts",
+    "tests/development/dropoff-handoffs-helpers.mts",
+    "tests/fixtures/dropoff-handoffs/independent-values.json",
+    "packages/commerce/contracts/dropoff-handoffs.v1.json"
   ],
   "source_count_fixture": "tests/fixtures/licensing/artifact-oracle.v1.json",
   "source_inventory": "planning/component-inventory.json"
