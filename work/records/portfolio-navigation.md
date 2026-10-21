@@ -49,6 +49,22 @@ presentation and navigation checkpoint, not product acceptance or publication.
 
 ## Verification and review
 
-Pending the exact integrated candidate. Record focused results and independent
-review decisions here before handoff. Raw output belongs in ignored
-`evidence/portfolio-navigation/`.
+The layout is committed as `0cfc48e`; the independently authored README
+`407ba01` is integrated as `08e5ef2`. Its link-only merge conflict was resolved
+by retaining the exact target-focused README. The documentation-index link
+and current-status pointer are a subsequent navigation refinement.
+
+Exploratory repository, generated-view, plan, workflow, and distribution checks
+passed. The distribution inventory contains 1,924 source files. The count
+fixture is refreshed through its existing additive count fields; component IDs,
+release blockers, case bindings, and all other protected values stay unchanged.
+
+The release-benchmark document check still reports
+`capability_disposition: target coverage must retain every original target`.
+The same command produces the same failure on the unchanged imported
+`c299065` development checkout: its earlier support-envelope target coverage
+does not include the expanded capability catalogue. This pre-existing product
+planning inconsistency is recorded, not hidden or waived by the layout work.
+
+Focused exact-candidate checks and final independent reviews are pending.
+Raw output belongs in ignored `evidence/portfolio-navigation/`.

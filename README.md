@@ -153,6 +153,7 @@ The next recorded commerce increment is consolidation and custody continuity. Co
 
 | Start here | What you will find |
 | --- | --- |
+| [Documentation index](docs/README.md) | Product guides and a concise repository map |
 | [Try Rifare](docs/TRY-RIFARE.md) | Runnable demos, session setup, and expected results |
 | [Product roadmap](docs/ROADMAP.md) | Target functionality, sequencing, and capability boundaries |
 | [Architecture](docs/ARCHITECTURE.md) | The core, portable skills, integrations, and AI execution modes |

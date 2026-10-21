@@ -5,9 +5,11 @@
 The original roadmap below is retained. The current canonical catalogue adds
 M13–M22 under ADR-0042 and M23–M25 under
 [ADR-0044](decisions/0044-browser-roadmap-adoption.md), for 26 milestones,
-281 goals, 216 requirements and 949 behavioral specifications. Actual local
-implementation is recorded through M14; the initial planning states do not
-replace its source-bound work records or formal qualification limits.
+281 goals, 216 requirements and 949 behavioral specifications. The catalogue
+describes target scope and preserves its original planning states. See
+[current project status](PROJECT-STATUS.md) for the M20-G03 local development
+checkpoint and remaining qualification; the historical milestone text below
+does not replace those source-bound records.
 
 | New milestone | Development outcome | Worker goals | Assessment |
 | --- | --- | --- | --- |
