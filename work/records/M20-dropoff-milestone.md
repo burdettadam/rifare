@@ -383,9 +383,10 @@ Inventory additions are exactly eleven source members, twelve registered cases,
 one proposed capability, nine protected artifacts and five privacy runtime pins.
 There are 1,909 source members, 3,292 registered cases, 222 capabilities,
 596 protected paths, 340 privacy runtime pins and 683 conformance oracle pins.
-The 15 privacy surfaces and 262-table core schema remain unchanged. The candidate
-will run only the assigned 48-case, three-file batch under unchanged defaults,
-followed by the one independently specified isolated materialization fault.
+The 15 privacy surfaces and 262-table core schema remain unchanged. The assigned
+selection was a 48-case, three-file batch under unchanged defaults, followed by
+the one independently specified isolated materialization fault. Actual execution
+and the narrow budget continuation are recorded below.
 
 ### First execution and independent fixture correction
 
@@ -406,3 +407,123 @@ second event lookup. All twelve IDs and prior assertions remain, and helper
 and literal oracle are byte-identical to the original independent freeze.
 Runtime is unchanged by this correction. The guide also clarifies that an
 unsuppressed hold can retain personal mappings for an authorized privacy reader.
+
+## G03 exact product and completed focused evidence
+
+Reviewed product 2565443968c467e1c7f5db42c1f2e015cd592251, tree
+89e92a2f6f151fd83675a4c005cdb3afba587ec4, integrates the independent correction
+and refreshed test pins. Runtime bytes are unchanged from f89d34a6acd57b4b5a302d37c2068b0dfb941fda.
+Both completed-evidence reports name this exact clean product and carry identical
+1,909-file source manifests, each verified against the exact Git contents.
+
+| Completed file | Passed | Runner file elapsed |
+|---|---:|---:|
+| dropoff-handoffs.test.mts | 12 | 27.767 seconds |
+| dropoff-credentials.test.mts | 14 | 29.271 seconds |
+| partner-services.test.mts | 22 | 7.717 seconds |
+
+The corrected three-file invocation completed twelve G03 and fourteen G02 cases
+before its shared sixty-second deadline expired at 60.008 seconds. The partner
+child had started and ran for 2.808 seconds without completed native XML. It
+receives zero completed-case credit, and the original report remains failed.
+
+The recorded narrow continuation ran only the previously assigned partner file
+on the exact unchanged candidate. Its twenty-two cases passed in a 7.855-second
+invocation. No completed G03 or G02 file was rerun. The sixty-case/four-file/
+sixty-second defaults and NODE_OPTIONS=--test-isolation=none remain unchanged.
+All forty-eight distinct assigned cases therefore have complete passing evidence
+across two invocations. Completed-file elapsed times total 64.755 seconds;
+invocation elapsed times total 67.863 seconds. This is not a successful single
+forty-eight-case batch. Completed native XML contains no failures, errors or
+skips; the interrupted invocation remains explicitly timed out.
+
+The exact corrected independent test SHA-256 is
+157193dd3b56abe565610ebedfbf6d961ad2ad5158f1553a060ad73911527e6d.
+Helper and literal oracle retain their original frozen hashes. The initial
+fixture failure remains raw evidence for its own candidate and is not folded
+into passing evidence. There were no broad-suite runs or supplemental product
+probes. Static preservation, report checks and archive restore verification do
+not execute product tests.
+
+## G03 exact-parent materialization fault
+
+Fault 035ef9daec41cad0a803103f48c0493a3d760f9d, tree
+a367992d9109034464b9a08b9b580f7f617c55dd, has the exact product as its immediate
+parent. It changes one statement in packages/commerce/dropoff-handoffs.mts after
+genuine source validation and final rechecks. The first one-unit acceptance is
+materialized as all three expected units accepted, with a recomputed digest.
+The independent source still stores its original single unit; its journal,
+admission guards and the independent test/helper/oracle are unchanged.
+
+The one assigned twelve-case fault run took 17.769 seconds. Native XML records
+three passes and nine behavioral ERR_ASSERTION failures, with no errors, skips
+or timeout. CASE03 first verifies one provider unit, then directly observes
+three accepted native units where the literal oracle requires one. CASE02
+separately observes accepted three/outstanding zero instead of accepted
+one/outstanding two. CASE11/12 detect disagreement between the native event and
+original source event. Later assertions after each first failure are not credited.
+
+The runner credits zero validated cases for the failed whole file; twelve actual
+executions and three individual passes are reported separately. All 1,909 actual
+fault source hashes match its exact Git archive. Only the assigned runtime file
+differs from the product; independent artifacts and metadata remain unchanged.
+Parent pins intentionally remain on the broken branch, whose raw source manifest
+identifies the actual mutant. No syntax, fixture setup or catalog-pin error
+caused detection. The fault is isolated outside product ancestry and never merged.
+
+## G03 independent decision and preservation
+
+Final independent nonauthor reviewers inspected the exact candidate and complete
+passing/fault evidence, following the earlier protocol and implementation reviews
+by /root/checkpoint_audit and /root/loyalty_regression:
+
+| Final reviewer | Scope | Decision |
+|---|---|---|
+| /root/handoff_authority_final | Authority, privacy, source integrity and recovery | Approved bounded local scope |
+| /root/handoff_regression_final | Native composition, regression, preservation and actual evidence | Approved bounded local scope |
+
+Both independently matched all product and fault source hashes, the corrected
+author artifacts, native XML outcomes and the actual native cardinality failure.
+Neither made edits or executed product tests/probes. Neither requested additional
+execution or found a remaining material blocker. Review records are integration-
+owner transcriptions of actual agent decisions, not external authenticated
+approval identities.
+
+All 35 static preservation/report checks pass. All 3,280 prior test objects,
+221 capabilities, 587 protected paths, 44 adapter objects and 1,898 source members
+remain. Current totals are 3,292 tests, 222 capabilities, 596 protected paths,
+45 adapters and 1,909 source members. All 340 runtime pins and 683 oracle pins
+match; the catalog contains 220 operations, 70 declarations and 297 native case
+references. Its 47 direct fixtures remain. G02 implementation, original test
+artifacts, legacy custody behavior and its fault marker remain unchanged. The
+262-table core schema, fifteen privacy surface IDs, protected main and formal
+acceptance ledger are unchanged.
+
+Evidence under evidence/M20-G03 includes the two candidate directories, the narrow
+remaining-partner continuation, all-units-fault, independent-freeze.json,
+execution-history.json, execution-budget-adjustment.json, focused-evidence.json,
+preservation.json, fault-summary.json, fault.patch, authority-review.md,
+regression-review.md and decision.json. Closing changes affect only PLANS.md,
+this record and docs/DROPOFF-HANDOFFS.md. The exact reviewed runtime, tests,
+contracts, metadata and pins remain intact. The complete checkpoint includes all
+native Git history, prior milestone evidence and a fresh bundle-only restore
+verification; no previous checkpoint is needed for recovery.
+
+## G03 continuation and open qualification
+
+This closes the bounded local synthetic G03 assignment. Formal G03 and M20
+acceptance remain open, as do accepted M07/M08/M10 prerequisites and connected
+provider, physical handoff, customer accessibility/device, target-host and
+production qualification. Native original-return anchors establish scoped
+retained integrity, not independent historical adapter attestation. The unchanged
+fixture does not supply an otherwise-valid above-one-hundred-unit positive
+control. Synthetic source observations alone establish no warehouse receipt,
+inspection, stock movement, fee, refund or settlement.
+
+Next is M20-G04 consolidation and custody continuity under its own prior
+assignment and independent specification. Trace stable original units through
+reported batch membership and later movement/receiving observations using the
+existing native owners. Missing or disputed evidence must remain explicit;
+elapsed time cannot prove arrival. G05 shopper experience and G99 assessment
+follow their own assigned evidence. M19's attributable provider award/reversal
+gap remains independently open.

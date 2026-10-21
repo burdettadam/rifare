@@ -522,3 +522,47 @@ independent specification, followed by G04 custody continuity. Compose existing
 native owners, retaining separate handoff, movement, warehouse receipt/inspection,
 stock and settlement stages. G01/G02 remain local synthetic increments;
 connected-provider, physical and formal M20 qualification remain open.
+
+## M20-G03 bounded local item-level drop-off checkpoint
+
+ADR-0064 now has a reviewed local implementation on goal/M20-dropoff-handoff.
+Exact product 2565443968c467e1c7f5db42c1f2e015cd592251, tree
+89e92a2f6f151fd83675a4c005cdb3afba587ec4, records the individual units actually
+accepted or rejected by the synthetic source. Partial intake, linked corrections,
+disputes and resolution retain original family identity across credential
+replacement. Current authority, native return mapping and execution controls are
+rechecked before import. Retained reads, erasure, held evidence, restore and
+merchant portability compose existing native custody and privacy owners.
+
+All 48 assigned cases have complete passing evidence on that same clean product:
+twelve new handoff, fourteen unchanged credential and twenty-two unchanged
+partner-service cases. The original invocation retained a failed sixty-second
+deadline after 26 completed passes; only the remaining partner file was
+continued. No completed new or credential file was rerun, defaults were not
+raised, and no broad suite ran. The independent author's earlier fixture actor
+correction and the original incomplete result remain recorded.
+
+The one exact-parent fault 035ef9daec41cad0a803103f48c0493a3d760f9d changed native
+materialization from one observed accepted unit to all three expected units.
+Unchanged CASE03 directly detected three native accepted units instead of one;
+CASE02 separately detected zero outstanding instead of two. Its twelve-case run
+had three passes and nine behavioral failures, without errors, skips or timeout.
+The fault remains outside product ancestry and is never merged.
+
+Both independent final reviewers approved bounded local closure. All 35 static
+preservation/report checks passed. All 3,280 prior test objects, 221 capabilities,
+44 adapter objects and 1,898 source members remain; current source count is 1,909.
+All 340 privacy runtime pins and 683 oracle pins match. The core schema, fifteen
+privacy surface IDs, protected main and formal acceptance ledger are unchanged.
+
+The [handoff guide](docs/DROPOFF-HANDOFFS.md) and
+[M20 work record](work/records/M20-dropoff-milestone.md) describe behavior, actual
+evidence, decisions and limits. The complete checkpoint retains all native Git
+history and cumulative evidence, with a fresh bundle-only restore verification.
+
+Next is G04 consolidation and custody continuity under its own prior assignment
+and independent specification, followed by G05 shopper experience. Reuse the
+existing custody and receiving owners; keep consolidation, movement, warehouse
+receipt/inspection, stock and settlement distinct. G01 through G03 remain bounded
+local synthetic increments. Formal prerequisite and M20 acceptance, connected
+provider and physical qualification remain open.

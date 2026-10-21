@@ -101,19 +101,40 @@ takes precedence over a hold copied in an older snapshot.
 Retained reads require actual human privacy administration and original-resource
 read permission. Minimized reads expose aggregate quantities and opaque unit
 references without restoring item-line mappings. A current unsuppressed hold can
-retain those mappings for the authorized privacy administrator. An issue without imported G03 evidence cannot
-reconstruct expected quantities after G02 terms are minimized and reports
+retain those mappings for the authorized privacy administrator. An issue without
+imported G03 evidence cannot reconstruct expected quantities after G02 terms are minimized and reports
 DROPOFF_HANDOFF_NOT_FOUND. Restore and merchant import validate original and
 destination graphs independently and do not invoke the source or replay effects.
 
 ## Focused evidence and continuation
 
-The prior independent specification assigns twelve permanent cases, followed by
-the unchanged fourteen credential and twenty-two partner-service cases. The
-three-unit fixture requires one accepted and two outstanding in the targeted
-fault case. An isolated fault deliberately materializes all three as accepted;
-the independent source continues to report one. Execution and final review status
-will be recorded with the exact candidate in the M20 work record.
+Reviewed product 2565443968c467e1c7f5db42c1f2e015cd592251 has complete passing
+evidence for all forty-eight assigned cases on that exact clean candidate:
+
+| Completed file | Passing cases |
+|---|---:|
+| Item-level handoff acceptance | 12 |
+| Unchanged credential lifecycle | 14 |
+| Unchanged partner services | 22 |
+
+The first three-file invocation reached its shared sixty-second deadline after
+the first twenty-six cases passed. That report remains failed; its interrupted
+partner child receives no completed-case credit. A narrow continuation ran only
+the remaining twenty-two partner cases. Defaults were unchanged, and no passing
+G03 or G02 file was rerun. This is complete passing evidence across two
+invocations, not one successful forty-eight-case batch.
+
+The one isolated fault deliberately stored three accepted native units from one
+source unit. Unchanged CASE03 first verified the provider's single unit and then
+failed on the real native count, three instead of one. CASE02 separately detected
+zero outstanding instead of two. Twelve fault cases executed, with three passes
+and nine behavioral assertion failures; later assertions after each failure are
+not credited. The broken branch remains isolated outside product ancestry.
+
+Both independent nonauthor reviewers approved this bounded local scope. The
+M20 work record and checkpoint evidence bind exact source hashes, the independent
+author's fixture correction, raw reports, fault and review decisions. Closing
+changes affect documentation only, preserving the executed runtime and tests.
 
 The unchanged fixture does not provide an otherwise-valid above-one-hundred-unit
 native positive control. The bounded implementation and malformed-input checks
