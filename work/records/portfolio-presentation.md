@@ -88,11 +88,13 @@ transparency, and single-file ownership were checked.
 
 This closure adds these actual observations and the official profile-pinning
 reference. The reviewed README, artwork, tour, status, and inventory are unchanged.
-Direct terminal push lacks GitHub authentication; the connected GitHub tools can
-publish a presentation snapshot with the same reviewed files and base ancestry.
-When published that way, verify its tree against the final local tree. Local
-authoring commit identities and the published snapshot may differ because the
-connector supplies commit metadata.
+Direct terminal push lacks GitHub authentication. The connected GitHub write
+request also failed with HTTP 403, `Resource not accessible by integration`, on
+the initial README blob. No remote branch, commit, pull request, default-branch
+change, or profile setting was created by this task. The completed local history
+is delivered as a delta Git bundle, with a binary patch and changed-file copy.
+The handoff guide gives explicit import and push instructions for an authenticated
+local clone. This is an access limitation, not an automatic-approval rejection.
 
 ## Handoff and acceptance boundary
 

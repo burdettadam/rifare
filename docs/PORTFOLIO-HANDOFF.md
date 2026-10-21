@@ -12,6 +12,13 @@ documentation, image assets, the source-file inventory, and its work record.
 Runtime behavior, tests, dependencies, licensing policy, milestones, and acceptance
 records are preserved.
 
+**Delivery state:** the completed changes are committed locally. The GitHub
+connection rejected its write request with HTTP 403, `Resource not accessible by
+integration`; no remote presentation branch or pull request was created. The
+downloadable handoff contains the Git bundle, binary patch, changed files, and
+exact import/push commands. Use the bundle from an existing clone containing
+the base commit to retain the authored commits.
+
 ## Review and apply
 
 Review the presentation branch or its pull request against `development`, the
@@ -19,7 +26,22 @@ repository's default and current development line. `main` remains the older
 baseline. The source history is retained; an older README is available at the
 base commit.
 
-After the presentation branch is available from `origin`:
+To import the supplied bundle from your existing Rifare clone, replace the path
+with the location where you extracted the handoff:
+
+```sh
+git status --short
+git bundle verify /path/to/Rifare-portfolio-branding.bundle
+git fetch /path/to/Rifare-portfolio-branding.bundle refs/heads/docs/portfolio-branding:refs/heads/docs/portfolio-branding
+git switch docs/portfolio-branding
+git push -u origin docs/portfolio-branding
+```
+
+Start with a clean worktree. If the presentation branch already exists locally,
+inspect it before updating it; do not force an existing ref. The bundle requires
+the base development commit and does not include a second full repository copy.
+
+After the presentation branch is available from `origin`, another worker can use:
 
 ```sh
 git fetch origin
