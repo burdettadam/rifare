@@ -38,7 +38,10 @@ packets do not close those obligations. Formal dependency IDs and the
 
 1. Read the current architecture and the relevant domain guide.
 2. Select a bounded remaining scope from the active catalogue or integration
-   follow-ups. Inspect the current code, native contracts and tests first.
+   follow-ups. Inspect the current code, native contracts and tests first. Before
+   assigning a compact entry, [promote just that entry](../planning/README.md#assign-a-compact-entry-or-qualify-a-retired-gate)
+   to an active packet and commit the planning assignment so evidence checks can
+   resolve it at their trusted base.
 3. Record assignment, candidate, focused verification and independent reviews in
    an ordinary work record. Use [development commands](DEVELOPMENT.md).
 4. Once a local implementation lands, remove its completed instructions from the

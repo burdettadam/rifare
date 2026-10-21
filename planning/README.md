@@ -62,6 +62,30 @@ fixtures and release thresholds. Follow [development](../docs/DEVELOPMENT.md) an
 [work records](../work/README.md); no initial-state database or static dispatch
 queue needs to be maintained.
 
+## Assign a compact entry or qualify a retired gate
+
+Compact integration rows are planning summaries. The existing work-goal,
+workflow and evidence checks require a goal packet at their trusted base commit;
+they intentionally reject a historical ID that is absent from that base's active
+`goals` list. Before assigning one of these rows, or formally qualifying a retired
+gate:
+
+1. Retrieve only the selected original goal and its milestone definition from
+   `d1fb45b94e14b276f7fa6e04f50173fe8cf39c77` in Git. Add a narrowed active packet
+   to the current inputs with its original ID, criteria, test bindings and formal
+   dependencies intact. Its instructions should describe only the remaining work.
+2. Add or update the smallest milestone/follow-up group containing that packet.
+   Preserve the original gate identity and exit criteria; an implementation
+   follow-up may leave the historical gate outside the active group. Remove the
+   selected compact row once its packet owns the same scope.
+3. Regenerate views, update active counts and source membership, then review and
+   commit that bounded planning assignment. Select the trusted execution/evidence
+   base only after this commit includes the packet.
+
+This promotes one useful scope, not the completed catalogue. A restored gate still
+requires every original worker and predecessor dependency to be accepted. Do not
+change an evidence controller or invent acceptance to bypass a missing packet.
+
 ## Retrieve a previous packet
 
 ```sh

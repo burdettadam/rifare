@@ -63,8 +63,16 @@ resolves. The known envelope/benchmark commands produce the same failures as the
 original development checkout.
 
 Raw results are under ignored `evidence/planning-retirement/`. Independent scope
-and regression reviews are pending on the committed candidate; closure will
-record their findings and exact candidate identity.
+and regression reviews inspected candidate
+`bec7e125a44358d9e728285dbf42351d51c6c71a`
+(tree `d91800f393cb5cc19417719111e5d8d4f938c440`). Scope review found no blocking
+authority or coverage issue. Regression review found one continuation issue:
+compact integration owners are absent from current active goal objects, while
+the existing workflow/evidence tools correctly require a packet at their trusted
+base. Planning maintenance, dispatch, current-plan and agent guidance now require
+promoting only the selected original contract into a bounded active packet and
+committing that assignment before choosing the execution base. The controllers
+remain unchanged. Final review of this documentation correction is pending.
 
 ## Existing limits
 

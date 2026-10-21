@@ -7,15 +7,19 @@ Git history; do not restart it from the beginning.
 The next recorded commerce direction is M20-G04, followed by M20-G05. Target-stack,
 loyalty and real-adapter work are also open. Choose a bounded scope with the owner,
 then inspect the source and current dependencies before creating a worktree.
+A compact integration entry first needs the
+[bounded packet promotion](../planning/README.md#assign-a-compact-entry-or-qualify-a-retired-gate)
+committed to the current plan, so the existing workflow/evidence tools can resolve
+its original contract at the trusted execution base.
 
 ## Worker instruction
 
 ```text
-Assigned remaining scope: <one goal ID or integration entry>
+Assigned remaining scope: <one active goal ID; promote a compact entry first>
 Candidate base and owned paths: <exact commit and concrete paths>
 
 Read AGENTS.md, docs/PLANS.md, docs/ARCHITECTURE.md and docs/DEVELOPMENT.md.
-Inspect the active packet or compact integration entry and current source.
+Inspect the active packet and current source.
 Use the existing work-goal/worktree-flow skills and ordinary project commands.
 Reuse landed owners, native contracts and regression tests.
 
