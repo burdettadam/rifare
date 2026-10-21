@@ -386,3 +386,23 @@ There are 1,909 source members, 3,292 registered cases, 222 capabilities,
 The 15 privacy surfaces and 262-table core schema remain unchanged. The candidate
 will run only the assigned 48-case, three-file batch under unchanged defaults,
 followed by the one independently specified isolated materialization fault.
+
+### First execution and independent fixture correction
+
+Exact candidate f89d34a6acd57b4b5a302d37c2068b0dfb941fda ran the new twelve-case
+file in the assigned batch. Native output records eleven passes and one failure;
+the batch stopped before G02 or partner-service execution, at 27.133 seconds.
+CASE08 passed an undefined fixture actor property to native Permissions.change.
+CASE09's permission branch shared that setup error, so its initial pass did not
+prove a real permission revocation. The first run is retained as incomplete
+validation, not a twelve-case success.
+
+The independent author corrected only four test lines in
+f5430adef9def56aef458e9031e50c65b2aae6c8, integrated unchanged as
+69c82f3. Both cases now derive the authenticated native actor identity. CASE08
+asserts the successful returned actor/revision; CASE09 asserts outside the
+denial expectation that the actual permission change succeeded during the
+second event lookup. All twelve IDs and prior assertions remain, and helper
+and literal oracle are byte-identical to the original independent freeze.
+Runtime is unchanged by this correction. The guide also clarifies that an
+unsuppressed hold can retain personal mappings for an authorized privacy reader.

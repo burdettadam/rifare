@@ -99,8 +99,9 @@ required evidence; it does not preserve import authority. Current suppression
 takes precedence over a hold copied in an older snapshot.
 
 Retained reads require actual human privacy administration and original-resource
-read permission. They expose aggregate quantities and opaque unit references,
-with no restored item-line mapping. An issue without imported G03 evidence cannot
+read permission. Minimized reads expose aggregate quantities and opaque unit
+references without restoring item-line mappings. A current unsuppressed hold can
+retain those mappings for the authorized privacy administrator. An issue without imported G03 evidence cannot
 reconstruct expected quantities after G02 terms are minimized and reports
 DROPOFF_HANDOFF_NOT_FOUND. Restore and merchant import validate original and
 destination graphs independently and do not invoke the source or replay effects.

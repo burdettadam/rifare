@@ -5356,37 +5356,37 @@
               "id": "CASE-M20-G03-01",
               "name": "CASE-M20-G03-01",
               "path": "tests/development/dropoff-handoffs.test.mts",
-              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+              "sha256": "157193dd3b56abe565610ebedfbf6d961ad2ad5158f1553a060ad73911527e6d"
             },
             {
               "id": "CASE-M20-G03-02",
               "name": "CASE-M20-G03-02",
               "path": "tests/development/dropoff-handoffs.test.mts",
-              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+              "sha256": "157193dd3b56abe565610ebedfbf6d961ad2ad5158f1553a060ad73911527e6d"
             },
             {
               "id": "CASE-M20-G03-03",
               "name": "CASE-M20-G03-03",
               "path": "tests/development/dropoff-handoffs.test.mts",
-              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+              "sha256": "157193dd3b56abe565610ebedfbf6d961ad2ad5158f1553a060ad73911527e6d"
             },
             {
               "id": "CASE-M20-G03-04",
               "name": "CASE-M20-G03-04",
               "path": "tests/development/dropoff-handoffs.test.mts",
-              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+              "sha256": "157193dd3b56abe565610ebedfbf6d961ad2ad5158f1553a060ad73911527e6d"
             },
             {
               "id": "CASE-M20-G03-06",
               "name": "CASE-M20-G03-06",
               "path": "tests/development/dropoff-handoffs.test.mts",
-              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+              "sha256": "157193dd3b56abe565610ebedfbf6d961ad2ad5158f1553a060ad73911527e6d"
             },
             {
               "id": "CASE-M20-G03-07",
               "name": "CASE-M20-G03-07",
               "path": "tests/development/dropoff-handoffs.test.mts",
-              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+              "sha256": "157193dd3b56abe565610ebedfbf6d961ad2ad5158f1553a060ad73911527e6d"
             }
           ],
           "direct_fixtures": []
@@ -5402,7 +5402,7 @@
               "id": "CASE-M20-G03-05",
               "name": "CASE-M20-G03-05",
               "path": "tests/development/dropoff-handoffs.test.mts",
-              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+              "sha256": "157193dd3b56abe565610ebedfbf6d961ad2ad5158f1553a060ad73911527e6d"
             }
           ],
           "direct_fixtures": []
@@ -5418,19 +5418,19 @@
               "id": "CASE-M20-G03-06",
               "name": "CASE-M20-G03-06",
               "path": "tests/development/dropoff-handoffs.test.mts",
-              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+              "sha256": "157193dd3b56abe565610ebedfbf6d961ad2ad5158f1553a060ad73911527e6d"
             },
             {
               "id": "CASE-M20-G03-07",
               "name": "CASE-M20-G03-07",
               "path": "tests/development/dropoff-handoffs.test.mts",
-              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+              "sha256": "157193dd3b56abe565610ebedfbf6d961ad2ad5158f1553a060ad73911527e6d"
             },
             {
               "id": "CASE-M20-G03-09",
               "name": "CASE-M20-G03-09",
               "path": "tests/development/dropoff-handoffs.test.mts",
-              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+              "sha256": "157193dd3b56abe565610ebedfbf6d961ad2ad5158f1553a060ad73911527e6d"
             }
           ],
           "direct_fixtures": []
@@ -5446,19 +5446,19 @@
               "id": "CASE-M20-G03-03",
               "name": "CASE-M20-G03-03",
               "path": "tests/development/dropoff-handoffs.test.mts",
-              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+              "sha256": "157193dd3b56abe565610ebedfbf6d961ad2ad5158f1553a060ad73911527e6d"
             },
             {
               "id": "CASE-M20-G03-06",
               "name": "CASE-M20-G03-06",
               "path": "tests/development/dropoff-handoffs.test.mts",
-              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+              "sha256": "157193dd3b56abe565610ebedfbf6d961ad2ad5158f1553a060ad73911527e6d"
             },
             {
               "id": "CASE-M20-G03-10",
               "name": "CASE-M20-G03-10",
               "path": "tests/development/dropoff-handoffs.test.mts",
-              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+              "sha256": "157193dd3b56abe565610ebedfbf6d961ad2ad5158f1553a060ad73911527e6d"
             }
           ],
           "direct_fixtures": []
@@ -5474,49 +5474,49 @@
               "id": "CASE-M20-G03-01",
               "name": "CASE-M20-G03-01",
               "path": "tests/development/dropoff-handoffs.test.mts",
-              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+              "sha256": "157193dd3b56abe565610ebedfbf6d961ad2ad5158f1553a060ad73911527e6d"
             },
             {
               "id": "CASE-M20-G03-02",
               "name": "CASE-M20-G03-02",
               "path": "tests/development/dropoff-handoffs.test.mts",
-              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+              "sha256": "157193dd3b56abe565610ebedfbf6d961ad2ad5158f1553a060ad73911527e6d"
             },
             {
               "id": "CASE-M20-G03-03",
               "name": "CASE-M20-G03-03",
               "path": "tests/development/dropoff-handoffs.test.mts",
-              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+              "sha256": "157193dd3b56abe565610ebedfbf6d961ad2ad5158f1553a060ad73911527e6d"
             },
             {
               "id": "CASE-M20-G03-08",
               "name": "CASE-M20-G03-08",
               "path": "tests/development/dropoff-handoffs.test.mts",
-              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+              "sha256": "157193dd3b56abe565610ebedfbf6d961ad2ad5158f1553a060ad73911527e6d"
             },
             {
               "id": "CASE-M20-G03-09",
               "name": "CASE-M20-G03-09",
               "path": "tests/development/dropoff-handoffs.test.mts",
-              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+              "sha256": "157193dd3b56abe565610ebedfbf6d961ad2ad5158f1553a060ad73911527e6d"
             },
             {
               "id": "CASE-M20-G03-10",
               "name": "CASE-M20-G03-10",
               "path": "tests/development/dropoff-handoffs.test.mts",
-              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+              "sha256": "157193dd3b56abe565610ebedfbf6d961ad2ad5158f1553a060ad73911527e6d"
             },
             {
               "id": "CASE-M20-G03-11",
               "name": "CASE-M20-G03-11",
               "path": "tests/development/dropoff-handoffs.test.mts",
-              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+              "sha256": "157193dd3b56abe565610ebedfbf6d961ad2ad5158f1553a060ad73911527e6d"
             },
             {
               "id": "CASE-M20-G03-12",
               "name": "CASE-M20-G03-12",
               "path": "tests/development/dropoff-handoffs.test.mts",
-              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+              "sha256": "157193dd3b56abe565610ebedfbf6d961ad2ad5158f1553a060ad73911527e6d"
             }
           ],
           "direct_fixtures": []
@@ -5532,37 +5532,37 @@
               "id": "CASE-M20-G03-01",
               "name": "CASE-M20-G03-01",
               "path": "tests/development/dropoff-handoffs.test.mts",
-              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+              "sha256": "157193dd3b56abe565610ebedfbf6d961ad2ad5158f1553a060ad73911527e6d"
             },
             {
               "id": "CASE-M20-G03-05",
               "name": "CASE-M20-G03-05",
               "path": "tests/development/dropoff-handoffs.test.mts",
-              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+              "sha256": "157193dd3b56abe565610ebedfbf6d961ad2ad5158f1553a060ad73911527e6d"
             },
             {
               "id": "CASE-M20-G03-08",
               "name": "CASE-M20-G03-08",
               "path": "tests/development/dropoff-handoffs.test.mts",
-              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+              "sha256": "157193dd3b56abe565610ebedfbf6d961ad2ad5158f1553a060ad73911527e6d"
             },
             {
               "id": "CASE-M20-G03-10",
               "name": "CASE-M20-G03-10",
               "path": "tests/development/dropoff-handoffs.test.mts",
-              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+              "sha256": "157193dd3b56abe565610ebedfbf6d961ad2ad5158f1553a060ad73911527e6d"
             },
             {
               "id": "CASE-M20-G03-11",
               "name": "CASE-M20-G03-11",
               "path": "tests/development/dropoff-handoffs.test.mts",
-              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+              "sha256": "157193dd3b56abe565610ebedfbf6d961ad2ad5158f1553a060ad73911527e6d"
             },
             {
               "id": "CASE-M20-G03-12",
               "name": "CASE-M20-G03-12",
               "path": "tests/development/dropoff-handoffs.test.mts",
-              "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+              "sha256": "157193dd3b56abe565610ebedfbf6d961ad2ad5158f1553a060ad73911527e6d"
             }
           ],
           "direct_fixtures": []
@@ -6606,7 +6606,7 @@
     },
     {
       "path": "tests/fixtures/conformance/expected-coverage.v1.json",
-      "sha256": "1c3300d4c14a019711b044437d5d7b6efd31ff5938bb51632bcb0d51a0c5d536"
+      "sha256": "d0a71324b4b470f8a6dfb70d007d78eb706d9491891be43eb2c0ab69a0d31504"
     },
     {
       "path": "tests/fixtures/conformance/source-inputs.v1.json",
@@ -8290,7 +8290,7 @@
     },
     {
       "path": "tests/development/dropoff-handoffs.test.mts",
-      "sha256": "af2d6f92d2151e89d7a2ea39121483249f7e135d96e1ccd91715b13ad65ef64d"
+      "sha256": "157193dd3b56abe565610ebedfbf6d961ad2ad5158f1553a060ad73911527e6d"
     },
     {
       "path": "tests/development/dropoff-handoffs-helpers.mts",
