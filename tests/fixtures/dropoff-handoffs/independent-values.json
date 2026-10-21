@@ -1,0 +1,33 @@
+{
+  "fixture_id":"FIX-M20-G03-01-02-03",
+  "qualification":"synthetic_only",
+  "oracle_basis":"The original credential covers two item lines and three physical units. Only explicit source unit observations count. Outstanding includes rejected and disputed units; neither custody evidence nor a correction performs warehouse inspection or financial settlement.",
+  "customer_id":"C-1001",
+  "case_id":"case_one",
+  "native_return_id":"gid://shopify/Return/900",
+  "contract":"rifare-dropoff-handoff-fixture-v1",
+  "site_id":"main-site",
+  "destination_id":"main-destination",
+  "method_id":"qr-bag",
+  "items":[
+    {"line_id":"alpha","item_id":"shirt","category":"fragile","quantity":2},
+    {"line_id":"beta","item_id":"hat","category":"accessory","quantity":1}
+  ],
+  "units":[{"line_id":"alpha","ordinal":1},{"line_id":"alpha","ordinal":2},{"line_id":"beta","ordinal":1}],
+  "alpha_both":[{"line_id":"alpha","ordinal":1,"disposition":"accepted","reason":"accepted"},{"line_id":"alpha","ordinal":2,"disposition":"accepted","reason":"accepted"}],
+  "alpha_one":[{"line_id":"alpha","ordinal":1,"disposition":"accepted","reason":"accepted"}],
+  "beta_one":[{"line_id":"beta","ordinal":1,"disposition":"accepted","reason":"accepted"}],
+  "scenarios":{
+    "empty":{"totals":{"expected":3,"accepted":0,"rejected":0,"disputed":0,"outstanding":3},"items":[{"line_id":"alpha","item_id":"shirt","expected":2,"accepted":0,"rejected":0,"disputed":0,"outstanding":2},{"line_id":"beta","item_id":"hat","expected":1,"accepted":0,"rejected":0,"disputed":0,"outstanding":1}]},
+    "alpha_both":{"totals":{"expected":3,"accepted":2,"rejected":0,"disputed":0,"outstanding":1},"items":[{"line_id":"alpha","item_id":"shirt","expected":2,"accepted":2,"rejected":0,"disputed":0,"outstanding":0},{"line_id":"beta","item_id":"hat","expected":1,"accepted":0,"rejected":0,"disputed":0,"outstanding":1}]},
+    "alpha_one":{"totals":{"expected":3,"accepted":1,"rejected":0,"disputed":0,"outstanding":2},"items":[{"line_id":"alpha","item_id":"shirt","expected":2,"accepted":1,"rejected":0,"disputed":0,"outstanding":1},{"line_id":"beta","item_id":"hat","expected":1,"accepted":0,"rejected":0,"disputed":0,"outstanding":1}]},
+    "mixed":{"totals":{"expected":3,"accepted":1,"rejected":1,"disputed":0,"outstanding":2},"items":[{"line_id":"alpha","item_id":"shirt","expected":2,"accepted":1,"rejected":0,"disputed":0,"outstanding":1},{"line_id":"beta","item_id":"hat","expected":1,"accepted":0,"rejected":1,"disputed":0,"outstanding":1}]},
+    "one_disputed":{"totals":{"expected":3,"accepted":1,"rejected":0,"disputed":1,"outstanding":2},"items":[{"line_id":"alpha","item_id":"shirt","expected":2,"accepted":1,"rejected":0,"disputed":1,"outstanding":1},{"line_id":"beta","item_id":"hat","expected":1,"accepted":0,"rejected":0,"disputed":0,"outstanding":1}]},
+    "both_disputed":{"totals":{"expected":3,"accepted":0,"rejected":0,"disputed":2,"outstanding":3},"items":[{"line_id":"alpha","item_id":"shirt","expected":2,"accepted":0,"rejected":0,"disputed":2,"outstanding":2},{"line_id":"beta","item_id":"hat","expected":1,"accepted":0,"rejected":0,"disputed":0,"outstanding":1}]},
+    "alpha_one_beta":{"totals":{"expected":3,"accepted":2,"rejected":0,"disputed":0,"outstanding":1},"items":[{"line_id":"alpha","item_id":"shirt","expected":2,"accepted":1,"rejected":0,"disputed":0,"outstanding":1},{"line_id":"beta","item_id":"hat","expected":1,"accepted":1,"rejected":0,"disputed":0,"outstanding":0}]},
+    "all_one_disputed":{"totals":{"expected":3,"accepted":2,"rejected":0,"disputed":1,"outstanding":1},"items":[{"line_id":"alpha","item_id":"shirt","expected":2,"accepted":1,"rejected":0,"disputed":1,"outstanding":1},{"line_id":"beta","item_id":"hat","expected":1,"accepted":1,"rejected":0,"disputed":0,"outstanding":0}]},
+    "all":{"totals":{"expected":3,"accepted":3,"rejected":0,"disputed":0,"outstanding":0},"items":[{"line_id":"alpha","item_id":"shirt","expected":2,"accepted":2,"rejected":0,"disputed":0,"outstanding":0},{"line_id":"beta","item_id":"hat","expected":1,"accepted":1,"rejected":0,"disputed":0,"outstanding":0}]}
+  },
+  "downstream":{"warehouse_state":"not_started","warehouse_received":0,"inspection":"pending","stock_effects":0,"financial_effects":0},
+  "above_100_unit_positive_control":"not_assigned"
+}
