@@ -4,7 +4,17 @@ The current source includes the bounded local **M20-G03 item-level drop-off
 handoff** implementation. Start with the [architecture](ARCHITECTURE.md) for
 existing modules and [roadmap](ROADMAP.md) for remaining work.
 
-## Current command-consumer checkpoint
+## Current original-command checkpoint
+
+**RCG-4B-C2 — durable original command claims** is implemented under
+[ADR-0076](decisions/0076-durable-delegated-command-claims.md); integrated focused
+verification and independent reviews are in progress. The [journal](DELEGATED-COMMAND-CLAIMS.md)
+retains complete P03 originals and immutable unverified observations, including
+privacy/hold/restore handling and terminal duplicate refusal. The slice also
+repairs C1's missing additive adapter-catalog registration. It installs no
+transport or execution authority. See the [current work record](../work/records/RCG-4B-C2.md).
+
+## Previous command-consumer checkpoint
 
 **RCG-4B-C1 — delegated-use command consumer** is complete within the bounded
 [ADR-0075](decisions/0075-delegated-command-consumer.md) assignment. It implements the pinned
@@ -49,10 +59,10 @@ protected Flow request/proof ingress. The explicit default-off host, public
 Gateway/wallet selection and deployed serving qualification remain open. See the
 [provider checkpoint and exact contracts](DELEGATED-COMMAND-CONSUMER.md#provider-and-next-integration).
 
-After the local codec prerequisite, the next dependency is the qualified public
+After the local codec and original-command journal prerequisites, the next dependency is the qualified public
 authentication/current-state, start/final-use and original-result contract. Once
-available, assign the bounded **RCG-4B public transport and original-claim
-composition**, then the complete isolated **RCG-5 cross-service journey** and connected
+available, assign the bounded **RCG-4B public transport, authenticated namespace and native purchase
+binding composition**, then the complete isolated **RCG-5 cross-service journey** and connected
 **RCG-6 profile**. Preserve original operation recovery and Rifare's execution,
 budget, reservation and business-idempotency ownership. Do not rebuild the landed
 receipt UI or bridge the public contract gap through private provider storage.

@@ -17,6 +17,7 @@ import { preflightFollowups,revokeFollowupsForRestore } from './journey-followup
 import {preflightLoyaltyRedemptions,revokeLoyaltyRedemptionsForRestore} from './loyalty-redemption-privacy.mts';
 import {preflightDropoffCredentials,revokeDropoffCredentialsForRestore} from './dropoff-credential-privacy.mts';
 import {preflightDelegatedIntents,revokeDelegatedIntentsForRestore} from './delegated-checkout-intent-privacy.mts';
+import {preflightDelegatedCommands,revokeDelegatedCommandsForRestore} from './delegated-command-claim-privacy.mts';
 import {preflightDropoffHandoffs,revokeDropoffHandoffsForRestore} from './dropoff-handoff-privacy.mts';
 
 const LIMIT=64*1024*1024;
@@ -73,6 +74,7 @@ export function restoreRecoverySnapshot(input:{snapshot:string;destination:strin
     const restoreId='restore_'+token().slice(0,32);
     k.transaction(()=>{
       preflightDelegatedIntents(k);
+      preflightDelegatedCommands(k);
       preflightShopperMemory(k);
       preflightJourneys(k);
       preflightFollowups(k);
@@ -80,6 +82,7 @@ export function restoreRecoverySnapshot(input:{snapshot:string;destination:strin
       preflightDropoffCredentials(k);
       preflightDropoffHandoffs(k,undefined,undefined,cp);
       revokeDelegatedIntentsForRestore(k,undefined,cp);
+      revokeDelegatedCommandsForRestore(k,undefined,cp);
       revokeLoyaltyRedemptionsForRestore(k,undefined,cp);
       revokeDropoffHandoffsForRestore(k,undefined,cp);
       revokeDropoffCredentialsForRestore(k,undefined,cp);

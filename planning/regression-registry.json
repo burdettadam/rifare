@@ -2058,6 +2058,14 @@
       "contract_files": [
         "packages/adapters/delegated-commands/consumer-contract.v1.json"
       ]
+    },
+    {
+      "id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/delegated-command-claims.v1.json"
+      ]
     }
   ],
   "tests": [
@@ -27673,6 +27681,335 @@
       "runner_case_id": "RCG4BC1-NATIVE-DENY",
       "source": "tests/development/delegated-command-native.test.mts",
       "capability_id": "FEATURE-RCG-4B-C1-COMMAND-CONSUMER"
+    },
+    {
+      "id": "runtime:RCG4BC2-CLAIM-ORACLE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-CLAIM-ORACLE",
+      "source": "tests/development/delegated-command-claims.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-CLAIM-CONFIG",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-CLAIM-CONFIG",
+      "source": "tests/development/delegated-command-claims.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-CLAIM-IDENTITY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-CLAIM-IDENTITY",
+      "source": "tests/development/delegated-command-claims.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-CLAIM-SCOPE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-CLAIM-SCOPE",
+      "source": "tests/development/delegated-command-claims.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-CLAIM-PROOF-FIRST",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-CLAIM-PROOF-FIRST",
+      "source": "tests/development/delegated-command-claims.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-CLAIM-NAMESPACE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-CLAIM-NAMESPACE",
+      "source": "tests/development/delegated-command-claims.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-CLAIM-OBSERVE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-CLAIM-OBSERVE",
+      "source": "tests/development/delegated-command-claims.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-CLAIM-RESPONSE-BINDING",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-CLAIM-RESPONSE-BINDING",
+      "source": "tests/development/delegated-command-claims.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-CLAIM-HISTORY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-CLAIM-HISTORY",
+      "source": "tests/development/delegated-command-claims.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-CLAIM-RECOVERY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-CLAIM-RECOVERY",
+      "source": "tests/development/delegated-command-claims.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-CLAIM-CANCEL",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-CLAIM-CANCEL",
+      "source": "tests/development/delegated-command-claims.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-CLAIM-FINAL-CHALLENGE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-CLAIM-FINAL-CHALLENGE",
+      "source": "tests/development/delegated-command-claims.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-CLAIM-RESTART",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-CLAIM-RESTART",
+      "source": "tests/development/delegated-command-claims.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-CLAIM-TRANSACTION",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-CLAIM-TRANSACTION",
+      "source": "tests/development/delegated-command-claims.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-CLAIM-COMMIT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-CLAIM-COMMIT",
+      "source": "tests/development/delegated-command-claims.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-CLAIM-ACCESS-FENCE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-CLAIM-ACCESS-FENCE",
+      "source": "tests/development/delegated-command-claims.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-CLAIM-REENTRANT-FENCE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-CLAIM-REENTRANT-FENCE",
+      "source": "tests/development/delegated-command-claims.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-CLAIM-CLOCK",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-CLAIM-CLOCK",
+      "source": "tests/development/delegated-command-claims.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-CLAIM-INTEGRITY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-CLAIM-INTEGRITY",
+      "source": "tests/development/delegated-command-claims.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-CLAIM-NO-AUTHORITY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-CLAIM-NO-AUTHORITY",
+      "source": "tests/development/delegated-command-claims.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-PRIVACY-EXPORT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-PRIVACY-EXPORT",
+      "source": "tests/development/delegated-command-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-PRIVACY-ERASE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-PRIVACY-ERASE",
+      "source": "tests/development/delegated-command-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-PRIVACY-HELD",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-PRIVACY-HELD",
+      "source": "tests/development/delegated-command-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-PRIVACY-DETACHED",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-PRIVACY-DETACHED",
+      "source": "tests/development/delegated-command-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-PRIVACY-REASSIGNED",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-PRIVACY-REASSIGNED",
+      "source": "tests/development/delegated-command-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-PRIVACY-ERASE-REPLAY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-PRIVACY-ERASE-REPLAY",
+      "source": "tests/development/delegated-command-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-PRIVACY-UNINSTALL",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-PRIVACY-UNINSTALL",
+      "source": "tests/development/delegated-command-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-PRIVACY-RESTORE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-PRIVACY-RESTORE",
+      "source": "tests/development/delegated-command-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-PRIVACY-RESTORE-HELD",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-PRIVACY-RESTORE-HELD",
+      "source": "tests/development/delegated-command-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-PRIVACY-RESTORE-SUPPRESSION",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-PRIVACY-RESTORE-SUPPRESSION",
+      "source": "tests/development/delegated-command-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-PRIVACY-RESTORE-INTEGRITY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-PRIVACY-RESTORE-INTEGRITY",
+      "source": "tests/development/delegated-command-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-PRIVACY-IMPORT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-PRIVACY-IMPORT",
+      "source": "tests/development/delegated-command-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-PRIVACY-IMPORT-HELD",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-PRIVACY-IMPORT-HELD",
+      "source": "tests/development/delegated-command-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-PRIVACY-IMPORT-SUPPRESSION",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-PRIVACY-IMPORT-SUPPRESSION",
+      "source": "tests/development/delegated-command-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-PRIVACY-IMPORT-DESTINATION-HOLD",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-PRIVACY-IMPORT-DESTINATION-HOLD",
+      "source": "tests/development/delegated-command-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-PRIVACY-IMPORT-DESTINATION-INTEGRITY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-PRIVACY-IMPORT-DESTINATION-INTEGRITY",
+      "source": "tests/development/delegated-command-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-PRIVACY-IMPORT-SOURCE-INTEGRITY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-PRIVACY-IMPORT-SOURCE-INTEGRITY",
+      "source": "tests/development/delegated-command-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-PRIVACY-IMPORT-REPLAY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-PRIVACY-IMPORT-REPLAY",
+      "source": "tests/development/delegated-command-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-PRIVACY-EXPORT-SUPPRESSION",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-PRIVACY-EXPORT-SUPPRESSION",
+      "source": "tests/development/delegated-command-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-PROCESS-LOST-CLAIM",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-PROCESS-LOST-CLAIM",
+      "source": "tests/development/delegated-command-process.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-PROCESS-CONTENTION",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-PROCESS-CONTENTION",
+      "source": "tests/development/delegated-command-process.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-PROCESS-CONFLICT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-PROCESS-CONFLICT",
+      "source": "tests/development/delegated-command-process.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-PROCESS-LOST-OBSERVATION",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-PROCESS-LOST-OBSERVATION",
+      "source": "tests/development/delegated-command-process.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-CATALOG-REGISTRATION",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-CATALOG-REGISTRATION",
+      "source": "tests/development/delegated-command-catalog.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-CATALOG-PRESERVATION",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-CATALOG-PRESERVATION",
+      "source": "tests/development/delegated-command-catalog.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-CATALOG-PINS",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-CATALOG-PINS",
+      "source": "tests/development/delegated-command-catalog.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-CATALOG-LIMITS",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-CATALOG-LIMITS",
+      "source": "tests/development/delegated-command-catalog.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
     }
   ],
   "protected_files": [

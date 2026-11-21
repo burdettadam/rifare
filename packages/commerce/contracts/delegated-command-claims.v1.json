@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "qualification": "candidate_contract_only",
+  "owner": "DelegatedCommandClaims over the unchanged C1 codec, native customer checks and commerce_support_documents",
+  "document_kind": "delegated_command_claim",
+  "protocol_candidate": "6126da7619e057be2ff58dd38a5d50f49891d1b3",
+  "correlation": {
+    "fields": ["provider_ref", "organization_id", "actor"],
+    "provider_ref": "Existing native ID, 1..96 ASCII letters/digits/underscore/hyphen.",
+    "organization_id": "Lowercase canonical non-nil UUID.",
+    "actor": "Existing Principal type, restricted to SERVICE_ACCOUNT or MACHINE_IDENTITY. Opaque local ID matches [A-Za-z0-9][A-Za-z0-9._:/-]{0,255}; this is not URI qualification.",
+    "trust": "Complete detached constructor configuration is a local correlation expectation only, not provider identity authentication, credential, endpoint or current authority. No body or callback can replace it."
+  },
+  "methods": {
+    "claim": "Commit a validated original START_USE or FINALIZE_USE mutation. Exact repetition returns unchanged retained status; same namespace/UUID with different intent conflicts. No replacement identity, send permission or retry is created.",
+    "read": "Read original historical status under current native customer proof, preserving original resource/subject ownership.",
+    "observe": "Bind an untrusted raw response to the retained original. At most one first response is retained. Its own prior result is supplied internally to C1; later observations may change recovered only and never replace the first stored response values, times or revision.",
+    "recovery": "Derive RECOVER_RESULT from complete retained original intent. It is unsent data and creates no command claim. Retired/minimized intent cannot supply it.",
+    "cancel": "Exact revision required. Retire locally, minimize unheld personal values and mask held values. Preserve all occupied identities and challenge fingerprints."
+  },
+  "identity": "Full digest of domain separator, native tenant/store, complete configured namespace digest and original command UUID. Resource, subject, command kind and command digest are excluded so changing them cannot reclaim an occupied original identity. Full digest is checked even when the row ID abbreviates it. This is local partitioned duplicate refusal, not provider-wide or business-wide idempotency.",
+  "finalize_challenge": "Namespace/challenge UUID fingerprint is unique within tenant/store across original, observed, retired and minimized records. No START-parent or signed proof-nonce equivalence is inferred.",
+  "retention": "One canonical original request and at most one closed raw response reside in a nullable personal projection with original customer/configuration. Original command UUID, local subject/resource, identity/namespace/command/result/challenge hashes and times remain linkage-bearing refusal tombstones. No raw compact JWS, proof bytes, bearer, credential or key is stored.",
+  "state": ["claimed", "observed", "cancelled"],
+  "retirement": "Retirement and minimization are monotonic. A claim without a response never expires or releases its identity. Terminal claims cannot accept observations or regain personal content. Historical provider times do not refresh local or external authority.",
+  "transaction": "Public claim/observe/cancel reject an already active SQLite transaction before any database work. The synchronous kernel owns BEGIN IMMEDIATE and final COMMIT. Typed privacy helpers compose only inside their existing owner transaction. Every write uses strict body/digest validation; updates use digest/state/revision CAS; final current native access is followed by an inert SQL identity/digest/uniqueness fence.",
+  "recovery_fence": "Claim, observe and recovery require the unchanged assertRecoveryEgress before journal work and again after the final callback-capable native access checks. Restored/migrating-store read exemptions cannot admit fresh active journal work. Historical read and cancellation remain subject to current native proof without establishing new use authority.",
+  "clock": "Safe nonnegative local integer times. created_at <= observed_at <= updated_at when observed. Mutations cannot precede retained partition timestamps or this owner's last mutation observation. Exact repetition does not refresh timestamps. An effective privacy retirement fails closed on clock rollback; a no-change repeated retirement leaves its original record unchanged without sampling a new time. Historical parsing and reads do not claim fresh authority.",
+  "privacy": "Original-subject export, hold, erasure, reassignment, suppression, uninstall and restore/import use the dedicated typed lifecycle hooks. Held bytes become inaccessible to ordinary use. Current suppression wins over replayed personal copies and copied holds. Restore/import permanently retire and minimize claims; unsuppressed held personal records cause atomic refusal. No restoration resumes work.",
+  "limits": { "maximum_body_bytes": 16384, "maximum_rows_per_validated_scan": 10000, "scan_scope": "Normal calls select one tenant/store. Whole-database privacy/restore scans share the same bound and fail closed above it.", "row_version": 1, "retained_responses": 1, "automatic_retries": 0 },
+  "output": {
+    "evidence_status": "historical_unverified_observation",
+    "observation_origin": "local_unverified_input",
+    "execution_authorized": false,
+    "provider_authenticated": false,
+    "receipt_signature_verified": false
+  },
+  "effects": "Dedicated local document writes only. Native proof checks can update session last_seen. No network, URI fetch, operation/work/lease/payment/order/source effect, receipt verification, ReceiptContextSource, evidence_verified intent, callback or public route.",
+  "remaining": ["authenticated provider identity", "current native purchase binding", "public transport", "remote outcome reconciliation", "business idempotency and execution", "production qualification"]
+}

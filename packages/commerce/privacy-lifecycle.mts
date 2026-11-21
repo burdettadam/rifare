@@ -4,6 +4,7 @@ import { exact,id,integer } from './kernel.mts';
 import { canonical,contentDigest } from './configuration-values.mts';
 import { subjectHash } from './data-guards.mts';
 import {hasDelegatedIntentSubject,delegatedIntentResourceSubjects,exportDelegatedIntentSubject,eraseDelegatedIntents,revokeDelegatedIntentsForUninstall} from './delegated-checkout-intent-privacy.mts';
+import {hasDelegatedCommandSubject,delegatedCommandResourceSubjects,exportDelegatedCommandSubject,eraseDelegatedCommands,revokeDelegatedCommandsForUninstall} from './delegated-command-claim-privacy.mts';
 import {hasLoyaltyRedemptionSubject,exportLoyaltyRedemptionSubject,eraseLoyaltyRedemptionSubject,eraseLoyaltyRedemptionResources,loyaltyRedemptionResourceSubjects,revokeLoyaltyRedemptionsForUninstall} from './loyalty-redemption-privacy.mts';
 import {eraseDropoffCredentialSubject,eraseDropoffCredentialResources,dropoffCredentialResourceSubjects,exportDropoffCredentialSubject,hasDropoffCredentialSubject,revokeDropoffCredentialsForUninstall} from './dropoff-credential-privacy.mts';
 import {eraseDropoffHandoffs,revokeDropoffHandoffsForUninstall} from './dropoff-handoff-privacy.mts';
@@ -260,6 +261,7 @@ export function eraseSelected(k:CommerceKernel,s:Row,ids:string[],hash:string,at
   const giftCases=all(k,'commerce_gift_cases',t,st),recipients=new Set([...all(k,'commerce_resources',t,st).filter(r=>r.kind==='order').map(r=>JSON.parse(r.payload).gift_facts?.recipient_customer_id),...giftCases.map(r=>JSON.parse(r.body).recipient_customer_id)].filter((c:unknown)=>typeof c==='string'&&subjectHash(t,st,c)===hash));
   for(const customer of recipients){eraseGiftCaseData(k,s,giftCases.filter(r=>JSON.parse(r.body).recipient_customer_id===customer).map(r=>r.case_id),hash);eraseGiftRecipient(k,s,String(customer));}
   for(const resource of ids)k.db.prepare('INSERT OR IGNORE INTO commerce_privacy_resources VALUES(?,?,?,?,?)').run(t,st,resource,hash,at);
+  eraseDelegatedCommands(k,t,st,[hash],ids);
   eraseDelegatedIntents(k,t,st,[hash],ids);
   eraseGrowthSubject(k,t,st,ids,hash);
   eraseDropoffHandoffs(k,t,st,[hash],ids);
@@ -331,13 +333,14 @@ export class PrivacyLifecycle {
     return k.transaction(()=>{k.authorize(scope,'privacy.manage');const rs=resources(k,s,customer),ids=rs.map(r=>r.id);
       const gifts=all(k,'commerce_resources',s.tenant_id,s.store_id).filter(r=>r.kind==='order'&&JSON.parse(r.payload).gift_facts?.recipient_customer_id===customer).map(r=>{const g=JSON.parse(r.payload).gift_facts;return {gift_id:g.gift_id,lines:g.lines,allowed_outcomes:g.allowed_outcomes};});
       const imageGiftCaseIds=imageRecipientCaseIds(k,s.tenant_id,s.store_id,customer);
+      const delegated_command_claim_records=exportDelegatedCommandSubject(k,s.tenant_id,s.store_id,subjectHash(s.tenant_id,s.store_id,customer));
       const delegated_checkout_intent_records=exportDelegatedIntentSubject(k,s.tenant_id,s.store_id,subjectHash(s.tenant_id,s.store_id,customer));
       const shopper_memory_records=exportShopperMemorySubject(k,s.tenant_id,s.store_id,subjectHash(s.tenant_id,s.store_id,customer));
       const journey_records=exportJourneySubject(k,s.tenant_id,s.store_id,subjectHash(s.tenant_id,s.store_id,customer));
       const journey_followup_records=exportFollowupSubject(k,s.tenant_id,s.store_id,subjectHash(s.tenant_id,s.store_id,customer));
       const dropoff_credential_records=exportDropoffCredentialSubject(k,s.tenant_id,s.store_id,subjectHash(s.tenant_id,s.store_id,customer));
       const loyalty_redemption_records=exportLoyaltyRedemptionSubject(k,s.tenant_id,s.store_id,subjectHash(s.tenant_id,s.store_id,customer));
-      if(!rs.length&&!gifts.length&&!imageGiftCaseIds.length&&!shopper_memory_records.length&&!journey_records.length&&!journey_followup_records.length&&!loyalty_redemption_records.length&&!dropoff_credential_records.length&&!delegated_checkout_intent_records.length)throw new Error('NOT_FOUND');
+      if(!rs.length&&!gifts.length&&!imageGiftCaseIds.length&&!shopper_memory_records.length&&!journey_records.length&&!journey_followup_records.length&&!loyalty_redemption_records.length&&!dropoff_credential_records.length&&!delegated_checkout_intent_records.length&&!delegated_command_claim_records.length)throw new Error('NOT_FOUND');
       const giftCaseIds=all(k,'commerce_gift_cases',s.tenant_id,s.store_id).map(r=>r.case_id);
       const cases=all(k,'commerce_cases',s.tenant_id,s.store_id).filter(r=>ids.includes(r.resource_id)&&!giftCaseIds.includes(r.id));
       const caseIds=cases.map(r=>r.id),subjectRecord=(r:Row)=>ids.includes(r.resource_id)&&(!r.case_id||caseIds.includes(r.case_id))&&!(r.source_kind==='case'&&giftCaseIds.includes(r.source_id)),operations=all(k,'commerce_operations',s.tenant_id,s.store_id).filter(subjectRecord);
@@ -372,7 +375,7 @@ export class PrivacyLifecycle {
       const inventory_planning_records=exportInventoryPlanningSubject(k,s.tenant_id,s.store_id,ids,customer,subjectHash(s.tenant_id,s.store_id,customer));
       const ecosystem_records=exportEcosystemSubject(k,s.tenant_id,s.store_id,ids,customer,subjectHash(s.tenant_id,s.store_id,customer));
       const image_assistance_records=exportImageRecords(k,s.tenant_id,s.store_id,[...caseIds,...imageGiftCaseIds]);
-      const result={delegated_checkout_intent_records,dropoff_credential_records,loyalty_redemption_records,journey_followup_records,journey_records,shopper_memory_records,image_assistance_records,ecosystem_records,inventory_planning_records,extended_service_records,growth_records,warehouse_inventory_records,packing_records,shipping_records,woocommerce_records,return_assistance_records,exchange_history_records,support_records,analytics_records,order_edit_records,gift_returns:gifts,schema_version:1,tenant_id:s.tenant_id,store_id:s.store_id,subject_ref:subjectHash(s.tenant_id,s.store_id,customer),
+      const result={delegated_command_claim_records,delegated_checkout_intent_records,dropoff_credential_records,loyalty_redemption_records,journey_followup_records,journey_records,shopper_memory_records,image_assistance_records,ecosystem_records,inventory_planning_records,extended_service_records,growth_records,warehouse_inventory_records,packing_records,shipping_records,woocommerce_records,return_assistance_records,exchange_history_records,support_records,analytics_records,order_edit_records,gift_returns:gifts,schema_version:1,tenant_id:s.tenant_id,store_id:s.store_id,subject_ref:subjectHash(s.tenant_id,s.store_id,customer),
         resources:rs.map(r=>k.project(r)),attachments:all(k,'commerce_attachments',s.tenant_id,s.store_id).filter(subjectRecord).map(r=>({id:r.id,resource_id:r.resource_id,content:JSON.parse(r.content)})),
         knowledge:all(k,'commerce_knowledge',s.tenant_id,s.store_id).filter(subjectRecord),
         tasks,assistance:all(k,'commerce_assistance_receipts',s.tenant_id,s.store_id).filter(r=>!isImageRecord(r)&&tasks.some(t=>t.id===r.task_id)),
@@ -391,7 +394,7 @@ export class PrivacyLifecycle {
   hold(scope:Scope,input:unknown) {
     const k=this.#k,p=exact(input,['customer_id','reason','authority_ref','expires_at']);id(p.customer_id);id(p.authority_ref);integer(p.expires_at,1);
     if(!['dispute','retention_obligation','investigation'].includes(p.reason)||p.expires_at<=k.clock()||p.expires_at>k.clock()+366*86400000)throw new Error('INVALID_INPUT');
-    return k.transaction(()=>{const s=k.authorize(scope,'privacy.manage');if(!resources(k,s,p.customer_id).length&&!recipientResources(k,s,p.customer_id).length&&!hasLoyaltyRedemptionSubject(k,s.tenant_id,s.store_id,subjectHash(s.tenant_id,s.store_id,p.customer_id))&&!hasDropoffCredentialSubject(k,s.tenant_id,s.store_id,subjectHash(s.tenant_id,s.store_id,p.customer_id))&&!hasDelegatedIntentSubject(k,s.tenant_id,s.store_id,subjectHash(s.tenant_id,s.store_id,p.customer_id)))throw new Error('NOT_FOUND');const hash=subjectHash(s.tenant_id,s.store_id,p.customer_id);
+    return k.transaction(()=>{const s=k.authorize(scope,'privacy.manage');if(!resources(k,s,p.customer_id).length&&!recipientResources(k,s,p.customer_id).length&&!hasLoyaltyRedemptionSubject(k,s.tenant_id,s.store_id,subjectHash(s.tenant_id,s.store_id,p.customer_id))&&!hasDropoffCredentialSubject(k,s.tenant_id,s.store_id,subjectHash(s.tenant_id,s.store_id,p.customer_id))&&!hasDelegatedCommandSubject(k,s.tenant_id,s.store_id,subjectHash(s.tenant_id,s.store_id,p.customer_id))&&!hasDelegatedIntentSubject(k,s.tenant_id,s.store_id,subjectHash(s.tenant_id,s.store_id,p.customer_id)))throw new Error('NOT_FOUND');const hash=subjectHash(s.tenant_id,s.store_id,p.customer_id);
       k.db.prepare(`INSERT INTO commerce_privacy_holds VALUES(?,?,?,?,?,?,0) ON CONFLICT(tenant_id,store_id,subject_hash) DO UPDATE SET reason=excluded.reason,authority_ref=excluded.authority_ref,expires_at=excluded.expires_at,released=0`).run(s.tenant_id,s.store_id,hash,p.reason,p.authority_ref,p.expires_at);
       event(k,s,hash,'hold_created',p.reason);return {subject_hash:hash,expires_at:p.expires_at};});
   }
@@ -404,24 +407,27 @@ export class PrivacyLifecycle {
     return k.transaction(()=>{const s=k.authorize(scope,'privacy.manage');storageInventoryCurrent(k);const hash=subjectHash(s.tenant_id,s.store_id,customer);
       const owned=resources(k,s,customer),related=new Set([customer,...recipientResources(k,s,customer).map(r=>r.customer_id),...owned.map(r=>JSON.parse(r.payload).gift_facts?.recipient_customer_id),...all(k,'commerce_gift_cases',s.tenant_id,s.store_id).filter(r=>owned.some(o=>o.id===r.resource_id)).map(r=>JSON.parse(r.body).recipient_customer_id)].filter(Boolean));
       const hashes=new Set([...related].map(c=>subjectHash(s.tenant_id,s.store_id,c)));
+      for(const subject of delegatedCommandResourceSubjects(k,s.tenant_id,s.store_id,owned.map(r=>r.id)))hashes.add(subject);
       for(const subject of delegatedIntentResourceSubjects(k,s.tenant_id,s.store_id,owned.map(r=>r.id)))hashes.add(subject);
       for(const subject of loyaltyRedemptionResourceSubjects(k,s.tenant_id,s.store_id,owned.map(r=>r.id)))hashes.add(subject);
       for(const subject of dropoffCredentialResourceSubjects(k,s.tenant_id,s.store_id,owned.map(r=>r.id)))hashes.add(subject);
       const hold=[...hashes].map(subject=>k.db.prepare('SELECT reason,authority_ref,expires_at FROM commerce_privacy_holds WHERE tenant_id=? AND store_id=? AND subject_hash=? AND released=0 AND expires_at>?').get(s.tenant_id,s.store_id,subject,k.clock())).find(Boolean);
-      if(hold){eraseDelegatedIntents(k,s.tenant_id,s.store_id,[...hashes],owned.map(r=>r.id),false);eraseDropoffHandoffs(k,s.tenant_id,s.store_id,[...hashes],owned.map(r=>r.id),false);for(const subject of hashes)eraseDropoffCredentialSubject(k,s.tenant_id,s.store_id,subject,false);eraseDropoffCredentialResources(k,s.tenant_id,s.store_id,owned.map(r=>r.id),false);event(k,s,hash,'erasure_held','configured_hold');return {status:'held',hold,erased:false};}
+      if(hold){eraseDelegatedCommands(k,s.tenant_id,s.store_id,[...hashes],owned.map(r=>r.id),false);eraseDelegatedIntents(k,s.tenant_id,s.store_id,[...hashes],owned.map(r=>r.id),false);eraseDropoffHandoffs(k,s.tenant_id,s.store_id,[...hashes],owned.map(r=>r.id),false);for(const subject of hashes)eraseDropoffCredentialSubject(k,s.tenant_id,s.store_id,subject,false);eraseDropoffCredentialResources(k,s.tenant_id,s.store_id,owned.map(r=>r.id),false);event(k,s,hash,'erasure_held','configured_hold');return {status:'held',hold,erased:false};}
       if(k.db.prepare('SELECT 1 FROM commerce_privacy_subjects WHERE tenant_id=? AND store_id=? AND subject_hash=?').get(s.tenant_id,s.store_id,hash)){
         const retained=k.db.prepare('SELECT resource_id FROM commerce_privacy_resources WHERE tenant_id=? AND store_id=? AND subject_hash=?').all(s.tenant_id,s.store_id,hash) as Row[];
+        eraseDelegatedCommands(k,s.tenant_id,s.store_id,[hash],[...new Set([...owned.map(r=>r.id),...retained.map(r=>r.resource_id)])]);
         eraseDelegatedIntents(k,s.tenant_id,s.store_id,[hash],[...new Set([...owned.map(r=>r.id),...retained.map(r=>r.resource_id)])]);
         eraseDropoffHandoffs(k,s.tenant_id,s.store_id,[hash],[...new Set([...owned.map(r=>r.id),...retained.map(r=>r.resource_id)])]);
         eraseDropoffCredentialResources(k,s.tenant_id,s.store_id,[...new Set([...owned.map(r=>r.id),...retained.map(r=>r.resource_id)])]);
         eraseDropoffCredentialSubject(k,s.tenant_id,s.store_id,hash);return {status:'already_erased'};
       }
-      const rs=resources(k,s,customer),giftCount=all(k,'commerce_resources',s.tenant_id,s.store_id).filter(r=>r.kind==='order'&&JSON.parse(r.payload).gift_facts?.recipient_customer_id===customer).length+all(k,'commerce_gift_cases',s.tenant_id,s.store_id).filter(r=>JSON.parse(r.body).recipient_customer_id===customer).length;if(!rs.length&&!giftCount&&!hasShopperMemorySubject(k,s.tenant_id,s.store_id,hash)&&!hasJourneySubject(k,s.tenant_id,s.store_id,hash)&&!hasFollowupSubject(k,s.tenant_id,s.store_id,hash)&&!hasLoyaltyRedemptionSubject(k,s.tenant_id,s.store_id,hash)&&!hasDropoffCredentialSubject(k,s.tenant_id,s.store_id,hash)&&!hasDelegatedIntentSubject(k,s.tenant_id,s.store_id,hash))throw new Error('NOT_FOUND');return eraseSelected(k,s,rs.map(r=>r.id),hash,k.clock());});
+      const rs=resources(k,s,customer),giftCount=all(k,'commerce_resources',s.tenant_id,s.store_id).filter(r=>r.kind==='order'&&JSON.parse(r.payload).gift_facts?.recipient_customer_id===customer).length+all(k,'commerce_gift_cases',s.tenant_id,s.store_id).filter(r=>JSON.parse(r.body).recipient_customer_id===customer).length;if(!rs.length&&!giftCount&&!hasShopperMemorySubject(k,s.tenant_id,s.store_id,hash)&&!hasJourneySubject(k,s.tenant_id,s.store_id,hash)&&!hasFollowupSubject(k,s.tenant_id,s.store_id,hash)&&!hasLoyaltyRedemptionSubject(k,s.tenant_id,s.store_id,hash)&&!hasDropoffCredentialSubject(k,s.tenant_id,s.store_id,hash)&&!hasDelegatedIntentSubject(k,s.tenant_id,s.store_id,hash)&&!hasDelegatedCommandSubject(k,s.tenant_id,s.store_id,hash))throw new Error('NOT_FOUND');return eraseSelected(k,s,rs.map(r=>r.id),hash,k.clock());});
   }
   uninstall(scope:Scope) {
     const k=this.#k;return k.transaction(()=>{const s=k.authorize(scope,'privacy.manage');storageInventoryCurrent(k);
       // Historical loyalty can refer to a case now attached to another subject.
       // Validate/minimize it before that current subject's native preview erasure.
+      revokeDelegatedCommandsForUninstall(k,s.tenant_id,s.store_id);
       revokeDelegatedIntentsForUninstall(k,s.tenant_id,s.store_id);
       revokeLoyaltyRedemptionsForUninstall(k,s.tenant_id,s.store_id);
       revokeDropoffHandoffsForUninstall(k,s.tenant_id,s.store_id);

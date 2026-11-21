@@ -11,7 +11,9 @@ The implementation is
 Its [local subset contract](../packages/adapters/delegated-commands/consumer-contract.v1.json)
 and [assignment](decisions/0075-delegated-command-consumer.md) define the finite
 scope. Actual candidates, verification and independent reviews belong in the
-[work record](../work/records/RCG-4B-C1.md).
+[work record](../work/records/RCG-4B-C1.md). The separate
+[RCG-4B-C2 journal](DELEGATED-COMMAND-CLAIMS.md) now owns durable local originals
+and immutable unverified observations, with typed privacy and restore handling.
 
 ## Available operations
 
@@ -162,7 +164,8 @@ wallet/consumer contract is installed; the human lifecycle route cannot be used
 as a machine-use route. The Protocol pin and this codec's scope are unchanged.
 
 Continue RCG-4B with the qualified public authentication/current-state, use and
-original-outcome contracts, durable original claims and actual transport. Reuse
+original-outcome contracts, authenticated namespace/native purchase binding and
+actual transport around the existing local journal. Reuse
 the landed provider owners through their eventual selected public composition.
 Do not invent a route or read private provider storage. Public wallet contracts,
 certificate lifecycle, selected required attestation and deployed request/receipt

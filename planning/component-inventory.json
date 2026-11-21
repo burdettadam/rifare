@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "id": "rifare-source-inventory",
-  "revision": 56,
+  "revision": 57,
   "status": "proposed",
   "components": [
     {
@@ -1647,7 +1647,18 @@
         "tests/fixtures/delegated-commands/consumer-vectors.v1.json",
         "docs/DELEGATED-COMMAND-CONSUMER.md",
         "docs/decisions/0076-durable-delegated-command-claims.md",
-        "work/records/RCG-4B-C2.md"
+        "work/records/RCG-4B-C2.md",
+        "docs/DELEGATED-COMMAND-CLAIMS.md",
+        "packages/commerce/delegated-command-claims.mts",
+        "packages/commerce/delegated-command-claim-records.mts",
+        "packages/commerce/delegated-command-claim-privacy.mts",
+        "packages/commerce/contracts/delegated-command-claims.v1.json",
+        "tests/development/delegated-command-claims.test.mts",
+        "tests/development/delegated-command-claim-helpers.mts",
+        "tests/development/delegated-command-privacy.test.mts",
+        "tests/development/delegated-command-process.test.mts",
+        "tests/development/delegated-command-process-child.mts",
+        "tests/development/delegated-command-catalog.test.mts"
       ],
       "notices": []
     },

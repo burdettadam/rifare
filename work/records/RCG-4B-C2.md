@@ -1,6 +1,6 @@
 # RCG-4B-C2 — Durable original delegated-command claims
 
-State: assigned; implementation and review pending.
+State: implemented; integrated verification and independent reviews pending.
 Integration owner: root delegated maintainer.
 Implementation writer: `command_consumer_impl`, separate assigned worktree.
 Independent reviewers: `commerce_checkpoint_audit` (authority/security),
@@ -24,7 +24,11 @@ this is an actual prior omission, not a missing-new-module test failure.
 
 ## Evidence and remaining boundary
 
-Implementation, focused behavioral evidence, real child-process durability and
-independent reviews are pending. Current provider head remains 1063f32b and
+The writer implementation is integrated from native 247dc15 and its recovery-fence
+correction 5cafb07. Both exploratory writer runs passed twenty cases; only the
+second includes quarantine introduced by the final native guard. Root added typed
+privacy/restore hooks, nineteen lifecycle cases, four real process cases and four
+bounded catalog cases. Integrated fixed-candidate verification and independent
+reviews are pending. Current provider head remains 1063f32b and
 Protocol remains 6126da7. Public serving and authentication, independent purchase
 binding, full connected execution and formal qualification remain open.

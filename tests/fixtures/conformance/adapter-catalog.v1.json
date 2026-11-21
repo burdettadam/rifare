@@ -22,6 +22,7 @@
     "packages/adapters/checkout-quote-fixture-source.mts",
     "packages/adapters/claims-fixture-source.mts",
     "packages/adapters/claims-source-guards.mts",
+    "packages/adapters/delegated-commands/command-codec.mts",
     "packages/adapters/delegated-receipts/jose-verifier.mts",
     "packages/adapters/delegated-receipts/strict-json.mts",
     "packages/adapters/delivery-trial-source-guards.mts",
@@ -5673,6 +5674,184 @@
           "direct_fixtures": []
         }
       ]
+    },
+    {
+      "id": "delegated_use_commands",
+      "kind": "diagnostic",
+      "source_files": [
+        {
+          "path": "packages/adapters/delegated-commands/command-codec.mts",
+          "sha256": "ac201f5f9202ce5df438e89afdfa34d79fd5e049a311d2139c4e72fa209fcf3c"
+        }
+      ],
+      "version": "source-sha256:ac201f5f9202ce5df438e89afdfa34d79fd5e049a311d2139c4e72fa209fcf3c",
+      "api_version": "optional-p03-delegated-command-v1",
+      "external_version": null,
+      "external_account": null,
+      "external_scopes_attested": false,
+      "source_oracle": "Original synthetic canonical-byte/digest fixtures and unchanged C1 cases validate a candidate-only P03 codec. Recovery keeps the full original mutation; receipt correlation is exact bytes only. No provider authentication, receipt signature verification, transport or execution.",
+      "operations": [
+        {
+          "id": "delegated.command.encode",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "RCG4BC1-CODEC-ORACLE",
+              "name": "RCG4BC1-CODEC-ORACLE independent canonical bodies and mutation digests match",
+              "path": "tests/development/delegated-command-codec.test.mts",
+              "sha256": "3c0dc8aa32ab8aca829ffba8763574b82b1de4f0583cbb99a9a29f54d929d91b"
+            },
+            {
+              "id": "RCG4BC1-CODEC-CANONICAL",
+              "name": "RCG4BC1-CODEC-CANONICAL member order and equivalent escapes retain original digest",
+              "path": "tests/development/delegated-command-codec.test.mts",
+              "sha256": "3c0dc8aa32ab8aca829ffba8763574b82b1de4f0583cbb99a9a29f54d929d91b"
+            },
+            {
+              "id": "RCG4BC1-CODEC-DIGEST-SCOPE",
+              "name": "RCG4BC1-CODEC-DIGEST-SCOPE every original mutation field participates in identity",
+              "path": "tests/development/delegated-command-codec.test.mts",
+              "sha256": "3c0dc8aa32ab8aca829ffba8763574b82b1de4f0583cbb99a9a29f54d929d91b"
+            },
+            {
+              "id": "RCG4BC1-CODEC-CLOSED-REQUEST",
+              "name": "RCG4BC1-CODEC-CLOSED-REQUEST authority and other-command fields are refused",
+              "path": "tests/development/delegated-command-codec.test.mts",
+              "sha256": "3c0dc8aa32ab8aca829ffba8763574b82b1de4f0583cbb99a9a29f54d929d91b"
+            },
+            {
+              "id": "RCG4BC1-CODEC-SCALARS",
+              "name": "RCG4BC1-CODEC-SCALARS identifiers digests revisions and absolute URI subset are strict",
+              "path": "tests/development/delegated-command-codec.test.mts",
+              "sha256": "3c0dc8aa32ab8aca829ffba8763574b82b1de4f0583cbb99a9a29f54d929d91b"
+            },
+            {
+              "id": "RCG4BC1-CODEC-STRICT-JSON",
+              "name": "RCG4BC1-CODEC-STRICT-JSON duplicate decoded names malformed bytes and numeric aliases fail",
+              "path": "tests/development/delegated-command-codec.test.mts",
+              "sha256": "3c0dc8aa32ab8aca829ffba8763574b82b1de4f0583cbb99a9a29f54d929d91b"
+            },
+            {
+              "id": "RCG4BC1-CODEC-SNAPSHOT",
+              "name": "RCG4BC1-CODEC-SNAPSHOT detached native data refuses accessors and caller alias mutation",
+              "path": "tests/development/delegated-command-codec.test.mts",
+              "sha256": "3c0dc8aa32ab8aca829ffba8763574b82b1de4f0583cbb99a9a29f54d929d91b"
+            },
+            {
+              "id": "RCG4BC1-CODEC-BOUNDS",
+              "name": "RCG4BC1-CODEC-BOUNDS complete wire byte limits apply to commands and responses",
+              "path": "tests/development/delegated-command-codec.test.mts",
+              "sha256": "3c0dc8aa32ab8aca829ffba8763574b82b1de4f0583cbb99a9a29f54d929d91b"
+            },
+            {
+              "id": "RCG4BC1-CODEC-NO-AUTHORITY",
+              "name": "RCG4BC1-CODEC-NO-AUTHORITY parsing historical metadata causes no fetch clock or trust promotion",
+              "path": "tests/development/delegated-command-codec.test.mts",
+              "sha256": "3c0dc8aa32ab8aca829ffba8763574b82b1de4f0583cbb99a9a29f54d929d91b"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "delegated.command.recover",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "RCG4BC1-CODEC-RECOVERY-ENCODING",
+              "name": "RCG4BC1-CODEC-RECOVERY-ENCODING recovery retains original identity and digest",
+              "path": "tests/development/delegated-command-codec.test.mts",
+              "sha256": "3c0dc8aa32ab8aca829ffba8763574b82b1de4f0583cbb99a9a29f54d929d91b"
+            },
+            {
+              "id": "RCG4BC1-CODEC-RECOVERY-FLAG",
+              "name": "RCG4BC1-CODEC-RECOVERY-FLAG explicit recovery requires true while duplicate mutation may recover",
+              "path": "tests/development/delegated-command-codec.test.mts",
+              "sha256": "3c0dc8aa32ab8aca829ffba8763574b82b1de4f0583cbb99a9a29f54d929d91b"
+            },
+            {
+              "id": "RCG4BC1-CODEC-RECOVERY-BINDING",
+              "name": "RCG4BC1-CODEC-RECOVERY-BINDING retained full original intent constrains recovered results",
+              "path": "tests/development/delegated-command-codec.test.mts",
+              "sha256": "3c0dc8aa32ab8aca829ffba8763574b82b1de4f0583cbb99a9a29f54d929d91b"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "delegated.response.bind",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "RCG4BC1-CODEC-START-BINDING",
+              "name": "RCG4BC1-CODEC-START-BINDING challenge preserves every original grant and operation fact",
+              "path": "tests/development/delegated-command-codec.test.mts",
+              "sha256": "3c0dc8aa32ab8aca829ffba8763574b82b1de4f0583cbb99a9a29f54d929d91b"
+            },
+            {
+              "id": "RCG4BC1-CODEC-ENVELOPE",
+              "name": "RCG4BC1-CODEC-ENVELOPE exact original identity profile and closed success envelope required",
+              "path": "tests/development/delegated-command-codec.test.mts",
+              "sha256": "3c0dc8aa32ab8aca829ffba8763574b82b1de4f0583cbb99a9a29f54d929d91b"
+            },
+            {
+              "id": "RCG4BC1-CODEC-FINAL-BINDING",
+              "name": "RCG4BC1-CODEC-FINAL-BINDING final result retains challenge decision and evidence semantics",
+              "path": "tests/development/delegated-command-codec.test.mts",
+              "sha256": "3c0dc8aa32ab8aca829ffba8763574b82b1de4f0583cbb99a9a29f54d929d91b"
+            },
+            {
+              "id": "RCG4BC1-CODEC-HISTORICAL-TIME",
+              "name": "RCG4BC1-CODEC-HISTORICAL-TIME calendar nanoseconds and original ordering stay historical",
+              "path": "tests/development/delegated-command-codec.test.mts",
+              "sha256": "3c0dc8aa32ab8aca829ffba8763574b82b1de4f0583cbb99a9a29f54d929d91b"
+            },
+            {
+              "id": "RCG4BC1-CODEC-HISTORY",
+              "name": "RCG4BC1-CODEC-HISTORY immutable prior results permit only recovered flag changes",
+              "path": "tests/development/delegated-command-codec.test.mts",
+              "sha256": "3c0dc8aa32ab8aca829ffba8763574b82b1de4f0583cbb99a9a29f54d929d91b"
+            },
+            {
+              "id": "RCG4BC1-CODEC-PRIOR-OPTIONS",
+              "name": "RCG4BC1-CODEC-PRIOR-OPTIONS prior observations and option objects are independently validated",
+              "path": "tests/development/delegated-command-codec.test.mts",
+              "sha256": "3c0dc8aa32ab8aca829ffba8763574b82b1de4f0583cbb99a9a29f54d929d91b"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "delegated.receipt.correlate",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "RCG4BC1-CODEC-RECEIPT",
+              "name": "RCG4BC1-CODEC-RECEIPT exact byte correlation does not verify a signature or retain token",
+              "path": "tests/development/delegated-command-codec.test.mts",
+              "sha256": "3c0dc8aa32ab8aca829ffba8763574b82b1de4f0583cbb99a9a29f54d929d91b"
+            },
+            {
+              "id": "RCG4BC1-CODEC-RECEIPT-FAULTS",
+              "name": "RCG4BC1-CODEC-RECEIPT-FAULTS changed oversized malformed or non-final receipt data fails",
+              "path": "tests/development/delegated-command-codec.test.mts",
+              "sha256": "3c0dc8aa32ab8aca829ffba8763574b82b1de4f0583cbb99a9a29f54d929d91b"
+            }
+          ],
+          "direct_fixtures": []
+        }
+      ]
     }
   ],
   "fixture_administration": "Seed, injected faults, and source observation setters are fixture administration, not remote provider operations. Unnamed real gateway/carrier/warehouse/ERP adapters are unavailable.",
@@ -6143,7 +6322,7 @@
     },
     {
       "path": "packages/commerce/privacy-lifecycle.mts",
-      "sha256": "c39ad6fd2b6b2b2f8f01284594ac83058bbe4196d1a8ffc4985dbaf617114bdc"
+      "sha256": "eb3eda2ceb7de0f317e30cb3203170eaf920bb234e4f4fbbe13ef54030cd11dd"
     },
     {
       "path": "packages/commerce/profile-editor.mts",
@@ -6279,7 +6458,7 @@
     },
     {
       "path": "packages/commerce/safe-recovery.mts",
-      "sha256": "fbb92a652c18a5df7f7f6444525eb3211d3b90f20f43de92a7b797833919e82b"
+      "sha256": "ac29b6d159adcccce93a828f54ec0b130d383f68f5450b760ab3877669a5893f"
     },
     {
       "path": "packages/commerce/secrets.mts",
@@ -6711,7 +6890,7 @@
     },
     {
       "path": "tests/fixtures/conformance/expected-coverage.v1.json",
-      "sha256": "3695be6b5c63ed41b45dfed2465ffa5c9df5103eadcd276d19aefa56687c07c9"
+      "sha256": "c18e6326f1c0f35f2beee88faf1e8ecc56422fea4e7f8d1fa43b29c3e4b1fce1"
     },
     {
       "path": "tests/fixtures/conformance/source-inputs.v1.json",
@@ -6891,7 +7070,7 @@
     },
     {
       "path": "packages/commerce/merchant-portability.mts",
-      "sha256": "90b036ded17897d7412e503f70fc4c63da6a17b9414af30548f2f212360be120"
+      "sha256": "12b0f2da7aa9693d23bbec1d0caf91a59e314ba2ba4fc8dfd9b5eadd0c8c6e98"
     },
     {
       "path": "packages/commerce/contracts/carrier-quotes.v1.json",
@@ -8460,6 +8639,18 @@
     {
       "path": "packages/commerce/contracts/delegated-checkout-recovery.v1.json",
       "sha256": "359ab110e73b9c9141b1590a8aa46f38ac8c5415d7300c97f9bb2e2589ea0986"
+    },
+    {
+      "path": "packages/adapters/delegated-commands/consumer-contract.v1.json",
+      "sha256": "7777755b8ebbeec7b0d68c330ae23e6d776d40812636afab94156b8435f8d145"
+    },
+    {
+      "path": "tests/fixtures/delegated-commands/consumer-vectors.v1.json",
+      "sha256": "a01e0ce41eec664f0e4275411c1d14abbbc7433bcda7934017c66f57587f5b19"
+    },
+    {
+      "path": "tests/development/delegated-command-codec.test.mts",
+      "sha256": "3c0dc8aa32ab8aca829ffba8763574b82b1de4f0583cbb99a9a29f54d929d91b"
     }
   ]
 }

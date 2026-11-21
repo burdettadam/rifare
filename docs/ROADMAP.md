@@ -18,11 +18,14 @@ The [RCG-4B-C1 command consumer](DELEGATED-COMMAND-CONSUMER.md) is also complete
 strict P03 request/result binding, original recovery and receipt-byte correlation,
 without transport or execution. All 42 focused cases and two separate original
 Protocol-vector checks pass; both independent reviews found no scoped blocker.
+The [RCG-4B-C2 journal](DELEGATED-COMMAND-CLAIMS.md) adds durable original
+command/result retention and typed privacy/restore handling; its integrated
+verification and independent reviews are recorded separately.
 At provider `1063f32`, internal use-access, exact-operation policy, mutual TLS
 and protected Flow request/proof ingress join the existing source and receipt
 owners. The explicit host, selected public Gateway/wallet contracts and deployed
 qualification remain open. Continue with the actual RCG-4B public
-transport/current-state/original-claim composition, full isolated RCG-5 journey
+transport/current-state/authenticated-namespace and native-purchase composition, full isolated RCG-5 journey
 and connected RCG-6 qualification. Local checks do not qualify those boundaries
 or formal acceptance.
 
