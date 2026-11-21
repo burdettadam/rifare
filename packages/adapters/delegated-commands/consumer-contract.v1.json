@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "qualification": "candidate_contract_only",
+  "protocol_candidate": "6126da7619e057be2ff58dd38a5d50f49891d1b3",
+  "semantics_source": "https://github.com/ElevenID/marty-protocol/blob/6126da7619e057be2ff58dd38a5d50f49891d1b3/protocol/delegated-authority/COMMANDS.md",
+  "description": "Independently implemented Rifare consumer subset. This describes the local adapter, not a copy of the upstream schemas or a qualified public Gateway transport.",
+  "request_profile": "urn:marty:delegation-command:v1",
+  "response_profile": "urn:marty:delegation-command-response:v1",
+  "supported_commands": ["START_USE", "FINALIZE_USE", "RECOVER_RESULT"],
+  "functions": {
+    "encodeDelegatedCommand": "Validate a full closed request from an object or original UTF-8 bytes, detach and freeze it, serialize using the native canonical owner and supply original command identity/digest. For recovery, command_digest is the referenced original digest, never a digest of the recovery request.",
+    "createDelegatedRecovery": "Construct a recovery request from the retained complete original START_USE or FINALIZE_USE mutation, without creating an identity or deciding whether another attempt is allowed.",
+    "bindDelegatedResponse": "Validate a successful raw response against the retained complete original mutation. Optional recovery is the exact recovery request; optional previous is the earlier raw successful response. Both are independently validated. Explicit recovery requires recovered=true; a direct response permits either flag.",
+    "correlateDelegatedReceipt": "Rebind a FINAL_USE response and compare its receipt digest against the exact supplied compact-JWS bytes. Return only a digest-matched observation without retaining the token or authenticating its signature."
+  },
+  "input_bounds": {
+    "maximum_document_utf8_bytes": 65536,
+    "maximum_json_depth": 16,
+    "maximum_json_scan_steps": 32768,
+    "maximum_uri_characters": 1024,
+    "maximum_time_characters": 64,
+    "maximum_compact_receipt_characters": 100000,
+    "revision": "Positive safe integer 1..9007199254740991. Original numeric wire spellings are nonnegative decimal integers; exponent/fraction spellings are unsupported.",
+    "uuid": "Original lowercase canonical hyphenated non-nil UUID; no trimming or repair.",
+    "uri": "Original absolute ASCII URI, nonempty scheme-specific part, no wildcard, whitespace, backslash, malformed percent escape or invalid component character. HTTP(S) requires explicit nonempty authority. Syntax validation never serializes a normalized URL and never fetches a reference.",
+    "time": "Native calendar-valid UTC Z subset, positive four-digit year and optional 1..9 fractional digits; original spelling retained. End must be strictly after start. Historical expiry is not current-authority validation.",
+    "digest": "Exact sha256: prefix followed by 64 lowercase hexadecimal digits.",
+    "json": "Native strict duplicate-aware fatal UTF-8 decoding and descriptor-checked frozen snapshots; unknown/null/foreign fields fail closed. The inherited scanner counts each whitespace character as a step, so documents under the byte ceiling can still exceed the scan limit. No unsupported command or result fallback."
+  },
+  "binding": {
+    "mutation": "Digest of the complete validated mutation via existing native canonical/contentDigest; the fixed ASCII field-name and safe-integer subset is not arbitrary RFC 8785 qualification.",
+    "start": "CHALLENGE result; exact original grant and every operation field. The challenge UUID is not a signed proof nonce.",
+    "finalize": "FINAL_USE result; exact original challenge, PERMIT or DENY and EVIDENCE_ONLY. Digest correlation does not prove the proof submission's producer or contents.",
+    "recovery": "Original command UUID/digest plus the original mutation's result kind and grant/operation/challenge checks. A prior response allows only recovered to differ; all original result values, timestamp spellings, receipt metadata and decision remain unchanged."
+  },
+  "output_authority": {
+    "execution_authorized": false,
+    "provider_authenticated": false,
+    "receipt_signature_verified": false,
+    "evidence_status": "unverified_protocol_data"
+  },
+  "effects": "Pure bounded data processing. No clock-based authority refresh, network, URI retrieval, retry, ID generation, key/trust configuration, storage, command claim, receipt-context source, purchase, payment or native commerce transition.",
+  "privacy": "Transient bounded process data only. No logging or persistence. Receipt bytes are used only for the synchronous exact-byte digest comparison and are absent from outputs; physical memory zeroization is not claimed.",
+  "remaining": ["authenticated public use transport", "current external authority and proof sources", "qualified receipt retrieval/signature context", "durable original command claims and reconciliation", "Rifare business idempotency and execution", "cross-service and production qualification"]
+}

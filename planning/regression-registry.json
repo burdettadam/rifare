@@ -2050,6 +2050,14 @@
         "packages/commerce/contracts/delegated-checkout-api.v1.json",
         "packages/commerce/contracts/delegated-checkout-intents.v1.json"
       ]
+    },
+    {
+      "id": "FEATURE-RCG-4B-C1-COMMAND-CONSUMER",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/adapters/delegated-commands/consumer-contract.v1.json"
+      ]
     }
   ],
   "tests": [
@@ -27490,6 +27498,181 @@
       "runner_case_id": "RCG5D-BROWSER-MOBILE-KEYBOARD",
       "source": "tests/development/delegated-checkout-receipt-browser.test.mts",
       "capability_id": "FEATURE-RCG-5D-RECEIPT-REVIEW"
+    },
+    {
+      "id": "runtime:RCG4BC1-CODEC-ORACLE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC1-CODEC-ORACLE",
+      "source": "tests/development/delegated-command-codec.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C1-COMMAND-CONSUMER"
+    },
+    {
+      "id": "runtime:RCG4BC1-CODEC-CANONICAL",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC1-CODEC-CANONICAL",
+      "source": "tests/development/delegated-command-codec.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C1-COMMAND-CONSUMER"
+    },
+    {
+      "id": "runtime:RCG4BC1-CODEC-DIGEST-SCOPE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC1-CODEC-DIGEST-SCOPE",
+      "source": "tests/development/delegated-command-codec.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C1-COMMAND-CONSUMER"
+    },
+    {
+      "id": "runtime:RCG4BC1-CODEC-CLOSED-REQUEST",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC1-CODEC-CLOSED-REQUEST",
+      "source": "tests/development/delegated-command-codec.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C1-COMMAND-CONSUMER"
+    },
+    {
+      "id": "runtime:RCG4BC1-CODEC-SCALARS",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC1-CODEC-SCALARS",
+      "source": "tests/development/delegated-command-codec.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C1-COMMAND-CONSUMER"
+    },
+    {
+      "id": "runtime:RCG4BC1-CODEC-STRICT-JSON",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC1-CODEC-STRICT-JSON",
+      "source": "tests/development/delegated-command-codec.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C1-COMMAND-CONSUMER"
+    },
+    {
+      "id": "runtime:RCG4BC1-CODEC-SNAPSHOT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC1-CODEC-SNAPSHOT",
+      "source": "tests/development/delegated-command-codec.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C1-COMMAND-CONSUMER"
+    },
+    {
+      "id": "runtime:RCG4BC1-CODEC-RECOVERY-ENCODING",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC1-CODEC-RECOVERY-ENCODING",
+      "source": "tests/development/delegated-command-codec.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C1-COMMAND-CONSUMER"
+    },
+    {
+      "id": "runtime:RCG4BC1-CODEC-START-BINDING",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC1-CODEC-START-BINDING",
+      "source": "tests/development/delegated-command-codec.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C1-COMMAND-CONSUMER"
+    },
+    {
+      "id": "runtime:RCG4BC1-CODEC-ENVELOPE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC1-CODEC-ENVELOPE",
+      "source": "tests/development/delegated-command-codec.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C1-COMMAND-CONSUMER"
+    },
+    {
+      "id": "runtime:RCG4BC1-CODEC-FINAL-BINDING",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC1-CODEC-FINAL-BINDING",
+      "source": "tests/development/delegated-command-codec.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C1-COMMAND-CONSUMER"
+    },
+    {
+      "id": "runtime:RCG4BC1-CODEC-HISTORICAL-TIME",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC1-CODEC-HISTORICAL-TIME",
+      "source": "tests/development/delegated-command-codec.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C1-COMMAND-CONSUMER"
+    },
+    {
+      "id": "runtime:RCG4BC1-CODEC-RECOVERY-FLAG",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC1-CODEC-RECOVERY-FLAG",
+      "source": "tests/development/delegated-command-codec.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C1-COMMAND-CONSUMER"
+    },
+    {
+      "id": "runtime:RCG4BC1-CODEC-RECOVERY-BINDING",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC1-CODEC-RECOVERY-BINDING",
+      "source": "tests/development/delegated-command-codec.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C1-COMMAND-CONSUMER"
+    },
+    {
+      "id": "runtime:RCG4BC1-CODEC-HISTORY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC1-CODEC-HISTORY",
+      "source": "tests/development/delegated-command-codec.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C1-COMMAND-CONSUMER"
+    },
+    {
+      "id": "runtime:RCG4BC1-CODEC-PRIOR-OPTIONS",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC1-CODEC-PRIOR-OPTIONS",
+      "source": "tests/development/delegated-command-codec.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C1-COMMAND-CONSUMER"
+    },
+    {
+      "id": "runtime:RCG4BC1-CODEC-RECEIPT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC1-CODEC-RECEIPT",
+      "source": "tests/development/delegated-command-codec.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C1-COMMAND-CONSUMER"
+    },
+    {
+      "id": "runtime:RCG4BC1-CODEC-RECEIPT-FAULTS",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC1-CODEC-RECEIPT-FAULTS",
+      "source": "tests/development/delegated-command-codec.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C1-COMMAND-CONSUMER"
+    },
+    {
+      "id": "runtime:RCG4BC1-CODEC-BOUNDS",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC1-CODEC-BOUNDS",
+      "source": "tests/development/delegated-command-codec.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C1-COMMAND-CONSUMER"
+    },
+    {
+      "id": "runtime:RCG4BC1-CODEC-NO-AUTHORITY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC1-CODEC-NO-AUTHORITY",
+      "source": "tests/development/delegated-command-codec.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C1-COMMAND-CONSUMER"
+    },
+    {
+      "id": "runtime:RCG4BC1-NATIVE-PREVIEW",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC1-NATIVE-PREVIEW",
+      "source": "tests/development/delegated-command-native.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C1-COMMAND-CONSUMER"
+    },
+    {
+      "id": "runtime:RCG4BC1-NATIVE-RECEIPT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC1-NATIVE-RECEIPT",
+      "source": "tests/development/delegated-command-native.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C1-COMMAND-CONSUMER"
+    },
+    {
+      "id": "runtime:RCG4BC1-NATIVE-FORGED-RECEIPT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC1-NATIVE-FORGED-RECEIPT",
+      "source": "tests/development/delegated-command-native.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C1-COMMAND-CONSUMER"
+    },
+    {
+      "id": "runtime:RCG4BC1-NATIVE-HISTORY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC1-NATIVE-HISTORY",
+      "source": "tests/development/delegated-command-native.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C1-COMMAND-CONSUMER"
+    },
+    {
+      "id": "runtime:RCG4BC1-NATIVE-DENY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC1-NATIVE-DENY",
+      "source": "tests/development/delegated-command-native.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C1-COMMAND-CONSUMER"
     }
   ],
   "protected_files": [

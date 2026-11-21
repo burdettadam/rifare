@@ -136,20 +136,25 @@ formal milestone acceptance and the full cross-service journey remain open.
 The refreshed upstream inspection on 2026-11-21 observed Marty UI main
 [`f662bb3`](https://github.com/ElevenID/marty-ui/tree/f662bb326bd0a83eb8191dc002bc3db57ec08cc3)
 and open draft [PR #1994](https://github.com/ElevenID/marty-ui/pull/1994) at
-`f226585513c7ca57148cab1dd1af7a68cab7591b`. Its
-[runtime candidate](https://github.com/ElevenID/marty-ui/blob/f226585513c7ca57148cab1dd1af7a68cab7591b/docs/delegated-use-runtime-candidate.md)
+`c44579ab81b46c4b5a55be1fd0308f0464824045`. Its
+[runtime candidate](https://github.com/ElevenID/marty-ui/blob/c44579ab81b46c4b5a55be1fd0308f0464824045/docs/delegated-use-runtime-candidate.md)
 contains retained internal `START_USE`/`FINALIZE_USE`, authenticated internal HTTP,
 actual nested JWT-VC issuer/holder verification, durable machine audit and receipt
 linkage, and concrete Flow/proof/nonce/receipt transaction ownership. Managed
 receipt signing now has a reported passing disposable TLS OpenBao/Redis gate for
 Ed25519 and ES256. These internal components should not be rebuilt in Rifare.
 
-The [internal use router](https://github.com/ElevenID/marty-ui/blob/f226585513c7ca57148cab1dd1af7a68cab7591b/rust/services/delegated-authority/USE_HTTP.md)
+The later source-owner increment adds concrete full-machine/MAP registry,
+credential-authority/status and machine-policy owners. Their source-to-proof
+composition has provider-reported local qualification; serving and deployment
+qualification remains separate.
+
+The [internal use router](https://github.com/ElevenID/marty-ui/blob/c44579ab81b46c4b5a55be1fd0308f0464824045/rust/services/delegated-authority/USE_HTTP.md)
 is explicitly assembled; no delegated-use executable or public Gateway installs
-it, and the human command host still rejects start/final use. Independently
-qualified full-machine/MAP, issuer/status, attestation and current policy sources,
-authenticated wallet/proof ingress, reviewed serving roles and the outer deployed
-HTTPS receipt adapter/production custody remain open. Public consumer contracts
+it, and the human command host still rejects start/final use. Protected workload
+identity and current use authorization, authenticated wallet/proof ingress,
+required attestation where selected, reviewed serving roles and the outer deployed
+HTTPS receipt adapter/production custody remain open. Public consumer qualification
 and unresolved-claim reconciliation also require qualification. Public MIP remains
 0.5.0, with support/discovery unchanged. These are source-inspected provider
 claims; this Rifare continuation did not rerun the provider's suites.
@@ -165,3 +170,8 @@ Gateway; do not invent routes or read private provider storage. Full RCG-5 still
 requires the actual isolated Rifare/provider/merchant journey, followed by the
 connected RCG-6 profile. Remote sender binding, managed trust, merchant execution,
 React/PostgreSQL and production qualification remain open.
+
+[RCG-4B-C1](DELEGATED-COMMAND-CONSUMER.md) adds the local P03 command codec and
+original-result binding prerequisite. It neither installs a transport nor turns
+the P03 challenge record UUID into this receipt owner's independently established
+proof nonce or current context.

@@ -14,12 +14,14 @@ cases passed on `40fc973`; both independent reviews found no scoped blocker.
 The [work record](../work/records/RCG-5D.md) binds the closing documentation to
 that tested source. This bounded local increment is complete.
 
-Provider internals now include retained start/finalize use and managed receipt
-signing, but their public Gateway host and qualified source/deployment composition
-remain open. The next delegated-checkout dependency is that public contract,
-followed by the RCG-4B current-state/final-use/original-outcome adapter, full
-isolated RCG-5 journey and connected RCG-6 qualification. Local page/process
-checks do not qualify those boundaries or formal milestone acceptance.
+The next assigned prerequisite is the [RCG-4B-C1 command consumer](DELEGATED-COMMAND-CONSUMER.md):
+strict P03 request/result binding, original recovery and receipt-byte correlation,
+without transport or execution. Provider internals now include retained use,
+managed receipt signing and concrete machine/MAP, credential/status and policy
+owners. Their public Gateway host and qualified serving composition remain open.
+After the codec, continue with the actual RCG-4B public transport/current-state/
+original-claim composition, full isolated RCG-5 journey and connected RCG-6
+qualification. Local checks do not qualify those boundaries or formal acceptance.
 
 | Area | Remaining outcome | Work entry |
 | --- | --- | --- |

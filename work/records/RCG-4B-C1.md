@@ -1,6 +1,6 @@
 # RCG-4B-C1 — Delegated-use command consumer
 
-State: assigned; implementation and verification pending.
+State: implemented candidate; integrated verification and independent review pending.
 Integration owner: root delegated maintainer.
 Implementation writer: `command_consumer_impl`, separate assigned worktree.
 Independent reviewers: `commerce_checkpoint_audit` (authority/security),
@@ -36,3 +36,20 @@ Applicable unchanged receipt regression: pending.
 Independent authority/security review: pending.
 Independent regression review: pending.
 Formal milestone acceptance: not performed.
+
+The isolated writer committed only its three assigned files as
+`de3344fdcb10120fe909b3f9e0f9fde09564949f`; root integrated identical source in
+`0096c57`. Its exploratory unit run passed 20/20. The first run passed 19/20:
+the new byte-bound test incorrectly expected a 65,536-byte whitespace-padded
+document to pass the inherited 32,768-step scanner limit. The writer corrected
+that new expectation and documented both limits without changing the existing
+parser. Both original raw reports are retained under ignored
+`evidence/rcg4bc1-writer/`; this does not replace clean integrated-candidate
+verification.
+
+The independent synthetic oracle has SHA-256
+`a01e0ce41eec664f0e4275411c1d14abbbc7433bcda7934017c66f57587f5b19`.
+Both reviewers independently recomputed its canonical mutation/recovery bodies
+and digests before implementation review. New registration adds 20 codec and
+five native composition cases to the protected 3,634 cases and one proposed
+capability to the protected 230. All 399 protected paths remain registered.

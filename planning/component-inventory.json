@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "id": "rifare-source-inventory",
-  "revision": 54,
+  "revision": 55,
   "status": "proposed",
   "components": [
     {
@@ -1639,7 +1639,13 @@
         "tests/development/delegated-checkout-receipt-review.test.mts",
         "work/records/RCG-5D.md",
         "docs/decisions/0075-delegated-command-consumer.md",
-        "work/records/RCG-4B-C1.md"
+        "work/records/RCG-4B-C1.md",
+        "packages/adapters/delegated-commands/command-codec.mts",
+        "packages/adapters/delegated-commands/consumer-contract.v1.json",
+        "tests/development/delegated-command-codec.test.mts",
+        "tests/development/delegated-command-native.test.mts",
+        "tests/fixtures/delegated-commands/consumer-vectors.v1.json",
+        "docs/DELEGATED-COMMAND-CONSUMER.md"
       ],
       "notices": []
     },

@@ -4,7 +4,18 @@ The current source includes the bounded local **M20-G03 item-level drop-off
 handoff** implementation. Start with the [architecture](ARCHITECTURE.md) for
 existing modules and [roadmap](ROADMAP.md) for remaining work.
 
-## Current delegated-checkout checkpoint
+## Current assigned increment
+
+**RCG-4B-C1 — delegated-use command consumer** is assigned under
+[ADR-0075](decisions/0075-delegated-command-consumer.md). It implements the pinned
+P03 START_USE, FINALIZE_USE and RECOVER_RESULT intent/result boundary while public
+provider serving continues upstream. The pure adapter validates original command
+digests, exact result binding, immutable historical recovery and receipt-byte
+correlation. It adds no network transport, current-authority source, durable
+claims, native execution or approval. See the [consumer guide](DELEGATED-COMMAND-CONSUMER.md)
+and [current work record](../work/records/RCG-4B-C1.md) for candidate and evidence.
+
+## Completed local receipt checkpoint
 
 The owner has continued development and publication. **RCG-5D receipt evidence
 review** is assigned under [ADR-0074](decisions/0074-checkout-receipt-review.md),
@@ -25,15 +36,16 @@ was published as exact-tree checkpoint `4ac8556`, matching native `413f849`;
 the original native history remains separately preserved. These are local
 plain-browser/SQLite observations, not React/PostgreSQL or full RCG-5 acceptance.
 
-The refreshed provider draft at `f226585` now has retained internal start/finalize
-use, authenticated internal transport, durable machine audit, concrete credential
-verification and managed receipt signing with a disposable live-custody gate.
-Its public Gateway use executable and independently qualified source/deployment
-composition remain absent. See the [provider checkpoint and exact contracts](DELEGATED-CHECKOUT-RECEIPT-REVIEW.md#provider-dependency-remains-separate).
+The refreshed provider draft at `c44579a` additionally implements concrete
+full-machine/MAP, credential-authority/status and machine-policy owners. Its
+retained internal use, audit, credential verification and managed receipt signing
+remain separate from an installed public Gateway use executable and qualified
+serving composition. See the [provider checkpoint and exact contracts](DELEGATED-COMMAND-CONSUMER.md#provider-and-next-integration).
 
-The next dependency is the qualified public current-state, start/final-use and
-original-result contract. Once available, assign the bounded **RCG-4B public
-adapter**, then the complete isolated **RCG-5 cross-service journey** and connected
+After the local codec prerequisite, the next dependency is the qualified public
+authentication/current-state, start/final-use and original-result contract. Once
+available, assign the bounded **RCG-4B public transport and original-claim
+composition**, then the complete isolated **RCG-5 cross-service journey** and connected
 **RCG-6 profile**. Preserve original operation recovery and Rifare's execution,
 budget, reservation and business-idempotency ownership. Do not rebuild the landed
 receipt UI or bridge the public contract gap through private provider storage.
