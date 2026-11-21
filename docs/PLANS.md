@@ -6,29 +6,28 @@ existing modules and [roadmap](ROADMAP.md) for remaining work.
 
 ## Current assigned increment
 
-The owner assigned **RCG-5C customer checkout review** under
-[ADR-0073](decisions/0073-customer-checkout-review.md), extending the reviewed
-RCG-5B original preparation recovery. The local `/checkout-review` page uses the
-unchanged native API to review an existing proposal, prepare once, recover an
-uncertain original request, observe history and cancel by observed revision.
-[The guide](DELEGATED-CHECKOUT-REVIEW.md) and [work record](../work/records/RCG-5C.md)
-keep native/controller evidence separate from actual served-browser execution.
+The owner has continued development and publication. **RCG-5D receipt evidence
+review** is assigned under [ADR-0074](decisions/0074-checkout-receipt-review.md),
+starting from public checkpoint `4ac8556`. It extends `/checkout-review` with one
+explicit submission of an already-issued signed receipt to the existing native
+API. Preserve the original intent, transient input handling and explicit status
+after an uncertain response. The implementation is present and its author's
+12 receipt and 21 existing controller/native HTTP cases pass. Integrated source
+checks, actual served-browser verification and independent review remain pending
+in [the work record](../work/records/RCG-5D.md).
 
-The existing authorized AWS development host has now executed all nine served
-Chromium cases successfully on candidate `3db6507`, within the unchanged
-60-second budget. This follows three lifecycle and 21 HTTP/controller passes.
-The actual browser run exposed a test wait-expression defect; equivalent function
-predicates resolve it without changing the application or its security policy.
-The [work record](../work/records/RCG-5C.md) binds the passing run and retained
-earlier failures. Refresh independent source/evidence review and the Codex
-handoff before broadening the customer flow. This is local plain-browser/SQLite
-evidence, not target React/PostgreSQL or full RCG-5 qualification.
+RCG-5C's nine served Chromium cases passed on `3db6507`, with earlier three
+lifecycle and 21 HTTP/controller passes carried by their recorded source
+equivalence. Both independent final reviews found no scoped blocker. The source
+was published as exact-tree checkpoint `4ac8556`, matching native `413f849`;
+the original native history remains separately preserved. These are local
+plain-browser/SQLite observations, not React/PostgreSQL or full RCG-5 acceptance.
 
-The last provider inspection lacked published delegated final-use and
-uncertain-outcome transports; this UI assignment does not refresh that external
-observation or supply a transport. Provider execution (RCG-4B), the full isolated
-Rifare/ElevenID/merchant journey (RCG-5), canonical criteria and formal acceptance
-remain open. Recovery absence never authorizes replacement preparation.
+The refreshed provider inspection found new draft organization-approval and
+current-authority composition, but public delegated start/final-use and managed
+receipt-signing endpoints remain missing. RCG-5D uses only the existing Rifare
+contract. Provider execution (RCG-4B), the complete isolated cross-service
+journey (RCG-5), canonical criteria and formal acceptance remain open.
 
 ## Continuing commerce roadmap
 

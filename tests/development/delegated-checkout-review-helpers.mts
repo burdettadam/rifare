@@ -35,6 +35,7 @@ export async function reviewFixture() {
       });
     return {
       get url() { return url; }, original, pending, bearer: credentials.bearer, inspect, request,
+      primaryReceipt: credentials.primary.compact_jws, pendingReceipt: credentials.pending.compact_jws,
       async restartHistory() {
         assert.equal(closed, false);
         await fixture!.close();

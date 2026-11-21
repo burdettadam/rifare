@@ -1431,11 +1431,11 @@
     },
     {
       "path": "apps/commerce-api/checkout-review.html",
-      "sha256": "4c52aa60146d4f1fc9239ebf57a6199e1f421a8e67a12b5d796143d25c90d855"
+      "sha256": "bdb96675e4b7f6172a17d2fd91a9d62e8949cd0df8b5ae3767e6074707dad1f4"
     },
     {
       "path": "apps/commerce-api/checkout-review-client.js",
-      "sha256": "2c472e22e51eb9dbdc43978e16c111a259a34802a6237c1479cd78ae7f76c3d7"
+      "sha256": "8116813c7b7c61e0817d02c80b592d6c1fb37585ab5f558cd9004a42c0281478"
     }
   ],
   "surfaces": [

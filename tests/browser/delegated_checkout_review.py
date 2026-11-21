@@ -14,12 +14,19 @@ from playwright.sync_api import sync_playwright
 cfg = json.loads(os.environ['RIFARE_TEST_INPUT'])
 scenario = cfg['scenario']
 stage = 'browser_startup'
-assert scenario in {'journey', 'lost_prepare', 'absence', 'lost_cancel', 'conflict',
-                    'late_clear', 'revoked', 'invalid_binding', 'mobile_keyboard'}
+receipt_scenario = scenario in {'receipt_journey', 'receipt_lost', 'receipt_invalid_binding',
+                               'receipt_late_clear', 'receipt_mobile_keyboard'}
+if receipt_scenario:
+    assert set(cfg['receipts']) == {'primary', 'wrong_binding'}
+    assert all(isinstance(value, str) and 0 < len(value) <= 100000 for value in cfg['receipts'].values())
+else:
+    assert scenario in {'journey', 'lost_prepare', 'absence', 'lost_cancel', 'conflict',
+                        'late_clear', 'revoked', 'invalid_binding', 'mobile_keyboard'}
 assert importlib.metadata.version('playwright') == '1.62.0'
 origin = urlsplit(cfg['url'])
 assert origin.scheme == 'http' and origin.hostname == '127.0.0.1' and origin.port
 calls, external, errors, console, assets = [], [], [], [], {}
+receipt_responses = []
 fault_applied = False
 committed_id = None
 browser = None
@@ -67,7 +74,7 @@ try:
                 headless=True, args=['--no-sandbox'])
             stage = 'context_startup'
             context = browser.new_context(service_workers='block',
-                                          viewport={'width': 390 if scenario == 'mobile_keyboard' else 1280, 'height': 900})
+                                          viewport={'width': 390 if scenario in {'mobile_keyboard', 'receipt_mobile_keyboard'} else 1280, 'height': 900})
             stage = 'page_startup'
             page = context.new_page()
             page.set_default_timeout(4000)
@@ -78,6 +85,8 @@ try:
                 path = urlsplit(response.url).path
                 if path in {'/checkout-review', '/checkout-review-client.js', '/checkout-review.css'}:
                     assets[path] = response.status
+                if path == '/v1/delegated-checkout/receipt':
+                    receipt_responses.append(response.status)
             page.on('response', listener('response_callback', response_seen))
 
             def boundary(route):
@@ -102,7 +111,8 @@ try:
                         scenario == 'lost_cancel' and path == '/v1/delegated-checkout/cancel' or
                         scenario == 'conflict' and path == '/v1/delegated-checkout/cancel' or
                         scenario == 'late_clear' and path == '/v1/delegated-checkout/preview-status' or
-                        scenario == 'invalid_binding' and path == '/v1/delegated-checkout-recovery/lookup')
+                        scenario == 'invalid_binding' and path == '/v1/delegated-checkout-recovery/lookup' or
+                        scenario in {'receipt_lost', 'receipt_late_clear'} and path == '/v1/delegated-checkout/receipt')
                     if fault_route and not fault_applied:
                         fault_applied = True
                         if scenario == 'conflict':
@@ -119,12 +129,17 @@ try:
                         else:
                             assert actual.status == 200
                             native = actual.json()
-                            if scenario == 'lost_prepare':
+                            if scenario in {'lost_prepare', 'receipt_lost', 'receipt_late_clear'}:
                                 committed_id = native['result']['intent_id']
-                            if scenario in {'lost_prepare', 'lost_cancel'}:
+                            if receipt_scenario:
+                                assert native['result']['state'] == 'evidence_verified'
+                                assert native['result']['revision'] == 2
+                                assert native['execution_authorized'] is False
+                                assert native['result']['execution_authorized'] is False
+                            if scenario in {'lost_prepare', 'lost_cancel', 'receipt_lost'}:
                                 route_stage = 'route_lost_response_abort'
                                 route.abort('failed')
-                            elif scenario == 'late_clear':
+                            elif scenario in {'late_clear', 'receipt_late_clear'}:
                                 route_stage = 'route_clear_click'
                                 page.get_by_role('button', name='Clear this page', exact=True).click()
                                 route_stage = 'route_late_fulfill'
@@ -168,7 +183,8 @@ try:
             def ready(button):
                 global stage
                 stage = {'prepare-intent': 'prepare_ready', 'recover-intent': 'recovery_ready',
-                         'refresh-intent': 'status_ready', 'request-cancel': 'cancel_ready'}[button]
+                         'refresh-intent': 'status_ready', 'request-cancel': 'cancel_ready',
+                         'submit-receipt': 'receipt_submit_ready'}[button]
                 page.wait_for_function('(id) => !document.getElementById(id).disabled', arg=button)
             def visible_intent():
                 global stage
@@ -196,7 +212,87 @@ try:
                 return [call for call in calls if call['path'].endswith('/' + name)]
             stage = scenario
 
-            if scenario == 'absence':
+            if receipt_scenario:
+                prepare()
+                visible_intent()
+                stage = 'receipt_control_available'
+                page.locator('#receipt-panel').wait_for(state='visible')
+                field = page.get_by_label('Signed receipt', exact=True)
+                assert field.get_attribute('type') == 'password'
+                assert field.get_attribute('maxlength') == '100000'
+                assert field.get_attribute('autocomplete') == 'off'
+                assert len(operation('prepare')) == 1
+                assert operation('prepare')[0]['body'] == cfg['original']
+                stage = 'receipt_input_fill'
+                supplied = cfg['receipts']['wrong_binding' if scenario == 'receipt_invalid_binding' else 'primary']
+                field.fill(supplied)
+                ready('submit-receipt')
+                stage = 'receipt_submit'
+                if scenario == 'receipt_mobile_keyboard':
+                    assert page.evaluate('document.documentElement.scrollWidth <= window.innerWidth')
+                    field.focus()
+                    page.keyboard.press('Tab')
+                    assert page.locator('#submit-receipt').evaluate('(element) => document.activeElement === element')
+                    page.keyboard.press('Enter')
+                else:
+                    page.get_by_role('button', name='Check receipt', exact=True).click()
+                stage = 'receipt_input_cleared'
+                page.wait_for_function("() => document.getElementById('receipt-input').value === ''")
+                assert not page.locator('#submit-receipt').is_enabled()
+                if scenario == 'receipt_late_clear':
+                    stage = 'receipt_late_clear_observed'
+                    page.wait_for_function("() => document.getElementById('preview-id').value === ''")
+                    assert committed_id is not None
+                    assert not page.locator('#intent-panel').is_visible()
+                    assert not page.locator('#receipt-panel').is_visible()
+                    assert page.locator('#session-input').input_value() == ''
+                elif scenario == 'receipt_invalid_binding':
+                    stage = 'receipt_refused'
+                    page.wait_for_function("() => document.getElementById('workflow-notice').getAttribute('role') === 'alert'")
+                    assert len(receipt_responses) == 1 and receipt_responses[0] in {400, 403, 409}
+                    assert not page.locator('#intent-panel').is_visible()
+                    assert not page.locator('#request-cancel').is_enabled()
+                else:
+                    if scenario == 'receipt_lost':
+                        ready('refresh-intent')
+                        assert not page.locator('#intent-panel').is_visible()
+                        assert not page.locator('#request-cancel').is_enabled()
+                        assert len(operation('receipt')) == 1
+                        assert len(operation('status')) == 0
+                        stage = 'receipt_original_status_click'
+                        page.get_by_role('button', name='Check status', exact=True).click()
+                    stage = 'receipt_evidence_observed'
+                    page.wait_for_function("() => document.getElementById('receipt-state').textContent === 'Historical evidence observed'")
+                    ready('refresh-intent')
+                    assert page.locator('#intent-state').text_content() == 'Evidence observed'
+                    assert page.locator('#intent-revision').text_content() == '2'
+                    assert page.locator('#receipt-input').input_value() == ''
+                    assert not page.locator('#submit-receipt').is_enabled()
+                    if scenario == 'receipt_lost':
+                        assert operation('status')[-1]['body']['intent_id'] == committed_id
+                    if scenario == 'receipt_journey':
+                        stage = 'receipt_observation_screenshot'
+                        os.makedirs('evidence/rcg5d-browser', exist_ok=True)
+                        page.locator('.follow-card').screenshot(path='evidence/rcg5d-browser/receipt-observed.png')
+                        cancel()
+                        stage = 'receipt_revision_cancelled'
+                        page.wait_for_function("() => document.getElementById('intent-state').textContent === 'Cancelled'")
+                        assert operation('cancel')[0]['body']['expected_revision'] == 2
+                        assert operation('cancel')[0]['body']['intent_id'] == operation('receipt')[0]['body']['intent_id']
+                        assert page.locator('#intent-revision').text_content() == '3'
+                stage = 'receipt_original_request_boundary'
+                assert len(operation('receipt')) == 1
+                assert len(operation('prepare')) == 1
+                assert len(operation('cancel')) == (1 if scenario == 'receipt_journey' else 0)
+                assert set(operation('receipt')[0]['body']) == {'intent_id', 'compact_jws'}
+                assert operation('receipt')[0]['body']['compact_jws'] == supplied
+                assert not page.locator('#submit-receipt').is_enabled()
+                assert page.locator('#receipt-input').input_value() == ''
+                for compact in cfg['receipts'].values():
+                    assert compact not in page.locator('body').inner_text()
+                    assert all(compact not in line for line in console)
+                assert not any(call['path'].endswith('/preview') for call in calls)
+            elif scenario == 'absence':
                 stage = 'recover_original_click'
                 page.get_by_role('button', name='Recover original', exact=True).click()
                 ready('recover-intent')
@@ -285,7 +381,8 @@ try:
             assert context.cookies() == []
             for private in (cfg['bearer'], cfg['original']['preview_id'], cfg['original']['context_id']):
                 assert all(private not in line for line in console)
-            assert not any(call['path'].endswith('/receipt') or call['path'].endswith('/preview') for call in calls)
+            if not receipt_scenario:
+                assert not any(call['path'].endswith('/receipt') or call['path'].endswith('/preview') for call in calls)
             version = browser.version
             stage = 'final_clear_click'
             page.get_by_role('button', name='Clear this page', exact=True).click()
@@ -294,6 +391,9 @@ try:
             assert not page.locator('#preview-panel').is_visible()
             for field in ('session-input', 'preview-id', 'context-id'):
                 assert page.locator('#' + field).input_value() == ''
+            if receipt_scenario:
+                assert page.locator('#receipt-input').input_value() == ''
+                assert not page.locator('#receipt-panel').is_visible()
             for private_id in ('preview-items', 'preview-total', 'intent-money', 'receipt-state', 'reference-details',
                                'intent-state', 'intent-message', 'intent-revision', 'intent-deadline', 'cancel-revision'):
                 assert page.locator('#' + private_id).text_content() == ''
@@ -331,4 +431,5 @@ if primary_failure is not None or callback_failures or cleanup_failures:
 print(json.dumps({'passed': True, 'scenario': scenario, 'actual_served_browser': True,
                   'playwright_version': importlib.metadata.version('playwright'), 'browser_version': version,
                   'preparation_requests': len(operation('prepare')), 'cancellation_requests': len(operation('cancel')),
+                  **({'receipt_requests': len(operation('receipt'))} if receipt_scenario else {}),
                   'external_requests': 0, 'execution_authorized': False}))

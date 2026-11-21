@@ -95,6 +95,16 @@
             <dl class="intent-facts"><div><dt>Observed revision</dt><dd id="intent-revision"></dd></div><div><dt>Receipt evidence</dt><dd id="receipt-state"></dd></div></dl>
             <p id="intent-deadline" class="hint"></p>
           </div>
+          <section id="receipt-panel" class="receipt-panel" aria-labelledby="receipt-title" hidden>
+            <h3 id="receipt-title">Check receipt evidence</h3>
+            <p class="section-copy">If you already have a signed receipt for this preparation, send it to the local verifier. Checking it does not place an order, move money or obtain provider approval.</p>
+            <form id="receipt-form" autocomplete="off" novalidate>
+              <label for="receipt-input">Signed receipt</label>
+              <input id="receipt-input" type="password" maxlength="100000" autocomplete="off" spellcheck="false" autocapitalize="none" aria-describedby="receipt-help" disabled>
+              <p id="receipt-help" class="hint">Use the complete signed receipt without spaces. The field clears when you submit. This page sends it once for the original record; if the response is uncertain, check status.</p>
+              <button id="submit-receipt" type="submit" class="secondary" disabled>Check receipt</button>
+            </form>
+          </section>
           <p id="expiry-notice" class="expiry-notice" role="status" aria-live="polite" hidden></p>
           <div class="follow-actions"><button id="refresh-intent" type="button" class="secondary" disabled>Check status</button><button id="request-cancel" type="button" class="quiet-button" disabled>Cancel preparation</button></div>
           <section id="cancel-confirmation" class="cancel-confirmation" aria-labelledby="cancel-title" hidden>

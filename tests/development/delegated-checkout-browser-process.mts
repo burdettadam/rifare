@@ -81,6 +81,7 @@ function run(mode: 'browser' | 'probe-normal' | 'probe-hold', input: unknown, ti
 
 export function runCheckoutBrowser(input: {
   scenario: string; url: string; bearer: string; original: unknown;
+  receipts?: Readonly<{ primary: string; wrong_binding: string }>;
 }): Promise<CheckoutBrowserRun> {
   return run('browser', input, 15000);
 }

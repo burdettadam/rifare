@@ -6,13 +6,14 @@ experience. This roadmap covers unfinished work.
 
 ## Next product increments
 
-The assigned delegated-checkout lane now adds a
-[customer review page](DELEGATED-CHECKOUT-REVIEW.md) over the existing original
-preparation recovery contract. Its actual served-browser gate remains open on a
-permitted host; native/controller evidence cannot close that gate. Provider
-final-use/current-state and uncertain-outcome transports, followed by the full
-isolated cross-service journey, remain open. Local page/process checks do not
-qualify those boundaries.
+The delegated-checkout lane has a [customer review page](DELEGATED-CHECKOUT-REVIEW.md)
+over the existing original preparation recovery contract. Its nine-case
+served-browser gate passed on the recorded development host and both independent
+reviews found no scoped blocker. The next assigned slice is
+[RCG-5D receipt evidence review](decisions/0074-checkout-receipt-review.md), using
+the unchanged native receipt API. Provider final-use/current-state and
+uncertain-outcome transports, followed by the full isolated cross-service journey,
+remain open. Local page/process checks do not qualify those boundaries.
 
 | Area | Remaining outcome | Work entry |
 | --- | --- | --- |

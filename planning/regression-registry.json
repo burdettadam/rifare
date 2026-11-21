@@ -2041,6 +2041,15 @@
         "packages/commerce/contracts/delegated-checkout-api.v1.json",
         "packages/commerce/contracts/delegated-checkout-recovery.v1.json"
       ]
+    },
+    {
+      "id": "FEATURE-RCG-5D-RECEIPT-REVIEW",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/delegated-checkout-api.v1.json",
+        "packages/commerce/contracts/delegated-checkout-intents.v1.json"
+      ]
     }
   ],
   "tests": [
@@ -27362,6 +27371,125 @@
       "runner_case_id": "RCG5C-PROCESS-OUTER-RUNNER-DEADLINE",
       "source": "tests/development/delegated-checkout-browser-process.test.mts",
       "capability_id": "FEATURE-RCG-5C-CUSTOMER-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5D-CONTROLLER-NATIVE-RECEIPT",
+      "suite": "runtime",
+      "runner_case_id": "RCG5D-CONTROLLER-NATIVE-RECEIPT",
+      "source": "tests/development/delegated-checkout-receipt-review.test.mts",
+      "capability_id": "FEATURE-RCG-5D-RECEIPT-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5D-CONTROLLER-LOCAL-INPUT-BOUNDS",
+      "suite": "runtime",
+      "runner_case_id": "RCG5D-CONTROLLER-LOCAL-INPUT-BOUNDS",
+      "source": "tests/development/delegated-checkout-receipt-review.test.mts",
+      "capability_id": "FEATURE-RCG-5D-RECEIPT-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5D-CONTROLLER-WRONG-RECEIPT-BINDING",
+      "suite": "runtime",
+      "runner_case_id": "RCG5D-CONTROLLER-WRONG-RECEIPT-BINDING",
+      "source": "tests/development/delegated-checkout-receipt-review.test.mts",
+      "capability_id": "FEATURE-RCG-5D-RECEIPT-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5D-CONTROLLER-BAD-RECEIPT-SIGNATURE",
+      "suite": "runtime",
+      "runner_case_id": "RCG5D-CONTROLLER-BAD-RECEIPT-SIGNATURE",
+      "source": "tests/development/delegated-checkout-receipt-review.test.mts",
+      "capability_id": "FEATURE-RCG-5D-RECEIPT-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5D-CONTROLLER-LOST-RECEIPT-RESPONSE",
+      "suite": "runtime",
+      "runner_case_id": "RCG5D-CONTROLLER-LOST-RECEIPT-RESPONSE",
+      "source": "tests/development/delegated-checkout-receipt-review.test.mts",
+      "capability_id": "FEATURE-RCG-5D-RECEIPT-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5D-CONTROLLER-UNKNOWN-PREPARED-NO-RESEND",
+      "suite": "runtime",
+      "runner_case_id": "RCG5D-CONTROLLER-UNKNOWN-PREPARED-NO-RESEND",
+      "source": "tests/development/delegated-checkout-receipt-review.test.mts",
+      "capability_id": "FEATURE-RCG-5D-RECEIPT-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5D-CONTROLLER-UNVERIFIED-SUCCESS-REFUSED",
+      "suite": "runtime",
+      "runner_case_id": "RCG5D-CONTROLLER-UNVERIFIED-SUCCESS-REFUSED",
+      "source": "tests/development/delegated-checkout-receipt-review.test.mts",
+      "capability_id": "FEATURE-RCG-5D-RECEIPT-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5D-CONTROLLER-AUTHORITY-SUCCESS-REFUSED",
+      "suite": "runtime",
+      "runner_case_id": "RCG5D-CONTROLLER-AUTHORITY-SUCCESS-REFUSED",
+      "source": "tests/development/delegated-checkout-receipt-review.test.mts",
+      "capability_id": "FEATURE-RCG-5D-RECEIPT-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5D-CONTROLLER-LATE-RECEIPT-BODY-CLEARED",
+      "suite": "runtime",
+      "runner_case_id": "RCG5D-CONTROLLER-LATE-RECEIPT-BODY-CLEARED",
+      "source": "tests/development/delegated-checkout-receipt-review.test.mts",
+      "capability_id": "FEATURE-RCG-5D-RECEIPT-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5D-CONTROLLER-LATE-RECEIPT-SESSION-CHANGE",
+      "suite": "runtime",
+      "runner_case_id": "RCG5D-CONTROLLER-LATE-RECEIPT-SESSION-CHANGE",
+      "source": "tests/development/delegated-checkout-receipt-review.test.mts",
+      "capability_id": "FEATURE-RCG-5D-RECEIPT-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5D-CONTROLLER-RECEIPT-EXPIRY-AT-ACTION",
+      "suite": "runtime",
+      "runner_case_id": "RCG5D-CONTROLLER-RECEIPT-EXPIRY-AT-ACTION",
+      "source": "tests/development/delegated-checkout-receipt-review.test.mts",
+      "capability_id": "FEATURE-RCG-5D-RECEIPT-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5D-CONTROLLER-RECEIPT-PAGE-LIFECYCLE",
+      "suite": "runtime",
+      "runner_case_id": "RCG5D-CONTROLLER-RECEIPT-PAGE-LIFECYCLE",
+      "source": "tests/development/delegated-checkout-receipt-review.test.mts",
+      "capability_id": "FEATURE-RCG-5D-RECEIPT-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5D-BROWSER-NATIVE-RECEIPT",
+      "suite": "runtime",
+      "runner_case_id": "RCG5D-BROWSER-NATIVE-RECEIPT",
+      "source": "tests/development/delegated-checkout-receipt-browser.test.mts",
+      "capability_id": "FEATURE-RCG-5D-RECEIPT-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5D-BROWSER-LOST-RECEIPT",
+      "suite": "runtime",
+      "runner_case_id": "RCG5D-BROWSER-LOST-RECEIPT",
+      "source": "tests/development/delegated-checkout-receipt-browser.test.mts",
+      "capability_id": "FEATURE-RCG-5D-RECEIPT-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5D-BROWSER-WRONG-BINDING",
+      "suite": "runtime",
+      "runner_case_id": "RCG5D-BROWSER-WRONG-BINDING",
+      "source": "tests/development/delegated-checkout-receipt-browser.test.mts",
+      "capability_id": "FEATURE-RCG-5D-RECEIPT-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5D-BROWSER-LATE-CLEAR",
+      "suite": "runtime",
+      "runner_case_id": "RCG5D-BROWSER-LATE-CLEAR",
+      "source": "tests/development/delegated-checkout-receipt-browser.test.mts",
+      "capability_id": "FEATURE-RCG-5D-RECEIPT-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5D-BROWSER-MOBILE-KEYBOARD",
+      "suite": "runtime",
+      "runner_case_id": "RCG5D-BROWSER-MOBILE-KEYBOARD",
+      "source": "tests/development/delegated-checkout-receipt-browser.test.mts",
+      "capability_id": "FEATURE-RCG-5D-RECEIPT-REVIEW"
     }
   ],
   "protected_files": [

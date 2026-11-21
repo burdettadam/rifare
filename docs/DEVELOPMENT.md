@@ -273,6 +273,18 @@ python3 tools/dev_tests.py --files tests/development/delegated-checkout-browser.
 The second selection requires the documented permitted Playwright/Chromium host;
 startup or connectivity failures cannot count as passing browser evidence.
 
+[Receipt evidence review](DELEGATED-CHECKOUT-RECEIPT-REVIEW.md) adds explicit
+submission through the existing native receipt API. Its controller/native HTTP
+and actual served-browser selections remain distinct:
+
+```sh
+python3 tools/dev_tests.py --files tests/development/delegated-checkout-receipt-review.test.mts
+python3 tools/dev_tests.py --files tests/development/delegated-checkout-receipt-browser.test.mts
+```
+
+Run the unchanged review/controller and nine-case browser files separately when
+changing their shared page assets. Preserve each invocation's normal budget.
+
 The [original preparation recovery guide](DELEGATED-CHECKOUT-RECOVERY.md) closes
 the case where the caller loses preparation's response before learning an intent
 ID. Run the separate no-argument journey to observe actual process replacement

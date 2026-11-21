@@ -1,6 +1,6 @@
 {
-  "source_file_count": 1787,
-  "source_count_reason": "ADR-0073 retains all 1773 prior source members and adds 14 assigned customer review assets, native/controller, served-browser and owned-process test sources/helpers, guide, assignment and work record. Browser execution remains a separate host gate. Existing component identities, dispositions and every other oracle field remain unchanged.",
+  "source_file_count": 1792,
+  "source_count_reason": "ADR-0074 retains all 1787 prior source members and adds five assigned sources: receipt controller/native HTTP tests, served-browser receipt tests, the receipt-review guide, assignment and work record. Existing component identities, dispositions and every other oracle field remain unchanged.",
   "component_ids": [
     "git-agent-adaptations",
     "rifare-developer-helpers",

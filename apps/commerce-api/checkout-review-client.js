@@ -1,13 +1,15 @@
 'use strict';
 (() => {
   // This controller presents native observations. It never grants execution,
-  // provisions context, submits receipts, or retries a mutation automatically.
+  // provisions context, issues receipts, or retries a mutation automatically.
   const $ = id => document.getElementById(id);
   const presentation = window.RifarePresentation;
   const display = Object.freeze({ locale: 'en-US', time_zone: 'UTC' });
   const ID = /^[A-Za-z0-9_-]{1,96}$/;
   const HASH = /^[a-f0-9]{64}$/;
   const BEARER = /^[A-Za-z0-9_-]{43}$/;
+  const COMPACT_RECEIPT = /^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/;
+  const RECEIPT_CHARACTERS = 100000;
   const MINOR = /^(0|[1-9][0-9]{0,23})$/;
   const UUID = /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/;
   const RESPONSE_BYTES = 262144;
@@ -16,6 +18,7 @@
     'preview-status': '/v1/delegated-checkout/preview-status',
     prepare: '/v1/delegated-checkout/prepare',
     status: '/v1/delegated-checkout/status',
+    receipt: '/v1/delegated-checkout/receipt',
     cancel: '/v1/delegated-checkout/cancel',
     lookup: '/v1/delegated-checkout-recovery/lookup',
   });
@@ -49,6 +52,7 @@
   let needsStatus = false;
   let uncertain = null;
   let confirmation = null;
+  let receiptAttempted = false; // A status without evidence never authorizes resubmission.
 
   class ReviewFailure extends Error {
     constructor(code) { super(code); this.code = code; }
@@ -299,6 +303,9 @@
     }
     if (operation === 'cancel') requireValue(value.state === 'cancelled' && value.authority_revoked &&
       value.revision > request.expected_revision);
+    if (operation === 'receipt') requireValue(expected && expected.state === 'prepared' && !expected.has_receipt &&
+      value.state === 'evidence_verified' && value.receipt !== null && value.verified_at !== null &&
+      !value.authority_revoked && !value.minimized && value.revision > expected.revision);
     // Do not retain the raw receipt, its identifiers, challenge or signer details.
     return Object.freeze({ intent_id: value.intent_id, resource_id: value.resource_id, revision: value.revision,
       created_at: value.created_at, expires_at: value.expires_at, binding_digest: value.binding_digest,
@@ -322,13 +329,25 @@
   function current(ticket) {
     requireValue(ticket.generation === generation && pending === ticket && ticket.secret === session, 'STALE');
     requireValue(!ticket.controller.signal.aborted, ticket.timedOut ? 'TIMEOUT' : 'STALE');
+    if (ticket.operation === 'receipt') requireValue(ticket.expected && Date.now() < ticket.expected.action_deadline, 'EXPIRED');
+  }
+  function releaseReceipt(ticket) {
+    if (ticket.operation === 'receipt') ticket.request = Object.freeze({ intent_id: ticket.request.intent_id });
   }
   async function receive(ticket) {
-    const response = await fetch(routes[ticket.operation], {
-      method: 'POST', headers: { authorization: 'Bearer ' + ticket.secret, 'content-type': 'application/json', accept: 'application/json' },
-      body: JSON.stringify(ticket.request), credentials: 'omit', mode: 'same-origin', redirect: 'error',
-      cache: 'no-store', referrerPolicy: 'no-referrer', signal: ticket.controller.signal,
-    });
+    let responsePending;
+    try {
+      responsePending = fetch(routes[ticket.operation], {
+        method: 'POST', headers: { authorization: 'Bearer ' + ticket.secret, 'content-type': 'application/json', accept: 'application/json' },
+        body: JSON.stringify(ticket.request), credentials: 'omit', mode: 'same-origin', redirect: 'error',
+        cache: 'no-store', referrerPolicy: 'no-referrer', signal: ticket.controller.signal,
+      });
+    } finally {
+      // The browser owns the transient request body. Keep only the original ID
+      // for response validation, never a receipt copy in pending controller state.
+      releaseReceipt(ticket);
+    }
+    const response = await responsePending;
     current(ticket);
     ticket.httpStatus = response.status;
     requireValue(response.redirected === false && response.headers.get('content-type')?.split(';')[0].trim().toLowerCase() === 'application/json');
@@ -354,6 +373,7 @@
       current(ticket);
       if (response.status !== 200) throw new ReviewFailure(httpFailures[response.status] || 'REQUEST_FAILED');
       const result = validateEnvelope(value, ticket);
+      if (ticket.operation === 'receipt') requireValue(Date.now() < result.action_deadline, 'EXPIRED');
       current(ticket);
       return result;
     } finally {
@@ -378,9 +398,11 @@
     const ticket = { operation, request: Object.freeze({ ...request }), references,
       expected: known, proposal: preview, secret: session, generation,
       controller: new AbortController(), timedOut: false, httpStatus: null };
+    if (operation === 'receipt') request = null;
     pending = ticket; confirmation = null; render();
     const loading = { 'preview-status': 'Checking the original proposal…', prepare: 'Sending one preparation request…',
-      lookup: 'Looking up the original preparation…', status: 'Checking the original record…', cancel: 'Sending the confirmed cancellation…' };
+      lookup: 'Looking up the original preparation…', status: 'Checking the original record…',
+      receipt: 'Checking the supplied receipt for the original record…', cancel: 'Sending the confirmed cancellation…' };
     say(loading[operation]);
     let timeout;
     const deadline = new Promise((resolve, reject) => {
@@ -408,6 +430,9 @@
       } else if (operation === 'cancel' || uncertain === 'cancellation') {
         uncertain = 'cancellation'; needsStatus = true;
         message += ' Cancellation is unconfirmed. Check status before any further change; do not resend it.';
+      } else if (operation === 'receipt' || uncertain === 'receipt') {
+        uncertain = 'receipt'; needsStatus = true;
+        message += ' Receipt submission is unconfirmed. Check the original status; this page will not send another receipt.';
       } else if (original) {
         message += known ? ' Check status explicitly before changing this original record.' :
           ' Absence does not authorize a replacement. Keep the original references; preparation stays disabled.';
@@ -415,7 +440,7 @@
       if (code === 'REQUEST_DENIED') message += ' Enter a current session and use the original references to recover.';
       say(message, true);
     } finally {
-      clearTimeout(timeout); ticket.controller.abort(); ticket.secret = '';
+      clearTimeout(timeout); ticket.controller.abort(); ticket.secret = ''; releaseReceipt(ticket);
       if (pending === ticket) { pending = null; render(); }
     }
   }
@@ -442,6 +467,15 @@
     return Boolean(session && !pending && intent && known && !needsStatus && !uncertain &&
       !intent.authority_revoked && !intent.minimized && ['prepared', 'evidence_verified'].includes(intent.state) &&
       Date.now() < intent.action_deadline);
+  }
+  function canReceiveReceipt() {
+    return Boolean(session && original && !pending && intent && known && !needsStatus && !uncertain &&
+      !confirmation && !receiptAttempted && !intent.authority_revoked && !intent.minimized &&
+      intent.state === 'prepared' && !intent.has_receipt && Date.now() < intent.action_deadline);
+  }
+  function receiptInputValid() {
+    const value = $('receipt-input').value;
+    return typeof value === 'string' && value.length <= RECEIPT_CHARACTERS && COMPACT_RECEIPT.test(value);
   }
   function acceptIntent(value) {
     intent = value; known = value;
@@ -487,10 +521,16 @@
     $('confirm-cancel').disabled = !confirmation || !canCancel();
     $('keep-intent').disabled = !confirmation || busy;
     if (confirmation) $('cancel-revision').textContent = 'Observed revision ' + confirmation.expected_revision + '. No replacement will be prepared.';
+    const receiptAvailable = canReceiveReceipt();
+    $('receipt-panel').hidden = !receiptAvailable;
+    $('receipt-input').disabled = !receiptAvailable;
+    if (!receiptAvailable) $('receipt-input').value = '';
+    $('submit-receipt').disabled = !receiptAvailable || !receiptInputValid();
     $('intent-empty').hidden = Boolean(intent && !busy);
     $('intent-empty-copy').textContent = uncertain === 'preparation' ?
       'Preparation is unconfirmed. Recover it using the fixed original references.' : uncertain === 'cancellation' ?
-      'Cancellation is unconfirmed. Check the original status before doing anything further.' : known ?
+      'Cancellation is unconfirmed. Check the original status before doing anything further.' : uncertain === 'receipt' ?
+      'Receipt submission is unconfirmed. Check the original status; another receipt will not be sent from this page.' : known ?
       'Details are unavailable until a fresh status is accepted for the original record.' : original ?
       'No original record has been confirmed. Absence never enables another preparation.' :
       'Review your proposal or recover an existing preparation using its original references.';
@@ -538,10 +578,11 @@
   }
   function reset(message, keepInput = false) {
     generation++;
-    if (pending) { pending.controller.abort(); pending.secret = ''; }
+    if (pending) { pending.controller.abort(); pending.secret = ''; releaseReceipt(pending); }
     pending = null; session = ''; original = null; preview = null; intent = null; known = null;
-    needsStatus = false; uncertain = null; confirmation = null;
+    needsStatus = false; uncertain = null; confirmation = null; receiptAttempted = false;
     if (!keepInput) $('session-input').value = '';
+    $('receipt-input').value = '';
     $('preview-id').value = ''; $('context-id').value = ''; $('technical-details').open = false;
     window.RifareA11y?.clearErrors();
     render(); say(message);
@@ -564,7 +605,7 @@
   window.addEventListener('pagehide', () => reset('This page was cleared. Server work was not undone.'));
   window.addEventListener('pageshow', () => reset('Use an existing verified customer session to begin.'));
   if (!presentation || presentation.version !== 1) {
-    $('session-input').value = ''; $('preview-id').value = ''; $('context-id').value = '';
+    $('session-input').value = ''; $('preview-id').value = ''; $('context-id').value = ''; $('receipt-input').value = '';
     say('The required display helper is unavailable. Review actions remain disabled.', true);
     return;
   }
@@ -615,7 +656,26 @@
     if (!session || pending || !known) return;
     perform('status', { intent_id: known.intent_id }, original, value => {
       acceptIntent(value); uncertain = null; needsStatus = false;
-      say('The original status and revision were observed from the server.');
+      say(receiptAttempted && value.state === 'prepared' && !value.has_receipt && !value.authority_revoked && !value.minimized ?
+        'The original status was observed without receipt evidence. This page will not send another receipt.' :
+        'The original status and revision were observed from the server.');
+    });
+  });
+  $('receipt-input').addEventListener('input', render);
+  $('receipt-input').addEventListener('change', render);
+  $('receipt-form').addEventListener('submit', event => {
+    event.preventDefault();
+    if (!canReceiveReceipt()) { render(); return; }
+    if (!receiptInputValid()) {
+      say('Enter a complete signed receipt without spaces, up to 100000 characters. Nothing was sent.', true);
+      render(); focus('receipt-input'); return;
+    }
+    const request = { intent_id: intent.intent_id, compact_jws: $('receipt-input').value };
+    $('receipt-input').value = '';
+    receiptAttempted = true; uncertain = 'receipt'; needsStatus = true;
+    perform('receipt', request, original, value => {
+      acceptIntent(value); uncertain = null; needsStatus = false;
+      say('Receipt evidence was observed for the original preparation. No order was placed and no payment or execution was authorized.');
     });
   });
   $('request-cancel').addEventListener('click', () => {

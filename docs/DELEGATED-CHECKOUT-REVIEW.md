@@ -10,7 +10,9 @@ The page uses the unchanged [checkout API](DELEGATED-CHECKOUT-HTTP.md) and
 [original preparation recovery](DELEGATED-CHECKOUT-RECOVERY.md). Native customer
 proof, original identity, privacy, revision and expiry owners enforce authority.
 The browser does not create sessions, previews, contexts, receipts or provider
-connections. Receipt upload and the existing Python caller remain separate.
+connections. [RCG-5D receipt evidence review](DELEGATED-CHECKOUT-RECEIPT-REVIEW.md)
+adds one explicit submission of an already-issued signed receipt to the same
+native API. The existing Python caller remains independently usable.
 
 ## Use the page
 
@@ -35,6 +37,12 @@ page itself exposes no fixture provisioning route.
 5. To cancel, choose **Cancel preparation**, review the confirmation and choose
    **Confirm cancellation**. The request uses the exact observed ID/revision.
    **Keep preparation** dismisses the confirmation without sending cancellation.
+
+For a current prepared original with no receipt evidence, the receipt-review
+extension provides **Signed receipt** and **Check receipt**. The masked input
+clears before one submission. An unconfirmed result requires explicit status and
+does not enable another submission. See the separate receipt-review guide for its
+data boundary and focused checks.
 
 An unconfirmed preparation locks its original references and disables another
 preparation. Recovery absence does not prove that creating a replacement is safe.
@@ -112,6 +120,8 @@ before a worker is spawned. Forced process
 termination may leave owned temporary files; this is not forensic erasure or an
 OS sandbox.
 
+## RCG-5C historical host qualification
+
 Three separate process-lifecycle cases exercise normal completion, the case
 deadline and the unchanged development runner's whole-invocation timeout using
 a harmless worker and separately grouped descendant. They require the original
@@ -157,6 +167,8 @@ Retain that source-equivalence distinction instead of claiming a fresh rerun.
 See [ADR-0073](decisions/0073-customer-checkout-review.md) and the
 [work record](../work/records/RCG-5C.md). Full RCG-5, connected provider outcomes,
 remote sender-bound access, target React/PostgreSQL and production qualification
-remain separate. The next useful step is to finish independent review of these
-exact source-bound results and refresh the Codex handoff before broadening the
-customer flow. Browser success is limited to this local diagnostic surface.
+remain separate. Both final independent reviews found no scoped blocker, and
+public checkpoint `4ac8556` preserves the exact source tree of native `413f849`.
+The subsequent RCG-5D assignment changes shared page assets and requires fresh
+focused controller and browser checks; this historical pass does not qualify
+those later changes. Browser success is limited to the local diagnostic surface.
