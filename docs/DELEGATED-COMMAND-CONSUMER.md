@@ -14,6 +14,8 @@ scope. Actual candidates, verification and independent reviews belong in the
 [work record](../work/records/RCG-4B-C1.md). The separate
 [RCG-4B-C2 journal](DELEGATED-COMMAND-CLAIMS.md) now owns durable local originals
 and immutable unverified observations, with typed privacy and restore handling.
+C2 also completes this codec's additive catalog registration; existing codec
+source, tests and synthetic oracle remain unchanged.
 
 ## Available operations
 
@@ -151,17 +153,21 @@ pack. Detailed source/runtime pins and independent reviews are retained in the
 ## Provider and next integration
 
 The [pinned command semantics](https://github.com/ElevenID/marty-protocol/blob/6126da7619e057be2ff58dd38a5d50f49891d1b3/protocol/delegated-authority/COMMANDS.md)
-describe an optional draft intent contract. The provider advanced during this
-increment to
-[`1063f32b5f65094ca3f98351804ff4b5994fc87b`](https://github.com/ElevenID/marty-ui/blob/1063f32b5f65094ca3f98351804ff4b5994fc87b/docs/agent-trust-runtime-milestones.md#current-access-delegated-policy-and-authenticated-ingress-follow-on).
-It now includes explicit machine-use access, current exact-operation policy,
+describe an optional draft intent contract. C1 inspected provider `1063f32`;
+the later snapshot inspected at C2 closing is
+[`3d1f699171ecb6facd4be522bd1fde6661c2f6a1`](https://github.com/ElevenID/marty-ui/blob/3d1f699171ecb6facd4be522bd1fde6661c2f6a1/docs/agent-trust-runtime-milestones.md).
+It includes explicit machine-use access, current exact-operation policy,
 mutual-TLS workload authentication and protected Flow request/proof ingress,
-alongside the existing machine/MAP and credential-authority sources. Those
-internal owners are implemented. Its [runtime candidate](https://github.com/ElevenID/marty-ui/blob/1063f32b5f65094ca3f98351804ff4b5994fc87b/docs/delegated-use-runtime-candidate.md)
-still requires an explicit default-off serving executable, reviewed separate
-credentials and deployed composition. No public use Gateway or selected public
-wallet/consumer contract is installed; the human lifecycle route cannot be used
-as a machine-use route. The Protocol pin and this codec's scope are unchanged.
+alongside the existing machine/MAP and credential-authority sources. Its
+[runtime candidate](https://github.com/ElevenID/marty-ui/blob/3d1f699171ecb6facd4be522bd1fde6661c2f6a1/docs/delegated-use-runtime-candidate.md)
+now includes the explicit default-off `marty-delegated-use` executable,
+fourteen restricted database connections, concrete source/provider assembly and
+readiness before mandatory mutual-TLS serving. Reviewed deployed credentials,
+CA/pin lifecycle, roles, network and custody remain unqualified. No public use
+Gateway or selected public wallet/consumer contract is installed; the human
+lifecycle route cannot be used as a machine-use route. The Protocol pin and
+this codec's scope are unchanged. This is a source/document update; no provider
+test execution is claimed here.
 
 Continue RCG-4B with the qualified public authentication/current-state, use and
 original-outcome contracts, authenticated namespace/native purchase binding and

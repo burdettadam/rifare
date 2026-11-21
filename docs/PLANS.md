@@ -6,13 +6,16 @@ existing modules and [roadmap](ROADMAP.md) for remaining work.
 
 ## Current original-command checkpoint
 
-**RCG-4B-C2 — durable original command claims** is implemented under
-[ADR-0076](decisions/0076-durable-delegated-command-claims.md); integrated focused
-verification and independent reviews are in progress. The [journal](DELEGATED-COMMAND-CLAIMS.md)
+**RCG-4B-C2 — durable original command claims** is complete within
+[ADR-0076](decisions/0076-durable-delegated-command-claims.md). Both independent
+reviews found no remaining scoped blocker after one catalog-pin correction. The [journal](DELEGATED-COMMAND-CLAIMS.md)
 retains complete P03 originals and immutable unverified observations, including
 privacy/hold/restore handling and terminal duplicate refusal. The slice also
 repairs C1's missing additive adapter-catalog registration. It installs no
-transport or execution authority. See the [current work record](../work/records/RCG-4B-C2.md).
+transport or execution authority. Final evidence covers 112 distinct passing
+cases: 95 retained through independently verified unchanged inputs and 17
+freshly executed after the catalog correction. Public candidate `9a5133c` has
+the exact reviewed native `0330376` tree. See the [current work record](../work/records/RCG-4B-C2.md).
 
 ## Previous command-consumer checkpoint
 
@@ -52,11 +55,12 @@ was published as exact-tree checkpoint `4ac8556`, matching native `413f849`;
 the original native history remains separately preserved. These are local
 plain-browser/SQLite observations, not React/PostgreSQL or full RCG-5 acceptance.
 
-The provider advanced during this increment to `1063f32`. In addition to the
-existing full-machine/MAP, credential-authority and machine-policy owners, it
-implements internal machine-use access, exact-operation policy, mutual TLS and
-protected Flow request/proof ingress. The explicit default-off host, public
-Gateway/wallet selection and deployed serving qualification remain open. See the
+The provider snapshot inspected at C2 closing is `3d1f699`. In addition to the
+existing full-machine/MAP, credential-authority, machine-policy, current access
+and protected Flow ingress owners, it now implements the explicit default-off
+`marty-delegated-use` host with fourteen restricted database connections and
+mandatory mutual TLS. Public Gateway/wallet/client selection and deployed
+serving qualification remain open. See the
 [provider checkpoint and exact contracts](DELEGATED-COMMAND-CONSUMER.md#provider-and-next-integration).
 
 After the local codec and original-command journal prerequisites, the next dependency is the qualified public

@@ -19,12 +19,15 @@ strict P03 request/result binding, original recovery and receipt-byte correlatio
 without transport or execution. All 42 focused cases and two separate original
 Protocol-vector checks pass; both independent reviews found no scoped blocker.
 The [RCG-4B-C2 journal](DELEGATED-COMMAND-CLAIMS.md) adds durable original
-command/result retention and typed privacy/restore handling; its integrated
-verification and independent reviews are recorded separately.
-At provider `1063f32`, internal use-access, exact-operation policy, mutual TLS
-and protected Flow request/proof ingress join the existing source and receipt
-owners. The explicit host, selected public Gateway/wallet contracts and deployed
-qualification remain open. Continue with the actual RCG-4B public
+command/result retention and typed privacy/restore handling. Its bounded scope
+is complete with 112 distinct passing cases and both independent reviews;
+[the work record](../work/records/RCG-4B-C2.md) identifies actual executions and
+unchanged-input equivalence after the catalog correction.
+At the inspected provider snapshot `3d1f699`, the explicit default-off
+`marty-delegated-use` host now assembles internal use-access, exact-operation
+policy, protected Flow ingress and existing source/receipt owners with fourteen
+restricted database connections and mandatory mutual TLS. Selected public
+Gateway/wallet/client contracts and deployed qualification remain open. Continue with the actual RCG-4B public
 transport/current-state/authenticated-namespace and native-purchase composition, full isolated RCG-5 journey
 and connected RCG-6 qualification. Local checks do not qualify those boundaries
 or formal acceptance.

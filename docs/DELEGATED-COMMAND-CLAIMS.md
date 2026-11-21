@@ -126,6 +126,13 @@ minimization.
 
 ## Focused verification
 
+The corrected native candidate `0330376` is published as exact-tree `9a5133c`.
+Both independent reviews found no remaining scoped blocker. Final evidence covers
+112 distinct passing cases: 95 retain unchanged implementation/test inputs from
+`92f6753`, while the affected eight process/catalog and nine privacy-coverage
+cases ran freshly on `0330376`. The work record preserves the exact reports,
+source/runtime comparisons and deliberately broken behavioral checks.
+
 The following are separate normal invocations; each retains the default
 60-case, four-file and 60-second limits:
 
@@ -144,7 +151,8 @@ wait behind an actual SQLite write transaction and converge after it releases.
 This is local commit/response-loss evidence; no provider request is sent.
 
 The catalog selection repairs the prior C1 codec's missing registration with
-four existing operations and twenty existing test references. It freezes every
+four existing operations and twenty existing test references and pins the new transitive privacy dependencies.
+It freezes every
 earlier expected-coverage row independently, retaining 46 earlier adapters,
 221 operations and 308 native cases before the additive registration. It does
 not execute the old nested catalog campaign. That legacy test's earlier
