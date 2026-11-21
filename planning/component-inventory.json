@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "id": "rifare-source-inventory",
-  "revision": 53,
+  "revision": 54,
   "status": "proposed",
   "components": [
     {
@@ -1637,7 +1637,9 @@
         "docs/decisions/0074-checkout-receipt-review.md",
         "tests/development/delegated-checkout-receipt-browser.test.mts",
         "tests/development/delegated-checkout-receipt-review.test.mts",
-        "work/records/RCG-5D.md"
+        "work/records/RCG-5D.md",
+        "docs/decisions/0075-delegated-command-consumer.md",
+        "work/records/RCG-4B-C1.md"
       ],
       "notices": []
     },

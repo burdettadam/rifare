@@ -1,6 +1,6 @@
 {
-  "source_file_count": 1792,
-  "source_count_reason": "ADR-0074 retains all 1787 prior source members and adds five assigned sources: receipt controller/native HTTP tests, served-browser receipt tests, the receipt-review guide, assignment and work record. Existing component identities, dispositions and every other oracle field remain unchanged.",
+  "source_file_count": 1794,
+  "source_count_reason": "ADR-0075 retains all 1792 prior source members and adds its assignment and work record before implementation. Only the actual source-count observation and this explanation change; all other oracle fields remain unchanged.",
   "component_ids": [
     "git-agent-adaptations",
     "rifare-developer-helpers",
