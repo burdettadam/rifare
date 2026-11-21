@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "capability": "native_checkout_start_construction",
+  "qualification": "candidate_contract_only",
+  "execution_authorized": false,
+  "provider_authenticated": false,
+  "receipt_signature_verified": false,
+  "source": {
+    "owner": "DelegatedCheckoutStarts",
+    "constructor": "DelegatedCheckoutStarts(kernel, previews, {grant})",
+    "preview_owner": "actual same-kernel CheckoutPreviews using captured concrete private-branded methods",
+    "grant": "descriptor-checked, detached and frozen original GrantRef validated by unchanged C1; no current provider grant authority",
+    "input_fields": ["command_id", "preview_id"],
+    "methods": ["prepare", "assertCurrent", "boundTo", "close"],
+    "binding_fields": ["preview_id", "preview_digest", "encoded"],
+    "provenance": "process-local WeakMap ties source instance, original opaque Scope and exact native preview object; JSON copies cannot rehydrate it",
+    "held_erasure": "after callback-capable native currentness and closure checks, an inert exact tenant/store/original-subject erasure_held event read denies new binding publication and currentness; plain holds permit construction, while release or expiry cannot revoke a prior erasure request",
+    "cache": "no new strong preview cache; existing CheckoutPreviews limits and expiry apply"
+  },
+  "operation": {
+    "action": "urn:rifare:action:purchase:v1",
+    "resource_id": "urn:rifare:resource:<native preview resource_id>",
+    "audience": "urn:rifare:store:<native preview store_id>",
+    "request_profile": "urn:rifare:checkout-preview:v1",
+    "request_digest": "sha256:<complete native preview digest>"
+  },
+  "claim": {
+    "owner": "DelegatedCommandClaims",
+    "constructor": "existing kernel and correlation, plus optional concrete starts owner",
+    "method": "claimCheckoutStart(scope, {command_id, preview_id})",
+    "transaction": "reject pre-existing transactions before database work; construct and retain inside the existing top-level transaction; return only after COMMIT",
+    "final_order": ["native customer and original ownership", "concrete original native START currentness", "existing recovery-egress fence", "inert journal identity/digest/uniqueness fence"],
+    "exact_repetition": "retained original view after all current native checks; changed complete original conflicts",
+    "response": "unchanged historical_unverified_observation CommandClaimView from local_unverified_input"
+  },
+  "storage": {
+    "new_tables": [],
+    "new_record_fields": [],
+    "retention": "unchanged C2 v1 original canonical START in its existing personal projection; existing privacy, hold, erase, uninstall, restore and import owners",
+    "body_limit_bytes": 16384,
+    "journal_validation_limit": "10000 rows per validation scan; normal calls are tenant/store scoped and global restore fails closed at the same bound",
+    "after_expiry_close_restart": "caller-held data and journal rows are historical; native use requires an actual current owner preview and cannot be reconstructed from history"
+  },
+  "source_errors": [
+    "CHECKOUT_START_CONFIG_INVALID", "CHECKOUT_START_INPUT_INVALID", "CHECKOUT_START_UNAVAILABLE",
+    "CHECKOUT_START_CURRENT_INVALID", "CHECKOUT_START_PROVENANCE_INVALID"
+  ],
+  "claim_errors": "existing finite COMMAND_CLAIM codes; source failures map to COMMAND_CLAIM_BINDING_INVALID",
+  "excluded": [
+    "authenticated provider namespace", "current grant or actor authorization", "ReceiptContextSource construction",
+    "FINALIZE or proof-nonce inference", "transport or send eligibility", "new command UUID generation",
+    "durable native binding or duplicate execution lifecycle", "raw proof, receipt, secret or credential retention",
+    "receipt verification", "business permission, budget, reservation or execution", "target-stack qualification"
+  ]
+}

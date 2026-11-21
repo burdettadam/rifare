@@ -12,6 +12,13 @@ The implementation and verification checkpoint is recorded in
 [ADR-0076](decisions/0076-durable-delegated-command-claims.md). This module has no
 network transport, public HTTP route, provider credential or dispatch callback.
 
+The additive [C3 native START source](DELEGATED-CHECKOUT-STARTS.md) supplies an
+optional third constructor argument and `claimCheckoutStart(scope, {command_id,
+preview_id})`. It constructs the purchase operation from the actual native
+preview and rechecks currentness inside this journal's transaction. The existing
+raw methods, stored version-1 fields and historical output shape remain unchanged;
+the original grant/correlation still establish no provider authority.
+
 ## Local API and identity
 
 Construct `DelegatedCommandClaims(kernel, correlation)` with a fixed server-side

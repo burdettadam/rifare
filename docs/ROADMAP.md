@@ -23,12 +23,15 @@ command/result retention and typed privacy/restore handling. Its bounded scope
 is complete with 112 distinct passing cases and both independent reviews;
 [the work record](../work/records/RCG-4B-C2.md) identifies actual executions and
 unchanged-input equivalence after the catalog correction.
-At the inspected provider snapshot `3d1f699`, the explicit default-off
-`marty-delegated-use` host now assembles internal use-access, exact-operation
-policy, protected Flow ingress and existing source/receipt owners with fourteen
-restricted database connections and mandatory mutual TLS. Selected public
+The assigned [RCG-4B-C3 native START source](DELEGATED-CHECKOUT-STARTS.md) composes
+actual current checkout provenance with the existing journal transaction;
+verification and independent review remain in progress.
+At the inspected provider snapshot `0a1ef66`, the explicit default-off
+`marty-delegated-use` host adds protected original-receipt recovery and an offline
+receipt consumer to its existing concrete owners, fourteen restricted database
+connections and mandatory mutual TLS. Selected public
 Gateway/wallet/client contracts and deployed qualification remain open. Continue with the actual RCG-4B public
-transport/current-state/authenticated-namespace and native-purchase composition, full isolated RCG-5 journey
+transport/current-state/authenticated-namespace and native-purchase finalization/sending composition, full isolated RCG-5 journey
 and connected RCG-6 qualification. Local checks do not qualify those boundaries
 or formal acceptance.
 

@@ -2066,6 +2066,14 @@
       "contract_files": [
         "packages/commerce/contracts/delegated-command-claims.v1.json"
       ]
+    },
+    {
+      "id": "FEATURE-RCG-4B-C3-NATIVE-START",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/delegated-checkout-starts.v1.json"
+      ]
     }
   ],
   "tests": [
@@ -28010,6 +28018,202 @@
       "runner_case_id": "RCG4BC2-CATALOG-LIMITS",
       "source": "tests/development/delegated-command-catalog.test.mts",
       "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC3-START-MAPPING",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-START-MAPPING",
+      "source": "tests/development/delegated-checkout-starts.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-START-CONFIG",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-START-CONFIG",
+      "source": "tests/development/delegated-checkout-starts.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-START-DETACHED",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-START-DETACHED",
+      "source": "tests/development/delegated-checkout-starts.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-START-OWNERS",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-START-OWNERS",
+      "source": "tests/development/delegated-checkout-starts.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-START-PROVENANCE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-START-PROVENANCE",
+      "source": "tests/development/delegated-checkout-starts.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-START-INPUT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-START-INPUT",
+      "source": "tests/development/delegated-checkout-starts.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-START-CLAIM",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-START-CLAIM",
+      "source": "tests/development/delegated-checkout-starts.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-START-CONFLICT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-START-CONFLICT",
+      "source": "tests/development/delegated-checkout-starts.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-START-RAW-CONVERGENCE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-START-RAW-CONVERGENCE",
+      "source": "tests/development/delegated-checkout-starts.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-START-SCOPE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-START-SCOPE",
+      "source": "tests/development/delegated-checkout-starts.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-START-SOURCE-CHANGES",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-START-SOURCE-CHANGES",
+      "source": "tests/development/delegated-checkout-starts.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-START-EXPIRY-CLOSE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-START-EXPIRY-CLOSE",
+      "source": "tests/development/delegated-checkout-starts.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-START-PROOF-RECOVERY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-START-PROOF-RECOVERY",
+      "source": "tests/development/delegated-checkout-starts.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-START-TRANSACTION",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-START-TRANSACTION",
+      "source": "tests/development/delegated-checkout-starts.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-START-COMMIT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-START-COMMIT",
+      "source": "tests/development/delegated-checkout-starts.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-START-FINAL-CURRENTNESS",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-START-FINAL-CURRENTNESS",
+      "source": "tests/development/delegated-checkout-starts.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-START-JOURNAL-FENCE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-START-JOURNAL-FENCE",
+      "source": "tests/development/delegated-checkout-starts.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-START-FINAL-AUTHORITY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-START-FINAL-AUTHORITY",
+      "source": "tests/development/delegated-checkout-starts.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-START-REENTRANCY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-START-REENTRANCY",
+      "source": "tests/development/delegated-checkout-starts.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-START-RESTART",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-START-RESTART",
+      "source": "tests/development/delegated-checkout-starts.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-LIFE-EXPORT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-LIFE-EXPORT",
+      "source": "tests/development/delegated-checkout-start-lifecycle.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-LIFE-CANCEL",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-LIFE-CANCEL",
+      "source": "tests/development/delegated-checkout-start-lifecycle.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-LIFE-ERASE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-LIFE-ERASE",
+      "source": "tests/development/delegated-checkout-start-lifecycle.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-LIFE-HOLD",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-LIFE-HOLD",
+      "source": "tests/development/delegated-checkout-start-lifecycle.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-LIFE-UNINSTALL",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-LIFE-UNINSTALL",
+      "source": "tests/development/delegated-checkout-start-lifecycle.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-LIFE-RESTORE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-LIFE-RESTORE",
+      "source": "tests/development/delegated-checkout-start-lifecycle.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-LIFE-IMPORT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-LIFE-IMPORT",
+      "source": "tests/development/delegated-checkout-start-lifecycle.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-LIFE-HISTORY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-LIFE-HISTORY",
+      "source": "tests/development/delegated-checkout-start-lifecycle.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
     }
   ],
   "protected_files": [

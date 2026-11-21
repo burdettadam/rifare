@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "id": "rifare-source-inventory",
-  "revision": 57,
+  "revision": 58,
   "status": "proposed",
   "components": [
     {
@@ -1658,7 +1658,15 @@
         "tests/development/delegated-command-privacy.test.mts",
         "tests/development/delegated-command-process.test.mts",
         "tests/development/delegated-command-process-child.mts",
-        "tests/development/delegated-command-catalog.test.mts"
+        "tests/development/delegated-command-catalog.test.mts",
+        "docs/decisions/0077-native-checkout-start-claims.md",
+        "work/records/RCG-4B-C3.md",
+        "docs/DELEGATED-CHECKOUT-STARTS.md",
+        "packages/commerce/delegated-checkout-starts.mts",
+        "packages/commerce/contracts/delegated-checkout-starts.v1.json",
+        "tests/development/delegated-checkout-starts.test.mts",
+        "tests/development/delegated-checkout-start-helpers.mts",
+        "tests/development/delegated-checkout-start-lifecycle.test.mts"
       ],
       "notices": []
     },

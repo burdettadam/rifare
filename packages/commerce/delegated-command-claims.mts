@@ -4,6 +4,8 @@ import { checkoutSnapshot } from './checkout-preview.mts';
 import { contentDigest } from './configuration-values.mts';
 import { subjectHash, assertRecoveryEgress } from './data-guards.mts';
 import { growthCustomer } from './growth-shopping-core.mts';
+import { DelegatedCheckoutStarts } from './delegated-checkout-starts.mts';
+import type { CheckoutStartRequest, CheckoutStartBinding } from './delegated-checkout-starts.mts';
 import { encodeDelegatedCommand, bindDelegatedResponse, createDelegatedRecovery } from '../adapters/delegated-commands/command-codec.mts';
 import type { DelegatedCommandResponse, EncodedDelegatedCommand } from '../adapters/delegated-commands/command-codec.mts';
 import { CLAIM_MAX_ROWS, CommandClaimDenied, claimDenied, commandCorrelation, commandNamespaceDigest,
@@ -33,10 +35,20 @@ export class DelegatedCommandClaims {
   readonly #kernel: CommerceKernel;
   readonly #correlation: CommandCorrelation;
   readonly #namespace: string;
+  readonly #prepareStart: DelegatedCheckoutStarts['prepare'] | undefined;
+  readonly #assertStart: DelegatedCheckoutStarts['assertCurrent'] | undefined;
   #lastTime = 0;
-  constructor(kernel: CommerceKernel, correlation: CommandCorrelation) {
+  constructor(kernel: CommerceKernel, correlation: CommandCorrelation, starts?: DelegatedCheckoutStarts) {
     this.#kernel = kernel; this.#correlation = commandCorrelation(correlation);
     this.#namespace = commandNamespaceDigest(this.#correlation);
+    if (starts !== undefined) {
+      try {
+        if (!(starts instanceof DelegatedCheckoutStarts) || !DelegatedCheckoutStarts.prototype.boundTo.call(starts, kernel))
+          claimDenied('COMMAND_CLAIM_CONFIG_INVALID');
+        this.#prepareStart = DelegatedCheckoutStarts.prototype.prepare.bind(starts);
+        this.#assertStart = DelegatedCheckoutStarts.prototype.assertCurrent.bind(starts);
+      } catch { claimDenied('COMMAND_CLAIM_CONFIG_INVALID'); }
+    }
   }
   #current(scope: Scope): Row {
     try {
@@ -86,8 +98,13 @@ export class DelegatedCommandClaims {
     try { assertRecoveryEgress(this.#kernel); }
     catch { claimDenied('COMMAND_CLAIM_ACCESS_DENIED'); }
   }
-  #finish(scope: Scope, record: CommandClaimRecord, activeWork = false): CommandClaimView {
+  #finish(scope: Scope, record: CommandClaimRecord, activeWork = false, nativeStart?: CheckoutStartBinding): CommandClaimView {
     this.#owned(this.#current(scope),record);
+    if (nativeStart) {
+      // RCG4BC3-FINAL-NATIVE-CURRENTNESS: follows every journal access callback.
+      try { this.#assertStart!(scope,nativeStart); }
+      catch { claimDenied('COMMAND_CLAIM_BINDING_INVALID'); }
+    }
     if (activeWork) this.#egress();
     this.#fence(record); return this.#view(record);
   }
@@ -110,6 +127,22 @@ export class DelegatedCommandClaims {
       let encoded: EncodedDelegatedCommand;
       try { encoded = encodeDelegatedCommand(originalMutation); }
       catch { claimDenied('COMMAND_CLAIM_INPUT_INVALID'); }
+      return this.#claimEncoded(scope,s,records,encoded);
+    });
+  }
+  /** Construct an original START from this process's actual current preview.
+   * The result is the unchanged historical journal view, not send permission. */
+  claimCheckoutStart(scope: Scope, input: CheckoutStartRequest): CommandClaimView {
+    return this.#run(scope,true,true,(s,records) => {
+      if (!this.#prepareStart) claimDenied('COMMAND_CLAIM_CONFIG_INVALID');
+      let binding: CheckoutStartBinding;
+      try { binding = this.#prepareStart(scope,input); }
+      catch { claimDenied('COMMAND_CLAIM_BINDING_INVALID'); }
+      return this.#claimEncoded(scope,s,records,binding.encoded,binding);
+    });
+  }
+  #claimEncoded(scope: Scope, s: Row, records: CommandClaimRecord[], encoded: EncodedDelegatedCommand,
+    nativeStart?: CheckoutStartBinding): CommandClaimView {
       if (encoded.request.command === 'RECOVER_RESULT') claimDenied('COMMAND_CLAIM_INPUT_INVALID');
       const request = encoded.request;
       const identity = commandClaimIdentity(s.tenant_id,s.store_id,this.#namespace,request.command_id);
@@ -124,7 +157,7 @@ export class DelegatedCommandClaims {
         if (previous.body.command_digest !== encoded.command_digest) claimDenied('COMMAND_CLAIM_CONFLICT');
         if (previous.body.command_kind !== request.command || previous.body.challenge_fingerprint !== challenge)
           claimDenied('COMMAND_CLAIM_CONFLICT');
-        this.#now(records); return this.#finish(scope,previous,true);
+        this.#now(records); return this.#finish(scope,previous,true,nativeStart);
       }
       if (records.length >= CLAIM_MAX_ROWS) claimDenied('COMMAND_CLAIM_ROW_LIMIT');
       const now = this.#now(records);
@@ -140,8 +173,7 @@ export class DelegatedCommandClaims {
         const occupied = records.find(r => r.body.challenge_fingerprint === challenge)!;
         this.#owned(s,occupied); claimDenied('COMMAND_CLAIM_CHALLENGE_CONFLICT');
       }
-      return this.#finish(scope,insertCommandClaim(this.#kernel,body),true);
-    });
+      return this.#finish(scope,insertCommandClaim(this.#kernel,body),true,nativeStart);
   }
   read(scope: Scope, originalCommandId: string): CommandClaimView {
     return this.#run(scope,false,false,(s,records) => this.#finish(scope,this.#lookup(s,records,originalCommandId)));

@@ -1,6 +1,6 @@
 {
-  "source_file_count": 1813,
-  "source_count_reason": "ADR-0076 retains all 1800 prior source members and adds thirteen assigned paths for the command claim owner, typed records/privacy, contract, six test/helper files, guide, assignment and work record. Only the actual source-count observation and this explanation change; all other oracle fields remain unchanged.",
+  "source_file_count": 1821,
+  "source_count_reason": "ADR-0077 retains all 1813 prior source members and adds eight assigned paths for native checkout START construction, its contract, three test/helper files, guide, assignment and work record. Only this actual source-count observation and explanation change; all other oracle fields remain unchanged.",
   "component_ids": [
     "git-agent-adaptations",
     "rifare-developer-helpers",

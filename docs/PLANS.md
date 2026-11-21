@@ -4,7 +4,18 @@ The current source includes the bounded local **M20-G03 item-level drop-off
 handoff** implementation. Start with the [architecture](ARCHITECTURE.md) for
 existing modules and [roadmap](ROADMAP.md) for remaining work.
 
-## Current original-command checkpoint
+## Current native START assignment
+
+**RCG-4B-C3 — native checkout START_USE claims** is assigned under
+[ADR-0077](decisions/0077-native-checkout-start-claims.md). It connects the actual
+current checkout preview to original-command retention, with final purchase
+currentness checked inside the journal's top-level transaction. The new
+[native source](DELEGATED-CHECKOUT-STARTS.md) selects fixed purchase fields and
+the complete preview digest; grant and provider correlation remain unverified.
+Implementation, focused verification and independent reviews are in progress.
+See [the current work record](../work/records/RCG-4B-C3.md).
+
+## Previous original-command checkpoint
 
 **RCG-4B-C2 — durable original command claims** is complete within
 [ADR-0076](decisions/0076-durable-delegated-command-claims.md). Both independent
@@ -55,18 +66,19 @@ was published as exact-tree checkpoint `4ac8556`, matching native `413f849`;
 the original native history remains separately preserved. These are local
 plain-browser/SQLite observations, not React/PostgreSQL or full RCG-5 acceptance.
 
-The provider snapshot inspected at C2 closing is `3d1f699`. In addition to the
-existing full-machine/MAP, credential-authority, machine-policy, current access
-and protected Flow ingress owners, it now implements the explicit default-off
-`marty-delegated-use` host with fourteen restricted database connections and
-mandatory mutual TLS. Public Gateway/wallet/client selection and deployed
-serving qualification remain open. See the
+The provider snapshot inspected for C3 is `0a1ef66`. Its explicit default-off
+`marty-delegated-use` host and concrete current owners now include protected
+original-receipt recovery and an independent offline receipt consumer. Mandatory
+mutual TLS and fourteen restricted database connections remain its internal
+composition. Public Gateway/wallet/client selection and deployed serving
+qualification remain open. This is source inspection, not a new provider test
+execution. See the
 [provider checkpoint and exact contracts](DELEGATED-COMMAND-CONSUMER.md#provider-and-next-integration).
 
-After the local codec and original-command journal prerequisites, the next dependency is the qualified public
+After the local codec, original-command journal and native START construction prerequisites, the next dependency is the qualified public
 authentication/current-state, start/final-use and original-result contract. Once
 available, assign the bounded **RCG-4B public transport, authenticated namespace and native purchase
-binding composition**, then the complete isolated **RCG-5 cross-service journey** and connected
+binding for finalization/sending composition**, then the complete isolated **RCG-5 cross-service journey** and connected
 **RCG-6 profile**. Preserve original operation recovery and Rifare's execution,
 budget, reservation and business-idempotency ownership. Do not rebuild the landed
 receipt UI or bridge the public contract gap through private provider storage.
