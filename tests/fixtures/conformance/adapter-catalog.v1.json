@@ -19,8 +19,11 @@
   ],
   "source_files": [
     "packages/adapters/carrier-quote-fixture-source.mts",
+    "packages/adapters/checkout-quote-fixture-source.mts",
     "packages/adapters/claims-fixture-source.mts",
     "packages/adapters/claims-source-guards.mts",
+    "packages/adapters/delegated-receipts/jose-verifier.mts",
+    "packages/adapters/delegated-receipts/strict-json.mts",
     "packages/adapters/delivery-trial-source-guards.mts",
     "packages/adapters/demand-fixture-source.mts",
     "packages/adapters/dropoff-credential-fixture-source.mts",
@@ -3498,6 +3501,10 @@
         {
           "path": "packages/adapters/upsell-source-guards.mts",
           "sha256": "e31e0d430c6c0dbdf68d6cb5969bda7b84069d678bf9d447ed9db6b352ba0163"
+        },
+        {
+          "path": "packages/adapters/checkout-quote-fixture-source.mts",
+          "sha256": "4da11a8db56fa2a5cecd678bc47fecf3f59523f4ddd84d3081d09df73e749af5"
         }
       ],
       "version": "source-sha256:a125a8b3f9f508b686e74f820c0ff48326f92890f8c11712afb7ee63cbb0b286",
@@ -5568,13 +5575,111 @@
           "direct_fixtures": []
         }
       ]
+    },
+    {
+      "id": "delegated_receipt_signatures",
+      "kind": "diagnostic",
+      "source_files": [
+        {
+          "path": "packages/adapters/delegated-receipts/jose-verifier.mts",
+          "sha256": "42f724028b21e4412a721bbe08aabb0fc144df06924f14d401ede88b6814d502"
+        },
+        {
+          "path": "packages/adapters/delegated-receipts/strict-json.mts",
+          "sha256": "35665ff4c3d7244bb973a24c5dbf661d884e8b1ed52d60c24045fc86c81c5bba"
+        }
+      ],
+      "version": "source-sha256:42f724028b21e4412a721bbe08aabb0fc144df06924f14d401ede88b6814d502",
+      "api_version": "local-delegated-decision-jws-v1",
+      "external_version": null,
+      "external_account": null,
+      "external_scopes_attested": false,
+      "source_oracle": "Original synthetic public-key/signature fixtures verify exact compact bytes, configured issuer/purpose/kid/algorithm pins, strict JSON and trust retirement. No provider transport, final-use, receipt redemption or merchant operation.",
+      "operations": [
+        {
+          "id": "receipt.signature.verify",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "RCG3-JOSE-TRUST",
+              "name": "RCG3-JOSE-TRUST receipt cannot choose another issuer algorithm or unknown key",
+              "path": "tests/development/delegated-receipt-jose.test.mts",
+              "sha256": "ad711f803be37d08f8a72c9c80b84c63b40162e39c7724be24fc6f29cc58cd97"
+            },
+            {
+              "id": "RCG3-JOSE-KEY-CONFIG",
+              "name": "RCG3-JOSE-KEY-CONFIG private symmetric mismatched and ambiguous keys are rejected",
+              "path": "tests/development/delegated-receipt-jose.test.mts",
+              "sha256": "ad711f803be37d08f8a72c9c80b84c63b40162e39c7724be24fc6f29cc58cd97"
+            },
+            {
+              "id": "RCG3-JOSE-HEADERS",
+              "name": "RCG3-JOSE-HEADERS signed unknown remote-key and critical header fields deny",
+              "path": "tests/development/delegated-receipt-jose.test.mts",
+              "sha256": "ad711f803be37d08f8a72c9c80b84c63b40162e39c7724be24fc6f29cc58cd97"
+            },
+            {
+              "id": "RCG3-JOSE-HEADER-DUPLICATES",
+              "name": "RCG3-JOSE-HEADER-DUPLICATES valid signatures do not excuse raw or escaped duplicate names",
+              "path": "tests/development/delegated-receipt-jose.test.mts",
+              "sha256": "ad711f803be37d08f8a72c9c80b84c63b40162e39c7724be24fc6f29cc58cd97"
+            },
+            {
+              "id": "RCG3-JOSE-PAYLOAD-DUPLICATES",
+              "name": "RCG3-JOSE-PAYLOAD-DUPLICATES reject authenticated duplicate fields at nested paths",
+              "path": "tests/development/delegated-receipt-jose.test.mts",
+              "sha256": "ad711f803be37d08f8a72c9c80b84c63b40162e39c7724be24fc6f29cc58cd97"
+            },
+            {
+              "id": "RCG3-JOSE-UTF8",
+              "name": "RCG3-JOSE-UTF8 authenticated invalid UTF8 BOM and unpaired Unicode deny",
+              "path": "tests/development/delegated-receipt-jose.test.mts",
+              "sha256": "ad711f803be37d08f8a72c9c80b84c63b40162e39c7724be24fc6f29cc58cd97"
+            },
+            {
+              "id": "RCG3-JOSE-JSON-VALID",
+              "name": "RCG3-JOSE-JSON-VALID escaped strings arrays and distinct nested names retain exact values",
+              "path": "tests/development/delegated-receipt-jose.test.mts",
+              "sha256": "ad711f803be37d08f8a72c9c80b84c63b40162e39c7724be24fc6f29cc58cd97"
+            },
+            {
+              "id": "RCG3-JOSE-BOUNDS",
+              "name": "RCG3-JOSE-BOUNDS token encoding and JSON nesting remain bounded",
+              "path": "tests/development/delegated-receipt-jose.test.mts",
+              "sha256": "ad711f803be37d08f8a72c9c80b84c63b40162e39c7724be24fc6f29cc58cd97"
+            },
+            {
+              "id": "RCG3-JOSE-SNAPSHOTS",
+              "name": "RCG3-JOSE-SNAPSHOTS caller mutation cannot change configured key or pending trust",
+              "path": "tests/development/delegated-receipt-jose.test.mts",
+              "sha256": "ad711f803be37d08f8a72c9c80b84c63b40162e39c7724be24fc6f29cc58cd97"
+            },
+            {
+              "id": "RCG3-JOSE-RETIRE",
+              "name": "RCG3-JOSE-RETIRE close rejects existing and in-flight key verification",
+              "path": "tests/development/delegated-receipt-jose.test.mts",
+              "sha256": "ad711f803be37d08f8a72c9c80b84c63b40162e39c7724be24fc6f29cc58cd97"
+            },
+            {
+              "id": "RCG3-JOSE-CANCEL",
+              "name": "RCG3-JOSE-CANCEL cancellation before or during import cannot return evidence",
+              "path": "tests/development/delegated-receipt-jose.test.mts",
+              "sha256": "ad711f803be37d08f8a72c9c80b84c63b40162e39c7724be24fc6f29cc58cd97"
+            }
+          ],
+          "direct_fixtures": []
+        }
+      ]
     }
   ],
   "fixture_administration": "Seed, injected faults, and source observation setters are fixture administration, not remote provider operations. Unnamed real gateway/carrier/warehouse/ERP adapters are unavailable.",
   "oracle_pins": [
     {
       "path": "apps/commerce-api/server.mts",
-      "sha256": "73ff170e8c819823cb447d5b6838fb109fe8c499a878fa4a43437e55091a93e0"
+      "sha256": "1562ab2652349766d5affd04ea529b17888ec274f98a8ed1f8e015ffffd41b61"
     },
     {
       "path": "migrations/commerce/001-foundation.sql",
@@ -5834,11 +5939,11 @@
     },
     {
       "path": "packages/commerce/action-gateway.mts",
-      "sha256": "b2f00084f23b53c0be0e2d69426dd5186393927c76d7d592acf141b35796a65c"
+      "sha256": "77885c013719a6da810627eae561529ba01a2a2c8d886a2ce7656ba104a1bbe0"
     },
     {
       "path": "packages/commerce/authorization.mts",
-      "sha256": "9811f1692f9dc57545b907fcf1c5982dc2cb61c5b9b54d3bd2e001823f87ec75"
+      "sha256": "ef99a16e5af8ba60eea95cd1abdb1bf4f5861695761cc928a8a121b873db9b97"
     },
     {
       "path": "packages/commerce/capabilities.mts",
@@ -5982,7 +6087,7 @@
     },
     {
       "path": "packages/commerce/kernel.mts",
-      "sha256": "f462705e27b2848decee85168381f90d0f89b4840f8bebe2e30605ce6717a58c"
+      "sha256": "03a073a04df511cd730f9fa73bd2bae3d771bdc68402241a612c450575209af3"
     },
     {
       "path": "packages/commerce/knowledge.mts",
@@ -6010,11 +6115,11 @@
     },
     {
       "path": "packages/commerce/operation-receipts.mts",
-      "sha256": "8961c26be8ae9c01123ef5594de6f3766c83e9a95ee90118e7d8636ea28cc3c1"
+      "sha256": "fef8dc6dd20cb13aaae61820bd16e0c593cda976465e475862e9c3937717ec98"
     },
     {
       "path": "packages/commerce/operation-store.mts",
-      "sha256": "56df66aa8ef55031f4d4b253f364c5e64dfb5aabdc47e8a037c8e6c79562d357"
+      "sha256": "2377b7bd122d512b13939bafcf8a8ee68c7865bb5db6f2e318534807072d789e"
     },
     {
       "path": "packages/commerce/order-edit-core.mts",
@@ -6038,7 +6143,7 @@
     },
     {
       "path": "packages/commerce/privacy-lifecycle.mts",
-      "sha256": "e1edd8bc68833888d4d32b2a6b364374f48e0907d92d43f684ff3ce85ec18f50"
+      "sha256": "c39ad6fd2b6b2b2f8f01284594ac83058bbe4196d1a8ffc4985dbaf617114bdc"
     },
     {
       "path": "packages/commerce/profile-editor.mts",
@@ -6078,7 +6183,7 @@
     },
     {
       "path": "packages/commerce/resolution-execution.mts",
-      "sha256": "047688506a94a2d3f22c50dd4f4c274ed99b31f65c97bf80825f7b2cf990e24e"
+      "sha256": "80559ecda17b34b5bf4b7999ece781afbb6d11cfa8a07a7678156ada775efb53"
     },
     {
       "path": "packages/commerce/resolution-ledger.mts",
@@ -6174,7 +6279,7 @@
     },
     {
       "path": "packages/commerce/safe-recovery.mts",
-      "sha256": "13c588ca9d4dbfd3583c7f90cc08f3eb73aefe6d215d9f96eb89fc74f8f2fa81"
+      "sha256": "fbb92a652c18a5df7f7f6444525eb3211d3b90f20f43de92a7b797833919e82b"
     },
     {
       "path": "packages/commerce/secrets.mts",
@@ -6274,7 +6379,7 @@
     },
     {
       "path": "packages/commerce/support-conversations.mts",
-      "sha256": "a25462a44ff5477ebe16bb419b9c121a07f8b52c5845f72594d6de8005be0b06"
+      "sha256": "3cbc57e661f3051277bc5ba16d0346c4931bdfa031edd4249f7846ad08015022"
     },
     {
       "path": "packages/commerce/support-core.mts",
@@ -6282,7 +6387,7 @@
     },
     {
       "path": "packages/commerce/support-delivery.mts",
-      "sha256": "2610b16a44818e4decc814ea0a6f4bc03c18a0820c9ca89292abf6b0da04e940"
+      "sha256": "a7124a5ee7cfe2e3f4927e5a31129968f9faf6f70a24a2d134b4a434e8012d2c"
     },
     {
       "path": "packages/commerce/support-errors.mts",
@@ -6302,7 +6407,7 @@
     },
     {
       "path": "packages/commerce/support-service.mts",
-      "sha256": "e0e9a0a6f742856e61a29b60bff0fa82de898193bce9e060f4edfa0ab0d96d49"
+      "sha256": "0cbb72dd2fdfdd4c89960518bed66a19e110f4d432b8fea90445bd1e626f3638"
     },
     {
       "path": "packages/commerce/support-tracking.mts",
@@ -6326,7 +6431,7 @@
     },
     {
       "path": "packages/development/http.mts",
-      "sha256": "ae40c862caa9d796c7122a630d4085432a673204b2fe4065361559e9162a28ad"
+      "sha256": "9de15a38cab353d9bfe7a2db115cacb5a4a90b92abf4788d3c41765c906a2cdd"
     },
     {
       "path": "tests/development/adapter-catalog-bindings.mts",
@@ -6606,7 +6711,7 @@
     },
     {
       "path": "tests/fixtures/conformance/expected-coverage.v1.json",
-      "sha256": "d0a71324b4b470f8a6dfb70d007d78eb706d9491891be43eb2c0ab69a0d31504"
+      "sha256": "3695be6b5c63ed41b45dfed2465ffa5c9df5103eadcd276d19aefa56687c07c9"
     },
     {
       "path": "tests/fixtures/conformance/source-inputs.v1.json",
@@ -6614,7 +6719,7 @@
     },
     {
       "path": "tests/fixtures/development/command-manifests.v1.json",
-      "sha256": "79e54714f969fe4ee77daf85965748cdf3e856e6a03d4a5fc498b3a4d216bc21"
+      "sha256": "58af0a5f5a959063f1dff6b48c1bb5e393b6d384de63fb88eb0c316863b327f9"
     },
     {
       "path": "tests/fixtures/exchange-finance/independent-values.json",
@@ -6786,7 +6891,7 @@
     },
     {
       "path": "packages/commerce/merchant-portability.mts",
-      "sha256": "56834166795b56b76d500c1af1a8574ec7fefbcbc6829126cfcc37ec78892b76"
+      "sha256": "90b036ded17897d7412e503f70fc4c63da6a17b9414af30548f2f212360be120"
     },
     {
       "path": "packages/commerce/contracts/carrier-quotes.v1.json",
@@ -8303,6 +8408,58 @@
     {
       "path": "packages/commerce/contracts/dropoff-handoffs.v1.json",
       "sha256": "539fecc28ce49ef7600d504db49ace7856e223c8ce3a21acae95d916d362cf01"
+    },
+    {
+      "path": "packages/commerce/checkout-preview.mts",
+      "sha256": "a130b5730a7610a040b01bcaeda701e81d0433dbd8aa36ff8fbeeecdafb178ac"
+    },
+    {
+      "path": "packages/commerce/delegated-receipt-binding.mts",
+      "sha256": "eb7f43d680c86034e49e9cfd83c5924ee00116d1d596672a9f14faf9d54f6362"
+    },
+    {
+      "path": "tests/development/receipt-signature-helpers.mts",
+      "sha256": "c6707e20284f7aad81e56cc7c7c1e936141c6e3fef1b6e3b17815130a61ff477"
+    },
+    {
+      "path": "packages/adapters/delegated-receipts/package.json",
+      "sha256": "6463478cd08fe663ad196c8bb769fa35ba74645131b67fdbde0e1a9e4fa5baf1"
+    },
+    {
+      "path": "packages/adapters/delegated-receipts/package-lock.json",
+      "sha256": "c1d026d8abb6629ecabe749fbe8a247756217ad68587c81e0e801d3ea2e212e6"
+    },
+    {
+      "path": "packages/commerce/checkout-previews.mts",
+      "sha256": "a88c4a5aa81eb08885694d3a80a4771a5f9afe2a9e5d9dfd5f1536949b56aee5"
+    },
+    {
+      "path": "packages/commerce/delegated-checkout-receipts.mts",
+      "sha256": "d01575393e338b39109d93795228e20e883c1b82787fdc636219faea980611f8"
+    },
+    {
+      "path": "packages/commerce/delegated-checkout-intents.mts",
+      "sha256": "81baad3fcc577d3f94ec32588dde79d3cf3606199ed5db08a8f8e58c1871b6d1"
+    },
+    {
+      "path": "packages/commerce/delegated-checkout-api.mts",
+      "sha256": "f041b0410dc62a7318783c4f35163a593eeaa65ccbeb6578210c6e8dbb33f408"
+    },
+    {
+      "path": "packages/commerce/contracts/delegated-checkout-api.v1.json",
+      "sha256": "2f9f1b124855c0ac404317e5000fe17a45b27fc489d6e5861e46a7f6e61951e8"
+    },
+    {
+      "path": "packages/commerce/delegated-checkout-intent-records.mts",
+      "sha256": "1d91faa2db4cc56cad5c12915d16ccd6eba994d12cb18a2f70d3bbe03fccce4f"
+    },
+    {
+      "path": "packages/commerce/delegated-checkout-intent-privacy.mts",
+      "sha256": "5fc96a48714442a1ae9a36ab425fb729c35f630e70c389b7dc59858675075f5a"
+    },
+    {
+      "path": "packages/commerce/contracts/delegated-checkout-recovery.v1.json",
+      "sha256": "359ab110e73b9c9141b1590a8aa46f38ac8c5415d7300c97f9bb2e2589ea0986"
     }
   ]
 }

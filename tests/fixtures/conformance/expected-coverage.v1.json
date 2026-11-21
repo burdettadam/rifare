@@ -970,12 +970,21 @@
         "semantics": "composed",
         "qualification": "sandbox-only"
       }
+    },
+    "delegated_receipt_signatures": {
+      "receipt.signature.verify": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      }
     }
   },
   "declarations": [
     "packages/adapters/carrier-quote-fixture-source.mts",
+    "packages/adapters/checkout-quote-fixture-source.mts",
     "packages/adapters/claims-fixture-source.mts",
     "packages/adapters/claims-source-guards.mts",
+    "packages/adapters/delegated-receipts/jose-verifier.mts",
+    "packages/adapters/delegated-receipts/strict-json.mts",
     "packages/adapters/delivery-trial-source-guards.mts",
     "packages/adapters/demand-fixture-source.mts",
     "packages/adapters/dropoff-credential-fixture-source.mts",
@@ -2245,6 +2254,16 @@
           "scope_kind": "server_local_fixture_only"
         },
         "dropoff.handoff.read": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        }
+      }
+    },
+    "delegated_receipt_signatures": {
+      "version": "source-sha256:42f724028b21e4412a721bbe08aabb0fc144df06924f14d401ede88b6814d502",
+      "api_version": "local-delegated-decision-jws-v1",
+      "operations": {
+        "receipt.signature.verify": {
           "required_scopes": [],
           "scope_kind": "server_local_fixture_only"
         }
@@ -4027,6 +4046,72 @@
       "name": "PORT-031-M11",
       "path": "tests/development/procurement-planning.test.mts",
       "sha256": "69228c7472b63563d6804cd6fbd5cdc6147bf2ceaecbeea215a395e77e6f6fc9"
+    },
+    {
+      "id": "RCG3-JOSE-BOUNDS",
+      "name": "RCG3-JOSE-BOUNDS token encoding and JSON nesting remain bounded",
+      "path": "tests/development/delegated-receipt-jose.test.mts",
+      "sha256": "ad711f803be37d08f8a72c9c80b84c63b40162e39c7724be24fc6f29cc58cd97"
+    },
+    {
+      "id": "RCG3-JOSE-CANCEL",
+      "name": "RCG3-JOSE-CANCEL cancellation before or during import cannot return evidence",
+      "path": "tests/development/delegated-receipt-jose.test.mts",
+      "sha256": "ad711f803be37d08f8a72c9c80b84c63b40162e39c7724be24fc6f29cc58cd97"
+    },
+    {
+      "id": "RCG3-JOSE-HEADER-DUPLICATES",
+      "name": "RCG3-JOSE-HEADER-DUPLICATES valid signatures do not excuse raw or escaped duplicate names",
+      "path": "tests/development/delegated-receipt-jose.test.mts",
+      "sha256": "ad711f803be37d08f8a72c9c80b84c63b40162e39c7724be24fc6f29cc58cd97"
+    },
+    {
+      "id": "RCG3-JOSE-HEADERS",
+      "name": "RCG3-JOSE-HEADERS signed unknown remote-key and critical header fields deny",
+      "path": "tests/development/delegated-receipt-jose.test.mts",
+      "sha256": "ad711f803be37d08f8a72c9c80b84c63b40162e39c7724be24fc6f29cc58cd97"
+    },
+    {
+      "id": "RCG3-JOSE-JSON-VALID",
+      "name": "RCG3-JOSE-JSON-VALID escaped strings arrays and distinct nested names retain exact values",
+      "path": "tests/development/delegated-receipt-jose.test.mts",
+      "sha256": "ad711f803be37d08f8a72c9c80b84c63b40162e39c7724be24fc6f29cc58cd97"
+    },
+    {
+      "id": "RCG3-JOSE-KEY-CONFIG",
+      "name": "RCG3-JOSE-KEY-CONFIG private symmetric mismatched and ambiguous keys are rejected",
+      "path": "tests/development/delegated-receipt-jose.test.mts",
+      "sha256": "ad711f803be37d08f8a72c9c80b84c63b40162e39c7724be24fc6f29cc58cd97"
+    },
+    {
+      "id": "RCG3-JOSE-PAYLOAD-DUPLICATES",
+      "name": "RCG3-JOSE-PAYLOAD-DUPLICATES reject authenticated duplicate fields at nested paths",
+      "path": "tests/development/delegated-receipt-jose.test.mts",
+      "sha256": "ad711f803be37d08f8a72c9c80b84c63b40162e39c7724be24fc6f29cc58cd97"
+    },
+    {
+      "id": "RCG3-JOSE-RETIRE",
+      "name": "RCG3-JOSE-RETIRE close rejects existing and in-flight key verification",
+      "path": "tests/development/delegated-receipt-jose.test.mts",
+      "sha256": "ad711f803be37d08f8a72c9c80b84c63b40162e39c7724be24fc6f29cc58cd97"
+    },
+    {
+      "id": "RCG3-JOSE-SNAPSHOTS",
+      "name": "RCG3-JOSE-SNAPSHOTS caller mutation cannot change configured key or pending trust",
+      "path": "tests/development/delegated-receipt-jose.test.mts",
+      "sha256": "ad711f803be37d08f8a72c9c80b84c63b40162e39c7724be24fc6f29cc58cd97"
+    },
+    {
+      "id": "RCG3-JOSE-TRUST",
+      "name": "RCG3-JOSE-TRUST receipt cannot choose another issuer algorithm or unknown key",
+      "path": "tests/development/delegated-receipt-jose.test.mts",
+      "sha256": "ad711f803be37d08f8a72c9c80b84c63b40162e39c7724be24fc6f29cc58cd97"
+    },
+    {
+      "id": "RCG3-JOSE-UTF8",
+      "name": "RCG3-JOSE-UTF8 authenticated invalid UTF8 BOM and unpaired Unicode deny",
+      "path": "tests/development/delegated-receipt-jose.test.mts",
+      "sha256": "ad711f803be37d08f8a72c9c80b84c63b40162e39c7724be24fc6f29cc58cd97"
     },
     {
       "id": "TEST-034",

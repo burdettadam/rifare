@@ -131,7 +131,7 @@
     },
     {
       "path": "apps/commerce-api/server.mts",
-      "sha256": "73ff170e8c819823cb447d5b6838fb109fe8c499a878fa4a43437e55091a93e0"
+      "sha256": "1562ab2652349766d5affd04ea529b17888ec274f98a8ed1f8e015ffffd41b61"
     },
     {
       "path": "apps/commerce-api/status-client.js",
@@ -395,7 +395,7 @@
     },
     {
       "path": "packages/commerce/action-gateway.mts",
-      "sha256": "b2f00084f23b53c0be0e2d69426dd5186393927c76d7d592acf141b35796a65c"
+      "sha256": "77885c013719a6da810627eae561529ba01a2a2c8d886a2ce7656ba104a1bbe0"
     },
     {
       "path": "packages/commerce/agency-access.mts",
@@ -411,7 +411,7 @@
     },
     {
       "path": "packages/commerce/authorization.mts",
-      "sha256": "9811f1692f9dc57545b907fcf1c5982dc2cb61c5b9b54d3bd2e001823f87ec75"
+      "sha256": "ef99a16e5af8ba60eea95cd1abdb1bf4f5861695761cc928a8a121b873db9b97"
     },
     {
       "path": "packages/commerce/bill-of-materials.mts",
@@ -655,7 +655,7 @@
     },
     {
       "path": "packages/commerce/kernel.mts",
-      "sha256": "f462705e27b2848decee85168381f90d0f89b4840f8bebe2e30605ce6717a58c"
+      "sha256": "03a073a04df511cd730f9fa73bd2bae3d771bdc68402241a612c450575209af3"
     },
     {
       "path": "packages/commerce/knowledge.mts",
@@ -675,7 +675,7 @@
     },
     {
       "path": "packages/commerce/merchant-portability.mts",
-      "sha256": "56834166795b56b76d500c1af1a8574ec7fefbcbc6829126cfcc37ec78892b76"
+      "sha256": "90b036ded17897d7412e503f70fc4c63da6a17b9414af30548f2f212360be120"
     },
     {
       "path": "packages/commerce/migration-cutover.mts",
@@ -707,11 +707,11 @@
     },
     {
       "path": "packages/commerce/operation-receipts.mts",
-      "sha256": "8961c26be8ae9c01123ef5594de6f3766c83e9a95ee90118e7d8636ea28cc3c1"
+      "sha256": "fef8dc6dd20cb13aaae61820bd16e0c593cda976465e475862e9c3937717ec98"
     },
     {
       "path": "packages/commerce/operation-store.mts",
-      "sha256": "56df66aa8ef55031f4d4b253f364c5e64dfb5aabdc47e8a037c8e6c79562d357"
+      "sha256": "2377b7bd122d512b13939bafcf8a8ee68c7865bb5db6f2e318534807072d789e"
     },
     {
       "path": "packages/commerce/operator-runbooks.mts",
@@ -771,7 +771,7 @@
     },
     {
       "path": "packages/commerce/privacy-lifecycle.mts",
-      "sha256": "e1edd8bc68833888d4d32b2a6b364374f48e0907d92d43f684ff3ce85ec18f50"
+      "sha256": "c39ad6fd2b6b2b2f8f01284594ac83058bbe4196d1a8ffc4985dbaf617114bdc"
     },
     {
       "path": "packages/commerce/procurement-approvals.mts",
@@ -851,7 +851,7 @@
     },
     {
       "path": "packages/commerce/resolution-execution.mts",
-      "sha256": "047688506a94a2d3f22c50dd4f4c274ed99b31f65c97bf80825f7b2cf990e24e"
+      "sha256": "80559ecda17b34b5bf4b7999ece781afbb6d11cfa8a07a7678156ada775efb53"
     },
     {
       "path": "packages/commerce/resolution-ledger.mts",
@@ -951,7 +951,7 @@
     },
     {
       "path": "packages/commerce/safe-recovery.mts",
-      "sha256": "13c588ca9d4dbfd3583c7f90cc08f3eb73aefe6d215d9f96eb89fc74f8f2fa81"
+      "sha256": "fbb92a652c18a5df7f7f6444525eb3211d3b90f20f43de92a7b797833919e82b"
     },
     {
       "path": "packages/commerce/secrets.mts",
@@ -1019,7 +1019,7 @@
     },
     {
       "path": "packages/commerce/support-conversations.mts",
-      "sha256": "a25462a44ff5477ebe16bb419b9c121a07f8b52c5845f72594d6de8005be0b06"
+      "sha256": "3cbc57e661f3051277bc5ba16d0346c4931bdfa031edd4249f7846ad08015022"
     },
     {
       "path": "packages/commerce/support-core.mts",
@@ -1027,7 +1027,7 @@
     },
     {
       "path": "packages/commerce/support-delivery.mts",
-      "sha256": "2610b16a44818e4decc814ea0a6f4bc03c18a0820c9ca89292abf6b0da04e940"
+      "sha256": "a7124a5ee7cfe2e3f4927e5a31129968f9faf6f70a24a2d134b4a434e8012d2c"
     },
     {
       "path": "packages/commerce/support-errors.mts",
@@ -1063,7 +1063,7 @@
     },
     {
       "path": "packages/commerce/support-service.mts",
-      "sha256": "e0e9a0a6f742856e61a29b60bff0fa82de898193bce9e060f4edfa0ab0d96d49"
+      "sha256": "0cbb72dd2fdfdd4c89960518bed66a19e110f4d432b8fea90445bd1e626f3638"
     },
     {
       "path": "packages/commerce/support-tracking.mts",
@@ -1147,7 +1147,7 @@
     },
     {
       "path": "packages/development/http.mts",
-      "sha256": "ae40c862caa9d796c7122a630d4085432a673204b2fe4065361559e9162a28ad"
+      "sha256": "9de15a38cab353d9bfe7a2db115cacb5a4a90b92abf4788d3c41765c906a2cdd"
     },
     {
       "path": "packages/development/order-edit-demo.mts",
@@ -1163,7 +1163,7 @@
     },
     {
       "path": "packages/development/support-demo.mts",
-      "sha256": "56920ecc804a57842a0a2ea8f6724010d3d2032f4ae866e6b5e5529b439cca92"
+      "sha256": "3a20bae34455c1a9004224069b1fb518b538f90fd29d1cf6fb3e0d79d235b65e"
     },
     {
       "path": "packages/operations/installation-upgrade.mts",
@@ -1376,6 +1376,66 @@
     {
       "path": "packages/commerce/dropoff-handoffs.mts",
       "sha256": "7be9060136fcb0c20e60172bfc96222bd550266f318585ed1581d42bdba1f075"
+    },
+    {
+      "path": "packages/adapters/checkout-quote-fixture-source.mts",
+      "sha256": "4da11a8db56fa2a5cecd678bc47fecf3f59523f4ddd84d3081d09df73e749af5"
+    },
+    {
+      "path": "packages/commerce/checkout-preview.mts",
+      "sha256": "a130b5730a7610a040b01bcaeda701e81d0433dbd8aa36ff8fbeeecdafb178ac"
+    },
+    {
+      "path": "packages/commerce/checkout-previews.mts",
+      "sha256": "a88c4a5aa81eb08885694d3a80a4771a5f9afe2a9e5d9dfd5f1536949b56aee5"
+    },
+    {
+      "path": "packages/adapters/delegated-receipts/jose-verifier.mts",
+      "sha256": "42f724028b21e4412a721bbe08aabb0fc144df06924f14d401ede88b6814d502"
+    },
+    {
+      "path": "packages/adapters/delegated-receipts/strict-json.mts",
+      "sha256": "35665ff4c3d7244bb973a24c5dbf661d884e8b1ed52d60c24045fc86c81c5bba"
+    },
+    {
+      "path": "packages/commerce/delegated-checkout-receipts.mts",
+      "sha256": "d01575393e338b39109d93795228e20e883c1b82787fdc636219faea980611f8"
+    },
+    {
+      "path": "packages/commerce/delegated-receipt-binding.mts",
+      "sha256": "eb7f43d680c86034e49e9cfd83c5924ee00116d1d596672a9f14faf9d54f6362"
+    },
+    {
+      "path": "packages/commerce/delegated-checkout-intent-records.mts",
+      "sha256": "1d91faa2db4cc56cad5c12915d16ccd6eba994d12cb18a2f70d3bbe03fccce4f"
+    },
+    {
+      "path": "packages/commerce/delegated-checkout-intents.mts",
+      "sha256": "81baad3fcc577d3f94ec32588dde79d3cf3606199ed5db08a8f8e58c1871b6d1"
+    },
+    {
+      "path": "packages/commerce/delegated-checkout-intent-privacy.mts",
+      "sha256": "5fc96a48714442a1ae9a36ab425fb729c35f630e70c389b7dc59858675075f5a"
+    },
+    {
+      "path": "packages/commerce/delegated-checkout-api.mts",
+      "sha256": "f041b0410dc62a7318783c4f35163a593eeaa65ccbeb6578210c6e8dbb33f408"
+    },
+    {
+      "path": "packages/development/delegated-checkout-fixture.mts",
+      "sha256": "bcf0bac41879f4ee233c12eb04c7093d8aee40a4bfbfc726547ed196006b5ef6"
+    },
+    {
+      "path": "packages/development/delegated-checkout-process.mts",
+      "sha256": "7fba344275675fda27cb4c091517da0bcdcb16fa692daf76a867307442eb3733"
+    },
+    {
+      "path": "apps/commerce-api/checkout-review.html",
+      "sha256": "4c52aa60146d4f1fc9239ebf57a6199e1f421a8e67a12b5d796143d25c90d855"
+    },
+    {
+      "path": "apps/commerce-api/checkout-review-client.js",
+      "sha256": "2c472e22e51eb9dbdc43978e16c111a259a34802a6237c1479cd78ae7f76c3d7"
     }
   ],
   "surfaces": [
@@ -1611,12 +1671,15 @@
         "packages/commerce/journey-followup-records.mts",
         "packages/commerce/journey-followup-guard.mts",
         "packages/commerce/journey-followup-privacy.mts",
-        "packages/commerce/loyalty-lifecycle.mts"
+        "packages/commerce/loyalty-lifecycle.mts",
+        "packages/commerce/delegated-checkout-intent-records.mts",
+        "packages/commerce/delegated-checkout-intents.mts",
+        "packages/commerce/delegated-checkout-intent-privacy.mts"
       ],
-      "export": "Subject cost/completion and return assistance records export; mixed-customer metric documents expose only owned members. Other aggregate and unbound configuration text requires scope review. Project only the subject assignment, exposure and native observations plus relevant seed-free experiment metadata. M11 aggregate source snapshots and forecasts contain no order or customer data. Agency aggregates allow only customer-free metric counts and explicit denominators. G05 composes transient scoped account, original-unit proposal, original-ID redemption and unchanged campaign/measurement projections. Missing award/reversal evidence remains explicit; no new report table, attributed issuance, monetary valuation or effect is created.",
-      "erasure": "Support metrics recheck case access when rebuilt; erased members remain unavailable in the frozen denominator. Insight drafts revoke. Bound prevention/risk bodies and customer IDs redact. Remove customer text and outcomes while retaining frozen assigned-arm denominators; missing/erased results remain unavailable. Rebuild explicit nested field allowlists even for empty resource lists and hash-only erasure. Every refresh recomputes current store authorization and the canonical subject-minimized metrics. The existing commerce_support_documents table also owns ADR-0053 shopper_memory records. Their exact case/resource/subject identity, explicit preference values and source references have dedicated all-version cleanup and allowlisted subject export; this kind is not treated as nonpersonal configuration. ADR-0055 commerce_journey documents retain only canonical intent references. Exact retained subject identity selects all versions for allowlisted export and erasure, including subjects with no current resources. Forgotten, superseded and uninstalled personal references scrub when unheld; held versions remain revoked and inaccessible. ADR-0056 journey_followup guard documents retain finite source/journey pins and only memory ID/version. Exact retained subject identity selects all versions for allowlisted export and erasure, including subjects with no current resources. Invalidated unheld guards scrub; held personal versions are revoked and inaccessible.",
-      "retention": "The support_documents table also carries merchant configuration, qualification and migration/import control. Do not bulk-delete it. Frozen denominator and minimized financial facts remain; no legal retention duration is inferred. Experiment counts and immutable source/prompt/catalog/model digests are audit, not causal-lift or placement guarantees. Keep frozen observations, declared cohorts, metrics, uncertainty limits and original digests when facts are unchanged. No agency aggregate cache is persisted. Minimized revoked revision/request-hash records retain replay refusal after personal values are removed. Context never falls back to an older version; held historical values are visible only in an explicitly scoped privacy export. Original operation, preview, approval and receipt owners retain their own records. Journey restoration/import preflights original and destination histories and scrubs restored personal references; current erasure suppression precedes held-content refusal. No journey, source or message automatically resumes. Original rule jobs/events and delivery operations retain their native identities. Latest-version guards invalidate waiting and final-send eligibility; restored/imported guards scrub after current suppression replay and never resume. Unsuppressed held personal guard histories cause atomic restoration refusal.",
-      "observation_required": "Rebuild the actual metric report after erasure and current-checkpoint import; inspect unbound document data before claiming subject completeness. Observe native event deduplication, cost coverage, erased unavailable units and catalog observation copies. Observe source availability cutoffs and retained zero, missing and censored demand denominators. Verify exact known-answer counts, denied drilldown and immediate exclusion after store revocation."
+      "export": "Subject cost/completion and return assistance records export; mixed-customer metric documents expose only owned members. Other aggregate and unbound configuration text requires scope review. Project only the subject assignment, exposure and native observations plus relevant seed-free experiment metadata. M11 aggregate source snapshots and forecasts contain no order or customer data. Agency aggregates allow only customer-free metric counts and explicit denominators. G05 composes transient scoped account, original-unit proposal, original-ID redemption and unchanged campaign/measurement projections. Missing award/reversal evidence remains explicit; no new report table, attributed issuance, monetary valuation or effect is created. ADR-0069 delegated_checkout_intent documents expose a bounded historical subject projection selected by original subject hash, including subjects without live resources. Current subject/resource suppression scrubs replayed personal copies before export; no raw JWS, session/proof token, key or full context is stored.",
+      "erasure": "Support metrics recheck case access when rebuilt; erased members remain unavailable in the frozen denominator. Insight drafts revoke. Bound prevention/risk bodies and customer IDs redact. Remove customer text and outcomes while retaining frozen assigned-arm denominators; missing/erased results remain unavailable. Rebuild explicit nested field allowlists even for empty resource lists and hash-only erasure. Every refresh recomputes current store authorization and the canonical subject-minimized metrics. The existing commerce_support_documents table also owns ADR-0053 shopper_memory records. Their exact case/resource/subject identity, explicit preference values and source references have dedicated all-version cleanup and allowlisted subject export; this kind is not treated as nonpersonal configuration. ADR-0055 commerce_journey documents retain only canonical intent references. Exact retained subject identity selects all versions for allowlisted export and erasure, including subjects with no current resources. Forgotten, superseded and uninstalled personal references scrub when unheld; held versions remain revoked and inaccessible. ADR-0056 journey_followup guard documents retain finite source/journey pins and only memory ID/version. Exact retained subject identity selects all versions for allowlisted export and erasure, including subjects with no current resources. Invalidated unheld guards scrub; held personal versions are revoked and inaccessible. Dedicated intent hooks revoke ordinary use under holds and minimize unheld personal purchase/context/challenge/receipt fields during erasure, cancellation and uninstall. Original subject/resource selection covers reassignment and already-erased replay paths. Ordinary intent reads hide held revoked personal content; explicit scoped privacy export is separate.",
+      "retention": "The support_documents table also carries merchant configuration, qualification and migration/import control. Do not bulk-delete it. Frozen denominator and minimized financial facts remain; no legal retention duration is inferred. Experiment counts and immutable source/prompt/catalog/model digests are audit, not causal-lift or placement guarantees. Keep frozen observations, declared cohorts, metrics, uncertainty limits and original digests when facts are unchanged. No agency aggregate cache is persisted. Minimized revoked revision/request-hash records retain replay refusal after personal values are removed. Context never falls back to an older version; held historical values are visible only in an explicitly scoped privacy export. Original operation, preview, approval and receipt owners retain their own records. Journey restoration/import preflights original and destination histories and scrubs restored personal references; current erasure suppression precedes held-content refusal. No journey, source or message automatically resumes. Original rule jobs/events and delivery operations retain their native identities. Latest-version guards invalidate waiting and final-send eligibility; restored/imported guards scrub after current suppression replay and never resume. Unsuppressed held personal guard histories cause atomic restoration refusal. Minimized intent identities and challenge/receipt/token fingerprints remain personal linkage and local duplicate-refusal tombstones, not anonymous data or provider replay prevention. A one-way expiry observation survives clock rollback and restart without renewing original deadlines. Restore/import preflights typed source and destination rows, applies current external suppression before held-content refusal, revokes/minimizes first and repeated imports and never resumes verification or dispatch.",
+      "observation_required": "Rebuild the actual metric report after erasure and current-checkpoint import; inspect unbound document data before claiming subject completeness. Observe native event deduplication, cost coverage, erased unavailable units and catalog observation copies. Observe source availability cutoffs and retained zero, missing and censored demand denominators. Verify exact known-answer counts, denied drilldown and immediate exclusion after store revocation. Exercise actual signed local receipt capture, held and zero-resource erasure/export, resource reassignment, replay suppression, uninstall, restore and first/repeated merchant import; inspect row/body/digest coherence and retained terminal claims."
     },
     {
       "id": "integration_replicas",
@@ -2096,12 +2159,26 @@
         "packages/commerce/dropoff-credential-values.mts",
         "packages/commerce/dropoff-credentials.mts",
         "packages/commerce/dropoff-handoff-values.mts",
-        "packages/commerce/dropoff-handoffs.mts"
+        "packages/commerce/dropoff-handoffs.mts",
+        "packages/commerce/checkout-preview.mts",
+        "packages/commerce/checkout-previews.mts",
+        "packages/commerce/delegated-receipt-binding.mts",
+        "packages/commerce/delegated-checkout-receipts.mts",
+        "packages/adapters/delegated-receipts/jose-verifier.mts",
+        "packages/adapters/delegated-receipts/strict-json.mts",
+        "packages/commerce/delegated-checkout-intents.mts",
+        "apps/commerce-api/server.mts",
+        "packages/development/http.mts",
+        "packages/commerce/delegated-checkout-api.mts",
+        "packages/development/delegated-checkout-fixture.mts",
+        "packages/development/delegated-checkout-process.mts",
+        "apps/commerce-api/checkout-review.html",
+        "apps/commerce-api/checkout-review-client.js"
       ],
-      "export": "Previously returned response bodies, clipboard, screenshots and tabs are caller copies. Ephemeral carrier quote snapshots and locale-formatted display values are also returned caller/process/browser copies. Returned packing scans/status, label and carrier receipts, manifest events and warehouse snapshots are also caller/process copies whose previously returned bytes cannot be recalled by local erasure. Warehouse return timelines, stock histories, transfer receipts and cycle reconciliation results also remain caller/process copies after they have been returned. Caller-owned growth previews and media are outside automatic canonical export. Returned M10 proposals, evidence drafts and consent previews remain caller-owned copies. M11 planning, PO, receipt and production previews returned to callers are separate copies. M12 mirrored bytes, templates, aggregate results and draft qualification/decision packets held by callers are separate copies. M19 loyalty balances, rules and quotes exist only in current authorized response/process copies; no loyalty cache is persisted in commerce storage. Original-unit accrual/reversal projections are bounded transient staff responses, rechecking native current authority and financial evidence; they create no customer-linked core cache. G03 returned point quotes and operation projections are caller-owned copies. Durable redemption terms are separately inventoried in support documents; G01 balances and G02 accrual projections remain transient. G04 comparison and G05 lifecycle/retained results are caller-owned copies. G05 retained results contain only already-minimized original G03 projections and do not reload customer or provider context. M20-G01 returns caller-owned transient original-line choices after current human ownership, native resource permissions, existing customer proof, source freshness and recovery/privacy checks. Customer IDs, proof/session hashes, raw source envelopes and usable credentials are omitted; reads create no effect or renewed proof. M20-G02 returns a usable synthetic credential only to its actual original human operator after current proof, ownership, resource, lifecycle and provider checks; delivery neither renews proof nor consumes approval again. Plaintext and injected keys are excluded from durable ordinary records, journals and ordinary error messages. M20-G03 imports original event IDs under actual human permissions and final native/source rechecks. Source-free retained projection does not renew customer proof or recover credential payloads, and cannot authorize another import.",
-      "erasure": "Revocation blocks later server reads/completion; it cannot recall bytes already in an arbitrary process, plugin, scanner or browser. Callers discard copied previews, media, generated output and links after withdrawal/erasure. Callers discard copied proofs, evidence, terms and commands after withdrawal or erasure. Callers discard obsolete copied source facts and approval previews. Callers discard obsolete artifact, configuration and evidence snapshots. M17 clears owned byte buffers and drops transient references, but does not claim forensic JavaScript-string, caller-copy, OS-snapshot or provider deletion. Missing M16 isolation is not inherited. M19 loyalty access rechecks current customer proof, source ownership, support generation, erasure, uninstall and recovery restrictions; prior returned copies cannot be recalled and grant no effect authority.",
-      "retention": "No general heap, browser history, swap, core dump or log deletion is implemented. Canonical minimization does not erase caller memory. Canonical minimization cannot erase caller memory. Canonical changes cannot erase arbitrary caller memory. Canonical erasure cannot remove arbitrary caller memory or independently stored mirror files. Shadow preparation holds bounded authorized text in process memory; caller-held snapshots/receipts need separate disposal and confer no replay authority. M14 opaque preparations retain bounded source snapshots until consumed; current authority is rechecked at actual route application.",
-      "observation_required": "Inventory actual deployed processes/plugins/logging and browser storage; observe their cleanup and retention separately. Source pins only flag code drift. Observe caller-retained growth drafts, media, templates, tokens and model outputs. Observe caller-held warranty/dispute packets and trial/partner previews. Observe caller-held quantity, supplier term, forecast and source command snapshots. Inspect caller copies and distinguish diagnostic contract validation from independent external or human qualification."
+      "export": "Previously returned response bodies, clipboard, screenshots and tabs are caller copies. Ephemeral carrier quote snapshots and locale-formatted display values are also returned caller/process/browser copies. Returned packing scans/status, label and carrier receipts, manifest events and warehouse snapshots are also caller/process copies whose previously returned bytes cannot be recalled by local erasure. Warehouse return timelines, stock histories, transfer receipts and cycle reconciliation results also remain caller/process copies after they have been returned. Caller-owned growth previews and media are outside automatic canonical export. Returned M10 proposals, evidence drafts and consent previews remain caller-owned copies. M11 planning, PO, receipt and production previews returned to callers are separate copies. M12 mirrored bytes, templates, aggregate results and draft qualification/decision packets held by callers are separate copies. M19 loyalty balances, rules and quotes exist only in current authorized response/process copies; no loyalty cache is persisted in commerce storage. Original-unit accrual/reversal projections are bounded transient staff responses, rechecking native current authority and financial evidence; they create no customer-linked core cache. G03 returned point quotes and operation projections are caller-owned copies. Durable redemption terms are separately inventoried in support documents; G01 balances and G02 accrual projections remain transient. G04 comparison and G05 lifecycle/retained results are caller-owned copies. G05 retained results contain only already-minimized original G03 projections and do not reload customer or provider context. M20-G01 returns caller-owned transient original-line choices after current human ownership, native resource permissions, existing customer proof, source freshness and recovery/privacy checks. Customer IDs, proof/session hashes, raw source envelopes and usable credentials are omitted; reads create no effect or renewed proof. M20-G02 returns a usable synthetic credential only to its actual original human operator after current proof, ownership, resource, lifecycle and provider checks; delivery neither renews proof nor consumes approval again. Plaintext and injected keys are excluded from durable ordinary records, journals and ordinary error messages. M20-G03 imports original event IDs under actual human permissions and final native/source rechecks. Source-free retained projection does not renew customer proof or recover credential payloads, and cannot authorize another import. ADR-0070 local checkout HTTP returns only original native preview/intent views under current customer proof. The independent Python client owns its response copies; no provider final use is implied.",
+      "erasure": "Revocation blocks later server reads/completion; it cannot recall bytes already in an arbitrary process, plugin, scanner or browser. Callers discard copied previews, media, generated output and links after withdrawal/erasure. Callers discard copied proofs, evidence, terms and commands after withdrawal or erasure. Callers discard obsolete copied source facts and approval previews. Callers discard obsolete artifact, configuration and evidence snapshots. M17 clears owned byte buffers and drops transient references, but does not claim forensic JavaScript-string, caller-copy, OS-snapshot or provider deletion. Missing M16 isolation is not inherited. M19 loyalty access rechecks current customer proof, source ownership, support generation, erasure, uninstall and recovery restrictions; prior returned copies cannot be recalled and grant no effect authority. Current proof is checked before receipt-body collection and native owners recheck after collection and asynchronous verification. Revoked/minimized intent views retain their original privacy rules.",
+      "retention": "No general heap, browser history, swap, core dump or log deletion is implemented. Canonical minimization does not erase caller memory. Canonical minimization cannot erase caller memory. Canonical changes cannot erase arbitrary caller memory. Canonical erasure cannot remove arbitrary caller memory or independently stored mirror files. Shadow preparation holds bounded authorized text in process memory; caller-held snapshots/receipts need separate disposal and confer no replay authority. M14 opaque preparations retain bounded source snapshots until consumed; current authority is rechecked at actual route application. RCG-4A authentic binding/receipt objects carry verifier-instance and original-scope provenance in WeakMaps. Caller-held authentic objects can keep original context/scope reachable until garbage collection; closing invalidates use without promising immediate zeroization. SQL/JSON copies cannot recreate that provenance. Receipt HTTP requests hold at most 102400 bytes around a maximum 100000-character compact JWS; other JSON routes retain 4096 bytes. Raw JWS and bearer input are not persisted or logged. Server logs contain finite event/status/code only, responses are no-store, and excess streamed input is discarded. Neither native strings nor separate Python process/caller memory is claimed to be zeroized. RCG-5A holds ephemeral original synthetic signing keys, context, receipt bytes and customer bearer in child/parent memory and a private IPC pipe. The copied Python client receives only its bearer environment and bounded receipt stdin. Child output and client output are bounded; reports omit secrets. The parent retains original bearer/receipt bytes across process loss for explicit historical access; this does not recreate verifier provenance or promise zeroization. RCG-5B recovery bodies are bounded to 4096 bytes and use strict JSON decoding before lookup. The preparation-response-loss probe retains only original intent ID, creation time, revision and binding digest from a completed owned response; the copied caller receives no lost response. Original references, bearer and response copies remain transient and are omitted from ordinary logs. RCG-5C holds the customer bearer, original references and sanitized review views only in page memory. Input capture clears the password field; session changes, local clearing and page exit/restoration clear dynamic personal DOM and invalidate late responses. Bodies are bounded to 262144 bytes with a ten-second deadline. Minimized/revoked views remove earlier purchase details. No browser storage, URL credentials, raw receipt display or automatic mutation retry is added; caller copies and forensic memory erasure remain outside this control.",
+      "observation_required": "Inventory actual deployed processes/plugins/logging and browser storage; observe their cleanup and retention separately. Source pins only flag code drift. Observe caller-retained growth drafts, media, templates, tokens and model outputs. Observe caller-held warranty/dispute packets and trial/partner previews. Observe caller-held quantity, supplier term, forecast and source command snapshots. Inspect caller copies and distinguish diagnostic contract validation from independent external or human qualification. Observe actual loopback refusal, input/response bounds, logs, client stdout/stderr and native privacy behavior; a copied independent client is local process evidence, not a complete provider deployment. RCG-5B returns only an original historical intent after current native proof and complete identity matching. The two caller-supplied original references are echoed transiently for response binding; erased stored personal fields and live provenance are not reconstructed. Absence cannot authorize a replacement. RCG-5C requires actual served-browser navigation, storage/log inspection and cleanup observation on a permitted host. Minimal-DOM controller tests and HTTP asset checks do not qualify browser execution, layout, CSP or accessibility."
     },
     {
       "id": "caller_export_artifacts",
@@ -2175,11 +2252,14 @@
         "packages/adapters/loyalty-incentive-fixture-source.mts",
         "packages/adapters/dropoff-fixture-source.mts",
         "packages/adapters/dropoff-credential-fixture-source.mts",
-        "packages/adapters/dropoff-handoff-fixture-source.mts"
+        "packages/adapters/dropoff-handoff-fixture-source.mts",
+        "packages/adapters/checkout-quote-fixture-source.mts",
+        "packages/development/delegated-checkout-fixture.mts",
+        "packages/development/delegated-checkout-process.mts"
       ],
       "export": "The legacy smoke SQLite/files and synthetic adapter ledgers are separate from commerce stores and do not contain authorized customer data. The carrier quote fixture holds bounded account, package and rate records only in its owning process memory. The shipping carrier fixture retains its original purchase/charge/void/refund, manifest and event ledgers in a separate synthetic SQLite database. Named warehouse configuration bindings and durable binding-requirement markers reside in two additional tables of the separate order-edit fixture database alongside its source orders, holds and effect history. Native warehouse return events and effective unit records plus inventory snapshot, movement, transfer and command journals share the existing warehouse fixture database and its sole available-stock owner. Separate sources contain invented local facts and are not subject-export bundles. Only invented local M10 source records are used; their stores remain separate from canonical exports. M11 fixture journals contain invented aggregate demand, supplier terms and stock observations only. M19 loyalty source identity and immutable versioned point/rule snapshots are invented data in a physically separate SQLite fixture database, outside commerce export. Historical accrual rules and original-purchase digest pins share that isolated synthetic loyalty database; they prove no provider points award and require independent fixture cleanup. G03 fixture identity, benefit catalogs, account anchors, original-ID journal and immutable debit snapshots persist in the separate disposable G01 source database. Core erasure does not claim source-side deletion or provider retention qualification. G04 applicability is customer-free configuration in the separate marketing fixture database, bound to exact durable marketing, shopping and loyalty identities. Explicit benefit/offer pairs and eligible variants do not constitute live entitlements. M20-G01 stores only short-lived customer-free site/destination/method declarations in the separate native partner fixture database, bound to exact durable fulfillment, partner and warehouse identities. No personal quotation or credential is persisted. M20-G02 retains immutable original credential commands/results and integrity-bound validity metadata in the separate partner fixture database. Delivery payloads use injected-key AES-256-GCM; forgetting removes key ID, nonce, ciphertext and tag while retaining immutable payload hash and provider history. Local forgetting does not revoke already-delivered copies. M20-G03 adds a bounded immutable secretless unit-observation journal in the existing separate partner fixture database. Payloads and raw manifests are validated transiently, never retained in this journal. Original admission, unit references and linked corrections survive expiry and source response loss.",
-      "erasure": "Commerce erasure cannot attest cleanup of independent fixture databases or filesystem attachments. Commerce erasure blocks reauthorized resource access but does not rewrite these independent source ledgers, warehouse binding records or source orders; only synthetic inputs are authorized. Commerce minimization cannot physically erase these source journals or invalidate caller-held native observations; the owning operator must retain or clean those synthetic copies independently. Operators own source-file cleanup; optional deletion queues address original effects and never replay processing. Separate fixture files require operator cleanup, with original unknown identities retained for reconciliation. Fixture files require separate operator cleanup; canonical privacy dispatches no native mutation. M19 loyalty fixture cleanup belongs to the test/operator; commerce erasure does not attest deletion of independent provider storage.",
-      "retention": "Fixture cleanup belongs to its owning test/operator directory; no migration to a production storage backend is claimed. Separate fixture files and old checkpoints are not physically erased by canonical erasure. Durable bound warranty/trial commands deny fresh-adapter new effects without current guards; original committed lookup remains distinct. Current guards are required for new bound effects; original committed lookup remains distinct. M13 development and distinct held-out texts and wire outputs are synthetic; held-out observations remain unrun and fixture results cannot become live evidence. M14 twelve-case local cohorts are insufficient for fixed60/60/30 qualification. Numeric120-case fixtures prove arithmetic/capacity only, without canonical inference provenance.",
+      "erasure": "Commerce erasure cannot attest cleanup of independent fixture databases or filesystem attachments. Commerce erasure blocks reauthorized resource access but does not rewrite these independent source ledgers, warehouse binding records or source orders; only synthetic inputs are authorized. Commerce minimization cannot physically erase these source journals or invalidate caller-held native observations; the owning operator must retain or clean those synthetic copies independently. Operators own source-file cleanup; optional deletion queues address original effects and never replay processing. Separate fixture files require operator cleanup, with original unknown identities retained for reconciliation. Fixture files require separate operator cleanup; canonical privacy dispatches no native mutation. M19 loyalty fixture cleanup belongs to the test/operator; commerce erasure does not attest deletion of independent provider storage. The RCG-5A parent stops its own child handles and removes only its allocated temporary directory after normal completion, failure or handled interruption. Forced parent termination can leave files for operator cleanup; this is not crash-proof reclamation or forensic erasure.",
+      "retention": "Fixture cleanup belongs to its owning test/operator directory; no migration to a production storage backend is claimed. Separate fixture files and old checkpoints are not physically erased by canonical erasure. Durable bound warranty/trial commands deny fresh-adapter new effects without current guards; original committed lookup remains distinct. Current guards are required for new bound effects; original committed lookup remains distinct. M13 development and distinct held-out texts and wire outputs are synthetic; held-out observations remain unrun and fixture results cannot become live evidence. M14 twelve-case local cohorts are insufficient for fixed60/60/30 qualification. Numeric120-case fixtures prove arithmetic/capacity only, without canonical inference provenance. RCG-5A allocates a private disposable parent directory, one copied standard-library client, and separate native/source SQLite files per instance with a small nonsecret identity/schema marker. Only original invented fixture data and native hashed session/proof bindings are persisted; raw bearer, compact JWS, private signing keys and complete contexts are not written. History startup validates the exact original files and performs no reseeding or replacement-session issuance.",
       "observation_required": "Verify that only synthetic data is used and inventory/clean owned fixture directories separately; treating them as a real deployment blocks privacy qualification. Inspect and clean the owned carrier and warehouse fixture databases and their files independently; source identities and configuration are not claimed anonymous. Inspect native event/correction/transfer IDs and independently handle warehouse database files, pages and source copies; this declaration does not attest physical stock or provider cleanup. Observe every new separate source database, purpose scope and original native effect ledger. Observe actual source bindings, separate fixture databases, and native effect/observation ledgers. Observe independent database identity, native receipt and output event identity, and shared warehouse_stock ownership."
     }
   ]

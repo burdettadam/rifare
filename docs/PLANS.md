@@ -4,7 +4,33 @@ The current source includes the bounded local **M20-G03 item-level drop-off
 handoff** implementation. Start with the [architecture](ARCHITECTURE.md) for
 existing modules and [roadmap](ROADMAP.md) for remaining work.
 
-## Next commerce increment
+## Current assigned increment
+
+The owner assigned **RCG-5C customer checkout review** under
+[ADR-0073](decisions/0073-customer-checkout-review.md), extending the reviewed
+RCG-5B original preparation recovery. The local `/checkout-review` page uses the
+unchanged native API to review an existing proposal, prepare once, recover an
+uncertain original request, observe history and cancel by observed revision.
+[The guide](DELEGATED-CHECKOUT-REVIEW.md) and [work record](../work/records/RCG-5C.md)
+keep native/controller evidence separate from actual served-browser execution.
+
+The existing authorized AWS development host has now executed all nine served
+Chromium cases successfully on candidate `3db6507`, within the unchanged
+60-second budget. This follows three lifecycle and 21 HTTP/controller passes.
+The actual browser run exposed a test wait-expression defect; equivalent function
+predicates resolve it without changing the application or its security policy.
+The [work record](../work/records/RCG-5C.md) binds the passing run and retained
+earlier failures. Refresh independent source/evidence review and the Codex
+handoff before broadening the customer flow. This is local plain-browser/SQLite
+evidence, not target React/PostgreSQL or full RCG-5 qualification.
+
+The last provider inspection lacked published delegated final-use and
+uncertain-outcome transports; this UI assignment does not refresh that external
+observation or supply a transport. Provider execution (RCG-4B), the full isolated
+Rifare/ElevenID/merchant journey (RCG-5), canonical criteria and formal acceptance
+remain open. Recovery absence never authorizes replacement preparation.
+
+## Continuing commerce roadmap
 
 **M20-G04: consolidation and custody continuity**, followed by **M20-G05: shopper
 drop-off experience**, is the next recorded commerce direction. Reuse the current
@@ -13,9 +39,8 @@ corrections, disputes and the separation between custody, receipt, inspection,
 stock and settlement. The [M20 record](../work/records/M20-dropoff-milestone.md)
 contains the latest source/review checkpoint and exact limits.
 
-This is a continuation point, not an automatic assignment. The owner's current
-request covers planning cleanup and portfolio presentation. Product implementation
-requires its own bounded scope and evidence.
+This remains a roadmap continuation point rather than an automatic assignment.
+It is separate from the newly authorized checkout-preparation slice above.
 
 ## Other open work
 

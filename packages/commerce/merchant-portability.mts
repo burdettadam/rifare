@@ -13,6 +13,7 @@ import { preflightJourneys,revokeJourneysForRestore } from './journey-privacy.mt
 import { preflightFollowups,revokeFollowupsForRestore } from './journey-followup-privacy.mts';
 import {preflightLoyaltyRedemptions,revokeLoyaltyRedemptionsForRestore} from './loyalty-redemption-privacy.mts';
 import {preflightDropoffCredentials,revokeDropoffCredentialsForRestore} from './dropoff-credential-privacy.mts';
+import {preflightDelegatedIntents,revokeDelegatedIntentsForRestore} from './delegated-checkout-intent-privacy.mts';
 import {preflightDropoffHandoffs,revokeDropoffHandoffsForRestore} from './dropoff-handoff-privacy.mts';
 
 const LIMIT=64*1024*1024, MAX_ROWS=10000;
@@ -141,6 +142,7 @@ export function exportMerchant(k:CommerceKernel,scope:Scope,input:{snapshot_id:s
   exact(input,['snapshot_id']);id(input.snapshot_id);
   return k.transaction(()=>{
     const s=owner(k,scope),inventory=storageInventoryCurrent(k),rows:Record<string,Row[]>={},refs=new Set<string>();
+    preflightDelegatedIntents(k,{tenant_id:s.tenant_id,store_id:s.store_id});
     const manifestTables:Row[]=[];let total=0;
     for(const table of inventory.tables){
       if(EXCLUDED[table.name]){manifestTables.push({name:table.name,columns:table.columns,mode:'local',reason:EXCLUDED[table.name]});continue;}
@@ -208,6 +210,7 @@ function validate(k:CommerceKernel,s:Row,value:unknown,expected:string){
 export function importMerchant(k:CommerceKernel,scope:Scope,value:unknown,expected_digest:string,suppression:MerchantSuppression){
   return k.transaction(()=>{
     const s=owner(k,scope),{x,m,included}=validate(k,s,value,expected_digest),cp=checkedSuppression(k,s,suppression,m.created_at),prior=receipt(k,s);
+    preflightDelegatedIntents(k,{tenant_id:s.tenant_id,store_id:s.store_id},x.rows);
     preflightShopperMemory(k,s,x.rows);
     preflightJourneys(k,s,x.rows);
     preflightFollowups(k,s,x.rows);
@@ -217,6 +220,7 @@ export function importMerchant(k:CommerceKernel,scope:Scope,value:unknown,expect
     if(prior){const state=k.db.prepare('SELECT * FROM commerce_recovery_state WHERE id=1').get() as Row;
       if(prior.snapshot_id!==m.snapshot_id||prior.digest!==expected_digest||!state||state.restore_id!==m.snapshot_id||state.source_digest!==expected_digest)throw new Error('PORTABILITY_IMPORT_CONFLICT');
       const imageReplay=prepareImageSuppression(k,cp.checkpoint,s,x.rows);
+      revokeDelegatedIntentsForRestore(k,{tenant_id:s.tenant_id,store_id:s.store_id},cp.checkpoint);
       revokeLoyaltyRedemptionsForRestore(k,s,cp.checkpoint);
       revokeDropoffHandoffsForRestore(k,s,cp.checkpoint);
       revokeDropoffCredentialsForRestore(k,s,cp.checkpoint);
@@ -254,6 +258,7 @@ export function importMerchant(k:CommerceKernel,scope:Scope,value:unknown,expect
     revokeLoyaltyRedemptionsForRestore(k,s,cp.checkpoint);
     revokeDropoffHandoffsForRestore(k,s,cp.checkpoint);
       revokeDropoffCredentialsForRestore(k,s,cp.checkpoint);
+    preflightDelegatedIntents(k,{tenant_id:s.tenant_id,store_id:s.store_id},x.rows);
     preflightShopperMemory(k,s,x.rows);
     preflightJourneys(k,s,x.rows);
     preflightFollowups(k,s,x.rows);
@@ -265,6 +270,7 @@ export function importMerchant(k:CommerceKernel,scope:Scope,value:unknown,expect
       const controlExclusion=table==='commerce_support_documents'?" AND kind!='migration_binding' AND substr(kind,1,9)!='merchant_'":'';
       k.db.prepare(`UPDATE ${table} SET ${clause} WHERE tenant_id=? AND store_id=?${controlExclusion}`).run(s.tenant_id,s.store_id);
     }
+    revokeDelegatedIntentsForRestore(k,{tenant_id:s.tenant_id,store_id:s.store_id},cp.checkpoint,true);
     revokeGrowthForRestore(k,s.tenant_id,s.store_id);
     revokeExtendedServicesForRestore(k,s.tenant_id,s.store_id);
     revokeInventoryPlanningForRestore(k,s.tenant_id,s.store_id);

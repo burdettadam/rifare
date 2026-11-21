@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "profile": "commerce-sqlite-diagnostic",
+  "qualification": "candidate_contract_only",
+  "owner": "DelegatedCheckoutApi over the existing durable intent owner",
+  "base_path": "/v1/delegated-checkout-recovery",
+  "authentication": "Existing opaque customer bearer and current native customer/resource/contact proof, before input collection and native lookup; exact loopback host/origin checks. No remote delegate qualification.",
+  "routes": [
+    { "method": "GET", "path": "/contract", "operation": "recovery-contract", "body": [] },
+    { "method": "POST", "path": "/lookup", "operation": "lookup", "body": ["preview_id", "context_id"] }
+  ],
+  "input_policy": "Strict UTF-8 JSON with no duplicate members or malformed Unicode; exact original preview/context references only. Tenant and store come from the authenticated native session. No intent creation, snapshots, URLs, credentials, authority flags or trust/context provisioning.",
+  "body_limit_bytes": 4096,
+  "lookup": "Derive the existing tenant/store-bound identity and compare its complete digest on the selected validated record. Reuse current customer proof and the ordinary expiry/view/final-access fences. Live preview, context and receipt owners are unnecessary and are never reconstructed.",
+  "response": {
+    "profile": "commerce-sqlite-diagnostic",
+    "qualification": "candidate_contract_only",
+    "evidence_status": "historical_observation",
+    "execution_authorized": false,
+    "operation": "recovery-contract or lookup",
+    "lookup_result": { "original": ["preview_id", "context_id"], "intent": "Existing native historical intent view" }
+  },
+  "absence": "NOT_FOUND is an observation under the current session and original references. It does not prove that another operation is safe, authorize replacement preparation or permit automatic mutation retry.",
+  "retention": "Cancelled, minimized, held and restored records retain the existing read projection. Supplied references may be echoed transiently for response binding; erased personal fields and live provenance are never reconstructed.",
+  "effects": "No new intent, receipt, session, provider call, challenge consumption, queue, order or payment effect. Ordinary expiry observation may update the original intent revision exactly as status does.",
+  "privacy": "No-store responses; finite status/code logs omit request bodies, credentials and references. Original references and bearer are not persisted by this route or client. Memory zeroization is not claimed.",
+  "compatibility": "The original /v1/delegated-checkout contract and its seven routes remain unchanged. Recovery is explicit and separately contracted.",
+  "unsupported": ["provider final use", "external outcome reconciliation", "automatic retry", "replacement identity", "remote sender-bound authentication", "merchant execution", "complete RCG-5 deployment", "production qualification"]
+}

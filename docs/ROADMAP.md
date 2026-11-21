@@ -6,6 +6,14 @@ experience. This roadmap covers unfinished work.
 
 ## Next product increments
 
+The assigned delegated-checkout lane now adds a
+[customer review page](DELEGATED-CHECKOUT-REVIEW.md) over the existing original
+preparation recovery contract. Its actual served-browser gate remains open on a
+permitted host; native/controller evidence cannot close that gate. Provider
+final-use/current-state and uncertain-outcome transports, followed by the full
+isolated cross-service journey, remain open. Local page/process checks do not
+qualify those boundaries.
+
 | Area | Remaining outcome | Work entry |
 | --- | --- | --- |
 | Drop-off continuity | Connect accepted original units to consolidation, movement and receiving; finish accurate shopper instructions, accessibility and outage behavior. | [M20-G04/G05](../planning/milestones/M20.md) |

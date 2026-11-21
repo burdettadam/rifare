@@ -1,6 +1,6 @@
 {
-  "source_file_count": 1703,
-  "source_count_reason": "ADR-0066 owner-approved publication readiness adds 20 files: three reproduced legal documents, two license-scope records, one workflow, one preview helper, four optional-formatting files, seven recorded-demo files, and two authority/continuation records. Original six component metadata records and historical release blockers remain intact; current license application and the reproduced-documents component are reviewed separately.",
+  "source_file_count": 1787,
+  "source_count_reason": "ADR-0073 retains all 1773 prior source members and adds 14 assigned customer review assets, native/controller, served-browser and owned-process test sources/helpers, guide, assignment and work record. Browser execution remains a separate host gate. Existing component identities, dispositions and every other oracle field remain unchanged.",
   "component_ids": [
     "git-agent-adaptations",
     "rifare-developer-helpers",

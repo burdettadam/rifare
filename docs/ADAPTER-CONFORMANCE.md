@@ -8,6 +8,16 @@ qualifies an external provider account. Formal M07-G05, M05-G99, M06-G99 and
 connected-service acceptance remain blocked under
 [ADR-0031](decisions/0031-second-platform-local-development.md).
 
+ADR-0067 adds `checkout-quote-fixture-source.mts` to the existing
+`shopping_catalog_source` source inventory. Its bounded explicit quote setters
+are local fixture administration, with native checkout-preview behavior covered
+by the separate proposed checkout contract and tests. This source registration
+adds no remote adapter operation, external account or transport qualification.
+It preserves the current catalog's 45 adapters, 220 operation entries, 297 native
+case bindings and 47 direct fixtures. Historical counts in this guide and the
+older full-catalog test are not refreshed by that bounded metadata change; a full
+catalog qualification run is not claimed.
+
 ## Package and execution
 
 The versioned inputs are

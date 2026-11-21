@@ -258,6 +258,63 @@ Full verification discovers these tests automatically. For candidate evidence,
 use the separately exported controller and independently retained pins described
 in the guide; candidate-authored checks alone are not an external trust anchor.
 
+## Local delegated checkout application
+
+The [customer review page](DELEGATED-CHECKOUT-REVIEW.md) is served at
+`/checkout-review`. It uses the existing verified session and original references
+for review, one preparation, explicit recovery and cancellation. The guide keeps
+controller/native HTTP evidence separate from the actual served-browser gate:
+
+```sh
+python3 tools/dev_tests.py --files tests/development/delegated-checkout-review.test.mts
+python3 tools/dev_tests.py --files tests/development/delegated-checkout-browser.test.mts
+```
+
+The second selection requires the documented permitted Playwright/Chromium host;
+startup or connectivity failures cannot count as passing browser evidence.
+
+The [original preparation recovery guide](DELEGATED-CHECKOUT-RECOVERY.md) closes
+the case where the caller loses preparation's response before learning an intent
+ID. Run the separate no-argument journey to observe actual process replacement
+and explicit lookup by the original preview/context references:
+
+```sh
+python3 tools/install_receipt_runtime.py --offline
+node --experimental-strip-types tools/demo-delegated-checkout-recovery.mts
+```
+
+Its eight synthetic observations preserve the original identity and create no
+replacement intent. The guide includes the separate recovery contract, explicit
+Python commands and focused 32-case selection. The original journey remains:
+
+The [process lifecycle demonstration](DELEGATED-CHECKOUT-LIFECYCLE.md) runs two
+disposable native server processes and the copied independent Python client,
+including lost-response recovery and actual server process loss/restart:
+
+```sh
+python3 tools/install_receipt_runtime.py --offline
+node --experimental-strip-types tools/demo-delegated-checkout.mts
+```
+
+It accepts no arguments or external credentials and cleans its owned temporary
+resources. The report identifies synthetic local observations and the remaining
+provider/deployment boundaries. This is an RCG-5 prerequisite, not full connected
+qualification. The underlying API remains independently usable as below.
+
+The [checkout HTTP guide](DELEGATED-CHECKOUT-HTTP.md) documents the optional
+server-local owner composition, customer-only routes and independent Python
+caller. The focused HTTP/client selection uses actual loopback requests and
+ephemeral synthetic signatures:
+
+```sh
+python3 tools/install_receipt_runtime.py --offline
+python3 tools/dev_tests.py --files tests/development/delegated-checkout-http.test.mts tests/development/delegated-checkout-client.test.mts
+```
+
+This is local evidence access, not provider final use or a complete connected
+checkout journey. Unconfigured native servers preserve current-proof retained
+status and cancellation while fresh preview/receipt work remains unavailable.
+
 ## Portable order-status reads
 
 The [read-workflow guide](PORTABLE-READ-WORKFLOWS.md) documents the installed

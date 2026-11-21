@@ -17,13 +17,17 @@ export function authorize(req: IncomingMessage, secret: string) {
   const expected = Buffer.from('Bearer ' + secret);
   if (received.length !== expected.length || !timingSafeEqual(received, expected)) throw new Error('AUTHORIZATION_REQUIRED');
 }
-export async function body(req: IncomingMessage) {
+export async function body(req: IncomingMessage, maximumBytes = 4096) {
+  if (!Number.isSafeInteger(maximumBytes) || maximumBytes < 1 || maximumBytes > 102400) throw new Error('BODY_LIMIT_INVALID');
   if (req.headers['content-type'] !== 'application/json') throw new Error('JSON_REQUIRED');
+  if (Number(req.headers['content-length'] ?? 0) > maximumBytes) { req.resume(); throw new Error('BODY_TOO_LARGE'); }
   const chunks: Buffer[] = []; let size = 0;
-  for await (const chunk of req) {
-    size += chunk.length;
-    if (size > 4096) throw new Error('BODY_TOO_LARGE');
-    chunks.push(chunk);
+  // Keep the socket available for a bounded refusal response on streamed overflow.
+  for await (const chunk of req.iterator({ destroyOnReturn: false })) {
+    const bytes = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
+    size += bytes.length;
+    if (size > maximumBytes) { req.resume(); throw new Error('BODY_TOO_LARGE'); }
+    chunks.push(bytes);
   }
   try { return JSON.parse(Buffer.concat(chunks).toString('utf8')); }
   catch { throw new Error('INVALID_JSON'); }

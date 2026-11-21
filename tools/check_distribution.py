@@ -25,6 +25,22 @@ FORMATTER_MANIFESTS = {
     'tools/formatting/package.json': '16bbc9e206f0febb34587760fefdbf9aba7552cc495457657f189c521cf7c862',
     'tools/formatting/package-lock.json': 'd978c368faf276d06827467bb7d98217c35c239f9c332d96780b6b7b37462aed',
 }
+RECEIPT_RUNTIME_MANIFESTS = {
+    'packages/adapters/delegated-receipts/package.json': '6463478cd08fe663ad196c8bb769fa35ba74645131b67fdbde0e1a9e4fa5baf1',
+    'packages/adapters/delegated-receipts/package-lock.json': 'c1d026d8abb6629ecabe749fbe8a247756217ad68587c81e0e801d3ea2e212e6',
+}
+RECEIPT_RUNTIME_PACKAGE = {
+    'name': 'rifare-delegated-receipts', 'version': '0.0.0', 'private': True,
+    'type': 'module',
+    'description': 'Optional local JOSE verification for Rifare delegated receipt evidence.',
+    'license': 'AGPL-3.0-only', 'dependencies': {'jose': '6.2.18'},
+}
+RECEIPT_JOSE_LOCK = {
+    'version': '6.2.18',
+    'resolved': 'https://registry.npmjs.org/jose/-/jose-6.2.18.tgz',
+    'integrity': 'sha512-doV4thUwgkrycJH4yLeqwTGIIZphHl+pk7CPReuMIhYhncmgzdko85MaCG4YQFTxqMFr1/oEH32tZuKKovcDEg==',
+    'license': 'MIT', 'funding': {'url': 'https://github.com/sponsors/panva'},
+}
 PREVIEW_WORKFLOW_REFERENCES = [
     {'path': '.github/workflows/development-preview.yml',
      'reference': 'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683'},
@@ -278,6 +294,51 @@ def validate_optional_formatter(root: Path) -> set[str]:
     return present
 
 
+def validate_optional_receipt_runtime(root: Path) -> set[str]:
+    """Review only ADR-0068's exact, separately installed JOSE dependency graph."""
+    present = {path for path in RECEIPT_RUNTIME_MANIFESTS if (root / path).exists()}
+    if not present:
+        return set()
+    require(present == set(RECEIPT_RUNTIME_MANIFESTS),
+            'receipt runtime intake: both manifests are required')
+    for path, digest in RECEIPT_RUNTIME_MANIFESTS.items():
+        require(sha256(read_regular(root, path)) == digest,
+                f'review_required:receipt runtime manifest changed: {path}')
+    package = read_json(root / 'packages/adapters/delegated-receipts/package.json')
+    lock = read_json(root / 'packages/adapters/delegated-receipts/package-lock.json')
+    require(package == RECEIPT_RUNTIME_PACKAGE,
+            'receipt runtime intake: unexpected workspace manifest, dependency or installation hook')
+    expected_lock = {
+        'name': 'rifare-delegated-receipts', 'version': '0.0.0',
+        'lockfileVersion': 3, 'requires': True,
+        'packages': {
+            '': {'name': 'rifare-delegated-receipts', 'version': '0.0.0',
+                 'license': 'AGPL-3.0-only', 'dependencies': {'jose': '6.2.18'}},
+            'node_modules/jose': RECEIPT_JOSE_LOCK,
+        },
+    }
+    require(lock == expected_lock,
+            'receipt runtime intake: dependency graph or provenance changed')
+    return present
+
+
+def receipt_runtime_observation(root: Path) -> dict[str, Any]:
+    """Describe reviewed source inputs, not an installed or qualified artifact."""
+    manifests = validate_optional_receipt_runtime(root)
+    return {
+        'application_dependencies_present': bool(manifests),
+        'optional_runtime_dependency_inputs': sorted(manifests),
+        'optional_runtime_packages': [{
+            'name': 'jose', 'version': RECEIPT_JOSE_LOCK['version'],
+            'resolved': RECEIPT_JOSE_LOCK['resolved'],
+            'integrity': RECEIPT_JOSE_LOCK['integrity'],
+            'license_declared': RECEIPT_JOSE_LOCK['license'],
+            'runtime_transitive_dependencies': [], 'bundled_in_source': False,
+        }] if manifests else [],
+        'optional_runtime_intake_basis': 'ADR-0068 source/development intake; installed artifact release review remains required',
+    }
+
+
 def applied_license_for(path: str, application: dict) -> str:
     if path in application['reproduced_legal_documents']:
         return 'retained_document_copying_terms'
@@ -340,7 +401,9 @@ def validate_inventory(inventory: dict, paths: list[str], root: Path, policy: di
     require(type(inventory['revision']) is int and inventory['revision'] >= 1, 'invalid inventory revision')
     require(inventory['status'] == 'proposed', 'inventory is not an acceptance decision')
     require(inventory['dependency_inputs'] == [], 'dependency graph intake not implemented at this checkpoint')
-    reviewed_commands = validate_smoke_command_manifests(root) | validate_optional_formatter(root)
+    reviewed_commands = (validate_smoke_command_manifests(root)
+                         | validate_optional_formatter(root)
+                         | validate_optional_receipt_runtime(root))
     application = read_json(root / APPLIED_LICENSES)
     document_component = application['inventory_component']
     require(inventory['planned_surfaces'] == obligations['planned_surfaces'], 'planned surface coverage changed')
@@ -446,7 +509,12 @@ def review_checkout(root: Path) -> dict[str, Any]:
     return {
         'check': 'licensing_inventory_only', 'result': 'pass',
         'files_reviewed': len(members), 'components_reviewed': len(inventory['components']),
-        'observed_dependency_inputs': [], 'application_dependencies_present': False,
+        # Retain the historical root-profile observation and name its scope;
+        # optional runtime packages are explicitly reported separately below.
+        'observed_dependency_inputs': [],
+        'observed_dependency_inputs_scope': 'root_zero_dependency_command_profile',
+        'root_demo_dependencies_present': False,
+        **receipt_runtime_observation(root),
         'reviewed_zero_dependency_command_manifests': ['package.json', 'package-lock.json'],
         'target_stack_qualified': False,
         'license_dispositions': dict(Counter(c['disposition'] for c in inventory['components'])),
