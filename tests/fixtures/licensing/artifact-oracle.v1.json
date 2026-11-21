@@ -1,6 +1,6 @@
 {
-  "source_file_count": 1800,
-  "source_count_reason": "ADR-0075 retains all 1792 prior source members and adds eight assigned paths: docs/decisions/0075-delegated-command-consumer.md; work/records/RCG-4B-C1.md; packages/adapters/delegated-commands/command-codec.mts; packages/adapters/delegated-commands/consumer-contract.v1.json; tests/development/delegated-command-codec.test.mts; tests/development/delegated-command-native.test.mts; tests/fixtures/delegated-commands/consumer-vectors.v1.json; docs/DELEGATED-COMMAND-CONSUMER.md. Only the actual source-count observation and this explanation change; all other oracle fields remain unchanged.",
+  "source_file_count": 1802,
+  "source_count_reason": "ADR-0076 preserves all 1800 prior source members and adds its assignment and RCG-4B-C2 work record before implementation. The remaining eleven assigned source members are added only when implemented. Only this source-count observation and explanation change; all other oracle fields remain unchanged.",
   "component_ids": [
     "git-agent-adaptations",
     "rifare-developer-helpers",

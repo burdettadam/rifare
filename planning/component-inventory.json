@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "id": "rifare-source-inventory",
-  "revision": 55,
+  "revision": 56,
   "status": "proposed",
   "components": [
     {
@@ -1645,7 +1645,9 @@
         "tests/development/delegated-command-codec.test.mts",
         "tests/development/delegated-command-native.test.mts",
         "tests/fixtures/delegated-commands/consumer-vectors.v1.json",
-        "docs/DELEGATED-COMMAND-CONSUMER.md"
+        "docs/DELEGATED-COMMAND-CONSUMER.md",
+        "docs/decisions/0076-durable-delegated-command-claims.md",
+        "work/records/RCG-4B-C2.md"
       ],
       "notices": []
     },
