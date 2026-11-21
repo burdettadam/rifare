@@ -151,8 +151,11 @@ codec cases. Append the corresponding declarations/contracts/operations/native
 cases to `expected-coverage.v1.json`; preserve all old rows, case names and
 semantics. Append exact codec/contract/oracle dependencies as needed within the
 unchanged 262,144-byte canonical catalog budget. For existing catalog oracle
-pins, authorize only SHA refreshes for the three narrowly changed lifecycle
-modules. Add a small bounded catalog test; do not modify the old catalog test's
+runtime pins, authorize only SHA refreshes for the three narrowly changed lifecycle
+modules. Before implementing the catalog repair, clarify its required data pin:
+the existing `expected-coverage.v1.json` oracle pin must also refresh to the exact
+additive coverage bytes assigned above. This does not authorize changes to any
+old expected row or other oracle pin. Add a small bounded catalog test; do not modify the old catalog test's
 assertions, fixture engine, runner, oracle or limits to obtain a pass. Its legacy
 nested first case still asserts earlier 38/199/262 totals despite the protected
 catalog's existing 46/221/308 totals; that pre-existing broader gate remains
