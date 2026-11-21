@@ -52,6 +52,16 @@ test('RCG4BC2-CATALOG-PINS source and case pins remain actual byte checks', () =
   const changedCase = structuredClone(catalog);
   adapter(changedCase).operations[0].native_cases[0].sha256 = '0'.repeat(64);
   assert.throws(() => validateAdapterCatalog(changedCase), /ADAPTER_CATALOG_PIN_CHANGED/);
+  for (const path of ['packages/commerce/delegated-command-claim-privacy.mts',
+    'packages/commerce/delegated-command-claim-records.mts']) {
+    const pin = catalog.oracle_pins.find((value: any) => value.path === path);
+    assert(pin, 'New typed lifecycle dependencies must remain catalog inputs: ' + path);
+    assert.equal(pin.sha256, createHash('sha256')
+      .update(readFileSync(new URL('../../' + path, import.meta.url))).digest('hex'));
+    const changedDependency = structuredClone(catalog);
+    changedDependency.oracle_pins.find((value: any) => value.path === path).sha256 = '0'.repeat(64);
+    assert.throws(() => validateAdapterCatalog(changedDependency), /ADAPTER_CATALOG_PIN_CHANGED/);
+  }
 });
 
 test('RCG4BC2-CATALOG-LIMITS additive registration preserves byte budget and cannot imply external qualification', () => {

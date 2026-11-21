@@ -8651,6 +8651,14 @@
     {
       "path": "tests/development/delegated-command-codec.test.mts",
       "sha256": "3c0dc8aa32ab8aca829ffba8763574b82b1de4f0583cbb99a9a29f54d929d91b"
+    },
+    {
+      "path": "packages/commerce/delegated-command-claim-privacy.mts",
+      "sha256": "91e474554863c3275d02f59b43285072e88e3f59292192e02c7d7098d1a3294c"
+    },
+    {
+      "path": "packages/commerce/delegated-command-claim-records.mts",
+      "sha256": "74a6232a9999c47a1c26cf9b588b9110afa714f98af61c64c518a2add7e8ec8f"
     }
   ]
 }
