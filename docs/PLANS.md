@@ -4,17 +4,19 @@ The current source includes the bounded local **M20-G03 item-level drop-off
 handoff** implementation. Start with the [architecture](ARCHITECTURE.md) for
 existing modules and [roadmap](ROADMAP.md) for remaining work.
 
-## Current assigned increment
+## Current delegated-checkout checkpoint
 
 The owner has continued development and publication. **RCG-5D receipt evidence
 review** is assigned under [ADR-0074](decisions/0074-checkout-receipt-review.md),
 starting from public checkpoint `4ac8556`. It extends `/checkout-review` with one
 explicit submission of an already-issued signed receipt to the existing native
 API. Preserve the original intent, transient input handling and explicit status
-after an uncertain response. The implementation is present and its author's
-12 receipt and 21 existing controller/native HTTP cases pass. Integrated source
-checks, actual served-browser verification and independent review remain pending
-in [the work record](../work/records/RCG-5D.md).
+after an uncertain response. **The bounded local gate is complete** on candidate
+`40fc973`: 12 new and 21 existing controller/native HTTP cases, five new receipt
+browser cases and all nine existing browser cases passed. Both independent
+reviewers found no scoped blocker. The closing documentation carries those
+executions through explicit source equivalence; exact reports, review identities
+and limits are in [the work record](../work/records/RCG-5D.md).
 
 RCG-5C's nine served Chromium cases passed on `3db6507`, with earlier three
 lifecycle and 21 HTTP/controller passes carried by their recorded source
@@ -23,11 +25,19 @@ was published as exact-tree checkpoint `4ac8556`, matching native `413f849`;
 the original native history remains separately preserved. These are local
 plain-browser/SQLite observations, not React/PostgreSQL or full RCG-5 acceptance.
 
-The refreshed provider inspection found new draft organization-approval and
-current-authority composition, but public delegated start/final-use and managed
-receipt-signing endpoints remain missing. RCG-5D uses only the existing Rifare
-contract. Provider execution (RCG-4B), the complete isolated cross-service
-journey (RCG-5), canonical criteria and formal acceptance remain open.
+The refreshed provider draft at `f226585` now has retained internal start/finalize
+use, authenticated internal transport, durable machine audit, concrete credential
+verification and managed receipt signing with a disposable live-custody gate.
+Its public Gateway use executable and independently qualified source/deployment
+composition remain absent. See the [provider checkpoint and exact contracts](DELEGATED-CHECKOUT-RECEIPT-REVIEW.md#provider-dependency-remains-separate).
+
+The next dependency is the qualified public current-state, start/final-use and
+original-result contract. Once available, assign the bounded **RCG-4B public
+adapter**, then the complete isolated **RCG-5 cross-service journey** and connected
+**RCG-6 profile**. Preserve original operation recovery and Rifare's execution,
+budget, reservation and business-idempotency ownership. Do not rebuild the landed
+receipt UI or bridge the public contract gap through private provider storage.
+Canonical criteria and formal acceptance remain open.
 
 ## Continuing commerce roadmap
 
@@ -39,7 +49,7 @@ stock and settlement. The [M20 record](../work/records/M20-dropoff-milestone.md)
 contains the latest source/review checkpoint and exact limits.
 
 This remains a roadmap continuation point rather than an automatic assignment.
-It is separate from the newly authorized checkout-preparation slice above.
+It is separate from the delegated-checkout continuation above.
 
 ## Other open work
 

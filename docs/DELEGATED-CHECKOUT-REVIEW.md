@@ -169,6 +169,10 @@ See [ADR-0073](decisions/0073-customer-checkout-review.md) and the
 remote sender-bound access, target React/PostgreSQL and production qualification
 remain separate. Both final independent reviews found no scoped blocker, and
 public checkpoint `4ac8556` preserves the exact source tree of native `413f849`.
-The subsequent RCG-5D assignment changes shared page assets and requires fresh
-focused controller and browser checks; this historical pass does not qualify
-those later changes. Browser success is limited to the local diagnostic surface.
+The subsequent RCG-5D assignment changes shared page assets. Its fresh verification
+on `40fc973` passed all 21 existing controller and nine existing browser cases,
+plus 12 new controller/native and five new receipt browser cases. Both independent
+reviews found no scoped blocker; [the RCG-5D record](../work/records/RCG-5D.md)
+binds those reports and any closing documentation equivalence. These are separate
+current executions, not an extension of this historical host qualification.
+Browser success remains limited to the local diagnostic surface.

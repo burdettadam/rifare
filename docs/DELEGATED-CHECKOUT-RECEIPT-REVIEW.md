@@ -121,24 +121,47 @@ The original nine cases and all 48 original worker assertions remain applicable
 to their original scenarios. The guardian, process budgets and application CSP
 are unchanged. These cases are not comprehensive accessibility qualification.
 
+The current gate is complete on clean candidate
+`40fc9738743fd6555ded780b4e5457e2e72f965f`: all 33 controller/native HTTP cases,
+five new receipt browser cases and nine existing browser cases passed with zero
+skips or failures. The browser invocations took 23.219 and 37.446 seconds under
+their unchanged 60-second budgets. Both independent reviews found no scoped
+blocker. The [work record](../work/records/RCG-5D.md) identifies original reports,
+runtime capture limits, protected-base red, independent supplemental probes and
+documentation-only source equivalence. This completes the bounded local check;
+formal milestone acceptance and the full cross-service journey remain open.
+
 ## Provider dependency remains separate
 
-The upstream inspection at 2026-11-21 06:40 UTC observed Marty UI main
+The refreshed upstream inspection on 2026-11-21 observed Marty UI main
 [`f662bb3`](https://github.com/ElevenID/marty-ui/tree/f662bb326bd0a83eb8191dc002bc3db57ec08cc3)
 and open draft [PR #1994](https://github.com/ElevenID/marty-ui/pull/1994) at
-`49000ea6725cc4adf03a1482fab2f692e036f960`. The draft adds identity-directory
-administration, exact-terms organization approval and a configured internal
-organization-authority producer. Those are useful provider advances.
+`f226585513c7ca57148cab1dd1af7a68cab7591b`. Its
+[runtime candidate](https://github.com/ElevenID/marty-ui/blob/f226585513c7ca57148cab1dd1af7a68cab7591b/docs/delegated-use-runtime-candidate.md)
+contains retained internal `START_USE`/`FINALIZE_USE`, authenticated internal HTTP,
+actual nested JWT-VC issuer/holder verification, durable machine audit and receipt
+linkage, and concrete Flow/proof/nonce/receipt transaction ownership. Managed
+receipt signing now has a reported passing disposable TLS OpenBao/Redis gate for
+Ed25519 and ES256. These internal components should not be rebuilt in Rifare.
 
-They do not provide the missing public delegated start/final-use or managed
-receipt-signing endpoints. The draft's
-[command boundary](https://github.com/ElevenID/marty-ui/blob/49000ea6725cc4adf03a1482fab2f692e036f960/rust/services/delegated-authority/src/commands.rs)
-explicitly keeps start/final use unsupported; the
-[runtime milestones](https://github.com/ElevenID/marty-ui/blob/49000ea6725cc4adf03a1482fab2f692e036f960/docs/agent-trust-runtime-milestones.md)
-retain the missing composition. Approval confirmation is not business execution.
-No provider source or private vectors are copied into Rifare.
+The [internal use router](https://github.com/ElevenID/marty-ui/blob/f226585513c7ca57148cab1dd1af7a68cab7591b/rust/services/delegated-authority/USE_HTTP.md)
+is explicitly assembled; no delegated-use executable or public Gateway installs
+it, and the human command host still rejects start/final use. Independently
+qualified full-machine/MAP, issuer/status, attestation and current policy sources,
+authenticated wallet/proof ingress, reviewed serving roles and the outer deployed
+HTTPS receipt adapter/production custody remain open. Public consumer contracts
+and unresolved-claim reconciliation also require qualification. Public MIP remains
+0.5.0, with support/discovery unchanged. These are source-inspected provider
+claims; this Rifare continuation did not rerun the provider's suites.
+
+All provider `FINAL_USE` results remain `EVIDENCE_ONLY`. Rifare continues to own
+orchestration, domain permissions, budgets, reservations, business idempotency,
+provider execution and outcomes. A provider decision does not establish merchant
+acceptance or payment. No provider source or private vectors are copied here.
 
 RCG-4B requires the published authenticated current-state/final-use/original-outcome
-contracts and their qualified runtime. Full RCG-5 still requires the actual
-isolated Rifare/provider/merchant journey. Remote sender binding, managed trust,
-merchant execution, React/PostgreSQL and production qualification remain open.
+contracts and their qualified runtime. Consume them through the normal public
+Gateway; do not invent routes or read private provider storage. Full RCG-5 still
+requires the actual isolated Rifare/provider/merchant journey, followed by the
+connected RCG-6 profile. Remote sender binding, managed trust, merchant execution,
+React/PostgreSQL and production qualification remain open.

@@ -141,10 +141,24 @@ formal milestone, qualify full RCG-5 or turn local receipts into provider final 
 
 ## External dependency
 
-The current upstream inspection found continued draft work on identity directory
-administration and organization approval. It still lacks published delegated
-start/final-use and managed receipt-signing runtime endpoints. Rifare must consume
-the normal public Gateway when those contracts exist; it must not import private
-provider internals or read their database to bridge this gap. RCG-4B, remote
-sender-bound access, the complete cross-service RCG-5 journey, React/PostgreSQL and
-production qualification remain separate.
+The assignment-time inspection found continued draft work on identity directory
+administration and organization approval. The recovery inspection at provider
+`f226585` now finds implemented internal start/finalize use and managed receipt
+signing, while the public Gateway use host and qualified source/deployment
+composition remain open. Exact source links and remaining gates are in the
+[receipt-review guide](../DELEGATED-CHECKOUT-RECEIPT-REVIEW.md#provider-dependency-remains-separate).
+Rifare must consume the normal public Gateway when those contracts exist; it must
+not import private provider internals or read their database to bridge the gap.
+
+## Recovery continuation — 2026-11-21
+
+The owner requested recovery of the commerce architecture work and continued
+development. Root resumed this existing bounded assignment at published
+implementation `40fc973`, preserving its original behavioral obligations and
+allowed paths. Independent review roles were reassigned to
+`commerce_checkpoint_audit` (authority/security) and `receipt_regression_review`
+(regression), each in a separate clean worktree with no implementation ownership.
+Both found no scoped blocker after current controller/native and actual browser
+verification. The closing changes are documentation only; the work record binds
+the executed candidate, raw evidence, independent reviews and explicit source
+equivalence. No formal milestone acceptance or new provider scope is assigned.
