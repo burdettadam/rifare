@@ -136,18 +136,36 @@ The optional JOSE runtime is only needed by native signature composition. No
 browser assets or routes change in this increment. Whole browser reruns do not
 replace the focused protocol and native-binding assertions.
 
+On clean candidate `e8c87c20cd413b2961d35e89d0f2184c9f3bb77b`, all **42 cases**
+passed: 20 codec, five native composition and 17 unchanged receipt-binding cases.
+The single normal-budget invocation took 2.344 seconds, with no skipped,
+unregistered or unrun cases. Two supplemental checks also matched the exact
+privately staged upstream START_USE and FINALIZE_USE bytes against their
+published digest manifest. Those two observations are separate from the 42
+registered cases and do not qualify a provider service or the full conformance
+pack. Detailed source/runtime pins and independent reviews are retained in the
+[work record](../work/records/RCG-4B-C1.md).
+
 ## Provider and next integration
 
 The [pinned command semantics](https://github.com/ElevenID/marty-protocol/blob/6126da7619e057be2ff58dd38a5d50f49891d1b3/protocol/delegated-authority/COMMANDS.md)
-describe an optional draft intent contract. The provider
-[source-owner checkpoint](https://github.com/ElevenID/marty-ui/blob/c44579ab81b46c4b5a55be1fd0308f0464824045/docs/agent-trust-runtime-milestones.md#concrete-source-owner-follow-on)
-now includes concrete full-machine/MAP, credential authority/status and machine
-policy owners. Its internal use router still has no installed public use
-executable/Gateway composition at this inspection. The existing public human
-lifecycle route cannot be used as a machine-use route.
+describe an optional draft intent contract. The provider advanced during this
+increment to
+[`1063f32b5f65094ca3f98351804ff4b5994fc87b`](https://github.com/ElevenID/marty-ui/blob/1063f32b5f65094ca3f98351804ff4b5994fc87b/docs/agent-trust-runtime-milestones.md#current-access-delegated-policy-and-authenticated-ingress-follow-on).
+It now includes explicit machine-use access, current exact-operation policy,
+mutual-TLS workload authentication and protected Flow request/proof ingress,
+alongside the existing machine/MAP and credential-authority sources. Those
+internal owners are implemented. Its [runtime candidate](https://github.com/ElevenID/marty-ui/blob/1063f32b5f65094ca3f98351804ff4b5994fc87b/docs/delegated-use-runtime-candidate.md)
+still requires an explicit default-off serving executable, reviewed separate
+credentials and deployed composition. No public use Gateway or selected public
+wallet/consumer contract is installed; the human lifecycle route cannot be used
+as a machine-use route. The Protocol pin and this codec's scope are unchanged.
 
 Continue RCG-4B with the qualified public authentication/current-state, use and
-original-outcome contracts, durable original claims and actual transport. Do not
-invent a route or read private provider storage. Full isolated cross-service
-RCG-5, connected RCG-6, target React/PostgreSQL, formal acceptance and production
+original-outcome contracts, durable original claims and actual transport. Reuse
+the landed provider owners through their eventual selected public composition.
+Do not invent a route or read private provider storage. Public wallet contracts,
+certificate lifecycle, selected required attestation and deployed request/receipt
+custody remain provider qualification work. Full isolated cross-service RCG-5,
+connected RCG-6, target React/PostgreSQL, formal acceptance and production
 qualification remain separate gates.

@@ -14,14 +14,17 @@ cases passed on `40fc973`; both independent reviews found no scoped blocker.
 The [work record](../work/records/RCG-5D.md) binds the closing documentation to
 that tested source. This bounded local increment is complete.
 
-The next assigned prerequisite is the [RCG-4B-C1 command consumer](DELEGATED-COMMAND-CONSUMER.md):
+The [RCG-4B-C1 command consumer](DELEGATED-COMMAND-CONSUMER.md) is also complete:
 strict P03 request/result binding, original recovery and receipt-byte correlation,
-without transport or execution. Provider internals now include retained use,
-managed receipt signing and concrete machine/MAP, credential/status and policy
-owners. Their public Gateway host and qualified serving composition remain open.
-After the codec, continue with the actual RCG-4B public transport/current-state/
-original-claim composition, full isolated RCG-5 journey and connected RCG-6
-qualification. Local checks do not qualify those boundaries or formal acceptance.
+without transport or execution. All 42 focused cases and two separate original
+Protocol-vector checks pass; both independent reviews found no scoped blocker.
+At provider `1063f32`, internal use-access, exact-operation policy, mutual TLS
+and protected Flow request/proof ingress join the existing source and receipt
+owners. The explicit host, selected public Gateway/wallet contracts and deployed
+qualification remain open. Continue with the actual RCG-4B public
+transport/current-state/original-claim composition, full isolated RCG-5 journey
+and connected RCG-6 qualification. Local checks do not qualify those boundaries
+or formal acceptance.
 
 | Area | Remaining outcome | Work entry |
 | --- | --- | --- |
