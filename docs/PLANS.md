@@ -4,16 +4,22 @@ The current source includes the bounded local **M20-G03 item-level drop-off
 handoff** implementation. Start with the [architecture](ARCHITECTURE.md) for
 existing modules and [roadmap](ROADMAP.md) for remaining work.
 
-## Current native START assignment
+## Current native START checkpoint
 
-**RCG-4B-C3 — native checkout START_USE claims** is assigned under
+**RCG-4B-C3 — native checkout START_USE claims** is complete within
 [ADR-0077](decisions/0077-native-checkout-start-claims.md). It connects the actual
 current checkout preview to original-command retention, with final purchase
 currentness checked inside the journal's top-level transaction. The new
 [native source](DELEGATED-CHECKOUT-STARTS.md) selects fixed purchase fields and
 the complete preview digest; grant and provider correlation remain unverified.
-Implementation, focused verification and independent reviews are in progress.
-See [the current work record](../work/records/RCG-4B-C3.md).
+Both independent reviews found no remaining scoped blocker after the held-erasure
+and privacy-description corrections. Final evidence covers 115 distinct passing
+cases: 62 fresh on corrected `ffe81ad` and 53 carried through independently
+verified unchanged execution inputs. The isolated currentness and digest faults
+fail the intended behavioral assertions. Published candidate `dfd60b5` has the
+exact reviewed source tree. See [the current work record](../work/records/RCG-4B-C3.md)
+for actual reports, correction history and closing equivalence. Formal acceptance,
+provider authentication, public transport and FINALIZE composition remain open.
 
 ## Previous original-command checkpoint
 

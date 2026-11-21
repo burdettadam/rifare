@@ -117,11 +117,22 @@ independently established `ReceiptContextSource`.
 
 ## Focused verification and continuation
 
-The assigned checks cover new native construction and lifecycle cases, existing
-checkout/journal behavior, process durability, native receipt separation and
-privacy/catalog controls. Each ordinary invocation retains the normal 60-case,
-four-file and 60-second limits. The work record identifies actual executions;
-this guide does not imply broad regression or formal acceptance.
+The bounded increment is complete with 115 distinct passing cases: 28 new native
+construction/lifecycle cases and 87 existing checkout, journal, native binding,
+privacy, process and bounded-catalog cases. Sixty-two ran freshly on corrected
+`ffe81ad`; 53 lifecycle cases ran on `66f4962` and carry through independently
+verified unchanged execution inputs. The sole intervening privacy-description
+and source-pin update was covered by a fresh privacy-coverage run. Each ordinary
+invocation retained the normal 60-case, four-file and 60-second limits.
+
+Both independent reviews found no remaining scoped blocker. Separately removing
+the final currentness check and replacing the full-preview digest with a valid
+wrong digest causes the intended unchanged behavioral assertions to fail. The
+[work record](../work/records/RCG-4B-C3.md) preserves exact candidates, raw report
+hashes, actual initial failures and corrections, source/runtime equivalence and
+review identities. Public `dfd60b5` has the exact reviewed implementation tree.
+This evidence does not imply broad regression, formal acceptance or a passing
+legacy nested catalog campaign; that separate stale-count gate remains deferred.
 
 The provider snapshot inspected for the assignment is
 [`0a1ef66`](https://github.com/ElevenID/marty-ui/blob/0a1ef66a4b832e0fd8d67a57940425af379e2254/docs/delegated-use-runtime-candidate.md).

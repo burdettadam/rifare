@@ -23,9 +23,13 @@ command/result retention and typed privacy/restore handling. Its bounded scope
 is complete with 112 distinct passing cases and both independent reviews;
 [the work record](../work/records/RCG-4B-C2.md) identifies actual executions and
 unchanged-input equivalence after the catalog correction.
-The assigned [RCG-4B-C3 native START source](DELEGATED-CHECKOUT-STARTS.md) composes
-actual current checkout provenance with the existing journal transaction;
-verification and independent review remain in progress.
+The completed [RCG-4B-C3 native START source](DELEGATED-CHECKOUT-STARTS.md) composes
+actual current checkout provenance with the existing journal transaction and
+rejects fresh use after the original preview customer's held erasure. Its 115
+distinct cases pass with both independent reviews complete: 62 ran on the final
+candidate and 53 retain verified unchanged inputs. Both assigned behavioral
+faults are detected. [The work record](../work/records/RCG-4B-C3.md) preserves
+actual execution identities, corrections and publication equivalence.
 At the inspected provider snapshot `0a1ef66`, the explicit default-off
 `marty-delegated-use` host adds protected original-receipt recovery and an offline
 receipt consumer to its existing concrete owners, fourteen restricted database
