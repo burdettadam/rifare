@@ -16,10 +16,23 @@ The [record](../work/records/COMMERCE-CONTEXT-01.md) retains the exact evidence 
 the fixture-reset/unregistered-ID qualifications. Formal acceptance remains open.
 
 This advances ADR-0081's target before C6's public transport composition. The
-existing SQLite journal/currentness contracts remain retained requirements; they
-cannot be replaced by a plain asynchronous cart query. Next prerequisites are the
-supported ElevenID authority selection, native original-operation persistence,
-atomic admission/currentness and enforcement at Medusa's actual effect boundary.
+existing SQLite journal/currentness contracts remain retained behavioral
+requirements; they cannot be replaced by a plain asynchronous cart query.
+
+**COMMERCE-OPERATION-01 is assigned** on `feat/medusa-operation-journal`
+under [ADR-0084](decisions/0084-medusa-operation-journal.md). It will implement
+the native PostgreSQL original-operation journal, database-enforced identity and
+challenge uniqueness, exact cart/customer/store binding, atomic admission and
+privacy lifecycle. It is assignment only: no schema, migration, implementation,
+tests or review have landed yet. The [work record](../work/records/COMMERCE-OPERATION-01.md)
+tracks the evidence gate. The existing public checkout/payment/order/return holds
+remain in place.
+
+After that journal is qualified, select the supported ElevenID human/machine
+account-link and authority contract, then compose its evidence with the retained
+operation and enforce final cart currentness/payment equality at Medusa's actual
+effect boundary. C6's public command transport must be re-evaluated against this
+Medusa-native operation owner rather than wired to the old SQLite-specific path.
 
 ## Owner-selected external identity provider
 
