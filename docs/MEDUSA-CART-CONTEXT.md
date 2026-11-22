@@ -20,16 +20,18 @@ state cannot turn a registered cart into a guest cart. Native email-only creatio
 continues to select guest customers; matching a registered email does not claim it.
 
 The policy covers cart reads/mutations, product and variant pricing context, and
-shipping-option listing/calculation that consume a cart ID. Duplicate/structured
-cart identifiers are refused. Child line IDs must belong to the URL's cart before
+shipping-option listing/calculation that consume a cart ID. Repeated query values,
+structured identifiers and conflicting query/body IDs are refused; an identical
+scalar in query and body is accepted. Child line IDs must belong to the URL's cart before
 native mutation, including when a guest cart is used as the parent. Cart creation
 and updates accept inline address values; address string references, `id` and
 `customer_id` fields are refused. These rules prevent a cart ID from authorizing
 an unrelated line or address through the native service interfaces.
 
-`POST /store/carts/:id/customer` remains held with HTTP 503. This profile does not
-implement guest claiming or customer transfer. Create a cart while signed in to
-obtain a native customer association. Existing completion, payment mutations,
+`POST /store/carts/:id/customer` cannot perform a transfer. Requests reaching its
+hold receive HTTP 503; native authentication/current-association checks may refuse
+earlier. This profile does not implement guest claiming or customer transfer.
+Create a cart while signed in to obtain a native customer association. Existing completion, payment mutations,
 public order/return and payment-hook holds remain unchanged.
 
 ## Observation API

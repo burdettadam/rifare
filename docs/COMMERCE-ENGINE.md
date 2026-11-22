@@ -1,7 +1,7 @@
 # Rifare commerce engine
 
-The next target-native slice is [Medusa cart context](MEDUSA-CART-CONTEXT.md),
-assigned by [ADR-0083](decisions/0083-medusa-cart-context.md). It protects registered
+The locally verified [Medusa cart context](MEDUSA-CART-CONTEXT.md) follows
+[ADR-0083](decisions/0083-medusa-cart-context.md). It protects registered
 cart ownership and projects native persisted values for observation. It retains
 all protected effects and adds a hold on unqualified native customer transfer.
 

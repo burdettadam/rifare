@@ -10,11 +10,14 @@ product acceptance remain separate.
 
 ## What is available now
 
-The next bounded target slice, [COMMERCE-CONTEXT-01](../work/records/COMMERCE-CONTEXT-01.md),
+The locally verified target slice, [COMMERCE-CONTEXT-01](../work/records/COMMERCE-CONTEXT-01.md),
 adds registered-cart access policy and a native persisted-fact observation. Its
 [guide](MEDUSA-CART-CONTEXT.md) records child-reference restrictions, exact decimal
-handling and the open ElevenID/currentness prerequisites. Candidate verification
-and independent review are pending; protected commerce effects remain held.
+handling and the open ElevenID/currentness prerequisites. Published `4550a14` has
+the exact reviewed tree: 22 cart-context, 28 identity and 17 commerce groups pass,
+with separate focused/intake checks, a meaningful ownership fault and successful
+backend/Admin builds. Both independent reviews found no scoped blocker. Protected
+commerce effects remain held; formal acceptance and production qualification remain open.
 
 The selected target is Medusa 2.23.0 with PostgreSQL and upstream Admin. Its build
 and 17 real database/API workflow groups pass; 61 focused configuration and

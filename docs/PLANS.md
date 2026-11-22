@@ -2,13 +2,18 @@
 
 ## Native cart context before approval integration
 
-**COMMERCE-CONTEXT-01** is assigned under
+**COMMERCE-CONTEXT-01** is implemented and independently reviewed locally under
 [ADR-0083](decisions/0083-medusa-cart-context.md), on `feat/medusa-cart-context`
-from `afd678f`. Root is the sole writer; independent authority and regression
-reviewers remain read-only. The bounded implementation protects native registered
+from `afd678f`, published as `4550a14` with the exact reviewed `9446548` tree.
+Root is the sole writer; independent authority and regression reviewers found no
+scoped blocker. The bounded implementation protects native registered
 cart access and observes persisted Medusa facts without opening protected effects.
 The [cart-context guide](MEDUSA-CART-CONTEXT.md) defines the distinct observation
-profile and its limits. Candidate-bound verification and review remain pending.
+profile and its limits. All 22 new cart-context, 28 retained identity and 17 retained
+commerce groups pass; 29 focused and 22 intake cases pass separately. The ownership
+fault failed at the intended unchanged HTTP assertion; backend/Admin builds pass.
+The [record](../work/records/COMMERCE-CONTEXT-01.md) retains the exact evidence and
+the fixture-reset/unregistered-ID qualifications. Formal acceptance remains open.
 
 This advances ADR-0081's target before C6's public transport composition. The
 existing SQLite journal/currentness contracts remain retained requirements; they

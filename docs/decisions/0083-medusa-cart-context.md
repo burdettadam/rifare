@@ -1,6 +1,6 @@
 # ADR-0083 — Medusa cart ownership and observation
 
-Status: assigned local development; approval and execution remain held.
+Status: implemented and independently reviewed locally; approval and execution remain held.
 Protected base: `afd678f44f25396c2159f0532f48fc46a3c4f129`.
 Branch: `feat/medusa-cart-context`; sole writer/integration owner: root.
 

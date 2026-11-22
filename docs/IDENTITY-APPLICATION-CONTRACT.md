@@ -51,11 +51,14 @@ Use distinct Rifare and ElevenID OAuth clients and application sessions. Explici
 retain ElevenID's identity/trust/delegation integration: sharing the same provider
 alone does not establish an ElevenID identity or make it an application dependency.
 
-The current parallel Marty branch at `f7f05e76a6c33c4d67d3e303e5e4b832ab4238e0`
-already supports [external OIDC](https://github.com/ElevenID/marty-ui/blob/f7f05e76a6c33c4d67d3e303e5e4b832ab4238e0/docs/installer-external-oidc.md)
-and separately configured managed PostgreSQL. Its tracked records do not establish
-a configured Supabase project/client, hosted authorization UI or a successful live
-Supabase journey. The other workstream owns those Marty changes.
+The read-only follow-up inspected parallel Marty branch
+`d5e383243edb26cd7c01b2ba85ca3d6656bf3f74`: external OIDC, separately configured
+managed PostgreSQL and a static login/consent companion now exist. A configured
+hosted Supabase project/client/browser journey remains unqualified. The other
+workstream owns those Marty changes. The [native cart guide](MEDUSA-CART-CONTEXT.md)
+records the inspected Auth/account-link interface gap and exact upstream pins.
+Shared provider identity must not be interpreted as an ElevenID account link,
+current organization membership or approval authority.
 
 ## Required contract and acceptance evidence
 

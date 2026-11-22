@@ -5,6 +5,14 @@ Base: `c88799bdd0d3b9211be7f8dbf1d04cb7104de1c0`.
 Branch: `feat/rcg4b-public-caller`.
 Assignment: [ADR-0080](../../docs/decisions/0080-public-managed-machine-caller.md).
 
+Target update: ADR-0081 and [ADR-0083](../../docs/decisions/0083-medusa-cart-context.md)
+supersede the old SQLite-specific composition. COMMERCE-CONTEXT-01 now supplies
+locally verified native cart ownership and persisted observations, with no sender
+or approval authority. C6 still needs the supported ElevenID authority selection,
+native original-operation journal and atomic admission/currentness boundary.
+Refresh upstream pins before its implementation; this record's original source
+facts below remain historical assignment evidence, not current runtime qualification.
+
 ## Objective
 
 Add a distinct Rifare client for the optional public managed-machine profile found in provider draft PR1994 at
