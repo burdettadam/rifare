@@ -117,12 +117,17 @@ deployed serving qualification remain open. These are source observations; no
 provider process or public route was exercised here. See the
 [provider checkpoint and exact contracts](DELEGATED-COMMAND-CONSUMER.md#provider-and-next-integration).
 
-The next bounded RCG-4B assignment should pin this selected public profile and
-connect its public commands and original-bound challenge/request handoff to the
-existing native lifecycle, using explicit transport trust and provisioned actor
-mapping. Then establish independent signed request verification before composing
-proof submission, FINALIZE and independent current receipt context. A caller's
-verification assertion or a challenge UUID cannot supply that authority.
+**RCG-4B-C6 is now assigned** on `feat/rcg4b-public-caller` under
+[ADR-0080](decisions/0080-public-managed-machine-caller.md). It pins the selected
+public managed-machine profile and will connect public START/original recovery
+and the original-bound challenge/request handoff to the existing native lifecycle.
+The returned signed request remains an unverified artifact. Proof submission and
+FINALIZE are explicitly excluded until independent signed-request verification
+and current native receipt-context composition are separately designed and tested.
+A caller's verification assertion or a challenge UUID cannot supply that authority.
+The [C6 work record](../work/records/RCG-4B-C6.md) tracks the assigned work and
+does not claim implementation or qualification yet.
+
 The full isolated **RCG-5 cross-service journey** and connected **RCG-6 profile**
 follow those bounded integrations. Preserve original recovery and Rifare's
 execution, budget, reservation and business-idempotency ownership. Reuse the
