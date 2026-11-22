@@ -75,7 +75,10 @@ binding. Native cache consumption is serialized through Medusa's Locking module.
 The state key includes the browser digest, so a different browser cannot consume
 the real browser's state. This memory-cache/lock profile supports one process;
 restart invalidates pending logins. PostgreSQL retains completed identity/customer
-associations. No durable or distributed pending-login claim is made.
+associations. No durable or distributed pending-login claim is made. Reusing an
+existing binding cookie does not refresh its expiry: a later attempt may lose its
+cookie before its new state reaches 300 seconds and must restart sign-in. This
+fails closed and remains a browser-usability item for hosted qualification.
 
 ## Credential lifetime and permissions
 
@@ -118,6 +121,15 @@ email challenge. Qualification must include real consent, callback delivery,
 disabled-account/recovery behavior, key rotation, application expiry and logout.
 Machine authentication remains the existing separate API-key/mTLS contract;
 Supabase OAuth does not currently supply a client-credentials grant.
+
+Marty already supports `external_oidc.client_auth_method: "client_secret_post"`
+with a private `client_secret_file`; the installer maps it to
+`OIDC_TOKEN_ENDPOINT_AUTH_METHOD=client_secret_post`. Its confidential-client
+default is already POST. Use the explicit value in the Supabase recipe and
+retain discovery-method validation. See the existing
+[ElevenID installer guide](https://github.com/ElevenID/marty-ui/blob/f7f05e76a6c33c4d67d3e303e5e4b832ab4238e0/docs/installer-external-oidc.md).
+The separate Marty workstream owns installation changes and real-provider
+qualification; Rifare's work did not alter that repository or provider accounts.
 
 ## Verification and dependencies
 

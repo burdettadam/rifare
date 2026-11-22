@@ -2,14 +2,24 @@
 
 ## Owner-selected external identity provider
 
-**IDENTITY-APP-01** is assigned under [ADR-0082](decisions/0082-external-customer-identity.md).
-The owner selected a Supabase-style external provider for both Rifare and ElevenID.
-Use separate application clients; retain ElevenID identity/trust/delegation and
-Medusa commerce ownership. The bounded next implementation is a maintained OIDC
-customer adapter with browser/actor binding, native identity/customer persistence
-and explicit lifetime limits. Protected commerce remains held. The
-[work record](../work/records/IDENTITY-APP-01.md) separates local synthetic-peer
-verification from an actual hosted provider/client/browser qualification.
+**IDENTITY-APP-01** is implemented and independently reviewed within its local
+scope under [ADR-0082](decisions/0082-external-customer-identity.md), published on
+`feat/supabase-identity`. Rifare and ElevenID use separate clients of a shared
+external authentication provider. ElevenID retains identity/trust/delegation;
+Medusa retains commerce ownership. The maintained OIDC customer adapter adds
+browser/actor binding, native identity/customer persistence and short credential
+lifetimes without opening protected commerce routes.
+
+Reviewed native `8e1f727` and published `003d558` have the same source tree.
+All 28 identity and 17 retained commerce groups pass against the synthetic peer,
+PostgreSQL and native HTTP; 29 focused and 22 dependency cases pass separately.
+Both independent reviews found no remaining scoped blocker, and the isolated
+browser-binding fault failed at the intended unchanged assertion. The
+[work record](../work/records/IDENTITY-APP-01.md) records exact inputs and limits.
+Next: configure and qualify the actual provider clients/login-consent frontend,
+then connect supported ElevenID identity/approval evidence to current Medusa
+operations and original-outcome recovery. Shared login alone does not supply that
+service dependency. Formal acceptance and production remain open.
 
 ## Owner-selected commerce replacement
 
@@ -22,9 +32,9 @@ workflows. New custom catalog, cart, pricing, inventory, order, return and excha
 engines are superseded by reuse-first migration. Existing SQLite implementations
 remain diagnostic regression contracts until their retained behavior is migrated.
 
-ElevenID remains the identity/trust supplier. Its existing Keycloak/external OIDC
-foundation should supply a deliberately specified application identity contract;
-commerce permissions and effects stay with Rifare/Medusa. C6 below remains
+ElevenID remains the identity/trust supplier. External authentication now follows
+the owner-selected provider contract above; commerce permissions and effects stay
+with Rifare/Medusa. The separate ElevenID account/approval binding and C6 below remain
 assigned but unimplemented. The [migration record](../work/records/COMMERCE-ENGINE-01.md)
 separates real application evidence from unconnected identity and legacy workflows.
 

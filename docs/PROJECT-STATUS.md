@@ -16,6 +16,17 @@ retained regression cases also pass. It is local-only, with public protected
 actions held while identity and approval integration is implemented. See the
 [engine guide](COMMERCE-ENGINE.md) for startup and exact limits.
 
+The optional [external customer identity profile](EXTERNAL-CUSTOMER-IDENTITY.md)
+now consumes a Supabase-style provider through maintained OIDC code and Medusa's
+native Auth extension. Its reviewed local candidate passes 28 identity groups,
+including real PostgreSQL/customer association, browser binding, cryptographic
+refusal cases, customer lifetime limits, operator sessions and development-log
+privacy. The 17 commerce groups still pass with public protected operations held.
+The [identity record](../work/records/IDENTITY-APP-01.md) preserves separate focused
+checks, the detected browser-binding fault and both independent reviews. An actual
+hosted Supabase project/client/consent journey and the ElevenID commerce binding
+remain unqualified.
+
 The repository also retains the modular TypeScript/Node.js implementation,
 SQLite diagnostics, fixture adapters, plain HTML/JavaScript interfaces,
 independent Python clients and deterministic demos. [Try Rifare](TRY-RIFARE.md)
