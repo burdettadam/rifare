@@ -1,5 +1,7 @@
 # Current development plan
 
+The recovered cross-era design inventory is consolidated in the [architecture recovery record](ARCHITECTURE-RECOVERY.md). Current implementation status and newer ADRs take precedence over historical roadmap proposals.
+
 ## Native cart context before approval integration
 
 **COMMERCE-CONTEXT-01** is implemented and independently reviewed locally under
