@@ -1,5 +1,19 @@
 # What remains to build
 
+## Current owner-selected priority
+
+Replace commodity custom code with the [Medusa commerce application](COMMERCE-ENGINE.md),
+under [ADR-0081](decisions/0081-upstream-commerce-engine.md). Catalog, prices,
+carts, stock, orders and ordinary post-purchase behavior should use upstream
+workflows. The target now has a real local PostgreSQL application and built
+Medusa Admin; existing feature scenarios and the identity bridge still need migration.
+
+The next integration is the [external application identity contract](IDENTITY-APPLICATION-CONTRACT.md)
+and a Medusa cart/approval/original-operation bridge. Map returns, exchanges,
+order edits and loyalty against upstream capabilities before adding custom code.
+The older M20 continuation and domain roadmap below are subordinate to this reuse
+decision, not instructions to build parallel commodity engines.
+
 Rifare already has substantial local commerce code. The [architecture](ARCHITECTURE.md)
 maps that foundation; the [product overview](../README.md) describes the target
 experience. This roadmap covers unfinished work.
@@ -64,7 +78,7 @@ formal acceptance remain open.
 | --- | --- | --- |
 | Drop-off continuity | Connect accepted original units to consolidation, movement and receiving; finish accurate shopper instructions, accessibility and outage behavior. | [M20-G04/G05](../planning/milestones/M20.md) |
 | Loyalty correctness | Add attributable award/reversal observations, supported multi-unit handling, bounded source retrieval, safe administrative hold resolution and remaining-balance reconciliation. | [Loyalty follow-ups](../planning/milestones/M19.md) |
-| Target application | Implement and exercise the PostgreSQL/React application, including migrations, isolated resources and an actual served-browser journey. The existing SQLite/plain-browser diagnostic environment is reusable. | [Target-stack follow-up](../planning/milestones/M00.md) |
+| Target application | Continue the Medusa/PostgreSQL application: connect identity and protected commerce, qualify isolation/durable infrastructure and a served-browser journey, then migrate retained workflows. | [Engine migration](COMMERCE-ENGINE.md) |
 | Remote callers | Recover or implement sender-bound remote access with issuer validation, sender proof and shared replay protection. Existing local clients do not supply this trust profile. | [M15](../planning/milestones/M15.md) |
 | Managed execution | Recover or implement managed execution and its isolation/operational boundaries. The reported later source is not present in this history. | [M16](../planning/milestones/M16.md) |
 | Actual image assistance | Enable an authorized actual image path and measure it using a frozen independently labeled cohort. Reuse landed intake, exact access, privacy and image suppression. | [Image follow-up](../planning/milestones/M17.md) |

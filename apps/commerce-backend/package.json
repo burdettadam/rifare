@@ -1,0 +1,32 @@
+{
+  "name": "rifare-commerce-backend",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Rifare commerce application using upstream Medusa workflows and PostgreSQL.",
+  "license": "AGPL-3.0-only",
+  "engines": {
+    "node": ">=22.22.0 <23 || >=24.0.0 <25"
+  },
+  "scripts": {
+    "dev": "node run.mjs develop",
+    "build": "node run.mjs build",
+    "db:migrate": "node run.mjs db:migrate",
+    "user": "node run.mjs user",
+    "test:commerce": "node run.mjs exec ./src/scripts/verify-commerce.ts"
+  },
+  "dependencies": {
+    "@medusajs/admin-sdk": "2.23.0",
+    "@medusajs/cli": "2.23.0",
+    "@medusajs/framework": "2.23.0",
+    "@medusajs/medusa": "2.23.0",
+    "@medusajs/telemetry": "2.23.0"
+  },
+  "devDependencies": {
+    "@swc/core": "1.16.22",
+    "ts-node": "10.9.2",
+    "typescript": "5.9.3"
+  },
+  "overrides": {
+    "ajv": "8.20.0"
+  }
+}

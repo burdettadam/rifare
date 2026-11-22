@@ -79,6 +79,15 @@ The previous accepted governance and independent review still govern their chang
 
 ## Development dependencies and release duties
 
+[ADR-0081](decisions/0081-upstream-commerce-engine.md) separately permits the exact
+Medusa application package/lock under `apps/commerce-backend`. The source checker
+validates their hashes, registry integrity and bundled-parent provenance, with
+installation hooks disabled. Its output reports this graph separately from the
+root diagnostic and JOSE profiles. The [engine guide](COMMERCE-ENGINE.md) records
+the mixed core/Enterprise license boundary, explicit Ajv security override and
+distribution obligations. An exact source/development intake is not approval to
+redistribute every installed material or enable a licensed Enterprise feature.
+
 The root npm package remains dependency-free. The optional formatter in
 `tools/formatting/` has its own pinned package/lock, with Prettier as the sole
 development dependency. Its installed package, license, and bundled notices stay

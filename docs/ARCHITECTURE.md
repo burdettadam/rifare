@@ -1,10 +1,25 @@
 # Rifare architecture
 
-**Current commerce checkpoint: M20-G03 item-level drop-off handoffs.** Rifare has a
+## Selected commerce target
+
+The owner selected **Medusa 2.23.0 with PostgreSQL** to replace commodity commerce
+under [ADR-0081](decisions/0081-upstream-commerce-engine.md). The runnable target
+is [`apps/commerce-backend`](../apps/commerce-backend/), using upstream APIs,
+workflows and Admin. The [engine guide](COMMERCE-ENGINE.md) maps actual local
+evidence and migration limits. The legacy domain map below describes the retained
+SQLite diagnostic implementation; it is not a second production commerce engine.
+
+ElevenID remains the identity/trust dependency, reusing its existing maintained
+authentication infrastructure. The [application identity contract](IDENTITY-APPLICATION-CONTRACT.md)
+separates authentication, commerce permission and lifecycle integration. Protected
+public commerce operations remain held until that bridge is implemented. None of
+the existing delegated-use or receipt controls is weakened by this migration.
+
+**Retained diagnostic checkpoint: M20-G03 item-level drop-off handoffs.** Rifare has a
 substantial local implementation spanning commerce operations, decision assistance,
-shopper journeys and loyalty. Its executable development environment uses
+shopper journeys and loyalty. Its legacy diagnostic environment uses
 TypeScript/Node and SQLite with synthetic source systems and plain browser
-surfaces. React/PostgreSQL remains the target stack. Connected services,
+surfaces. The selected Medusa/PostgreSQL target is described above. Connected services,
 independent deployment and formal product qualification remain open; see
 [project status](PROJECT-STATUS.md).
 
@@ -14,7 +29,7 @@ tracks remaining work without repeating completed implementation instructions.
 
 ## Runtime and ownership
 
-Rifare keeps durable commerce state in its own core. Human interfaces, rules,
+The legacy diagnostic profile keeps durable commerce state in its own core. Human interfaces, rules,
 built-in agents and supported external callers use the same permissions, current
 facts, policies, approvals and operation owners. Portable skills describe a
 workflow; typed merchant profiles customize permitted fields; adapters translate
@@ -26,7 +41,7 @@ supported native operations. Model output and skill text confer no authority.
 | Commerce core | [`packages/commerce/`](../packages/commerce/) | Tenant and resource authority, business state, workflow composition, exact approvals, durable operations and privacy. |
 | Adapters and source contracts | [`packages/adapters/`](../packages/adapters/), [`packages/conformance/`](../packages/conformance/) | Platform/provider translation, explicit capabilities and contract checks. Most write paths currently bind synthetic fixture sources. Shopify/WooCommerce read and Chatwoot/Resend wire mappings also exist; connected qualification is separate. |
 | Agents and skills | [`packages/agent/`](../packages/agent/), [`packages/commerce/skill-bundles/`](../packages/commerce/skill-bundles/), [`clients/`](../clients/) | Replaceable runtimes/providers, bounded model requests, reusable workflow resources and protocol clients. Existing local clients do not implement the missing M15 remote trust profile. |
-| Development and storage | [`packages/development/`](../packages/development/), [`migrations/`](../migrations/), [`tools/dev-target.mts`](../tools/dev-target.mts) | Local fixture lifecycle, transactional SQLite persistence and an explicit target-stack qualification guard. Separate synthetic source databases preserve the distinction between core state and provider observations. |
+| Development and storage | [`packages/development/`](../packages/development/), [`migrations/`](../migrations/) | Legacy fixture lifecycle and transactional SQLite persistence. Separate synthetic source databases preserve the distinction between core state and provider observations. [`tools/dev-target.mts`](../tools/dev-target.mts) separately launches the selected Medusa application; it has no fixture fallback. |
 
 See [skill architecture](SKILL-ARCHITECTURE.md), [policy customization](POLICY-CUSTOMIZATION.md)
 and [development](DEVELOPMENT.md) for composition rules and runnable entry points.

@@ -29,6 +29,10 @@ RECEIPT_RUNTIME_MANIFESTS = {
     'packages/adapters/delegated-receipts/package.json': '6463478cd08fe663ad196c8bb769fa35ba74645131b67fdbde0e1a9e4fa5baf1',
     'packages/adapters/delegated-receipts/package-lock.json': 'c1d026d8abb6629ecabe749fbe8a247756217ad68587c81e0e801d3ea2e212e6',
 }
+COMMERCE_RUNTIME_MANIFESTS = {
+    'apps/commerce-backend/package.json': '9e55bffbb12cb3d65e9342584ede457b4553a8cadf252a387e4ec5aafb36d6b9',
+    'apps/commerce-backend/package-lock.json': '7f17da97236cf3ebe7f6c00203ce25e43b04e348321f3cedc3468268a43872f5',
+}
 RECEIPT_RUNTIME_PACKAGE = {
     'name': 'rifare-delegated-receipts', 'version': '0.0.0', 'private': True,
     'type': 'module',
@@ -322,6 +326,57 @@ def validate_optional_receipt_runtime(root: Path) -> set[str]:
     return present
 
 
+def validate_commerce_runtime(root: Path) -> set[str]:
+    """ADR-0081 source/development intake only; no binary or Enterprise grant."""
+    present = {path for path in COMMERCE_RUNTIME_MANIFESTS if (root / path).exists()}
+    if not present:
+        return set()
+    require(present == set(COMMERCE_RUNTIME_MANIFESTS), 'commerce intake: both manifests are required')
+    for path, digest in COMMERCE_RUNTIME_MANIFESTS.items():
+        require(sha256(read_regular(root, path)) == digest,
+                f'review_required:commerce dependency manifest changed: {path}')
+    package = read_json(root / 'apps/commerce-backend/package.json')
+    lock = read_json(root / 'apps/commerce-backend/package-lock.json')
+    require(package['private'] is True and package['name'] == 'rifare-commerce-backend',
+            'commerce intake: unexpected package')
+    require(set(package['scripts']) == {'dev', 'build', 'db:migrate', 'user', 'test:commerce'}
+            and all(command.startswith('node run.mjs ') for command in package['scripts'].values()),
+            'commerce intake: unreviewed command or lifecycle hook')
+    require(read_regular(root, 'apps/commerce-backend/.npmrc') ==
+            b'save-exact=true\nengine-strict=true\naudit=false\nfund=false\nignore-scripts=true\n',
+            'commerce intake: installation scripts must stay disabled')
+    require(lock['lockfileVersion'] == 3 and len(lock['packages']) == 1013,
+            'commerce intake: dependency graph changed')
+    for path, entry in lock['packages'].items():
+        if not path:
+            require(entry['dependencies'] == package['dependencies']
+                    and entry['devDependencies'] == package['devDependencies'],
+                    'commerce intake: inconsistent root lock entry')
+            continue
+        if entry.get('inBundle') is True:
+            parent = path.rsplit('/node_modules/', 1)[0]
+            require(parent in lock['packages'] and lock['packages'][parent].get('integrity', '').startswith('sha512-'),
+                    'commerce intake: bundled dependency without pinned parent')
+        else:
+            require(entry.get('resolved', '').startswith('https://registry.npmjs.org/')
+                    and entry.get('integrity', '').startswith('sha512-') and not entry.get('link'),
+                    f'commerce intake: unpinned registry dependency: {path}')
+    return present
+
+
+def commerce_runtime_observation(root: Path) -> dict[str, Any]:
+    manifests = validate_commerce_runtime(root)
+    return {
+        'commerce_runtime_dependency_inputs': sorted(manifests),
+        'commerce_runtime': {
+            'engine': 'Medusa', 'version': '2.23.0', 'lock_entries': 1012,
+            'installation_scripts_enabled': False,
+            'license_scope': 'mixed upstream core/Enterprise; source intake grants no Enterprise rights',
+            'distribution_qualified': False,
+        } if manifests else None,
+    }
+
+
 def receipt_runtime_observation(root: Path) -> dict[str, Any]:
     """Describe reviewed source inputs, not an installed or qualified artifact."""
     manifests = validate_optional_receipt_runtime(root)
@@ -403,7 +458,8 @@ def validate_inventory(inventory: dict, paths: list[str], root: Path, policy: di
     require(inventory['dependency_inputs'] == [], 'dependency graph intake not implemented at this checkpoint')
     reviewed_commands = (validate_smoke_command_manifests(root)
                          | validate_optional_formatter(root)
-                         | validate_optional_receipt_runtime(root))
+                         | validate_optional_receipt_runtime(root)
+                         | validate_commerce_runtime(root))
     application = read_json(root / APPLIED_LICENSES)
     document_component = application['inventory_component']
     require(inventory['planned_surfaces'] == obligations['planned_surfaces'], 'planned surface coverage changed')
@@ -515,6 +571,7 @@ def review_checkout(root: Path) -> dict[str, Any]:
         'observed_dependency_inputs_scope': 'root_zero_dependency_command_profile',
         'root_demo_dependencies_present': False,
         **receipt_runtime_observation(root),
+        **commerce_runtime_observation(root),
         'reviewed_zero_dependency_command_manifests': ['package.json', 'package-lock.json'],
         'target_stack_qualified': False,
         'license_dispositions': dict(Counter(c['disposition'] for c in inventory['components'])),

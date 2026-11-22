@@ -1,6 +1,6 @@
 import { mkdtempSync, cpSync, mkdirSync, readFileSync, rmSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join, dirname } from 'node:path';
+import { join, dirname, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawn, spawnSync, execFileSync } from 'node:child_process';
 import { setTimeout as delay } from 'node:timers/promises';
@@ -18,7 +18,11 @@ export function fixture() {
   const temporary = mkdtempSync(join(tmpdir(), 'rifare-g05-'));
   const root = join(temporary, 'first'); mkdirSync(root);
   for (const name of ['apps', 'packages', 'migrations', 'package.json', 'package-lock.json', '.npmrc']) {
-    cpSync(join(ROOT, name), join(root, name), { recursive: true });
+    cpSync(join(ROOT, name), join(root, name), { recursive: true, filter: (source) => {
+      const entry = basename(source);
+      return !['node_modules', '.medusa', '.cache'].includes(entry)
+        && !(entry === '.env' || (entry.startsWith('.env.') && entry !== '.env.example'));
+    } });
   }
   mkdirSync(join(root, 'tools'));
   for (const name of ['dev-smoke.mts', 'dev-stop.mts', 'dev-migrate.mts', 'dev-target.mts']) cpSync(join(ROOT, 'tools', name), join(root, 'tools', name));

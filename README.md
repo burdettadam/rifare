@@ -12,6 +12,13 @@ Start with what happens after checkout. Connect it to the warehouse, the next co
 
 > **Development preview.** The capabilities below describe Rifare's target product. Runnable local implementations are available today; connected services and production qualification are still in development. [See what runs now →](docs/PROJECT-STATUS.md)
 
+**Commerce implementation direction:** Rifare now uses a pinned Medusa/PostgreSQL
+application for the target commerce engine, with upstream catalog, carts, orders,
+inventory and standard post-purchase workflows. ElevenID remains the identity and
+trust supplier. [Run the new local application](docs/COMMERCE-ENGINE.md) ·
+[Identity integration boundary](docs/IDENTITY-APPLICATION-CONTRACT.md).
+The synthetic demonstrations below remain available as retained diagnostics.
+
 ## Watch a refund recover from a lost response
 
 The refund source accepts the request, but its response disappears. Rifare keeps

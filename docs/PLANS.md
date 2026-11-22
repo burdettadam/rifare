@@ -1,5 +1,21 @@
 # Current development plan
 
+## Owner-selected commerce replacement
+
+**COMMERCE-ENGINE-01** is assigned on `feat/medusa-commerce` under
+[ADR-0081](decisions/0081-upstream-commerce-engine.md). The owner selected Medusa
+to replace commodity commerce and reduce custom code. The selected target is a
+pinned upstream application with PostgreSQL and Medusa's standard modules and
+workflows. New custom catalog, cart, pricing, inventory, order, return and exchange
+engines are superseded by reuse-first migration. Existing SQLite implementations
+remain diagnostic regression contracts until their retained behavior is migrated.
+
+ElevenID remains the identity/trust supplier. Its existing Keycloak/external OIDC
+foundation should supply a deliberately specified application identity contract;
+commerce permissions and effects stay with Rifare/Medusa. C6 below remains
+assigned but unimplemented. The [migration record](../work/records/COMMERCE-ENGINE-01.md)
+separates real application evidence from unconnected identity and legacy workflows.
+
 The current source includes the bounded local **M20-G03 item-level drop-off
 handoff** implementation. Start with the [architecture](ARCHITECTURE.md) for
 existing modules and [roadmap](ROADMAP.md) for remaining work.
