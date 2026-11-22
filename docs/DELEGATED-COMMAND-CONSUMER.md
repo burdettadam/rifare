@@ -184,6 +184,12 @@ lifecycle route cannot be used as a machine-use route. The Protocol pin and
 this codec's scope are unchanged. This is a source/document update; no provider
 test execution is claimed here.
 
+[C5 internal transport](DELEGATED-USE-INTERNAL-CLIENT.md) now assigns a bounded
+client against this existing mTLS profile, preserving the pure C1 codec and
+historical C2 flags. The native composition has atomic first admission and a
+retained-only currentness fence before HTTP bytes. This explicitly internal
+selection is separate from the still-open public consumer composition.
+
 Continue RCG-4B with the qualified public authentication/current-state, use and
 original-outcome contracts, authenticated namespace/native purchase binding and
 actual transport around the existing local journal. Reuse

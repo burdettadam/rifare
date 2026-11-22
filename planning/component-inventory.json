@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "id": "rifare-source-inventory",
-  "revision": 59,
+  "revision": 60,
   "status": "proposed",
   "components": [
     {
@@ -1674,7 +1674,17 @@
         "tests/development/delegated-checkout-command-helpers.mts",
         "tests/development/delegated-checkout-commands.test.mts",
         "tests/development/delegated-checkout-command-client.test.mts",
-        "tests/development/delegated-checkout-owner-binding.test.mts"
+        "tests/development/delegated-checkout-owner-binding.test.mts",
+        "docs/decisions/0079-internal-delegated-command-transport.md",
+        "work/records/RCG-4B-C5.md",
+        "docs/DELEGATED-USE-INTERNAL-CLIENT.md",
+        "packages/adapters/delegated-commands/internal-use-client.mts",
+        "packages/commerce/delegated-checkout-command-sender.mts",
+        "tests/development/delegated-use-client-helpers.mts",
+        "tests/development/delegated-use-client.test.mts",
+        "tests/development/delegated-checkout-command-sender.test.mts",
+        "tests/development/delegated-command-admission.test.mts",
+        "tests/development/delegated-use-catalog.test.mts"
       ],
       "notices": []
     },

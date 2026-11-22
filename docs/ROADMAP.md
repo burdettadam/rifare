@@ -39,6 +39,12 @@ and both assigned faults failed at their intended behavioral assertions. Public
 `6000723` retains the exact reviewed implementation tree. See
 [C4's record](../work/records/RCG-4B-C4.md) for actual executions and closing
 documentation equivalence.
+The next assigned increment is [C5 internal command transport](DELEGATED-USE-INTERNAL-CLIENT.md)
+under [ADR-0079](decisions/0079-internal-delegated-command-transport.md): atomic
+native START admission and explicit original recovery through the documented
+internal mTLS profile. Implementation and focused qualification are pending.
+Every admitted original remains recovery-only after uncertainty; public serving,
+FINALIZE and independent receipt context remain distinct follow-ups.
 At the provider snapshot inspected for C4, `37b7fdc`, the explicit default-off
 `marty-delegated-use` host has an executable managed lifecycle through actual
 template/policy, issuance, signing and offline receipt-consumer owners. Its

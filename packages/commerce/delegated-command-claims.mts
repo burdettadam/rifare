@@ -133,16 +133,29 @@ export class DelegatedCommandClaims {
   /** Construct an original START from this process's actual current preview.
    * The result is the unchanged historical journal view, not send permission. */
   claimCheckoutStart(scope: Scope, input: CheckoutStartRequest): CommandClaimView {
+    return this.#checkoutStart(scope,input,'claim');
+  }
+  /** Consume fresh admission atomically, even when a previous original is an
+   * exact repeat. A later uncertain send does not reopen this local admission. */
+  claimNewCheckoutStart(scope: Scope, input: CheckoutStartRequest): CommandClaimView {
+    return this.#checkoutStart(scope,input,'new');
+  }
+  /** Revalidate only a retained original. In particular, a missing row may not
+   * be reconstructed by a late network guard, even under an unchanged clock. */
+  currentCheckoutStart(scope: Scope, input: CheckoutStartRequest): CommandClaimView {
+    return this.#checkoutStart(scope,input,'current');
+  }
+  #checkoutStart(scope: Scope, input: CheckoutStartRequest, mode: 'claim' | 'new' | 'current'): CommandClaimView {
     return this.#run(scope,true,true,(s,records) => {
       if (!this.#prepareStart) claimDenied('COMMAND_CLAIM_CONFIG_INVALID');
       let binding: CheckoutStartBinding;
       try { binding = this.#prepareStart(scope,input); }
       catch { claimDenied('COMMAND_CLAIM_BINDING_INVALID'); }
-      return this.#claimEncoded(scope,s,records,binding.encoded,binding);
+      return this.#claimEncoded(scope,s,records,binding.encoded,binding,mode);
     });
   }
   #claimEncoded(scope: Scope, s: Row, records: CommandClaimRecord[], encoded: EncodedDelegatedCommand,
-    nativeStart?: CheckoutStartBinding): CommandClaimView {
+    nativeStart?: CheckoutStartBinding, mode: 'claim' | 'new' | 'current' = 'claim'): CommandClaimView {
       if (encoded.request.command === 'RECOVER_RESULT') claimDenied('COMMAND_CLAIM_INPUT_INVALID');
       const request = encoded.request;
       const identity = commandClaimIdentity(s.tenant_id,s.store_id,this.#namespace,request.command_id);
@@ -153,12 +166,15 @@ export class DelegatedCommandClaims {
         // Scope is checked before command conflict details, including minimized claims.
         this.#owned(s,previous);
         if (previous.body.identity_digest !== identity) claimDenied('COMMAND_CLAIM_NOT_FOUND');
+        // RCG4BC5-FRESH-ADMISSION: an occupied original never authorizes another START.
+        if (mode === 'new') claimDenied('COMMAND_CLAIM_CONFLICT');
         // RCG4BC2-ORIGINAL-COMMAND-DIGEST: targeted-fault mutation point.
         if (previous.body.command_digest !== encoded.command_digest) claimDenied('COMMAND_CLAIM_CONFLICT');
         if (previous.body.command_kind !== request.command || previous.body.challenge_fingerprint !== challenge)
           claimDenied('COMMAND_CLAIM_CONFLICT');
         this.#now(records); return this.#finish(scope,previous,true,nativeStart);
       }
+      if (mode === 'current') claimDenied('COMMAND_CLAIM_NOT_FOUND');
       if (records.length >= CLAIM_MAX_ROWS) claimDenied('COMMAND_CLAIM_ROW_LIMIT');
       const now = this.#now(records);
       const body: CommandClaimBody = { schema_version: 1, id: key, tenant_id: s.tenant_id, store_id: s.store_id,

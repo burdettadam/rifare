@@ -169,6 +169,18 @@ not execute the old nested catalog campaign. That legacy test's earlier
 38/199/262 count assertions remain an explicit pre-existing broader-gate issue;
 neither they nor its runner are rewritten by this slice.
 
+## Assigned internal sender composition
+
+[C5](DELEGATED-USE-INTERNAL-CLIENT.md) assigns two additive methods:
+`claimNewCheckoutStart` atomically requires an absent original, while
+`currentCheckoutStart` requires and revalidates a retained original without
+insertion. Existing journal methods and stored semantics remain protected.
+The separate native sender uses these methods around internal mTLS work; the
+journal itself still has no network callback or transport credential. All
+preexisting originals are recovery-only for that sender, including C4 claims
+and failures before HTTP transmission. Execution and review status are in
+[the C5 record](../work/records/RCG-4B-C5.md).
+
 ## Next integration boundary
 
 Continue with the public provider authentication, current-state, start/final-use

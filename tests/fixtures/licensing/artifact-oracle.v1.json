@@ -1,6 +1,6 @@
 {
-  "source_file_count": 1829,
-  "source_count_reason": "ADR-0078 retains all 1821 prior source members and adds eight assigned paths for local checkout command access: assignment, work record, guide, separate route contract and four HTTP/client/owner test-helper files. Only this source-count observation and explanation change; all other oracle fields remain unchanged.",
+  "source_file_count": 1839,
+  "source_count_reason": "ADR-0079 preserves all 1829 previous source members and adds ten assigned paths: the internal-client assignment, work record and guide, two runtime owners, one TLS helper and four executable test files. Only this source-count observation and explanation change; all other oracle fields remain unchanged.",
   "component_ids": [
     "git-agent-adaptations",
     "rifare-developer-helpers",

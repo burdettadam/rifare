@@ -4,6 +4,18 @@ The current source includes the bounded local **M20-G03 item-level drop-off
 handoff** implementation. Start with the [architecture](ARCHITECTURE.md) for
 existing modules and [roadmap](ROADMAP.md) for remaining work.
 
+## Assigned internal command connection
+
+**RCG-4B-C5 — internal mTLS START and original recovery** is assigned under
+[ADR-0079](decisions/0079-internal-delegated-command-transport.md), from public
+C4 checkpoint `9c61f30`. It selects the already documented internal machine
+profile: atomic fresh admission, current native checks after TLS and before
+application bytes, and explicit recovery of the original after uncertainty.
+Existing originals, including C4 preparations and failures before transmission,
+remain recovery-only. Implementation, focused execution and independent review
+are pending in [the C5 record](../work/records/RCG-4B-C5.md). This assignment does
+not select public serving or FINALIZE/receipt-context composition.
+
 ## Current local command application checkpoint
 
 **RCG-4B-C4 — local checkout command access** is complete within

@@ -994,6 +994,16 @@
         "semantics": "native",
         "qualification": "sandbox-only"
       }
+    },
+    "delegated_use_internal_client": {
+      "delegated.internal.start": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      },
+      "delegated.internal.recover": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      }
     }
   },
   "declarations": [
@@ -1002,6 +1012,7 @@
     "packages/adapters/claims-fixture-source.mts",
     "packages/adapters/claims-source-guards.mts",
     "packages/adapters/delegated-commands/command-codec.mts",
+    "packages/adapters/delegated-commands/internal-use-client.mts",
     "packages/adapters/delegated-receipts/jose-verifier.mts",
     "packages/adapters/delegated-receipts/strict-json.mts",
     "packages/adapters/delivery-trial-source-guards.mts",
@@ -2305,6 +2316,20 @@
           "scope_kind": "server_local_fixture_only"
         },
         "delegated.receipt.correlate": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        }
+      }
+    },
+    "delegated_use_internal_client": {
+      "version": "source-sha256:8d0c09ba2f4f386faf3b679ecce57be99bfe783dcf3e165b5800820c732874dd",
+      "api_version": "internal-mtls-p03-start-recovery-v1",
+      "operations": {
+        "delegated.internal.start": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "delegated.internal.recover": {
           "required_scopes": [],
           "scope_kind": "server_local_fixture_only"
         }
@@ -4273,6 +4298,54 @@
       "name": "RCG4BC1-CODEC-STRICT-JSON duplicate decoded names malformed bytes and numeric aliases fail",
       "path": "tests/development/delegated-command-codec.test.mts",
       "sha256": "3c0dc8aa32ab8aca829ffba8763574b82b1de4f0583cbb99a9a29f54d929d91b"
+    },
+    {
+      "id": "RCG4BC5-WIRE-BINDING",
+      "name": "RCG4BC5-WIRE-BINDING successful JSON still requires exact original grant operation and CHALLENGE kind",
+      "path": "tests/development/delegated-use-client.test.mts",
+      "sha256": "1cecc67bcf17fcc6cccd27db4fcf1faf18766f88acd136a2c4ec6cfe30dc0d0e"
+    },
+    {
+      "id": "RCG4BC5-WIRE-GUARDS",
+      "name": "RCG4BC5-WIRE-GUARDS synchronous guards run before connection and after TLS before any application byte",
+      "path": "tests/development/delegated-use-client.test.mts",
+      "sha256": "1cecc67bcf17fcc6cccd27db4fcf1faf18766f88acd136a2c4ec6cfe30dc0d0e"
+    },
+    {
+      "id": "RCG4BC5-WIRE-IDENTITY",
+      "name": "RCG4BC5-WIRE-IDENTITY the selected non-CA leaf owns the exact key pin validity and sole canonical SPIFFE SAN",
+      "path": "tests/development/delegated-use-client.test.mts",
+      "sha256": "1cecc67bcf17fcc6cccd27db4fcf1faf18766f88acd136a2c4ec6cfe30dc0d0e"
+    },
+    {
+      "id": "RCG4BC5-WIRE-INPUT",
+      "name": "RCG4BC5-WIRE-INPUT only original START data is accepted and accessors never run",
+      "path": "tests/development/delegated-use-client.test.mts",
+      "sha256": "1cecc67bcf17fcc6cccd27db4fcf1faf18766f88acd136a2c4ec6cfe30dc0d0e"
+    },
+    {
+      "id": "RCG4BC5-WIRE-RECOVERY",
+      "name": "RCG4BC5-WIRE-RECOVERY explicit recovery uses retained original bytes and a fresh authenticated connection",
+      "path": "tests/development/delegated-use-client.test.mts",
+      "sha256": "1cecc67bcf17fcc6cccd27db4fcf1faf18766f88acd136a2c4ec6cfe30dc0d0e"
+    },
+    {
+      "id": "RCG4BC5-WIRE-RECOVERY-BINDING",
+      "name": "RCG4BC5-WIRE-RECOVERY-BINDING recovered true is mandatory only for explicit recovery and historical times stay inert",
+      "path": "tests/development/delegated-use-client.test.mts",
+      "sha256": "1cecc67bcf17fcc6cccd27db4fcf1faf18766f88acd136a2c4ec6cfe30dc0d0e"
+    },
+    {
+      "id": "RCG4BC5-WIRE-START",
+      "name": "RCG4BC5-WIRE-START real mTLS transmits only the exact canonical START on its fixed organization path",
+      "path": "tests/development/delegated-use-client.test.mts",
+      "sha256": "1cecc67bcf17fcc6cccd27db4fcf1faf18766f88acd136a2c4ec6cfe30dc0d0e"
+    },
+    {
+      "id": "RCG4BC5-WIRE-TLS",
+      "name": "RCG4BC5-WIRE-TLS wrong server trust hostname and client chain never reach the HTTP peer",
+      "path": "tests/development/delegated-use-client.test.mts",
+      "sha256": "1cecc67bcf17fcc6cccd27db4fcf1faf18766f88acd136a2c4ec6cfe30dc0d0e"
     },
     {
       "id": "TEST-034",

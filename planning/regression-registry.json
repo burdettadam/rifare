@@ -2082,6 +2082,15 @@
       "contract_files": [
         "packages/commerce/contracts/delegated-checkout-commands.v1.json"
       ]
+    },
+    {
+      "id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "docs/decisions/0079-internal-delegated-command-transport.md",
+        "docs/DELEGATED-USE-INTERNAL-CLIENT.md"
+      ]
     }
   ],
   "tests": [
@@ -28530,6 +28539,314 @@
       "runner_case_id": "RCG4BC4-OWNER-DESCRIPTORS",
       "source": "tests/development/delegated-checkout-owner-binding.test.mts",
       "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-WIRE-START",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-WIRE-START",
+      "source": "tests/development/delegated-use-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-WIRE-RECOVERY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-WIRE-RECOVERY",
+      "source": "tests/development/delegated-use-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-WIRE-INPUT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-WIRE-INPUT",
+      "source": "tests/development/delegated-use-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-WIRE-RECOVERY-INPUT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-WIRE-RECOVERY-INPUT",
+      "source": "tests/development/delegated-use-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-WIRE-CONFIG-DATA",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-WIRE-CONFIG-DATA",
+      "source": "tests/development/delegated-use-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-WIRE-CONFIG-ORIGIN",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-WIRE-CONFIG-ORIGIN",
+      "source": "tests/development/delegated-use-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-WIRE-IDENTITY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-WIRE-IDENTITY",
+      "source": "tests/development/delegated-use-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-WIRE-DETACH",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-WIRE-DETACH",
+      "source": "tests/development/delegated-use-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-WIRE-TLS",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-WIRE-TLS",
+      "source": "tests/development/delegated-use-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-WIRE-GUARDS",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-WIRE-GUARDS",
+      "source": "tests/development/delegated-use-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-WIRE-CLOSE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-WIRE-CLOSE",
+      "source": "tests/development/delegated-use-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-WIRE-STATUS",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-WIRE-STATUS",
+      "source": "tests/development/delegated-use-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-WIRE-BINDING",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-WIRE-BINDING",
+      "source": "tests/development/delegated-use-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-WIRE-RECOVERY-BINDING",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-WIRE-RECOVERY-BINDING",
+      "source": "tests/development/delegated-use-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-WIRE-STRICT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-WIRE-STRICT",
+      "source": "tests/development/delegated-use-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-WIRE-MEDIA",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-WIRE-MEDIA",
+      "source": "tests/development/delegated-use-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-WIRE-BOUNDS",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-WIRE-BOUNDS",
+      "source": "tests/development/delegated-use-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-WIRE-LOSS",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-WIRE-LOSS",
+      "source": "tests/development/delegated-use-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-WIRE-DEADLINE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-WIRE-DEADLINE",
+      "source": "tests/development/delegated-use-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-WIRE-CAPACITY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-WIRE-CAPACITY",
+      "source": "tests/development/delegated-use-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-SENDER-START",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-SENDER-START",
+      "source": "tests/development/delegated-checkout-command-sender.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-SENDER-LOSS",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-SENDER-LOSS",
+      "source": "tests/development/delegated-checkout-command-sender.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-SENDER-PRECLAIM",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-SENDER-PRECLAIM",
+      "source": "tests/development/delegated-checkout-command-sender.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-SENDER-TLS-PRICE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-SENDER-TLS-PRICE",
+      "source": "tests/development/delegated-checkout-command-sender.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-SENDER-TLS-DELETE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-SENDER-TLS-DELETE",
+      "source": "tests/development/delegated-checkout-command-sender.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-SENDER-TLS-PROOF",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-SENDER-TLS-PROOF",
+      "source": "tests/development/delegated-checkout-command-sender.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-SENDER-TLS-OBSERVED",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-SENDER-TLS-OBSERVED",
+      "source": "tests/development/delegated-checkout-command-sender.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-SENDER-POSTWAIT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-SENDER-POSTWAIT",
+      "source": "tests/development/delegated-checkout-command-sender.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-SENDER-BINDING",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-SENDER-BINDING",
+      "source": "tests/development/delegated-checkout-command-sender.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-SENDER-IMMUTABLE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-SENDER-IMMUTABLE",
+      "source": "tests/development/delegated-checkout-command-sender.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-SENDER-CLOSE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-SENDER-CLOSE",
+      "source": "tests/development/delegated-checkout-command-sender.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-SENDER-OWNERS",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-SENDER-OWNERS",
+      "source": "tests/development/delegated-checkout-command-sender.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-SENDER-CORRELATION",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-SENDER-CORRELATION",
+      "source": "tests/development/delegated-checkout-command-sender.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-SENDER-INPUT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-SENDER-INPUT",
+      "source": "tests/development/delegated-checkout-command-sender.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-SENDER-TLS-FAILURE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-SENDER-TLS-FAILURE",
+      "source": "tests/development/delegated-checkout-command-sender.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-ADMIT-ONCE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-ADMIT-ONCE",
+      "source": "tests/development/delegated-command-admission.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-ADMIT-HISTORY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-ADMIT-HISTORY",
+      "source": "tests/development/delegated-command-admission.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-ADMIT-INPUT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-ADMIT-INPUT",
+      "source": "tests/development/delegated-command-admission.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-ADMIT-ABSENCE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-ADMIT-ABSENCE",
+      "source": "tests/development/delegated-command-admission.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-ADMIT-CURRENT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-ADMIT-CURRENT",
+      "source": "tests/development/delegated-command-admission.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-ADMIT-FENCE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-ADMIT-FENCE",
+      "source": "tests/development/delegated-command-admission.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-CATALOG-REGISTRATION",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-CATALOG-REGISTRATION",
+      "source": "tests/development/delegated-use-catalog.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-CATALOG-PRESERVATION",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-CATALOG-PRESERVATION",
+      "source": "tests/development/delegated-use-catalog.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-CATALOG-PINS",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-CATALOG-PINS",
+      "source": "tests/development/delegated-use-catalog.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
     }
   ],
   "protected_files": [

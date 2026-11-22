@@ -11,8 +11,8 @@ const adapter = (catalog: any) => catalog.adapters.find((value: any) => value.id
 
 test('RCG4BC2-CATALOG-REGISTRATION unchanged C1 codec has four bounded operations and all twenty real cases', () => {
   const catalog = readAdapterCatalog(), checked = validateAdapterCatalog(catalog), value = adapter(catalog);
-  assert.equal(checked.adapter_count, 47); assert.equal(checked.operation_count, 225);
-  assert.equal(checked.native_case_count, 328); assert.equal(checked.direct_fixture_count, 47);
+  assert.equal(checked.adapter_count, 48); assert.equal(checked.operation_count, 227);
+  assert.equal(checked.native_case_count, 336); assert.equal(checked.direct_fixture_count, 47);
   assert.equal(value.kind, 'diagnostic');
   assert.deepEqual(value.source_files.map((pin: any) => pin.path), [source]);
   assert.deepEqual(value.operations.map((operation: any) => operation.id), [
@@ -32,6 +32,11 @@ test('RCG4BC2-CATALOG-REGISTRATION unchanged C1 codec has four bounded operation
 
 test('RCG4BC2-CATALOG-PRESERVATION every earlier coverage row retains independently frozen protected bytes', () => {
   const expected = JSON.parse(readFileSync(new URL('../fixtures/conformance/expected-coverage.v1.json', import.meta.url), 'utf8'));
+  // ADR-0079: remove only the new internal-client coverage before the original C1 subtraction.
+  delete expected.adapter_operations.delegated_use_internal_client;
+  delete expected.adapter_contracts.delegated_use_internal_client;
+  expected.declarations = expected.declarations.filter((path: string) => path !== 'packages/adapters/delegated-commands/internal-use-client.mts');
+  expected.native_cases = expected.native_cases.filter((ref: any) => ref.path !== 'tests/development/delegated-use-client.test.mts');
   delete expected.adapter_operations.delegated_use_commands;
   delete expected.adapter_contracts.delegated_use_commands;
   expected.declarations = expected.declarations.filter((path: string) => path !== source);
