@@ -2,7 +2,8 @@
 
 ## Owner-selected commerce replacement
 
-**COMMERCE-ENGINE-01** is assigned on `feat/medusa-commerce` under
+**COMMERCE-ENGINE-01** is implemented and independently reviewed within its
+local development scope on `feat/medusa-commerce` under
 [ADR-0081](decisions/0081-upstream-commerce-engine.md). The owner selected Medusa
 to replace commodity commerce and reduce custom code. The selected target is a
 pinned upstream application with PostgreSQL and Medusa's standard modules and
@@ -15,6 +16,14 @@ foundation should supply a deliberately specified application identity contract;
 commerce permissions and effects stay with Rifare/Medusa. C6 below remains
 assigned but unimplemented. The [migration record](../work/records/COMMERCE-ENGINE-01.md)
 separates real application evidence from unconnected identity and legacy workflows.
+
+Candidate `167b977` passes the actual Medusa/PostgreSQL verification (17 workflow
+groups) and backend/Admin builds. The 61 selected configuration/dependency/legacy
+cases pass with unchanged relevant inputs from `44e105f`. Both independent reviews
+find no scoped blocker, and removing the completion hold in an isolated checkout
+causes an actual order and the expected failing assertion. Formal acceptance and
+production remain open. Next, qualify the identity/client lifecycle and the
+Medusa approval-to-effect bridge before opening protected public operations.
 
 The current source includes the bounded local **M20-G03 item-level drop-off
 handoff** implementation. Start with the [architecture](ARCHITECTURE.md) for

@@ -1,12 +1,26 @@
 # Rifare project status
 
-**Public development preview · local synthetic implementations · production qualification open**
+**Medusa commerce application · retained diagnostic implementations · production qualification open**
 
-This guide summarizes the accumulated source at development checkpoint [`c299065`](https://github.com/burdettadam/rifare/commit/c299065241b3bdf4928a83f9ff4decf749c6afaa), which closes bounded local M20-G03 work. The presentation refresh does not implement or accept another product milestone.
+The owner-selected [Medusa migration](COMMERCE-ENGINE.md) now supplies the local
+commerce target. [COMMERCE-ENGINE-01](../work/records/COMMERCE-ENGINE-01.md)
+records its exact tested source and independent reviews. The diagnostic domain
+inventory below retains the earlier M20-G03 foundation; implementation and formal
+product acceptance remain separate.
 
 ## What is available now
 
-The repository contains a modular TypeScript/Node.js commerce implementation, SQLite diagnostics, native fixture adapters, plain HTML/JavaScript interfaces, independent Python clients, and deterministic demonstration commands. Start with [Try Rifare](TRY-RIFARE.md).
+The selected target is Medusa 2.23.0 with PostgreSQL and upstream Admin. Its build
+and 17 real database/API workflow groups pass; 61 focused configuration and
+retained regression cases also pass. It is local-only, with public protected
+actions held while identity and approval integration is implemented. See the
+[engine guide](COMMERCE-ENGINE.md) for startup and exact limits.
+
+The repository also retains the modular TypeScript/Node.js implementation,
+SQLite diagnostics, fixture adapters, plain HTML/JavaScript interfaces,
+independent Python clients and deterministic demos. [Try Rifare](TRY-RIFARE.md)
+describes these diagnostic paths. Their commodity behavior is being migrated
+upstream, preserving business expectations before retiring old implementations.
 
 | Area | Current local scope | Source of detail |
 | --- | --- | --- |
@@ -24,13 +38,17 @@ These rows describe local behavior. They do not establish live platform, payment
 
 The M20-G03 implementation records which individual units a synthetic drop-off source accepted or rejected. It preserves partial intake, corrections, disputes, and original family identity across credential replacement. Handoff acceptance remains separate from consolidation, movement, warehouse receipt/inspection, stock, and settlement.
 
-The next recorded commerce increment is **M20-G04: consolidation and custody continuity**, followed by G05 shopper experience. Those goals require their own assignment and evidence; a roadmap entry is not an instruction to begin work. See the [current plan](PLANS.md) and the [M20 work record](../work/records/M20-dropoff-milestone.md). The [roadmap](ROADMAP.md) also keeps missing target-stack, real-adapter and loyalty reconciliation code explicit.
+The current priority is the [ElevenID application identity contract](IDENTITY-APPLICATION-CONTRACT.md)
+and the Medusa cart/approval/original-operation bridge. Then map existing returns,
+exchanges, edits and other scenarios to upstream workflows before adding custom
+behavior. M20-G04/G05 remain unfinished diagnostic-domain work subordinate to
+this reuse decision. See the [current plan](PLANS.md) and [roadmap](ROADMAP.md).
 
 ## What the preview does not establish
 
 | Boundary | Current state |
 | --- | --- |
-| Target application | React and PostgreSQL remain the target. The runnable preview uses plain browser shells and SQLite. `npm run dev` intentionally exits instead of silently substituting a demo. |
+| Target application | Real Medusa/PostgreSQL workflows and the upstream Admin build now run locally. The ElevenID/approval bridge, served-browser journey, durable production services and independent deployment remain open. `npm run dev` selects this application when installed/configured, with no diagnostic fallback. |
 | Connected commerce services | Fixture-backed protocols and local source records do not establish live merchant, financial, carrier, warehouse, or partner operation. |
 | Model quality and portability | Local contracts, fixtures, and reader paths exist. Actual provider quality and independently qualified combinations still need evidence. |
 | Remote clients and recovered history | Some local independent-client demonstrations exist. Later remote/managed/browser claims whose source was missing from recovery are not treated as recovered implementation. |

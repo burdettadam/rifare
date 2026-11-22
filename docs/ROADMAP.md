@@ -71,7 +71,7 @@ Next, assign public commands and original-bound challenge/request handoff throug
 the existing native lifecycle, then independent signed request verification,
 proof/FINALIZE and independently sourced current receipt context. General
 wallet/Gateway selection, provisioned endpoint and certificate lifecycle
-qualification, full isolated RCG-5, connected RCG-6, target PostgreSQL/React and
+qualification, full isolated RCG-5, connected RCG-6, target application integration and
 formal acceptance remain open.
 
 | Area | Remaining outcome | Work entry |
@@ -86,7 +86,8 @@ formal acceptance remain open.
 | Individualized campaigns | Extend existing campaign, consent, approval and delivery controls with the planned individualization. | [M22](../planning/milestones/M22.md) |
 | Browser decision assistance | Build and measure the browser model loader, separate client-observation boundary, compact backend and scoped image path. | [M23](../planning/milestones/M23.md) · [M24](../planning/milestones/M24.md) · [M25](../planning/milestones/M25.md) |
 
-M20-G04 is the next recorded commerce continuation. Other lanes need a deliberate
+M20-G04 remains the older drop-off continuation. The owner-selected Medusa and
+ElevenID integration above takes priority; these remaining lanes need a deliberate
 assignment based on the intended release and available integrations. Milestone
 numbers are identifiers, not a promise that every earlier gate is accepted.
 

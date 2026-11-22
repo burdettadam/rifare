@@ -216,8 +216,9 @@ python3 tools/verify.py --runtime  # planning + Python helpers + Node smoke test
 
 The process launcher is a local product start/stop script, not an agent scheduler.
 No paid services, model keys or production accounts are used. Root npm metadata
-contains no dependency packages. PostgreSQL, React and OS-level outbound network
-isolation remain unqualified; `npm run dev` exits 2 rather than substituting smoke.
+contains no dependency packages. This diagnostic slice does not qualify PostgreSQL,
+React or OS-level outbound network isolation. The separately installed Medusa
+target uses `npm run dev`; it still exits 2 when its dependencies are absent.
 
 ## M00-G06 native test harness
 
