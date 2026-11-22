@@ -1,5 +1,11 @@
 # Rifare architecture
 
+[ADR-0083](decisions/0083-medusa-cart-context.md) adds the bounded
+[native cart context](MEDUSA-CART-CONTEXT.md): current customer access policy,
+child-reference checks and a separately versioned persisted-fact observation.
+It reuses Medusa services and adds no pricing/cart engine or authority database.
+Observation digests do not establish ElevenID approval or execution currentness.
+
 ## Selected commerce target
 
 The owner selected **Medusa 2.23.0 with PostgreSQL** to replace commodity commerce

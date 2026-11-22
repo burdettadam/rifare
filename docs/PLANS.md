@@ -1,5 +1,21 @@
 # Current development plan
 
+## Native cart context before approval integration
+
+**COMMERCE-CONTEXT-01** is assigned under
+[ADR-0083](decisions/0083-medusa-cart-context.md), on `feat/medusa-cart-context`
+from `afd678f`. Root is the sole writer; independent authority and regression
+reviewers remain read-only. The bounded implementation protects native registered
+cart access and observes persisted Medusa facts without opening protected effects.
+The [cart-context guide](MEDUSA-CART-CONTEXT.md) defines the distinct observation
+profile and its limits. Candidate-bound verification and review remain pending.
+
+This advances ADR-0081's target before C6's public transport composition. The
+existing SQLite journal/currentness contracts remain retained requirements; they
+cannot be replaced by a plain asynchronous cart query. Next prerequisites are the
+supported ElevenID authority selection, native original-operation persistence,
+atomic admission/currentness and enforcement at Medusa's actual effect boundary.
+
 ## Owner-selected external identity provider
 
 **IDENTITY-APP-01** is implemented and independently reviewed within its local

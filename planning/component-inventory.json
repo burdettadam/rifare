@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "id": "rifare-source-inventory",
-  "revision": 63,
+  "revision": 64,
   "status": "proposed",
   "components": [
     {
@@ -1710,7 +1710,15 @@
         "apps/commerce-backend/src/api/identity-middleware.ts",
         "apps/commerce-backend/src/scripts/verify-identity.ts",
         "tests/development/external-identity-config.test.mts",
-        "docs/EXTERNAL-CUSTOMER-IDENTITY.md"
+        "docs/EXTERNAL-CUSTOMER-IDENTITY.md",
+        "docs/decisions/0083-medusa-cart-context.md",
+        "work/records/COMMERCE-CONTEXT-01.md",
+        "apps/commerce-backend/src/cart-context/policy.ts",
+        "apps/commerce-backend/src/cart-context/observation.ts",
+        "apps/commerce-backend/src/api/cart-context-middleware.ts",
+        "apps/commerce-backend/src/api/store/rifare/cart-observations/[id]/route.ts",
+        "apps/commerce-backend/src/scripts/verify-cart-context.ts",
+        "docs/MEDUSA-CART-CONTEXT.md"
       ],
       "notices": []
     },

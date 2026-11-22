@@ -13,7 +13,8 @@
     "db:migrate": "node run.mjs db:migrate",
     "user": "node run.mjs user",
     "test:commerce": "node run.mjs exec ./src/scripts/verify-commerce.ts",
-    "test:identity": "node run.mjs exec ./src/scripts/verify-identity.ts"
+    "test:identity": "node run.mjs exec ./src/scripts/verify-identity.ts",
+    "test:cart-context": "node run.mjs exec ./src/scripts/verify-cart-context.ts"
   },
   "dependencies": {
     "@medusajs/admin-sdk": "2.23.0",
@@ -21,8 +22,9 @@
     "@medusajs/framework": "2.23.0",
     "@medusajs/medusa": "2.23.0",
     "@medusajs/telemetry": "2.23.0",
+    "cookie": "2.0.2",
     "openid-client": "6.9.1",
-    "cookie": "2.0.2"
+    "safe-stable-stringify": "2.5.0"
   },
   "devDependencies": {
     "@swc/core": "1.16.22",

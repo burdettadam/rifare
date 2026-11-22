@@ -30,8 +30,8 @@ RECEIPT_RUNTIME_MANIFESTS = {
     'packages/adapters/delegated-receipts/package-lock.json': 'c1d026d8abb6629ecabe749fbe8a247756217ad68587c81e0e801d3ea2e212e6',
 }
 COMMERCE_RUNTIME_MANIFESTS = {
-    'apps/commerce-backend/package.json': '6c5bd3e87b4d49991932c7f13fb5723b41fe6adec81fdb07569a10534d099414',
-    'apps/commerce-backend/package-lock.json': '065bdced2990b9ef29fa9e6ac4cbca87d6a813558c5f15dca299d37b289a5521',
+    'apps/commerce-backend/package.json': 'b07d5d3320b3b4264dee72a00a6995c1e15e12b415281a784c7525881f71bad9',
+    'apps/commerce-backend/package-lock.json': '8c8b3f4194cb50c91f03e44aa75ea922c3ad86133f6199512fdae62f9355e134',
 }
 RECEIPT_RUNTIME_PACKAGE = {
     'name': 'rifare-delegated-receipts', 'version': '0.0.0', 'private': True,
@@ -339,7 +339,7 @@ def validate_commerce_runtime(root: Path) -> set[str]:
     lock = read_json(root / 'apps/commerce-backend/package-lock.json')
     require(package['private'] is True and package['name'] == 'rifare-commerce-backend',
             'commerce intake: unexpected package')
-    require(set(package['scripts']) == {'dev', 'build', 'db:migrate', 'user', 'test:commerce', 'test:identity'}
+    require(set(package['scripts']) == {'dev', 'build', 'db:migrate', 'user', 'test:commerce', 'test:identity', 'test:cart-context'}
             and all(command.startswith('node run.mjs ') for command in package['scripts'].values()),
             'commerce intake: unreviewed command or lifecycle hook')
     require(read_regular(root, 'apps/commerce-backend/.npmrc') ==

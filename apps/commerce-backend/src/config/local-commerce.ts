@@ -2,6 +2,17 @@ type Environment = Readonly<Record<string, string | undefined>>;
 
 const loopback = new Set(["127.0.0.1", "[::1]"]);
 
+export function cartContextConfig(env: Environment) {
+  const merchant = env.RIFARE_MERCHANT_NAMESPACE;
+  const store = env.RIFARE_NATIVE_STORE_ID;
+  if (!merchant && !store) return undefined;
+  if (!merchant || !/^[a-z0-9][a-z0-9_-]{0,63}$/.test(merchant) ||
+      !store || !/^store_[A-Za-z0-9]{1,100}$/.test(store)) {
+    throw new Error("RIFARE_CART_CONTEXT_CONFIGURATION_REQUIRED");
+  }
+  return { merchant_namespace: merchant, store_id: store };
+}
+
 export type ExternalIdentityConfig = {
   issuer: string; clientId: string; clientSecret: string; callbackUrl: string;
   webOrigin: string; signingAlgorithm: "RS256" | "ES256"; synthetic: boolean;
@@ -45,6 +56,7 @@ export function externalIdentityConfig(env: Environment, webOrigin: string): Ext
 
 /** Explicit development profile. This is not a production configuration. */
 export function localCommerceConfig(env: Environment) {
+  cartContextConfig(env);
   if (env.RIFARE_COMMERCE_PROFILE !== "local-medusa" ||
       ![undefined, "development", "test"].includes(env.NODE_ENV)) {
     throw new Error("RIFARE_COMMERCE_PROFILE_UNQUALIFIED");

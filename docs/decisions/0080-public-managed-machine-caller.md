@@ -1,6 +1,13 @@
 # ADR-0080 — Public managed-machine command and request handoff
 
 Status: assigned; implementation and qualification not yet performed.
+
+**Target composition update:** [ADR-0081](0081-upstream-commerce-engine.md) and
+[ADR-0083](0083-medusa-cart-context.md) supersede the SQLite-specific composition
+below. Retain the public transport/request-artifact contracts, but connect them
+only after the target-native source, original-operation journal and atomic
+admission/currentness boundary are assigned and demonstrated. C6 remains
+unimplemented; a cart observation does not satisfy those execution guarantees.
 Protected base: `c88799bdd0d3b9211be7f8dbf1d04cb7104de1c0`.
 Branch: `feat/rcg4b-public-caller`.
 

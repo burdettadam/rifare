@@ -10,6 +10,12 @@ product acceptance remain separate.
 
 ## What is available now
 
+The next bounded target slice, [COMMERCE-CONTEXT-01](../work/records/COMMERCE-CONTEXT-01.md),
+adds registered-cart access policy and a native persisted-fact observation. Its
+[guide](MEDUSA-CART-CONTEXT.md) records child-reference restrictions, exact decimal
+handling and the open ElevenID/currentness prerequisites. Candidate verification
+and independent review are pending; protected commerce effects remain held.
+
 The selected target is Medusa 2.23.0 with PostgreSQL and upstream Admin. Its build
 and 17 real database/API workflow groups pass; 61 focused configuration and
 retained regression cases also pass. It is local-only, with public protected
