@@ -72,3 +72,28 @@ No ElevenID approval request or proof submission, public managed-machine transpo
 ## Next boundary
 
 After the journal is qualified, a separate assignment selects and verifies the supported ElevenID human/machine account-link and authority contract. Only then compose authority evidence with this durable original operation, add a final native currentness/payment-equality check at Medusa's effect boundary, and qualify one complete cross-service purchase lifecycle.
+
+
+## Medusa implementation primitives pinned for the writer
+
+The application is pinned to Medusa **2.23.0**. Use its documented DML models,
+module service and generated module migrations rather than a hand-built parallel
+ORM or raw database pool:
+
+- [Data models and generated migrations](https://docs.medusajs.com/learn/fundamentals/data-models)
+- [Composite unique database indexes](https://docs.medusajs.com/learn/fundamentals/data-models/indexes)
+- [Transactional module-service database operations](https://docs.medusajs.com/learn/fundamentals/modules/db-operations)
+
+The DML supports composite unique indexes, and the module service can execute
+database operations inside the injected transaction manager. The writer must
+inspect the exact installed 2.23.0 package API before implementation and generate
+the migration with the pinned Medusa CLI. Do not copy current unpinned examples
+without verifying their exported symbols.
+
+The default Medusa locking provider currently used by this local profile is
+in-memory. It may coordinate cooperating operations in one process but is not the
+journal's uniqueness or cross-process concurrency primitive. Use the PostgreSQL
+unique index as the final duplicate arbiter and prove transaction/locking behavior
+with separate database connections. If the required row-lock API is not exposed
+through the supported module transaction context, stop and resolve that design
+before implementing a weaker check-then-insert path.
