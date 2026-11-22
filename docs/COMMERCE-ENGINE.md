@@ -80,8 +80,10 @@ different from enabling or qualifying them.
 
 Public catalog and guest-cart preparation use Medusa's normal APIs. These guest
 carts are capability-style development resources, not verified ElevenID customer
-accounts. Customer authentication is disabled; local operator email/password
-access is separate and restricted to the development profile.
+accounts. Customer authentication is disabled by default. The explicit
+[external identity profile](EXTERNAL-CUSTOMER-IDENTITY.md) adds customer OIDC login
+while retaining these commerce holds. Local operator email/password access remains
+separate and restricted to the development profile.
 
 The application holds the following native routes with an explicit 503 response:
 
@@ -154,8 +156,10 @@ does not grant permission to enable them. This application does not configure
 Enterprise providers, and verification checks that RBAC and audit modules are
 not loaded. Container placeholder keys do not count as loaded modules. See the [exact upstream license](https://github.com/medusajs/medusa/blob/v2.23.0/LICENSE)
 and [Enterprise file scope](https://github.com/medusajs/medusa/blob/v2.23.0/ENTERPRISE-LICENSE.md).
-Generic auth-provider extension APIs are a separate option for the future identity
-adapter; this branch neither copies Enterprise code nor disables its controls.
+The customer identity adapter uses the generic Auth provider extension with
+MIT-licensed `openid-client` 6.9.1 and `cookie` 2.0.2. It neither copies Enterprise
+code nor disables upstream controls. The exact graph contains 1,015 dependency
+entries plus its root record; native Express/session cookie versions are retained.
 
 The first audit found Ajv 8.13.0 through an upstream tool dependency. The lock now
 uses an explicit Ajv 8.20.0 override for

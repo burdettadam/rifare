@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "id": "rifare-source-inventory",
-  "revision": 62,
+  "revision": 63,
   "status": "proposed",
   "components": [
     {
@@ -1701,7 +1701,16 @@
         "apps/commerce-backend/tsconfig.json",
         "docs/COMMERCE-ENGINE.md",
         "docs/IDENTITY-APPLICATION-CONTRACT.md",
-        "tests/development/commerce-backend-config.test.mts"
+        "tests/development/commerce-backend-config.test.mts",
+        "docs/decisions/0082-external-customer-identity.md",
+        "work/records/IDENTITY-APP-01.md",
+        "apps/commerce-backend/src/modules/external-identity/index.ts",
+        "apps/commerce-backend/src/modules/external-identity/browser.ts",
+        "apps/commerce-backend/src/modules/external-identity/provider.ts",
+        "apps/commerce-backend/src/api/identity-middleware.ts",
+        "apps/commerce-backend/src/scripts/verify-identity.ts",
+        "tests/development/external-identity-config.test.mts",
+        "docs/EXTERNAL-CUSTOMER-IDENTITY.md"
       ],
       "notices": []
     },

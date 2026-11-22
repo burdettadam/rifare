@@ -5,6 +5,9 @@ import { fileURLToPath } from "node:url";
 const directory = fileURLToPath(new URL(".", import.meta.url));
 const localEnv = fileURLToPath(new URL(".env", import.meta.url));
 if (existsSync(localEnv)) process.loadEnvFile(localEnv);
+// Native HTTP logs include callback queries. Suppress that log level before the
+// upstream logger singleton is loaded; errors/info remain available.
+if (process.env.RIFARE_IDENTITY_PROVIDER) process.env.LOG_LEVEL = "info";
 // The upstream telemetry singleton reads this before medusa-config is loaded.
 process.env.MEDUSA_DISABLE_TELEMETRY = "true";
 process.env.MEDUSA_FF_ANALYTICS = "false";

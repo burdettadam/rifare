@@ -1,5 +1,16 @@
 # Current development plan
 
+## Owner-selected external identity provider
+
+**IDENTITY-APP-01** is assigned under [ADR-0082](decisions/0082-external-customer-identity.md).
+The owner selected a Supabase-style external provider for both Rifare and ElevenID.
+Use separate application clients; retain ElevenID identity/trust/delegation and
+Medusa commerce ownership. The bounded next implementation is a maintained OIDC
+customer adapter with browser/actor binding, native identity/customer persistence
+and explicit lifetime limits. Protected commerce remains held. The
+[work record](../work/records/IDENTITY-APP-01.md) separates local synthetic-peer
+verification from an actual hosted provider/client/browser qualification.
+
 ## Owner-selected commerce replacement
 
 **COMMERCE-ENGINE-01** is implemented and independently reviewed within its

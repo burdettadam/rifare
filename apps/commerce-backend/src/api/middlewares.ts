@@ -1,5 +1,6 @@
 import { defineMiddlewares } from "@medusajs/framework/http";
 import type { MiddlewareRoute } from "@medusajs/framework/http";
+import { identityMiddlewares } from "./identity-middleware";
 
 /** Cart preparation uses Medusa. An order UUID, login or public API key does
  * not replace the pending identity/approval bridge. No caller-controlled bypass.
@@ -13,7 +14,7 @@ const held: MiddlewareRoute[] = [
 ];
 
 export default defineMiddlewares({
-  routes: held.map((route) => ({
+  routes: [...identityMiddlewares(), ...held.map((route) => ({
     ...route,
     middlewares: [(_req, res) => {
       res.status(503).json({
@@ -21,5 +22,5 @@ export default defineMiddlewares({
         message: "This operation is unavailable while the identity and approval integration is being completed.",
       });
     }],
-  })),
+  }))],
 });

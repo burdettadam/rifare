@@ -1,6 +1,8 @@
 # Rifare application identity contract
 
-Status: integration design and acceptance requirements; not a connected provider.
+Status: external-provider customer adapter implemented; local verification and
+hosted provider qualification are recorded separately in the
+[IDENTITY-APP-01 work record](../work/records/IDENTITY-APP-01.md).
 
 ElevenID remains Rifare's primary identity/trust dependency. Identity management
 and authentication are compatible responsibilities. Authentication establishes
@@ -33,7 +35,8 @@ delegated-use mTLS profile are separate authentication contracts.
 
 | Owner | Responsibilities |
 | --- | --- |
-| ElevenID identity service, using maintained authentication infrastructure | Stable human and machine identity, organization associations, credentials, authentication/federation, identity assurance, consent/delegation evidence, revocation/status. |
+| External authentication provider, selected as Supabase | Account authentication, credential recovery and provider login/consent. Rifare and ElevenID use separate registered clients. |
+| ElevenID identity service | Stable human and machine identity, organization associations, credentials, identity assurance, consent/delegation evidence, revocation/status; consumes external authentication for its own application. |
 | Medusa commerce engine | Catalog, prices, carts, tax, promotions, inventory, orders, payment/fulfillment records and ordinary post-purchase workflows. |
 | Thin Rifare application integration | Map a verified identity to its merchant/customer/operator context; apply product-specific approvals and commerce policy; preserve original cross-system operation identity, evidence and recovery. |
 
@@ -42,12 +45,17 @@ or merchant-admin account. A login establishes identity; current merchant
 membership, order ownership, allowed amount, approval and business state still
 control the effect. Medusa channels do not replace tenant isolation.
 
-The preferred first path is a separately registered Rifare client of the
-ElevenID-operated Keycloak issuer, using a maintained standards implementation.
-This keeps ElevenID's authentication implementation upstream. If the selected
-installation instead uses an external IdP, explicitly retain ElevenID's supported
-identity/trust/delegation integration; sharing the same IdP alone would not make
-ElevenID an application dependency.
+The owner selected a shared external provider in [ADR-0082](decisions/0082-external-customer-identity.md),
+superseding the earlier preference for an ElevenID-operated Keycloak issuer.
+Use distinct Rifare and ElevenID OAuth clients and application sessions. Explicitly
+retain ElevenID's identity/trust/delegation integration: sharing the same provider
+alone does not establish an ElevenID identity or make it an application dependency.
+
+The current parallel Marty branch at `f7f05e76a6c33c4d67d3e303e5e4b832ab4238e0`
+already supports [external OIDC](https://github.com/ElevenID/marty-ui/blob/f7f05e76a6c33c4d67d3e303e5e4b832ab4238e0/docs/installer-external-oidc.md)
+and separately configured managed PostgreSQL. Its tracked records do not establish
+a configured Supabase project/client, hosted authorization UI or a successful live
+Supabase journey. The other workstream owns those Marty changes.
 
 ## Required contract and acceptance evidence
 
@@ -91,13 +99,15 @@ this branch changes no ElevenID repository.
 
 Medusa's current built-in OIDC SSO provider is an Enterprise feature requiring
 separate terms; this branch does not enable it. Its generic auth-provider
-extension remains available. A later implementation should use a maintained OIDC
-client or suitably licensed adapter behind that extension, or an explicitly
-licensed upstream provider. Keep the adapter small and test the lifecycle above.
+extension is used by the current adapter with pinned `openid-client` 6.9.1.
+Medusa owns identity persistence, customer association, cache, locking and application
+tokens. The adapter adds exact provider configuration, browser/actor binding,
+verified issuer/subject mapping and lifetime restrictions. See
+[external customer identity](EXTERNAL-CUSTOMER-IDENTITY.md) for its actual scope.
 Do not create a second authentication engine or copy Enterprise code to avoid
 its license controls.
 
-The current local commerce profile permits only development operator login and
-guest-cart preparation. Protected public operations remain unavailable until
-this contract is implemented and reviewed. This is an explicit integration gap,
-not a claim that ElevenID lacks authentication or must own commerce authorization.
+The default local profile retains development operator login and guest carts.
+The explicit external profile adds customer login; protected commerce operations
+remain held until the ElevenID identity/approval-to-Medusa effect contract is
+implemented and reviewed. Authentication alone does not complete that bridge.

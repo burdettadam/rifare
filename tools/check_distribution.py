@@ -30,8 +30,8 @@ RECEIPT_RUNTIME_MANIFESTS = {
     'packages/adapters/delegated-receipts/package-lock.json': 'c1d026d8abb6629ecabe749fbe8a247756217ad68587c81e0e801d3ea2e212e6',
 }
 COMMERCE_RUNTIME_MANIFESTS = {
-    'apps/commerce-backend/package.json': '9e55bffbb12cb3d65e9342584ede457b4553a8cadf252a387e4ec5aafb36d6b9',
-    'apps/commerce-backend/package-lock.json': '7f17da97236cf3ebe7f6c00203ce25e43b04e348321f3cedc3468268a43872f5',
+    'apps/commerce-backend/package.json': '6c5bd3e87b4d49991932c7f13fb5723b41fe6adec81fdb07569a10534d099414',
+    'apps/commerce-backend/package-lock.json': '065bdced2990b9ef29fa9e6ac4cbca87d6a813558c5f15dca299d37b289a5521',
 }
 RECEIPT_RUNTIME_PACKAGE = {
     'name': 'rifare-delegated-receipts', 'version': '0.0.0', 'private': True,
@@ -339,13 +339,13 @@ def validate_commerce_runtime(root: Path) -> set[str]:
     lock = read_json(root / 'apps/commerce-backend/package-lock.json')
     require(package['private'] is True and package['name'] == 'rifare-commerce-backend',
             'commerce intake: unexpected package')
-    require(set(package['scripts']) == {'dev', 'build', 'db:migrate', 'user', 'test:commerce'}
+    require(set(package['scripts']) == {'dev', 'build', 'db:migrate', 'user', 'test:commerce', 'test:identity'}
             and all(command.startswith('node run.mjs ') for command in package['scripts'].values()),
             'commerce intake: unreviewed command or lifecycle hook')
     require(read_regular(root, 'apps/commerce-backend/.npmrc') ==
             b'save-exact=true\nengine-strict=true\naudit=false\nfund=false\nignore-scripts=true\n',
             'commerce intake: installation scripts must stay disabled')
-    require(lock['lockfileVersion'] == 3 and len(lock['packages']) == 1013,
+    require(lock['lockfileVersion'] == 3 and len(lock['packages']) == 1016,
             'commerce intake: dependency graph changed')
     for path, entry in lock['packages'].items():
         if not path:
@@ -369,7 +369,7 @@ def commerce_runtime_observation(root: Path) -> dict[str, Any]:
     return {
         'commerce_runtime_dependency_inputs': sorted(manifests),
         'commerce_runtime': {
-            'engine': 'Medusa', 'version': '2.23.0', 'lock_entries': 1012,
+            'engine': 'Medusa', 'version': '2.23.0', 'lock_entries': 1015,
             'installation_scripts_enabled': False,
             'license_scope': 'mixed upstream core/Enterprise; source intake grants no Enterprise rights',
             'distribution_qualified': False,

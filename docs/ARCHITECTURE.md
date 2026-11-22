@@ -9,8 +9,12 @@ workflows and Admin. The [engine guide](COMMERCE-ENGINE.md) maps actual local
 evidence and migration limits. The legacy domain map below describes the retained
 SQLite diagnostic implementation; it is not a second production commerce engine.
 
-ElevenID remains the identity/trust dependency, reusing its existing maintained
-authentication infrastructure. The [application identity contract](IDENTITY-APPLICATION-CONTRACT.md)
+ElevenID remains the identity/trust dependency. Under [ADR-0082](decisions/0082-external-customer-identity.md),
+Rifare and ElevenID use separate clients of a shared external authentication
+provider such as Supabase. Rifare's [customer adapter](EXTERNAL-CUSTOMER-IDENTITY.md)
+uses maintained OIDC validation and Medusa identity persistence; hosted provider
+qualification and the ElevenID account/approval binding remain open.
+The [application identity contract](IDENTITY-APPLICATION-CONTRACT.md)
 separates authentication, commerce permission and lifecycle integration. Protected
 public commerce operations remain held until that bridge is implemented. None of
 the existing delegated-use or receipt controls is weakened by this migration.
