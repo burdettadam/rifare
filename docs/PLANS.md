@@ -6,17 +6,21 @@ existing modules and [roadmap](ROADMAP.md) for remaining work.
 
 ## Current local command application checkpoint
 
-**RCG-4B-C4 — local checkout command access** is assigned by
+**RCG-4B-C4 — local checkout command access** is complete within
 [ADR-0078](decisions/0078-local-checkout-command-access.md). It connects the
 existing C3 native START and C2 original journal to a separate five-route local
 customer API and the standalone Python caller. The same assignment corrects
 concrete native owner checks and dispatch at the API, server, receipt and intent
 composition boundaries. The [command guide](DELEGATED-CHECKOUT-COMMANDS.md)
 describes configuration, explicit original recovery and the preserved execution
-boundary. Final candidate, focused evidence and independent review results are
-recorded in [C4](../work/records/RCG-4B-C4.md). Existing tests, contracts, business
-owners and record schemas remain protected; public provider transport and formal
-acceptance remain separate.
+boundary. All 200 focused cases passed freshly on clean `ecc34e5`: 44 new cases
+and 156 existing regressions. Both independent reviews found no scoped blocker,
+and both assigned isolated authorization/UUID faults caused the intended unchanged
+behavioral assertions to fail. Published `6000723` has the exact reviewed tree.
+The [C4 record](../work/records/RCG-4B-C4.md) preserves actual reports, review
+identities and documentation-only closing equivalence. Existing tests, contracts,
+business owners and record schemas remain protected; public provider transport
+and formal acceptance remain separate.
 
 ## Previous native START checkpoint
 

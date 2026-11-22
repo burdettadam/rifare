@@ -1,6 +1,6 @@
 # ADR-0078 — Local checkout command access and concrete owner composition
 
-Status: bounded delegated assignment before implementation.
+Status: bounded local implementation and focused review complete; formal acceptance separate.
 Protected source: `e8a0152825711bea81df29b8d9b035fea01ea035`.
 
 ## Assignment and ownership
@@ -15,6 +15,14 @@ the separately assigned implementation writer `command_consumer_impl`.
 `commerce_checkpoint_audit` and `receipt_regression_review` remain independent
 authority/security and regression reviewers; neither authors product code,
 tests or oracle. At most three corrective review rounds apply.
+
+Closing review note: `commerce_checkpoint_audit` completed the assignment review,
+then its final model session failed authentication after preparing an unexecuted
+isolated mutant. Fresh independent `c4_authority_review` completed the final
+authority/security review and assigned fault; the preparation-only worktree was
+preserved. `receipt_regression_review` completed the regression review and its
+assigned fault. No corrective product round was required. Exact evidence and
+publication identities are recorded in [C4](../../work/records/RCG-4B-C4.md).
 
 The inspected provider PR1994 snapshot is open draft
 `37b7fdc3d3f1c223613ad98fe601d7d86e6a3600`; Protocol PR38 remains

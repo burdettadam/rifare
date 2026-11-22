@@ -182,8 +182,19 @@ evidence; existing C2 tests separately exercise actual process loss. The new hel
 erasure route check seeds the exact existing native marker; prior C3 lifecycle
 evidence records execution of the actual typed privacy owner.
 
-Actual final results and the two isolated authorization/UUID faults are recorded
-in the C4 work record. This focused scope does not imply a full regression run,
+All 200 cases passed freshly on clean candidate `ecc34e5`: 44 new and 156 existing
+cases across thirteen whole files. The four selections ran in 10.897, 16.223,
+10.742 and 20.114 seconds. Both independent reviewers found no scoped blocker.
+The twelve owner assertions also preserve their original meaningful failures
+against the protected implementation and pass unchanged after the correction.
+
+The isolated authorization fault caused the intended 413-versus-404 failure in
+one of twenty unchanged HTTP cases. The isolated UUID fault made the caller accept
+a complete valid second original and failed one of twelve unchanged client cases.
+Neither fault produced import or setup failures. Public `6000723` has the exact
+reviewed implementation tree; the final documentation retains those executions
+through explicit unchanged-source/runtime/report checks. Exact hashes and native
+denominators are recorded in the C4 work record. This focused scope does not imply a full regression run,
 formal acceptance, external provider execution, public wallet qualification or
 the target React/PostgreSQL deployment.
 

@@ -33,8 +33,12 @@ actual execution identities, corrections and publication equivalence.
 The additive [RCG-4B-C4 local command application](DELEGATED-CHECKOUT-COMMANDS.md)
 connects those owners to separate customer START/status/recovery/cancel routes
 and an independent Python caller. It also corrects four explicitly bounded
-native owner-composition boundaries. See [C4's record](../work/records/RCG-4B-C4.md)
-for its actual candidate, focused executions and independent review results.
+native owner-composition boundaries. Its bounded gate is complete: all 200 cases
+passed freshly on `ecc34e5`, both independent reviews found no scoped blocker,
+and both assigned faults failed at their intended behavioral assertions. Public
+`6000723` retains the exact reviewed implementation tree. See
+[C4's record](../work/records/RCG-4B-C4.md) for actual executions and closing
+documentation equivalence.
 At the provider snapshot inspected for C4, `37b7fdc`, the explicit default-off
 `marty-delegated-use` host has an executable managed lifecycle through actual
 template/policy, issuance, signing and offline receipt-consumer owners. Its
