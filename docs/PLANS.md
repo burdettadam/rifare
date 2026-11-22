@@ -4,17 +4,22 @@ The current source includes the bounded local **M20-G03 item-level drop-off
 handoff** implementation. Start with the [architecture](ARCHITECTURE.md) for
 existing modules and [roadmap](ROADMAP.md) for remaining work.
 
-## Assigned internal command connection
+## Current internal command connection checkpoint
 
-**RCG-4B-C5 — internal mTLS START and original recovery** is assigned under
+**RCG-4B-C5 — internal mTLS START and original recovery** is complete within
 [ADR-0079](decisions/0079-internal-delegated-command-transport.md), from public
 C4 checkpoint `9c61f30`. It selects the already documented internal machine
 profile: atomic fresh admission, current native checks after TLS and before
 application bytes, and explicit recovery of the original after uncertainty.
 Existing originals, including C4 preparations and failures before transmission,
-remain recovery-only. Implementation, focused execution and independent review
-are pending in [the C5 record](../work/records/RCG-4B-C5.md). This assignment does
-not select public serving or FINALIZE/receipt-context composition.
+remain recovery-only. All 158 focused cases passed freshly on clean `3ecb91e`:
+44 new and 114 existing cases. Both independent reviews found no scoped blocker;
+the two assigned faults demonstrated stale transmission and a repeated START
+at the actual peer. Published `9ecb34e` has the exact reviewed tree.
+[The C5 record](../work/records/RCG-4B-C5.md) preserves actual executions,
+negative-input equivalence and documentation-only closure. The existing customer
+API, Python caller and runnable fixture keep their prior composition. Public
+serving and FINALIZE/receipt-context integration remain separate.
 
 ## Current local command application checkpoint
 
@@ -102,24 +107,27 @@ was published as exact-tree checkpoint `4ac8556`, matching native `413f849`;
 the original native history remains separately preserved. These are local
 plain-browser/SQLite observations, not React/PostgreSQL or full RCG-5 acceptance.
 
-The provider snapshot inspected for C4 is `37b7fdc`. Its explicit default-off
-`marty-delegated-use` host now has an executable managed network lifecycle through
-concrete template/policy, issuance, signing and independent receipt-consumer
-owners. Mandatory mutual TLS and fourteen restricted database connections remain
-its internal composition. Public Gateway/wallet/client selection and deployed
-serving qualification remain open. This is source inspection, not a new provider
-test execution. Protocol draft PR38 remains `6126da7`. See the
+Closing inspection for C5 found provider draft PR1994 at `3c05227`, advanced
+from the assigned internal `37b7fdc` contract. It adds a default-off public
+managed-machine caller profile on the same mandatory mTLS listener: public
+commands, challenge-bound request retrieval, proof submission and original
+receipt recovery, with a separate Rust client. The internal route remains;
+Protocol draft PR38 remains `6126da7`. General wallet/Gateway selection and
+deployed serving qualification remain open. These are source observations; no
+provider process or public route was exercised here. See the
 [provider checkpoint and exact contracts](DELEGATED-COMMAND-CONSUMER.md#provider-and-next-integration).
 
-After the local codec, original-command journal, native START construction and
-local customer command access, the next dependency is the qualified public
-authentication/current-state, start/final-use and original-result contract. Once
-available, assign the bounded **RCG-4B public transport, authenticated namespace and native purchase
-binding for finalization/sending composition**, then the complete isolated **RCG-5 cross-service journey** and connected
-**RCG-6 profile**. Preserve original operation recovery and Rifare's execution,
-budget, reservation and business-idempotency ownership. Do not rebuild the landed
-receipt UI or bridge the public contract gap through private provider storage.
-Canonical criteria and formal acceptance remain open.
+The next bounded RCG-4B assignment should pin this selected public profile and
+connect its public commands and original-bound challenge/request handoff to the
+existing native lifecycle, using explicit transport trust and provisioned actor
+mapping. Then establish independent signed request verification before composing
+proof submission, FINALIZE and independent current receipt context. A caller's
+verification assertion or a challenge UUID cannot supply that authority.
+The full isolated **RCG-5 cross-service journey** and connected **RCG-6 profile**
+follow those bounded integrations. Preserve original recovery and Rifare's
+execution, budget, reservation and business-idempotency ownership. Reuse the
+landed receipt UI and provider service owners through documented interfaces.
+Canonical criteria, actual endpoint qualification and formal acceptance remain open.
 
 ## Continuing commerce roadmap
 

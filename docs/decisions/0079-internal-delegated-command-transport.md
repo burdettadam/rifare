@@ -1,6 +1,6 @@
 # ADR-0079 — Internal delegated-command transport and native admission
 
-Status: assigned; implementation and independent review pending.
+Status: bounded implementation and independent review complete; formal acceptance not performed.
 Protected source: `9c61f309398842cf49d7fdcde6cef788acdac3b7`.
 
 ## Assignment and ownership
@@ -18,7 +18,7 @@ worktree. `c4_authority_review` and `receipt_regression_review` independently
 review authority/security and regression. Neither reviewer authors product code,
 tests or expected outcomes. At most three corrective review rounds apply.
 
-Fresh read-only inspection confirms Marty UI draft PR1994 remains at
+Read-only inspection at assignment confirmed Marty UI draft PR1994 at
 `37b7fdc3d3f1c223613ad98fe601d7d86e6a3600` and Protocol draft PR38 remains at
 `6126da7619e057be2ff58dd38a5d50f49891d1b3`. The consumable internal route is
 `POST /internal/v1/organizations/{organization_id}/delegated-use-commands`.
@@ -202,3 +202,24 @@ local TLS evidence. Actual provisioned-provider observation, public serving,
 request/proof/finalization/context composition, full RCG-5/6, target PostgreSQL/
 React and formal acceptance remain separate. Rifare retains domain permission,
 approval, budget, reservation, business idempotency, execution and outcomes.
+
+## Completed bounded checkpoint
+
+Clean native candidate `3ecb91e07ec45cfdb9282cbd899c1966ca6c996e`, tree
+`e9ffcfe55aeb692e35c17d3e6403e3262ba23f64`, is published as exact-tree
+`9ecb34e5635fbc7ec0a31ef186c1d6f41b6c2570`. All 158 selected cases passed
+freshly: 44 new and 114 existing cases across thirteen whole files. Both
+independent roles found no remaining scoped blocker. The assigned guard and
+admission faults each failed at actual outbound-count assertions; their earlier
+execution identities and exact unchanged-input carry are retained. The
+[C5 work record](../../work/records/RCG-4B-C5.md) binds reports, runtime, controls,
+reviews, the test-listener correction and one narrative clarification. No
+corrective product round was required. Closing Markdown receives a separate
+equivalence attestation without relabeling the product executions.
+
+Closing source inspection found provider PR1994 advanced to `3c05227`, adding
+an optional public managed-machine caller profile on the same mandatory mTLS
+listener. Protocol remains `6126da7`; both pull requests remain draft and
+unmerged. This later public profile is a next integration input. It does not
+change C5's pinned internal route or qualify provider deployment, request/proof
+verification, FINALIZE or independent receipt context.

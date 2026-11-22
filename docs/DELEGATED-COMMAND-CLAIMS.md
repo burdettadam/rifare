@@ -169,24 +169,30 @@ not execute the old nested catalog campaign. That legacy test's earlier
 38/199/262 count assertions remain an explicit pre-existing broader-gate issue;
 neither they nor its runner are rewritten by this slice.
 
-## Assigned internal sender composition
+## Internal sender composition
 
-[C5](DELEGATED-USE-INTERNAL-CLIENT.md) assigns two additive methods:
+[C5](DELEGATED-USE-INTERNAL-CLIENT.md) implements two additive methods:
 `claimNewCheckoutStart` atomically requires an absent original, while
 `currentCheckoutStart` requires and revalidates a retained original without
 insertion. Existing journal methods and stored semantics remain protected.
 The separate native sender uses these methods around internal mTLS work; the
 journal itself still has no network callback or transport credential. All
 preexisting originals are recovery-only for that sender, including C4 claims
-and failures before HTTP transmission. Execution and review status are in
+and failures before HTTP transmission. All 158 C5 focused cases passed freshly;
+both independent reviews found no scoped blocker. The tests include actual TLS
+withdrawal, deleted-original refusal, response loss, recovery and two detected
+guard/admission faults. Exact source and evidence are in
 [the C5 record](../work/records/RCG-4B-C5.md).
 
 ## Next integration boundary
 
-Continue with the public provider authentication, current-state, start/final-use
-and original-result contracts when available. Establish the real typed actor
-namespace and native purchase binding before composing a transport with this
-journal. Preserve the original command after uncertainty and reuse the existing
-execution, approval, reservation, budget and business-idempotency owners.
+Provider `3c05227` now supplies an optional public managed-machine contract.
+The [current provider checkpoint](DELEGATED-COMMAND-CONSUMER.md#provider-and-next-integration)
+describes that source-only observation and the next bounded work: public commands
+and original-bound challenge/request handoff, then independent signed request
+verification, proof/FINALIZE and current receipt-context composition. Explicit
+trust and real typed actor provisioning remain necessary. Preserve original
+commands after uncertainty and reuse the existing execution, approval,
+reservation, budget and business-idempotency owners.
 Public serving, full isolated RCG-5, connected RCG-6, target PostgreSQL/React,
 formal acceptance and production qualification remain separate obligations.

@@ -39,22 +39,26 @@ and both assigned faults failed at their intended behavioral assertions. Public
 `6000723` retains the exact reviewed implementation tree. See
 [C4's record](../work/records/RCG-4B-C4.md) for actual executions and closing
 documentation equivalence.
-The next assigned increment is [C5 internal command transport](DELEGATED-USE-INTERNAL-CLIENT.md)
-under [ADR-0079](decisions/0079-internal-delegated-command-transport.md): atomic
-native START admission and explicit original recovery through the documented
-internal mTLS profile. Implementation and focused qualification are pending.
-Every admitted original remains recovery-only after uncertainty; public serving,
-FINALIZE and independent receipt context remain distinct follow-ups.
-At the provider snapshot inspected for C4, `37b7fdc`, the explicit default-off
-`marty-delegated-use` host has an executable managed lifecycle through actual
-template/policy, issuance, signing and offline receipt-consumer owners. Its
-fourteen restricted database connections and mandatory mutual TLS remain
-internal composition. These are inspected source facts; no provider tests ran
-here. Protocol draft PR38 remains `6126da7`. Selected public
-Gateway/wallet/client contracts and deployed qualification remain open. Continue with the actual RCG-4B public
-transport/current-state/authenticated-namespace and native-purchase finalization/sending composition, full isolated RCG-5 journey
-and connected RCG-6 qualification. Local checks do not qualify those boundaries
-or formal acceptance.
+The completed [C5 internal command transport](DELEGATED-USE-INTERNAL-CLIENT.md)
+adds atomic native START admission and explicit original recovery through the
+documented internal mTLS profile. All 158 focused cases passed freshly on
+`3ecb91e`, both independent reviews found no scoped blocker and both assigned
+faults produced the required actual peer-count failures. Published `9ecb34e`
+retains the exact reviewed tree; [C5's record](../work/records/RCG-4B-C5.md)
+binds the evidence and documentation-only closure. Every admitted original,
+including a failure before HTTP transmission, remains recovery-only.
+
+Closing source inspection found provider draft PR1994 at `3c05227`, adding an
+optional public managed-machine profile and a separate Rust client. Commands,
+challenge request/proof and original receipt recovery use the same mandatory
+mTLS listener when explicitly enabled. The internal contract remains and
+Protocol draft PR38 stays `6126da7`. No provider test or public route ran here.
+Next, assign public commands and original-bound challenge/request handoff through
+the existing native lifecycle, then independent signed request verification,
+proof/FINALIZE and independently sourced current receipt context. General
+wallet/Gateway selection, provisioned endpoint and certificate lifecycle
+qualification, full isolated RCG-5, connected RCG-6, target PostgreSQL/React and
+formal acceptance remain open.
 
 | Area | Remaining outcome | Work entry |
 | --- | --- | --- |

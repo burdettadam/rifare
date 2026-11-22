@@ -178,24 +178,57 @@ finite credential-format aliases and bind issuance/signing ownership and nested
 machine credential identity. These are source observations, not provider test
 executions performed here. The consumer still requires independently trusted
 original context and authenticated retained results. Reviewed deployed credentials,
-CA/pin lifecycle, roles, network and custody remain unqualified. No public use
-Gateway or selected public wallet/consumer contract is installed; the human
-lifecycle route cannot be used as a machine-use route. The Protocol pin and
-this codec's scope are unchanged. This is a source/document update; no provider
-test execution is claimed here.
+CA/pin lifecycle, roles, network and custody remain unqualified. At that C4
+snapshot, no public use Gateway or selected public wallet/consumer contract was
+installed. The later C5 closing snapshot below adds a selected managed-machine
+profile; the human lifecycle route still cannot be used as a machine-use route.
+The Protocol pin and this codec's scope are unchanged.
 
-[C5 internal transport](DELEGATED-USE-INTERNAL-CLIENT.md) now assigns a bounded
+[C5 internal transport](DELEGATED-USE-INTERNAL-CLIENT.md) now implements a bounded
 client against this existing mTLS profile, preserving the pure C1 codec and
 historical C2 flags. The native composition has atomic first admission and a
 retained-only currentness fence before HTTP bytes. This explicitly internal
-selection is separate from the still-open public consumer composition.
+selection is separate from Rifare's remaining public consumer composition.
+Its 158 focused cases passed freshly; both independent reviews found no scoped
+blocker and the two assigned faults produced actual stale/repeated transmissions.
+Published `9ecb34e` retains the reviewed implementation tree.
 
-Continue RCG-4B with the qualified public authentication/current-state, use and
-original-outcome contracts, authenticated namespace/native purchase binding and
-actual transport around the existing local journal. Reuse
-the landed provider owners through their eventual selected public composition.
-Do not invent a route or read private provider storage. Public wallet contracts,
-certificate lifecycle, selected required attestation and deployed request/receipt
-custody remain provider qualification work. Full isolated cross-service RCG-5,
-connected RCG-6, target React/PostgreSQL, formal acceptance and production
-qualification remain separate gates.
+Closing inspection found draft PR1994 at
+[`3c05227fe0a2da1216c8d4306a9e2ca0f9ea432a`](https://github.com/ElevenID/marty-ui/blob/3c05227fe0a2da1216c8d4306a9e2ca0f9ea432a/rust/services/delegated-authority/USE_HTTP.md).
+Its optional public managed-machine profile is disabled by default and selected
+with `DELEGATED_USE_PUBLIC_CALLER_ENABLED=true` on the same mandatory mTLS
+listener. It supplies these routes:
+
+| Method | Public path |
+| --- | --- |
+| POST | `/v1/organizations/{organization}/delegated-use-commands` |
+| GET | `/v1/flows/instances/{challenge}/request` |
+| POST | `/v1/flows/instances/{challenge}/submit` |
+| POST | `/v1/organizations/{organization}/delegated-use/receipts/recover` |
+
+A CHALLENGE, including recovery, supplies one same-origin, challenge-bound `Link`
+with relation `urn:marty:delegated-use:request`; command JSON and digest remain
+unchanged. Proof submission uses exactly `state` and `vp_token` form fields,
+binding the original challenge and frozen DCQL query ID. This association does
+not perform the finalization owner's proof verification. The selected profile
+is managed MACHINE_IDENTITY, managed MachineCredential/KEY and the exact
+operation. The [independent Rust client](https://github.com/ElevenID/marty-ui/blob/3c05227fe0a2da1216c8d4306a9e2ca0f9ea432a/rust/crates/delegated-use-client/README.md)
+uses explicit transport trust and retained originals; its request artifact is
+cryptographically unverified and `CallerVerifiedRequest` is a caller assertion,
+not a verifier. Receipt artifacts still need independent consumption.
+
+The internal HTTP route remains and `USE_MTLS.md` has identical bytes to C5's
+assigned `37b7fdc` snapshot. Both provider and Protocol pull requests remain draft
+and unmerged. These are source inspections, not provider tests, actual accounts,
+deployed endpoint observations or public route executions performed here.
+
+The next bounded Rifare assignment should pin the selected public profile and
+compose public commands and original-bound challenge/request handoff through the
+existing native lifecycle. Explicit trust, provisioned typed actor mapping and
+current native purchase binding remain required. Independent signed request
+verification must precede proof submission, FINALIZE and independently trusted
+current receipt context; neither a challenge UUID nor a caller verification
+assertion supplies that authority. General wallet/Gateway selection, certificate
+lifecycle, selected required attestation and deployed custody remain separate
+qualification work. Full isolated RCG-5, connected RCG-6, target React/PostgreSQL,
+formal acceptance and production qualification remain open.

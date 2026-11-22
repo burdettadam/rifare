@@ -176,9 +176,38 @@ peer certificate/path/body, plaintext HTTP byte counts, lost responses, explicit
 recovery and unchanged commerce effects. The independent sender tests control the
 TLS handshake to change native state during the actual asynchronous wait.
 
-The work record identifies the fixed candidate, whole-file reports, runtime and
-OpenSSL inputs, independent reviews and isolated faults. A passing local peer is
-not a provider process run or a complete cross-service journey. Actual endpoint
-provisioning, registered identity/trust acquisition, request/proof/finalization
-and independent current receipt-context composition remain ahead of full RCG-5/6.
-Public serving and target PostgreSQL/React qualification remain separate.
+All **158 selected cases** passed freshly on clean native `3ecb91e`: 44 new and
+114 existing cases across thirteen whole files. Published implementation
+`9ecb34e5635fbc7ec0a31ef186c1d6f41b6c2570` has the exact reviewed tree
+`e9ffcfe55aeb692e35c17d3e6403e3262ba23f64`. Both independent reviews found no
+scoped blocker. Removing the final native guard caused a changed purchase to
+reach the peer; removing fresh-admission refusal caused a second START after
+response loss. The work record preserves those faults' actual earlier execution
+identities and exact unchanged-input equivalence.
+
+The following are separate ordinary invocations, each within sixty cases,
+four files and sixty seconds:
+
+```sh
+python3 tools/install_receipt_runtime.py --offline
+python3 tools/dev_tests.py --files tests/development/delegated-use-client.test.mts tests/development/delegated-command-codec.test.mts tests/development/delegated-command-native.test.mts
+python3 tools/dev_tests.py --files tests/development/delegated-checkout-command-sender.test.mts tests/development/delegated-checkout-starts.test.mts tests/development/delegated-command-claims.test.mts
+python3 tools/dev_tests.py --files tests/development/delegated-command-admission.test.mts tests/development/delegated-command-process.test.mts tests/development/privacy-coverage.test.mts tests/development/delegated-command-catalog.test.mts
+python3 tools/dev_tests.py --files tests/development/delegated-use-catalog.test.mts tests/development/delegated-checkout-commands.test.mts tests/development/delegated-checkout-command-client.test.mts
+```
+
+The work record pins raw reports, runtime/OpenSSL observations and closing
+documentation equivalence. These are local TLS and native SQLite observations.
+A passing local peer does not establish a provider process or complete
+cross-service journey.
+
+Closing inspection found provider `3c05227` adds an optional public managed-machine
+profile on the same mTLS listener, while the selected internal route remains.
+[The provider checkpoint](DELEGATED-COMMAND-CONSUMER.md#provider-and-next-integration)
+records its exact routes and unverified request/client boundary. It is a next
+integration input and does not extend this fixed-path client. Public commands and
+original-bound challenge/request handoff can reuse the native lifecycle; then
+independent signed request verification must precede proof/FINALIZE and current
+receipt-context composition. Actual endpoint provisioning, registered
+identity/trust acquisition, certificate lifecycle, full RCG-5/6 and target
+PostgreSQL/React qualification remain open.
