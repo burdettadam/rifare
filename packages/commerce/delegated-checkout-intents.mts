@@ -22,7 +22,7 @@ export type DelegatedIntentView = Readonly<{
 /** Local intent/evidence storage, never provider final use, replay redemption or dispatch. */
 export class DelegatedCheckoutIntents {
   readonly #kernel: CommerceKernel;
-  readonly #receipts: DelegatedCheckoutReceipts|undefined;
+  readonly #receiptsAvailable: (() => boolean)|undefined;
   readonly #capture: DelegatedCheckoutReceipts['currentBinding']|undefined;
   readonly #verify: DelegatedCheckoutReceipts['verify']|undefined;
   readonly #assertBinding: DelegatedCheckoutReceipts['assertBindingCurrent']|undefined;
@@ -30,11 +30,18 @@ export class DelegatedCheckoutIntents {
   #lastTime = 0;
 
   constructor(kernel: CommerceKernel, receipts?: DelegatedCheckoutReceipts) {
-    if (receipts && (!(receipts instanceof DelegatedCheckoutReceipts) || !receipts.boundTo(kernel)))
-      throw new Error('INTENT_CONFIG_INVALID');
-    this.#kernel = kernel; this.#receipts = receipts;
-    this.#capture = receipts?.currentBinding.bind(receipts); this.#verify = receipts?.verify.bind(receipts);
-    this.#assertBinding = receipts?.assertBindingCurrent.bind(receipts); this.#assertReceipt = receipts?.assertCurrent.bind(receipts);
+    this.#kernel = kernel;
+    if (receipts !== undefined) {
+      try {
+        if (!(receipts instanceof DelegatedCheckoutReceipts) || !DelegatedCheckoutReceipts.prototype.boundTo.call(receipts,kernel))
+          throw new Error('INTENT_CONFIG_INVALID');
+        this.#capture = DelegatedCheckoutReceipts.prototype.currentBinding.bind(receipts);
+        this.#verify = DelegatedCheckoutReceipts.prototype.verify.bind(receipts);
+        this.#assertBinding = DelegatedCheckoutReceipts.prototype.assertBindingCurrent.bind(receipts);
+        this.#assertReceipt = DelegatedCheckoutReceipts.prototype.assertCurrent.bind(receipts);
+        this.#receiptsAvailable = Object.getOwnPropertyDescriptor(DelegatedCheckoutReceipts.prototype,'available')!.get!.bind(receipts);
+      } catch { throw new Error('INTENT_CONFIG_INVALID'); }
+    }
   }
   #records(scope: Scope): IntentRecord[] {
     const s = this.#kernel.require(scope);
@@ -62,7 +69,7 @@ export class DelegatedCheckoutIntents {
       receipt: p?.receipt ?? null, verified_at: p?.verified_at ?? null,
       evidence_status: 'historical_observation', execution_authorized: false, qualification: 'candidate_contract_only' });
   }
-  #available(): void { if (!this.#receipts?.available) throw new Error('RECEIPT_UNAVAILABLE'); }
+  #available(): void { if (!this.#receiptsAvailable?.()) throw new Error('RECEIPT_UNAVAILABLE'); }
   #now(): number {
     const now = integer(this.#kernel.clock());
     if (now < this.#lastTime) throw new Error('INTENT_CLOCK_INVALID');

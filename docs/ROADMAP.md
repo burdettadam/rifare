@@ -30,10 +30,17 @@ distinct cases pass with both independent reviews complete: 62 ran on the final
 candidate and 53 retain verified unchanged inputs. Both assigned behavioral
 faults are detected. [The work record](../work/records/RCG-4B-C3.md) preserves
 actual execution identities, corrections and publication equivalence.
-At the inspected provider snapshot `0a1ef66`, the explicit default-off
-`marty-delegated-use` host adds protected original-receipt recovery and an offline
-receipt consumer to its existing concrete owners, fourteen restricted database
-connections and mandatory mutual TLS. Selected public
+The additive [RCG-4B-C4 local command application](DELEGATED-CHECKOUT-COMMANDS.md)
+connects those owners to separate customer START/status/recovery/cancel routes
+and an independent Python caller. It also corrects four explicitly bounded
+native owner-composition boundaries. See [C4's record](../work/records/RCG-4B-C4.md)
+for its actual candidate, focused executions and independent review results.
+At the provider snapshot inspected for C4, `37b7fdc`, the explicit default-off
+`marty-delegated-use` host has an executable managed lifecycle through actual
+template/policy, issuance, signing and offline receipt-consumer owners. Its
+fourteen restricted database connections and mandatory mutual TLS remain
+internal composition. These are inspected source facts; no provider tests ran
+here. Protocol draft PR38 remains `6126da7`. Selected public
 Gateway/wallet/client contracts and deployed qualification remain open. Continue with the actual RCG-4B public
 transport/current-state/authenticated-namespace and native-purchase finalization/sending composition, full isolated RCG-5 journey
 and connected RCG-6 qualification. Local checks do not qualify those boundaries

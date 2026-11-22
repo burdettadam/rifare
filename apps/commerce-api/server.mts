@@ -1,6 +1,6 @@
 import { ReturnDepthApi } from '../../packages/commerce/return-depth-api.mts';
-import { DelegatedCheckoutApi, CHECKOUT_HTTP_OPERATIONS, CHECKOUT_RECEIPT_BODY_BYTES, checkoutHttpFailure, checkoutRecoveryBody } from '../../packages/commerce/delegated-checkout-api.mts';
-import type { CheckoutHttpOperation } from '../../packages/commerce/delegated-checkout-api.mts';
+import { DelegatedCheckoutApi, CHECKOUT_HTTP_OPERATIONS, CHECKOUT_COMMAND_HTTP_OPERATIONS, CHECKOUT_RECEIPT_BODY_BYTES, checkoutHttpFailure, checkoutRecoveryBody } from '../../packages/commerce/delegated-checkout-api.mts';
+import type { CheckoutHttpOperation, CheckoutCommandHttpOperation } from '../../packages/commerce/delegated-checkout-api.mts';
 import { ReturnPortabilityApi } from '../../packages/commerce/return-portability-api.mts';
 import { RETURN_PORTABILITY_ERRORS } from '../../packages/commerce/return-portability-errors.mts';
 import { RETURN_DEPTH_ERRORS } from '../../packages/commerce/return-depth-errors.mts';
@@ -82,8 +82,21 @@ for(const code of RETURN_PORTABILITY_ERRORS)SAFE_CODES.add(code);
 export async function startCommerceServer(options:{checkout?:DelegatedCheckoutApi;support?:SupportService;gifts?:GiftReturns;resolutionExecution?:ResolutionExecution;kernel:CommerceKernel;caps:Capabilities;customers:CustomerAccess;
   simulator:StoreSimulator;instantSource?:InstantExchangeFixtureSource;lineageSource?:ExchangeLineageFixtureSource;orderEditSource?:OrderEditFixtureSource;warehouseSource?:WarehouseFixtureSource;nativeChangeSource?:NativeChangeFixtureSource;fulfillmentSource?:FulfillmentFixtureSource;resolutionSource?:ResolutionFixtureSource;evidenceScanner?:EvidenceScanner;reconciliationJournals?:JournalResolver;vault?:SecretVault;inbox?:WebhookInbox;reads?:ReadContext;runner?:{run:(scope:object,taskId:string,configurationId:string,untrustedInput?:unknown)=>Promise<unknown>;receipt:(scope:object,taskId:string,receiptId:string)=>unknown};port?:number;log?:(entry:unknown)=>void}) {
   const {kernel,caps,customers,simulator,vault}=options;const orderEdits=new OrderEdits(kernel,options.orderEditSource),editWorkflow=new OrderEditWorkflow(orderEdits);const reads=options.reads??new ReadContext(kernel,caps);const mcp=new ReadMcp(kernel,reads);const editor=new ProfileEditor(kernel,caps),policies=new Policies(kernel);let port=0;const gateway=new ActionGateway(kernel),actionMcp=new ActionMcp(kernel,gateway),releases=new SkillReleases(kernel);
-  if(options.checkout!==undefined&&(!(options.checkout instanceof DelegatedCheckoutApi)||!options.checkout.boundTo(kernel)))throw new Error('CHECKOUT_CONFIG_INVALID');
-  const checkout=options.checkout??new DelegatedCheckoutApi(kernel);
+  const checkoutSlot=Object.getOwnPropertyDescriptor(options,'checkout');
+  if(checkoutSlot&&(!Object.hasOwn(checkoutSlot,'value')||!checkoutSlot.enumerable))throw new Error('CHECKOUT_CONFIG_INVALID');
+  const checkout=checkoutSlot?.value===undefined?new DelegatedCheckoutApi(kernel):checkoutSlot.value;
+  try {
+    if(!(checkout instanceof DelegatedCheckoutApi)||!DelegatedCheckoutApi.prototype.boundTo.call(checkout,kernel))
+      throw new Error('CHECKOUT_CONFIG_INVALID');
+  } catch { throw new Error('CHECKOUT_CONFIG_INVALID'); }
+  // RCG4BC4-PREBODY-CONCRETE-AUTH: an instance shadow cannot bypass role/proof checks before input collection.
+  const checkoutAuthorize=DelegatedCheckoutApi.prototype.authorize.bind(checkout);
+  const checkoutContract=DelegatedCheckoutApi.prototype.contract.bind(checkout);
+  const checkoutPost=DelegatedCheckoutApi.prototype.post.bind(checkout);
+  const checkoutRecoveryContract=DelegatedCheckoutApi.prototype.recoveryContract.bind(checkout);
+  const checkoutLookup=DelegatedCheckoutApi.prototype.lookup.bind(checkout);
+  const checkoutCommandsContract=DelegatedCheckoutApi.prototype.commandsContract.bind(checkout);
+  const checkoutPostCommand=DelegatedCheckoutApi.prototype.postCommand.bind(checkout);
   if(options.gifts&&options.gifts.kernel!==kernel)throw new Error('GIFT_VERIFICATION_REQUIRED');
   const resolutionLedger=new ResolutionLedger(kernel),refundQuotes=new RefundQuotes(kernel),storeCredit=new StoreCredit(kernel),exchanges=new VariantExchanges(kernel),exchangeFinance=new ExchangeFinance(kernel),resolutionExecution=options.resolutionExecution??(options.resolutionSource?new ResolutionExecution(kernel,options.resolutionSource):null);
   if(resolutionExecution&&resolutionExecution.kernel!==kernel)throw new Error('RESOLUTION_SOURCE_MISMATCH');
@@ -175,26 +188,39 @@ export async function startCommerceServer(options:{checkout?:DelegatedCheckoutAp
         else send(res,404,{error:'NOT_FOUND'});return;
       }
       const scope=kernel.authenticate(auth.slice(7));
+      if(url.pathname==='/v1/delegated-checkout-commands'||url.pathname.startsWith('/v1/delegated-checkout-commands/')){
+        try {
+          checkoutAuthorize(scope);
+          const operation=url.pathname.slice('/v1/delegated-checkout-commands/'.length);
+          if(operation!=='contract'&&!CHECKOUT_COMMAND_HTTP_OPERATIONS.includes(operation as CheckoutCommandHttpOperation))throw new Error('NOT_FOUND');
+          const method=operation==='contract'?'GET':'POST';
+          if(req.method!==method){res.setHeader('allow',method);send(res,405,{error:'METHOD_NOT_ALLOWED'});log(405,'METHOD_NOT_ALLOWED');return;}
+          const result=operation==='contract'?checkoutCommandsContract(scope)
+            :checkoutPostCommand(scope,operation as CheckoutCommandHttpOperation,await checkoutRecoveryBody(req));
+          send(res,200,result);log(200,'DELEGATED_CHECKOUT_COMMAND_OBSERVATION');
+        } catch(error) {const failure=checkoutHttpFailure(error);send(res,failure.status,{error:failure.error});log(failure.status,failure.error);}
+        return;
+      }
       if(url.pathname==='/v1/delegated-checkout-recovery'||url.pathname.startsWith('/v1/delegated-checkout-recovery/')){
         try {
-          checkout.authorize(scope);
+          checkoutAuthorize(scope);
           const operation=url.pathname.slice('/v1/delegated-checkout-recovery/'.length);
           if(operation!=='contract'&&operation!=='lookup')throw new Error('NOT_FOUND');
           const method=operation==='contract'?'GET':'POST';
           if(req.method!==method){res.setHeader('allow',method);send(res,405,{error:'METHOD_NOT_ALLOWED'});log(405,'METHOD_NOT_ALLOWED');return;}
-          const result=operation==='contract'?checkout.recoveryContract(scope):checkout.lookup(scope,await checkoutRecoveryBody(req));
+          const result=operation==='contract'?checkoutRecoveryContract(scope):checkoutLookup(scope,await checkoutRecoveryBody(req));
           send(res,200,result);log(200,'DELEGATED_CHECKOUT_RECOVERY_OBSERVATION');
         } catch(error) {const failure=checkoutHttpFailure(error);send(res,failure.status,{error:failure.error});log(failure.status,failure.error);}
         return;
       }
       if(url.pathname==='/v1/delegated-checkout'||url.pathname.startsWith('/v1/delegated-checkout/')){
         try {
-          checkout.authorize(scope);
+          checkoutAuthorize(scope);
           const operation=url.pathname.slice('/v1/delegated-checkout/'.length);
           if(operation!=='contract'&&!CHECKOUT_HTTP_OPERATIONS.includes(operation as CheckoutHttpOperation))throw new Error('NOT_FOUND');
           const method=operation==='contract'?'GET':'POST';
           if(req.method!==method){res.setHeader('allow',method);send(res,405,{error:'METHOD_NOT_ALLOWED'});log(405,'METHOD_NOT_ALLOWED');return;}
-          const result=operation==='contract'?checkout.contract(scope):await checkout.post(scope,operation as CheckoutHttpOperation,
+          const result=operation==='contract'?checkoutContract(scope):await checkoutPost(scope,operation as CheckoutHttpOperation,
             await body(req,operation==='receipt'?CHECKOUT_RECEIPT_BODY_BYTES:4096));
           send(res,200,result);log(200,'DELEGATED_CHECKOUT_OBSERVATION');
         } catch(error) {const failure=checkoutHttpFailure(error);send(res,failure.status,{error:failure.error});log(failure.status,failure.error);}

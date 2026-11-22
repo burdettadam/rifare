@@ -5858,7 +5858,7 @@
   "oracle_pins": [
     {
       "path": "apps/commerce-api/server.mts",
-      "sha256": "1562ab2652349766d5affd04ea529b17888ec274f98a8ed1f8e015ffffd41b61"
+      "sha256": "3afb3705770131fa8311b0632032cc4cee51d36f1159aa3692ff400405ff1719"
     },
     {
       "path": "migrations/commerce/001-foundation.sql",
@@ -8614,15 +8614,15 @@
     },
     {
       "path": "packages/commerce/delegated-checkout-receipts.mts",
-      "sha256": "d01575393e338b39109d93795228e20e883c1b82787fdc636219faea980611f8"
+      "sha256": "1023ec7598ba47b46b30451f37a0f42a804409a462edf3c346aefba1ecb21d58"
     },
     {
       "path": "packages/commerce/delegated-checkout-intents.mts",
-      "sha256": "81baad3fcc577d3f94ec32588dde79d3cf3606199ed5db08a8f8e58c1871b6d1"
+      "sha256": "81e2700150c5a2bdb7631c26c584ca1c1f4a58330ba6acd65f622ddf93a64f41"
     },
     {
       "path": "packages/commerce/delegated-checkout-api.mts",
-      "sha256": "f041b0410dc62a7318783c4f35163a593eeaa65ccbeb6578210c6e8dbb33f408"
+      "sha256": "a0a69d5a494be78a7a7d83b4dda89da5bb42bd1b948fc2bec6cffe7368065090"
     },
     {
       "path": "packages/commerce/contracts/delegated-checkout-api.v1.json",
@@ -8659,6 +8659,18 @@
     {
       "path": "packages/commerce/delegated-command-claim-records.mts",
       "sha256": "74a6232a9999c47a1c26cf9b588b9110afa714f98af61c64c518a2add7e8ec8f"
+    },
+    {
+      "path": "packages/commerce/delegated-command-claims.mts",
+      "sha256": "8cfa858c88034bf2425487bf29170615d7f1df15d68e4147a9ef6d9d2e3b5e8a"
+    },
+    {
+      "path": "packages/commerce/delegated-checkout-starts.mts",
+      "sha256": "b47cf68fed78cd4b173a0f9e326d41351c7597f46c470204b796c6e358c223a9"
+    },
+    {
+      "path": "packages/commerce/contracts/delegated-checkout-commands.v1.json",
+      "sha256": "0ee26315c30ab7fd5697d3cdab7146f5875325bd688748ef73950de4584c5a74"
     }
   ]
 }

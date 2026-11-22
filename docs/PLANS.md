@@ -4,7 +4,21 @@ The current source includes the bounded local **M20-G03 item-level drop-off
 handoff** implementation. Start with the [architecture](ARCHITECTURE.md) for
 existing modules and [roadmap](ROADMAP.md) for remaining work.
 
-## Current native START checkpoint
+## Current local command application checkpoint
+
+**RCG-4B-C4 — local checkout command access** is assigned by
+[ADR-0078](decisions/0078-local-checkout-command-access.md). It connects the
+existing C3 native START and C2 original journal to a separate five-route local
+customer API and the standalone Python caller. The same assignment corrects
+concrete native owner checks and dispatch at the API, server, receipt and intent
+composition boundaries. The [command guide](DELEGATED-CHECKOUT-COMMANDS.md)
+describes configuration, explicit original recovery and the preserved execution
+boundary. Final candidate, focused evidence and independent review results are
+recorded in [C4](../work/records/RCG-4B-C4.md). Existing tests, contracts, business
+owners and record schemas remain protected; public provider transport and formal
+acceptance remain separate.
+
+## Previous native START checkpoint
 
 **RCG-4B-C3 — native checkout START_USE claims** is complete within
 [ADR-0077](decisions/0077-native-checkout-start-claims.md). It connects the actual
@@ -72,16 +86,17 @@ was published as exact-tree checkpoint `4ac8556`, matching native `413f849`;
 the original native history remains separately preserved. These are local
 plain-browser/SQLite observations, not React/PostgreSQL or full RCG-5 acceptance.
 
-The provider snapshot inspected for C3 is `0a1ef66`. Its explicit default-off
-`marty-delegated-use` host and concrete current owners now include protected
-original-receipt recovery and an independent offline receipt consumer. Mandatory
-mutual TLS and fourteen restricted database connections remain its internal
-composition. Public Gateway/wallet/client selection and deployed serving
-qualification remain open. This is source inspection, not a new provider test
-execution. See the
+The provider snapshot inspected for C4 is `37b7fdc`. Its explicit default-off
+`marty-delegated-use` host now has an executable managed network lifecycle through
+concrete template/policy, issuance, signing and independent receipt-consumer
+owners. Mandatory mutual TLS and fourteen restricted database connections remain
+its internal composition. Public Gateway/wallet/client selection and deployed
+serving qualification remain open. This is source inspection, not a new provider
+test execution. Protocol draft PR38 remains `6126da7`. See the
 [provider checkpoint and exact contracts](DELEGATED-COMMAND-CONSUMER.md#provider-and-next-integration).
 
-After the local codec, original-command journal and native START construction prerequisites, the next dependency is the qualified public
+After the local codec, original-command journal, native START construction and
+local customer command access, the next dependency is the qualified public
 authentication/current-state, start/final-use and original-result contract. Once
 available, assign the bounded **RCG-4B public transport, authenticated namespace and native purchase
 binding for finalization/sending composition**, then the complete isolated **RCG-5 cross-service journey** and connected

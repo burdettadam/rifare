@@ -17,6 +17,12 @@ contract.
 
 ## Composition
 
+The additive [C4 local command application](DELEGATED-CHECKOUT-COMMANDS.md)
+exposes this same native construction through a separate customer HTTP contract
+and Python caller. It leaves this source, C1/C2 records and currentness rules
+unchanged. The API can also run with correlation-only configuration for historical
+status, unsent recovery and cancellation after live provenance is unavailable.
+
 The server supplies the actual kernel and preview owner plus a closed grant
 reference configuration. A method caller supplies only the original command
 UUID and the ID of an existing native preview:
@@ -110,8 +116,9 @@ inert negative check over the existing privacy owner, with no new state or
 changes to historical C2 read permissions.
 
 The optional native source does not change raw `claim`, `read`, `observe`,
-`recovery` or `cancel`. Their observations remain unverified. The later native
-receipt and checkout-intent owners also remain unchanged. A P03 challenge UUID
+`recovery` or `cancel`. Their observations remain unverified. C3 left the native
+receipt and checkout-intent owners unchanged; C4 subsequently corrects their
+concrete composition wiring without changing stored semantics. A P03 challenge UUID
 is not the signed proof nonce; START construction cannot manufacture their
 independently established `ReceiptContextSource`.
 

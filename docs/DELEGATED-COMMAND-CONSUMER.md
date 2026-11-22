@@ -19,6 +19,9 @@ source, tests and synthetic oracle remain unchanged.
 The [C3 native START source](DELEGATED-CHECKOUT-STARTS.md) now composes this codec
 with actual native purchase facts and the existing journal transaction. It leaves
 grant/provider authentication, FINALIZE linkage and public transport separate.
+The separate [C4 local application](DELEGATED-CHECKOUT-COMMANDS.md) now provides
+customer command access and an independent Python caller over those same owners.
+It adds no provider dispatch and leaves this codec and its vectors unchanged.
 
 ## Available operations
 
@@ -156,18 +159,24 @@ pack. Detailed source/runtime pins and independent reviews are retained in the
 ## Provider and next integration
 
 The [pinned command semantics](https://github.com/ElevenID/marty-protocol/blob/6126da7619e057be2ff58dd38a5d50f49891d1b3/protocol/delegated-authority/COMMANDS.md)
-describe an optional draft intent contract. C1 inspected provider `1063f32`;
-the snapshot inspected for C3 is
-[`0a1ef66a4b832e0fd8d67a57940425af379e2254`](https://github.com/ElevenID/marty-ui/blob/0a1ef66a4b832e0fd8d67a57940425af379e2254/docs/agent-trust-runtime-milestones.md).
+describe an optional draft intent contract. C1 inspected provider `1063f32`, C3
+inspected `0a1ef66`, and the snapshot inspected for C4 is draft PR1994 at
+[`37b7fdc3d3f1c223613ad98fe601d7d86e6a3600`](https://github.com/ElevenID/marty-ui/blob/37b7fdc3d3f1c223613ad98fe601d7d86e6a3600/docs/agent-trust-runtime-milestones.md).
 It includes explicit machine-use access, current exact-operation policy,
 mutual-TLS workload authentication and protected Flow request/proof ingress,
 alongside the existing machine/MAP and credential-authority sources. Its
-[runtime candidate](https://github.com/ElevenID/marty-ui/blob/0a1ef66a4b832e0fd8d67a57940425af379e2254/docs/delegated-use-runtime-candidate.md)
+[runtime candidate](https://github.com/ElevenID/marty-ui/blob/37b7fdc3d3f1c223613ad98fe601d7d86e6a3600/docs/delegated-use-runtime-candidate.md)
 now includes the explicit default-off `marty-delegated-use` executable,
 fourteen restricted database connections, concrete source/provider assembly and
 readiness before mandatory mutual-TLS serving. Protected original-receipt
 recovery and an independent offline receipt consumer now exist as internal
-candidate capabilities; the consumer still requires independently trusted
+candidate capabilities. The new executable managed lifecycle uses actual
+template/policy gRPC, fresh managed issuance and SigningKeys HTTPS for request,
+credential and receipt signatures, followed by independent offline receipt
+consumption. Its source fixes restrict delegated-use policy access, preserve
+finite credential-format aliases and bind issuance/signing ownership and nested
+machine credential identity. These are source observations, not provider test
+executions performed here. The consumer still requires independently trusted
 original context and authenticated retained results. Reviewed deployed credentials,
 CA/pin lifecycle, roles, network and custody remain unqualified. No public use
 Gateway or selected public wallet/consumer contract is installed; the human

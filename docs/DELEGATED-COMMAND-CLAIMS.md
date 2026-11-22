@@ -10,7 +10,10 @@ business-operation owners are unchanged.
 The implementation and verification checkpoint is recorded in
 [RCG-4B-C2](../work/records/RCG-4B-C2.md), under
 [ADR-0076](decisions/0076-durable-delegated-command-claims.md). This module has no
-network transport, public HTTP route, provider credential or dispatch callback.
+provider network transport, provider credential or dispatch callback. The separate
+[C4 customer command application](DELEGATED-CHECKOUT-COMMANDS.md) now wraps its
+existing methods through a local HTTP contract and independent Python caller;
+this journal's runtime and stored schema remain unchanged by C4.
 
 The additive [C3 native START source](DELEGATED-CHECKOUT-STARTS.md) supplies an
 optional third constructor argument and `claimCheckoutStart(scope, {command_id,

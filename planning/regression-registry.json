@@ -2074,6 +2074,14 @@
       "contract_files": [
         "packages/commerce/contracts/delegated-checkout-starts.v1.json"
       ]
+    },
+    {
+      "id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/delegated-checkout-commands.v1.json"
+      ]
     }
   ],
   "tests": [
@@ -28214,6 +28222,314 @@
       "runner_case_id": "RCG4BC3-LIFE-HISTORY",
       "source": "tests/development/delegated-checkout-start-lifecycle.test.mts",
       "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC4-HTTP-CONTRACT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-HTTP-CONTRACT",
+      "source": "tests/development/delegated-checkout-commands.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-HTTP-START",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-HTTP-START",
+      "source": "tests/development/delegated-checkout-commands.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-HTTP-CANCEL",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-HTTP-CANCEL",
+      "source": "tests/development/delegated-checkout-commands.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-HTTP-CONFIG",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-HTTP-CONFIG",
+      "source": "tests/development/delegated-checkout-commands.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-HTTP-SCOPE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-HTTP-SCOPE",
+      "source": "tests/development/delegated-checkout-commands.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-HTTP-PREBODY-CONCRETE-AUTH",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-HTTP-PREBODY-CONCRETE-AUTH",
+      "source": "tests/development/delegated-checkout-commands.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-HTTP-PROOF-FIRST",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-HTTP-PROOF-FIRST",
+      "source": "tests/development/delegated-checkout-commands.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-HTTP-BODY-REVOCATION",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-HTTP-BODY-REVOCATION",
+      "source": "tests/development/delegated-checkout-commands.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-HTTP-INPUT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-HTTP-INPUT",
+      "source": "tests/development/delegated-checkout-commands.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-HTTP-STRICT-JSON",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-HTTP-STRICT-JSON",
+      "source": "tests/development/delegated-checkout-commands.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-HTTP-BODY-LIMIT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-HTTP-BODY-LIMIT",
+      "source": "tests/development/delegated-checkout-commands.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-HTTP-ROUTING",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-HTTP-ROUTING",
+      "source": "tests/development/delegated-checkout-commands.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-HTTP-ORIGIN",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-HTTP-ORIGIN",
+      "source": "tests/development/delegated-checkout-commands.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-HTTP-SOURCE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-HTTP-SOURCE",
+      "source": "tests/development/delegated-checkout-commands.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-HTTP-HELD-ERASURE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-HTTP-HELD-ERASURE",
+      "source": "tests/development/delegated-checkout-commands.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-HTTP-RECOVERY-FENCE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-HTTP-RECOVERY-FENCE",
+      "source": "tests/development/delegated-checkout-commands.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-HTTP-CLOSED-SOURCE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-HTTP-CLOSED-SOURCE",
+      "source": "tests/development/delegated-checkout-commands.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-HTTP-LOST-RESULT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-HTTP-LOST-RESULT",
+      "source": "tests/development/delegated-checkout-commands.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-HTTP-SANITIZE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-HTTP-SANITIZE",
+      "source": "tests/development/delegated-checkout-commands.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-HTTP-CONCURRENT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-HTTP-CONCURRENT",
+      "source": "tests/development/delegated-checkout-commands.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-CLIENT-NATIVE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-CLIENT-NATIVE",
+      "source": "tests/development/delegated-checkout-command-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-CLIENT-HISTORY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-CLIENT-HISTORY",
+      "source": "tests/development/delegated-checkout-command-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-CLIENT-LOST-RESPONSE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-CLIENT-LOST-RESPONSE",
+      "source": "tests/development/delegated-checkout-command-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-CLIENT-ORIGINAL-ID",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-CLIENT-ORIGINAL-ID",
+      "source": "tests/development/delegated-checkout-command-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-CLIENT-RECOVERY-BINDING",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-CLIENT-RECOVERY-BINDING",
+      "source": "tests/development/delegated-checkout-command-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-CLIENT-VIEW-BINDING",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-CLIENT-VIEW-BINDING",
+      "source": "tests/development/delegated-checkout-command-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-CLIENT-AUTHORITY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-CLIENT-AUTHORITY",
+      "source": "tests/development/delegated-checkout-command-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-CLIENT-STRICT-RESPONSE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-CLIENT-STRICT-RESPONSE",
+      "source": "tests/development/delegated-checkout-command-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-CLIENT-INPUT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-CLIENT-INPUT",
+      "source": "tests/development/delegated-checkout-command-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-CLIENT-TRANSPORT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-CLIENT-TRANSPORT",
+      "source": "tests/development/delegated-checkout-command-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-CLIENT-SECRET-PROOF",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-CLIENT-SECRET-PROOF",
+      "source": "tests/development/delegated-checkout-command-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-CLIENT-OBSERVATIONS",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-CLIENT-OBSERVATIONS",
+      "source": "tests/development/delegated-checkout-command-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-OWNER-API-FORGED",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-OWNER-API-FORGED",
+      "source": "tests/development/delegated-checkout-owner-binding.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-OWNER-API-SHADOWS",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-OWNER-API-SHADOWS",
+      "source": "tests/development/delegated-checkout-owner-binding.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-OWNER-API-AUTH",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-OWNER-API-AUTH",
+      "source": "tests/development/delegated-checkout-owner-binding.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-OWNER-SERVER-FORGED",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-OWNER-SERVER-FORGED",
+      "source": "tests/development/delegated-checkout-owner-binding.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-OWNER-SERVER-SHADOWS",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-OWNER-SERVER-SHADOWS",
+      "source": "tests/development/delegated-checkout-owner-binding.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-OWNER-RECEIPT-FORGED",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-OWNER-RECEIPT-FORGED",
+      "source": "tests/development/delegated-checkout-owner-binding.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-OWNER-RECEIPT-SHADOWS",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-OWNER-RECEIPT-SHADOWS",
+      "source": "tests/development/delegated-checkout-owner-binding.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-OWNER-RECEIPT-CLOSED",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-OWNER-RECEIPT-CLOSED",
+      "source": "tests/development/delegated-checkout-owner-binding.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-OWNER-INTENT-FORGED",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-OWNER-INTENT-FORGED",
+      "source": "tests/development/delegated-checkout-owner-binding.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-OWNER-INTENT-SHADOWS",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-OWNER-INTENT-SHADOWS",
+      "source": "tests/development/delegated-checkout-owner-binding.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-OWNER-INTENT-CLOSED",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-OWNER-INTENT-CLOSED",
+      "source": "tests/development/delegated-checkout-owner-binding.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-OWNER-DESCRIPTORS",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-OWNER-DESCRIPTORS",
+      "source": "tests/development/delegated-checkout-owner-binding.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
     }
   ],
   "protected_files": [

@@ -55,9 +55,12 @@ export class DelegatedCheckoutReceipts {
   #closed = false;
 
   constructor(kernel: CommerceKernel, previews: CheckoutPreviews, config?: ReceiptVerificationConfiguration) {
-    if (!(previews instanceof CheckoutPreviews) || !previews.boundTo(kernel)) fail('RECEIPT_CONFIG_INVALID');
+    try {
+      if (!(previews instanceof CheckoutPreviews) || !CheckoutPreviews.prototype.boundTo.call(previews,kernel))
+        fail('RECEIPT_CONFIG_INVALID');
+    } catch { fail('RECEIPT_CONFIG_INVALID'); }
     this.#kernel = kernel; this.#clock = kernel.clock.bind(kernel);
-    this.#current = previews.current.bind(previews);
+    this.#current = CheckoutPreviews.prototype.current.bind(previews);
     if (!config) { this.#maximum = 16; return; }
     if (Reflect.ownKeys(config).some(key => typeof key !== 'string' ||
       !['contexts','jose','trust','verification_timeout_ms','max_pending'].includes(key))) fail('RECEIPT_CONFIG_INVALID');
@@ -75,11 +78,12 @@ export class DelegatedCheckoutReceipts {
       contentDigest, now: () => this.#now(), verification_timeout_ms: config.verification_timeout_ms });
   }
 
-  get available(): boolean { return !this.#closed && !!this.#binder; }
+  get available(): boolean { return this.#available(); }
+  #available(): boolean { return !this.#closed && !!this.#binder; }
   boundTo(kernel: CommerceKernel): boolean { return this.#kernel === kernel; }
   close(): void { this.#closed = true; }
   #now(): number {
-    if (!this.available) fail('RECEIPT_UNAVAILABLE');
+    if (!this.#available()) fail('RECEIPT_UNAVAILABLE');
     const now = this.#clock();
     if (!Number.isSafeInteger(now) || now < this.#lastTime) fail('RECEIPT_CLOCK_INVALID');
     this.#lastTime = now; return now;
@@ -115,12 +119,12 @@ export class DelegatedCheckoutReceipts {
       if (trustResult instanceof Promise) void trustResult.catch(() => {});
       fail('RECEIPT_TRUST_INVALID');
     }
-    if (!this.available) fail('RECEIPT_UNAVAILABLE');
+    if (!this.#available()) fail('RECEIPT_UNAVAILABLE');
   }
 
   /** Internal capture of server-owned current facts; it grants no execution authority. */
   currentBinding(scope: Scope, input: Readonly<{ preview_id: string; context_id: string }>): CurrentReceiptBinding {
-    if (!this.available) fail('RECEIPT_UNAVAILABLE');
+    if (!this.#available()) fail('RECEIPT_UNAVAILABLE');
     const request = checkoutSnapshot(input); exact(request, ['preview_id','context_id']);
     id(request.preview_id); id(request.context_id);
     const startedAt = this.#now(), preview = this.#current(scope, request.preview_id);
@@ -160,14 +164,15 @@ export class DelegatedCheckoutReceipts {
   }
 
   async verify(scope: Scope, input: ReceiptEvidenceRequest): Promise<BoundDelegatedReceipt> {
-    if (!this.available) fail('RECEIPT_UNAVAILABLE');
+    if (!this.#available()) fail('RECEIPT_UNAVAILABLE');
     if (this.#pending >= this.#maximum) fail('RECEIPT_VERIFICATION_CAPACITY');
     this.#pending++;
     try {
       const request = checkoutSnapshot(input);
       exact(request, ['preview_id','context_id','compact_jws']);
       id(request.preview_id); id(request.context_id);
-      const binding = this.currentBinding(scope, { preview_id: request.preview_id, context_id: request.context_id });
+      const binding = DelegatedCheckoutReceipts.prototype.currentBinding.call(this,scope,
+        { preview_id: request.preview_id, context_id: request.context_id });
       const { preview, context } = binding;
       const { context_id: _id, revision: _revision, valid_until: _until,
         preview_id: _preview, preview_digest: _digest, resource_id: _resource,

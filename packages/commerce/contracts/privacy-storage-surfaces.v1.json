@@ -131,7 +131,7 @@
     },
     {
       "path": "apps/commerce-api/server.mts",
-      "sha256": "1562ab2652349766d5affd04ea529b17888ec274f98a8ed1f8e015ffffd41b61"
+      "sha256": "3afb3705770131fa8311b0632032cc4cee51d36f1159aa3692ff400405ff1719"
     },
     {
       "path": "apps/commerce-api/status-client.js",
@@ -1399,7 +1399,7 @@
     },
     {
       "path": "packages/commerce/delegated-checkout-receipts.mts",
-      "sha256": "d01575393e338b39109d93795228e20e883c1b82787fdc636219faea980611f8"
+      "sha256": "1023ec7598ba47b46b30451f37a0f42a804409a462edf3c346aefba1ecb21d58"
     },
     {
       "path": "packages/commerce/delegated-receipt-binding.mts",
@@ -1411,7 +1411,7 @@
     },
     {
       "path": "packages/commerce/delegated-checkout-intents.mts",
-      "sha256": "81baad3fcc577d3f94ec32588dde79d3cf3606199ed5db08a8f8e58c1871b6d1"
+      "sha256": "81e2700150c5a2bdb7631c26c584ca1c1f4a58330ba6acd65f622ddf93a64f41"
     },
     {
       "path": "packages/commerce/delegated-checkout-intent-privacy.mts",
@@ -1419,7 +1419,7 @@
     },
     {
       "path": "packages/commerce/delegated-checkout-api.mts",
-      "sha256": "f041b0410dc62a7318783c4f35163a593eeaa65ccbeb6578210c6e8dbb33f408"
+      "sha256": "a0a69d5a494be78a7a7d83b4dda89da5bb42bd1b948fc2bec6cffe7368065090"
     },
     {
       "path": "packages/development/delegated-checkout-fixture.mts",

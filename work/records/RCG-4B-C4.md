@@ -24,5 +24,29 @@ and privacy owners, tests, fixtures and migrations except assigned source-count
 and actual pin refreshes. Raw/observe/FINALIZE/send routes, new context authority
 and default-branch/release/deployment actions are outside this scope.
 
-Actual candidates, verification, corrections, independent reviews and publication
-equivalence will be recorded after implementation. No result is claimed here.
+## Assignment and independent assertions
+
+Native assignment `61f0dfac6b769d7829f95ea0b669b012f4ca2cf4`, tree
+`5230fb013b5f6bd140b572f240aac90ba678dfad`, was published before product changes
+as exact-tree `8f38faff84824d3ca01e8c2b3c5349af131659a2` on the new feature branch.
+Both independent reviewers read the full ADR and found no assignment blocker.
+
+Root wrote twelve owner-binding cases before integration, committed at
+`cc0cbcd081a427325e8a7572d143c076b3d147f4`. Against the unchanged protected
+product, all twelve reached their intended behavioral assertions and failed:
+forged owners accepted, instance shadows called, API authorization bypassed,
+closed receipt availability bypassed and accessor containers accepted. There
+were no import, setup, syntax or skipped-case failures. The actual negative
+execution took 1.942 seconds; native XML records 12 executed, 0 passed, 12 failed.
+The failed-wrapper `actual_tests: 0` is bookkeeping and is not its denominator.
+
+Raw report: `evidence/development/20261121T234210.227298Z-5098b9/report.json`.
+SHA-256: `912e25366fb1f19a1be4802fab115e201c30f99f843f571ee299d6bc9cee863f`.
+The assertions remain unchanged for final candidate qualification. Root separately
+committed twelve independent copied-client cases at
+`1deda2086808702a959b486e08d45faff7485f68`. The implementation writer owns the
+separate twenty-case HTTP file and writes it before implementation.
+
+Final product candidates, executions, corrections, independent reviews and
+publication equivalence will be recorded after integration. No final pass is
+claimed here.

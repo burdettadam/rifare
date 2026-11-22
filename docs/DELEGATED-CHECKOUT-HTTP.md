@@ -9,6 +9,11 @@ is performed. [ADR-0070](decisions/0070-delegated-checkout-http.md) assigns this
 bounded increment; [the work record](../work/records/RCG-4A-HTTP.md) records its
 verification and limitations.
 
+The additive [C4 command application](DELEGATED-CHECKOUT-COMMANDS.md) exposes
+native START and original-command history/recovery/cancel under the separate
+`/v1/delegated-checkout-commands` family. It preserves the seven routes below
+and the separate preparation-recovery contract. Its configuration is optional.
+
 ## Server construction
 
 Configure the actual native owners at the application composition boundary:
@@ -28,6 +33,13 @@ independently configured current context and pinned verification trust. Read
 [receipt verification](DELEGATED-RECEIPT-VERIFICATION.md) for those owners.
 The wrapper constructs its intent owner internally. Foreign-kernel or invalid
 wrapper/owner injection fails before a listener is opened.
+
+C4 makes those checks concrete: the API and listener use native private-brand
+kernel checks and captured methods; receipt and intent composition capture their
+actual owner operations and availability guards. Instance method/getter shadows
+cannot replace current authorization or native verification. Owner configuration
+containers are checked as data without invoking accessors. The explicit context,
+JOSE and quote source ports keep their existing contracts.
 
 The HTTP input cannot create trust, contexts, source quotes, grants or keys.
 A new preview must receive its context from the configured server-side producer
