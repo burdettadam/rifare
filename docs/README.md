@@ -11,6 +11,7 @@ exchanges, service, fulfillment, customer relationships, and the next purchase.
 | Run a local demonstration | [Try Rifare](TRY-RIFARE.md) · [Recorded recovery](demos/README.md) |
 | See what is implemented and what is still targeted | [Project status](PROJECT-STATUS.md) |
 | Understand how the platform fits together | [Architecture](ARCHITECTURE.md) |
+| Recover decisions across the earlier and current designs | [Architecture recovery](ARCHITECTURE-RECOVERY.md) |
 | Explore the product roadmap | [Roadmap](ROADMAP.md) |
 | Reuse the logo, hero, or social artwork | [Brand guide](BRAND.md) |
 
