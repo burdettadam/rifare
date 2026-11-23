@@ -80,6 +80,8 @@ async function fixture(run: (client: PublicDelegatedUseClient, peer: any) => Pro
 const started = (client: PublicDelegatedUseClient) => client.start(start.request, guard);
 
 test('CONT-PROOF-WIRE exact public form uses explicit mTLS and compact-proof identity', () => fixture(async (client, peer) => {
+  assert.equal(client.boundToOrigin(peer.config.origin), true); assert.equal(client.boundToOrigin('https://foreign.invalid'), false);
+  assert.equal(client.boundToOrigin({ toString() { throw new Error('do not coerce'); } }), false);
   const bound = await started(client), result = await client.submitProofAfterAdmission(start.request, bound, 'machine', form(), admit, guard);
   const request = peer.requests[1]; assert.equal(request.path, '/v1/flows/instances/' + challenge + '/submit'); assert.equal(request.method, 'POST');
   assert.equal(request.raw.toString(), form().toString()); assert.equal(request.headers['content-type'], 'application/x-www-form-urlencoded');

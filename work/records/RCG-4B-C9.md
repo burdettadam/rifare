@@ -1,7 +1,8 @@
 # RCG-4B-C9 - Native proof association and original finalization
 
-State: codec and shared continuation transport implemented and locally exercised;
-independent transport review, native persistence and full C9 qualification pending.
+State: codec/transport reviewed; native continuation implemented with exploratory
+PostgreSQL checks passing. Full C9 compiled/session/restore qualification and
+renewed independent review remain pending.
 Base: `acab80a787b5e625e16527f22463a86deaa718e0` (merged C8 PR7).
 Writer/integration owner: root, canonical primary `rifare` checkout.
 Branch: `feat/medusa-proof-finalization`.
@@ -103,3 +104,64 @@ first-proof association, original FINALIZE, privacy/recovery and compiled Postgr
 qualification. Endpoint/enrolled caller and managed-machine VP custody remain
 provider-owned unavailable; the user's lack of a location does not authorize a
 substitute credential or signer. Full C9 and the broad work goal remain active.
+
+## Native continuation progress checkpoint
+
+Both independent reviewers cleared shared transport `0da5ea45c7ee3ecaed737c8ccc7a2eb08c00b82c`
+against protected `acab80a`: `/root/c7_authority_review` and
+`/root/rifare_regression_review`. Authority independently reran 51 wire/catalog
+cases with Git OpenSSL and both reconstructed protected metadata/LF repair.
+Regression independently checked original C1/C5/C6 test files against protected Git.
+Their disposition is transport-only. The authorized feature remote was verified at
+that exact checkpoint; no full C9 acceptance or merge follows from these reviews.
+
+The journal now derives proof routing/query solely from retained C7 observations,
+captures compact proof bytes privately and stores only context/digest/dispatch owner
+and first semantic submission. First dispatch rechecks the concrete C7 verifier,
+native ownership/privacy/cart and DB time after TLS; original explicit recovery
+needs independently supplied identical bytes without renewing C7 validity. A separate
+server-generated FINALIZE UUID/bytes/digest precedes I/O, with one-use claim and
+original result recovery. First FINAL_USE remains immutable, including DENY. Receipt
+admission additionally checks signed receipt identity/digest/decision and original
+time bounds against that final result before C8 persistence. Provider source shows
+receipt issue time precedes result recorded time; equality is not required.
+
+Generated `Migration20261123121939` adds sixteen nullable columns and constraints.
+Fifteen personal continuation fields join export/hold/minimization. FINALIZE UUID
+remains a unique refusal identity after erasure; closed current five-field refusal
+records preserve it, while legacy records cannot discard it. No VP/MachineCredential
+is persisted. An internal continuation session composes these native owners with the
+real client; it has no public route, credential custody, signer or business effect.
+
+Exploratory native PostgreSQL runs pass 15 continuation groups, 38 signed receipt
+cases, unchanged 13 C8 retention groups, unchanged 11 C7 retention groups and schema/
+privacy checks. First ownership test failed because upstream metadata update merged
+rather than removed its customer field. The corrected fixture sets and asserts an
+actual withdrawn DB identity before the unchanged refusal checks. Initial failure
+is preserved in `c9-native-continuation-retention-first.log`. The successful run is
+source execution; it does not qualify the standalone compiled session. Later origin
+composition/snapshot changes need the fixed-candidate rerun.
+
+A deliberate native fault removed only the acknowledgement proof-digest guard:
+four controls passed before the unchanged mismatch rejection failed. Finally restored
+the captured original bytes. The first evidence summarizer misread PowerShell's
+UTF-16 log as UTF-8 after restoration; the raw failure, decoded inspection and
+restored-source hash are retained under `c9-native-digest-fault*`.
+
+Before native proof intent, composition now requires the concrete transport's
+configured origin to match C7's authenticated submission origin. This adds only
+configuration correspondence, no authenticated-provider flag. The extended existing
+wire case and the full retained/new focused scope pass 51 cases; catalog pins were
+renewed exactly. This consequential source addition requires renewed final review.
+Backend noEmit passes. Migration, model and privacy checks remain local evidence.
+
+One primary/zero linked checkouts remain; root owns the active primary. Reused source
+dependency cache and generated `apps/commerce-backend/.medusa/server` are root-owned;
+retire generated output after C9 exact qualification/reviews. Host C free space before
+the build was 65,814,429,696 bytes. Both task PostgreSQL qualification containers and
+the deliberate-fault container were stopped by their owning scripts. Other workers'
+services were untouched. Next: complete actual session mTLS journey, restart/rollback/
+upgrade/whole-DB restore assertions and standalone own-dependency qualification;
+fix exact candidate, renew both roles, then use the authorized normal integration.
+Provider endpoint/enrollment/presentation custody and commerce-effect gates remain
+open. No merge, deployment, external qualification or full-goal completion is claimed.

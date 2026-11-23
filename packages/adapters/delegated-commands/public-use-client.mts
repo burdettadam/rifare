@@ -151,6 +151,8 @@ export class PublicDelegatedUseClient {
     try { return canonical(commandCorrelation(correlation)) === canonical(retained); }
     catch { return false; }
   }
+  /** Configuration correspondence only; this is not provider authentication. */
+  boundToOrigin(selected: unknown): boolean { return typeof selected === 'string' && selected === this.#url.origin; }
   close(): void {
     if (this.#closed) return; this.#closed = true;
     for (const cancel of [...this.#pending]) cancel();
