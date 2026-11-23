@@ -24,6 +24,14 @@ export class PublicUseClientDenied extends Error {
   constructor(code: PublicUseCode) { super(code); this.code = code; this.name = 'PublicUseClientDenied'; }
 }
 function fail(code: PublicUseCode): never { throw new PublicUseClientDenied(code); }
+const nativeSignalAborted = Object.getOwnPropertyDescriptor(AbortSignal.prototype, 'aborted')!.get!;
+const nativeAddListener = EventTarget.prototype.addEventListener;
+const nativeRemoveListener = EventTarget.prototype.removeEventListener;
+function signalAborted(signal?: AbortSignal): boolean {
+  if (signal === undefined) return false;
+  try { return nativeSignalAborted.call(signal); }
+  catch { fail('PUBLIC_USE_INPUT_INVALID'); }
+}
 const MAX_PENDING = 8, MAX_HEADERS = 16_384, MAX_REQUEST_BYTES = 100_000;
 export type UnverifiedRequestArtifact = Readonly<{
   original_command_id: string; command_digest: string; challenge_id: string;
@@ -169,22 +177,22 @@ export class PublicDelegatedUseClient {
     return this.#send(encoded, encoded, guard);
   }
   async startAfterAdmission(original: unknown, admission: () => Promise<void>,
-    guard: () => void): Promise<BoundDelegatedResponse> {
+    guard: () => void, signal?: AbortSignal): Promise<BoundDelegatedResponse> {
     this.#available();
     const encoded = this.#original(original);
     if (typeof admission !== 'function') fail('PUBLIC_USE_INPUT_INVALID');
-    return this.#send(encoded, encoded, guard, admission);
+    return this.#send(encoded, encoded, guard, admission, signal);
   }
   async recover(original: unknown, recovery: unknown, guard: () => void): Promise<BoundDelegatedResponse> {
     return this.#recover(original, recovery, guard);
   }
   async recoverAfterAdmission(original: unknown, recovery: unknown, admission: () => Promise<void>,
-    guard: () => void): Promise<BoundDelegatedResponse> {
+    guard: () => void, signal?: AbortSignal): Promise<BoundDelegatedResponse> {
     if (typeof admission !== 'function') fail('PUBLIC_USE_INPUT_INVALID');
-    return this.#recover(original, recovery, guard, admission);
+    return this.#recover(original, recovery, guard, admission, signal);
   }
   #recover(original: unknown, recovery: unknown, guard: () => void,
-    admission?: () => Promise<void>): Promise<BoundDelegatedResponse> {
+    admission?: () => Promise<void>, signal?: AbortSignal): Promise<BoundDelegatedResponse> {
     this.#available(); const retained = this.#original(original);
     let encoded: EncodedDelegatedCommand;
     try {
@@ -192,19 +200,19 @@ export class PublicDelegatedUseClient {
       if (encoded.canonical_json !== createDelegatedRecovery(retained.request).canonical_json)
         fail('PUBLIC_USE_INPUT_INVALID');
     } catch { fail('PUBLIC_USE_INPUT_INVALID'); }
-    return this.#send(retained, encoded, guard, admission);
+    return this.#send(retained, encoded, guard, admission, signal);
   }
   async fetchRequest(original: unknown, challenge: BoundDelegatedResponse,
     guard: () => void): Promise<UnverifiedRequestArtifact> {
     return this.#fetchRequest(original, challenge, guard);
   }
   async fetchRequestAfterAdmission(original: unknown, challenge: BoundDelegatedResponse,
-    admission: () => Promise<void>, guard: () => void): Promise<UnverifiedRequestArtifact> {
+    admission: () => Promise<void>, guard: () => void, signal?: AbortSignal): Promise<UnverifiedRequestArtifact> {
     if (typeof admission !== 'function') fail('PUBLIC_USE_INPUT_INVALID');
-    return this.#fetchRequest(original, challenge, guard, admission);
+    return this.#fetchRequest(original, challenge, guard, admission, signal);
   }
   #fetchRequest(original: unknown, challenge: BoundDelegatedResponse,
-    guard: () => void, admission?: () => Promise<void>): Promise<UnverifiedRequestArtifact> {
+    guard: () => void, admission?: () => Promise<void>, signal?: AbortSignal): Promise<UnverifiedRequestArtifact> {
     this.#available();
     const encoded = this.#original(original), retained = this.#requests.get(challenge);
     if (!retained || retained.original !== encoded.canonical_json) fail('PUBLIC_USE_INPUT_INVALID');
@@ -221,10 +229,10 @@ export class PublicDelegatedUseClient {
         evidence_status: 'unverified_authorization_request', execution_authorized: false,
         request_signature_verified: false, qualification: 'candidate_contract_only',
       });
-    }, admission);
+    }, admission, signal);
   }
   #send(original: EncodedDelegatedCommand, outbound: EncodedDelegatedCommand,
-    guard: () => void, admission?: () => Promise<void>): Promise<BoundDelegatedResponse> {
+    guard: () => void, admission?: () => Promise<void>, signal?: AbortSignal): Promise<BoundDelegatedResponse> {
     return this.#exchange(this.#url, outbound, guard, (body, response) => {
       let bound: BoundDelegatedResponse;
       try {
@@ -243,20 +251,22 @@ export class PublicDelegatedUseClient {
         this.#requests.set(bound, Object.freeze({ original: original.canonical_json, uri, challengeId }));
       } else if (links.length) fail('PUBLIC_USE_RESPONSE_INVALID');
       return bound;
-    }, admission);
+    }, admission, signal);
   }
   #exchange<T>(url: URL, outbound: EncodedDelegatedCommand | undefined, guard: () => void,
     parse: (body: Buffer, response: IncomingMessage) => T,
-    admission?: () => Promise<void>): Promise<T> {
+    admission?: () => Promise<void>, signal?: AbortSignal): Promise<T> {
     if (typeof guard !== 'function') fail('PUBLIC_USE_INPUT_INVALID');
+    if (signalAborted(signal)) fail('PUBLIC_USE_UNAVAILABLE');
     this.#available();
     if (this.#pending.size >= MAX_PENDING) fail('PUBLIC_USE_CAPACITY');
     return new Promise((resolve, reject) => {
       const bytes = Buffer.from(outbound?.canonical_json ?? ''), deadline = performance.now() + this.#timeout;
       let active: ClientRequest | undefined, incoming: IncomingMessage | undefined, agent: Agent | undefined;
-      let settled = false, timer: ReturnType<typeof setTimeout>;
+      let settled = false, listening = false, timer: ReturnType<typeof setTimeout>;
       const finish = (error?: PublicUseClientDenied, result?: T) => {
         if (settled) return; settled = true; clearTimeout(timer); this.#pending.delete(cancel);
+        if (listening) nativeRemoveListener.call(signal!, 'abort', cancel);
         active?.destroy(); incoming?.destroy(); agent?.destroy(); bytes.fill(0);
         if (error) reject(error); else resolve(result!);
       };
@@ -266,6 +276,11 @@ export class PublicDelegatedUseClient {
       this.#pending.add(cancel);
       timer = setTimeout(() => finish(new PublicUseClientDenied('PUBLIC_USE_TIMEOUT')), this.#timeout);
       try {
+        if (signal !== undefined) {
+          nativeAddListener.call(signal, 'abort', cancel, { once: true });
+          listening = true;
+          if (signalAborted(signal)) { cancel(); return; }
+        }
         this.#guard(guard); this.#available(deadline);
         if (settled) return;
         // A fresh native agent has no connection/TLS-session reuse and receives
@@ -313,7 +328,8 @@ export class PublicDelegatedUseClient {
               // this authenticated-TLS guard. Real peer plaintext tests witness it.
               this.#guard(guard);
               this.#available(deadline);
-              if (settled || active!.destroyed || socket.destroyed) fail('PUBLIC_USE_UNAVAILABLE');
+              if (settled || signalAborted(signal) || active!.destroyed || socket.destroyed)
+                fail('PUBLIC_USE_UNAVAILABLE');
               if (admission) {
                 try {
                   const returned = admission();
@@ -328,7 +344,8 @@ export class PublicDelegatedUseClient {
                 // Admission may have committed while this exchange timed out or
                 // closed. Only captured bytes and private transport state remain.
                 this.#available(deadline);
-                if (settled || active!.destroyed || socket.destroyed) fail('PUBLIC_USE_UNAVAILABLE');
+                if (settled || signalAborted(signal) || active!.destroyed || socket.destroyed)
+                  fail('PUBLIC_USE_UNAVAILABLE');
               }
               // All caller/native callbacks are finished. No await or further
               // owner dispatch may intervene before these exact application bytes.
