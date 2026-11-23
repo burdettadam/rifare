@@ -155,10 +155,13 @@ separate. No release or independent-machine observation is inferred.
 The transfer API above covers the SQLite diagnostic. The selected commerce
 application uses Medusa and PostgreSQL. Its operation-journal recovery rehearsal
 restored a database backup and applied separately retained erasures and refusal
-identities for the same installation before serving traffic. The rehearsal left
-the older operation retired and refused both its original UUID and a new original
-for the erased subject. A destination operated by a buyer still needs a transfer
-contract, a rehearsal, and an acceptance decision.
+identities for the same installation before serving traffic. A separate rehearsal
+carried forward a verified installation uninstall into an older backup. Both
+rehearsals retired the older operation and refused its original UUID and a new
+original. Hold the restored database offline until the operator can reconcile the
+current privacy facts, including whether the installation was uninstalled, from
+records outside that backup. A destination operated by a buyer still needs a
+transfer contract, a rehearsal, and an acceptance decision.
 
 | Responsibility | Evidence required before transfer |
 | --- | --- |

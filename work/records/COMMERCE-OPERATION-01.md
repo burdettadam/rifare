@@ -416,3 +416,25 @@ The [merchant portability guide](../../docs/MERCHANT-PORTABILITY.md) records
 the separate requirements for a receiving Medusa operator. The journal
 checkpoint is ready for independent review. Publication, maintainer acceptance,
 and connected ElevenID and Supabase qualification remain open.
+
+## Installation uninstall after backup
+
+On November 22, 2026 (America/Denver), Medusa and disposable PostgreSQL 16
+reproduced an installation uninstall being lost when an older snapshot was
+restored. The test backed up an admitted operation, executed uninstall in the
+source, and loaded the backup into a fresh database. Without the fix, the
+restored operation remained in `awaiting_authority`.
+
+At `84cae61c28ba2f4de70dd98f2e0ac34170c290ae`, the existing privacy owner can
+pass a verified `installationUninstalled` fact with current refusal and
+erasure facts. The journal applies them in one transaction. A conflicting
+refusal rolled back suppression and retirement. Exact reconciliation retired
+and minimized the restored original and refused both its UUID and a fresh
+one. Repeating reconciliation left its revision stable. TypeScript and the
+separate customer-erasure restore path passed on the same commit. The
+synthetic backups and their containers were removed.
+
+The local evidence manifest SHA-256 is
+`1694a0889f66fc5458e2dfcae43a8652b00b63379d6c0646c9093490a3b5c065`.
+The operator still supplies current facts from outside the backup. This
+test covers an offline same-installation recovery.
