@@ -61,6 +61,11 @@ export function localCommerceConfig(env: Environment) {
       ![undefined, "development", "test"].includes(env.NODE_ENV)) {
     throw new Error("RIFARE_COMMERCE_PROFILE_UNQUALIFIED");
   }
+  const testCheckoutLock = env.RIFARE_TEST_CHECKOUT_LOCK;
+  if (testCheckoutLock !== undefined && (testCheckoutLock !== "postgres" ||
+      env.NODE_ENV !== "test" || env.RIFARE_COMMERCE_VERIFY !== "disposable")) {
+    throw new Error("RIFARE_DISPOSABLE_CHECKOUT_LOCK_REQUIRED");
+  }
   if (env.EXECUTION_CONTEXT || Object.keys(env).some((key) => key.startsWith("MEDUSA_CLOUD_") && env[key])) {
     throw new Error("RIFARE_COMMERCE_CLOUD_CONFIGURATION_UNSUPPORTED");
   }
@@ -113,6 +118,9 @@ export function localCommerceConfig(env: Environment) {
         { resolve: "@medusajs/medusa/auth-emailpass", id: "emailpass" },
         ...(identity ? [{ resolve: "./src/modules/external-identity", id: "external-oidc", options: identity }] : []),
       ] },
-    }, { resolve: "./src/modules/operation-journal" }],
+    }, { resolve: "./src/modules/operation-journal" }, ...(testCheckoutLock === "postgres" ? [{
+      resolve: "@medusajs/medusa/locking",
+      options: { providers: [{ resolve: "@medusajs/medusa/locking-postgres", id: "locking-postgres", is_default: true }] },
+    }] : [])],
   };
 }

@@ -1,7 +1,9 @@
 import assert from "node:assert/strict";
-import { spawn } from "node:child_process";
+import { execFile, spawn } from "node:child_process";
 import { randomUUID } from "node:crypto";
+import { basename } from "node:path";
 import { setTimeout as delay } from "node:timers/promises";
+import { promisify } from "node:util";
 import type { ExecArgs } from "@medusajs/framework/types";
 import { MedusaModule } from "@medusajs/framework/modules-sdk";
 import { ContainerRegistrationKeys, MathBN, MedusaError, Modules, ProductStatus, PromotionActions } from "@medusajs/framework/utils";
@@ -20,7 +22,7 @@ import {
   orderEditAddNewItemWorkflow, orderEditUpdateItemQuantityWorkflow, orderExchangeAddNewItemWorkflow,
   orderExchangeRequestItemReturnWorkflow,
   receiveItemReturnRequestWorkflow, refundPaymentWorkflow, releaseLockStep, requestItemReturnWorkflow,
-  requestOrderEditRequestWorkflow, updateCartPromotionsWorkflow, updateStoresWorkflow,
+  requestOrderEditRequestWorkflow, updateCartPromotionsWorkflow, updateLineItemInCartWorkflow, updateStoresWorkflow,
 } from "@medusajs/medusa/core-flows";
 
 /** Creates only synthetic records in an explicitly selected disposable local DB.
@@ -29,6 +31,18 @@ import {
 export default async function verifyCommerce({ container }: ExecArgs) {
   if (process.env.NODE_ENV !== "test" || process.env.RIFARE_COMMERCE_VERIFY !== "disposable") {
     throw new Error("RIFARE_DISPOSABLE_COMMERCE_TEST_REQUIRED");
+  }
+  const { RIFARE_TEST_LOCK_CART, RIFARE_TEST_LOCK_LINE } = process.env;
+  if (RIFARE_TEST_LOCK_CART || RIFARE_TEST_LOCK_LINE) {
+    assert.ok(RIFARE_TEST_LOCK_CART && RIFARE_TEST_LOCK_LINE);
+    const result = await updateLineItemInCartWorkflow(container).run({
+      input: { cart_id: RIFARE_TEST_LOCK_CART, item_id: RIFARE_TEST_LOCK_LINE, update: { quantity: 2 } },
+      throwOnError: false,
+    });
+    console.log("RIFARE_CART_LOCK_CONTENDER=" + JSON.stringify({
+      pid: process.pid, error: result.errors[0]?.error?.message ?? null,
+    }));
+    return;
   }
   const checks: string[] = [];
   const check = (name: string, assertions: () => void) => {
@@ -467,6 +481,58 @@ export default async function verifyCommerce({ container }: ExecArgs) {
       assert.ok(MathBN.eq(matched.total, matchingSession.amount));
       assert.ok(MathBN.eq(matched.payment_collections[0].payments[0].amount, matchingSession.amount));
     });
+
+    if (process.env.RIFARE_TEST_CHECKOUT_LOCK === "postgres") {
+      const { fixtureCart: sharedCart } = await createPaymentCart();
+      const { items: [sharedLine] } = await graph("cart", sharedCart.id, ["items.*"]);
+      const locking = container.resolve(Modules.LOCKING);
+      const postgres = container.resolve(ContainerRegistrationKeys.PG_CONNECTION);
+      const ownerId = randomUUID();
+      const execute = promisify(execFile);
+      const runContender = async () => {
+        const { stdout } = await execute(process.execPath, [
+          "run.mjs", "exec", `./src/scripts/${basename(__filename)}`,
+        ], {
+          env: { ...process.env, RIFARE_TEST_LOCK_CART: sharedCart.id, RIFARE_TEST_LOCK_LINE: sharedLine.id },
+          timeout: 45000,
+        });
+        const prefix = "RIFARE_CART_LOCK_CONTENDER=";
+        const line = stdout.split(/\r?\n/).find(value => value.startsWith(prefix));
+        assert.ok(line);
+        const outcome = JSON.parse(line.slice(prefix.length));
+        assert.notEqual(outcome.pid, process.pid);
+        return outcome;
+      };
+      await locking.acquire(sharedCart.id, { ownerId, expire: 60 });
+      try {
+        const blocked = await runContender();
+        assert.equal(typeof blocked.error, "string", "A separate Medusa process must reject the held cart lock");
+        assert.match(blocked.error, /locked|failed to acquire lock/i);
+        const lockedCart = await graph("cart", sharedCart.id, ["items.*"]);
+        assert.equal(Number(lockedCart.items[0].quantity), 1);
+        check("native-postgres-cart-lock-fences-another-process-while-held", () => {});
+      } finally {
+        await locking.release(sharedCart.id, { ownerId });
+      }
+      await locking.acquire(sharedCart.id, { ownerId, expire: 1 });
+      try {
+        await postgres.raw("select pg_sleep(1.1)");
+        const row = await postgres("locking").where({ id: sharedCart.id })
+          .first(postgres.raw("expiration <= now() as expired"));
+        assert.equal(row?.expired, true);
+        const expired = await runContender();
+        assert.match(expired.error, /locked|failed to acquire lock/i);
+        check("native-postgres-cart-lock-does-not-reclaim-another-owners-expired-lease", () => {});
+      } finally {
+        await locking.release(sharedCart.id, { ownerId });
+      }
+      const released = await runContender();
+      assert.equal(released.error, null);
+      const changedCart = await graph("cart", sharedCart.id, ["items.*"]);
+      check("native-postgres-cart-lock-allows-mutation-after-owner-release", () => {
+        assert.equal(Number(changedCart.items[0].quantity), 2);
+      });
+    }
 
     completeCartWorkflow.hooks.validate(({ input, cart: checkoutCart }) => {
       if (input.id === staleCart.id) {

@@ -146,6 +146,21 @@ creation with equal order and payment amounts. This uses the local provider
 and one process. Shared lock behavior, current authority and final-effect
 fencing across separate workers still need qualification.
 
+The default in-memory provider allowed a second Medusa process to update a
+cart while the first held its lock. A separate disposable profile evaluated the
+bundled PostgreSQL provider in the same database. A native line-item workflow
+in another process refused the held key and updated the cart after owner
+release. The workflow also refused the key after PostgreSQL confirmed its
+previous lease had expired. Expiry alone therefore did not recover the
+interrupted checkout lock in this pinned provider.
+
+Set `RIFARE_TEST_CHECKOUT_LOCK=postgres` only with `NODE_ENV=test` and
+`RIFARE_COMMERCE_VERIFY=disposable` to rerun this fixture. Apply the native
+migrations to its disposable database before running `npm run test:commerce`.
+The normal local profile still uses the default provider. A future shared
+checkout lock must qualify owner interruption and recovery as well as
+simultaneous writers.
+
 COMMERCE-AUTHORITY-01 must refuse mismatched, expired or unverified authority
 before entering a workflow that can compensate an existing payment. The
 entry must bind the exact original operation, current cart snapshot, selected

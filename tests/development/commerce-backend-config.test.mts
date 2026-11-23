@@ -56,3 +56,13 @@ test("CASE-COMMERCE-ENGINE-01-07 ambient cloud endpoints cannot activate externa
   assert.equal(config.admin.backendUrl, "/");
   assert.deepEqual(config.plugins, [{ resolve: "@medusajs/cloud", options: { disabled: true } }]);
 });
+
+test("PostgreSQL checkout locking qualification is limited to a disposable test profile", () => {
+  const selected = { ...valid(), RIFARE_COMMERCE_VERIFY: "disposable", RIFARE_TEST_CHECKOUT_LOCK: "postgres" };
+  assert.equal(localCommerceConfig(valid()).modules.some(module => module.resolve === "@medusajs/medusa/locking"), false);
+  assert.equal(localCommerceConfig(selected).modules.some(module => module.resolve === "@medusajs/medusa/locking"), true);
+  for (const input of [{ ...selected, NODE_ENV: "development" }, { ...selected, RIFARE_COMMERCE_VERIFY: undefined },
+    { ...selected, RIFARE_TEST_CHECKOUT_LOCK: "unknown" }]) {
+    assert.throws(() => localCommerceConfig(input), /DISPOSABLE_CHECKOUT_LOCK_REQUIRED/);
+  }
+});
