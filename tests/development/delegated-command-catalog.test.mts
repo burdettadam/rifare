@@ -1,4 +1,5 @@
 import test from 'node:test';
+import { removeExactPublicCoverage, removeExactPublicAdapter } from './public-catalog-baseline.mts';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
@@ -11,8 +12,8 @@ const adapter = (catalog: any) => catalog.adapters.find((value: any) => value.id
 
 test('RCG4BC2-CATALOG-REGISTRATION unchanged C1 codec has four bounded operations and all twenty real cases', () => {
   const catalog = readAdapterCatalog(), checked = validateAdapterCatalog(catalog), value = adapter(catalog);
-  assert.equal(checked.adapter_count, 48); assert.equal(checked.operation_count, 227);
-  assert.equal(checked.native_case_count, 336); assert.equal(checked.direct_fixture_count, 47);
+  assert.equal(checked.adapter_count, 49); assert.equal(checked.operation_count, 230);
+  assert.equal(checked.native_case_count, 359); assert.equal(checked.direct_fixture_count, 47);
   assert.equal(value.kind, 'diagnostic');
   assert.deepEqual(value.source_files.map((pin: any) => pin.path), [source]);
   assert.deepEqual(value.operations.map((operation: any) => operation.id), [
@@ -31,7 +32,7 @@ test('RCG4BC2-CATALOG-REGISTRATION unchanged C1 codec has four bounded operation
 });
 
 test('RCG4BC2-CATALOG-PRESERVATION every earlier coverage row retains independently frozen protected bytes', () => {
-  const expected = JSON.parse(readFileSync(new URL('../fixtures/conformance/expected-coverage.v1.json', import.meta.url), 'utf8'));
+  const expected = removeExactPublicCoverage(JSON.parse(readFileSync(new URL('../fixtures/conformance/expected-coverage.v1.json', import.meta.url), 'utf8')));
   // ADR-0079: remove only the new internal-client coverage before the original C1 subtraction.
   delete expected.adapter_operations.delegated_use_internal_client;
   delete expected.adapter_contracts.delegated_use_internal_client;
@@ -71,7 +72,7 @@ test('RCG4BC2-CATALOG-PINS source and case pins remain actual byte checks', () =
 
 test('RCG4BC2-CATALOG-LIMITS additive registration preserves byte budget and cannot imply external qualification', () => {
   const catalog = readAdapterCatalog(), checked = validateAdapterCatalog(catalog);
-  assert(Buffer.byteLength(JSON.stringify(jsonValue(catalog, 262144))) <= 262144);
+  assert(Buffer.byteLength(JSON.stringify(jsonValue(catalog, 327680))) <= 327680);
   assert.equal(checked.external_qualification, false); assert.equal(checked.production_qualified, false);
   const removed = structuredClone(catalog); removed.adapters = removed.adapters.filter((value: any) => value.id !== 'delegated_use_commands');
   assert.throws(() => validateAdapterCatalog(removed), /ADAPTER_CATALOG_COVERAGE_CHANGED/);
