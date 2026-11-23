@@ -249,7 +249,8 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
     } finally { for (const [name, original] of originals) Native.prototype[name] = original; }
     return;
   }
-  const f = await nativePaymentFixture(container, false, true);
+  const providerPrivacy = process.env.RIFARE_C12_PROVIDER_PRIVACY === "retain";
+  const f = await nativePaymentFixture(container, providerPrivacy, true);
   try {
   const seededCart = await f.makeCart(), addressId = "caaddr_" + randomBytes(12).toString("hex");
   const address = { id: addressId, customer_id: f.customer.id, company: null, first_name: "Original", last_name: "Customer",
@@ -324,7 +325,8 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
       and tgfoid='public.rifare_guard_native_generation()'::regprocedure))`, [claim.worker!.role,claim.worker!.role,claim.worker!.role])).rows;
   assert.deepEqual(missing, [], "Every actually granted native write table needs both generation boundaries");
   writeFileSync(custody, JSON.stringify({ source: process.env.RIFARE_C12_SOURCE, original_id: original.command.command_id,
-    worker: claim.worker, seal: claim.seal }, null, 2), { flag: "wx", mode: 0o600 });
+    worker: claim.worker, seal: claim.seal, ...(providerPrivacy ? { privacy: { merchant: f.merchant,
+      customer_id: f.customer.id, actor: f.privacyActor, context: f.context } } : {}) }, null, 2), { flag: "wx", mode: 0o600 });
   definition = (await postgres.raw("select pg_get_functiondef(to_regprocedure('public.rifare_guard_native_generation()')) as definition")).rows[0].definition as string | null;
   originalDefinition = (await postgres.raw("select pg_get_functiondef(to_regprocedure('public.rifare_guard_native_original()')) as definition")).rows[0].definition as string | null;
   paymentDefinition = (await postgres.raw("select pg_get_functiondef(to_regprocedure('public.rifare_require_native_execution_payment(text,text,text)')) as definition")).rows[0].definition as string | null;
@@ -644,6 +646,7 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
       correlation, correlation_fault: correlationFault, provider, provider_fault: providerFault,
       provider_ordering: providerOrdering, provider_ordering_fault: providerOrderingFault,
       provider_expiry: providerExpiry, provider_expiry_fault: providerExpiryFault,
+      provider_privacy: providerPrivacy,
       ordering_fault: orderingFault, ordering_observation: orderingObservation }, null, 2), { flag: "wx" });
     if (parentFailure) throw parentFailure;
     assert.equal(result.code, 0, result.output);

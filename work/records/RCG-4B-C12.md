@@ -505,3 +505,10 @@ delegate transaction, holds that row beyond a trigger-shortened execution expiry
 and requires refusal before the pinned System method. Removing only the post-lock
 clock check must let System run and fail the unchanged expiry oracle; the original
 gate definition is then restored exactly.
+
+Both roles cleared `f5742f7` for the bounded pinned local post-lock expiry case.
+The next source adds attempt-specific privacy behavior without invoking a provider:
+privacy export must contain the durable attempt time; erasure under hold must keep
+it as unknown-effect evidence; hold release must minimize personal/payment fields
+without reopening execution; and actual whole-PostgreSQL restores must reconcile
+current erasure or uninstall facts idempotently while retaining the attempt marker.
