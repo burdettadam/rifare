@@ -319,3 +319,17 @@ triggers are not overwritten. The installer is invoker-only,owner-checked and no
 PUBLIC-executable; no superuser DDL event trigger or new mandatory command layer is
 introduced. Deferred native write checks repeat generation/clock validation at
 COMMIT. Current authority/original row visibility/provider effects remain separate.
+
+
+Atf32d874 the actual already-open native worker refused all five stale writes:
+Cart,Cart line,earliest Order address,Inventory reservation and Payment session.
+No native System preparation/authorization/capture/refund/cancel call occurred;
+native row/audit snapshots stayed exact. No independent-pool/reconnect or full
+current-authority/row visibility/provider-edge qualification is inferred.
+
+The next fixed test also disables each Cart boundary in turn and proves genuine
+claim admission refuses before minting a role,then restores it. Actual granted
+native write privileges are checked against both installed trigger shapes to
+expose list drift. The worker cannot change replication mode,disable its guards or
+invoke the owner-only installer. The installer owner comparison is explicitly
+NULL-safe. The unchanged stale oracle remains the predicate-fault detector.

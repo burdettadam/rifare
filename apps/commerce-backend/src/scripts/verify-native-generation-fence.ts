@@ -21,6 +21,9 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
     assert.equal(identity.role, task.role);
     await assert.rejects(postgres.raw('set role "postgres"'), (error: any) => error.code === "42501");
     await assert.rejects(postgres.raw('set session authorization "postgres"'), (error: any) => error.code === "42501");
+    await assert.rejects(postgres.raw("set session_replication_role='replica'"), (error: any) => error.code === "42501");
+    await assert.rejects(postgres.raw("alter table public.cart disable trigger rifare_native_generation"), (error: any) => error.code === "42501");
+    await assert.rejects(postgres.raw("select public.rifare_install_native_generation_fences()"), (error: any) => error.code === "42501");
     const require = createRequire(discoveryPath), Native = require(resolve(dirname(discoveryPath), "providers/system.js")).SystemPaymentProvider;
     const names = ["initiatePayment", "authorizePayment", "capturePayment", "refundPayment", "cancelPayment"];
     const originals = new Map<string, any>(), calls = Object.fromEntries(names.map(name => [name, 0]));
@@ -67,8 +70,30 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
   const location = await locations.createStockLocations({ name: "C12 synthetic generation" });
   await inventory.createInventoryLevels({ inventory_item_id: item.id, location_id: location.id, stocked_quantity: 5 });
   const line = await postgres("cart_line_item").where({ cart_id: original.cart.id }).first("id");
+  for (const trigger of ["rifare_native_generation", "rifare_native_generation_commit"]) {
+    const before = await original.row();
+    const roles = Number((await postgres.raw("select count(*) as n from pg_roles where rolname ~ '^rifare_exec_[a-f0-9]{32}$'")).rows[0].n);
+    await postgres.raw(`alter table public.cart disable trigger ${trigger}`);
+    try {
+      assert.equal((await postgres.raw("select public.rifare_native_generation_ready() as ready")).rows[0].ready, false);
+      await assert.rejects(f.journal.claimNativeExecution(original.command.command_id, f.context, f.verifier), /NATIVE_GENERATION_FENCE_NOT_READY/);
+      assert.deepEqual(await original.row(), before);
+      assert.equal(Number((await postgres.raw("select count(*) as n from pg_roles where rolname ~ '^rifare_exec_[a-f0-9]{32}$'")).rows[0].n), roles);
+    } finally { await postgres.raw(`alter table public.cart enable trigger ${trigger}`); }
+  }
+  assert.equal((await postgres.raw("select public.rifare_native_generation_ready() as ready")).rows[0].ready, true);
   const claim = await f.journal.claimNativeExecution(original.command.command_id, f.context, f.verifier);
   assert.ok(claim.worker); assert.ok(claim.seal);
+  const missing = (await postgres.raw(`select p.tablename from pg_catalog.pg_tables p where p.schemaname='public'
+    and (has_table_privilege(?,format('%I.%I',p.schemaname,p.tablename),'INSERT')
+      or has_table_privilege(?,format('%I.%I',p.schemaname,p.tablename),'UPDATE')
+      or has_table_privilege(?,format('%I.%I',p.schemaname,p.tablename),'DELETE'))
+    and (not exists(select 1 from pg_catalog.pg_trigger where tgrelid=to_regclass(format('%I.%I',p.schemaname,p.tablename))
+      and tgname='rifare_native_generation' and tgtype=62 and tgenabled='O' and tgfoid='public.rifare_guard_native_generation()'::regprocedure)
+      or not exists(select 1 from pg_catalog.pg_trigger where tgrelid=to_regclass(format('%I.%I',p.schemaname,p.tablename))
+      and tgname='rifare_native_generation_commit' and tgtype=29 and tgenabled='O' and tgdeferrable and tginitdeferred
+      and tgfoid='public.rifare_guard_native_generation()'::regprocedure))`, [claim.worker!.role,claim.worker!.role,claim.worker!.role])).rows;
+  assert.deepEqual(missing, [], "Every actually granted native write table needs both generation boundaries");
   const custody = process.env.RIFARE_C12_GENERATION_CUSTODY!; assert.ok(custody.endsWith("-private.json"));
   writeFileSync(custody, JSON.stringify({ source: process.env.RIFARE_C12_SOURCE, original_id: original.command.command_id,
     worker: claim.worker, seal: claim.seal }, null, 2), { flag: "wx", mode: 0o600 });

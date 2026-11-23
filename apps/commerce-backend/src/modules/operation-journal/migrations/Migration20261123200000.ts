@@ -61,7 +61,7 @@ export class Migration20261123200000 extends Migration {
       language plpgsql set search_path=pg_catalog,public as $$
       declare target text; relation_oid oid;
       begin
-        if current_user <> pg_get_userbyid((select relowner from pg_catalog.pg_class where oid='public.rifare_operation'::regclass)) then
+        if current_user is distinct from pg_get_userbyid((select relowner from pg_catalog.pg_class where oid='public.rifare_operation'::regclass)) then
           raise exception 'Native generation provisioning owner required' using errcode='42501';
         end if;
         foreach target in array array[
