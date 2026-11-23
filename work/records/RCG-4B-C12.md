@@ -163,3 +163,21 @@ the actual property descriptor only for the clock fault, restores it exactly and
 leaves other modes untouched. The clock fault affects only the terminal root-pool
 SELECT; the transaction snapshot is unmodified. Failing source/log/database remain
 preserved; a new fixed disposable database is required for qualification.
+
+
+## Native restricted-worker integration
+
+At5aa0951 the20 source claim groups and18 retained C10 groups passed on the exact
+candidate. Both independent roles cleared only the bounded first-claim/delivery
+stage after three corrective rounds. Local progress evidence binds37 evidence
+files and19 changed source files; it is not a full consumed-input/compiled receipt.
+Rifare remains one active root-owned primary,zero linked. The same root-owned native
+PG instance is reused (14 owned disposable databases at that reconciliation), with
+no extra checkout/compiler output. All full C12 effect-time fences remain open.
+
+Next prove that the genuinely claimed restricted worker can boot the actual native
+module application and read its cart/session through real module pools, while
+journal/identity/control tables remain inaccessible. Any bootstrap permission gap
+must be resolved through a supported narrow boundary,not broad grants to identity
+or workflow state. This source probe dispatches no completion or financial action.
+The first-claim and prior fixture propagation evidence do not prove this new path.
