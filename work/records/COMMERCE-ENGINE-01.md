@@ -231,3 +231,21 @@ and its retirement immediately after qualification and evidence preservation.
 Host free space before allocation is 56641687552 bytes. Reuse the inactive build
 cache and existing npm download cache where compatible. No hosted CI, external
 account change, provider deployment or protected commerce effect is authorized.
+
+## Prior decision for standalone command intake refresh
+
+Before changing tools/check_distribution.py, root as delegated integration owner
+approves the source manifest SHA256
+7298fd3a0a6b2b5ce7a8629d055739541616164f83f335c9bcbb535dc04d1a73.
+The changes are the source start command and build finalization through the
+reviewed shared-adapter and runtime builders. Every other source command remains
+unchanged. Replace the generic command-prefix predicate with exact equality to
+this full reviewed source script map. Preserve every dependency, locked version,
+1016-entry count, registry/integrity and license check, the lock SHA256
+8c8b3f4194cb50c91f03e44aa75ea922c3ad86133f6199512fdae62f9355e134,
+and the exact hook-disabled .npmrc. The preexisting C6 package change had not
+refreshed this intake pin. Preserve that actual failed checker result.
+
+Independent authority review approved the bounded proposal before editing the
+checker. No dependency or license waiver applies. New negative validation must
+continue refusing changed scripts and hooks, even if a manifest pin is refreshed.
