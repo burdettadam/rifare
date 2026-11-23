@@ -7,6 +7,7 @@ import { cartContextConfig } from "../../config/local-commerce";
 import { lockCartOwner, readLockedCartFacts } from "./cart-facts";
 import { parseOriginalCommand, requireCommandCartMatch } from "./command";
 import { nativeAuthorityStart } from "./authority-start";
+import { openNativeAuthoritySession } from "./authority-sender";
 import {
   eraseJournalSubject, exportJournalSubject, journalSubjectIsSuppressed, minimizedOperationFields,
   restoreJournalRefusalIdentities, setJournalOperationHold, uninstallJournal,
@@ -40,6 +41,11 @@ export default class OperationJournalService {
 
   constructor({ [ContainerRegistrationKeys.PG_CONNECTION]: postgres }: { [ContainerRegistrationKeys.PG_CONNECTION]: Postgres }) {
     this.postgres = postgres;
+  }
+
+  /** Internal composition only. No public route or commerce effect is enabled. */
+  async openAuthoritySession(input: Uint8Array, descriptor: Uint8Array, context: AdmissionContext, transport: unknown) {
+    return openNativeAuthoritySession(this, input, descriptor, context, transport);
   }
 
   /** Internal entry point. The caller supplies framework-verified request context. */

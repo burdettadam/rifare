@@ -3,6 +3,8 @@ import { execFile, spawn } from "node:child_process";
 import { createHash, randomBytes, randomUUID } from "node:crypto";
 import { setTimeout as delay } from "node:timers/promises";
 import { promisify } from "node:util";
+import { resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 import type { ExecArgs } from "@medusajs/framework/types";
 import { ContainerRegistrationKeys, generateJwtToken, Modules, ProductStatus, PromotionActions } from "@medusajs/framework/utils";
 import { createApiKeysWorkflow, createCartWorkflow, createCartCreditLinesWorkflow, createProductsWorkflow,
@@ -450,6 +452,68 @@ export default async function verifyCartContext({ container }: ExecArgs) {
       assert.equal(priorOriginal.recovery_only, true);
       assert.equal(priorOriginal.send_ticket, null);
       check("journal-authority-start-ticket-is-issued-once-and-claims-once-in-postgres", () => {});
+
+      const wireModule = await import(pathToFileURL(resolve(process.cwd(),
+        "../../packages/adapters/delegated-commands/public-use-client.mts")).href);
+      const peerModule = await import(pathToFileURL(resolve(process.cwd(),
+        "../../tests/development/delegated-use-client-helpers.mts")).href);
+      const peer = await peerModule.delegatedUsePeer();
+      const transport = new wireModule.PublicDelegatedUseClient(peer.config);
+      const remoteResults = new Map<string, unknown>();
+      peer.setHandler((request: any, response: any) => {
+        response.statusCode = 200;
+        if (request.method === "GET") {
+          response.setHeader("content-type", "application/oauth-authz-req+jwt");
+          response.setHeader("pragma", "no-cache");
+          response.setHeader("x-content-type-options", "nosniff");
+          response.end("eyJhbGciOiJFUzI1NiJ9.eyJub25jZSI6InN5bnRoZXRpYyJ9.c3ludGhldGlj");
+          return;
+        }
+        const id = request.body.command === "START_USE" ? request.body.command_id : request.body.original_command_id;
+        if (request.body.command === "START_USE") {
+          remoteResults.set(id, {
+            profile: "urn:marty:delegation-command-response:v1", original_command_id: id,
+            command_digest: "sha256:" + createHash("sha256").update(request.raw).digest("hex"),
+            result: { kind: "CHALLENGE", challenge_id: "bbbbbbbb-cccc-4ddd-8eee-ffffffffffff",
+              grant: request.body.grant, operation: request.body.operation,
+              created_at: "2026-11-23T00:00:00.000Z", expires_at: "2026-11-23T00:10:00.000Z" },
+          });
+        }
+        response.setHeader("link", "<" + peer.config.origin +
+          '/v1/flows/instances/bbbbbbbb-cccc-4ddd-8eee-ffffffffffff/request>; rel="urn:marty:delegated-use:request"');
+        response.end(JSON.stringify({ ...remoteResults.get(id) as object,
+          recovered: request.body.command === "RECOVER_RESULT" }));
+      });
+      try {
+        const senderCommand = { ...command, command_id: randomUUID() };
+        const senderBytes = Buffer.from(JSON.stringify(senderCommand));
+        const session = await journal.openAuthoritySession(senderBytes, descriptorBytes, admission, transport);
+        assert.equal(peer.connections, 0);
+        assert.equal("send_ticket" in session, false);
+        const storedBeforeNetwork = await journal.prepareRecovery(senderCommand.command_id, admission);
+        assert.ok(storedBeforeNetwork.authority_start);
+        const bound = await session.start();
+        assert.equal(session.recovery_only, true);
+        assert.equal(peer.requests.length, 1);
+        assert.equal(peer.requests[0].path, "/v1/organizations/" +
+          descriptor.correlation.organization_id + "/delegated-use-commands");
+        assert.equal(peer.requests[0].raw.toString(), storedBeforeNetwork.authority_start!.command_bytes);
+        assert.equal(peer.requests[0].tls_authorized, true);
+        await assert.rejects(session.start(), /Authority sender is unavailable/);
+        assert.equal(peer.requests.length, 1);
+        const resumed = await journal.openAuthoritySession(senderBytes, descriptorBytes, admission, transport);
+        assert.equal(resumed.recovery_only, true);
+        await assert.rejects(resumed.start(), /Authority sender is unavailable/);
+        const recoveredBound = await resumed.recover();
+        assert.equal(peer.requests[1].body.command, "RECOVER_RESULT");
+        assert.equal(peer.requests[1].body.original_command_id, senderCommand.command_id);
+        const artifact = await resumed.requestArtifact(recoveredBound);
+        assert.equal((artifact as { execution_authorized: boolean }).execution_authorized, false);
+        assert.equal(peer.requests[2].method, "GET");
+        assert.equal((bound as { response: { recovered: boolean } }).response.recovered, false);
+        session.close(); resumed.close();
+        check("native-authority-session-retains-before-tls-and-recovers-only-the-original", () => {});
+      } finally { transport.close(); await peer.close(); }
 
       const changed = Buffer.from(JSON.stringify({ ...command, payable_minor_units: "0" }));
       await assert.rejects(journal.admit(changed, admission), /Original commerce command unavailable/);

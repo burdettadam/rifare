@@ -32,8 +32,9 @@ function identities() {
   const directory = mkdtempSync(join(tmpdir(), 'rifare-use-tls-'));
   try {
     let executable: string | undefined;
+    const executableName = process.platform === 'win32' ? 'openssl.exe' : 'openssl';
     for (const entry of (process.env.PATH ?? '').split(delimiter)) {
-      try { const path = join(entry, 'openssl'); accessSync(path, constants.X_OK); executable = realpathSync(path); break; }
+      try { const path = join(entry, executableName); accessSync(path, constants.X_OK); executable = realpathSync(path); break; }
       catch { /* Only an available local executable can generate this fixture. */ }
     }
     if (!executable) throw new Error('TLS_FIXTURE_GENERATOR_UNAVAILABLE');
