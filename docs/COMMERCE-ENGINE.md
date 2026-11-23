@@ -255,6 +255,40 @@ production cutover or distribution rights. The source dependency graph and licen
 controls remain separate from a release decision. See the existing
 [engine work record](../work/records/COMMERCE-ENGINE-01.md) for reviews and failures.
 
+## Standalone local Admin
+
+The Admin-enabled standalone build is now locally qualified on source
+`1ed7ebfab03fd95c015dc100e5dc40498be31ca6`. Its relocated runtime has its own
+production dependencies and serves packaged Admin assets without the repository
+or a Vite development server. Actual browser login, draft-product creation,
+deep-link reload and local logout passed, with customer/operator separation and
+public commerce holds intact. Native verification confirmed the product/default
+variant and unchanged protected payment/order/reservation/stock tables.
+
+For this qualified local static-serving profile, supply the documented private
+loopback database/session configuration and set `NODE_ENV=test`,
+`RIFARE_COMMERCE_PROFILE=local-medusa` and `DISABLE_MEDUSA_ADMIN=false`. Run the
+normal `npm run build` in the source application. Install the relocated output's
+unchanged lock with production dependencies and installation scripts disabled,
+then use its existing migration, user and start commands. Select a matching
+loopback `RIFARE_WEB_ORIGIN` and server port. Upstream Admin is at `/app`.
+Production mode remains refused; ordinary development mode selects Vite serving
+and is outside this standalone static observation.
+
+The builder refuses enabled Admin output missing its HTML or referenced entry
+assets. Explicit `DISABLE_MEDUSA_ADMIN=true` preserves the backend-only build.
+[ADR-0089](decisions/0089-standalone-admin-delivery.md) records two exact,
+hash-guarded 2.23.0 build compatibility corrections: one duplicate native product
+route Outlet and the reported email/password FetchError promise. Installed vendor
+files, backend authentication, native validation, permissions and MFA/SSO callbacks
+remain unchanged. A dependency change must requalify or retire those corrections.
+
+The [work record](../work/records/COMMERCE-ENGINE-02.md) binds exact inputs, rendered
+screens, missing-entry/omitted-Outlet faults and independent reviews. This qualifies
+the demonstrated operator catalog journey. Broader upstream UI, connected customer
+identity, protected commerce execution, receiving-operator transfer, production and
+distribution-rights acceptance remain separate gates.
+
 ## Retirement rule
 
 The existing SQLite commerce modules and synthetic sources remain available to

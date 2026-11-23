@@ -87,6 +87,16 @@ causes an actual order and the expected failing assertion. Formal acceptance and
 production remain open. Next, qualify the identity/client lifecycle and the
 Medusa approval-to-effect bridge before opening protected public operations.
 
+**COMMERCE-ENGINE-02 standalone native Admin delivery is locally qualified** under
+[ADR-0089](decisions/0089-standalone-admin-delivery.md). A relocated own-dependency
+backend serves packaged upstream Admin and its demonstrated operator catalog journey.
+Browser login/negative authentication, one accessible product dialog, native draft,
+deep-link reload and local logout passed with public holds and customer separation.
+Native protected-effect table digests stayed unchanged; exact asset and Outlet faults
+were caught and restored. [The record](../work/records/COMMERCE-ENGINE-02.md) preserves
+source/dependency hashes, independently checked evidence, compatibility scope and
+remaining broader UI/connected/production/transfer gates.
+
 The current source includes the bounded local **M20-G03 item-level drop-off
 handoff** implementation. Start with the [architecture](ARCHITECTURE.md) for
 existing modules and [roadmap](ROADMAP.md) for remaining work.

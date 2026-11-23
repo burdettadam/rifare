@@ -1,6 +1,6 @@
 # ADR-0089 - Standalone native Admin delivery
 
-Status: assigned; implementation and qualification pending.
+Status: implemented and independently reviewed locally; bounded integration accepted.
 Base: `5aa050e9ccdf8b8156c2e0455605ef4011a5d633` (Rifare PR9).
 Branch: `feat/medusa-standalone-admin`; root is sole writer and integration owner.
 
@@ -105,3 +105,7 @@ SSO component or any other Enterprise code that shares the distributed chunk. A
 changed or absent module fails the build. Installed packages and npm lock remain
 unchanged; retire both hooks with a selected, qualified upstream fix. This remains
 local compatibility qualification without distribution-rights acceptance.
+
+Fixed source, actual browser/native results, fault restoration, separate independent
+review dispositions and lifecycle scope are in [COMMERCE-ENGINE-02](../../work/records/COMMERCE-ENGINE-02.md).
+The acceptance is limited to the demonstrated local packaged operator journey.
