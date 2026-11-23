@@ -75,3 +75,24 @@ under the cost instruction; normal authorized feature push/review/merge applies.
 Provider/Supabase deployments and enrollment/account-link evidence stay with their
 other owners. Full COMMERCE-AUTHORITY-01, IDENTITY-APP-02, DELEGATED-PURCHASE-01,
 provider reconciliation, final-effect fencing and production/transfer stay open.
+
+## Observation contract before implementation
+
+The new internal method is recoverNativePaymentOutcome(original UUID, verified native
+context, optional AbortSignal). Its profile is
+urn:rifare:native-original-payment-observation:v1. It returns the original association,
+native_payment or null, capture/refund record arrays, exact minor-unit native
+collection totals, optional original-order transaction/credit/summary facts,
+consistency comparisons, immutable first-payment observation time and a later database
+observation time/content digest. Provider payloads and idempotency keys are excluded.
+execution_authorized, live_provider_status_verified, external_settlement_verified and
+absence_of_remote_effect_proven are always false. A content digest may stay unchanged
+while observation time advances; it is neither a grant nor a settlement proof.
+
+The native projection uses a consistent serializable snapshot and bounded explicit
+columns. Existing owner/privacy locks remain; do not lock financial writers merely
+to manufacture freshness for a historical observation. Recheck in a new transaction
+after first-binding COMMIT. Report/refuse ambiguous or inconsistent identity rather
+than migrating the original to another native payment. Keep C10's strict original
+principal/currency checks; native order totals may legitimately change after credit
+lines and are reported separately from the original paid principal.

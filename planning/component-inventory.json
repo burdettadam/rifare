@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "id": "rifare-source-inventory",
-  "revision": 85,
+  "revision": 86,
   "status": "proposed",
   "components": [
     {
@@ -1807,7 +1807,8 @@
         "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123162000.ts",
         "apps/commerce-backend/src/scripts/verify-claim-admission.ts",
         "docs/decisions/0091-native-original-payment-outcomes.md",
-        "work/records/RCG-4B-C11.md"
+        "work/records/RCG-4B-C11.md",
+        "apps/commerce-backend/src/scripts/verify-payment-outcomes.ts"
       ],
       "notices": []
     },
