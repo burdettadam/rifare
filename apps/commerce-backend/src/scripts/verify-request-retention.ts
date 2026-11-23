@@ -1,0 +1,386 @@
+import assert from "node:assert/strict";
+import { spawn } from "node:child_process";
+import { createHash, generateKeyPairSync, randomBytes, randomUUID, sign } from "node:crypto";
+import { setTimeout as delay } from "node:timers/promises";
+import type { ExecArgs } from "@medusajs/framework/types";
+import { ContainerRegistrationKeys, Modules, ProductStatus } from "@medusajs/framework/utils";
+import { createCartWorkflow, createProductsWorkflow, createRegionsWorkflow,
+  createSalesChannelsWorkflow, updateStoresWorkflow } from "@medusajs/medusa/core-flows";
+import { configure } from "safe-stable-stringify";
+import { resolve } from "node:path";
+import { pathToFileURL } from "node:url";
+import { authorityAdapters } from "../modules/operation-journal/authority-sender";
+import { readLockedCartFacts } from "../modules/operation-journal/cart-facts";
+import { operationJournalModule } from "../modules/operation-journal";
+import type OperationJournalService from "../modules/operation-journal/service";
+
+/** Disposable native journal/cryptography tests. No deployed keys or providers. */
+export default async function verifyRequestRetention({ container }: ExecArgs) {
+  if (process.env.NODE_ENV !== "test" || process.env.RIFARE_COMMERCE_VERIFY !== "disposable") {
+    throw new Error("RIFARE_DISPOSABLE_REQUEST_TEST_REQUIRED");
+  }
+  const journal = container.resolve<OperationJournalService>(operationJournalModule);
+  const postgres = container.resolve(ContainerRegistrationKeys.PG_CONNECTION);
+  const clockSamples: number[] = [];
+  postgres.on("query-response", (result: any, query: any) => {
+    if (query.sql === "select clock_timestamp() as now" && result?.rows?.[0]?.now instanceof Date) {
+      clockSamples.push(result.rows[0].now.getTime()); if (clockSamples.length > 20) clockSamples.shift();
+    }
+  });
+  if (process.env.RIFARE_C7_COMPILED === "true") {
+    assert.ok(__filename.endsWith(".js"));
+    assert.ok(journal instanceof require("../modules/operation-journal/service").default);
+  }
+  const stringify = configure({ deterministic: true, strict: true, bigint: false });
+  const bytes = (value: unknown) => Buffer.from(stringify(value)!);
+  if (process.env.RIFARE_C7_WORKER) {
+    const task = JSON.parse(process.env.RIFARE_C7_WORKER);
+    const verifier = await journal.createAuthorityRequestVerifier(bytes(task.trust));
+    const result = task.mode === "recover" ?
+      await journal.recoverVerifiedAuthorityRequest(task.command_id, task.context, verifier) :
+      await journal.verifyAuthorityRequest(task.command_id, Buffer.from(task.artifact), task.context, verifier);
+    if (task.mode === "retain-lose-ack") process.exit(79);
+    console.log("C7_RECOVERED=" + JSON.stringify({ digest: result.request_digest, observed_at: result.first_observed_at }));
+    verifier.close(); return;
+  }
+  const restorePhase = process.env.RIFARE_C7_RESTORE_PHASE;
+  if (restorePhase && restorePhase !== "seed") {
+    const fixture = JSON.parse(process.env.RIFARE_C7_RESTORE_FIXTURE ?? "");
+    process.env.RIFARE_MERCHANT_NAMESPACE = fixture.merchant.merchant_namespace;
+    process.env.RIFARE_NATIVE_STORE_ID = fixture.merchant.store_id;
+    process.env.RIFARE_JOURNAL_PRIVACY_OPERATOR_ID = fixture.privacyActor.actor_id;
+    const operation = () => postgres("rifare_operation").where({ original_command_uuid: fixture.command_id }).first();
+    const before = await operation(); assert.equal(before.request_digest, fixture.request_digest); assert.ok(before.request_bytes);
+    if (restorePhase === "erase") {
+      await journal.erasePrivacySubject(fixture.context.actor.actor_id, fixture.privacyActor);
+      const row = await operation(); assert.equal(row.request_bytes, null);
+      console.log("C7_RESTORE_CURRENT_REFUSAL=" + JSON.stringify({ id: row.id,
+        original_command_uuid: row.original_command_uuid, challenge_fingerprint: row.challenge_fingerprint })); return;
+    }
+    assert.ok(restorePhase === "reconcile-erase" || restorePhase === "reconcile-uninstall");
+    const refusal = JSON.parse(process.env.RIFARE_C7_RESTORE_REFUSAL ?? "null");
+    const reconcile = () => restorePhase === "reconcile-erase" ?
+      journal.reconcilePrivacyRestore([refusal], [fixture.context.actor.actor_id], fixture.privacyActor) :
+      journal.reconcilePrivacyRestore([], [], fixture.privacyActor, { installationUninstalled: true });
+    await reconcile(); await reconcile();
+    const row = await operation(); assert.equal(row.state, "retired"); assert.equal(row.id, before.id);
+    for (const field of ["request_bytes", "request_digest", "request_context_digest", "request_nonce", "request_observed_at", "request_expires_at"]) assert.equal(row[field], null);
+    const verifier = await journal.createAuthorityRequestVerifier(bytes(fixture.trust));
+    await assert.rejects(journal.recoverVerifiedAuthorityRequest(fixture.command_id, fixture.context, verifier)); verifier.close();
+    console.log("C7_DATABASE_RESTORE_RESULT=" + JSON.stringify({ result: "pass", phase: restorePhase,
+      source: "restored-whole-postgres-database", execution_authorized: false })); return;
+  }
+  const checks: string[] = [];
+  const check = async (name: string, run: () => unknown) => {
+    await run(); checks.push(name); console.log("REQUEST_RETENTION_CHECK " + name);
+  };
+  const suffix = randomUUID();
+  const stores = container.resolve(Modules.STORE), customers = container.resolve(Modules.CUSTOMER);
+  const auth = container.resolve(Modules.AUTH), users = container.resolve(Modules.USER);
+  const [store] = await stores.listStores();
+  const merchant = { merchant_namespace: "synthetic-request", store_id: store.id };
+  const { result: channels } = await createSalesChannelsWorkflow(container).run({ input: {
+    salesChannelsData: [{ name: "C7 " + suffix }],
+  } });
+  await updateStoresWorkflow(container).run({ input: { selector: { id: store.id }, update: {
+    supported_currencies: [{ currency_code: "usd", is_default: true }], default_sales_channel_id: channels[0].id,
+  } } });
+  const { result: regions } = await createRegionsWorkflow(container).run({ input: { regions: [{
+    name: "C7 " + suffix, currency_code: "usd", countries: ["us"], automatic_taxes: false,
+    payment_providers: ["pp_system_default"],
+  }] } });
+  const { result: products } = await createProductsWorkflow(container).run({ input: { products: [{
+    title: "C7 " + suffix, status: ProductStatus.PUBLISHED, sales_channels: [{ id: channels[0].id }],
+    options: [{ title: "Size", values: ["One"] }], variants: [{ title: "One", options: { Size: "One" },
+      manage_inventory: false, prices: [{ currency_code: "usd", amount: 12.5 }] }],
+  }] } });
+  const customer = await customers.createCustomers({ email: "c7-" + suffix + "@example.invalid", has_account: true });
+  const identity = await auth.createAuthIdentities({ app_metadata: { customer_id: customer.id } });
+  const operator = await users.createUsers({ email: "c7-operator-" + suffix + "@example.invalid" });
+  const operatorIdentity = await auth.createAuthIdentities({ app_metadata: { user_id: operator.id } });
+  const privacyActor = { actor_type: "user" as const, actor_id: operator.id, auth_identity_id: operatorIdentity.id };
+  process.env.RIFARE_MERCHANT_NAMESPACE = merchant.merchant_namespace;
+  process.env.RIFARE_NATIVE_STORE_ID = store.id;
+  if (restorePhase === "seed") assert.match(process.env.RIFARE_JOURNAL_PRIVACY_KEY ?? "", /^[A-Za-z0-9_-]{43}$/);
+  else process.env.RIFARE_JOURNAL_PRIVACY_KEY = randomBytes(32).toString("base64url");
+  process.env.RIFARE_JOURNAL_PRIVACY_OPERATOR_ID = operator.id;
+  const context = { actor: { actor_type: "customer" as const, actor_id: customer.id, auth_identity_id: identity.id },
+    salesChannelIds: [channels[0].id] };
+  const key = generateKeyPairSync("ec", { namedCurve: "prime256v1" });
+  const correlation = { actor: { id: "urn:rifare:synthetic:machine", type: "MACHINE_IDENTITY" },
+    organization_id: randomUUID(), provider_ref: "synthetic-provider" };
+  const trust = { profile: "urn:rifare:managed-authorization-request-trust:v1", ...correlation,
+    origin: "https://authority.example.invalid", verifier_did: "did:web:verifier.example.invalid",
+    client_id: "decentralized_identifier:did:web:verifier.example.invalid", key_id: "did:web:verifier.example.invalid#request",
+    key_purpose: "oid4vp_request_signing", algorithm: "ES256", public_jwk: key.publicKey.export({ format: "jwk" }),
+    max_lifetime_seconds: 300, dcql_query: { credentials: [{ id: "machine", format: "jwt_vc_json",
+      require_cryptographic_holder_binding: true, meta: {
+        marty_securing_profile: "marty_nested_vc2_jwt_v1", type_values: [["MachineCredential"]],
+      } }] }, client_metadata: { vp_formats_supported: {
+      jwt_vc_json: { alg_values_supported: ["ES256", "ES384", "EdDSA", "RS256"] },
+      jwt_vp: { alg_values_supported: ["ES256", "ES384", "EdDSA", "RS256"] },
+    } } };
+  const verifier = await journal.createAuthorityRequestVerifier(bytes(trust));
+  const makeOriginal = async (retainChallenge = true, lifetimeSeconds = 120) => {
+    const { result: cart } = await createCartWorkflow(container).run({ input: { customer_id: customer.id,
+      region_id: regions[0].id, sales_channel_id: channels[0].id,
+      items: [{ variant_id: products[0].variants[0].id, quantity: 1 }],
+    } });
+    const facts = await postgres.transaction(tx => readLockedCartFacts(tx, cart.id, merchant, context), { isolationLevel: "serializable" });
+    const command = { cart_facts_digest: facts.factsDigest, cart_id: cart.id, command_id: randomUUID(),
+      currency: "usd", currency_exponent: 2, kind: "prepare_purchase", payable_minor_units: facts.facts.payable_total_minor,
+      profile: "urn:rifare:medusa-original-operation:v1" };
+    const descriptor = { correlation, grant: { id: randomUUID(), revision: 1, terms_digest: "sha256:" + "a".repeat(64) } };
+    const now = (await postgres.raw("select clock_timestamp() as now")).rows[0].now.getTime(), challenge = randomUUID();
+    if (retainChallenge) {
+    const admitted = await journal.admitForAuthority(bytes(command), context);
+    assert.ok(admitted.send_ticket);
+    const start = await journal.retainAuthorityStart(command.command_id, admitted.send_ticket!, bytes(descriptor), context);
+    const response = { profile: "urn:marty:delegation-command-response:v1", original_command_id: command.command_id,
+      command_digest: start.command_digest, recovered: false, result: { kind: "CHALLENGE", challenge_id: challenge,
+        grant: JSON.parse(start.command_bytes).grant, operation: JSON.parse(start.command_bytes).operation,
+        created_at: new Date(now - 1000).toISOString(), expires_at: new Date(now + lifetimeSeconds * 1000).toISOString() } };
+    await journal.observeAuthorityResponse(command.command_id, bytes(response), false, context);
+    }
+    const artifact = (nonce = "synthetic-" + randomUUID()) => {
+      const header = bytes({ alg: "ES256", kid: trust.key_id, typ: "oauth-authz-req+jwt" }).toString("base64url");
+      const payload = bytes({ aud: "https://self-issued.me/v2", client_id: trust.client_id, iss: trust.client_id,
+        iat: Math.floor(now / 1000), exp: Math.floor((now + lifetimeSeconds * 1000) / 1000), nonce, state: challenge,
+        response_type: "vp_token", response_mode: "direct_post", response_uri: trust.origin + "/v1/flows/instances/" + challenge + "/submit",
+        dcql_query: trust.dcql_query, client_metadata: trust.client_metadata }).toString("base64url");
+      const input = header + "." + payload;
+      return Buffer.from(input + "." + sign("sha256", Buffer.from(input), { key: key.privateKey, dsaEncoding: "ieee-p1363" }).toString("base64url"));
+    };
+    return { command, cart, artifact, descriptor, row: () => postgres("rifare_operation").where({ original_command_uuid: command.command_id }).first() };
+  };
+  const runWorker = (task: unknown) => new Promise<{ code: number | null; output: string }>((resolve, reject) => {
+    const child = spawn(process.execPath, ["run.mjs", "exec", __filename], { cwd: process.cwd(),
+      env: { ...process.env, RIFARE_C7_WORKER: JSON.stringify(task) }, stdio: ["ignore", "pipe", "pipe"] });
+    let output = ""; for (const stream of [child.stdout, child.stderr]) stream.on("data", data => { output = (output + data).slice(-16000); });
+    child.once("error", reject); child.once("exit", code => resolve({ code, output }));
+  });
+  if (restorePhase === "seed") {
+    const fixture = await makeOriginal();
+    await journal.verifyAuthorityRequest(fixture.command.command_id, fixture.artifact(), context, verifier);
+    const row = await fixture.row();
+    console.log("C7_RESTORE_FIXTURE=" + JSON.stringify({ merchant, privacyActor, context, trust,
+      command_id: fixture.command.command_id, request_digest: row.request_digest })); verifier.close(); return;
+  }
+  await check("C7-NATIVE-FIRST exact signed bytes and verification context commit once with original time", async () => {
+    const fixture = await makeOriginal(), artifact = fixture.artifact();
+    await assert.rejects(journal.verifyAuthorityRequest(fixture.command.command_id, Buffer.from("unverified"), context, verifier));
+    assert.equal((await fixture.row()).request_bytes, null);
+    await assert.rejects(postgres("rifare_operation").where({ original_command_uuid: fixture.command.command_id })
+      .update({ request_nonce: "orphan" }), /rifare_operation_request_tuple/);
+    let first: Awaited<ReturnType<OperationJournalService["verifyAuthorityRequest"]>>;
+    try { first = await journal.verifyAuthorityRequest(fixture.command.command_id, artifact, context, verifier); }
+    catch (error) { console.error("C7_CLOCK_DIAGNOSTIC=" + JSON.stringify(clockSamples)); throw error; }
+    const stored = await fixture.row(); assert.equal(stored.request_bytes, artifact.toString());
+    assert.equal(stored.request_digest, "sha256:" + createHash("sha256").update(artifact).digest("hex"));
+    assert.match(stored.request_context_digest, /^sha256:[a-f0-9]{64}$/); assert.ok(stored.request_nonce);
+    assert.equal(first.request_digest, stored.request_digest);
+    const retry = await journal.verifyAuthorityRequest(fixture.command.command_id, artifact, context, verifier);
+    assert.equal(new Date(retry.first_observed_at).getTime(), new Date(first.first_observed_at).getTime());
+    assert.deepEqual(await fixture.row(), stored);
+    await assert.rejects(journal.verifyAuthorityRequest(fixture.command.command_id, fixture.artifact(), context, verifier));
+    const changed = await journal.createAuthorityRequestVerifier(bytes({ ...trust, max_lifetime_seconds: 299 }));
+    await assert.rejects(journal.verifyAuthorityRequest(fixture.command.command_id, artifact, context, changed)); changed.close();
+  });
+  await check("C7-NATIVE-RACE two different valid signed requests have one immutable native winner", async () => {
+    const fixture = await makeOriginal(), artifacts = [fixture.artifact(), fixture.artifact()];
+    const results = await Promise.allSettled(artifacts.map(artifact => journal.verifyAuthorityRequest(fixture.command.command_id, artifact, context, verifier)));
+    assert.equal(results.filter(result => result.status === "fulfilled").length, 1);
+    const row = await fixture.row(), winner = artifacts.find(value => value.toString() === row.request_bytes);
+    assert.ok(winner); await journal.verifyAuthorityRequest(fixture.command.command_id, winner!, context, verifier);
+    for (const artifact of artifacts.filter(value => value !== winner)) await assert.rejects(journal.verifyAuthorityRequest(fixture.command.command_id, artifact, context, verifier));
+  });
+  await check("C7-NATIVE-ORIGINAL signed request cannot cross the journal original or current customer association", async () => {
+    const first = await makeOriginal(), second = await makeOriginal();
+    await assert.rejects(journal.verifyAuthorityRequest(second.command.command_id, first.artifact(), context, verifier));
+    await auth.updateAuthIdentities({ id: identity.id, app_metadata: { customer_id: "cus_other" } });
+    await assert.rejects(journal.verifyAuthorityRequest(first.command.command_id, first.artifact(), context, verifier));
+    await auth.updateAuthIdentities({ id: identity.id, app_metadata: { customer_id: customer.id } });
+    assert.equal((await first.row()).request_bytes, null); assert.equal((await second.row()).request_bytes, null);
+  });
+  await check("C7-NATIVE-ROLLBACK failed deferred COMMIT retains no partial verified artifact", async () => {
+    const fixture = await makeOriginal(), artifact = fixture.artifact(), before = await fixture.row();
+    await postgres.raw(`create function public.c7_fail_request_commit() returns trigger language plpgsql as $$ begin
+      if new.original_command_uuid = '${fixture.command.command_id}' and new.request_bytes is not null then
+      raise exception 'C7_TEST_COMMIT_FAILURE'; end if; return new; end $$`);
+    await postgres.raw("create constraint trigger c7_request_commit after update on rifare_operation deferrable initially deferred for each row execute function public.c7_fail_request_commit()");
+    try { await assert.rejects(journal.verifyAuthorityRequest(fixture.command.command_id, artifact, context, verifier), /C7_TEST_COMMIT_FAILURE/); }
+    finally { await postgres.raw("drop trigger c7_request_commit on rifare_operation; drop function public.c7_fail_request_commit()"); }
+    assert.deepEqual(await fixture.row(), before);
+    await journal.verifyAuthorityRequest(fixture.command.command_id, artifact, context, verifier);
+  });
+  await check("C7-NATIVE-RESTART acknowledgement loss and fresh process recover the same first artifact", async () => {
+    const fixture = await makeOriginal(), artifact = fixture.artifact();
+    const task = { trust, command_id: fixture.command.command_id, context };
+    const lost = await runWorker({ ...task, artifact: artifact.toString(), mode: "retain-lose-ack" });
+    assert.equal(lost.code, 79, lost.output); const row = await fixture.row(); assert.equal(row.request_bytes, artifact.toString());
+    const recovered = await runWorker({ ...task, mode: "recover" }); assert.equal(recovered.code, 0, recovered.output);
+    assert.ok(recovered.output.includes(row.request_digest)); assert.deepEqual(await fixture.row(), row);
+  });
+  await check("C7-NATIVE-CLOSE verifier retirement during a real blocked native write rolls back retention", async () => {
+    const fixture = await makeOriginal(), selected = await journal.createAuthorityRequestVerifier(bytes(trust));
+    const blocker = await postgres.transaction(); await blocker("rifare_operation").where({ original_command_uuid: fixture.command.command_id }).forUpdate().first();
+    const pending = journal.verifyAuthorityRequest(fixture.command.command_id, fixture.artifact(), context, selected);
+    const rejected = assert.rejects(pending, /REQUEST_TRUST_RETIRED/);
+    try {
+      let blocked = false; for (let n = 0; n < 100; n++) {
+        const result = await postgres.raw("select 1 from pg_stat_activity where datname=current_database() and pid<>pg_backend_pid() and wait_event_type='Lock' and query like 'update %rifare_operation%'");
+        if (result.rows.length) { blocked = true; break; } await delay(20);
+      }
+      assert.ok(blocked, "actual request-retention UPDATE must wait on the owned row"); selected.close();
+    } finally { await blocker.commit(); }
+    await rejected; assert.equal((await fixture.row()).request_bytes, null);
+  });
+  await check("C7-NATIVE-COMMIT-EXPIRY late COMMIT retains original evidence but returns no current verification", async () => {
+    const fixture = await makeOriginal(true, 3), artifact = fixture.artifact();
+    await postgres.raw(`create function public.c7_delay_request_commit() returns trigger language plpgsql as $$ begin
+      if new.original_command_uuid = '${fixture.command.command_id}' and new.request_bytes is not null then
+      perform pg_sleep(3.2); end if; return new; end $$`);
+    await postgres.raw("create constraint trigger c7_request_delay after update on rifare_operation deferrable initially deferred for each row execute function public.c7_delay_request_commit()");
+    try { await assert.rejects(journal.verifyAuthorityRequest(fixture.command.command_id, artifact, context, verifier)); }
+    finally { await postgres.raw("drop trigger c7_request_delay on rifare_operation; drop function public.c7_delay_request_commit()"); }
+    const row = await fixture.row(); assert.equal(row.request_bytes, artifact.toString());
+    await assert.rejects(journal.recoverVerifiedAuthorityRequest(fixture.command.command_id, context, verifier));
+    assert.deepEqual(await fixture.row(), row);
+  });
+  await check("C7-NATIVE-COMMIT-OWNER ownership withdrawn at COMMIT refuses the returning verification", async () => {
+    const fixture = await makeOriginal(), artifact = fixture.artifact();
+    await postgres.raw(`create function public.c7_withdraw_request_owner() returns trigger language plpgsql as $$ begin
+      if new.original_command_uuid = '${fixture.command.command_id}' and new.request_bytes is not null then
+      update auth_identity set app_metadata = '{"customer_id":"cus_other"}'::jsonb where id = '${identity.id}';
+      end if; return new; end $$`);
+    await postgres.raw("create constraint trigger c7_request_owner after update on rifare_operation deferrable initially deferred for each row execute function public.c7_withdraw_request_owner()");
+    try { await assert.rejects(journal.verifyAuthorityRequest(fixture.command.command_id, artifact, context, verifier), /Cart context unavailable/); }
+    finally {
+      await postgres.raw("drop trigger c7_request_owner on rifare_operation; drop function public.c7_withdraw_request_owner()");
+      await auth.updateAuthIdentities({ id: identity.id, app_metadata: { customer_id: customer.id } });
+    }
+    const row = await fixture.row(); assert.equal(row.request_bytes, artifact.toString());
+    await journal.recoverVerifiedAuthorityRequest(fixture.command.command_id, context, verifier);
+    assert.deepEqual(await fixture.row(), row);
+  });
+  await check("C7-NATIVE-CLOCK-RECOVERY a fresh verifier cannot recover behind the persisted first-observation clock floor", async () => {
+    const fixture = await makeOriginal();
+    await journal.verifyAuthorityRequest(fixture.command.command_id, fixture.artifact(), context, verifier);
+    const row = await fixture.row(), restarted = await journal.createAuthorityRequestVerifier(bytes(trust));
+    await postgres("rifare_operation").where({ id: row.id }).update({ request_observed_at: new Date(row.request_observed_at.getTime() + 2000) });
+    try { await assert.rejects(journal.recoverVerifiedAuthorityRequest(fixture.command.command_id, context, restarted), /Original commerce command unavailable/); }
+    finally {
+      restarted.close(); await postgres("rifare_operation").where({ id: row.id }).update({ request_observed_at: row.request_observed_at });
+    }
+    assert.deepEqual(await fixture.row(), row);
+  });
+  await check("C7-NATIVE-WIRE actual C6 recovery and mTLS retrieval compose with original-bound native verification", async () => {
+    const fixture = await makeOriginal(false);
+    const fixtureRoot = process.env.RIFARE_C7_COMPILED === "true" ? process.env.RIFARE_C7_TEST_FIXTURE_ROOT : resolve(process.cwd(), "../..");
+    assert.ok(fixtureRoot, "compiled qualification explicitly supplies external test fixtures");
+    const helpers = await import(pathToFileURL(resolve(fixtureRoot!, "tests/development/delegated-use-client-helpers.mts")).href);
+    const peer = await helpers.delegatedUsePeer();
+    const selectedTrust = { ...trust, ...peer.correlation, origin: peer.config.origin };
+    const selected = await journal.createAuthorityRequestVerifier(bytes(selectedTrust));
+    const transport = await journal.createAuthorityTransport(peer.config);
+    const { codec } = await authorityAdapters();
+    let retainedResponse: any, compact = "", claims: any;
+    const signedArtifact = () => {
+      const input = bytes({ alg: "ES256", kid: trust.key_id, typ: "oauth-authz-req+jwt" }).toString("base64url") + "." + bytes(claims).toString("base64url");
+      return input + "." + sign("sha256", Buffer.from(input), { key: key.privateKey, dsaEncoding: "ieee-p1363" }).toString("base64url");
+    };
+    peer.setHandler(async (request: any, response: any) => {
+      response.statusCode = 200;
+      if (request.method === "GET") {
+        response.setHeader("content-type", "application/oauth-authz-req+jwt"); response.setHeader("cache-control", "no-store");
+        response.setHeader("pragma", "no-cache"); response.setHeader("x-content-type-options", "nosniff"); response.end(compact); return;
+      }
+      const command = JSON.parse(request.raw.toString());
+      if (command.command === "START_USE") {
+        const now = (await postgres.raw("select clock_timestamp() as now")).rows[0].now.getTime(), challenge = randomUUID();
+        retainedResponse = { profile: "urn:marty:delegation-command-response:v1", original_command_id: command.command_id,
+          command_digest: codec.encodeDelegatedCommand(command).command_digest, recovered: false,
+          result: { kind: "CHALLENGE", challenge_id: challenge, grant: command.grant, operation: command.operation,
+            created_at: new Date(now - 1000).toISOString(), expires_at: new Date(now + 120000).toISOString() } };
+        claims = { aud: "https://self-issued.me/v2", client_id: trust.client_id, iss: trust.client_id, iat: Math.floor(now / 1000),
+          exp: Math.floor((now + 120000) / 1000), nonce: "synthetic-c7-wire-" + randomUUID(), state: challenge,
+          response_mode: "direct_post", response_type: "vp_token", response_uri: peer.config.origin + "/v1/flows/instances/" + challenge + "/submit",
+          dcql_query: trust.dcql_query, client_metadata: trust.client_metadata };
+        compact = signedArtifact(); response.destroy(); return;
+      }
+      assert.equal(command.command, "RECOVER_RESULT"); assert.ok(retainedResponse);
+      response.setHeader("content-type", "application/json");
+      response.setHeader("link", "<" + peer.config.origin + "/v1/flows/instances/" + retainedResponse.result.challenge_id + '/request>; rel="urn:marty:delegated-use:request"');
+      response.end(JSON.stringify({ ...retainedResponse, recovered: true }));
+    });
+    const descriptor = bytes({ ...fixture.descriptor, correlation: peer.correlation });
+    let first: any, session: any, other: any;
+    try {
+      first = await journal.openVerifiedAuthoritySession(bytes(fixture.command), descriptor, context, transport, selected);
+      await assert.rejects(first.start()); first.close();
+      session = await journal.openVerifiedAuthoritySession(bytes(fixture.command), descriptor, context, transport, selected);
+      let challenge = await session.recover();
+      const blocker = await postgres.transaction();
+      await blocker("rifare_operation").where({ original_command_uuid: fixture.command.command_id }).forUpdate().first();
+      const pending = session.verifyRequest(challenge), rejected = assert.rejects(pending);
+      try {
+        let blocked = false; for (let n = 0; n < 100; n++) {
+          const result = await postgres.raw("select 1 from pg_stat_activity where datname=current_database() and pid<>pg_backend_pid() and wait_event_type='Lock' and query like 'update %rifare_operation%'");
+          if (result.rows.length) { blocked = true; break; } await delay(20);
+        }
+        assert.ok(blocked); session.close();
+      } finally { await blocker.commit(); }
+      await rejected; assert.equal((await fixture.row()).request_bytes, null);
+      session = await journal.openVerifiedAuthoritySession(bytes(fixture.command), descriptor, context, transport, selected);
+      challenge = await session.recover(); const handle = await session.verifyRequest(challenge);
+      assert.equal((await fixture.row()).request_bytes, compact);
+      assert.equal(JSON.parse((await fixture.row()).start_response_bytes).recovered, true);
+      const current = await session.describeVerifiedRequest(handle); assert.equal(current.execution_authorized, false);
+      other = await journal.openVerifiedAuthoritySession(bytes(fixture.command), descriptor, context, transport, selected);
+      await assert.rejects(other.describeVerifiedRequest(handle), /Verified authority session is unavailable/);
+      await assert.rejects(session.describeVerifiedRequest(structuredClone(handle)), /Verified authority session is unavailable/);
+      await other.recoverVerifiedRequest();
+      claims.nonce = "synthetic-replacement"; compact = signedArtifact();
+      await assert.rejects(session.verifyRequest(challenge));
+      assert.equal(peer.requests.filter((request: any) => request.method === "POST" && JSON.parse(request.raw.toString()).command === "START_USE").length, 1);
+      assert.equal(peer.requests.filter((request: any) => request.method === "GET").length, 3);
+    } finally { first?.close(); session?.close(); other?.close(); selected.close(); transport.close(); await peer.close(); }
+  });
+  await check("C7-NATIVE-PRIVACY holds export exact request while erasure and hold release minimize it", async () => {
+    const held = await makeOriginal(), ordinary = await makeOriginal();
+    await journal.verifyAuthorityRequest(held.command.command_id, held.artifact(), context, verifier);
+    await journal.verifyAuthorityRequest(ordinary.command.command_id, ordinary.artifact(), context, verifier);
+    const restoreSnapshot = await ordinary.row();
+    const privacySnapshot = await postgres("rifare_operation_privacy_subject").select("*");
+    let heldRow = await held.row();
+    assert.equal(await journal.setPrivacyHold(customer.id, heldRow.id, heldRow.revision, true, privacyActor), true);
+    const exported = await journal.exportPrivacySubject(customer.id, privacyActor);
+    assert.ok(exported.find(row => row.id === heldRow.id)?.request_bytes);
+    await journal.erasePrivacySubject(customer.id, privacyActor);
+    heldRow = await held.row(); const erased = await ordinary.row();
+    assert.ok(heldRow.request_bytes); assert.equal(erased.request_bytes, null); assert.equal(erased.request_nonce, null);
+    await assert.rejects(journal.recoverVerifiedAuthorityRequest(held.command.command_id, context, verifier));
+    assert.equal(await journal.setPrivacyHold(customer.id, heldRow.id, heldRow.revision, false, privacyActor), true);
+    const released = await held.row();
+    for (const column of ["request_bytes", "request_digest", "request_context_digest", "request_nonce", "request_observed_at", "request_expires_at"]) {
+      assert.equal(released[column], null); assert.equal(erased[column], null);
+    }
+    // Recreate a paused old checkpoint, then apply current outside erasure facts
+    // before any operation can be served from that restored checkpoint.
+    await postgres("rifare_operation").where({ id: restoreSnapshot.id }).update(restoreSnapshot);
+    await postgres.transaction(async tx => {
+      await tx("rifare_operation_privacy_subject").delete(); await tx("rifare_operation_privacy_subject").insert(privacySnapshot);
+    });
+    await journal.reconcilePrivacyRestore([], [customer.id], privacyActor);
+    assert.equal((await ordinary.row()).request_bytes, null);
+    await assert.rejects(journal.recoverVerifiedAuthorityRequest(ordinary.command.command_id, context, verifier));
+    // A second paused restore receives the installation's current uninstall fact.
+    await postgres("rifare_operation").where({ id: restoreSnapshot.id }).update(restoreSnapshot);
+    await journal.reconcilePrivacyRestore([], [], privacyActor, { installationUninstalled: true });
+    assert.equal((await ordinary.row()).request_bytes, null);
+    await assert.rejects(journal.recoverVerifiedAuthorityRequest(ordinary.command.command_id, context, verifier));
+  });
+  verifier.close();
+  console.log(JSON.stringify({ result: "pass", checks, count: checks.length,
+    scope: "native-postgres-selected-request-retention", connected_qualified: false, execution_authorized: false }));
+}

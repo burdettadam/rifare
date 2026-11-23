@@ -25,7 +25,8 @@
     "@medusajs/telemetry": "2.23.0",
     "cookie": "2.0.2",
     "openid-client": "6.9.1",
-    "safe-stable-stringify": "2.5.0"
+    "safe-stable-stringify": "2.5.0",
+    "jose": "6.2.18"
   },
   "devDependencies": {
     "@swc/core": "1.16.22",

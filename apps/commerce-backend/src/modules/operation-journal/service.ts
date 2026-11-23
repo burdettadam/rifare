@@ -8,6 +8,8 @@ import { lockCartOwner, readLockedCartFacts } from "./cart-facts";
 import { parseOriginalCommand, requireCommandCartMatch } from "./command";
 import { nativeAuthorityStart } from "./authority-start";
 import { authorityAdapters, openNativeAuthoritySession } from "./authority-sender";
+import { createPinnedRequestVerifier, PinnedRequestVerifier } from "./request-verifier";
+import { openVerifiedAuthoritySession } from "./request-session";
 import { configure } from "safe-stable-stringify";
 import {
   eraseJournalSubject, exportJournalSubject, journalSubjectIsSuppressed, minimizedOperationFields,
@@ -26,7 +28,8 @@ const historyColumns = [...statusColumns, "cart_id", "actor_digest", "command_di
   "privacy_hold", "first_observation_digest", "first_observed_at", "command_bytes",
   "start_owner_digest", "start_claimed_at", "start_command_bytes", "start_command_digest",
   "start_correlation", "store_id", "start_response_bytes", "start_response_digest", "start_response_observed_at",
-  "challenge_fingerprint"];
+  "challenge_fingerprint", "request_bytes", "request_digest", "request_context_digest", "request_nonce",
+  "request_observed_at", "request_expires_at"];
 type JournalConfiguration = ReturnType<typeof journalConfiguration>;
 type Merchant = NonNullable<ReturnType<typeof cartContextConfig>>;
 type JournalRow = {
@@ -38,8 +41,13 @@ type JournalRow = {
   start_correlation: string | null; store_id: string;
   start_response_bytes: string | null; start_response_digest: string | null;
   start_response_observed_at: Date | null; challenge_fingerprint: string | null;
+  request_bytes: string | null; request_digest: string | null; request_context_digest: string | null;
+  request_nonce: string | null; request_observed_at: Date | null; request_expires_at: Date | null;
 };
 const conflict = () => new MedusaError(MedusaError.Types.CONFLICT, "Original commerce command unavailable");
+const verifyRequest = PinnedRequestVerifier.prototype.verify;
+const describeRequest = PinnedRequestVerifier.prototype.describe;
+const signalAborted = Object.getOwnPropertyDescriptor(AbortSignal.prototype, "aborted")!.get!;
 
 export default class OperationJournalService {
   private readonly postgres: Postgres;
@@ -56,6 +64,91 @@ export default class OperationJournalService {
   async createAuthorityTransport(configuration: unknown) {
     const { wire } = await authorityAdapters();
     return new wire.PublicDelegatedUseClient(configuration);
+  }
+
+  /** Internal server construction. Trust enrollment is never customer input. */
+  async createAuthorityRequestVerifier(configuration: Uint8Array) {
+    return createPinnedRequestVerifier(configuration);
+  }
+
+  async openVerifiedAuthoritySession(input: Uint8Array, descriptor: Uint8Array, context: AdmissionContext,
+    transport: unknown, verifier: unknown) {
+    return openVerifiedAuthoritySession(this, input, descriptor, context, transport, verifier);
+  }
+
+  /** Signature verification records evidence only. No approval or effect occurs. */
+  async verifyAuthorityRequest(commandId: string, input: Uint8Array, context: AdmissionContext, verifier: unknown, signal?: AbortSignal) {
+    if (!(verifier instanceof PinnedRequestVerifier) || !(input instanceof Uint8Array) ||
+        !input.byteLength || input.byteLength > 65536) throw conflict();
+    const detached = Buffer.from(input);
+    const active = () => { if (signal && signalAborted.call(signal)) throw conflict(); };
+    active();
+    const result = await this.withCurrentOriginal(commandId, context, async (tx, row, configuration) => {
+      if (row.state !== "awaiting_authority" || !row.start_command_bytes || !row.start_correlation ||
+          !row.start_response_bytes || !row.start_response_digest) throw conflict();
+      const { codec } = await authorityAdapters();
+      const original = codec.encodeDelegatedCommand(Buffer.from(row.start_command_bytes));
+      if (original.original_command_id !== row.original_command_uuid || original.command_digest !== row.start_command_digest ||
+          original.canonical_json !== row.start_command_bytes || row.start_response_digest !==
+          "sha256:" + createHash("sha256").update(row.start_response_bytes).digest("hex")) throw conflict();
+      const bound = codec.bindDelegatedResponse(original.request, Buffer.from(row.start_response_bytes));
+      if (bound.response.result.kind !== "CHALLENGE") throw conflict();
+      const challenge = bound.response.result;
+      const correlation = JSON.parse(row.start_correlation);
+      const fingerprint = factsDigest({ profile: "urn:rifare:medusa-authority-challenge:v1", correlation,
+        challenge_id: challenge.challenge_id });
+      if (fingerprint !== row.challenge_fingerprint) throw conflict();
+      const binding = Buffer.from(stringify({ ...correlation, challenge_id: challenge.challenge_id,
+        created_at: challenge.created_at, expires_at: challenge.expires_at })!);
+      const originalCommand = parseOriginalCommand(Buffer.from(row.command_bytes));
+      requireCommandCartMatch(originalCommand, await readLockedCartFacts(tx, row.cart_id, configuration.merchant, configuration.verifiedContext));
+      const before = await requestClock(tx);
+      if (row.request_observed_at && before.getTime() < row.request_observed_at.getTime()) throw conflict();
+      const handle = await verifyRequest.call(verifier, detached, binding, before.getTime());
+      const verified = describeRequest.call(verifier, handle);
+      active();
+      requireCommandCartMatch(originalCommand, await readLockedCartFacts(tx, row.cart_id, configuration.merchant, configuration.verifiedContext));
+      const observed = await requestClock(tx);
+      if (observed.getTime() < verified.observed_at || observed.getTime() >= verified.expires_at * 1000) throw conflict();
+      describeRequest.call(verifier, handle);
+      active();
+      if (row.request_bytes) {
+        if (row.request_bytes !== verified.compact_jws || row.request_digest !== verified.digest ||
+            row.request_context_digest !== verified.verification_context_digest || row.request_nonce !== verified.nonce ||
+            row.request_expires_at?.getTime() !== verified.expires_at * 1000) throw conflict();
+        return { verification: handle, request_digest: row.request_digest, first_observed_at: row.request_observed_at!,
+          request_expires_at: row.request_expires_at! };
+      }
+      const expires = new Date(verified.expires_at * 1000);
+      const [saved] = await tx(operations).where(revisionFence(row)).whereNull("request_bytes").update({
+        request_bytes: verified.compact_jws, request_digest: verified.digest, request_context_digest: verified.verification_context_digest,
+        request_nonce: verified.nonce, request_observed_at: observed, request_expires_at: expires,
+        revision: row.revision + 1, updated_at: tx.fn.now(),
+      }).returning("id");
+      if (!saved) throw conflict();
+      // Closing trust during the awaited write rolls the entire tuple back.
+      describeRequest.call(verifier, handle);
+      active();
+      return { verification: handle, request_digest: verified.digest as string, first_observed_at: observed,
+        request_expires_at: expires };
+    });
+    describeRequest.call(verifier, result.verification);
+    active();
+    await this.withCurrentOriginal(commandId, context, async (tx, row) => {
+      const current = (await requestClock(tx)).getTime();
+      if (row.request_digest !== result.request_digest || row.request_observed_at?.getTime() !== result.first_observed_at.getTime() ||
+          current < result.first_observed_at.getTime() || current >= result.request_expires_at.getTime()) throw conflict();
+    });
+    describeRequest.call(verifier, result.verification);
+    active();
+    return Object.freeze(result);
+  }
+
+  async recoverVerifiedAuthorityRequest(commandId: string, context: AdmissionContext, verifier: unknown) {
+    const bytes = await this.withCurrentOriginal(commandId, context, async (_tx, row) => {
+      if (!row.request_bytes) throw conflict(); return Buffer.from(row.request_bytes);
+    });
+    return this.verifyAuthorityRequest(commandId, bytes, context, verifier);
   }
 
   /** Internal entry point. The caller supplies framework-verified request context. */
@@ -407,4 +500,10 @@ function requireAwaitingRevision(row: JournalRow, expectedRevision: number) {
 
 function revisionFence(row: JournalRow) {
   return { id: row.id, revision: row.revision, state: "awaiting_authority" };
+}
+
+async function requestClock(transaction: Postgres): Promise<Date> {
+  const value = (await transaction.raw("select clock_timestamp() as now")).rows[0]?.now;
+  if (!(value instanceof Date) || !Number.isFinite(value.getTime())) throw conflict();
+  return value;
 }

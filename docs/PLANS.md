@@ -215,6 +215,18 @@ A caller's verification assertion or a challenge UUID cannot supply that authori
 The [C6 work record](../work/records/RCG-4B-C6.md) records exact source and
 compiled evidence, independent reviews and the remaining connected qualification.
 
+**RCG-4B-C7 is implemented and independently reviewed locally** under
+[ADR-0085](decisions/0085-native-signed-authorization-request.md). A separate native
+session composes C6 retrieval with pinned ES256 request verification and immutable
+PostgreSQL retention for the retained original. First nonce, bytes, context and
+observation time survive retries and recovery; stale ownership, changed requests,
+expired observations and privacy suppression refuse use. The compiled consumer,
+populated upgrade and whole-database restore reconciliation passed locally.
+The [C7 record](../work/records/RCG-4B-C7.md) preserves exact evidence and reviews.
+Proof submission, presentation verification, FINALIZE and final commerce authority
+remain unimplemented in this slice; their qualification cannot be inferred from
+a verified request. Provider trust enrollment and connected qualification remain open.
+
 The full isolated **RCG-5 cross-service journey** and connected **RCG-6 profile**
 follow those bounded integrations. Preserve original recovery and Rifare's
 execution, budget, reservation and business-idempotency ownership. Reuse the
