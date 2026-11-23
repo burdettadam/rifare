@@ -2,6 +2,30 @@
 
 Status: assigned; implementation and qualification not yet performed.
 
+## November 23 implementation resumption
+
+Resume from integrated development `8cd2a09fa444b53c0276ce4492ded49b43846bba`
+after COMMERCE-OPERATION-01's native PostgreSQL, concurrency, privacy and
+restored-database qualification and independent composition review.
+The refreshed provider pin is Marty UI
+`169ba94680653a7235319498f5bff2f6da221515`, whose
+`rust/services/delegated-authority/USE_HTTP.md` retains the optional public
+managed-machine contract. Deployment and exact caller enrollment evidence
+remain with the provider worker.
+
+Root owns integration and independent expected behavior on the existing
+`rifare-operation-journal` linked checkout, now on the resumed
+`feat/rcg4b-public-caller` branch. A separate implementation writer owns only
+the new public transport and wire helper on `impl/medusa-public-caller`
+in `rifare-public-caller-impl`. Retire that implementation checkout after
+integration and preservation of its checkpoint and evidence.
+
+Preserve the internal transport bytes and behavior. Root must connect the public
+adapter to Medusa's original-operation owner and qualify native admission,
+currentness, uncertainty and recovery before calling C6 implemented. The
+standalone wire adapter is an implementation component of this assignment.
+Protected commerce effects stay gated through this assignment.
+
 **Target composition update:** [ADR-0081](0081-upstream-commerce-engine.md) and
 [ADR-0083](0083-medusa-cart-context.md) supersede the SQLite-specific composition
 below. Retain the public transport/request-artifact contracts, but connect them

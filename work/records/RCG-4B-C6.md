@@ -1,6 +1,14 @@
 # RCG-4B-C6 — Public managed-machine command and request handoff
 
 State: assigned; no implementation, test execution, independent review or publication claim yet.
+
+Resumed November 23 from integrated `8cd2a09` on
+`feat/rcg4b-public-caller`. Root owns tests, native composition and integration.
+The public transport implementation writer is assigned
+`impl/medusa-public-caller` in `rifare-public-caller-impl`, to be retired
+after integration and checkpoint preservation. Provider source is refreshed to
+`169ba94680653a7235319498f5bff2f6da221515`. Qualified endpoint and enrolled
+caller evidence remain external prerequisites owned by the provider worker.
 Base: `c88799bdd0d3b9211be7f8dbf1d04cb7104de1c0`.
 Branch: `feat/rcg4b-public-caller`.
 Assignment: [ADR-0080](../../docs/decisions/0080-public-managed-machine-caller.md).
