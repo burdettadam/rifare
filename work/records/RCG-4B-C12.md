@@ -417,3 +417,10 @@ connection through the installed Knex driver's unchanged credential settings to
 observe PostgreSQL's role-login refusal,then separately requires the installed pool
 and actual native Cart method to refuse. The role-login fault must first commit a
 stale Cart update before those unchanged refusal assertions fail.
+
+The58d3dba direct installed-driver probe observed PostgreSQL SQLSTATE28000 and
+`role ... is not permitted to log in`;the pool propagated that same database error
+rather than wrapping it as a timeout. No pass is credited because the pool oracle
+recognized only its other valid bounded-timeout form. The final correction accepts
+only these two concrete retired-pool refusal forms and requires the actual native
+Cart method to reject by the same predicate. The role-login fault oracle is unchanged.

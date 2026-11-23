@@ -91,11 +91,14 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
         // Under the deliberate fault, preserve the concrete stale effect before
         // the unchanged credential and pool-refusal assertions fail.
         if (pooled) await carts.updateCarts(task.cart_id, { metadata: { c12_generation_probe: "stale-reconnected" } });
-        assert.ok(directError && (directError.code === "28000" || /not permitted to log in/i.test(directError.message)),
+        const credentialRefused = (error: any) => error && (error.code === "28000" || /not permitted to log in/i.test(error.message));
+        const poolRefused = (error: any) => credentialRefused(error) || error &&
+          (error.name === "KnexTimeoutError" || /acquiring a connection/i.test(error.message));
+        assert.ok(credentialRefused(directError),
           "PostgreSQL must reject the retired credential");
-        assert.ok(poolError && (poolError.name === "KnexTimeoutError" || /acquiring a connection/i.test(poolError.message)),
+        assert.ok(poolRefused(poolError),
           "The installed native pool must refuse retired credential acquisition");
-        await assert.rejects(carts.updateCarts(task.cart_id, { metadata: { c12_generation_probe: "stale-reconnected" } }));
+        await assert.rejects(carts.updateCarts(task.cart_id, { metadata: { c12_generation_probe: "stale-reconnected" } }), poolRefused);
         assert.deepEqual(calls, Object.fromEntries(names.map(name => [name, 0])));
         console.log("C12_NATIVE_GENERATION_RECONNECT=" + JSON.stringify({ active_pool_reconnected: true,
           backend_changed: true, retired_pool_reconnect_refused: true, native_system_calls: calls }));
