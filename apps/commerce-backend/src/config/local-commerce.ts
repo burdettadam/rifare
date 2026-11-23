@@ -1,3 +1,41 @@
+import { createHash } from "node:crypto";
+
+// ADR-0089: one upstream ProductList call-site correction, not a replacement
+// dashboard. Remove when a fixed upstream release is selected and requalified.
+const productModule = "/@medusajs/dashboard/dist/product-list-SC2CY4XX.mjs";
+const productModuleDigest = "3aba92f16ae523ec7ccbdaa44dc1787f066cf1771439420da9e7599816fd3e5c";
+const marker = 'widgetsZonePrefix: "product.list",';
+
+export function adminBuildConfig() {
+  let corrected = false;
+  return { plugins: [{
+    name: "rifare-static-admin-react",
+    // Keep React and Vite8 OXC JSX in agreement for a static build even when
+    // the backend uses its permitted local test profile. Serving/HMR is unchanged.
+    config: (_config: unknown, { command }: { command: string }) => command === "build" ? {
+      define: { "process.env.NODE_ENV": JSON.stringify("production") },
+      oxc: { jsx: { development: false } },
+    } : undefined,
+  }, {
+    name: "rifare-medusa-product-list-outlet",
+    apply: "build" as const,
+    enforce: "pre" as const,
+    transform(source: string, id: string) {
+      if (!id.split("?")[0].replaceAll("\\", "/").endsWith(productModule)) return null;
+      if (createHash("sha256").update(source).digest("hex") !== productModuleDigest || source.split(marker).length !== 2) {
+        throw new Error("RIFARE_ADMIN_PRODUCT_MODULE_UNQUALIFIED");
+      }
+      corrected = true;
+      // Each unchanged native table already owns the route Outlet. Suppress only
+      // the outer composer's second Outlet; preserve both table/permission branches.
+      return { code: source.replace(marker, `${marker}\n      hasOutlet: false,`), map: null };
+    },
+    buildEnd(error?: Error) {
+      if (!error && !corrected) throw new Error("RIFARE_ADMIN_PRODUCT_MODULE_NOT_OBSERVED");
+    },
+  }] };
+}
+
 type Environment = Readonly<Record<string, string | undefined>>;
 
 const loopback = new Set(["127.0.0.1", "[::1]"]);
@@ -104,7 +142,7 @@ export function localCommerceConfig(env: Environment) {
   }
   const identity = externalIdentityConfig(env, web.origin);
   return {
-    admin: { disable: env.DISABLE_MEDUSA_ADMIN === "true", backendUrl: "/" },
+    admin: { disable: env.DISABLE_MEDUSA_ADMIN === "true", backendUrl: "/", vite: adminBuildConfig },
     plugins: [{ resolve: "@medusajs/cloud", options: { disabled: true } }],
     projectConfig: {
       databaseUrl: database.href,

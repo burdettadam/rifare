@@ -50,3 +50,29 @@ The owned runtime keeps the two failed generated Admin bundles outside its serve
 public tree for review; both are task-owned rebuildable data and retire with this
 runtime. PostgreSQL and the loopback backend are task-owned and currently active.
 No exact-candidate or completed browser qualification is claimed yet.
+
+## Implementation checkpoint
+
+The builder requires the actual compiled config and all referenced local Admin entry
+assets before advertising standalone commands. Explicit disabled Admin still preserves
+the backend-only profile and exact lock. Static React runtime and OXC JSX production
+selection agree; backend production mode remains refused. The pinned native ProductList
+build hook verifies its input hash/one marker and refuses an absent target. Installed
+package bytes, permission checks and both native table branches remain unchanged.
+
+A relocated exploratory browser now observes exactly one visible/accessibility-exposed
+native create-product dialog and one form. Its normal Save-as-draft action persisted
+one native product and default un-managed variant, confirmed through current native
+Admin API. A diagnostic predicate used an unavailable URL global after the click;
+we reconciled the existing product instead of repeating that write. The committed
+browser helper avoids that setup error and uses a fresh isolated context, actual
+operator login/catalog/deep-link/logout, valid synthetic customer JWT separation and
+all selected public holds. A native fixture independently checks persisted catalog
+and unchanged protected effect tables. Those complete fixed checks remain pending.
+
+Five static delivery regression cases and eight retained config cases pass; no-emit
+passed after the native fixture was added. The earlier failing guard and duplicate
+modal observations remain preserved. Root remains sole writer; one primary/zero linked
+checkouts. The temporary standalone runtime, owned loopback backend and PostgreSQL
+remain active for fixed qualification, with generated failed bundles owned for the
+same retirement event. No production, provider authentication or distribution claim.

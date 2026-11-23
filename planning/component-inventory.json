@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "id": "rifare-source-inventory",
-  "revision": 80,
+  "revision": 81,
   "status": "proposed",
   "components": [
     {
@@ -1797,7 +1797,10 @@
         "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123133906.ts",
         "apps/commerce-backend/src/scripts/native-payment-fixture.ts",
         "apps/commerce-backend/src/scripts/verify-payment-association.ts",
-        "apps/commerce-backend/src/scripts/verify-payment-restore.ts"
+        "apps/commerce-backend/src/scripts/verify-payment-restore.ts",
+        "apps/commerce-backend/src/scripts/verify-standalone-admin.ts",
+        "apps/commerce-backend/tools/verify-standalone-admin.mjs",
+        "tests/development/commerce-admin-build.test.mts"
       ],
       "notices": []
     },
