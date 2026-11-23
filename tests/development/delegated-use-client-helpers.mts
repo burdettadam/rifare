@@ -30,6 +30,7 @@ let generated: { credentials: Credentials; runtime: Record<string, string> } | u
 function identities() {
   if (generated) return generated;
   const directory = mkdtempSync(join(tmpdir(), 'rifare-use-tls-'));
+  let stage = 'setup';
   try {
     let executable: string | undefined;
     const executableName = process.platform === 'win32' ? 'openssl.exe' : 'openssl';
@@ -38,8 +39,11 @@ function identities() {
       catch { /* Only an available local executable can generate this fixture. */ }
     }
     if (!executable) throw new Error('TLS_FIXTURE_GENERATOR_UNAVAILABLE');
-    const run = (...args: string[]) => execFileSync(executable!, args, { cwd: directory,
-      timeout: 5000, maxBuffer: 32768, stdio: ['ignore', 'pipe', 'pipe'] });
+    const run = (...args: string[]) => {
+      stage = args[0];
+      return execFileSync(executable!, args, { cwd: directory,
+        timeout: 5000, maxBuffer: 32768, stdio: ['ignore', 'pipe', 'pipe'] });
+    };
     const runtime = { node: process.versions.node, node_openssl: process.versions.openssl,
       openssl_path: executable, openssl_version: run('version').toString('utf8').trim(),
       openssl_sha256: createHash('sha256').update(readFileSync(executable)).digest('hex') };
@@ -71,7 +75,12 @@ function identities() {
       ambiguousClient: leaf('ambiguous-client', 'URI:' + WORKLOAD_URI + ',URI:spiffe://rifare.test/other', 'clientAuth'),
       noUriClient: leaf('no-uri-client', 'DNS:localhost', 'clientAuth') } };
     return generated;
-  } catch { throw new Error('TLS_FIXTURE_GENERATION_FAILED'); }
+  } catch (error) {
+    const failure = error as { status?: number; stderr?: Buffer };
+    const configuration = failure.stderr?.toString().includes('config') ? 'CONFIG' : 'OTHER';
+    throw new Error('TLS_FIXTURE_GENERATION_FAILED_' + stage.toUpperCase() + '_' +
+      (typeof failure.status === 'number' ? failure.status : 'UNKNOWN') + '_' + configuration);
+  }
   finally { rmSync(directory, { recursive: true, force: true }); }
 }
 

@@ -57,10 +57,12 @@ export async function openNativeAuthoritySession(
       !boundTo(JSON.parse(retained.correlation))) throw unavailable();
   const recoveryCommand = codec.createDelegatedRecovery(encoded.request).request;
   let closed = false;
+  const cancellation = new AbortController();
   const guard = () => { if (closed) throw unavailable(); };
   const checkRecovery = async () => {
     guard();
     const current = await recovery(commandId, capturedContext);
+    guard();
     if (!current.authority_start || current.authority_start.command_bytes !== retained.command_bytes ||
         current.authority_start.command_digest !== retained.command_digest ||
         current.authority_start.correlation !== retained.correlation) throw unavailable();
@@ -77,22 +79,23 @@ export async function openNativeAuthoritySession(
       const response = await send(encoded.request, async () => {
         guard();
         await claim(commandId, initialTicket, capturedContext);
-      }, guard);
+        guard();
+      }, guard, cancellation.signal);
       await checkRecovery();
       return response;
     },
     async recover(): Promise<unknown> {
       await checkRecovery();
-      const response = await recover(encoded.request, recoveryCommand, checkRecovery, guard);
+      const response = await recover(encoded.request, recoveryCommand, checkRecovery, guard, cancellation.signal);
       await checkRecovery();
       return response;
     },
     async requestArtifact(challenge: unknown): Promise<unknown> {
       await checkRecovery();
-      const artifact = await fetchRequest(encoded.request, challenge, checkRecovery, guard);
+      const artifact = await fetchRequest(encoded.request, challenge, checkRecovery, guard, cancellation.signal);
       await checkRecovery();
       return artifact;
     },
-    close() { closed = true; ticket = null; },
+    close() { closed = true; ticket = null; cancellation.abort(); },
   });
 }

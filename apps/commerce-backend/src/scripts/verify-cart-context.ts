@@ -513,6 +513,67 @@ export default async function verifyCartContext({ container }: ExecArgs) {
         assert.equal((bound as { response: { recovered: boolean } }).response.recovered, false);
         session.close(); resumed.close();
         check("native-authority-session-retains-before-tls-and-recovers-only-the-original", () => {});
+
+        const closeCommand = { ...command, command_id: randomUUID() };
+        const closing = await journal.openAuthoritySession(Buffer.from(JSON.stringify(closeCommand)),
+          descriptorBytes, admission, transport);
+        const blocker = await postgres.transaction();
+        let pendingClose: Promise<unknown> | undefined;
+        try {
+          const blockerPid = (await blocker.raw("select pg_backend_pid() as pid")).rows[0].pid;
+          await blocker("user").where({ id: operator.id }).forUpdate().first("id");
+          const count = peer.requests.length;
+          const applicationBytes = peer.applicationBytes;
+          pendingClose = closing.start().then(() => "unexpected-success", error => error);
+          let blocked = false;
+          const deadline = Date.now() + 5000;
+          while (!blocked && Date.now() < deadline) {
+            const { rows } = await postgres.raw(
+              "select exists(select 1 from pg_stat_activity where ?::integer = any(pg_blocking_pids(pid))) as blocked",
+              [blockerPid]);
+            blocked = rows[0].blocked;
+            if (!blocked) await delay(10);
+          }
+          assert.equal(blocked, true, "The actual native post-TLS claim must wait on the held owner row");
+          closing.close();
+          await blocker.commit();
+          assert.ok(await pendingClose instanceof Error);
+          const claimDeadline = Date.now() + 5000;
+          let spent = false;
+          while (!spent && Date.now() < claimDeadline) {
+            const row = await postgres("rifare_operation").where({ original_command_uuid: closeCommand.command_id }).first();
+            spent = row.start_claimed_at !== null;
+            if (!spent) await delay(10);
+          }
+          assert.equal(spent, true);
+          assert.equal(peer.requests.length, count);
+          assert.equal(peer.applicationBytes, applicationBytes);
+          check("native-authority-session-close-during-database-admission-sends-no-bytes", () => {});
+        } finally {
+          closing.close();
+          if (!blocker.isCompleted()) await blocker.rollback();
+          await pendingClose;
+        }
+
+        const staleCommand = { ...command, command_id: randomUUID() };
+        const staleSession = await journal.openAuthoritySession(Buffer.from(JSON.stringify(staleCommand)),
+          descriptorBytes, admission, transport);
+        peer.holdHandshake();
+        const countBeforeStale = peer.requests.length;
+        const staleResult = staleSession.start().then(() => "unexpected-success", error => error);
+        try {
+          await peer.handshakeEntered;
+          const line = await postgres("cart_line_item").where({ cart_id: command.cart_id }).first("id", "quantity");
+          await carts.updateLineItems(line.id, { quantity: Number(line.quantity) + 1 });
+          try {
+            peer.releaseHandshake();
+            assert.ok(await staleResult instanceof Error);
+            assert.equal(peer.requests.length, countBeforeStale);
+          } finally { await carts.updateLineItems(line.id, { quantity: Number(line.quantity) }); }
+          await assert.rejects(staleSession.start(), /Authority sender is unavailable/);
+          assert.equal(peer.requests.length, countBeforeStale);
+          check("native-authority-cart-change-during-tls-refuses-and-consumes-original-opportunity", () => {});
+        } finally { staleSession.close(); peer.releaseHandshake(); await staleResult; }
       } finally { transport.close(); await peer.close(); }
 
       const changed = Buffer.from(JSON.stringify({ ...command, payable_minor_units: "0" }));
