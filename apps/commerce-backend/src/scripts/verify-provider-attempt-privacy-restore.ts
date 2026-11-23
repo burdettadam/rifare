@@ -19,6 +19,7 @@ export default async function verifyProviderAttemptPrivacyRestore({ container }:
   }
   const journal = container.resolve<OperationJournalService>(operationJournalModule);
   const postgres = container.resolve(ContainerRegistrationKeys.PG_CONNECTION);
+  assert.equal((await postgres.raw("select has_function_privilege('public','public.rifare_require_native_execution_payment(text,text,text)','execute') as allowed")).rows[0].allowed, false);
   const selected = () => postgres("rifare_operation").where({ original_command_uuid: fixture.original_id }).first();
   const before = await selected();
   assert.ok(before?.execution_payment_attempted_at instanceof Date);

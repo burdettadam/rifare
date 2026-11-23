@@ -512,3 +512,13 @@ privacy export must contain the durable attempt time; erasure under hold must ke
 it as unknown-effect evidence; hold release must minimize personal/payment fields
 without reopening execution; and actual whole-PostgreSQL restores must reconcile
 current erasure or uninstall facts idempotently while retaining the attempt marker.
+
+Both independent roles cleared `bc30fdc` for that bounded attempt-marker privacy
+and whole-database restore scope. The next source closes the separate fail-closed
+transfer omission: the authorized privacy owner may import a complete execution
+refusal identity into a receiving installation only as a retired, minimized row.
+Owner, seal, payment-handle, optional order and attempted-effect identities must be
+complete and exact; legacy or partial records cannot downgrade them. Import creates
+no worker, generation, lease, native order binding or provider permission. A fresh
+destination rehearsal, repeated import, collision cases and an attempt-field
+omission fault remain required before this transfer slice can be credited.
