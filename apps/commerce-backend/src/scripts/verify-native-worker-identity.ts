@@ -3,7 +3,7 @@ import { randomBytes, randomUUID } from "node:crypto";
 import { spawn } from "node:child_process";
 import { writeFileSync } from "node:fs";
 import type { ExecArgs } from "@medusajs/framework/types";
-import { ContainerRegistrationKeys, Modules } from "@medusajs/framework/utils";
+import { ContainerRegistrationKeys, Modules, ModulesSdkUtils } from "@medusajs/framework/utils";
 
 /** C12 mechanism proof only. It is not the journal execution owner or a final
  * fence. The unguarded baseline demonstrates a stale native write. Optional
@@ -116,7 +116,46 @@ export default async function verifyNativeWorkerIdentity({ container }: ExecArgs
     authenticated_role: roles[0].role, native_backend_count: new Set(audit.map(row => row.backend_pid)).size,
     forged_application_name_and_metadata_did_not_change_identity: true, role_and_control_forgery_refused: true,
     native_payment_service_models_migrations_and_system_provider_unchanged: true }));
+  if (guarded) {
+    // Separate authenticated SQL transactions isolate the trigger lock ordering
+    // proof from native-module propagation (proved above). Observe the real
+    // blocking relationship rather than accepting a timer as evidence.
+    const url = new URL(process.env.DATABASE_URL!); url.username = roles[0].role; url.password = roles[0].password;
+    const workerPool = ModulesSdkUtils.createPgConnection({ clientUrl: url.href, pool: { min: 0, max: 1 } });
+    const holder = await workerPool.transaction(), revoker = await postgres.transaction();
+    let pending: Promise<unknown> | undefined;
+    try {
+      const holderPid = (await holder.raw("select pg_backend_pid() as pid")).rows[0].pid;
+      const revokerPid = (await revoker.raw("select pg_backend_pid() as pid")).rows[0].pid;
+      assert.notEqual(holderPid, revokerPid);
+      await revoker.raw("set local statement_timeout='5s'");
+      await holder("cart").where({ id: original.id }).update({ email: "ordered-c12@example.invalid" });
+      let settled = false;
+      pending = revoker("rifare_c12_identity_control").where({ id: 1 })
+        .update({ active_role: roles[1].role, generation: 2 }).then(value => { settled = true; return value; });
+      // Attach immediately so an unexpected timeout remains a reported failure.
+      pending.catch(() => undefined);
+      let observed = false;
+      const deadline = Date.now() + 3000;
+      while (Date.now() < deadline) {
+        const blockers = (await postgres.raw("select pg_blocking_pids(?) as blockers", [revokerPid])).rows[0].blockers;
+        if (blockers.includes(holderPid)) { observed = true; break; }
+        if (settled) break;
+        await new Promise(resolve => setTimeout(resolve, 20));
+      }
+      assert.ok(observed && !settled, "Revocation must wait on the actual native-write trigger transaction");
+      await holder.commit(); await pending; await revoker.commit();
+      console.log("C12_NATIVE_GUARD_ORDERING=" + JSON.stringify({ actual_blocker_observed: true, holder_pid: holderPid,
+        revoker_pid: revokerPid, revocation_committed_after_write_transaction: true }));
+    } finally {
+      if (!holder.isCompleted()) await holder.rollback();
+      if (!revoker.isCompleted()) await revoker.rollback();
+      if (pending) await pending.catch(() => undefined);
+      await workerPool.destroy();
+    }
+  } else {
   await postgres("rifare_c12_identity_control").where({ id: 1 }).update({ active_role: roles[1].role, generation: 2 });
+  }
   const successor = await run(1, "cart", "successor-c12@example.invalid"); assert.equal(successor.code, 0, successor.output);
   const successorAudit = await postgres("rifare_c12_identity_audit").where({ authenticated_role: roles[1].role });
   assert.ok(successorAudit.some(row => row.native_table === "cart"));
