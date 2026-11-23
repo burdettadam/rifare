@@ -69,3 +69,26 @@ C11 cache was retired,no installed native command was available and C host free 
 manifest,with valid EDB signatures. No service or shared-clock setting changed.
 One source dependency cache/primary is reused; no compiler output or extra checkout
 was allocated. This instance remains active for the assigned C12 mechanism work.
+
+
+## Authenticated worker baseline and supported provider component
+
+At baf22f2 actual authenticated role A propagated through two native backends and
+five native cart/payment tables. Role/session/control forgery failed. A distinct
+role B performed the successor native cart write. Resuming A then violated the
+unchanged stale-write refusal assertion: the meaningful baseline failed as expected.
+Private custody, source identity, database and raw logs remain in local evidence.
+This proves identity propagation, not generation enforcement or C12 qualification.
+
+Independent authority assessment selected a separately named supported Payment
+provider extension rather than the unsupported service override. The local-only
+fenced System adapter preserves pp_system_default and the C10 binding profile.
+Native System delegation is explicitly pinned by version/export/file hash; this
+private implementation path is not represented as a stable public API. Preparation
+generates opaque correlation bound to the native-created session. Authorization
+requires a database gate before delegation; that gate is not implemented yet, so
+absence refuses. Other actions refuse. Component tests observe actual native System
+calls and financial tables, without a permissive substitute gate. Full journal,
+early-write, visibility, recovery and connected qualification remain outstanding.
+Root remains sole writer in the one primary checkout; zero linked Rifare checkouts.
+The root-owned native PG instance is active for this next component run and C12.
