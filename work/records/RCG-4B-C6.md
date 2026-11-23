@@ -88,8 +88,25 @@ TypeScript passed and the synthetic triggers, function, cart and database
 container were retired.
 
 This experiment establishes a session-loss gap in that proposed fence. Root
-owns the next design and implementation of durable original-operation ownership
-and native writer enforcement through sender interruption and recovery.
-Qualified dispatch must cover all cart facts, access and privacy changes and
-the surviving-sender case before C6's atomic currentness claim can be made.
-The current wire component remains local and protected commerce effects held.
+owns durable original-operation admission and recovery. A subsequent independent
+requirement audit corrected the interpretation that C6 requires global native
+immutability through physical transmission. ADR-0080 requires preserved original
+admission and recovery plus refusal of native purchase changes during TLS.
+ADR-0084 places final synchronous currentness and payment equality at the
+subsequent Medusa commerce effect boundary.
+
+C6 will commit the original before network activity and perform a short
+serializable dispatch-admission transaction after authenticated TLS. That
+transaction rechecks live access, privacy, complete native facts and original
+eligibility and atomically claims the sole initial-send opportunity. After
+commit the transport sends captured bytes with no further caller callback,
+selection or asynchronous lookup. Currentness is established at that
+transaction's serialization point. The commit-to-send interval remains disclosed.
+Existing invocations remain recovery-only even when interruption precedes
+transmission. The public adapter's new explicit native-admission seam preserves
+the existing synchronous transport API and its refusal of asynchronous guards.
+
+The native session-fence experiments remain evidence about the stronger proposed
+mechanism and its failure after session loss. They do not replace the unresolved
+COMMERCE-AUTHORITY-01 final-effect controls. The current wire component remains
+local and protected commerce effects held.

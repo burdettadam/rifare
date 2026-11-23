@@ -273,3 +273,59 @@ test('PUBLIC-WIRE-ARTIFACT-STREAM bounds a chunked request artifact without a de
   await assert.rejects(client.fetchRequest(original.request, bound, () => {}));
   assert.equal(peer.requests.length, 2);
 }));
+
+test('PUBLIC-WIRE-NATIVE-ADMISSION runs after TLS and sends only captured bytes after commit', () => fixture(async (client, peer) => {
+  let guards = 0, admissions = 0;
+  const request = structuredClone(original.request);
+  const bound = await client.startAfterAdmission(request, async () => {
+    admissions++;
+    assert.equal(peer.requests.length, 0);
+    assert.equal(peer.applicationBytes, 0);
+    assert.equal(guards, 2);
+    request.command_id = 'aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee';
+  }, () => { guards++; });
+  assert.deepEqual(bound.response, claimOracle.challenge_response);
+  assert.equal(admissions, 1);
+  assert.equal(guards, 2, 'No caller callback may run after the committed admission returns');
+  assert.equal(peer.requests[0].raw.toString(), original.canonical_json);
+}));
+
+test('PUBLIC-WIRE-NATIVE-REFUSAL sends zero bytes when native admission fails', () => fixture(async (client, peer) => {
+  await assert.rejects(client.startAfterAdmission(original.request, async () => {
+    throw new Error('Synthetic native currentness refusal');
+  }, () => {}));
+  assert.equal(peer.requests.length, 0);
+  assert.equal(peer.applicationBytes, 0);
+}));
+
+test('PUBLIC-WIRE-NATIVE-CLOSE cannot resume transmission after closing during admission', () => fixture(async (client, peer) => {
+  let entered!: () => void, proceed!: () => void;
+  const entry = new Promise<void>(resolve => { entered = resolve; });
+  const release = new Promise<void>(resolve => { proceed = resolve; });
+  const pending = client.startAfterAdmission(original.request, async () => {
+    entered();
+    await release;
+  }, () => {});
+  const rejected = assert.rejects(pending);
+  await entry;
+  client.close();
+  proceed();
+  await rejected;
+  await new Promise(resolve => setTimeout(resolve, 10));
+  assert.equal(peer.requests.length, 0);
+  assert.equal(peer.applicationBytes, 0);
+}));
+
+test('PUBLIC-WIRE-NATIVE-HANDSHAKE cannot admit an original before TLS completes', () => fixture(async (client, peer) => {
+  peer.holdHandshake();
+  let admissions = 0;
+  const pending = client.startAfterAdmission(original.request, async () => { admissions++; }, () => {});
+  const rejected = assert.rejects(pending);
+  await peer.handshakeEntered;
+  assert.equal(admissions, 0);
+  client.close();
+  peer.releaseHandshake();
+  await rejected;
+  assert.equal(admissions, 0);
+  assert.equal(peer.requests.length, 0);
+}));
