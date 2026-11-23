@@ -3,7 +3,10 @@ import { randomBytes, randomUUID } from "node:crypto";
 import { setTimeout as delay } from "node:timers/promises";
 import type { ExecArgs } from "@medusajs/framework/types";
 import { ContainerRegistrationKeys } from "@medusajs/framework/utils";
-import { eraseJournalSubject, journalSubjectIsSuppressed, setJournalOperationHold } from "../modules/operation-journal/privacy";
+import {
+  eraseJournalSubject, exportJournalSubject, journalSubjectIsSuppressed,
+  restoreJournalRefusalIdentities, setJournalOperationHold, uninstallJournal,
+} from "../modules/operation-journal/privacy";
 
 export default async function verifyOperationPrivacy({ container }: ExecArgs) {
   if (process.env.NODE_ENV !== "test" || process.env.RIFARE_COMMERCE_VERIFY !== "disposable") {
@@ -44,6 +47,10 @@ export default async function verifyOperationPrivacy({ container }: ExecArgs) {
   assert.equal(retained.state, "retired");
   assert.equal(retained.command_bytes, "{}");
   assert.equal(retained.revision, 2);
+  const exported = await postgres.transaction(tx => exportJournalSubject(tx, scope, key));
+  assert.equal(exported.length, 1);
+  assert.equal(exported[0].id, held.id);
+  assert.equal(exported[0].command_bytes, "{}");
   assert.equal(minimized.state, "retired");
   assert.equal(minimized.customer_id, null);
   assert.equal(minimized.command_bytes, null);
@@ -95,5 +102,34 @@ export default async function verifyOperationPrivacy({ container }: ExecArgs) {
   } finally {
     if (!writer.isCompleted()) await writer.rollback();
   }
+  const fresh = () => ({ id: "rifop_" + randomUUID(), original_command_uuid: randomUUID(),
+    challenge_fingerprint: null });
+  const restored = fresh();
+  const same = { id: held.id, original_command_uuid: held.original_command_uuid, challenge_fingerprint: digest };
+  const importRecords = (records: Parameters<typeof restoreJournalRefusalIdentities>[3]) =>
+    postgres.transaction(tx => restoreJournalRefusalIdentities(tx, scope, key, records));
+  await importRecords([restored, same]);
+  await importRecords([restored, same]);
+  const imported = await operations().where({ id: restored.id }).first();
+  assert.equal(imported.state, "retired");
+  assert.equal(imported.command_bytes, null);
+  assert.equal(imported.customer_id, null);
+  await assert.rejects(importRecords([{ ...restored, ...{ command_bytes: "{}" } }]), /Invalid or conflicting/);
+  const first = { ...fresh(), original_command_uuid: "10000000-0000-0000-0000-000000000000" };
+  const conflicting = { ...fresh(), original_command_uuid: "20000000-0000-0000-0000-000000000000",
+    challenge_fingerprint: digest };
+  await assert.rejects(importRecords([first, conflicting]), /Invalid or conflicting/);
+  assert.equal(await operations().where({ id: first.id }).first(), undefined);
+
+  const outside = { ...fixtureOperation(), store_id: "store_other" };
+  await operations().insert(outside);
+  await postgres.transaction(tx => uninstallJournal(tx, scope, key));
+  await postgres.transaction(tx => uninstallJournal(tx, scope, key));
+  assert.equal((await operations().where({ id: unrelated.id }).first()).state, "retired");
+  assert.equal((await operations().where({ id: outside.id }).first()).state, "awaiting_authority");
+  assert.equal(await postgres.transaction(tx => journalSubjectIsSuppressed(tx, { ...scope, customer_id: "cus_unseen" }, key)), true);
+  assert.equal(await postgres.transaction(tx => journalSubjectIsSuppressed(tx, { ...scope, store_id: "store_other" }, key)), false);
+  await importRecords([restored]);
+  assert.equal(await postgres.transaction(tx => journalSubjectIsSuppressed(tx, scope, key)), true);
   console.log("RIFARE_OPERATION_PRIVACY_RESULT=pass");
 }

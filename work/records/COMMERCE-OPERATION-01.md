@@ -196,3 +196,26 @@ minimization and two independent PostgreSQL connections. PostgreSQL reported
 that a competing suppression check waited for the in-flight erasure, then
 the check saw suppression after commit. The disposable fixture was retired.
 Codex continues on the assigned linked checkout.
+
+## Export, uninstall and transfer checkpoint
+
+The internal privacy hooks now export retained subject rows under the same
+subject lock, including retired material under hold. An installation marker
+shares a lock with subject operations and records uninstall for the selected
+merchant/store. Uninstall retires that installation's held rows and minimizes
+its unheld rows. A later subject check remains suppressed even if the
+customer had no operations before uninstall.
+
+The trusted transfer owner can restore or import only the operation ID,
+original UUID and challenge fingerprint. The hook inserts retired tombstones.
+An exact repeat preserves the destination row and its current suppression.
+A conflicting UUID, operation ID or challenge aborts the enclosing transaction.
+Personal payloads are rejected. Admission and the owner wiring for these
+internal hooks are still open. Whole-database recovery requires reconciliation
+with current privacy markers before reopening any application traffic.
+
+On November 22, 2026 (America/Denver), the latest TypeScript check, migrations,
+and the native PostgreSQL privacy suite passed. The suite demonstrated
+held export, scoped uninstall, repeat import, conflict rollback, rejection
+of personal payloads and retained suppression after import. Both disposable
+fixtures were retired. Codex continues on the assigned checkout.
