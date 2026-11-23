@@ -72,3 +72,24 @@ public implementation is integrated and the actual tests pass.
 | Publication of implementation | Not done |
 
 No claim of functional support, provider qualification or formal acceptance is made by this assignment record.
+
+## Native fence interruption rehearsal
+
+At `52ef90d`, a disposable PostgreSQL statement trigger made a separate
+Medusa cart update wait on an exclusive advisory session lock. The owner
+completed loopback HTTP while PostgreSQL reported it idle with no transaction.
+Explicit release allowed the native update to commit.
+
+A second native worker's line-item insert also waited. Terminating only the
+fixture owner's identified database backend released that insert. The original
+JavaScript process then successfully emitted another HTTP request despite
+losing its database session. The native script asserts both observations.
+TypeScript passed and the synthetic triggers, function, cart and database
+container were retired.
+
+This experiment establishes a session-loss gap in that proposed fence. Root
+owns the next design and implementation of durable original-operation ownership
+and native writer enforcement through sender interruption and recovery.
+Qualified dispatch must cover all cart facts, access and privacy changes and
+the surviving-sender case before C6's atomic currentness claim can be made.
+The current wire component remains local and protected commerce effects held.

@@ -238,3 +238,38 @@ test('PUBLIC-WIRE-CAPACITY bounds pending exchanges and close terminates active 
   client.close();
   assert.deepEqual(await Promise.all(pending), Array(8).fill('PUBLIC_USE_UNAVAILABLE'));
 }));
+
+test('PUBLIC-WIRE-RESPONSE-BOUNDS refuses oversized headers, streaming bodies and truncated commands', async () => {
+  const faults = ['headers', 'stream', 'truncated'];
+  for (const fault of faults) await fixture(async (client, peer) => {
+    peer.setHandler((_request, response) => {
+      response.statusCode = 200;
+      if (fault === 'headers') {
+        response.setHeader('x-synthetic-padding', 'a'.repeat(20000));
+        response.end(JSON.stringify(claimOracle.challenge_response));
+      } else if (fault === 'stream') {
+        response.write('a'.repeat(40000));
+        response.end('b'.repeat(40000));
+      } else {
+        response.setHeader('content-length', '1000');
+        response.end('{}');
+      }
+    });
+    await assert.rejects(client.start(original.request, () => {}));
+    assert.equal(peer.requests.length, 1);
+  });
+});
+
+test('PUBLIC-WIRE-ARTIFACT-STREAM bounds a chunked request artifact without a declared length', () => fixture(async (client, peer) => {
+  const bound = await client.start(original.request, () => {});
+  peer.setHandler((_request, response) => {
+    response.statusCode = 200;
+    response.setHeader('content-type', 'application/oauth-authz-req+jwt');
+    response.setHeader('pragma', 'no-cache');
+    response.setHeader('x-content-type-options', 'nosniff');
+    response.write('a'.repeat(60000));
+    response.end('.' + 'b'.repeat(60000) + '.c');
+  });
+  await assert.rejects(client.fetchRequest(original.request, bound, () => {}));
+  assert.equal(peer.requests.length, 2);
+}));
