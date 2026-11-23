@@ -80,3 +80,28 @@ Require a fresh-browser native create-product/catalog journey and single accessi
 dialog, with a deliberate omission of this exact adjustment reproducing the unchanged
 failure. Static missing-entry fault remains separately required. Scope stays local
 packaged Admin delivery; other upstream features are not accepted by one journey.
+
+## Reported email/password failure promise
+
+The fixed browser's wrong-password request returned HTTP401 and rendered the native
+`Authentication failed` validation text, but also raised an uncaught page error with
+that message. A separate fresh-browser wrong-password-only reproduction confirms it.
+The native EmailPassLogin awaits `mutateAsync` with an onError callback that already
+populates the form, then lets that reported HTTP rejection escape its submit handler.
+Do not weaken the zero-unexpected-page-errors or HTTP401/data-refusal assertions.
+
+Before implementation, the delegated maintainer selects a second narrowly pinned
+compatibility adjustment: catch only the existing SDK FetchError rejection after
+that unchanged native mutation/onError handling; rethrow every other exception.
+Preserve the original onError status checks, validation/server-error messages,
+onSuccess and MFA callbacks, backend Auth responses, all permissions and provider
+selection. The browser must verify the visible error as well as failed authentication.
+
+The exact module is `@medusajs/dashboard/dist/login-NQL3NNCN.mjs`, SHA256
+`b86850b96199e64c8efa01027800be32413f97802722106a7b202dc7e4428d47`.
+Hash/unique-boundary checks must confine the adjustment to EmailPassLogin's submit
+handler from `src/routes/login/components/email-pass-login.tsx`. Do not modify the
+SSO component or any other Enterprise code that shares the distributed chunk. A
+changed or absent module fails the build. Installed packages and npm lock remain
+unchanged; retire both hooks with a selected, qualified upstream fix. This remains
+local compatibility qualification without distribution-rights acceptance.

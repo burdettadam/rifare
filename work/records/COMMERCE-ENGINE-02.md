@@ -76,3 +76,13 @@ modal observations remain preserved. Root remains sole writer; one primary/zero 
 checkouts. The temporary standalone runtime, owned loopback backend and PostgreSQL
 remain active for fixed qualification, with generated failed bundles owned for the
 same retirement event. No production, provider authentication or distribution claim.
+
+The initial fixed run passed all ten functional browser stages, including customer
+JWT separation, nine public hold requests and local logout, but failed the unchanged
+zero-runtime-errors check. Bounded diagnostics found exactly `Authentication failed`
+and no external requests, unpackaged scripts or bad assets. A wrong-password-only
+fresh browser confirms HTTP401, visible native validation text and that uncaught
+promise rejection. Original draft outcomes were reconciled in PostgreSQL instead of
+retried; all eleven protected native table digests remain unchanged. ADR0089 selects
+the specific FetchError submit-handler correction before implementation. No error,
+status, data-refusal or page-error assertion is relaxed.
