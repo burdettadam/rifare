@@ -220,7 +220,7 @@ export default async function verifyRequestRetention({ container }: ExecArgs) {
     const fixture = await makeOriginal(false);
     if (process.env.RIFARE_C7_COMPILED === "true") {
       assert.ok(__filename.endsWith(".js"));
-      assert.ok(journal instanceof (await import("../modules/operation-journal/service")).default);
+      assert.ok(journal instanceof require("../modules/operation-journal/service").default);
     }
     const fixtureRoot = process.env.RIFARE_C7_COMPILED === "true" ? process.env.RIFARE_C7_TEST_FIXTURE_ROOT : resolve(process.cwd(), "../..");
     assert.ok(fixtureRoot, "compiled qualification explicitly supplies external test fixtures");
