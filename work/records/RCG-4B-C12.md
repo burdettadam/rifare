@@ -341,3 +341,18 @@ pg_catalog; all native relations are already explicitly public-qualified. A newl
 provisioned worker must lack effective CREATE on public,checked before admission
 can commit. No global schema privilege is changed. This tightens the bounded SQL
 primitive without claiming original-row or provider-call authority.
+
+
+At5418e81 five native stale-write refusals and readiness/control-plane checks
+passed. Actual predicate omission committed another stale Cart update and failed
+the unchanged oracle; the exact function was restored and compared independently
+to the passing DB. All18 C10 and27 C11 source groups passed on that candidate.
+Authority review cleared only the completed-revocation primitive. Regression found
+a fixture lifecycle gap: post-claim setup (including wx custody creation) preceded
+retirement finally. The next candidate encloses every post-claim setup step, nests
+role retirement even if function restoration fails,and closes fixture verifiers for
+all post-fixture paths. An occupied custody-path case must preserve the committed
+unknown original,retire LOGIN/generation,and refuse a replacement on recovery.
+Deferred trigger checks are not credited as an unbypassable expiry fence: constraint
+timing is normally session-controllable. In-flight ordering,late expiry,reconnect,
+current authority,original row visibility and provider effects remain unqualified.
