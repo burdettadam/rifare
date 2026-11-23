@@ -6,13 +6,13 @@ import {
   cancelOrderClaimWorkflow, cancelOrderWorkflow, capturePaymentWorkflow, completeCartWorkflow,
   confirmClaimRequestWorkflow, confirmReturnReceiveWorkflow, createCartWorkflow, createClaimShippingMethodWorkflow,
   createInventoryLevelsWorkflow, createOrderFulfillmentWorkflow, createPaymentCollectionForCartWorkflow,
-  createPaymentSessionsWorkflow, createProductsWorkflow, orderClaimAddNewItemWorkflow, orderClaimItemWorkflow,
+  createPaymentSessionsWorkflow, createProductsWorkflow, createShippingOptionsWorkflow, orderClaimAddNewItemWorkflow, orderClaimItemWorkflow,
   orderClaimRequestItemReturnWorkflow, receiveItemReturnRequestWorkflow, refundPaymentWorkflow,
 } from "@medusajs/medusa/core-flows";
 
 /** Ordinary upstream claims only; no application route, external provider or settlement. */
 export async function qualifyNativeClaims(container: any, fixture: {
-  profileId: string; channelId: string; shippingId: string; locationId: string; cartInput: object;
+  profileId: string; channelId: string; shippingId: string; locationId: string; serviceZoneId: string; regionId: string; cartInput: object;
 }, check: (name: string, assertions: () => void) => void) {
   assert.equal(process.env.NODE_ENV, "test");
   assert.equal(process.env.RIFARE_COMMERCE_VERIFY, "disposable");
@@ -31,7 +31,9 @@ export async function qualifyNativeClaims(container: any, fixture: {
   };
   const financial = () => rows(["payment", "capture", "refund"]);
   const effects = () => rows(["payment", "capture", "refund", "order", "order_item", "order_line_item",
-    "order_claim", "order_claim_item", "order_change", "order_change_action", "reservation_item", "inventory_level"]);
+    "order_claim", "order_claim_item", "order_change", "order_change_action", "reservation_item", "inventory_level",
+    "payment_collection", "payment_session", "order_transaction", "order_credit_line", "order_summary",
+    "return", "return_item", "return_fulfillment", "fulfillment", "fulfillment_item", "order_fulfillment"]);
   const suffix = randomUUID().replaceAll("-", "");
   const { result: products } = await createProductsWorkflow(container).run({ input: { products: [{
     title: `Rifare native claim ${suffix}`, status: ProductStatus.PUBLISHED,
@@ -66,13 +68,13 @@ export async function qualifyNativeClaims(container: any, fixture: {
       shipping_option_id: fixture.shippingId, items: [{ id: order.items[0].id, quantity: 2 }], no_notification: true } });
     return { order: await graph("order", order.id, orderFields), paymentId };
   };
-  const rejectUnchanged = async (name: string, invoke: () => Promise<unknown>) => {
+  const rejectUnchanged = async (name: string, invoke: () => Promise<unknown>, expression = /cancel|not found/i) => {
     const before = await effects();
     await assert.rejects(invoke, (error: any) => {
-      assert.match(error?.message ?? "", /cancel|not found/i); return true;
+      assert.match(error?.message ?? "", expression); return true;
     });
-    check(name, () => {});
     assert.deepEqual(await effects(), before, `${name}: rejected call changed native effects`);
+    check(name, () => {});
   };
   const refundOriginal = await original();
   assert.deepEqual(await level(), { stock: 8, reserved: 0 });
@@ -136,6 +138,20 @@ export async function qualifyNativeClaims(container: any, fixture: {
   assert.deepEqual(await level(), { stock: 6, reserved: 0 }, "Canceled replacement must release its native reservation");
   assert.deepEqual(await financial(), replacementFinancial);
 
+  const { result: adversarial } = await beginClaimOrderWorkflow(container).run({ input: { order_id: refundOriginal.order.id, type: "refund" } });
+  await rejectUnchanged("native-claim-foreign-order-item-refuses-without-effects", () =>
+    orderClaimItemWorkflow(container).run({ input: { claim_id: adversarial.claim_id!,
+      items: [{ id: replacementOriginal.order.items[0].id, quantity: 1 }] } }), /item.*not found/i);
+  await rejectUnchanged("native-claim-excess-original-quantity-refuses-without-effects", () =>
+    orderClaimItemWorkflow(container).run({ input: { claim_id: adversarial.claim_id!,
+      items: [{ id: refundOriginal.order.items[0].id, quantity: 3 }] } }), /more items than what was ordered/i);
+  await rejectUnchanged("native-claim-repeated-original-quantity-refuses-without-effects", () =>
+    orderClaimItemWorkflow(container).run({ input: { claim_id: adversarial.claim_id!,
+      items: [{ id: refundOriginal.order.items[0].id, quantity: 1 }, { id: refundOriginal.order.items[0].id, quantity: 2 }] } }), /more items than what was ordered/i);
+  await rejectUnchanged("native-competing-active-claim-refuses-without-effects", () =>
+    beginClaimOrderWorkflow(container).run({ input: { order_id: refundOriginal.order.id, type: "replace" } }), /existing active order change/i);
+  await cancelBeginOrderClaimWorkflow(container).run({ input: { claim_id: adversarial.claim_id! } });
+
   // A native workflow error can follow a successful provider effect. Observe the
   // actual System call and bookkeeping; do not infer no-effect from rejection.
   const { result: active } = await beginClaimOrderWorkflow(container).run({ input: { order_id: refundOriginal.order.id, type: "refund" } });
@@ -143,7 +159,11 @@ export async function qualifyNativeClaims(container: any, fixture: {
   const events = container.resolve(Modules.EVENT_BUS);
   const originalRefund = provider.refundPayment, originalEmit = events.emit;
   let providerCalls = 0, refundEvents = 0;
-  provider.refundPayment = async function (...args: any[]) { providerCalls++; return originalRefund.apply(this, args); };
+  const providerArguments: any[] = [];
+  provider.refundPayment = async function (...args: any[]) {
+    providerCalls++; providerArguments.push({ provider_id: args[0], amount: args[1].amount, key: args[1].context.idempotency_key });
+    return originalRefund.apply(this, args);
+  };
   events.emit = async function (input: any, ...rest: any[]) {
     for (const event of (Array.isArray(input) ? input : [input])) if (event.name === "payment.refunded") refundEvents++;
     return originalEmit.call(this, input, ...rest);
@@ -166,10 +186,14 @@ export async function qualifyNativeClaims(container: any, fixture: {
     assert.equal(baseline.refunds.length, 0); assert.equal(baseline.credits.length, 0);
     await expectRefundError(refundInput, /existing active order change/i);
     const first = await refundState();
+    const nativePayment = await postgres("payment").where({ id: refundOriginal.paymentId }).first();
     check("native-active-claim-refund-error-can-follow-one-successful-provider-refund", () => {
       assert.equal(first.providerCalls, 1); assert.equal(first.refundEvents, 0);
+      assert.equal(nativePayment.currency_code, "usd"); assert.equal(nativePayment.provider_id, "pp_system_default");
+      assert.deepEqual(providerArguments, [{ provider_id: nativePayment.provider_id, amount: { value: "1", precision: 20 }, key }]);
       assert.equal(first.refunds.length, 1); assert.equal(first.refunds[0].status, "succeeded");
       assert.equal(Number(first.refunds[0].amount), 1); assert.equal(first.refunds[0].idempotency_key, key);
+      assert.equal(first.refunds[0].raw_amount.value, "1");
       assert.equal(first.transactions.length, 0); assert.equal(first.credits.length, 0); assert.equal(first.refunded, 0);
     });
     await expectRefundError(refundInput, /existing active order change/i);
@@ -200,7 +224,7 @@ export async function qualifyNativeClaims(container: any, fixture: {
     assert.deepEqual(await refundState(), recovered);
     console.log("RIFARE_NATIVE_CLAIM_REFUND_RESULT=" + JSON.stringify({ original_order_id: refundOriginal.order.id,
       original_payment_id: refundOriginal.paymentId, original_refund_id: first.refunds[0].id,
-      provider_calls: providerCalls, refund_events: refundEvents, amount: 1, currency: "usd",
+      provider_calls: providerCalls, refund_events: refundEvents, amount: 1, currency: nativePayment.currency_code,
       initial_workflow_error_after_provider_success: true, recovered_original_bookkeeping: true,
       real_financial_effect: false, production_qualified: false }));
   } finally { provider.refundPayment = originalRefund; events.emit = originalEmit; }
@@ -212,28 +236,62 @@ export async function qualifyNativeClaims(container: any, fixture: {
   const { result: receiving } = await beginClaimOrderWorkflow(container).run({ input: { order_id: receivingOriginal.order.id, type: "replace" } });
   await orderClaimRequestItemReturnWorkflow(container).run({ input: { claim_id: receiving.claim_id!, return_id: "",
     location_id: fixture.locationId, items: [{ id: receivingOriginal.order.items[0].id, quantity: 1 }] } });
+  const pendingReturn = await orders.retrieveOrderClaim(receiving.claim_id!);
+  const { result: returnOptions } = await createShippingOptionsWorkflow(container).run({ input: [{
+    name: `Rifare synthetic claim return ${suffix}`, price_type: "flat", provider_id: "manual_manual",
+    service_zone_id: fixture.serviceZoneId, shipping_profile_id: fixture.profileId,
+    type: { label: "Synthetic return", description: "No physical carrier", code: `return-${suffix}` },
+    prices: [{ currency_code: "usd", amount: 0 }, { region_id: fixture.regionId, amount: 0 }],
+    rules: [{ attribute: "enabled_in_store", operator: "eq", value: "true" }, { attribute: "is_return", operator: "eq", value: "true" }],
+  }] });
+  await createClaimShippingMethodWorkflow(container).run({ input: { claim_id: receiving.claim_id!,
+    return_id: pendingReturn.return_id!, shipping_option_id: returnOptions[0].id } });
   await orderClaimAddNewItemWorkflow(container).run({ input: { claim_id: receiving.claim_id!, items: [{ variant_id: variant.id, quantity: 1 }] } });
   await createClaimShippingMethodWorkflow(container).run({ input: { claim_id: receiving.claim_id!, shipping_option_id: fixture.shippingId } });
   await confirmClaimRequestWorkflow(container).run({ input: { claim_id: receiving.claim_id! } });
   const withReturn = await orders.retrieveOrderClaim(receiving.claim_id!, { relations: ["additional_items"] });
   assert.ok(withReturn.return_id);
   assert.deepEqual(await level(), { stock: 4, reserved: 1 });
+  const inboundLink = await postgres("return_fulfillment").where({ return_id: withReturn.return_id }).whereNull("deleted_at");
+  assert.equal(inboundLink.length, 1);
+  const inbound = await postgres("fulfillment").where({ id: inboundLink[0].fulfillment_id }).first();
+  assert.equal(inbound.provider_id, "manual_manual"); assert.equal(inbound.shipping_option_id, returnOptions[0].id);
+  assert.equal(inbound.canceled_at, null);
+  await rejectUnchanged("native-claim-cancellation-with-live-return-fulfillment-refuses-without-effects", () =>
+    cancelOrderClaimWorkflow(container).run({ input: { claim_id: receiving.claim_id!, no_notification: true } }));
   await createOrderFulfillmentWorkflow(container).run({ input: { order_id: receivingOriginal.order.id,
     location_id: fixture.locationId, shipping_option_id: fixture.shippingId,
     items: [{ id: withReturn.additional_items[0].item_id, quantity: 1 }], no_notification: true } });
   assert.deepEqual(await level(), { stock: 3, reserved: 0 });
-  check("native-claim-replacement-fulfillment-consumes-only-one-reserved-stock-unit", () => {});
+  const outgoingItems = await postgres("fulfillment_item").where({ line_item_id: withReturn.additional_items[0].item_id }).whereNull("deleted_at");
+  assert.equal(outgoingItems.length, 1);
+  const outgoing = await postgres("fulfillment").where({ id: outgoingItems[0].fulfillment_id }).first();
+  const outgoingOrder = await postgres("order_fulfillment").where({ fulfillment_id: outgoing.id }).whereNull("deleted_at");
+  check("native-claim-replacement-fulfillment-consumes-only-one-reserved-stock-unit", () => {
+    assert.equal(outgoingOrder.length, 1); assert.equal(outgoingOrder[0].order_id, receivingOriginal.order.id);
+    assert.equal(outgoing.location_id, fixture.locationId); assert.equal(outgoing.shipping_option_id, fixture.shippingId);
+    assert.equal(outgoingItems[0].inventory_item_id, inventoryId); assert.equal(Number(outgoingItems[0].quantity), 1);
+  });
   await beginReceiveReturnWorkflow(container).run({ input: { return_id: withReturn.return_id } });
   await receiveItemReturnRequestWorkflow(container).run({ input: { return_id: withReturn.return_id,
     items: [{ id: receivingOriginal.order.items[0].id, quantity: 1 }] } });
   await confirmReturnReceiveWorkflow(container).run({ input: { return_id: withReturn.return_id } });
   assert.deepEqual(await level(), { stock: 4, reserved: 0 });
   assert.deepEqual(await financial(), receivingFinancial);
-  check("native-claim-return-receiving-restocks-only-one-received-unit-without-payment-effects", () => {});
+  const received = await postgres("return").where({ id: withReturn.return_id }).first();
+  const receivedItems = await postgres("return_item").where({ return_id: received.id }).whereNull("deleted_at");
+  check("native-claim-return-receiving-restocks-only-one-received-unit-without-payment-effects", () => {
+    assert.equal(received.order_id, receivingOriginal.order.id); assert.equal(received.claim_id, receiving.claim_id);
+    assert.equal(received.location_id, fixture.locationId); assert.equal(received.status, "received"); assert.ok(received.received_at);
+    assert.equal(receivedItems.length, 1); assert.equal(receivedItems[0].item_id, receivingOriginal.order.items[0].id);
+    assert.equal(Number(receivedItems[0].quantity), 1); assert.equal(Number(receivedItems[0].received_quantity), 1);
+    assert.equal(Number(receivedItems[0].damaged_quantity), 0);
+  });
 
   const { result: canceled } = await createCartWorkflow(container).run({ input: {
     ...fixture.cartInput, items: [{ variant_id: variant.id, quantity: 1 }],
   } });
+  await addShippingMethodToCartWorkflow(container).run({ input: { cart_id: canceled.id, options: [{ id: fixture.shippingId }] } });
   const { result: collection } = await createPaymentCollectionForCartWorkflow(container).run({ input: { cart_id: canceled.id } });
   await createPaymentSessionsWorkflow(container).run({ input: { payment_collection_id: collection.id, provider_id: "pp_system_default" } });
   const { result: canceledOrder } = await completeCartWorkflow(container).run({ input: { id: canceled.id } });

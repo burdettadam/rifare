@@ -63,10 +63,10 @@ A separately preserved, local diagnostic on that exact synthetic database confir
 native confirmed-claim cancellation released its reservation. It also measured a
 new active refund claim: System provider refund called once for USD 1 and native
 refund succeeded, while the workflow returned existing-active-change and left zero
-refund transactions/credit lines/events and summary refunded_total zero. Same-key
+refund transactions/credit lines/payment.refunded events and summary refunded_total zero. Same-key
 retry retained the one original refund with no new provider call. Changed amount
 refused. After canceling the draft, same-key recovery created one refund transaction,
-one credit line and one event; replay retained that exact state with no provider
+one credit line and one payment.refunded event; replay retained that exact state with no provider
 recall. These are synthetic/native effects, not settlement or a safe automatic
 recovery API. Diagnostic TS package-scope and Windows inline-compiler setup failures
 preceded the actual successful CJS probe and are retained, excluded from passing
@@ -77,3 +77,24 @@ replacement fulfillment/native return receiving. It preserves all 23 existing
 baseline entries reached in the initial normal-lock profile. Expanded no-emit passes.
 Next: complete adversarial/effect observations and fixed native execution, then exact
 compiled own-dependency qualification, fault/restoration and both final reviews.
+
+## Expanded lifecycle and adversarial evidence
+
+The 1ca64c3 source run reached replacement confirmation/cancellation, five refund
+failure/recovery checks, replacement fulfillment and return receiving. It then failed
+in the final canceled-order fixture because that cart lacked shipping. Add its normal
+native shipping method; no shipping validation is bypassed. This remains a failed run.
+
+Read-only authority review of the actual diagnostic and source requested exact
+provider arguments/raw money/currency, wider refusal snapshots, and actual return/
+fulfillment identity checks. Those assertions are now present, together with a real
+native inbound manual return fulfillment and canceled-while-live refusal. No fake
+physical receiving or independent external provider is claimed.
+
+Two targeted native adversarial diagnostics on the already-populated synthetic
+expanded database refused foreign-order item, excessive original quantity and
+repeated aggregate quantity at preview. The second widened comparison to the full
+25-table refusal snapshot and found no changed rows/tables. Raw probes/logs are
+retained separately; these exploratory observations are not fixed qualification.
+The first-class helper now asserts these cases and competing active-claim refusal.
+No native vendor changes, routes or application permission changes were introduced.
