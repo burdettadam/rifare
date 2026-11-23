@@ -30,6 +30,7 @@ export default async function verifyNativeReceipts(_args: ExecArgs) {
     provider_ref: trust.provider_ref, organization_id: trust.organization_id, actor: trust.actor,
     original_command_id: "12345678-1234-4234-8234-123456789abd",
     cart_id: "cart_synthetic", store_id: "store_synthetic", challenge_id: "12345678-1234-4234-8234-123456789abe",
+    challenge_created_at: iso(now - 10000), challenge_expires_at: iso(now + 60000),
     nonce: "provider-signed-original-nonce-0123456789", authorization_request_digest: hash, authorization_context_digest: hash,
     currency: "usd", currency_exponent: 2, payable_minor_units: "4999",
     grant: { id: "12345678-1234-4234-8234-123456789abf", revision: 2, terms_digest: hash },
@@ -108,6 +109,10 @@ export default async function verifyNativeReceipts(_args: ExecArgs) {
       await assert.rejects(verify(signed(), { ...context, ...changed }));
     }
     await assert.rejects(verify(signed({ ...payload, id: [payload.id] })));
+  });
+  await check("C8-CHALLENGE receipt cannot outlive Flow or predate its original challenge", async () => {
+    await assert.rejects(verify(signed(), { ...context, challenge_expires_at: iso(now + 29999) }));
+    await assert.rejects(verify(signed(), { ...context, challenge_created_at: iso(now - 1999) }));
   });
   await check("C8-ED25519 independently selected EdDSA receipt key verifies its own signature", async () => {
     const ed = generateKeyPairSync("ed25519"), selected = { ...trust, key: { ...trust.key, algorithm: "EdDSA", public_jwk: ed.publicKey.export({ format: "jwk" }) } };

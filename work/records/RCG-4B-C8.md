@@ -1,7 +1,8 @@
 # RCG-4B-C8 — Native delegated receipt admission
 
-State: signature/native-context foundation implemented and locally exercised;
-native PostgreSQL receipt admission and full slice qualification pending.
+State: signature/context foundation independently reviewed; native PostgreSQL
+receipt admission implemented and exercised locally. Isolated compiled runtime,
+populated upgrade, whole-database restore and native candidate reviews pending.
 Base: `4d07b3aa797a794dd318e9dc95cffa04e5333692`.
 Writer/integration owner: root; branch `feat/medusa-native-receipts`.
 Checkout: canonical primary `rifare`; one primary, zero linked, clean at assignment.
@@ -108,3 +109,63 @@ failure was counted as a pass. The missing ignored provider vector was separatel
 restored from the exact authorized local Protocol Git object and matched its
 existing SHA-256; it was not regenerated or added to source. Logs retain each
 attempt. The Linux direct native invocation took 2.006 seconds.
+
+## Native implementation checkpoint
+
+Both independent roles cleared foundation `d5459e09c7d11378625e2a02accd5182ba6de374`
+against protected `4d07b3aa`. Each independently recomputed all 61 source inputs
+and 71 then-current compiled hashes; authority also reran all 37 compiled cases.
+They explicitly limited clearance to the foundation. The checkpoint is published
+on the assigned feature branch. Their actual dispositions and fixed-input receipt
+are preserved under ignored `c8-foundation-independent-reviews.json` and
+`c8-foundation-input-receipt.json`. The native changes below require renewed review.
+
+The native context owner now requires the complete C7 tuple, retained exact
+original/START/CHALLENGE hashes and correspondence, request bytes/digest, nonce,
+state and expiry consistency. Receipt verification derives its operation, grant,
+currency and exact amount from that trusted original, without a legacy preview or
+a caller's verification flag. It uses the retained C7 observation as historical
+authenticated context, while independently checking current receipt trust and
+native ownership/privacy/cart state. Provider lifetime inspection led to an
+additional independent Flow challenge interval bound and one new signature test
+(38 cases now). No request lifetime or old binder assertion was relaxed.
+
+The existing service admits one immutable receipt tuple under serializable native
+currentness and revision checks, with database time before/after crypto and after
+COMMIT/current cart reads. It rechecks verifier retirement/cancellation around
+awaited writes and return. Recovery verifies the same original bytes/context and
+preserves the first observation; a persisted time floor survives a fresh verifier.
+Receipt evidence leaves the operation awaiting authority, with no commerce effect.
+
+Native DML generated `Migration20261123110127`: six personal receipt fields plus
+one unique receipt identity fingerprint. The fingerprint is independent of key
+rotation and survives minimization. Privacy export, hold, erasure, uninstall and
+refusal reconciliation include the new fields. Pre-C8 three-field refusal records
+remain supported when they discard no C8 fingerprint; current four-field refusals
+can preserve a later fingerprint across an older backup. The exact compatibility
+decision is recorded before implementation in ADR-0086.
+
+The normal source backend build and all 38 signature cases pass. All 13 actual
+PostgreSQL receipt groups pass: first result/retry/context immutability; concurrent
+valid winners; missing C7/cross-original/current owner refusal; changed cart;
+receipt identity reuse after cancellation/minimization and refusal restoration;
+deferred COMMIT rollback; separate-process acknowledgement loss/recovery; trust
+retirement during an observed blocked UPDATE; late-COMMIT expiry; owner withdrawal
+at COMMIT; fresh-verifier persisted clock floor; historical request context after
+JWT expiry within a still-current challenge; and privacy hold/export/erase/release.
+Raw observations are `c8-native-*`; the qualification runner is preserved there.
+
+The first retained C7 rerun encountered `us` already assigned to the new suite's
+region. Its setup failure is preserved separately as
+`c8-native-first-C7-fixture-collision.log`. A fresh separate regression database
+then passed all 11 unchanged C7 native groups, old schema and privacy scripts.
+No old fixture/assertion or accepted count was changed. Both owned PostgreSQL
+containers were stopped/removed. No provider or Supabase resources were used.
+
+The new populated-upgrade witness is source only at this checkpoint; it has not
+yet run. Next: qualify the fixed compiled consumer with its own production-only
+dependencies, populate a real pre-C8 schema and verify migration/replay preservation,
+run whole-database restore with current erasure/uninstall reconciliation, and obtain
+both native candidate reviews. Keep the primary active with root as writer; no new
+checkout was created. Source dependency cache is reused. Retire generated outputs
+and any later owned runtime after their qualification/review preservation gates.

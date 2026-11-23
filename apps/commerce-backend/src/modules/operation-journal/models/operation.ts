@@ -38,11 +38,19 @@ const Operation = model.define("rifare_operation", {
   request_nonce: model.text().nullable(),
   request_observed_at: model.dateTime().nullable(),
   request_expires_at: model.dateTime().nullable(),
+  receipt_fingerprint: model.text().nullable(),
+  receipt_bytes: model.text().nullable(),
+  receipt_digest: model.text().nullable(),
+  receipt_context_digest: model.text().nullable(),
+  receipt_id: model.text().nullable(),
+  receipt_observed_at: model.dateTime().nullable(),
+  receipt_expires_at: model.dateTime().nullable(),
   privacy_hold: model.boolean().default(false),
 }).indexes([
   // An original cannot be reminted by changing its merchant, store or customer.
   { name: "rifare_operation_original_unique", on: ["original_command_uuid"], unique: true, where: null },
   { name: "rifare_operation_challenge_unique", on: ["challenge_fingerprint"], unique: true, where: null },
+  { name: "rifare_operation_receipt_unique", on: ["receipt_fingerprint"], unique: true, where: null },
 ]).checks([
   { name: "rifare_operation_original_uuid", expression: "original_command_uuid ~ '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'" },
   { name: "rifare_operation_revision", expression: "revision >= 0" },
@@ -61,6 +69,12 @@ const Operation = model.define("rifare_operation", {
     and (request_bytes is null or start_response_bytes is not null)` },
   { name: "rifare_operation_request_digest", expression: "request_digest ~ '^sha256:[0-9a-f]{64}$' and request_context_digest ~ '^sha256:[0-9a-f]{64}$'" },
   { name: "rifare_operation_request_bounds", expression: "octet_length(request_bytes) between 1 and 65536 and length(request_nonce) between 1 and 1024 and request_expires_at > request_observed_at" },
+  { name: "rifare_operation_receipt_tuple", expression: `(receipt_bytes is null) = (receipt_digest is null)
+    and (receipt_bytes is null) = (receipt_context_digest is null) and (receipt_bytes is null) = (receipt_id is null)
+    and (receipt_bytes is null) = (receipt_observed_at is null) and (receipt_bytes is null) = (receipt_expires_at is null)
+    and (receipt_bytes is null or (request_bytes is not null and receipt_fingerprint is not null))` },
+  { name: "rifare_operation_receipt_digests", expression: "receipt_fingerprint ~ '^sha256:[0-9a-f]{64}$' and receipt_digest ~ '^sha256:[0-9a-f]{64}$' and receipt_context_digest ~ '^sha256:[0-9a-f]{64}$'" },
+  { name: "rifare_operation_receipt_bounds", expression: "octet_length(receipt_bytes) between 1 and 100000 and receipt_expires_at > receipt_observed_at and receipt_id ~ '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'" },
   { name: "rifare_operation_payable", expression: "payable_minor_units ~ '^(0|[1-9][0-9]{0,18})$' and (length(payable_minor_units) < 19 or payable_minor_units collate \"C\" <= '9223372036854775807')" },
   { name: "rifare_operation_currency", expression: "currency ~ '^[a-z]{3}$' and currency_exponent between 0 and 4" },
   { name: "rifare_operation_active_binding", expression: `

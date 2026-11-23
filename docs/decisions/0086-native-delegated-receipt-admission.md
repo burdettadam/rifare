@@ -93,6 +93,30 @@ No manifest, dependency graph, script or package integrity changes are authorize
 by this correction. Do not add generic newline normalization or relax the exact
 byte check. Independent review must verify both encodings against the prior pins.
 
+## Native historical context and refusal continuity
+
+The committed C7 tuple is the authenticated historical request observation under
+the trusted database/exclusive-owner-path boundary. Native receipt admission
+requires its complete tuple and checks its hashes, retained nonce/state and
+original START/CHALLENGE correspondence. It does not decode a fresh caller JWT
+as authority or re-run the current-request API with a fabricated historical clock.
+Current receipt key trust, native cart/ownership/privacy and database time are
+checked independently. Request-JWS expiry is not renewed or required to remain
+current for historical context. Provider `oid4vp.rs:265–271` caps proof validity
+at Flow challenge expiry and `receipt.rs:225–228` caps receipt expiry by proof
+validity: include the original challenge interval in native expectations and
+refuse receipts extending beyond it. Post-expiry historical recovery is distinct
+from the current-evidence API and cannot return renewed authority.
+
+Persist a unique receipt identity fingerprint scoped to provider, organization,
+issuer and receipt UUID, independently of signing-key rotation. Preserve it after
+minimization. New refusal records carry this fingerprint; retain compatibility
+with pre-C8 three-field refusal records only where no receipt fingerprint would
+be discarded. A current C8 refusal must not be downgraded to a legacy shape.
+When an old backup lacks a later receipt fingerprint, a verified current refusal
+may add it while retiring/minimizing the original. Database uniqueness applies
+to imports too. Test both legacy compatibility and the new replay refusal.
+
 This assignment does not send a proof, issue FINALIZE, enable checkout, verify
 current live revocation, acquire final business authority or perform payment/order
 effects. Those are remaining steps toward DELEGATED-PURCHASE-01 and

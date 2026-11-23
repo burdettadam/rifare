@@ -61,10 +61,11 @@ function trustConfiguration(value: unknown) {
 function contextConfiguration(value: unknown, trust: Row) {
   const code = "CONTEXT_INVALID";
   const context = object(value, ["provider_ref", "organization_id", "actor", "original_command_id", "grant", "operation",
-    "cart_id", "store_id", "challenge_id", "nonce", "authorization_request_digest", "authorization_context_digest",
+    "cart_id", "store_id", "challenge_id", "challenge_created_at", "challenge_expires_at", "nonce", "authorization_request_digest", "authorization_context_digest",
     "currency", "currency_exponent", "payable_minor_units"], code);
   requireValue(context.provider_ref === trust.provider_ref && context.organization_id === trust.organization_id &&
     isUuid(context.original_command_id) && isUuid(context.challenge_id) && text(context.nonce) &&
+    text(context.challenge_created_at) && text(context.challenge_expires_at) &&
     isDigest(context.authorization_request_digest) && isDigest(context.authorization_context_digest) &&
     text(context.cart_id, 96) && text(context.store_id, 96), code);
   same(context.actor, trust.actor, code); grant(context.grant, code);
@@ -155,12 +156,16 @@ export class NativeReceiptVerifier {
       const issued = this.#timestamp(payload.issued_at), expires = this.#timestamp(payload.expires_at),
         proofAt = this.#timestamp(evaluation.proof_verified_at), proofUntil = this.#timestamp(evaluation.proof_valid_until),
         statusAt = this.#timestamp(status.checked_at), statusUntil = this.#timestamp(status.valid_until),
-        evaluated = this.#timestamp(evaluation.evaluated_at), observed = BigInt(now) * 1000000n;
+        evaluated = this.#timestamp(evaluation.evaluated_at), observed = BigInt(now) * 1000000n,
+        challengeCreated = this.#timestamp(context.challenge_created_at), challengeExpires = this.#timestamp(context.challenge_expires_at);
       requireValue(proofAt <= evaluated && statusAt <= evaluated && evaluated <= issued && issued <= observed && observed < expires &&
         expires <= proofUntil && expires <= statusUntil && observed < proofUntil && observed < statusUntil &&
-        expires - issued <= 600000000000n, "TIME_INVALID");
+        expires - issued <= 600000000000n && challengeCreated <= proofAt && expires <= challengeExpires, "TIME_INVALID");
       this.#active(signal);
       const result = Object.freeze({ compact_jws: compact, digest: digest(compact), receipt_id: payload.id,
+        receipt_fingerprint: digest(stringify({ profile: "urn:rifare:medusa-receipt-identity:v1",
+          provider_ref: this.#trust.provider_ref, organization_id: this.#trust.organization_id,
+          issuer: this.#trust.issuer, receipt_id: payload.id })!),
         verification_context_digest: digest(stringify({ trust: this.#trust, context })!),
         observed_at: now, expires_at: payload.expires_at, nonce: context.nonce,
         original_command_id: context.original_command_id, operation_digest: context.operation.request_digest,
