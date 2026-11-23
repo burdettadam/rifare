@@ -43,6 +43,10 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
           const native = (await tx.raw("select session_user as role, pg_backend_pid() as pid")).rows[0];
           assert.equal(native.role, task.role);
           await carts.updateCarts(task.cart_id, current, { transactionManager });
+          // MikroORM can defer its SQL flush until outer transaction commit.
+          // Pause only after the native UPDATE and its trigger actually ran.
+          await transactionManager.flush();
+          assert.equal((await tx("cart").where({ id: task.cart_id }).first("metadata")).metadata.c12_generation_probe, "current");
           const release = new Promise<void>((resolve, reject) => {
             const timer = setTimeout(() => reject(new Error("Native transaction release deadline")), 15000);
             process.once("message", message => { clearTimeout(timer); try { assert.deepEqual(message, { phase: "commit" }); resolve(); } catch (error) { reject(error); } });
@@ -179,6 +183,7 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
             if (blocked) break;
             await new Promise(resolve => setTimeout(resolve, 20));
           }
+          if (settled) await retirement;
           assert.ok(blocked && !settled, "Revocation must wait on the actual native Cart transaction's journal generation lock");
           orderingObservation = { actual_blocker_observed: true, native_pid: phase.identity.pid,
             revoker_pid: blocked.pid, blockers: blocked.blockers, native_cart_write_precedes_revocation_commit: true };

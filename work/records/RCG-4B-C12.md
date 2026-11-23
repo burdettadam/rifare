@@ -368,3 +368,9 @@ refusals after retirement completes. A separate fault removes the actual guard's
 two SHARE locks without changing the ordering assertion. This tests transaction
 serialization only; current authority,late expiry,row visibility and provider
 effects remain separate unqualified boundaries.
+
+The690191e native transaction test failed its ordering assertion: returning from
+the Cart method inside an outer MikroORM transaction had not flushed the SQL yet.
+No native audit row committed,and no ordering pass is credited. The corrected
+probe explicitly flushes the same actual module transaction and reads persisted
+Cart metadata through its transaction handle before announcing the pause.
