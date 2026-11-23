@@ -63,15 +63,20 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
         };
         await refused("cart", () => carts.updateCarts(task.other_cart_id, { metadata: { c12_wrong_original: true } }));
         await refused("cart_line_item", () => carts.addLineItems({ cart_id: task.other_cart_id, title: "Wrong original", quantity: 1, unit_price: 1 }));
+        await refused("cart_line_item", () => postgres("cart_line_item").where({ id: task.other_line_id }).update({ cart_id: task.cart_id }));
         await refused("order_address", () => container.resolve(Modules.ORDER).createOrders({ customer_id: task.customer_id,
           currency_code: "usd", email: "wrong-original@example.invalid", shipping_address: { first_name: "Wrong", last_name: "Original",
             address_1: "2 Synthetic Street", city: "Synthetic", country_code: "us", postal_code: "00000" } }));
+        await refused("order_address", () => postgres("order_address").where({ id: task.foreign_address_id }).update({ city: "Synthetic" }));
         await refused("reservation_item", () => container.resolve(Modules.INVENTORY).createReservationItems({ inventory_item_id: task.inventory_item_id,
-          location_id: task.location_id, quantity: 1, line_item_id: task.other_line_id }));
+          location_id: task.location_id, quantity: 1, line_item_id: task.foreign_order_line_id }));
         await refused("payment_session", () => container.resolve(Modules.PAYMENT).createPaymentSession(task.other_collection_id, {
           provider_id: "pp_rifare_fenced_system_fixture", currency_code: "usd", amount: 12.5, data: {} }));
+        await refused("payment_session", () => postgres("payment_session").where({ id: task.other_session_id }).update({
+          payment_collection_id: task.collection_id, provider_id: "pp_rifare_fenced_system_fixture",
+          currency_code: "usd", amount: 12.5, raw_amount: task.original_raw_amount }));
         assert.deepEqual(calls, Object.fromEntries(names.map(name => [name, 0])));
-        console.log("C12_NATIVE_ORIGINAL_RESULT=" + JSON.stringify({ current_wrong_original_refusals: 5, native_system_calls: calls }));
+        console.log("C12_NATIVE_ORIGINAL_RESULT=" + JSON.stringify({ current_wrong_original_refusals: 8, native_system_calls: calls }));
       }
       if (task.reconnect) {
         assert.equal(typeof process.send, "function");
@@ -153,7 +158,12 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
   }
   const f = await nativePaymentFixture(container, false, true);
   try {
-  const original = await f.makePaymentOriginal();
+  const seededCart = await f.makeCart(), addressId = "caaddr_" + randomBytes(12).toString("hex");
+  const address = { id: addressId, customer_id: f.customer.id, company: null, first_name: "Original", last_name: "Customer",
+    address_1: "1 Original Street", address_2: null, city: "Synthetic", country_code: "us", province: null,
+    postal_code: "00000", phone: null, metadata: null };
+  await postgres("cart_address").insert(address); await postgres("cart").where({ id: seededCart.id }).update({ shipping_address_id: addressId });
+  const original = await f.makePaymentOriginal({ existingCart: seededCart });
   const inventory = container.resolve(Modules.INVENTORY), locations = container.resolve(Modules.STOCK_LOCATION);
   const item = await inventory.createInventoryItems({ sku: "c12-generation-" + randomBytes(8).toString("hex") });
   const location = await locations.createStockLocations({ name: "C12 synthetic generation" });
@@ -163,6 +173,16 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
   const otherCart = await carts.createCarts({ currency_code: "usd", email: "wrong-original@example.invalid" });
   const otherLine = await carts.addLineItems({ cart_id: otherCart.id, title: "Wrong original fixture", quantity: 1, unit_price: 1 });
   const otherCollection = (await payments.createPaymentCollections([{ currency_code: "usd", amount: 12.5 }]))[0];
+  const otherSession = await payments.createPaymentSession(otherCollection.id, {
+    provider_id: "pp_rifare_fenced_system_fixture", currency_code: "usd", amount: 12.5, data: {} });
+  const foreignAddressId = "ordaddr_" + randomBytes(12).toString("hex");
+  await postgres("order_address").insert({ ...address, id: foreignAddressId });
+  const originalLine = await postgres("cart_line_item").where({ id: line.id }).first();
+  const originalCartRow = await postgres("cart").where({ id: original.cart.id }).first();
+  const foreignOrder = await container.resolve(Modules.ORDER).createOrders({ customer_id: f.customer.id, currency_code: originalCartRow.currency_code,
+    email: originalCartRow.email, items: [{ title: originalLine.title, quantity: originalLine.quantity, unit_price: originalLine.unit_price,
+      variant_id: originalLine.variant_id, product_id: originalLine.product_id, metadata: originalLine.metadata }] });
+  const foreignOrderItem = await postgres("order_item").where({ order_id: foreignOrder.id }).first("item_id");
   for (const trigger of ["rifare_native_generation", "rifare_native_generation_commit"]) {
     const before = await original.row();
     const roles = Number((await postgres.raw("select count(*) as n from pg_roles where rolname ~ '^rifare_exec_[a-f0-9]{32}$'")).rows[0].n);
@@ -247,7 +267,9 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
   env.RIFARE_C12_GENERATION_TASK = JSON.stringify({ role: claim.worker!.role, cart_id: original.cart.id,
     customer_id: f.customer.id, collection_id: original.collection.id, line_item_id: line.id,
     inventory_item_id: item.id, location_id: location.id, ordering, reconnect, correlation,
-    other_cart_id: otherCart.id, other_line_id: otherLine[0].id, other_collection_id: otherCollection.id });
+    other_cart_id: otherCart.id, other_line_id: otherLine[0].id, other_collection_id: otherCollection.id,
+    other_session_id: otherSession.id, foreign_address_id: foreignAddressId, foreign_order_line_id: foreignOrderItem.item_id,
+    original_raw_amount: original.session.raw_amount });
   for (const key of Object.keys(env)) if (key.startsWith("PG") || key.endsWith("_CUSTODY") || /(?:API_KEY|_TOKEN|_PASSWORD|_SECRET|_PRIVATE_KEY|_CREDENTIALS)$/.test(key) ||
     key.endsWith("DATABASE_URL") && key !== "DATABASE_URL" || key.startsWith("RIFARE_JOURNAL_PRIVACY_") || key.startsWith("RIFARE_C12_CONTROLLER_")) delete env[key];
   env.JWT_SECRET = randomBytes(32).toString("hex"); env.COOKIE_SECRET = randomBytes(32).toString("hex");
@@ -384,7 +406,7 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
       ...(reconnect ? { actual_backend_loss_and_reconnect: true, active_reconnect_native_writes: 1,
         post_retirement_native_method_acquisition_refusals: 1, same_existing_authenticated_session: false } :
         { actual_native_stale_write_refusals: 5, same_existing_authenticated_session: true,
-          ...(correlation ? { current_wrong_original_refusals: 5 } : {}) }),
+          ...(correlation ? { current_wrong_original_refusals: 8 } : {}) }),
       original_visibility_qualified: false, current_authority_fence_qualified: false,
       provider_effect_time_fence_qualified: false, full_C12_qualified: false }));
   } finally {

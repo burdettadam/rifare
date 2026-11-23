@@ -452,3 +452,13 @@ all refuse before their first row. Replacing only this row-correlation function
 with a no-op must make the unchanged wrong-Cart oracle fail and is restored exactly.
 Read visibility,full order-child coverage and a healthy complete checkout remain
 unqualified by this bounded row-write stage.
+
+Initial authority and regression review of663f2b2 found cross-original adoption
+bypasses:UPDATE checked only NEW,payment identity/raw money were incomplete,
+address values did not own an existing address,and reservation accepted equal-value
+foreign order lines. The correction checks OLD and NEW,requires the exact retained
+payment-session ID plus native raw value/precision,and adds trigger-authenticated
+owner markers to exact copied Order addresses,lines,items and reservations. New
+adversarial cases reparent a foreign Cart line and payment session,update an
+identical foreign address,and reserve against a separately created equal-value
+foreign order line. Controller-created foreign rows carry no authenticated marker.
