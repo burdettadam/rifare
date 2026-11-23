@@ -263,6 +263,17 @@ export default async function verifyRequestRetention({ container }: ExecArgs) {
     await journal.recoverVerifiedAuthorityRequest(fixture.command.command_id, context, verifier);
     assert.deepEqual(await fixture.row(), row);
   });
+  await check("C7-NATIVE-CLOCK-RECOVERY a fresh verifier cannot recover behind the persisted first-observation clock floor", async () => {
+    const fixture = await makeOriginal();
+    await journal.verifyAuthorityRequest(fixture.command.command_id, fixture.artifact(), context, verifier);
+    const row = await fixture.row(), restarted = await journal.createAuthorityRequestVerifier(bytes(trust));
+    await postgres("rifare_operation").where({ id: row.id }).update({ request_observed_at: new Date(row.request_observed_at.getTime() + 2000) });
+    try { await assert.rejects(journal.recoverVerifiedAuthorityRequest(fixture.command.command_id, context, restarted), /Original commerce command unavailable/); }
+    finally {
+      restarted.close(); await postgres("rifare_operation").where({ id: row.id }).update({ request_observed_at: row.request_observed_at });
+    }
+    assert.deepEqual(await fixture.row(), row);
+  });
   await check("C7-NATIVE-WIRE actual C6 recovery and mTLS retrieval compose with original-bound native verification", async () => {
     const fixture = await makeOriginal(false);
     const fixtureRoot = process.env.RIFARE_C7_COMPILED === "true" ? process.env.RIFARE_C7_TEST_FIXTURE_ROOT : resolve(process.cwd(), "../..");
