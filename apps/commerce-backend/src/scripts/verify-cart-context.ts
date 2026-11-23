@@ -545,8 +545,60 @@ export default async function verifyCartContext({ container }: ExecArgs) {
         await assert.rejects(resumed.requestArtifact(mismatchedHandle), /COMMAND_HISTORY_CHANGED/);
         assert.equal(peer.requests.length, requestsBeforeArtifact);
         remoteResults.set(senderCommand.command_id, originalRemote);
+        for (const action of ["recover", "artifact"]) {
+          peer.holdHandshake();
+          const beforeRequests = peer.requests.length;
+          const beforeBytes = peer.applicationBytes;
+          const attempted = (action === "recover" ? resumed.recover() : resumed.requestArtifact(recoveredBound))
+            .then(() => "unexpected-success", error => error);
+          try {
+            await peer.handshakeEntered;
+            await auth.updateAuthIdentities({ id: alice.identity.id,
+              app_metadata: { customer_id: bob.customer.id } });
+            peer.releaseHandshake();
+            assert.ok(await attempted instanceof Error);
+            assert.equal(peer.requests.length, beforeRequests, action + " must refuse before HTTP");
+            assert.equal(peer.applicationBytes, beforeBytes, action + " must send zero application bytes");
+          } finally {
+            await auth.updateAuthIdentities({ id: alice.identity.id,
+              app_metadata: { customer_id: alice.customer.id } });
+            peer.releaseHandshake();
+            await attempted;
+          }
+          check("native-authority-" + action + "-refuses-owner-withdrawal-during-tls", () => {});
+        }
         session.close(); resumed.close();
         check("native-authority-session-retains-before-tls-and-recovers-only-the-original", () => {});
+
+        const racingCommand = { ...command, command_id: randomUUID() };
+        const racingBytes = Buffer.from(JSON.stringify(racingCommand));
+        const openings = await Promise.allSettled([
+          journal.openAuthoritySession(racingBytes, descriptorBytes, admission, transport),
+          journal.openAuthoritySession(racingBytes, descriptorBytes, admission, transport),
+        ]);
+        const opened = openings.flatMap(result => result.status === "fulfilled" ? [result.value] : []);
+        const creatorsForOriginal = opened.filter(value => !value.recovery_only);
+        assert.equal(creatorsForOriginal.length, 1);
+        const competingRecovery = await journal.openAuthoritySession(racingBytes, descriptorBytes, admission, transport);
+        assert.equal(competingRecovery.recovery_only, true);
+        try {
+          const started = await Promise.allSettled([
+            creatorsForOriginal[0].start(), competingRecovery.start(),
+          ]);
+          assert.equal(started.filter(result => result.status === "fulfilled").length, 1);
+          assert.equal(started.filter(result => result.status === "rejected").length, 1);
+          assert.equal(peer.requests.filter((request: any) => request.body?.command === "START_USE" &&
+            request.body.command_id === racingCommand.command_id).length, 1);
+          const retainedRacing = await postgres("rifare_operation")
+            .where({ original_command_uuid: racingCommand.command_id });
+          assert.equal(retainedRacing.length, 1);
+          assert.ok(retainedRacing[0].start_claimed_at);
+          assert.ok(retainedRacing[0].start_response_bytes);
+          check("native-authority-competing-sessions-send-one-start-for-one-retained-original", () => {});
+        } finally {
+          for (const value of opened) value.close();
+          competingRecovery.close();
+        }
 
         const authorityWorker = (mode: string, original: typeof command, compiled = false) =>
           promisify(execFile)(process.execPath, compiled ? [

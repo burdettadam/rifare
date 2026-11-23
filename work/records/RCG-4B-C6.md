@@ -139,3 +139,30 @@ all 43 selected wire groups passed. The disposable fixture was retired.
 Durable provider-response observation, restart recovery evidence, connected
 provider qualification and final C6 acceptance remain open. Root owns the next
 implementation checkpoint.
+
+## Compiled adapter qualification
+
+At `6c66999`, the normal backend build also emits the shared authority adapter
+dependency closure as 20 ESM modules using the existing pinned TypeScript
+compiler. Compiled native code loads that packaged entry relative to itself.
+The journal's transport factory ensures that the session and client use the
+same packaged class identity.
+
+The relocated adapter test passed C1 roundtrip and real public mTLS after
+copying the generated assets outside the checkout. The backend build passed
+with Admin disabled for this backend-only profile. A compiled native recovery
+worker ran from `.medusa/server`, asserted its JavaScript entry, and recovered
+the retained original through the packaged adapters.
+
+Schema, privacy and native cart/journal tests passed. Commerce passed separately
+in a fresh disposable database, with migration replay. The earlier combined
+fixture run collided on US region setup and remains retained as failed setup
+evidence. A nullable payment-session guard found by the real backend build was
+corrected and the build rerun successfully.
+
+Root owns the reused `.medusa/server` compiler cache for the next C6
+qualification; retire generated output after final qualification/integration.
+The temporary relocation directory and database fixtures were removed.
+This qualifies the adapter layout and compiled consumer locally. Full standalone
+application installation, connected provider qualification and C6 acceptance
+remain open.
