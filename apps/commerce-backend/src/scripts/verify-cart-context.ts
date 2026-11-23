@@ -394,6 +394,48 @@ export default async function verifyCartContext({ container }: ExecArgs) {
         ...admission, actor: { actor_type: "customer", actor_id: bob.customer.id, auth_identity_id: bob.identity.id },
       }), denied);
 
+      const bobContext = {
+        ...admission, actor: { actor_type: "customer", actor_id: bob.customer.id, auth_identity_id: bob.identity.id },
+      };
+      const bobFacts = await readAdmission(bobCart.id, bobContext);
+      const bobOriginal = {
+        ...command, cart_id: bobCart.id, cart_facts_digest: bobFacts.factsDigest,
+        payable_minor_units: bobFacts.facts.payable_total_minor,
+      };
+      await assert.rejects(journal.admit(Buffer.from(JSON.stringify(bobOriginal)), bobContext), /Original commerce command unavailable/);
+      process.env.RIFARE_MERCHANT_NAMESPACE = "another-merchant";
+      try {
+        await assert.rejects(journal.admit(bytes, admission), /Original commerce command unavailable/);
+      } finally {
+        process.env.RIFARE_MERCHANT_NAMESPACE = merchant.merchant_namespace;
+      }
+
+      const rollbackOriginal = { ...command, command_id: randomUUID() };
+      const rollbackBytes = Buffer.from(JSON.stringify(rollbackOriginal));
+      // PostgreSQL runs this constraint trigger at commit, after INSERT has
+      // returned the candidate ID to the application's transaction callback.
+      await postgres.raw(`
+        create function rifare_fixture_reject_commit() returns trigger language plpgsql
+        as 'begin raise exception ''RIFARE_FIXTURE_COMMIT_ABORT''; end;'
+      `);
+      try {
+        await postgres.raw(`
+          create constraint trigger rifare_fixture_commit_fault
+          after insert on rifare_operation deferrable initially deferred
+          for each row execute function rifare_fixture_reject_commit()
+        `);
+        await assert.rejects(journal.admit(rollbackBytes, admission), /RIFARE_FIXTURE_COMMIT_ABORT/);
+        assert.equal(await postgres("rifare_operation").where({ original_command_uuid: rollbackOriginal.command_id }).first(), undefined);
+      } finally {
+        await postgres.raw("drop trigger if exists rifare_fixture_commit_fault on rifare_operation");
+        await postgres.raw("drop function rifare_fixture_reject_commit()");
+      }
+      const recoveredRollback = await journal.admit(rollbackBytes, admission);
+      const recoveredRows = await postgres("rifare_operation").where({ original_command_uuid: rollbackOriginal.command_id });
+      assert.equal(recoveredRows.length, 1);
+      assert.equal(recoveredRows[0].id, recoveredRollback.id);
+      check("journal-commit-abort-rolls-back-insert-and-preserves-original-for-retry", () => {});
+
       const processOriginal = { ...command, command_id: randomUUID() };
       const processBytes = Buffer.from(JSON.stringify(processOriginal));
       const executeWorker = promisify(execFile);
@@ -505,7 +547,6 @@ export default async function verifyCartContext({ container }: ExecArgs) {
       await journal.restorePrivacyRefusals([refusal], privacyActor);
       assert.equal((await postgres("rifare_operation").where({ id: refusal.id }).first()).state, "retired");
       await journal.uninstallPrivacyJournal(privacyActor);
-      const bobContext = { ...admission, actor: { actor_type: "customer", actor_id: bob.customer.id, auth_identity_id: bob.identity.id } };
       await assert.rejects(journal.admit(Buffer.from(JSON.stringify({ ...command, cart_id: bobCart.id })), bobContext), denied);
       check("journal-privacy-owner-is-native-scoped-and-rechecked", () => {});
       await assert.rejects(journal.admit(bytes, admission), denied);

@@ -382,3 +382,17 @@ The fixture database and backup were retired. This rehearsal covers a logical
 backup restored offline with independently known current facts. Qualification
 does not yet cover automated sourcing of those facts, storage-level restore,
 or authorized production recovery.
+
+## Deferred commit failure and UUID ownership
+
+On November 22, 2026 (America/Denver), all 31 native cart-context groups
+passed on disposable PostgreSQL 16. A deferred constraint trigger rejected
+an admission transaction at commit, after the INSERT had run. PostgreSQL
+retained no row. After removing the fixture trigger, the same exact original
+was admitted once under its original UUID. The suite also verified that a
+different valid native buyer and cart, and a different merchant namespace,
+could not allocate an already occupied UUID. TypeScript passed. The fixture
+trigger, database and container were retired.
+
+Independent authority and regression review and delegated maintainer
+acceptance remain pending. Codex retains the active linked checkout.
