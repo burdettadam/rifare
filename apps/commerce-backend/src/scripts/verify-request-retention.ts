@@ -21,6 +21,10 @@ export default async function verifyRequestRetention({ container }: ExecArgs) {
   }
   const journal = container.resolve<OperationJournalService>(operationJournalModule);
   const postgres = container.resolve(ContainerRegistrationKeys.PG_CONNECTION);
+  if (process.env.RIFARE_C7_COMPILED === "true") {
+    assert.ok(__filename.endsWith(".js"));
+    assert.ok(journal instanceof require("../modules/operation-journal/service").default);
+  }
   const stringify = configure({ deterministic: true, strict: true, bigint: false });
   const bytes = (value: unknown) => Buffer.from(stringify(value)!);
   if (process.env.RIFARE_C7_WORKER) {
@@ -32,6 +36,33 @@ export default async function verifyRequestRetention({ container }: ExecArgs) {
     if (task.mode === "retain-lose-ack") process.exit(79);
     console.log("C7_RECOVERED=" + JSON.stringify({ digest: result.request_digest, observed_at: result.first_observed_at }));
     verifier.close(); return;
+  }
+  const restorePhase = process.env.RIFARE_C7_RESTORE_PHASE;
+  if (restorePhase && restorePhase !== "seed") {
+    const fixture = JSON.parse(process.env.RIFARE_C7_RESTORE_FIXTURE ?? "");
+    process.env.RIFARE_MERCHANT_NAMESPACE = fixture.merchant.merchant_namespace;
+    process.env.RIFARE_NATIVE_STORE_ID = fixture.merchant.store_id;
+    process.env.RIFARE_JOURNAL_PRIVACY_OPERATOR_ID = fixture.privacyActor.actor_id;
+    const operation = () => postgres("rifare_operation").where({ original_command_uuid: fixture.command_id }).first();
+    const before = await operation(); assert.equal(before.request_digest, fixture.request_digest); assert.ok(before.request_bytes);
+    if (restorePhase === "erase") {
+      await journal.erasePrivacySubject(fixture.context.actor.actor_id, fixture.privacyActor);
+      const row = await operation(); assert.equal(row.request_bytes, null);
+      console.log("C7_RESTORE_CURRENT_REFUSAL=" + JSON.stringify({ id: row.id,
+        original_command_uuid: row.original_command_uuid, challenge_fingerprint: row.challenge_fingerprint })); return;
+    }
+    assert.ok(restorePhase === "reconcile-erase" || restorePhase === "reconcile-uninstall");
+    const refusal = JSON.parse(process.env.RIFARE_C7_RESTORE_REFUSAL ?? "null");
+    const reconcile = () => restorePhase === "reconcile-erase" ?
+      journal.reconcilePrivacyRestore([refusal], [fixture.context.actor.actor_id], fixture.privacyActor) :
+      journal.reconcilePrivacyRestore([], [], fixture.privacyActor, { installationUninstalled: true });
+    await reconcile(); await reconcile();
+    const row = await operation(); assert.equal(row.state, "retired"); assert.equal(row.id, before.id);
+    for (const field of ["request_bytes", "request_digest", "request_context_digest", "request_nonce", "request_observed_at", "request_expires_at"]) assert.equal(row[field], null);
+    const verifier = await journal.createAuthorityRequestVerifier(bytes(fixture.trust));
+    await assert.rejects(journal.recoverVerifiedAuthorityRequest(fixture.command_id, fixture.context, verifier)); verifier.close();
+    console.log("C7_DATABASE_RESTORE_RESULT=" + JSON.stringify({ result: "pass", phase: restorePhase,
+      source: "restored-whole-postgres-database", execution_authorized: false })); return;
   }
   const checks: string[] = [];
   const check = async (name: string, run: () => unknown) => {
@@ -64,7 +95,8 @@ export default async function verifyRequestRetention({ container }: ExecArgs) {
   const privacyActor = { actor_type: "user" as const, actor_id: operator.id, auth_identity_id: operatorIdentity.id };
   process.env.RIFARE_MERCHANT_NAMESPACE = merchant.merchant_namespace;
   process.env.RIFARE_NATIVE_STORE_ID = store.id;
-  process.env.RIFARE_JOURNAL_PRIVACY_KEY = randomBytes(32).toString("base64url");
+  if (restorePhase === "seed") assert.match(process.env.RIFARE_JOURNAL_PRIVACY_KEY ?? "", /^[A-Za-z0-9_-]{43}$/);
+  else process.env.RIFARE_JOURNAL_PRIVACY_KEY = randomBytes(32).toString("base64url");
   process.env.RIFARE_JOURNAL_PRIVACY_OPERATOR_ID = operator.id;
   const context = { actor: { actor_type: "customer" as const, actor_id: customer.id, auth_identity_id: identity.id },
     salesChannelIds: [channels[0].id] };
@@ -121,6 +153,13 @@ export default async function verifyRequestRetention({ container }: ExecArgs) {
     let output = ""; for (const stream of [child.stdout, child.stderr]) stream.on("data", data => { output = (output + data).slice(-16000); });
     child.once("error", reject); child.once("exit", code => resolve({ code, output }));
   });
+  if (restorePhase === "seed") {
+    const fixture = await makeOriginal();
+    await journal.verifyAuthorityRequest(fixture.command.command_id, fixture.artifact(), context, verifier);
+    const row = await fixture.row();
+    console.log("C7_RESTORE_FIXTURE=" + JSON.stringify({ merchant, privacyActor, context, trust,
+      command_id: fixture.command.command_id, request_digest: row.request_digest })); verifier.close(); return;
+  }
   await check("C7-NATIVE-FIRST exact signed bytes and verification context commit once with original time", async () => {
     const fixture = await makeOriginal(), artifact = fixture.artifact();
     await assert.rejects(journal.verifyAuthorityRequest(fixture.command.command_id, Buffer.from("unverified"), context, verifier));
@@ -218,10 +257,6 @@ export default async function verifyRequestRetention({ container }: ExecArgs) {
   });
   await check("C7-NATIVE-WIRE actual C6 recovery and mTLS retrieval compose with original-bound native verification", async () => {
     const fixture = await makeOriginal(false);
-    if (process.env.RIFARE_C7_COMPILED === "true") {
-      assert.ok(__filename.endsWith(".js"));
-      assert.ok(journal instanceof require("../modules/operation-journal/service").default);
-    }
     const fixtureRoot = process.env.RIFARE_C7_COMPILED === "true" ? process.env.RIFARE_C7_TEST_FIXTURE_ROOT : resolve(process.cwd(), "../..");
     assert.ok(fixtureRoot, "compiled qualification explicitly supplies external test fixtures");
     const helpers = await import(pathToFileURL(resolve(fixtureRoot!, "tests/development/delegated-use-client-helpers.mts")).href);
