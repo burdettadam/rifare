@@ -258,3 +258,17 @@ runtime plus generated .medusa/server after fresh Windows gates. Preserve source
 node_modules, four preexisting native types, local configuration, refs and all raw
 evidence. Rifare audit scope: one active primary owned by root and zero linked or
 verification checkouts. The broad handoff goal stays active.
+
+## Verified integration and retirement
+
+PR11 merged normally at258904eaa384a6bbe4f9f8084751ac4e42323580; its whole tree
+matches publication9854a39, with both roles' explicit carry-forward. The source and
+feature refs remain reachable. Owned PostgreSQL fixture and HTTP listener are absent.
+The exact runtime and generated .medusa/server are removed after fresh Windows
+process/service/link/mount/consumer/data checks and88,807 nondeleting share probes.
+Allocated-file bytes retired563,255,464; observed free-space delta579,002,368 is not
+sole attribution. All91 qualification hashes and four native types still match.
+Source dependencies/configuration/receipts/dump/reviews remain. Rifare: one primary
+(root active), zero linked/verification checkouts. Provider: one primary/40 linked,
+read-only inventory only. Root continues original payment observations in RCG-4B-C11;
+full connected authority, financial reconciliation and production gates remain open.

@@ -51,15 +51,22 @@ export async function readLockedNativePayment(transaction: Postgres, original: O
   // no-effect proof; presence always requires the separate reconciliation owner.
   const payment = await transaction("payment").where(builder => builder.where({ payment_collection_id: collection.id }).orWhere({ payment_session_id: session.id })).orderBy("id").forUpdate().first("id");
   requireValue(!payment);
+  return Object.freeze({ payment_collection_id: collection.id as string, payment_session_id: session.id as string,
+    payment_provider_id: session.provider_id as string, ...nativePaymentCommitments(original, binding, {
+      payment_collection_id: collection.id, payment_session_id: session.id, payment_provider_id: session.provider_id }),
+    execution_authorized: false, live_provider_status_verified: false });
+}
+
+/** The unchanged C10 canonical profile/commitments, reused for historical identity. */
+export function nativePaymentCommitments(original: Original, binding: Omit<Binding, "region_id">,
+  identity: { payment_collection_id: string; payment_session_id: string; payment_provider_id: string }) {
   const context = { profile: "urn:rifare:native-pending-payment-context:v1", payment_provider_profile: "urn:rifare:local-medusa-system-pending:v1", merchant_namespace: binding.merchant_namespace,
     store_id: binding.store_id, original_command_id: original.command.command_id, command_digest: original.commandDigest,
     cart_id: original.command.cart_id, final_command_uuid: binding.final_command_uuid, final_response_digest: binding.final_response_digest,
     receipt_digest: binding.receipt_digest, receipt_context_digest: binding.receipt_context_digest, receipt_id: binding.receipt_id,
-    payment_collection_id: collection.id, payment_session_id: session.id, provider_id: session.provider_id,
-    currency: original.command.currency, currency_exponent: exponent, payable_minor_units: original.command.payable_minor_units };
-  return Object.freeze({ payment_collection_id: collection.id as string, payment_session_id: session.id as string,
-    payment_provider_id: session.provider_id as string, payment_context_digest: factsDigest(context),
-    payment_fingerprint: factsDigest({ profile: "urn:rifare:medusa-payment-refusal:v1", merchant_namespace: binding.merchant_namespace,
-      store_id: binding.store_id, provider_id: session.provider_id, payment_session_id: session.id }),
-    execution_authorized: false, live_provider_status_verified: false });
+    payment_collection_id: identity.payment_collection_id, payment_session_id: identity.payment_session_id, provider_id: identity.payment_provider_id,
+    currency: original.command.currency, currency_exponent: original.command.currency_exponent, payable_minor_units: original.command.payable_minor_units };
+  return { payment_context_digest: factsDigest(context), payment_fingerprint: factsDigest({
+    profile: "urn:rifare:medusa-payment-refusal:v1", merchant_namespace: binding.merchant_namespace,
+    store_id: binding.store_id, provider_id: identity.payment_provider_id, payment_session_id: identity.payment_session_id }) };
 }

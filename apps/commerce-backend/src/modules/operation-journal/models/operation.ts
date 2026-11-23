@@ -60,6 +60,9 @@ const Operation = model.define("rifare_operation", {
   payment_provider_id: model.text().nullable(),
   payment_context_digest: model.text().nullable(),
   payment_observed_at: model.dateTime().nullable(),
+  native_payment_fingerprint: model.text().nullable(),
+  native_payment_id: model.text().nullable(),
+  native_payment_observed_at: model.dateTime().nullable(),
   receipt_fingerprint: model.text().nullable(),
   receipt_bytes: model.text().nullable(),
   receipt_digest: model.text().nullable(),
@@ -74,6 +77,7 @@ const Operation = model.define("rifare_operation", {
   { name: "rifare_operation_challenge_unique", on: ["challenge_fingerprint"], unique: true, where: null },
   { name: "rifare_operation_final_uuid_unique", on: ["final_command_uuid"], unique: true, where: null },
   { name: "rifare_operation_payment_unique", on: ["payment_fingerprint"], unique: true, where: null },
+  { name: "rifare_operation_native_payment_unique", on: ["native_payment_fingerprint"], unique: true, where: null },
   { name: "rifare_operation_receipt_unique", on: ["receipt_fingerprint"], unique: true, where: null },
 ]).checks([
   { name: "rifare_operation_original_uuid", expression: "original_command_uuid ~ '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'" },
@@ -120,6 +124,10 @@ const Operation = model.define("rifare_operation", {
     and (payment_fingerprint is null or payment_collection_id is not null or state = 'retired')` },
   { name: "rifare_operation_payment_digests", expression: "payment_fingerprint ~ '^sha256:[0-9a-f]{64}$' and payment_context_digest ~ '^sha256:[0-9a-f]{64}$'" },
   { name: "rifare_operation_payment_ids", expression: "payment_collection_id ~ '^pay_col_[A-Za-z0-9]{1,100}$' and payment_session_id ~ '^payses_[A-Za-z0-9]{1,100}$' and payment_provider_id ~ '^pp_[A-Za-z0-9_.:-]{1,250}$'" },
+  { name: "rifare_operation_native_payment_tuple", expression: `(native_payment_id is null) = (native_payment_observed_at is null)
+    and (native_payment_id is null or (native_payment_fingerprint is not null and payment_collection_id is not null))
+    and (native_payment_fingerprint is null or (payment_fingerprint is not null and (native_payment_id is not null or state = 'retired')))` },
+  { name: "rifare_operation_native_payment_shape", expression: "native_payment_id ~ '^pay_[A-Za-z0-9]{1,100}$' and native_payment_fingerprint ~ '^sha256:[0-9a-f]{64}$'" },
   { name: "rifare_operation_receipt_tuple", expression: `(receipt_bytes is null) = (receipt_digest is null)
     and (receipt_bytes is null) = (receipt_context_digest is null) and (receipt_bytes is null) = (receipt_id is null)
     and (receipt_bytes is null) = (receipt_observed_at is null) and (receipt_bytes is null) = (receipt_expires_at is null)

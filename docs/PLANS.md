@@ -283,6 +283,21 @@ preserves exact evidence and unexplained intermittent inherited C7 qualification
 failures. Live provider outcome/status, connected custody, identity linking and
 final commerce execution authority remain open.
 
+**RCG-4B-C11 is implemented and independently reviewed locally** under
+[ADR-0091](decisions/0091-native-original-payment-outcomes.md). A separate historical
+observer recovers the exact C10 original through native authorization,capture,
+refund/cancellation and completed-order history. Immutable first-payment identity
+and privacy refusal continuity remain distinct from mutable native totals and order
+bookkeeping. Missing native records never prove no remote effect. It adds no provider
+call,dispatch authority or public route and preserves C10's strict pending profile.
+The own-dependency compiled Windows PostgreSQL16.16 campaign passes27 new groups and
+61 retained C7-C10 groups. Actual profile-bound fault,upgrade and whole-database
+restore evidence and both independent roles are retained in [the C11 record](../work/records/RCG-4B-C11.md).
+WSL/Docker backward clock steps remain an environmental qualification limit; the
+passing Windows profile does not qualify production clock behavior. Connected
+custody,identity linking,live provider reconciliation and final-effect controls
+remain open.
+
 The full isolated **RCG-5 cross-service journey** and connected **RCG-6 profile**
 follow those bounded integrations. Preserve original recovery and Rifare's
 execution, budget, reservation and business-idempotency ownership. Reuse the
