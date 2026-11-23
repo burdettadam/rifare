@@ -67,7 +67,9 @@ export async function qualifyNativeClaims(container: any, fixture: {
   };
   const rejectUnchanged = async (name: string, invoke: () => Promise<unknown>) => {
     const before = await effects();
-    await assert.rejects(invoke, /cancel|not found/i);
+    await assert.rejects(invoke, (error: any) => {
+      assert.match(error?.message ?? "", /cancel|not found/i); return true;
+    });
     check(name, () => {});
     assert.deepEqual(await effects(), before, `${name}: rejected call changed native effects`);
   };
