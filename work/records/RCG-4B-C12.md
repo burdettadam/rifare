@@ -356,3 +356,15 @@ unknown original,retire LOGIN/generation,and refuse a replacement on recovery.
 Deferred trigger checks are not credited as an unbypassable expiry fence: constraint
 timing is normally session-controllable. In-flight ordering,late expiry,reconnect,
 current authority,original row visibility and provider effects remain unqualified.
+
+At9d4f00e the five native refusals passed,actual predicate omission still failed
+the unchanged stale oracle,and occupied custody creation failed with EEXIST only
+after active delivery then verified generation2/NOLOGIN,zero sessions and recovery
+without replacement. Both independent roles cleared that bounded correction.
+The next source probe holds an actual native Cart method transaction open while
+the canonical journal retirement runs in another backend. It requires observed
+pg_blocking_pids linkage before permitting native COMMIT,then repeats all five stale
+refusals after retirement completes. A separate fault removes the actual guard's
+two SHARE locks without changing the ordering assertion. This tests transaction
+serialization only; current authority,late expiry,row visibility and provider
+effects remain separate unqualified boundaries.

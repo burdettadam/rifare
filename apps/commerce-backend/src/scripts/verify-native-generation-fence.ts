@@ -33,7 +33,24 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
       Native.prototype[name] = async function(...args: any[]) { calls[name]++; return originals.get(name).apply(this, args); };
     }
     try {
-      await carts.updateCarts(task.cart_id, { metadata: { c12_generation_probe: "current", asserted_generation: 999, asserted_worker: "postgres" } });
+      const current = { metadata: { c12_generation_probe: "current", asserted_generation: 999, asserted_worker: "postgres" } };
+      if (task.ordering) {
+        // Observe a real native Cart method inside its actual module transaction,
+        // rather than inferring transaction identity from a separate raw write.
+        const repository = (carts as any).baseRepository_;
+        await repository.transaction(async (transactionManager: any) => {
+          const tx = transactionManager.getTransactionContext(); assert.equal(tx?.isTransaction, true);
+          const native = (await tx.raw("select session_user as role, pg_backend_pid() as pid")).rows[0];
+          assert.equal(native.role, task.role);
+          await carts.updateCarts(task.cart_id, current, { transactionManager });
+          const release = new Promise<void>((resolve, reject) => {
+            const timer = setTimeout(() => reject(new Error("Native transaction release deadline")), 15000);
+            process.once("message", message => { clearTimeout(timer); try { assert.deepEqual(message, { phase: "commit" }); resolve(); } catch (error) { reject(error); } });
+          });
+          process.send!({ phase: "native-transaction-open", identity: native });
+          await release;
+        });
+      } else await carts.updateCarts(task.cart_id, current);
       const resumed = new Promise<void>((resolve, reject) => {
         const timer = setTimeout(() => reject(new Error("Native generation resume deadline")), 15000);
         process.once("message", message => { clearTimeout(timer); try { assert.deepEqual(message, { phase: "resume" }); resolve(); } catch (error) { reject(error); } });
@@ -89,8 +106,10 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
   const setupFault = process.env.RIFARE_C12_GENERATION_SETUP_FAULT === "occupied";
   if (setupFault) writeFileSync(custody, JSON.stringify({ fixture: "occupied before claim" }), { flag: "wx", mode: 0o600 });
   const claim = await f.journal.claimNativeExecution(original.command.command_id, f.context, f.verifier);
-  let definition: string | null = null, deliveredLogin: boolean | undefined;
+  let definition: string | null = null, deliveredLogin: boolean | undefined, retirement: Promise<void> | undefined;
   const fault = process.env.RIFARE_C12_GENERATION_FAULT === "omit";
+  const ordering = process.env.RIFARE_C12_GENERATION_ORDERING === "write-first";
+  const orderingFault = process.env.RIFARE_C12_GENERATION_ORDERING_FAULT === "omit-locks";
   try {
   assert.ok(claim.worker); assert.ok(claim.seal);
   deliveredLogin = (await postgres("pg_catalog.pg_roles").where({ rolname: claim.worker.role }).first()).rolcanlogin;
@@ -108,7 +127,11 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
   writeFileSync(custody, JSON.stringify({ source: process.env.RIFARE_C12_SOURCE, original_id: original.command.command_id,
     worker: claim.worker, seal: claim.seal }, null, 2), { flag: "wx", mode: 0o600 });
   definition = (await postgres.raw("select pg_get_functiondef(to_regprocedure('public.rifare_guard_native_generation()')) as definition")).rows[0].definition as string | null;
-  if (fault) assert.ok(definition, "The enforcement fault requires an installed generation function");
+  if (fault || orderingFault) assert.ok(definition, "The enforcement fault requires an installed generation function");
+  if (orderingFault) {
+    assert.ok(ordering); assert.equal((definition!.match(/for share/gi) ?? []).length, 2);
+    await postgres.raw(definition!.replace(/for share/gi, ""));
+  }
   await postgres.raw(`create table public.rifare_c12_generation_audit(id bigserial primary key,native_table text not null,authenticated_role text not null);
     create function public.rifare_c12_generation_observe() returns trigger language plpgsql security definer set search_path=pg_catalog as $$ begin
       if session_user::text ~ '^rifare_exec_[a-f0-9]{32}$' then insert into public.rifare_c12_generation_audit(native_table,authenticated_role) values(TG_TABLE_NAME,session_user); end if;
@@ -125,11 +148,12 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
   const env: NodeJS.ProcessEnv = { ...process.env, DATABASE_URL: database.href, MEDUSA_WORKER_MODE: "server",
     RIFARE_C12_NATIVE_WORKER: JSON.stringify({ role: claim.worker!.role }), RIFARE_C12_GENERATION_TASK: JSON.stringify({ role: claim.worker!.role,
       cart_id: original.cart.id, customer_id: f.customer.id, collection_id: original.collection.id, line_item_id: line.id,
-      inventory_item_id: item.id, location_id: location.id }) };
+      inventory_item_id: item.id, location_id: location.id, ordering }) };
   for (const key of Object.keys(env)) if (key.startsWith("PG") || key.endsWith("_CUSTODY") || /(?:API_KEY|_TOKEN|_PASSWORD|_SECRET|_PRIVATE_KEY|_CREDENTIALS)$/.test(key) ||
     key.endsWith("DATABASE_URL") && key !== "DATABASE_URL" || key.startsWith("RIFARE_JOURNAL_PRIVACY_") || key.startsWith("RIFARE_C12_CONTROLLER_")) delete env[key];
   env.JWT_SECRET = randomBytes(32).toString("hex"); env.COOKIE_SECRET = randomBytes(32).toString("hex");
   let beforeStale: string | undefined, beforeAudit: unknown, parentFailure: unknown;
+  let orderingObservation: unknown;
     const result = await new Promise<{ code: number | null; output: string }>((complete, reject) => {
       const compiled = __filename.endsWith(".js"), entry = resolvePath();
       function resolvePath() { return resolve(dirname(__filename), "native-execution-worker-entry." + (compiled ? "js" : "ts")); }
@@ -139,8 +163,32 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
       const timer = setTimeout(() => { child.kill(); reject(new Error("Native generation worker deadline")); }, 45000);
       for (const stream of [child.stdout!, child.stderr!]) stream.on("data", data => { output = (output + data).slice(-30000); });
       child.on("message", message => { void (async () => {
+        const phase = message as any;
+        assert.equal(phase.identity.role, claim.worker!.role);
+        if (phase.phase === "native-transaction-open") {
+          assert.ok(ordering && !retirement && !ready);
+          let settled = false;
+          retirement = retireOriginalExecutionWorker(postgres, claim.worker!.role).finally(() => { settled = true; });
+          retirement.catch(() => undefined);
+          let blocked: any;
+          const deadline = Date.now() + 4000;
+          while (Date.now() < deadline && !settled) {
+            blocked = (await postgres.raw(`select pid,pg_blocking_pids(pid) as blockers from pg_catalog.pg_stat_activity
+              where datname=current_database() and pid<>pg_backend_pid() and ?::integer=any(pg_blocking_pids(pid))
+              and query ilike '%update%rifare_operation%'`, [phase.identity.pid])).rows[0];
+            if (blocked) break;
+            await new Promise(resolve => setTimeout(resolve, 20));
+          }
+          assert.ok(blocked && !settled, "Revocation must wait on the actual native Cart transaction's journal generation lock");
+          orderingObservation = { actual_blocker_observed: true, native_pid: phase.identity.pid,
+            revoker_pid: blocked.pid, blockers: blocked.blockers, native_cart_write_precedes_revocation_commit: true };
+          child.send({ phase: "commit" });
+          await retirement;
+          return;
+        }
         assert.equal(ready, false); ready = true;
-        const phase = message as any; assert.equal(phase.phase, "ready"); assert.equal(phase.identity.role, claim.worker!.role);
+        assert.equal(phase.phase, "ready");
+        if (ordering) { assert.ok(retirement); await retirement; }
         assert.equal((await postgres("cart").where({ id: original.cart.id }).first()).metadata.c12_generation_probe, "current");
         beforeAudit = await postgres("rifare_c12_generation_audit").orderBy("id");
         assert.equal((beforeAudit as any[]).length, 1); beforeStale = await snapshot();
@@ -158,19 +206,22 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
       });
     });
     writeFileSync(custody.replace("-private.json", "-observations.json"), JSON.stringify({ worker_exit: result.code, before_stale: beforeStale,
-      after_stale: await snapshot(), audit: await postgres("rifare_c12_generation_audit").orderBy("id"), fault }, null, 2), { flag: "wx" });
+      after_stale: await snapshot(), audit: await postgres("rifare_c12_generation_audit").orderBy("id"), fault,
+      ordering, ordering_fault: orderingFault, ordering_observation: orderingObservation }, null, 2), { flag: "wx" });
     if (parentFailure) throw parentFailure;
     assert.equal(result.code, 0, result.output);
     assert.match(result.output, /C12_NATIVE_MODULE_WORKER_SHUTDOWN=complete/);
     assert.equal(await snapshot(), beforeStale, "Stale native writes must have zero effects, including early address and reservation rows");
     assert.deepEqual(await postgres("rifare_c12_generation_audit").orderBy("id"), beforeAudit);
+    if (ordering) { assert.ok(orderingObservation); console.log("C12_NATIVE_GENERATION_ORDERING=" + JSON.stringify(orderingObservation)); }
     console.log(result.output.split(/\r?\n/).filter(value => value.startsWith("C12_NATIVE_GENERATION_")).join("\n"));
     console.log("C12_NATIVE_GENERATION_RESULT=" + JSON.stringify({ result: "pass", actual_native_stale_write_refusals: 5,
       same_existing_authenticated_session: true, original_visibility_qualified: false, current_authority_fence_qualified: false,
       provider_effect_time_fence_qualified: false, full_C12_qualified: false }));
   } finally {
     try {
-      if (fault && definition) {
+      if (retirement) await retirement;
+      if ((fault || orderingFault) && definition) {
         await postgres.raw(definition);
         assert.equal((await postgres.raw("select pg_get_functiondef('public.rifare_guard_native_generation()'::regprocedure) as definition")).rows[0].definition, definition);
         console.log("C12_NATIVE_GENERATION_FAULT_RESTORED=exact");
