@@ -291,3 +291,18 @@ An actual predicate omission must make the unchanged stale-write oracle fail,the
 restore the exact function. This is generation-mechanism proof only; current
 native authority,original visibility/row correlation,provider edge and complete
 upstream completion remain required before any full-C12 acceptance.
+
+
+Ata38364e the genuine revoked worker retained its existing backend and committed
+another native Cart metadata write after generation2/NOLOGIN. The unchanged
+stale-write refusal assertion failed; the audit and differing before/after native
+hashes preserve the actual effect. This is the intended meaningful baseline.
+
+The next migration adds a narrowly named generation-only BEFORE STATEMENT guard
+on native economic write targets,using authenticated session_user plus the journal's
+unique immutable owner fingerprint. Cart then journal SHARE locks last through the
+native transaction; clock bounds are checked after lock acquisition. Missing/retired/
+revoked/expired original identity refuses. Required native targets cannot be silently
+skipped. Ordinary non-worker behavior stays outside this primitive; original-specific
+row visibility,missing-identity protected-cart cases,current authority and provider
+calls are still unqualified. This guard cannot by itself satisfy C12.
