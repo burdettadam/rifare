@@ -40,7 +40,7 @@ export async function verifyStandaloneAdmin(page, fixture) {
     await p.screenshot({ path: fixture.artifactPrefix + '-login.png', fullPage: true });
     checks.push('ADMIN-ANONYMOUS-DEEP-LINK');
     await p.getByPlaceholder('Email', { exact: true }).fill(fixture.email);
-    await p.getByPlaceholder('Password', { exact: true }).fill('00000000000000000000000000000000');
+    await p.getByPlaceholder('Password', { exact: true }).fill('incorrect-' + fixture.password);
     const wrong = p.waitForResponse(r => r.request().method() === 'POST' && path(r.url()) === '/auth/user/emailpass');
     await p.getByRole('button', { name: 'Continue with Email', exact: true }).click();
     ensure((await wrong).status() === 401, 'ADMIN_WRONG_PASSWORD_ACCEPTED');

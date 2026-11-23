@@ -36,9 +36,13 @@ export default async function verifyStandaloneAdmin({ container }: ExecArgs) {
     console.log("RIFARE_ADMIN_FIXTURE_SEEDED=" + JSON.stringify({ synthetic: true, customerId: customer.id, cartId: cart.id, protectedEffectTables: Object.keys(baseline).length }));
     return;
   }
-  assert.equal(process.env.RIFARE_ADMIN_FIXTURE_PHASE, "verify");
   const fixture = JSON.parse(readFileSync(file, "utf8")); assert.equal(fixture.synthetic, true);
   assert.deepEqual(await effectSnapshot(), fixture.baseline, "Admin observation and refused public routes cannot mutate protected native effects");
+  if (process.env.RIFARE_ADMIN_FIXTURE_PHASE === "effects") {
+    console.log("RIFARE_ADMIN_EFFECTS_RESULT=" + JSON.stringify({ result: "pass", protectedEffectTablesUnchanged: Object.keys(fixture.baseline).length }));
+    return;
+  }
+  assert.equal(process.env.RIFARE_ADMIN_FIXTURE_PHASE, "verify");
   const resultFile = process.env.RIFARE_ADMIN_BROWSER_RESULT; assert.ok(resultFile);
   const result = JSON.parse(readFileSync(resultFile, "utf8")); assert.equal(result.result, "pass");
   const row = await postgres("product").where({ id: result.product.id }).first();
