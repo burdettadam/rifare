@@ -424,3 +424,10 @@ rather than wrapping it as a timeout. No pass is credited because the pool oracl
 recognized only its other valid bounded-timeout form. The final correction accepts
 only these two concrete retired-pool refusal forms and requires the actual native
 Cart method to reject by the same predicate. The role-login fault oracle is unchanged.
+
+Ata2eef11 the positive backend-loss/reconnect campaign passed,but the role-login
+fault reconnected successfully and then reached the still-active SQL generation
+guard before the credential-refusal assertion. That is valid defense in depth but
+the wrong targeted fault outcome. The final source records successful retired-role
+reconnection and immediately applies the unchanged PostgreSQL credential-refusal
+assertion;the SQL guard remains installed and is not faulted in this campaign.

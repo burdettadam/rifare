@@ -88,9 +88,7 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
         let pooled: any, poolError: any;
         try { pooled = await postgres.raw("select session_user as role,pg_backend_pid() as pid"); }
         catch (error) { poolError = error; }
-        // Under the deliberate fault, preserve the concrete stale effect before
-        // the unchanged credential and pool-refusal assertions fail.
-        if (pooled) await carts.updateCarts(task.cart_id, { metadata: { c12_generation_probe: "stale-reconnected" } });
+        if (pooled) console.log("C12_NATIVE_RECONNECT_FAULT=retired-credential-reconnected");
         const credentialRefused = (error: any) => error && (error.code === "28000" || /not permitted to log in/i.test(error.message));
         const poolRefused = (error: any) => credentialRefused(error) || error &&
           (error.name === "KnexTimeoutError" || /acquiring a connection/i.test(error.message));
