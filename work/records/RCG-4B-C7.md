@@ -172,7 +172,8 @@ reviewers verified them read-only and did not claim independent execution.
 Actual failed observations remain distinct. An initial migration-generator
 attempt used an unavailable placeholder database; its uniquely identified owned
 process was stopped before rerunning on disposable PostgreSQL. TLS setup initially
-selected the wrong Windows OpenSSL, corrected with a task-local Git OpenSSL PATH.
+failed under the default Windows OpenSSL selection; a task-local Git OpenSSL PATH
+was used for the passing run.
 The new peer fixture initially retained its internal default HTTP status, corrected
 to the selected public 200 response and actual response destruction for loss. Fixture
 timestamps now come from the database owner clock. A relocated `3413268` run refused
@@ -187,3 +188,15 @@ the earlier foundation review. Independent rifare_regression_review also cleared
 that exact candidate. Both found no scoped blocker. Root accepts bounded local
 development integration only; provider enrollment, nonce generation, connected
 qualification, signed presentations, final authority and production remain open.
+
+## Qualification artifact retirement
+
+After both reviewers independently verified the runtime receipt, root removed the
+owned temporary runtime/dependency directory and the 68-file generated server
+cache. All qualification PostgreSQL containers and observed owned listeners are
+stopped/removed. The final Windows free-space measurement increased 585154560 bytes
+for runtime retirement. Source inputs, branch refs, installed-lock and build
+receipts, qualification scripts and actual pass/failure logs remain preserved.
+Reusable source dependencies remain assigned to root for subsequent Rifare work.
+No other repository or worker workload was stopped or cleaned. The five additive
+inventory entries and existing intake/plan/license/structure checks pass.
