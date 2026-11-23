@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "id": "rifare-source-inventory",
-  "revision": 89,
+  "revision": 90,
   "status": "proposed",
   "components": [
     {
@@ -1813,7 +1813,9 @@
         "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123171000.ts",
         "apps/commerce-backend/src/scripts/verify-payment-outcomes-restore.ts",
         "docs/decisions/0092-native-original-execution-fence.md",
-        "work/records/RCG-4B-C12.md"
+        "work/records/RCG-4B-C12.md",
+        "apps/commerce-backend/src/modules/native-execution-payment/index.ts",
+        "apps/commerce-backend/src/scripts/verify-native-worker-identity.ts"
       ],
       "notices": []
     },
