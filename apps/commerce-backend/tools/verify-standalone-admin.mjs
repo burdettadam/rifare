@@ -11,7 +11,7 @@ export async function verifyStandaloneAdmin(page, fixture) {
   const browser = page.context().browser();
   const context = await browser.newContext({ viewport: { width: 1440, height: 1000 }, locale: 'en-US' });
   const p = await context.newPage(); p.setDefaultTimeout(10000);
-  let customerContext;
+  let customerContext, product;
   await context.route('**/*', route => {
     if (!path(route.request().url())) { external.push(route.request().url().split('/').slice(0, 3).join('/')); return route.abort(); }
     return route.continue();
@@ -44,6 +44,7 @@ export async function verifyStandaloneAdmin(page, fixture) {
     const wrong = p.waitForResponse(r => r.request().method() === 'POST' && path(r.url()) === '/auth/user/emailpass');
     await p.getByRole('button', { name: 'Continue with Email', exact: true }).click();
     ensure((await wrong).status() === 401, 'ADMIN_WRONG_PASSWORD_ACCEPTED');
+    await p.getByText('Authentication failed', { exact: true }).waitFor();
     ensure((await context.request.get(origin + '/admin/products')).status() === 401, 'ADMIN_FAILED_LOGIN_GAVE_DATA');
     checks.push('ADMIN-WRONG-PASSWORD');
     await p.getByPlaceholder('Password', { exact: true }).fill(fixture.password);
@@ -63,7 +64,7 @@ export async function verifyStandaloneAdmin(page, fixture) {
     await p.getByRole('button', { name: 'Save as draft', exact: true }).click();
     const save = await saved, body = await save.json();
     ensure(save.status() === 200 && /^prod_[A-Za-z0-9]+$/.test(body.product?.id) && body.product.title === title && body.product.status === 'draft', 'ADMIN_NATIVE_PRODUCT_NOT_PERSISTED');
-    const product = { id: body.product.id, title, status: body.product.status };
+    product = { id: body.product.id, title, status: body.product.status };
     await p.waitForURL(origin + '/app/products/' + product.id);
     await p.getByRole('heading', { name: title, exact: true }).waitFor();
     checks.push('ADMIN-NATIVE-CATALOG-WRITE');
@@ -111,7 +112,11 @@ export async function verifyStandaloneAdmin(page, fixture) {
       globalTokenRevocationVerified: false, connectedProviderVerified: false, productionQualified: false };
   } catch (error) {
     await p.screenshot({ path: fixture.artifactPrefix + '-failure.png', fullPage: true }).catch(() => {});
-    console.error('ADMIN_BROWSER_FAILURE=' + JSON.stringify({ checks, errors, external, assets, failure: error.message }));
-    throw error;
+    const details = { checks, errors, external, product,
+      unpackagedScripts: scriptRequests.filter(target => !target.startsWith('/app/assets/')),
+      failedAssets: assets.filter(a => a.status !== 200 || /text\/html/.test(a.type ?? '')) };
+    let message = error.message;
+    for (const value of [fixture.password, fixture.customerToken, fixture.publishableKey]) if (value) message = message.replaceAll(value, '[synthetic-redacted]');
+    throw new Error(message + '\nADMIN_BROWSER_FAILURE=' + JSON.stringify(details));
   } finally { await customerContext?.close(); await context.close(); }
 }
