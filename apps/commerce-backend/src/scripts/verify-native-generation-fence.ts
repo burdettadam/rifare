@@ -57,6 +57,15 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
       } else await carts.updateCarts(task.cart_id, current);
       if (task.reconnect) {
         assert.equal(typeof process.send, "function");
+        // Bound the actual native pools' acquisition wait so a retired login
+        // produces an observed refusal instead of waiting on Knex's 60s default.
+        // This changes test timing only; connection creation/authentication stays
+        // in the installed pools and PostgreSQL.
+        const pools = [postgres, (carts as any).baseRepository_.getFreshManager().getKnex()];
+        for (const pool of new Set(pools)) {
+          assert.ok(pool.client?.pool); pool.client.pool.acquireTimeoutMillis = 2000;
+          pool.client.pool.createRetryIntervalMillis = 100; pool.client.pool.propagateCreateError = true;
+        }
         const wait = (expected: string) => new Promise<void>((resolve, reject) => {
           const timer = setTimeout(() => reject(new Error("Native reconnect " + expected + " deadline")), 15000);
           process.once("message", message => { clearTimeout(timer); try { assert.deepEqual(message, { phase: expected }); resolve(); } catch (error) { reject(error); } });

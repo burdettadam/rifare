@@ -402,3 +402,10 @@ the worker's actual active backend,requires its native pool to reconnect under t
 still-current original,then retires it,kills every replacement session,and requires
 the same pool's new login plus native write to refuse. A fault re-enables that
 retired role and must fail the unchanged reconnect-refusal assertion.
+
+The1fab6f3 first reconnect campaign proved active backend replacement and reached
+retirement with six actual replacement sessions terminated,but the retired Knex
+pool waited past the harness deadline while repeatedly failing connection creation.
+No reconnect-refusal pass is credited. The next candidate bounds only the two
+actually exercised native pools' acquire wait below the harness deadline and keeps
+PostgreSQL authentication as the refusal source;it changes no runtime enforcement.
