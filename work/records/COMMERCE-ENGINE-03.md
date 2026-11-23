@@ -175,3 +175,16 @@ it is not attributed to a successfully completed full cancel-order workflow.
 No-emit passed before the final added measurement refinements; recheck the fixed
 checkpoint. Full compiled execution, missing-trigger fault, final reviews and normal
 integration/retirement remain outstanding.
+
+## Locked optional compiler evidence correction
+
+The first new-runtime installation completed with the exact existing installed-lock
+hash and 937 installed packages, then the helper refused an overstrict absence check:
+TypeScript 5.9.3 is a locked devOptional transitive dependency despite omit=dev;
+ts-node is absent. The previous immutable Admin receipt also correctly records
+TypeScript true/ts-node false. Its prose and PR10 had incorrectly claimed both absent;
+those claims are corrected without rewriting receipt bytes or deleting installed
+packages. Qualified consumer code must execute compiled .js, independent of source
+and ts-node. Preserve the locked optional graph and record actual presence truthfully.
+This installation/preflight refusal is excluded from native qualification; reuse the
+same complete owned install after correcting only the harness assertion.

@@ -91,7 +91,7 @@ status, data-refusal or page-error assertion is relaxed.
 
 Qualified source: `1ed7ebfab03fd95c015dc100e5dc40498be31ca6`, against base
 `5aa050e9ccdf8b8156c2e0455605ef4011a5d633`. The own-dependency relocated backend
-serves static Admin under test/local-medusa; it has neither TypeScript nor ts-node
+serves static Admin under test/local-medusa; its locked installation includes TypeScript 5.9.3 as a devOptional dependency and excludes ts-node
 installed. It does not use a repository dependency link or a Vite development server.
 The source dependency cache and the one task-owned production installation are reused.
 
@@ -164,3 +164,12 @@ connected endpoint replacing the known external gate. Other workers retain deplo
 Next: carry both clearances through final documentation-only publication, normal merge,
 and owned runtime/intermediate/compiler retirement with fresh Windows gates. The broad
 handoff goal stays active; the complete external/commerce/transfer outcome remains open.
+
+## Evidence correction during COMMERCE-ENGINE-03
+
+The immutable receipt records consumer_typescript_installed true and
+consumer_ts_node_installed false. Earlier prose claimed both were absent; that was
+incorrect and is withdrawn here and in PR10. The exact installed lock already includes
+the optional TypeScript entry. No receipt, locked dependency or native/browser result
+was modified for this correction. Compiled JavaScript and packaged Admin consumption
+remain demonstrated; total absence of a TypeScript package was never demonstrated.
