@@ -77,6 +77,36 @@ export default async function verifyDatabaseRestore({ container }: ExecArgs) {
   selectInstallation(merchant, operator);
   const customerId = buyer.actor.actor_id;
   const operationRow = () => postgres("rifare_operation").where({ id: operationId }).first();
+  if (phase === "uninstall") {
+    await journal.uninstallPrivacyJournal(operator);
+    const row = await operationRow();
+    assert.equal(row.state, "retired");
+    assert.equal(row.command_bytes, null);
+    console.log("RIFARE_RESTORE_UNINSTALL_RESULT=pass");
+    return;
+  }
+  if (phase === "reconcile-uninstall") {
+    assert.equal((await operationRow()).state, "awaiting_authority");
+    const invalidRefusal = { id: "rifop_conflict", original_command_uuid: command.command_id,
+      challenge_fingerprint: null };
+    await assert.rejects(journal.reconcilePrivacyRestore([invalidRefusal], [], operator,
+      { installationUninstalled: true }), /Invalid or conflicting/);
+    assert.equal((await operationRow()).state, "awaiting_authority");
+    const original = Buffer.from(JSON.stringify(command));
+    assert.equal((await journal.admit(original, buyer)).id, operationId);
+
+    await journal.reconcilePrivacyRestore([], [], operator, { installationUninstalled: true });
+    await journal.reconcilePrivacyRestore([], [], operator, { installationUninstalled: true });
+    const restored = await operationRow();
+    assert.equal(restored.state, "retired");
+    assert.equal(restored.revision, 1);
+    assert.equal(restored.command_bytes, null);
+    await assert.rejects(journal.admit(original, buyer), /Cart context unavailable/);
+    const fresh = { ...command, command_id: randomUUID() };
+    await assert.rejects(journal.admit(Buffer.from(JSON.stringify(fresh)), buyer), /Cart context unavailable/);
+    console.log("RIFARE_RESTORE_UNINSTALL_RESULT=pass");
+    return;
+  }
   if (phase === "erase") {
     await journal.erasePrivacySubject(customerId, operator);
     const row = await operationRow();

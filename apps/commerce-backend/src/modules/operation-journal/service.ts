@@ -169,15 +169,18 @@ export default class OperationJournalService {
       restoreJournalRefusalIdentities(tx, merchant, key, records));
   }
 
-  /** The recovery owner supplies current, verified refusals and erasures. */
+  /** The recovery owner supplies current, verified refusals, erasures and installation state. */
   async reconcilePrivacyRestore(
     records: Parameters<typeof restoreJournalRefusalIdentities>[3],
     erasedCustomerIds: readonly string[],
     actor: VerifiedActor,
+    { installationUninstalled = false }: { installationUninstalled?: boolean } = {},
   ) {
-    if (!Array.isArray(erasedCustomerIds) || erasedCustomerIds.length > 1000) throw unavailable();
+    if (typeof installationUninstalled !== "boolean" ||
+        !Array.isArray(erasedCustomerIds) || erasedCustomerIds.length > 1000) throw unavailable();
     const orderedCustomers = [...new Set(erasedCustomerIds)].sort();
     return this.withPrivacyOwner(actor, async (tx, merchant, key) => {
+      if (installationUninstalled) await uninstallJournal(tx, merchant, key);
       for (const customerId of orderedCustomers) {
         await eraseJournalSubject(tx, privacySubject(merchant, customerId), key);
       }
