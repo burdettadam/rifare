@@ -1,7 +1,7 @@
 # RCG-4B-C9 - Native proof association and original finalization
 
-State: pure association foundation implemented and exercised; native transport,
-persistence and full C9 qualification pending.
+State: codec and shared continuation transport implemented and locally exercised;
+independent transport review, native persistence and full C9 qualification pending.
 Base: `acab80a787b5e625e16527f22463a86deaa718e0` (merged C8 PR7).
 Writer/integration owner: root, canonical primary `rifare` checkout.
 Branch: `feat/medusa-proof-finalization`.
@@ -63,3 +63,43 @@ component. No full backend build/cache or additional checkout is allocated.
 Next: independent foundation review, then the real continuation transport and
 PostgreSQL owner/FINALIZE/receipt composition. The managed custody/endpoint gate
 remains with its provider owner; absent exact recovery bytes must remain pending.
+
+## Shared continuation transport checkpoint
+
+Both independent roles cleared foundation `b583af7` within its codec-only scope.
+Authority independently inspected the pinned provider contracts and recomputed the
+seven direct input hashes; regression independently verified hashes and retained
+source/catalog behavior. Neither clearance covers native or connected operation.
+
+The shared explicit-mTLS engine now carries exact proof forms, original FINALIZE,
+original result recovery and exact receipt recovery under post-TLS native admission.
+It preserves private bound challenge ownership, existing trust/cancellation/no-retry
+controls, and closed response/digest/time correlation. Receipt compact bytes are
+nonenumerable and all returned evidence remains unverified/inert. The 262144-byte
+proof passes through the real synthetic mTLS peer without raising generic JSON or
+catalog limits. No credentials, native journal persistence or commerce effects are
+introduced by this transport checkpoint.
+
+Local focused runs passed 51 wire/catalog cases and 47 retained C1/C5 cases in the
+maintained four-file/default-deadline runner. The original 23 C6 wire cases, original
+20 C1 cases and 20 C5 client cases are unchanged. Protected prior catalog/coverage
+canonical hashes and old scope assertions remain exact after strictly validating
+and subtracting the one/four/24 new contribution. The sole inherited LF pin repair
+is separately recorded in ADR-0087 and `aba218e`.
+
+A deliberate transport fault removed only acknowledgement proof-digest equality.
+Valid wire/history controls passed; the unchanged mismatched-digest assertion then
+failed with Missing expected rejection. Exact source was restored (SHA-256
+623d71c98dd0b4f05d37e30d2c2647db7147cd2e733747c436a57b74c079690f).
+Raw logs and restoration receipt: ignored `evidence/operation-journal/c9-continuation-*`.
+The Python console could not print a Unicode test glyph after saving those files;
+the fault run and exact restoration completed before that output-only failure.
+
+Backend noEmit typecheck and repository/generated/plan/distribution/license checks
+pass. No full compiler output, runtime, database, dependency change or checkout was
+allocated. One primary/zero linked Rifare checkouts remain, root active here.
+Next: fix this transport candidate for both independent roles, then implement native
+first-proof association, original FINALIZE, privacy/recovery and compiled PostgreSQL
+qualification. Endpoint/enrolled caller and managed-machine VP custody remain
+provider-owned unavailable; the user's lack of a location does not authorize a
+substitute credential or signer. Full C9 and the broad work goal remain active.

@@ -88,6 +88,15 @@ after this sole correction is
 Independent regression review must verify these prior/candidate comparisons and
 the old scoped counts alongside actual new and retained wire executions.
 
+The same exact-subtraction rule applies to the retained C1 and C5 registration
+assertions, which currently express the same 49/230/359/47 protected C6 scope.
+Before modifying those test files, extend this prior decision to their scoped
+registration results: validate the entire new catalog and exact new entry first,
+then subtract only one adapter, four operations and its fixed 24 new cases.
+Keep their old counts, original codec/client cases, negative assertions and
+historical content digests unchanged. The new full-scope assertion remains
+50/234/383/47; no validator or qualification threshold is relaxed.
+
 First proof dispatch requires C7's actual current opaque verification and native
 original/cart/ownership/privacy checks. Persist the selected context and exact
 compact-proof digest before I/O. Never persist the VP or nested credential. After

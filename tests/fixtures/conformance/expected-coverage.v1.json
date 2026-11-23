@@ -1018,6 +1018,24 @@
         "semantics": "native",
         "qualification": "sandbox-only"
       }
+    },
+    "delegated_use_public_continuation": {
+      "delegated.public.proof_submit": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      },
+      "delegated.public.finalize": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      },
+      "delegated.public.recover_final": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      },
+      "delegated.public.recover_receipt": {
+        "semantics": "native",
+        "qualification": "sandbox-only"
+      }
     }
   },
   "declarations": [
@@ -2351,7 +2369,7 @@
       }
     },
     "delegated_use_public_client": {
-      "version": "source-sha256:e05461dc4bec360cdcb2ce58cd6965f1c63ee53092e186d174aa9825636bf0a1",
+      "version": "source-sha256:623d71c98dd0b4f05d37e30d2c2647db7147cd2e733747c436a57b74c079690f",
       "api_version": "public-mtls-p03-start-recovery-request-v1",
       "operations": {
         "delegated.public.start": {
@@ -2363,6 +2381,28 @@
           "scope_kind": "server_local_fixture_only"
         },
         "delegated.public.request_artifact": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        }
+      }
+    },
+    "delegated_use_public_continuation": {
+      "version": "source-sha256:623d71c98dd0b4f05d37e30d2c2647db7147cd2e733747c436a57b74c079690f",
+      "api_version": "public-mtls-p03-proof-finalize-receipt-v1",
+      "operations": {
+        "delegated.public.proof_submit": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "delegated.public.finalize": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "delegated.public.recover_final": {
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only"
+        },
+        "delegated.public.recover_receipt": {
           "required_scopes": [],
           "scope_kind": "server_local_fixture_only"
         }
@@ -3203,6 +3243,150 @@
       "name": "CASE-M20-G03-12",
       "path": "tests/development/dropoff-handoffs.test.mts",
       "sha256": "157193dd3b56abe565610ebedfbf6d961ad2ad5158f1553a060ad73911527e6d"
+    },
+    {
+      "id": "CONT-ADMISSION",
+      "name": "CONT-ADMISSION TLS completes before native admission and no proof plaintext precedes its resolution",
+      "path": "tests/development/public-delegated-continuation.test.mts",
+      "sha256": "c8a4ded1322d2fa47bf82c5de9df6d2e74fdd87172cd6aaefbd7fa0ba6e17517"
+    },
+    {
+      "id": "CONT-ADMISSION-DENIED",
+      "name": "CONT-ADMISSION-DENIED rejected admission and arbitrary thenables emit no proof",
+      "path": "tests/development/public-delegated-continuation.test.mts",
+      "sha256": "c8a4ded1322d2fa47bf82c5de9df6d2e74fdd87172cd6aaefbd7fa0ba6e17517"
+    },
+    {
+      "id": "CONT-CANCEL",
+      "name": "CONT-CANCEL abort during native admission cannot emit proof bytes",
+      "path": "tests/development/public-delegated-continuation.test.mts",
+      "sha256": "c8a4ded1322d2fa47bf82c5de9df6d2e74fdd87172cd6aaefbd7fa0ba6e17517"
+    },
+    {
+      "id": "CONT-CLOSE",
+      "name": "CONT-CLOSE retirement during native admission cannot send a late proof",
+      "path": "tests/development/public-delegated-continuation.test.mts",
+      "sha256": "c8a4ded1322d2fa47bf82c5de9df6d2e74fdd87172cd6aaefbd7fa0ba6e17517"
+    },
+    {
+      "id": "CONT-DENY",
+      "name": "CONT-DENY genuine denial is preserved as evidence without a retry or business permit",
+      "path": "tests/development/public-delegated-continuation.test.mts",
+      "sha256": "c8a4ded1322d2fa47bf82c5de9df6d2e74fdd87172cd6aaefbd7fa0ba6e17517"
+    },
+    {
+      "id": "CONT-FINAL-CORRELATION",
+      "name": "CONT-FINAL-CORRELATION response original UUID digest challenge receipt namespace and semantics are bound",
+      "path": "tests/development/public-delegated-continuation.test.mts",
+      "sha256": "c8a4ded1322d2fa47bf82c5de9df6d2e74fdd87172cd6aaefbd7fa0ba6e17517"
+    },
+    {
+      "id": "CONT-FINAL-RECOVER",
+      "name": "CONT-FINAL-RECOVER explicit read retains the original finalization UUID digest and result",
+      "path": "tests/development/public-delegated-continuation.test.mts",
+      "sha256": "c8a4ded1322d2fa47bf82c5de9df6d2e74fdd87172cd6aaefbd7fa0ba6e17517"
+    },
+    {
+      "id": "CONT-FINALIZE",
+      "name": "CONT-FINALIZE exact original canonical FINALIZE identity is sent once and stays inert",
+      "path": "tests/development/public-delegated-continuation.test.mts",
+      "sha256": "c8a4ded1322d2fa47bf82c5de9df6d2e74fdd87172cd6aaefbd7fa0ba6e17517"
+    },
+    {
+      "id": "CONT-ONE-ATTEMPT",
+      "name": "CONT-ONE-ATTEMPT redirects lost responses and unresolved status never cause automatic finalization retry",
+      "path": "tests/development/public-delegated-continuation.test.mts",
+      "sha256": "c8a4ded1322d2fa47bf82c5de9df6d2e74fdd87172cd6aaefbd7fa0ba6e17517"
+    },
+    {
+      "id": "CONT-PROOF-BOUNDS",
+      "name": "CONT-PROOF-BOUNDS oversized compact proof and form cannot reach the peer",
+      "path": "tests/development/public-delegated-continuation.test.mts",
+      "sha256": "c8a4ded1322d2fa47bf82c5de9df6d2e74fdd87172cd6aaefbd7fa0ba6e17517"
+    },
+    {
+      "id": "CONT-PROOF-CORRELATION",
+      "name": "CONT-PROOF-CORRELATION acknowledgement IDs digest types and original interval are checked",
+      "path": "tests/development/public-delegated-continuation.test.mts",
+      "sha256": "c8a4ded1322d2fa47bf82c5de9df6d2e74fdd87172cd6aaefbd7fa0ba6e17517"
+    },
+    {
+      "id": "CONT-PROOF-DUPLICATE",
+      "name": "CONT-PROOF-DUPLICATE escaped duplicate acknowledgement members are refused",
+      "path": "tests/development/public-delegated-continuation.test.mts",
+      "sha256": "c8a4ded1322d2fa47bf82c5de9df6d2e74fdd87172cd6aaefbd7fa0ba6e17517"
+    },
+    {
+      "id": "CONT-PROOF-FORM",
+      "name": "CONT-PROOF-FORM changed state query duplicates and escaped JSON fields fail before I/O",
+      "path": "tests/development/public-delegated-continuation.test.mts",
+      "sha256": "c8a4ded1322d2fa47bf82c5de9df6d2e74fdd87172cd6aaefbd7fa0ba6e17517"
+    },
+    {
+      "id": "CONT-PROOF-HISTORY",
+      "name": "CONT-PROOF-HISTORY explicit identical-proof recovery preserves submission identity and original time",
+      "path": "tests/development/public-delegated-continuation.test.mts",
+      "sha256": "c8a4ded1322d2fa47bf82c5de9df6d2e74fdd87172cd6aaefbd7fa0ba6e17517"
+    },
+    {
+      "id": "CONT-PROOF-MAX",
+      "name": "CONT-PROOF-MAX exact 262144-byte compact proof crosses the real peer unchanged",
+      "path": "tests/development/public-delegated-continuation.test.mts",
+      "sha256": "c8a4ded1322d2fa47bf82c5de9df6d2e74fdd87172cd6aaefbd7fa0ba6e17517"
+    },
+    {
+      "id": "CONT-PROOF-OWNER",
+      "name": "CONT-PROOF-OWNER cloned or another-client challenge cannot dispatch proof bytes",
+      "path": "tests/development/public-delegated-continuation.test.mts",
+      "sha256": "c8a4ded1322d2fa47bf82c5de9df6d2e74fdd87172cd6aaefbd7fa0ba6e17517"
+    },
+    {
+      "id": "CONT-PROOF-WIRE",
+      "name": "CONT-PROOF-WIRE exact public form uses explicit mTLS and compact-proof identity",
+      "path": "tests/development/public-delegated-continuation.test.mts",
+      "sha256": "c8a4ded1322d2fa47bf82c5de9df6d2e74fdd87172cd6aaefbd7fa0ba6e17517"
+    },
+    {
+      "id": "CONT-PROTECTED",
+      "name": "CONT-PROTECTED all continuation responses require unique no-store no-cache and nosniff headers",
+      "path": "tests/development/public-delegated-continuation.test.mts",
+      "sha256": "c8a4ded1322d2fa47bf82c5de9df6d2e74fdd87172cd6aaefbd7fa0ba6e17517"
+    },
+    {
+      "id": "CONT-RECEIPT",
+      "name": "CONT-RECEIPT original outer and inner evidence bind exact bytes without enumerable artifact contents",
+      "path": "tests/development/public-delegated-continuation.test.mts",
+      "sha256": "c8a4ded1322d2fa47bf82c5de9df6d2e74fdd87172cd6aaefbd7fa0ba6e17517"
+    },
+    {
+      "id": "CONT-RECEIPT-CORRELATION",
+      "name": "CONT-RECEIPT-CORRELATION changed outer inner bytes semantics duplicate or excess evidence fails",
+      "path": "tests/development/public-delegated-continuation.test.mts",
+      "sha256": "c8a4ded1322d2fa47bf82c5de9df6d2e74fdd87172cd6aaefbd7fa0ba6e17517"
+    },
+    {
+      "id": "CONT-RECOVERY-INPUT",
+      "name": "CONT-RECOVERY-INPUT changed original recovery expectation is refused before transport",
+      "path": "tests/development/public-delegated-continuation.test.mts",
+      "sha256": "c8a4ded1322d2fa47bf82c5de9df6d2e74fdd87172cd6aaefbd7fa0ba6e17517"
+    },
+    {
+      "id": "CONT-RESPONSE-BOUNDS",
+      "name": "CONT-RESPONSE-BOUNDS oversized proof acknowledgement compression and wrong media fail closed",
+      "path": "tests/development/public-delegated-continuation.test.mts",
+      "sha256": "c8a4ded1322d2fa47bf82c5de9df6d2e74fdd87172cd6aaefbd7fa0ba6e17517"
+    },
+    {
+      "id": "CONT-SNAPSHOT",
+      "name": "CONT-SNAPSHOT caller form mutation during admission cannot alter captured bytes",
+      "path": "tests/development/public-delegated-continuation.test.mts",
+      "sha256": "c8a4ded1322d2fa47bf82c5de9df6d2e74fdd87172cd6aaefbd7fa0ba6e17517"
+    },
+    {
+      "id": "CONT-TRUST",
+      "name": "CONT-TRUST foreign CA fails the TLS handshake before finalization plaintext",
+      "path": "tests/development/public-delegated-continuation.test.mts",
+      "sha256": "c8a4ded1322d2fa47bf82c5de9df6d2e74fdd87172cd6aaefbd7fa0ba6e17517"
     },
     {
       "id": "M01-G04-01",

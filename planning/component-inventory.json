@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "id": "rifare-source-inventory",
-  "revision": 74,
+  "revision": 75,
   "status": "proposed",
   "components": [
     {
@@ -1776,7 +1776,10 @@
         "docs/decisions/0087-native-proof-and-finalization.md",
         "work/records/RCG-4B-C9.md",
         "apps/commerce-backend/src/modules/operation-journal/proof-association.ts",
-        "apps/commerce-backend/src/scripts/verify-proof-association.ts"
+        "apps/commerce-backend/src/scripts/verify-proof-association.ts",
+        "tests/development/public-delegated-continuation.test.mts",
+        "tests/development/continuation-catalog-baseline.mts",
+        "tests/development/public-continuation-catalog.test.mts"
       ],
       "notices": []
     },
