@@ -48,6 +48,16 @@ The C5 internal route and its source remain unchanged. No provider tests or depl
 
 ## Evidence ledger
 
+The independent root-authored public wire test reached the local mTLS peer
+using the unchanged C5 adapter and failed specifically on its internal command
+path versus the required public command path. This establishes the targeted
+wire behavior before introducing the public adapter. The ignored log is
+`evidence/operation-journal/c6-public-route-red.log`. Seven new whole-file
+test groups specify public START/recovery, exact unverified artifact bytes,
+fresh authenticated GET, original/response binding, closed Link destinations,
+artifact rejection and guard withdrawal. These remain unqualified until the
+public implementation is integrated and the actual tests pass.
+
 | Item | Status |
 | --- | --- |
 | Provider source inspection | Complete; source-only |
