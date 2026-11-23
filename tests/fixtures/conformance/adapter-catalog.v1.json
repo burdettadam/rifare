@@ -8773,7 +8773,7 @@
     },
     {
       "path": "tests/development/delegated-use-client-helpers.mts",
-      "sha256": "1aeff4c969b2fe1eb90cb1ff17c5e43416f00a94c225ba93e615ea6c45f285b7"
+      "sha256": "f3b1ce5dad3aa8adbaf06503b6a2ee90fca4370512880c99f30c9c146c9fc7e4"
     }
   ]
 }
