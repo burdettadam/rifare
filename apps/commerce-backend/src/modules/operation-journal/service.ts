@@ -200,13 +200,17 @@ export default class OperationJournalService {
     return this.postgres.transaction(async tx => {
       const user = await liveUser(tx, actor_id);
       const identity = await tx("auth_identity").where({ id: auth_identity_id }).whereNull("deleted_at")
-        .first({ user_id: tx.raw("app_metadata ->> 'user_id'") });
+        .forShare().first({ user_id: tx.raw("app_metadata ->> 'user_id'") });
       const stores = await tx("store").whereNull("deleted_at").limit(2).select("id");
       if (!user || identity?.user_id !== actor_id || stores.length !== 1 || stores[0].id !== merchant.store_id) {
         throw unavailable();
       }
       return use(tx, merchant, key);
-    }, { isolationLevel: "serializable" });
+    }, { isolationLevel: "serializable" }).catch(error => {
+      // A concurrent identity change invalidates this authorization snapshot.
+      if (error?.code === "40001") throw unavailable();
+      throw error;
+    });
   }
 
   private async withCurrentOriginal<T>(
@@ -257,7 +261,7 @@ function privacySubject(merchant: Merchant, customerId: string) {
 }
 
 function liveUser(tx: Postgres, userId: string) {
-  return tx("user").where({ id: userId }).whereNull("deleted_at").first("id");
+  return tx("user").where({ id: userId }).whereNull("deleted_at").forShare().first("id");
 }
 
 function journalUnavailable() {

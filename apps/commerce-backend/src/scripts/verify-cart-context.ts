@@ -541,6 +541,42 @@ export default async function verifyCartContext({ container }: ExecArgs) {
       const exported = await journal.exportPrivacySubject(alice.customer.id, privacyActor);
       assert.ok(exported.some(row => row.id === committed[0].id));
       assert.equal((await journal.exportPrivacySubject(bob.customer.id, privacyActor)).length, 0);
+
+      const revocation = await postgres.transaction();
+      let exportResult: Promise<unknown> | undefined;
+      try {
+        const { rows: [{ pid }] } = await revocation.raw("select pg_backend_pid() as pid");
+        await revocation("auth_identity").where({ id: operatorIdentity.id })
+          .update({ app_metadata: JSON.stringify({ user_id: unrelatedUser.id }) });
+        let settled = false;
+        exportResult = journal.exportPrivacySubject(alice.customer.id, privacyActor)
+          .then(() => "disclosed", (error: unknown) => error).finally(() => { settled = true; });
+        let blocked = false;
+        const deadline = Date.now() + 5000;
+        // Refresh pg_stat_activity outside any cached statistics snapshot.
+        while (!settled && Date.now() < deadline) {
+          await revocation.raw("select pg_stat_clear_snapshot()");
+          const { rows } = await revocation.raw(
+            "select exists (select 1 from pg_stat_activity where ?::integer = any(pg_blocking_pids(pid))) as blocked",
+            [pid],
+          );
+          blocked = rows[0].blocked;
+          if (blocked) break;
+          await delay(25);
+        }
+        assert.equal(blocked, true, "Privacy export must wait on the in-flight operator identity change");
+        await revocation.commit();
+        const result = await exportResult;
+        assert.ok(result instanceof Error);
+        assert.match(result.message, denied);
+        await assert.rejects(journal.exportPrivacySubject(alice.customer.id, privacyActor), denied);
+      } finally {
+        if (!revocation.isCompleted()) await revocation.rollback();
+        await exportResult;
+      }
+      await auth.updateAuthIdentities({ id: operatorIdentity.id, app_metadata: { user_id: operator.id } });
+      check("journal-privacy-export-waits-for-in-flight-operator-revocation-and-refuses-disclosure", () => {});
+
       await journal.erasePrivacySubject(alice.customer.id, privacyActor);
       assert.equal((await journal.exportPrivacySubject(alice.customer.id, privacyActor)).length, 0);
       const refusal = { id: "rifop_" + randomUUID(), original_command_uuid: randomUUID(), challenge_fingerprint: null };
