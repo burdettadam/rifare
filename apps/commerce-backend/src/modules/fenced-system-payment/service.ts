@@ -91,13 +91,19 @@ export default class FencedSystemPaymentProvider extends AbstractPaymentProvider
         return claimed;
       });
     } catch { return unavailable(); }
-    // The installed System delegate performs no HTTP. A future external provider
-    // needs its own provider-side fence/reconciliation and is not qualified here.
-    activeProfile();
     try {
-      const native = await this.delegate.authorizePayment({ data: {}, context: {} });
-      activeProfile();
-      return { ...native, data: { ...native.data, rifare_native_execution: { ...selected, original_command_id: original } } };
+      return await this.postgres.transaction(async tx => {
+        // Revalidate after the durable attempt commit, then retain the database
+        // ordering locks across only the pinned local no-HTTP System call.
+        const result = await tx.raw("select public.rifare_require_native_execution_payment(?, ?, ?) as original_id",
+          [selected.session_id, selected.handle, "delegate"]);
+        const current = result.rows[0]?.original_id;
+        if (current !== original) unavailable();
+        activeProfile();
+        const native = await this.delegate.authorizePayment({ data: {}, context: {} });
+        activeProfile();
+        return { ...native, data: { ...native.data, rifare_native_execution: { ...selected, original_command_id: original } } };
+      });
     } catch { return unavailable(); }
   }
 

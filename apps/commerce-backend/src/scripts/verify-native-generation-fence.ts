@@ -30,7 +30,21 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
     const originals = new Map<string, any>(), calls = Object.fromEntries(names.map(name => [name, 0]));
     for (const name of names) {
       originals.set(name, Native.prototype[name]);
-      Native.prototype[name] = async function(...args: any[]) { calls[name]++; return originals.get(name).apply(this, args); };
+      Native.prototype[name] = async function(...args: any[]) {
+        calls[name]++;
+        if (name === "authorizePayment" && task.provider_ordering) {
+          assert.equal(typeof process.send, "function");
+          const release = new Promise<void>((resolve, reject) => {
+            const timer = setTimeout(() => reject(new Error("Native provider delegate release deadline")), 15000);
+            process.once("message", message => { clearTimeout(timer); try {
+              assert.deepEqual(message, { phase: "provider-delegate-release" }); resolve();
+            } catch (error) { reject(error); } });
+          });
+          process.send!({ phase: "provider-delegate-open", identity });
+          await release;
+        }
+        return originals.get(name).apply(this, args);
+      };
     }
     try {
       const current = { metadata: { c12_generation_probe: "current", asserted_generation: 999, asserted_worker: "postgres" } };
@@ -278,6 +292,8 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
   const correlationFault = process.env.RIFARE_C12_ORIGINAL_FAULT === "omit";
   const provider = process.env.RIFARE_C12_PROVIDER === "verify";
   const providerFault = process.env.RIFARE_C12_PROVIDER_FAULT === "omit-attempt";
+  const providerOrdering = process.env.RIFARE_C12_PROVIDER_ORDERING === "delegate-open";
+  const providerOrderingFault = process.env.RIFARE_C12_PROVIDER_ORDERING_FAULT === "omit-delegate-lock";
   const orderingFault = process.env.RIFARE_C12_GENERATION_ORDERING_FAULT === "omit-locks";
   try {
   assert.ok(claim.worker); assert.ok(claim.seal);
@@ -310,16 +326,36 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
   }
   if (providerFault) {
     assert.ok(provider && paymentDefinition);
-    const attempted = "\n          or original.execution_payment_attempted_at is not null";
-    const claim = `        update public.rifare_operation set execution_payment_attempted_at=observed,
-          revision=revision+1,updated_at=clock_timestamp()
-          where id=original.id and execution_payment_attempted_at is null
-          returning original_command_uuid into claimed_original;
-        if not found then raise exception 'Native execution payment unavailable' using errcode='42501'; end if;
-        return claimed_original;`;
+    const attempted = `
+          or (p_action='authorize' and original.execution_payment_attempted_at is not null)
+          or (p_action='delegate' and original.execution_payment_attempted_at is null)`;
+    const claim = `        if p_action='authorize' then
+          update public.rifare_operation set execution_payment_attempted_at=observed,
+            revision=revision+1,updated_at=clock_timestamp()
+            where id=original.id and execution_payment_attempted_at is null
+            returning original_command_uuid into claimed_original;
+          if not found then raise exception 'Native execution payment unavailable' using errcode='42501'; end if;
+          return claimed_original;
+        end if;
+        return original.original_command_uuid;`;
     assert.ok(paymentDefinition.includes(attempted)); assert.ok(paymentDefinition.includes(claim));
     const mutant = paymentDefinition.replace(attempted, "").replace(claim, "        return original.original_command_uuid;");
     assert.notEqual(mutant, paymentDefinition); await postgres.raw(mutant);
+  }
+  if (providerOrderingFault) {
+    assert.ok(providerOrdering && provider && paymentDefinition && !providerFault);
+    const checked = `        if session_user::text !~ '^rifare_exec_[a-f0-9]{32}$' or p_action is null or p_action not in ('authorize','delegate')
+          or p_session !~ '^payses_[A-Za-z0-9]{1,100}$' or p_handle !~ '^[a-f0-9]{64}$' then
+          raise exception 'Native execution payment unavailable' using errcode='42501';
+        end if;`;
+    const bypass = `${checked}
+        if p_action='delegate' then
+          select original_command_uuid into claimed_original from public.rifare_operation
+            where execution_owner_fingerprint='sha256:' || encode(sha256(convert_to(session_user::text,'UTF8')),'hex');
+          return claimed_original;
+        end if;`;
+    assert.ok(paymentDefinition.includes(checked));
+    const mutant = paymentDefinition.replace(checked, () => bypass); assert.notEqual(mutant, paymentDefinition); await postgres.raw(mutant);
   }
   await postgres.raw(`create table public.rifare_c12_generation_audit(id bigserial primary key,native_table text not null,authenticated_role text not null);
     create function public.rifare_c12_generation_observe() returns trigger language plpgsql security definer set search_path=pg_catalog as $$ begin
@@ -350,6 +386,7 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
   env.RIFARE_C12_GENERATION_TASK = JSON.stringify({ role: claim.worker!.role, cart_id: original.cart.id,
     customer_id: f.customer.id, collection_id: original.collection.id, line_item_id: line.id,
     inventory_item_id: item.id, location_id: location.id, ordering, reconnect, correlation, provider,
+    provider_ordering: providerOrdering,
     other_cart_id: otherCart.id, other_line_id: otherLine[0].id, other_collection_id: otherCollection.id,
     other_session_id: otherSession.id, foreign_address_id: foreignAddressId, foreign_order_id: foreignOrder.id,
     foreign_order_line_id: foreignOrderItem.item_id, original_session_id: original.session.id, original_session_data: original.session.data,
@@ -375,6 +412,30 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
         const handling = (async () => {
         const phase = message as any;
         assert.equal(phase.identity.role, claim.worker!.role);
+        if (providerOrdering && phase.phase === "provider-delegate-open") {
+          assert.ok(provider && !retirement && !ready);
+          let settled = false;
+          retirement = retireOriginalExecutionWorker(postgres, claim.worker!.role).finally(() => { settled = true; });
+          retirement.catch(() => undefined);
+          let blocked: any;
+          const deadline = Date.now() + 4000;
+          while (Date.now() < deadline && !settled) {
+            blocked = (await postgres.raw(`select pid,pg_blocking_pids(pid) as blockers from pg_catalog.pg_stat_activity
+              where datname=current_database() and usename=current_user and query ilike '%update%rifare_operation%'
+              and exists(select 1 from pg_catalog.pg_stat_activity blocker
+                where blocker.pid=any(pg_blocking_pids(pg_stat_activity.pid)) and blocker.usename=?)`, [claim.worker!.role])).rows[0];
+            if (blocked) break;
+            await new Promise(resolve => setTimeout(resolve, 20));
+          }
+          const blockedBeforeRelease = Boolean(blocked) && !settled;
+          if (!blockedBeforeRelease) console.log("C12_NATIVE_PROVIDER_EFFECT_FAULT=retirement-not-blocked-by-delegate");
+          child.send({ phase: "provider-delegate-release" });
+          await retirement;
+          assert.ok(blockedBeforeRelease, "Canonical retirement must wait for the actual local System delegate transaction");
+          orderingObservation = { provider_delegate_lock_observed: true, revoker_pid: blocked.pid,
+            blockers: blocked.blockers, retirement_committed_after_system_delegate: true };
+          return;
+        }
         if (phase.phase === "native-transaction-open") {
           assert.ok(ordering && !retirement && !ready);
           let settled = false;
@@ -467,7 +528,8 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
           const revoked = await original.row(); assert.equal(revoked.execution_generation, 2); assert.ok(revoked.execution_revoked_at);
           return;
         }
-        await retireOriginalExecutionWorker(postgres, claim.worker!.role);
+        if (retirement) await retirement;
+        else await retireOriginalExecutionWorker(postgres, claim.worker!.role);
         const revoked = await original.row(); assert.equal(revoked.execution_generation, 2); assert.ok(revoked.execution_revoked_at);
         if (fault) await postgres.raw(`create or replace function public.rifare_guard_native_generation() returns trigger
           language plpgsql security definer set search_path=pg_catalog as $$ begin return null; end $$`);
@@ -487,6 +549,7 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
       after_stale: await snapshot(), audit: await postgres("rifare_c12_generation_audit").orderBy("id"), fault,
       ordering, revoke_first: revokeFirst, reconnect, reconnect_fault: reconnectFault,
       correlation, correlation_fault: correlationFault, provider, provider_fault: providerFault,
+      provider_ordering: providerOrdering, provider_ordering_fault: providerOrderingFault,
       ordering_fault: orderingFault, ordering_observation: orderingObservation }, null, 2), { flag: "wx" });
     if (parentFailure) throw parentFailure;
     assert.equal(result.code, 0, result.output);
@@ -497,7 +560,9 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
       assert.deepEqual(finalAudit.map((row: any) => row.native_table), ["cart", "payment_session"]);
       assert.ok(finalAudit.every((row: any) => row.authenticated_role === claim.worker!.role));
     } else assert.deepEqual(finalAudit, beforeAudit);
-    if (ordering || revokeFirst || reconnect) { assert.ok(orderingObservation); console.log("C12_NATIVE_GENERATION_ORDERING=" + JSON.stringify(orderingObservation)); }
+    if (ordering || revokeFirst || reconnect || providerOrdering) {
+      assert.ok(orderingObservation); console.log("C12_NATIVE_GENERATION_ORDERING=" + JSON.stringify(orderingObservation));
+    }
     console.log(result.output.split(/\r?\n/).filter(value => value.startsWith("C12_NATIVE_")).join("\n"));
     console.log("C12_NATIVE_GENERATION_RESULT=" + JSON.stringify({ result: "pass",
       ...(reconnect ? { actual_backend_loss_and_reconnect: true, active_reconnect_native_writes: 1,
@@ -506,7 +571,8 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
           established_authenticated_worker_backend: true,
           ...(correlation ? { current_wrong_original_refusals: 10, healthy_original_session_writes: 1 } : {}) }),
       original_visibility_qualified: false, current_authority_fence_qualified: false,
-      provider_admission_currentness_qualified: provider, provider_effect_time_fence_qualified: false,
+      provider_admission_currentness_qualified: provider, provider_revocation_ordering_qualified: providerOrdering,
+      provider_effect_time_fence_qualified: false, provider_expiry_at_delegate_qualified: false,
       provider_one_shot_attempt_qualified: provider, attempted_state_privacy_restore_qualified: false,
       connected_provider_qualified: false, full_C12_qualified: false }));
   } finally {
@@ -526,10 +592,10 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
           assert.equal((await postgres.raw("select pg_get_functiondef('public.rifare_guard_native_original()'::regprocedure) as definition")).rows[0].definition, originalDefinition);
           console.log("C12_NATIVE_ORIGINAL_FAULT_RESTORED=exact");
         }
-        if (providerFault && paymentDefinition) {
+        if ((providerFault || providerOrderingFault) && paymentDefinition) {
           await postgres.raw(paymentDefinition);
           assert.equal((await postgres.raw("select pg_get_functiondef('public.rifare_require_native_execution_payment(text,text,text)'::regprocedure) as definition")).rows[0].definition, paymentDefinition);
-          console.log("C12_NATIVE_PROVIDER_FAULT_RESTORED=exact");
+          console.log(providerOrderingFault ? "C12_NATIVE_PROVIDER_EFFECT_FAULT_RESTORED=exact" : "C12_NATIVE_PROVIDER_FAULT_RESTORED=exact");
         }
       }
     } finally {

@@ -160,7 +160,7 @@ export class Migration20261123200000 extends Migration {
       language plpgsql security definer set search_path=pg_catalog as $$
       declare original public.rifare_operation%rowtype; selected_cart text; observed timestamptz; claimed_original text;
       begin
-        if session_user::text !~ '^rifare_exec_[a-f0-9]{32}$' or p_action is distinct from 'authorize'
+        if session_user::text !~ '^rifare_exec_[a-f0-9]{32}$' or p_action is null or p_action not in ('authorize','delegate')
           or p_session !~ '^payses_[A-Za-z0-9]{1,100}$' or p_handle !~ '^[a-f0-9]{64}$' then
           raise exception 'Native execution payment unavailable' using errcode='42501';
         end if;
@@ -176,7 +176,8 @@ export class Migration20261123200000 extends Migration {
           or original.execution_generation is distinct from 1 or original.execution_revoked_at is not null
           or original.execution_claimed_at is null or original.execution_expires_at is null
           or observed < original.execution_claimed_at or observed >= original.execution_expires_at
-          or original.execution_payment_attempted_at is not null
+          or (p_action='authorize' and original.execution_payment_attempted_at is not null)
+          or (p_action='delegate' and original.execution_payment_attempted_at is null)
           or original.payment_session_id is distinct from p_session
           or original.payment_provider_id is distinct from 'pp_rifare_fenced_system_fixture'
           or original.execution_payment_handle_fingerprint is distinct from
@@ -199,12 +200,15 @@ export class Migration20261123200000 extends Migration {
             and not exists(select 1 from public.payment p where p.payment_session_id=p_session or p.payment_collection_id=original.payment_collection_id)
           for share of ps,pc;
         if not found then raise exception 'Native execution payment unavailable' using errcode='42501'; end if;
-        update public.rifare_operation set execution_payment_attempted_at=observed,
-          revision=revision+1,updated_at=clock_timestamp()
-          where id=original.id and execution_payment_attempted_at is null
-          returning original_command_uuid into claimed_original;
-        if not found then raise exception 'Native execution payment unavailable' using errcode='42501'; end if;
-        return claimed_original;
+        if p_action='authorize' then
+          update public.rifare_operation set execution_payment_attempted_at=observed,
+            revision=revision+1,updated_at=clock_timestamp()
+            where id=original.id and execution_payment_attempted_at is null
+            returning original_command_uuid into claimed_original;
+          if not found then raise exception 'Native execution payment unavailable' using errcode='42501'; end if;
+          return claimed_original;
+        end if;
+        return original.original_command_uuid;
       end $$;
       revoke all on function public.rifare_require_native_execution_payment(text,text,text) from public;`);
     this.addSql(`create function public.rifare_native_generation_ready() returns boolean

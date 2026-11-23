@@ -485,3 +485,15 @@ before the local delegate, withdrawal in that commit-to-call gap remains open.
 The retained C10/C11 privacy and restore regressions pass but do not create the
 new attempted timestamp, so behavioral privacy/restore qualification for that
 field also remains open.
+
+Both roles cleared `a8e470d` for bounded one-shot admission only. The next source
+keeps that first attempt commit, then begins a second database transaction that
+revalidates currentness and retains Cart/journal/session/collection locks across
+the pinned local no-HTTP System call. This local ordering does not generalize to
+an external provider; provider-side fencing and reconciliation remain required.
+
+Initial review cleared the mechanism as local revocation ordering but found that
+the gate samples its clock before its final payment-session/collection lock wait.
+A controller-held payment row could therefore delay the delegate phase past the
+execution expiry. This source does not claim an expiry-aware effect-time fence;
+that requires a post-wait clock check and an actual delayed-row-lock expiry case.
