@@ -26,7 +26,7 @@ its diagnostic source owners; it is not connected to this new database yet.
 | Stock, reservations and cancellation | Medusa Inventory and order workflows | Insufficient-stock refusal, reservation on cart completion, stock consumption on fulfillment and release on cancellation. |
 | Orders and payment records | Medusa cart-completion and Payment workflows | One native order for repeated completion of the same cart; manual-provider capture/refund records. No real payment provider is configured. |
 | Ordinary returns and receiving | Medusa Order return workflows | Requested return, confirmed receipt and restocking of exactly the received unit. No physical handoff is claimed. |
-| Generic merchant administration | Upstream Medusa Admin | Frontend and backend build; full served-browser/operator qualification remains open. |
+| Generic merchant administration | Upstream Medusa Admin | The compiled application serves the Admin bundle and renders the login form in Chromium. Operator sign-in and authenticated browser workflows remain open. |
 | Exchanges, claims and order edits | Reuse the existing upstream Order capabilities | Available upstream, but not yet mapped against all retained Rifare scenarios. Do not keep duplicate engines by default. |
 | Loyalty, credit and growth | Assess upstream modules/plugins before extending | Specific scope, license and scenario equivalence remain to be assessed. |
 
@@ -147,6 +147,13 @@ The fixture helper excludes installed npm trees, generated Medusa/cache files an
 private dotenv files; assertions and retained synthetic fixtures are unchanged.
 The [work record](../work/records/COMMERCE-ENGINE-01.md) records exact candidates,
 executions, the behavioral fault, independent reviews and outstanding qualification.
+
+The compiled application at `ce08222` passed all 17 native commerce groups
+against disposable PostgreSQL 16. The seeded store requests exercised the
+checkout, returns, order and payment holds through the compiled middleware.
+The same build served the Admin HTML and JavaScript on loopback. Chromium
+rendered the email and password controls and submit button. No browser login
+was submitted. This covers the local build and served login entry point.
 
 ## Dependency and license boundary
 

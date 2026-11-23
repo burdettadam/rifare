@@ -170,3 +170,22 @@ currentness guard.
    behavior; delete obsolete custom implementations after callers/scenarios migrate.
 4. Qualify served Admin/browser behavior, durable workers/events/locking, real
    providers, isolated deployments and actual distribution artifacts separately.
+
+## Compiled application and served Admin entry point
+
+On November 22, 2026 (America/Denver), the archived Rifare candidate
+`ce082227c9016ed8ca550a51d8129024670b0fed` built the Medusa backend and Admin
+in Linux with Node 24.14.1 and npm 11.11.0, using the committed lockfile.
+The compiled server started on loopback after migration. Its compiled
+commerce fixture passed all 17 native groups on disposable PostgreSQL 16,
+including the retained protected-route holds. The login page and application
+bundle returned HTTP 200, and Chromium rendered a single login form with
+email, password and submit controls.
+
+The record distinguishes the unauthenticated probe, which Medusa refused
+before the Rifare hold, from the seeded store requests used for qualification.
+The browser assertion uses the actual email control name and autocomplete
+attribute. Authentication and post-login browser behavior remain open.
+The database, npm/build outputs and disposable containers were retired.
+The local evidence manifest SHA-256 is
+`e4c51b4cb6a0703987348d5619581e937c40ffd5ae103c2521cd032bcc1b2ee9`.
