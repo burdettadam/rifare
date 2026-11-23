@@ -7440,7 +7440,7 @@
     },
     {
       "path": "tests/fixtures/conformance/expected-coverage.v1.json",
-      "sha256": "d5667cd660b0808ad1266b21900592e481f14bb645a0ea697de3bc1015e9fdfa"
+      "sha256": "8c392d78746636a0043c35efbabf95cf884bb5cc9bf876ded4562b41df15b51b"
     },
     {
       "path": "tests/fixtures/conformance/source-inputs.v1.json",
