@@ -169,6 +169,22 @@ export default class OperationJournalService {
       restoreJournalRefusalIdentities(tx, merchant, key, records));
   }
 
+  /** The recovery owner supplies current, verified refusals and erasures. */
+  async reconcilePrivacyRestore(
+    records: Parameters<typeof restoreJournalRefusalIdentities>[3],
+    erasedCustomerIds: readonly string[],
+    actor: VerifiedActor,
+  ) {
+    if (!Array.isArray(erasedCustomerIds) || erasedCustomerIds.length > 1000) throw unavailable();
+    const orderedCustomers = [...new Set(erasedCustomerIds)].sort();
+    return this.withPrivacyOwner(actor, async (tx, merchant, key) => {
+      for (const customerId of orderedCustomers) {
+        await eraseJournalSubject(tx, privacySubject(merchant, customerId), key);
+      }
+      await restoreJournalRefusalIdentities(tx, merchant, key, records);
+    });
+  }
+
   /** Internal only. Authentication is supplied by the Medusa request boundary. */
   private async withPrivacyOwner<T>(
     actor: VerifiedActor,

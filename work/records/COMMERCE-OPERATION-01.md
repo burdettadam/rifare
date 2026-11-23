@@ -358,3 +358,27 @@ PostgreSQL 16 database on November 22, 2026 (America/Denver). Both fixture
 containers and their database data were retired. This check validates the
 journal reconciliation hook on older rows. Whole-database restore and
 operator sequencing still need independent qualification.
+
+## Whole-database logical restore rehearsal
+
+The internal privacy owner can reconcile verified current erasures and
+refusal identities in one database transaction before serving a restored
+database. It derives its installation from server configuration and checks
+the live Medusa operator and identity. The recovery caller supplies current
+privacy facts from outside the older backup.
+
+On November 22, 2026 (America/Denver), TypeScript and the database restore
+rehearsal passed on disposable PostgreSQL 16. The Medusa exec fixture admitted
+an operation, then pg_dump took a full logical backup. The native privacy
+owner erased the customer in the original database after the backup. pg_restore
+loaded the backup into a second database with the active row still present.
+The owner reconciled current erasure and refusal data through the internal
+API. A conflict rolled back, exact reconciliation minimized the older row,
+and the same and new original UUIDs were refused for that customer. Repeating
+reconciliation left the revision stable. The final synthetic backup SHA-256
+was ef5ed782cf75a154814e9d18e682912c8d4f24d74fd6e9ea9acb3fe6253f4b37.
+
+The fixture database and backup were retired. This rehearsal covers a logical
+backup restored offline with independently known current facts. Qualification
+does not yet cover automated sourcing of those facts, storage-level restore,
+or authorized production recovery.
