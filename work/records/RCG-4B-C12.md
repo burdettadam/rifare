@@ -221,3 +221,19 @@ actual native Cart.retrieveCart then refused SELECT on credit_line (the native
 model's real table name). Shutdown completed and the child exited nonzero. The
 next candidate grants this current-cart input SELECT only and explicitly refuses
 its UPDATE. It does not grant a credit ledger or pricing-write capability.
+
+
+At299d25e the restricted native module worker passed: project,Cart,Payment,Order,
+Inventory,two native link modules and the fenced adapter's actual pool all observed
+the same authenticated dedicated role/backend. Actual Cart/Payment reads succeeded;
+identity/API-key/journal/workflow-control and catalogue mutations refused. Provider
+catalogue,commerce/stored workflow rows and original journal stayed unchanged;
+normal lifecycle shutdown left no role sessions. This is not full native dispatch.
+
+Next add explicit rejected-execution and partial-loader failure cleanup, a controlled
+process signal-event callback (not an OS graceful-signal claim), and actual owned
+worker hard termination after readiness. After loss, the same original must be
+recovery-only without a replacement role. The probe retires its own role/generation
+in a finally block. Public module registry lifecycle hooks cover partial load when
+MedusaAppLoader has not returned an app. Preserve all failed startup evidence and
+continue generation/visibility/early-write work after this prerequisite is proved.

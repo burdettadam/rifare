@@ -1,6 +1,7 @@
 import { dirname, resolve } from "node:path";
 import { createRequire } from "node:module";
 import { loadSearchIndexes } from "@medusajs/medusa/loaders/search";
+import { MedusaModule } from "@medusajs/framework/modules-sdk";
 import { initializeContainer } from "@medusajs/medusa/loaders/index";
 import { MedusaAppLoader, LinkLoader, WorkflowLoader, SubscriberLoader, container as nativeContainer } from "@medusajs/framework";
 import { ContainerRegistrationKeys, Modules, getResolvedPlugins, mergePluginModules } from "@medusajs/framework/utils";
@@ -50,6 +51,9 @@ async function main() {
     if (app) {
       await cleanup(() => app!.onApplicationPrepareShutdown());
       await cleanup(() => app!.onApplicationShutdown());
+    } else {
+      await cleanup(() => MedusaModule.onApplicationPrepareShutdown());
+      await cleanup(() => MedusaModule.onApplicationShutdown());
     }
     const postgres = nativeContainer.hasRegistration(ContainerRegistrationKeys.PG_CONNECTION) ?
       nativeContainer.resolve(ContainerRegistrationKeys.PG_CONNECTION) : undefined;
