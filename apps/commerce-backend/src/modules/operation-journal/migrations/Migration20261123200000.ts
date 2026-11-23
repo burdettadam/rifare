@@ -86,6 +86,10 @@ export class Migration20261123200000 extends Migration {
         elsif TG_TABLE_NAME='order_item' then
           if previous is not null and previous->'metadata'->>'rifare_execution_owner' is distinct from original.execution_owner_fingerprint
             then raise exception 'Native original unavailable on %',TG_TABLE_NAME using errcode='42501'; end if;
+          if original.execution_order_id is null or selected->>'order_id' is distinct from original.execution_order_id
+            or previous is not null and previous->>'order_id' is distinct from original.execution_order_id then
+            raise exception 'Native original unavailable on %',TG_TABLE_NAME using errcode='42501';
+          end if;
           if not exists(select 1 from public.order_line_item li join public.cart_line_item ci
             on ci.cart_id=original.cart_id and ci.deleted_at is null and ci.variant_id is not distinct from li.variant_id
               and ci.product_id is not distinct from li.product_id and ci.unit_price is not distinct from li.unit_price
@@ -112,14 +116,15 @@ export class Migration20261123200000 extends Migration {
             or selected->>'provider_id' is distinct from 'pp_rifare_fenced_system_fixture'
             or selected->>'currency_code' is distinct from original.currency
             or (selected->>'amount')::numeric is distinct from original.payable_minor_units::numeric / power(10::numeric,original.currency_exponent)
-            or selected->'raw_amount'->>'value' is distinct from (original.payable_minor_units::numeric / power(10::numeric,original.currency_exponent))::text
+            or (selected->'raw_amount'->>'value')::numeric is distinct from original.payable_minor_units::numeric / power(10::numeric,original.currency_exponent)
             or selected->'raw_amount'->>'precision' is distinct from '20'
+            or previous is not null and selected->'raw_amount' is distinct from previous->'raw_amount'
             or previous is not null and (previous->>'id' is distinct from original.payment_session_id
               or previous->>'payment_collection_id' is distinct from original.payment_collection_id
               or previous->>'provider_id' is distinct from 'pp_rifare_fenced_system_fixture'
               or previous->>'currency_code' is distinct from original.currency
               or (previous->>'amount')::numeric is distinct from original.payable_minor_units::numeric / power(10::numeric,original.currency_exponent)
-              or previous->'raw_amount'->>'value' is distinct from (original.payable_minor_units::numeric / power(10::numeric,original.currency_exponent))::text
+              or (previous->'raw_amount'->>'value')::numeric is distinct from original.payable_minor_units::numeric / power(10::numeric,original.currency_exponent)
               or previous->'raw_amount'->>'precision' is distinct from '20') then
             raise exception 'Native original unavailable on %',TG_TABLE_NAME using errcode='42501';
           end if;

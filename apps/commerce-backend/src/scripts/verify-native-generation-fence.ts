@@ -70,13 +70,20 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
         await refused("order_address", () => postgres("order_address").where({ id: task.foreign_address_id }).update({ city: "Synthetic" }));
         await refused("reservation_item", () => container.resolve(Modules.INVENTORY).createReservationItems({ inventory_item_id: task.inventory_item_id,
           location_id: task.location_id, quantity: 1, line_item_id: task.foreign_order_line_id }));
+        await refused("order_item", () => container.resolve(Modules.ORDER).createOrders({ customer_id: task.customer_id,
+          currency_code: "usd", email: "unbound-order@example.invalid", items: [task.original_line] }));
         await refused("payment_session", () => container.resolve(Modules.PAYMENT).createPaymentSession(task.other_collection_id, {
           provider_id: "pp_rifare_fenced_system_fixture", currency_code: "usd", amount: 12.5, data: {} }));
         await refused("payment_session", () => postgres("payment_session").where({ id: task.other_session_id }).update({
           payment_collection_id: task.collection_id, provider_id: "pp_rifare_fenced_system_fixture",
           currency_code: "usd", amount: 12.5, raw_amount: task.original_raw_amount }));
+        await postgres("payment_session").where({ id: task.original_session_id }).update({ raw_amount: task.original_raw_amount });
+        const rawValue = String(task.original_raw_amount.value), equalRaw = { ...task.original_raw_amount,
+          value: rawValue.includes(".") ? rawValue + "0" : rawValue + ".0" };
+        await refused("payment_session", () => postgres("payment_session").where({ id: task.original_session_id }).update({ raw_amount: equalRaw }));
         assert.deepEqual(calls, Object.fromEntries(names.map(name => [name, 0])));
-        console.log("C12_NATIVE_ORIGINAL_RESULT=" + JSON.stringify({ current_wrong_original_refusals: 8, native_system_calls: calls }));
+        console.log("C12_NATIVE_ORIGINAL_RESULT=" + JSON.stringify({ current_wrong_original_refusals: 10,
+          healthy_original_session_writes: 1, native_system_calls: calls }));
       }
       if (task.reconnect) {
         assert.equal(typeof process.send, "function");
@@ -268,7 +275,10 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
     customer_id: f.customer.id, collection_id: original.collection.id, line_item_id: line.id,
     inventory_item_id: item.id, location_id: location.id, ordering, reconnect, correlation,
     other_cart_id: otherCart.id, other_line_id: otherLine[0].id, other_collection_id: otherCollection.id,
-    other_session_id: otherSession.id, foreign_address_id: foreignAddressId, foreign_order_line_id: foreignOrderItem.item_id,
+    other_session_id: otherSession.id, foreign_address_id: foreignAddressId, foreign_order_id: foreignOrder.id,
+    foreign_order_line_id: foreignOrderItem.item_id, original_session_id: original.session.id,
+    original_line: { title: originalLine.title, quantity: originalLine.quantity, unit_price: originalLine.unit_price,
+      variant_id: originalLine.variant_id, product_id: originalLine.product_id, metadata: originalLine.metadata },
     original_raw_amount: original.session.raw_amount });
   for (const key of Object.keys(env)) if (key.startsWith("PG") || key.endsWith("_CUSTODY") || /(?:API_KEY|_TOKEN|_PASSWORD|_SECRET|_PRIVATE_KEY|_CREDENTIALS)$/.test(key) ||
     key.endsWith("DATABASE_URL") && key !== "DATABASE_URL" || key.startsWith("RIFARE_JOURNAL_PRIVACY_") || key.startsWith("RIFARE_C12_CONTROLLER_")) delete env[key];
@@ -343,7 +353,7 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
         if (ordering) { assert.ok(retirement); await retirement; }
         assert.equal((await postgres("cart").where({ id: original.cart.id }).first()).metadata.c12_generation_probe, "current");
         beforeAudit = await postgres("rifare_c12_generation_audit").orderBy("id");
-        assert.equal((beforeAudit as any[]).length, 1); beforeStale = await snapshot();
+        assert.equal((beforeAudit as any[]).length, correlation ? 2 : 1); beforeStale = await snapshot();
         if (revokeFirst) {
           // Pause the canonical retirement AFTER its actual journal UPDATE has
           // acquired the row, not a copied retirement or a timer-based ordering.
@@ -399,14 +409,18 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
     assert.equal(result.code, 0, result.output);
     assert.match(result.output, /C12_NATIVE_MODULE_WORKER_SHUTDOWN=complete/);
     assert.equal(await snapshot(), beforeStale, "Stale native writes must have zero effects, including early address and reservation rows");
-    assert.deepEqual(await postgres("rifare_c12_generation_audit").orderBy("id"), beforeAudit);
+    const finalAudit = await postgres("rifare_c12_generation_audit").orderBy("id");
+    if (correlation) {
+      assert.deepEqual(finalAudit.map((row: any) => row.native_table), ["cart", "payment_session"]);
+      assert.ok(finalAudit.every((row: any) => row.authenticated_role === claim.worker!.role));
+    } else assert.deepEqual(finalAudit, beforeAudit);
     if (ordering || revokeFirst || reconnect) { assert.ok(orderingObservation); console.log("C12_NATIVE_GENERATION_ORDERING=" + JSON.stringify(orderingObservation)); }
     console.log(result.output.split(/\r?\n/).filter(value => value.startsWith("C12_NATIVE_GENERATION_")).join("\n"));
     console.log("C12_NATIVE_GENERATION_RESULT=" + JSON.stringify({ result: "pass",
       ...(reconnect ? { actual_backend_loss_and_reconnect: true, active_reconnect_native_writes: 1,
         post_retirement_native_method_acquisition_refusals: 1, same_existing_authenticated_session: false } :
         { actual_native_stale_write_refusals: 5, same_existing_authenticated_session: true,
-          ...(correlation ? { current_wrong_original_refusals: 8 } : {}) }),
+          ...(correlation ? { current_wrong_original_refusals: 10, healthy_original_session_writes: 1 } : {}) }),
       original_visibility_qualified: false, current_authority_fence_qualified: false,
       provider_effect_time_fence_qualified: false, full_C12_qualified: false }));
   } finally {
