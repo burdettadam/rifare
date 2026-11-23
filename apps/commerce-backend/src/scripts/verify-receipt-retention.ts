@@ -166,7 +166,12 @@ export default async function verifyReceiptRetention({ container }: ExecArgs) {
     assert.deepEqual(await fixture.row(), before);
   });
   await check("C8-NATIVE-HISTORICAL-REQUEST committed authenticated request remains context after JWT expiry", async () => {
-    const fixture = await makeOriginal(true, 2); await delay(2200); const artifact = await fixture.receipt();
+    const fixture = await makeOriginal(true, 2), stored = await fixture.row(), started = performance.now();
+    const expires = stored.request_expires_at.getTime(); let observed = await f.clock();
+    while (observed <= expires + 250 && performance.now() - started < 15000) { await delay(50); observed = await f.clock(); }
+    console.log("C8_HISTORICAL_REQUEST_CLOCK=" + JSON.stringify({ expires, observed, elapsed_ms: performance.now() - started }));
+    assert.ok(observed > expires + 250, "actual database clock must pass the retained request expiry before the refusal assertion");
+    const artifact = await fixture.receipt();
     await assert.rejects(journal.recoverVerifiedAuthorityRequest(fixture.command.command_id, context, f.requestVerifier));
     const result = await journal.verifyAuthorityReceipt(fixture.command.command_id, artifact, context, verifier);
     assert.equal(verifier.describe(result.verification).nonce, fixture.nonce); assert.equal((await fixture.row()).state, "awaiting_authority");

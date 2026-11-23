@@ -169,3 +169,17 @@ run whole-database restore with current erasure/uninstall reconciliation, and ob
 both native candidate reviews. Keep the primary active with root as writer; no new
 checkout was created. Source dependency cache is reused. Retire generated outputs
 and any later owned runtime after their qualification/review preservation gates.
+
+The first isolated runtime used its own offline production-only install (937
+packages) and passed the new migration and 38 signature cases. Native retention
+passed its first 11 groups, then the historical-request case's expected expiry
+refusal did not occur after its fixed host delay. That invocation recorded no
+database clock at the assertion, so its exact cause is unproven. The fixture now
+waits for and asserts actual PostgreSQL time beyond the retained expiry before
+the unchanged refusal assertion, with a bounded monotonic deadline and clock
+diagnostic. No product guard or expected outcome changed. The earlier failure
+remains under candidate `c6ba656` evidence. Windows PowerShell also rejected the
+runner's newer static RNG API; its compatible Create/GetBytes form is used for
+subsequent fixture setup. The missing key did not reach restore qualification in
+that failed invocation. Reuse the owned isolated dependency cache after the
+completed process, rather than installing another copy.
