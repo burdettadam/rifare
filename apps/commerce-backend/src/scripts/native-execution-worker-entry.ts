@@ -19,7 +19,14 @@ async function main() {
     throw new Error("NATIVE_MODULE_WORKER_REQUIRED");
   const directory = process.cwd();
   let app: Awaited<ReturnType<MedusaAppLoader["load"]>> | undefined;
-  let stopping = false;
+  let stopping = false, asynchronousFailure: unknown;
+  // A rejected native bootstrap dependency can be published separately from the
+  // load() rejection. Keep it fatal, while allowing owned cleanup to finish.
+  const failAsync = (error: unknown) => {
+    asynchronousFailure ??= error; stopping = true; process.exitCode = 1;
+    console.error("C12_NATIVE_MODULE_WORKER_ASYNC_FAILURE", error);
+  };
+  process.on("unhandledRejection", failAsync);
   const stop = () => { stopping = true; };
   process.on("SIGINT", stop); process.on("SIGTERM", stop);
   try {
@@ -62,6 +69,7 @@ async function main() {
     process.off("SIGINT", stop); process.off("SIGTERM", stop);
     if (failures.length) throw new AggregateError(failures, "Native module worker cleanup failed");
     console.log("C12_NATIVE_MODULE_WORKER_SHUTDOWN=complete");
+    if (asynchronousFailure) throw asynchronousFailure;
   }
 }
 main().catch(error => { console.error(error); process.exitCode = 1; });

@@ -246,3 +246,12 @@ retired the original role/generation. The next fixture directly invokes the exac
 registered stop callback, distinguishing that control from actual OS termination.
 The separate actual hard-loss case must still prove retained unknown/recovery-only
 state and closed sessions. Windows graceful OS signal handling remains unqualified.
+
+
+At6757471 the registered stop callback and rejected execution cleaned up, but the
+missing-provisioning case exited before the cleanup marker. The pinned SDK also
+rejects a separate module-loading dependency promise on bootstrap failure. The next
+entry keeps unhandled bootstrap rejection fatal while allowing owned cleanup, and
+records whether that path actually occurs. No unexpected rejection can count as a
+successful worker. A source-only callback typing error is also corrected; the
+previous candidate's noEmit failure is not credited as a passing source check.

@@ -52,7 +52,7 @@ export default async function verifyNativeExecutionWorker({ container }: ExecArg
       // on this Windows runtime terminated the process before cleanup; do not
       // relabel a callback check as an OS graceful-signal qualification.
       const handlers = process.listeners("SIGTERM").filter(handler => handler.name === "stop");
-      assert.equal(handlers.length, 1); handlers[0](); return;
+      assert.equal(handlers.length, 1); handlers[0]("SIGTERM"); return;
     }
     if (task.action === "hard-loss") {
       console.log("C12_NATIVE_WORKER_HARD_LOSS_READY");
