@@ -227,6 +227,17 @@ Proof submission, presentation verification, FINALIZE and final commerce authori
 remain unimplemented in this slice; their qualification cannot be inferred from
 a verified request. Provider trust enrollment and connected qualification remain open.
 
+**RCG-4B-C8 is implemented and independently reviewed locally** under
+[ADR-0086](decisions/0086-native-delegated-receipt-admission.md). Its
+[native receipt owner](NATIVE-DELEGATED-RECEIPTS.md) derives expectations from the
+retained Medusa original and authenticated C7 nonce, verifies pinned signatures
+and atomically retains one immutable PostgreSQL observation. Recovery, replay
+refusal and privacy remain original-bound. The isolated compiled runtime, populated
+prior-schema migration/replay and whole-database restore reconciliation passed
+locally; [the record](../work/records/RCG-4B-C8.md) preserves exact evidence.
+The observation remains inert. Proof submission, FINALIZE, provider enrollment,
+live grant status and final commerce execution controls remain separate open work.
+
 The full isolated **RCG-5 cross-service journey** and connected **RCG-6 profile**
 follow those bounded integrations. Preserve original recovery and Rifare's
 execution, budget, reservation and business-idempotency ownership. Reuse the

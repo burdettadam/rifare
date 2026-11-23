@@ -1,8 +1,7 @@
-# RCG-4B-C8 — Native delegated receipt admission
+# RCG-4B-C8 - Native delegated receipt admission
 
-State: signature/context foundation independently reviewed; native PostgreSQL
-receipt admission implemented and exercised locally. Isolated compiled runtime,
-populated upgrade, whole-database restore and native candidate reviews pending.
+State: implemented, locally qualified and independently reviewed for bounded
+development integration. Connected and formal product qualification remain open.
 Base: `4d07b3aa797a794dd318e9dc95cffa04e5333692`.
 Writer/integration owner: root; branch `feat/medusa-native-receipts`.
 Checkout: canonical primary `rifare`; one primary, zero linked, clean at assignment.
@@ -183,3 +182,61 @@ runner's newer static RNG API; its compatible Create/GetBytes form is used for
 subsequent fixture setup. The missing key did not reach restore qualification in
 that failed invocation. Reuse the owned isolated dependency cache after the
 completed process, rather than installing another copy.
+
+## Fixed native qualification and independent disposition
+
+Final tested source is `10555464daf18bb7fe3df435b8d90937454dde40`; its product
+code is unchanged from `c6ba656`. The normal backend build, own isolated runtime
+(937 offline production-only packages, hooks disabled), all 38 signature cases,
+13 native receipt groups, 11 unchanged C7 native groups and schema/privacy checks
+pass. The clock diagnostic explicitly established database expiry before the
+unchanged historical-request refusal. It does not prove the cause of the earlier
+unrecorded timing failure.
+
+Actual pg_dump/pg_restore restored the whole pre-erasure synthetic database twice.
+Reapplying current erasure and uninstall state separately cleared all six receipt
+fields, retained the fingerprint and refused recovery. A dedicated database fault
+removed only the unique receipt index: four unchanged controls passed, then the
+unchanged replay assertion failed at compiled line152 with Missing expected
+rejection. No application source or oracle was modified for that fault.
+
+The populated pre-C8 schema retained an authenticated request through the exact
+protected prior journal service source, compiled with pinned TypeScript 5.9.3 in
+the isolated runtime. Its input record is preserved. This is qualification of
+that prior component/schema, not a complete prior application rebuild. The old
+service and paused migration were restored byte-for-byte afterward. The unchanged
+native commerce script passed all 25 groups, creating actual synthetic order and
+payment data. The new migration and replay preserved exact counts/digests across
+14 tables including C7 history; all seven new nullable columns stayed null for
+existing rows. The first external fixture helper called updateRegions with the
+wrong argument shape and failed to release `us`; corrected `(id, data)` usage plus
+an explicit unassigned-country assertion resolved that setup failure. Product
+source, accepted tests and expected data preservation were unchanged.
+
+The runtime receipt binds 84 actual source inputs, 76 compiled artifacts and the
+own installed dependency lock. SHA-256:
+`30c7c02400ced30b1d6350cf012a4203f5e1d722ddc044e6d20d0bd4bc96cf66`.
+Installed-lock SHA-256:
+`607396fd2f643cf25348b126859d6de0a83028073ed6d9625e58fd3fccc14a39`.
+Logs, synthetic backup, input receipt and exact scripts are retained under ignored
+`evidence/operation-journal/10555464daf18bb7fe3df435b8d90937454dde40/` and the
+existing C8 evidence prefix. Earlier failures remain in their original locations.
+
+Independent authority/security and regression roles each recomputed all source,
+compiled and installed-lock hashes and found no scoped blocker at the fixed tested
+candidate. Authority independently reran all 38 compiled signature cases. Both
+inspected native, fault, upgrade and restore evidence. The maintainer accepts this
+bounded local implementation for integration; this does not change formal goal
+acceptance or qualify provider enrollment/custody, live grant status, proof
+submission, FINALIZE or payment/order effects. No review identity was fabricated
+as a GitHub author approval, and no hosted status was manufactured.
+
+Repository, generated plan, retained requirements, source/license intake, whitespace
+and secret scanning pass. The reference guide and planning/inventory closure add
+no product delta to the reviewed candidate. Use the normal authorized merge path
+with local evidence and skip hosted Actions for the owner's cost restriction.
+Primary checkout remains root's active checkout for the wider Rifare goal, with
+one primary and zero linked. After preserving this receipt and reviews, retire
+the owned temporary runtime and generated backend output; retain source cache,
+branch refs and evidence. Record actual retirement and host-space observations
+in this PR/evidence without creating an outbound Git handoff.

@@ -1,6 +1,7 @@
 # ADR-0086 — Native delegated receipt context and admission
 
-Status: assigned; implementation and qualification pending.
+Status: implemented and independently reviewed for bounded local development
+integration. Connected and formal product qualification remain open.
 Protected base: `4d07b3aa797a794dd318e9dc95cffa04e5333692`.
 Branch: `feat/medusa-native-receipts`; writer and integration owner: root.
 
