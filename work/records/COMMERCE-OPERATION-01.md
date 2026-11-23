@@ -132,3 +132,21 @@ shipping adjustments. The transaction reader preserves that refusal. The
 admission service still needs native association checks, the journal write in
 the same transaction, and concurrent and privacy lifecycle verification before
 handling personal data. Codex continues on the linked checkout.
+
+## Ownership checks in the cart transaction
+
+The journal cart reader now requires a verified Medusa customer and channel
+context from its internal caller. In the serializable transaction it checks
+the actual cart owner, the configured sole live store, the active sales
+channel, the registered customer and the current auth-identity association.
+It refuses an existing order link before projecting cart facts. The digest
+binds the customer and auth identity under the server merchant and store.
+
+On November 22, 2026 (America/Denver), TypeScript and all 24 groups in
+`npm run test:cart-context` passed on disposable PostgreSQL 16. New cases
+cover the wrong owner, guest, wrong store or channel, mismatched or stale
+native identity, and an already-ordered cart. A copied reader with the
+cart-owner comparison removed passed the positive projection check and
+failed the cross-owner refusal assertion at the expected line. The fault
+copies and both containers were retired. Admission and privacy persistence
+remain open. Codex continues on the assigned linked checkout.

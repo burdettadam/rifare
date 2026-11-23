@@ -1,10 +1,15 @@
 import { createRawPropertiesFromBigNumber, decorateCartTotals } from "@medusajs/framework/utils";
+import type { AuthenticatedMedusaRequest } from "@medusajs/framework/http";
 import type { ModulesSdkUtils } from "@medusajs/framework/utils";
 import { factsDigest, projectCart } from "../../cart-context/observation";
 import { cartId, unavailable } from "../../cart-context/policy";
 
 type Postgres = ReturnType<typeof ModulesSdkUtils.createPgConnection>;
 type Merchant = Parameters<typeof projectCart>[1];
+type AdmissionContext = {
+  actor: Pick<AuthenticatedMedusaRequest["auth_context"], "actor_type" | "actor_id" | "auth_identity_id">;
+  salesChannelIds: readonly string[];
+};
 
 const addressFields = [
   "id", "customer_id", "first_name", "last_name", "phone", "company",
@@ -15,10 +20,11 @@ const adjustmentFields = ["id", "code", "promotion_id", "provider_id", "is_tax_i
 
 /**
  * Use the existing journal transaction and native Medusa totals. The caller
- * owns the serializable transaction, association checks and journal write.
+ * supplies verified Medusa auth/channel context and trusted merchant configuration,
+ * and owns the serializable transaction through the journal write.
  * Stable lock order and bounded rows keep the transaction short.
  */
-export async function readLockedCartFacts(transaction: Postgres, id: string, merchant: Merchant) {
+export async function readLockedCartFacts(transaction: Postgres, id: string, merchant: Merchant, context: AdmissionContext) {
   if (!transaction.isTransaction) throw new Error("A PostgreSQL transaction is required");
   const { rows } = await transaction.raw("show transaction_isolation");
   if (rows[0]?.transaction_isolation !== "serializable") {
@@ -30,7 +36,22 @@ export async function readLockedCartFacts(transaction: Postgres, id: string, mer
     "id", "customer_id", "region_id", "sales_channel_id", "currency_code", "email", "completed_at",
     "shipping_address_id", "billing_address_id",
   );
-  if (!cart || cart.completed_at != null) throw unavailable();
+  const { actor, salesChannelIds } = context;
+  if (!cart || cart.completed_at != null || actor.actor_type !== "customer" ||
+      !actor.actor_id || !actor.auth_identity_id || cart.customer_id !== actor.actor_id ||
+      !cart.sales_channel_id || !salesChannelIds.includes(cart.sales_channel_id)) throw unavailable();
+
+  const stores = await liveRows("store").limit(2).select("id");
+  if (stores.length !== 1 || stores[0].id !== merchant.store_id) throw unavailable();
+  const channel = await liveRows("sales_channel").where({ id: cart.sales_channel_id }).first("is_disabled");
+  if (channel?.is_disabled !== false) throw unavailable();
+  const customer = await liveRows("customer").where({ id: actor.actor_id }).first("has_account");
+  if (customer?.has_account !== true) throw unavailable();
+  const identity = await liveRows("auth_identity").where({ id: actor.auth_identity_id })
+    .first({ customer_id: transaction.raw("app_metadata ->> 'customer_id'") });
+  if (identity?.customer_id !== actor.actor_id) throw unavailable();
+  const orderLink = await liveRows("order_cart").where({ cart_id: cart.id }).first("id");
+  if (orderLink) throw unavailable();
 
   const addressIds = [cart.shipping_address_id, cart.billing_address_id].filter(id => id != null);
   const addresses = await liveRows("cart_address").whereIn("id", addressIds).select(addressFields);
@@ -80,5 +101,15 @@ export async function readLockedCartFacts(transaction: Postgres, id: string, mer
   });
   createRawPropertiesFromBigNumber(native);
   const facts = projectCart(native, merchant);
-  return { facts, factsDigest: factsDigest(facts) };
+  return {
+    facts,
+    factsDigest: factsDigest(facts),
+    actorDigest: factsDigest({
+      profile: "urn:rifare:medusa-operation-actor:v1",
+      merchant_namespace: merchant.merchant_namespace,
+      store_id: merchant.store_id,
+      customer_id: actor.actor_id,
+      auth_identity_id: actor.auth_identity_id,
+    }),
+  };
 }

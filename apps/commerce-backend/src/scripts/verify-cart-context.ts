@@ -259,15 +259,33 @@ export default async function verifyCartContext({ container }: ExecArgs) {
     check("native-credit-lines-participate-in-the-projection", () => {});
 
     const postgres = container.resolve(ContainerRegistrationKeys.PG_CONNECTION);
-    await assert.rejects(readLockedCartFacts(postgres, aliceCart.id, merchant), /transaction is required/);
-    await assert.rejects(postgres.transaction(tx => readLockedCartFacts(tx, aliceCart.id, merchant)),
+    const admission = {
+      actor: { actor_type: "customer", actor_id: alice.customer.id, auth_identity_id: alice.identity.id },
+      salesChannelIds: [channels[0].id],
+    };
+    const readAdmission = (id = aliceCart.id, context = admission, selection = merchant) =>
+      postgres.transaction(tx => readLockedCartFacts(tx, id, selection, context), { isolationLevel: "serializable" });
+    await assert.rejects(readLockedCartFacts(postgres, aliceCart.id, merchant, admission), /transaction is required/);
+    await assert.rejects(postgres.transaction(tx => readLockedCartFacts(tx, aliceCart.id, merchant, admission)),
       /Serializable isolation is required/);
-    const lockedFacts = await postgres.transaction(tx => readLockedCartFacts(tx, aliceCart.id, merchant),
-      { isolationLevel: "serializable" });
+    const lockedFacts = await readAdmission();
     check("serializable-cart-facts-match-native-observation", () => {
       assert.deepEqual(lockedFacts.facts, afterCredit.value.observation.facts);
       assert.equal(lockedFacts.factsDigest, afterCredit.value.observation.facts_digest);
+      assert.match(lockedFacts.actorDigest, /^sha256:[a-f0-9]{64}$/);
     });
+    const denied = /Cart context unavailable/;
+    await assert.rejects(readAdmission(bobCart.id), denied);
+    await assert.rejects(readAdmission(guest.id), denied);
+    await assert.rejects(readAdmission(aliceCart.id, admission, { ...merchant, store_id: secondStore.id }), denied);
+    await assert.rejects(readAdmission(aliceCart.id, { ...admission, salesChannelIds: [channels[1].id] }), denied);
+    await assert.rejects(readAdmission(aliceCart.id, {
+      ...admission, actor: { ...admission.actor, auth_identity_id: bob.identity.id },
+    }), denied);
+    await auth.updateAuthIdentities({ id: alice.identity.id, app_metadata: { customer_id: bob.customer.id } });
+    await assert.rejects(readAdmission(), denied);
+    await auth.updateAuthIdentities({ id: alice.identity.id, app_metadata: { customer_id: alice.customer.id } });
+    check("serializable-admission-refuses-wrong-owner-identity-store-and-channel", () => {});
 
     await carts.updateCarts([{ id: aliceCart.id, completed_at: new Date() }]);
     assert.equal((await observe()).status, 403);
@@ -275,6 +293,7 @@ export default async function verifyCartContext({ container }: ExecArgs) {
     const order = await orders.createOrders({ currency_code: "usd", region_id: regions[0].id });
     await container.resolve(ContainerRegistrationKeys.LINK).create({ [Modules.ORDER]: { order_id: order.id }, [Modules.CART]: { cart_id: aliceCart.id } });
     const linked = await observe(); assert.equal(linked.status, 403); assert.equal(JSON.stringify(linked.value).includes(order.id), false);
+    await assert.rejects(readAdmission(), denied);
     check("completed-or-already-ordered-carts-cannot-be-observed-for-preparation", () => {});
     await customers.softDeleteCustomers([bob.customer.id]);
     assert.equal((await request(`/store/carts/${bobCart.id}`)).status, 403);
