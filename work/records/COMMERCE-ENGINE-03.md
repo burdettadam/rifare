@@ -27,3 +27,13 @@ upstream refund-before-creditline report is an investigation lead, not local pro
 Next: implement the bounded helper in the existing native fixture, execute against
 disposable PostgreSQL, fix only evidenced harness/source issues, then freeze compiled
 qualification and obtain both independent roles. Connected external gates stay open.
+
+## Initial implementation checkpoint
+
+The test-only helper now composes native draft/refund and replacement claim controls
+in the existing commerce verification, after all existing assertions. It introduces
+no application behavior. Native source typing rejected the nonexistent damaged
+reason; corrected to the pinned production_failure enum before runtime execution.
+No-emit then passed. Partial-refund, receiving/fulfillment and adversarial quantities
+remain to implement/observe under the prior scope correction. Initial native
+execution will establish actual cancellation behavior before any acceptance claim.

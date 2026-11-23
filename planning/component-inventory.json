@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "id": "rifare-source-inventory",
-  "revision": 82,
+  "revision": 83,
   "status": "proposed",
   "components": [
     {
@@ -1802,7 +1802,8 @@
         "apps/commerce-backend/tools/verify-standalone-admin.mjs",
         "tests/development/commerce-admin-build.test.mts",
         "docs/decisions/0090-native-order-claims.md",
-        "work/records/COMMERCE-ENGINE-03.md"
+        "work/records/COMMERCE-ENGINE-03.md",
+        "apps/commerce-backend/src/scripts/native-claim-qualification.ts"
       ],
       "notices": []
     },

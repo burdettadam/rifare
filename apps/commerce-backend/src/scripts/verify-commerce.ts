@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { qualifyNativeClaims } from "./native-claim-qualification";
 import { execFile, spawn } from "node:child_process";
 import { randomUUID } from "node:crypto";
 import { basename } from "node:path";
@@ -639,6 +640,8 @@ export default async function verifyCommerce({ container }: ExecArgs) {
       assert.equal(paymentAfterRefusal.refunds?.length, 1);
       assert.ok(MathBN.eq(paymentAfterRefusal.refunds![0].amount, capturedOriginal.amount));
     });
+    await qualifyNativeClaims(container, { profileId: profile.id, channelId: channel.id,
+      shippingId: shipping.id, locationId: location.id, cartInput }, check);
     console.log("RIFARE_MEDUSA_RESULT=" + JSON.stringify({ result: "pass", medusa: "2.23.0",
       database: "PostgreSQL", payment_provider: "pp_system_default", checks,
       actual_financial_or_physical_effects: false, elevenid_connected: false, production_qualified: false }));
