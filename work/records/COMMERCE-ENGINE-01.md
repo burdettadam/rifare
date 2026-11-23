@@ -189,3 +189,14 @@ attribute. Authentication and post-login browser behavior remain open.
 The database, npm/build outputs and disposable containers were retired.
 The local evidence manifest SHA-256 is
 `e4c51b4cb6a0703987348d5619581e937c40ffd5ae103c2521cd032bcc1b2ee9`.
+
+The follow-up at `b6652bde71930559a8cda907d20049f4d681ec58` built the same
+application source in Linux, with a fresh PostgreSQL 16 database and native
+synthetic email/password operator. Chromium submitted the login form, observed
+HTTP 200 from the native login and protected product endpoints, and rendered
+the seeded product. Separate anonymous contexts received HTTP 401 before and
+after sign-in. All 17 compiled commerce groups passed. The browser was
+restricted to the loopback origin. No hosted identity client or connected
+commerce provider was involved. The build, database and browser fixtures were
+removed. The authenticated evidence manifest SHA-256 is
+`8af4b0bafdd3bba8ddd004d1d4a20dd9df2b99cd3be332ffbf58a27a3c325796`.

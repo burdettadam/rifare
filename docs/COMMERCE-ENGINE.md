@@ -26,7 +26,7 @@ its diagnostic source owners; it is not connected to this new database yet.
 | Stock, reservations and cancellation | Medusa Inventory and order workflows | Insufficient-stock refusal, reservation on cart completion, stock consumption on fulfillment and release on cancellation. |
 | Orders and payment records | Medusa cart-completion and Payment workflows | One native order for repeated completion of the same cart; manual-provider capture/refund records. No real payment provider is configured. |
 | Ordinary returns and receiving | Medusa Order return workflows | Requested return, confirmed receipt and restocking of exactly the received unit. No physical handoff is claimed. |
-| Generic merchant administration | Upstream Medusa Admin | The compiled application serves the Admin bundle and renders the login form in Chromium. Operator sign-in and authenticated browser workflows remain open. |
+| Generic merchant administration | Upstream Medusa Admin | A synthetic native operator signed in through the compiled Admin in Chromium and viewed a seeded product. An independent anonymous context was refused. |
 | Exchanges, claims and order edits | Reuse the existing upstream Order capabilities | Available upstream, but not yet mapped against all retained Rifare scenarios. Do not keep duplicate engines by default. |
 | Loyalty, credit and growth | Assess upstream modules/plugins before extending | Specific scope, license and scenario equivalence remain to be assessed. |
 
@@ -152,8 +152,12 @@ The compiled application at `ce08222` passed all 17 native commerce groups
 against disposable PostgreSQL 16. The seeded store requests exercised the
 checkout, returns, order and payment holds through the compiled middleware.
 The same build served the Admin HTML and JavaScript on loopback. Chromium
-rendered the email and password controls and submit button. No browser login
-was submitted. This covers the local build and served login entry point.
+rendered the email and password controls and submit button. The follow-up
+at `b6652bd` submitted the native operator form, loaded the protected product
+listing, and rendered the product seeded by the native commerce fixture.
+A fresh anonymous browser context received HTTP 401 on the same endpoint.
+This verifies local sign-in and catalog read. Hosted identity and the
+remaining merchant workflows still need qualification.
 
 ## Dependency and license boundary
 
