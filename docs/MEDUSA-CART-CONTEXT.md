@@ -111,11 +111,12 @@ qualified ownership, approval, payment equality and original-outcome recovery.
 
 ## ElevenID dependency
 
-The read-only upstream audit found Marty main `284ca81`, delegated-use candidate
-`3c8a938` (PR #1994 still draft/unmerged), and Supabase branch `d5e3832`. The latter
-now contains a static sign-in/consent companion; hosted provider/client/browser
-qualification remains open. Protocol PR #38 merged; selected content `6126da7`
-is retained by merge `1952c56` without changed files.
+The earlier upstream audit inspected Marty main `284ca81`, delegated-use
+candidate `3c8a938`, and Supabase branch `d5e3832`. Marty protected main
+`5d8ea970` now includes the delegation host from PR #1994 and opt-in packaging
+from PR #2063. Hosted provider/client/browser qualification remains open.
+Protocol PR #38 merged. Its selected content `6126da7` is retained by merge
+`1952c56` without changed files.
 
 The available selected delegation runtime is organization-to-machine KEY /
 EXACT_OPERATION. Current Marty human authentication consumes its own session;
@@ -124,10 +125,13 @@ current ElevenID identity/membership lookup. Protocol account-linking defines
 bilateral proof, exact-terms confirmation, current status/revision and
 `authority_inherited: false`, but does not itself implement that service.
 
-Rifare therefore does not map shared Supabase email/subject to ElevenID permission.
-C6 remains pending a selected supported authority profile, native original-operation
-storage, atomic admission/currentness and approval-to-effect enforcement. These
-observations neither send delegated commands nor confer approval authority.
+Rifare requires a verified account link and evaluates merchant permissions
+separately. The native PostgreSQL journal now supplies original-operation
+storage and atomic admission within its locally verified scope. C6 still
+requires a qualified provider, public caller qualification, and current
+approval-to-effect enforcement on Medusa. See the
+[identity application contract](IDENTITY-APPLICATION-CONTRACT.md#identity-app-02-provider-selection)
+for each owner's remaining inputs.
 
 Sources: [Marty command host](https://github.com/ElevenID/marty-ui/blob/3c8a9386da87a18d8b3c1855614b7e7c18841c09/rust/services/delegated-authority/COMMAND_HOST.md),
 [account-link protocol](https://github.com/ElevenID/marty-protocol/blob/6126da7619e057be2ff58dd38a5d50f49891d1b3/protocol/agent-trust/OAUTH-ACCOUNT-LINKING-MCP.md),

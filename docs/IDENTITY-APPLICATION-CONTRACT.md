@@ -60,6 +60,38 @@ records the inspected Auth/account-link interface gap and exact upstream pins.
 Shared provider identity must not be interpreted as an ElevenID account link,
 current organization membership or approval authority.
 
+## IDENTITY-APP-02 provider selection
+
+Marty protected main `5d8ea970d7a2537229bcb84a4b80bd1037be9db6` contains the
+delegation hosts from PR #1994 and the opt-in machine-use packaging from PR
+#2063. These sources support a candidate machine profile. The provider still
+needs to supply a qualified endpoint and the exact registered caller.
+
+| Binding | What Rifare needs from the provider | What Rifare must establish |
+| --- | --- | --- |
+| Human customer or operator | A supported account-link and current-status interface bound to ElevenID's issuer, link revision and the verified parties. The inspected Auth surface provides Marty session login and `/v1/auth/me` without a supported external issuer/subject account-link lookup for Rifare. | Keep the verified Supabase issuer/subject bound to the native Medusa customer. Accept an ElevenID link only after verifying both ends, active status and current revision. Evaluate merchant membership and permissions separately, including after unlinking or removal. |
+| Managed machine | The opt-in managed-machine caller profile on the delegated-use listener. It selects mutual TLS, one configured organization, a full managed machine identity, KEY-bound grant and exact operation. | Pin the HTTPS origin, CA, organization and complete machine principal. Keep workload credentials in their authorized custody. Verify that cross-organization identity, stale or revoked proof and human-session substitutions fail. |
+
+The Protocol [account-link schema](https://github.com/ElevenID/marty-protocol/blob/1952c56e11d2ad1346b139da8c0a5e98cd7a2f73/schemas/agent-trust/v1/account-link.json)
+defines two proof references, status and revision. It requires
+`authority_inherited: false`. Its conformance examples cover shape and
+consistency. The provider must still expose and qualify a current-state
+operation. A matching email, shared provider session or local customer UUID
+cannot stand in for a link or a merchant permission.
+
+The [machine-use transport](https://github.com/ElevenID/marty-ui/blob/5d8ea970d7a2537229bcb84a4b80bd1037be9db6/rust/services/delegated-authority/USE_HTTP.md)
+keeps the original command bytes and binds challenge retrieval to the original
+response. Rifare's retained internal transport and command handling passed 93
+local regression cases at `de0b119`. Those synthetic peers and the SQLite
+diagnostic remain useful regression inputs for a native integration. A deployed
+machine endpoint and public caller run are still required.
+
+The ElevenID provider owner supplies the qualified interfaces and caller
+enrollment evidence. The Rifare consumer owner verifies the selected humans and
+machine against Medusa and the original-operation journal. Approval currentness,
+payment equality, signed request and receipt verification and protected commerce
+effects remain separate qualification gates.
+
 ## Required contract and acceptance evidence
 
 1. **Issuer/client:** pin the actual issuer, discovery and audience, redirect URI,
