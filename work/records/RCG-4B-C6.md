@@ -63,12 +63,12 @@ public implementation is integrated and the actual tests pass.
 | --- | --- |
 | Provider source inspection | Complete; source-only |
 | Assignment/ADR | Complete |
-| Implementation | Separate public wire adapter at `c527439`; native composition pending |
-| Local TLS tests | Eight public and 20 unchanged internal groups passed on `c527439` |
-| Native integration tests | Not run |
+| Implementation | Public adapter and internal native authority session composed at `60fdc8a`; durable response observation remains pending |
+| Local TLS tests | 23 public and 20 unchanged internal groups passed on `60fdc8a` |
+| Native integration tests | Native PostgreSQL plus real local mTLS START, original recovery, request retrieval, cart change during TLS and close during blocked database admission passed on `60fdc8a` |
 | C5 regression | Unchanged internal wire file passed all 20 groups; other native regressions pending |
-| Fault injections | Not run |
-| Independent reviews | Not run |
+| Fault injections | Link destination and duplicate acceptance faults caught at unchanged rejection assertions; later implementation refresh pending |
+| Independent reviews | Scoped authority reviews found and verified correction of export omission and session-close race; final C6 reviews pending |
 | Publication of implementation | Not done |
 
 No claim of functional support, provider qualification or formal acceptance is made by this assignment record.
@@ -110,3 +110,32 @@ The native session-fence experiments remain evidence about the stronger proposed
 mechanism and its failure after session loss. They do not replace the unresolved
 COMMERCE-AUTHORITY-01 final-effect controls. The current wire component remains
 local and protected commerce effects held.
+
+## Native session composition checkpoint
+
+At `60fdc8a`, the session captures concrete native journal and public transport
+prototype methods. It retains and C1-validates complete remote bytes before
+opening TLS, consumes the initial ticket before awaiting transport, and connects
+the post-TLS callback to the serializable native dispatch claim. Existing
+originals expose recovery and retained-challenge retrieval. Privacy and session
+state are checked again before returning network data.
+
+Independent review identified a close race while database work was pending.
+The corrected session checks closure after each awaited native operation and
+owns a cancellation signal for its exchanges. A native test holds the actual
+operator row, observes the blocked dispatch claim, closes the session and releases
+the database lock. The claim is spent and the peer observes zero HTTP bytes.
+Another native test changes cart quantity during the TLS handshake and observes
+refusal, including after facts are restored and the same session tries again.
+
+The repository launcher loads the existing shared C1 and transport source assets
+relative to the commerce application working directory. Packaging must retain
+those assets and qualify that layout separately. Native Windows TLS qualification
+used the existing Git OpenSSL executable through a task-local PATH after the
+Strawberry OpenSSL fixture failed. No global environment was changed.
+
+Native schema, privacy, cart/journal and migration replay passed. TypeScript and
+all 43 selected wire groups passed. The disposable fixture was retired.
+Durable provider-response observation, restart recovery evidence, connected
+provider qualification and final C6 acceptance remain open. Root owns the next
+implementation checkpoint.

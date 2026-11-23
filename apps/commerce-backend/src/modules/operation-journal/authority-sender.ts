@@ -1,6 +1,7 @@
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { MedusaError } from "@medusajs/framework/utils";
+import { types } from "node:util";
 import OperationJournalService from "./service";
 
 type Context = Parameters<OperationJournalService["admit"]>[1];
@@ -9,7 +10,7 @@ const unavailable = () => new MedusaError(MedusaError.Types.NOT_ALLOWED, "Author
 
 /** The repository launcher retains the shared C1 and public transport sources.
  * Use their actual classes/codecs, without importing the diagnostic database owner. */
-async function adapters() {
+export async function authorityAdapters() {
   const directory = resolve(process.cwd(), "../../packages/adapters/delegated-commands");
   const [wire, codec] = await Promise.all([
     import(pathToFileURL(resolve(directory, "public-use-client.mts")).href),
@@ -28,7 +29,7 @@ export async function openNativeAuthoritySession(
   }
   const originalBytes = Buffer.from(input), descriptorBytes = Buffer.from(descriptor);
   const capturedContext = { actor: { ...context.actor }, salesChannelIds: [...context.salesChannelIds] };
-  const { wire, codec } = await adapters();
+  const { wire, codec } = await authorityAdapters();
   if (!(transport instanceof wire.PublicDelegatedUseClient)) throw unavailable();
   const prototype = wire.PublicDelegatedUseClient.prototype;
   const boundTo = prototype.boundTo.bind(transport);
@@ -40,6 +41,7 @@ export async function openNativeAuthoritySession(
   const retain = owner.retainAuthorityStart.bind(journal);
   const claim = owner.claimAuthorityDispatch.bind(journal);
   const recovery = owner.prepareRecovery.bind(journal);
+  const observe = owner.observeAuthorityResponse.bind(journal);
   const admitted = await admit(originalBytes, capturedContext);
   const commandId = admitted.operation.original_command_uuid;
   let ticket = admitted.send_ticket;
@@ -67,8 +69,9 @@ export async function openNativeAuthoritySession(
         current.authority_start.command_digest !== retained.command_digest ||
         current.authority_start.correlation !== retained.correlation) throw unavailable();
   };
+  const currentOperation = await owner.status.call(journal, commandId, capturedContext);
   return Object.freeze({
-    operation: Object.freeze({ ...admitted.operation }),
+    operation: Object.freeze({ ...currentOperation }),
     get recovery_only() { return ticket === null; },
     async start(): Promise<unknown> {
       guard();
@@ -81,17 +84,26 @@ export async function openNativeAuthoritySession(
         await claim(commandId, initialTicket, capturedContext);
         guard();
       }, guard, cancellation.signal);
+      await observe(commandId, Buffer.from(JSON.stringify(response.response)), false, capturedContext);
       await checkRecovery();
       return response;
     },
     async recover(): Promise<unknown> {
       await checkRecovery();
       const response = await recover(encoded.request, recoveryCommand, checkRecovery, guard, cancellation.signal);
+      await observe(commandId, Buffer.from(JSON.stringify(response.response)), true, capturedContext);
       await checkRecovery();
       return response;
     },
     async requestArtifact(challenge: unknown): Promise<unknown> {
       await checkRecovery();
+      const retainedResponse = (await recovery(commandId, capturedContext)).authority_start?.first_response;
+      guard();
+      if (!retainedResponse || !challenge || typeof challenge !== "object" || types.isProxy(challenge)) throw unavailable();
+      const responseProperty = Object.getOwnPropertyDescriptor(challenge, "response");
+      if (!responseProperty || !Object.hasOwn(responseProperty, "value")) throw unavailable();
+      codec.bindDelegatedResponse(encoded.request, responseProperty.value,
+        { previous: Buffer.from(retainedResponse.bytes) });
       const artifact = await fetchRequest(encoded.request, challenge, checkRecovery, guard, cancellation.signal);
       await checkRecovery();
       return artifact;

@@ -7,7 +7,8 @@ import { cartContextConfig } from "../../config/local-commerce";
 import { lockCartOwner, readLockedCartFacts } from "./cart-facts";
 import { parseOriginalCommand, requireCommandCartMatch } from "./command";
 import { nativeAuthorityStart } from "./authority-start";
-import { openNativeAuthoritySession } from "./authority-sender";
+import { authorityAdapters, openNativeAuthoritySession } from "./authority-sender";
+import { configure } from "safe-stable-stringify";
 import {
   eraseJournalSubject, exportJournalSubject, journalSubjectIsSuppressed, minimizedOperationFields,
   restoreJournalRefusalIdentities, setJournalOperationHold, uninstallJournal,
@@ -18,12 +19,14 @@ type AdmissionContext = Parameters<typeof readLockedCartFacts>[3];
 type VerifiedActor = AdmissionContext["actor"];
 
 const operations = "rifare_operation";
+const stringify = configure({ strict: true, deterministic: true, bigint: false });
 const originalId = /^(?!00000000-0000-0000-0000-000000000000$)[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 const statusColumns = ["id", "original_command_uuid", "state", "revision"];
 const historyColumns = [...statusColumns, "cart_id", "actor_digest", "command_digest",
   "privacy_hold", "first_observation_digest", "first_observed_at", "command_bytes",
   "start_owner_digest", "start_claimed_at", "start_command_bytes", "start_command_digest",
-  "start_correlation", "store_id"];
+  "start_correlation", "store_id", "start_response_bytes", "start_response_digest", "start_response_observed_at",
+  "challenge_fingerprint"];
 type JournalConfiguration = ReturnType<typeof journalConfiguration>;
 type Merchant = NonNullable<ReturnType<typeof cartContextConfig>>;
 type JournalRow = {
@@ -33,6 +36,8 @@ type JournalRow = {
   command_bytes: string; start_owner_digest: string | null; start_claimed_at: Date | null;
   start_command_bytes: string | null; start_command_digest: string | null;
   start_correlation: string | null; store_id: string;
+  start_response_bytes: string | null; start_response_digest: string | null;
+  start_response_observed_at: Date | null; challenge_fingerprint: string | null;
 };
 const conflict = () => new MedusaError(MedusaError.Types.CONFLICT, "Original commerce command unavailable");
 
@@ -104,6 +109,46 @@ export default class OperationJournalService {
     }, true);
   }
 
+  /** Persist only the closed unverified C1 response, never the signed request artifact. */
+  async observeAuthorityResponse(commandId: string, input: Uint8Array, recovered: boolean, context: AdmissionContext) {
+    if (!(input instanceof Uint8Array) || !input.byteLength || input.byteLength > 65536 ||
+        typeof recovered !== "boolean") throw conflict();
+    const bytes = Buffer.from(input);
+    const { codec } = await authorityAdapters();
+    return this.withCurrentOriginal(commandId, context, async (tx, row) => {
+      if (row.state !== "awaiting_authority" || !row.start_command_bytes || !row.start_correlation) throw conflict();
+      const original = codec.encodeDelegatedCommand(Buffer.from(row.start_command_bytes));
+      if (original.canonical_json !== row.start_command_bytes || original.command_digest !== row.start_command_digest ||
+          original.original_command_id !== row.original_command_uuid) throw conflict();
+      if (row.start_response_bytes && row.start_response_digest !==
+          "sha256:" + createHash("sha256").update(row.start_response_bytes).digest("hex")) throw conflict();
+      const bound = codec.bindDelegatedResponse(original.request, bytes, {
+        ...(recovered ? { recovery: codec.createDelegatedRecovery(original.request).request } : {}),
+        ...(row.start_response_bytes ? { previous: Buffer.from(row.start_response_bytes) } : {}),
+      });
+      if (bound.response.result.kind !== "CHALLENGE") throw conflict();
+      if (row.start_response_bytes) return;
+      const responseBytes = stringify(bound.response)!;
+      const fingerprint = factsDigest({
+        profile: "urn:rifare:medusa-authority-challenge:v1",
+        correlation: JSON.parse(row.start_correlation),
+        challenge_id: bound.response.result.challenge_id,
+      });
+      if (row.challenge_fingerprint && row.challenge_fingerprint !== fingerprint) throw conflict();
+      const [observed] = await tx(operations).where(revisionFence(row)).whereNull("start_response_bytes")
+        .update({
+          start_response_bytes: responseBytes,
+          start_response_digest: "sha256:" + createHash("sha256").update(responseBytes).digest("hex"),
+          start_response_observed_at: tx.fn.now(), challenge_fingerprint: fingerprint,
+          revision: row.revision + 1, updated_at: tx.fn.now(),
+        }).returning("id");
+      if (!observed) throw conflict();
+    }).catch(error => {
+      if ((error as { code?: string }).code === "23505") throw conflict();
+      throw error;
+    });
+  }
+
   private async admitOriginal(input: Uint8Array, context: AdmissionContext, ownerDigest: string | null = null) {
     const { merchant, key, privacyOperator, verifiedContext, subject } = journalConfiguration(context);
     const original = parseOriginalCommand(input);
@@ -170,6 +215,10 @@ export default class OperationJournalService {
         ...(row.start_command_bytes ? { authority_start: {
           command_bytes: row.start_command_bytes, command_digest: row.start_command_digest,
           correlation: row.start_correlation,
+          ...(row.start_response_bytes ? { first_response: {
+            bytes: row.start_response_bytes, digest: row.start_response_digest,
+            observed_at: row.start_response_observed_at,
+          } } : {}),
         } } : {}) };
     });
   }

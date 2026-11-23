@@ -385,6 +385,54 @@
           "enumItems": [],
           "mappedType": "text"
         },
+        "start_response_bytes": {
+          "name": "start_response_bytes",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "text"
+        },
+        "start_response_digest": {
+          "name": "start_response_digest",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "text"
+        },
+        "start_response_observed_at": {
+          "name": "start_response_observed_at",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "unique": false,
+          "length": 6,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "datetime"
+        },
         "privacy_hold": {
           "name": "privacy_hold",
           "type": "boolean",
@@ -536,6 +584,16 @@
           "name": "rifare_operation_start_digest",
           "expression": "start_command_digest ~ '^sha256:[0-9a-f]{64}$'",
           "definition": "check ((start_command_digest ~ '^sha256:[0-9a-f]{64}$'))"
+        },
+        {
+          "name": "rifare_operation_start_response",
+          "expression": "(start_response_bytes is null) = (start_response_digest is null) and (start_response_bytes is null) = (start_response_observed_at is null)",
+          "definition": "check (((start_response_bytes is null) = (start_response_digest is null) and (start_response_bytes is null) = (start_response_observed_at is null)))"
+        },
+        {
+          "name": "rifare_operation_start_response_digest",
+          "expression": "start_response_digest ~ '^sha256:[0-9a-f]{64}$'",
+          "definition": "check ((start_response_digest ~ '^sha256:[0-9a-f]{64}$'))"
         },
         {
           "name": "rifare_operation_payable",

@@ -24,6 +24,9 @@ export const minimizedOperationFields = {
   start_command_bytes: null,
   start_command_digest: null,
   start_correlation: null,
+  start_response_bytes: null,
+  start_response_digest: null,
+  start_response_observed_at: null,
 };
 
 function privacyRecordId(transaction: Postgres, key: Buffer, purpose: string, scope: InstallationScope, ...subject: string[]) {
@@ -127,6 +130,7 @@ export async function exportJournalSubject(transaction: Postgres, scope: Subject
     "cart_facts_digest", "payable_minor_units", "currency", "currency_exponent",
     "command_bytes", "command_digest", "first_observation_digest", "first_observed_at",
     "start_owner_digest", "start_claimed_at", "start_command_bytes", "start_command_digest", "start_correlation",
+    "start_response_bytes", "start_response_digest", "start_response_observed_at",
     "created_at", "updated_at",
   );
   if (rows.length > 1000) throw new Error("Journal subject export limit exceeded");

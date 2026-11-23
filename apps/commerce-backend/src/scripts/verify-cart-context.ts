@@ -474,16 +474,19 @@ export default async function verifyCartContext({ container }: ExecArgs) {
           remoteResults.set(id, {
             profile: "urn:marty:delegation-command-response:v1", original_command_id: id,
             command_digest: "sha256:" + createHash("sha256").update(request.raw).digest("hex"),
-            result: { kind: "CHALLENGE", challenge_id: "bbbbbbbb-cccc-4ddd-8eee-ffffffffffff",
+            result: { kind: "CHALLENGE", challenge_id: randomUUID(),
               grant: request.body.grant, operation: request.body.operation,
               created_at: "2026-11-23T00:00:00.000Z", expires_at: "2026-11-23T00:10:00.000Z" },
           });
         }
+        const saved = remoteResults.get(id) as { result: { challenge_id: string } };
         response.setHeader("link", "<" + peer.config.origin +
-          '/v1/flows/instances/bbbbbbbb-cccc-4ddd-8eee-ffffffffffff/request>; rel="urn:marty:delegated-use:request"');
+          '/v1/flows/instances/' + saved.result.challenge_id + '/request>; rel="urn:marty:delegated-use:request"');
         response.end(JSON.stringify({ ...remoteResults.get(id) as object,
           recovered: request.body.command === "RECOVER_RESULT" }));
       });
+      let observedSenderId: string | undefined;
+      let observedSenderResponse: string | undefined;
       try {
         const senderCommand = { ...command, command_id: randomUUID() };
         const senderBytes = Buffer.from(JSON.stringify(senderCommand));
@@ -493,6 +496,13 @@ export default async function verifyCartContext({ container }: ExecArgs) {
         const storedBeforeNetwork = await journal.prepareRecovery(senderCommand.command_id, admission);
         assert.ok(storedBeforeNetwork.authority_start);
         const bound = await session.start();
+        observedSenderId = session.operation.id;
+        const observedSender = await postgres("rifare_operation").where({ id: observedSenderId }).first();
+        observedSenderResponse = observedSender.start_response_bytes;
+        assert.ok(observedSender.start_response_observed_at);
+        assert.equal(observedSender.start_response_digest,
+          "sha256:" + createHash("sha256").update(observedSenderResponse!).digest("hex"));
+        assert.equal(observedSender.revision, 3);
         assert.equal(session.recovery_only, true);
         assert.equal(peer.requests.length, 1);
         assert.equal(peer.requests[0].path, "/v1/organizations/" +
@@ -505,12 +515,30 @@ export default async function verifyCartContext({ container }: ExecArgs) {
         assert.equal(resumed.recovery_only, true);
         await assert.rejects(resumed.start(), /Authority sender is unavailable/);
         const recoveredBound = await resumed.recover();
+        const afterRecovery = await postgres("rifare_operation").where({ id: observedSenderId }).first();
+        assert.equal(afterRecovery.start_response_bytes, observedSenderResponse);
+        assert.equal(afterRecovery.revision, 3);
         assert.equal(peer.requests[1].body.command, "RECOVER_RESULT");
         assert.equal(peer.requests[1].body.original_command_id, senderCommand.command_id);
         const artifact = await resumed.requestArtifact(recoveredBound);
         assert.equal((artifact as { execution_authorized: boolean }).execution_authorized, false);
         assert.equal(peer.requests[2].method, "GET");
         assert.equal((bound as { response: { recovered: boolean } }).response.recovered, false);
+        const originalRemote = remoteResults.get(senderCommand.command_id) as any;
+        remoteResults.set(senderCommand.command_id, { ...originalRemote,
+          result: { ...originalRemote.result, challenge_id: randomUUID() } });
+        await assert.rejects(resumed.recover(), /COMMAND_HISTORY_CHANGED/);
+        assert.equal((await postgres("rifare_operation").where({ id: observedSenderId }).first()).start_response_bytes,
+          observedSenderResponse);
+        const mismatchedHandle = await transport.recover(JSON.parse(storedBeforeNetwork.authority_start!.command_bytes), {
+          profile: "urn:marty:delegation-command:v1", command: "RECOVER_RESULT",
+          original_command_id: senderCommand.command_id,
+          expected_command_digest: storedBeforeNetwork.authority_start!.command_digest,
+        }, () => {});
+        const requestsBeforeArtifact = peer.requests.length;
+        await assert.rejects(resumed.requestArtifact(mismatchedHandle), /COMMAND_HISTORY_CHANGED/);
+        assert.equal(peer.requests.length, requestsBeforeArtifact);
+        remoteResults.set(senderCommand.command_id, originalRemote);
         session.close(); resumed.close();
         check("native-authority-session-retains-before-tls-and-recovers-only-the-original", () => {});
 
@@ -738,6 +766,10 @@ export default async function verifyCartContext({ container }: ExecArgs) {
       assert.equal(exportedStart.start_owner_digest, beforeClaim.start_owner_digest);
       assert.ok(exportedStart.start_claimed_at);
       assert.equal(JSON.stringify(exportedStart).includes(creators[0].send_ticket!), false);
+      const exportedResponse = exported.find(row => row.id === observedSenderId)!;
+      assert.equal(exportedResponse.start_response_bytes, observedSenderResponse);
+      assert.ok(exportedResponse.start_response_digest);
+      assert.ok(exportedResponse.start_response_observed_at);
       assert.equal((await journal.exportPrivacySubject(bob.customer.id, privacyActor)).length, 0);
 
       const revocation = await postgres.transaction();
@@ -776,12 +808,20 @@ export default async function verifyCartContext({ container }: ExecArgs) {
       check("journal-privacy-export-waits-for-in-flight-operator-revocation-and-refuses-disclosure", () => {});
 
       assert.equal(await journal.setPrivacyHold(alice.customer.id, creators[0].operation.id, 2, true, privacyActor), true);
+      assert.equal(await journal.setPrivacyHold(alice.customer.id, observedSenderId!, 3, true, privacyActor), true);
       await journal.erasePrivacySubject(alice.customer.id, privacyActor);
       const heldExports = await journal.exportPrivacySubject(alice.customer.id, privacyActor);
-      assert.equal(heldExports.length, 1);
-      assert.equal(heldExports[0].start_command_bytes, retainedStart.command_bytes);
-      assert.equal(heldExports[0].start_correlation, retainedStart.correlation);
+      assert.equal(heldExports.length, 2);
+      const heldStart = heldExports.find(row => row.id === creators[0].operation.id)!;
+      assert.equal(heldStart.start_command_bytes, retainedStart.command_bytes);
+      assert.equal(heldStart.start_correlation, retainedStart.correlation);
+      assert.equal(heldExports.find(row => row.id === observedSenderId)!.start_response_bytes, observedSenderResponse);
       assert.equal(await journal.setPrivacyHold(alice.customer.id, creators[0].operation.id, 4, false, privacyActor), true);
+      assert.equal(await journal.setPrivacyHold(alice.customer.id, observedSenderId!, 5, false, privacyActor), true);
+      const minimizedResponse = await postgres("rifare_operation").where({ id: observedSenderId }).first();
+      assert.equal(minimizedResponse.start_response_bytes, null);
+      assert.equal(minimizedResponse.start_response_digest, null);
+      assert.equal(minimizedResponse.start_response_observed_at, null);
       const minimizedStart = await authorityRow();
       for (const field of ["start_command_bytes", "start_command_digest", "start_correlation",
         "start_owner_digest", "start_claimed_at"]) assert.equal(minimizedStart[field], null);
