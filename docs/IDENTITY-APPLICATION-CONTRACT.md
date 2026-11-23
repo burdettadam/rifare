@@ -161,6 +161,19 @@ The normal local profile still uses the default provider. A future shared
 checkout lock must qualify owner interruption and recovery as well as
 simultaneous writers.
 
+The bundled Redis provider also fenced the second process. After expiry a
+new named owner acquired the lock, and the old named owner could not remove
+it. When both acquisitions omitted an owner, a separate process calling the
+same ownerless release operation deleted the successor lease. The test
+checkout wrapper uses a unique owner for acquisition and release. Named
+release protects the successor lease. A worker that outlives its lease must
+still be fenced at the native effect boundary.
+
+For the Redis qualification only, select `RIFARE_TEST_CHECKOUT_LOCK=redis`
+with the same disposable profile and set `RIFARE_TEST_LOCK_REDIS_URL` to its
+password-protected loopback fixture. Redis holds lock state only. Commerce
+and journal records remain in PostgreSQL.
+
 COMMERCE-AUTHORITY-01 must refuse mismatched, expired or unverified authority
 before entering a workflow that can compensate an existing payment. The
 entry must bind the exact original operation, current cart snapshot, selected

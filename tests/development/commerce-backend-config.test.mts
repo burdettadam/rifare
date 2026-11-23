@@ -57,12 +57,26 @@ test("CASE-COMMERCE-ENGINE-01-07 ambient cloud endpoints cannot activate externa
   assert.deepEqual(config.plugins, [{ resolve: "@medusajs/cloud", options: { disabled: true } }]);
 });
 
-test("PostgreSQL checkout locking qualification is limited to a disposable test profile", () => {
+test("shared checkout locking qualification is limited to a disposable test profile", () => {
   const selected = { ...valid(), RIFARE_COMMERCE_VERIFY: "disposable", RIFARE_TEST_CHECKOUT_LOCK: "postgres" };
   assert.equal(localCommerceConfig(valid()).modules.some(module => module.resolve === "@medusajs/medusa/locking"), false);
   assert.equal(localCommerceConfig(selected).modules.some(module => module.resolve === "@medusajs/medusa/locking"), true);
   for (const input of [{ ...selected, NODE_ENV: "development" }, { ...selected, RIFARE_COMMERCE_VERIFY: undefined },
     { ...selected, RIFARE_TEST_CHECKOUT_LOCK: "unknown" }]) {
     assert.throws(() => localCommerceConfig(input), /DISPOSABLE_CHECKOUT_LOCK_REQUIRED/);
+  }
+  const redis = { ...selected, RIFARE_TEST_CHECKOUT_LOCK: "redis" };
+  const redisUrl = "redis://:synthetic@127.0.0.1:16379/0";
+  const module = localCommerceConfig({ ...redis, RIFARE_TEST_LOCK_REDIS_URL: redisUrl }).modules
+    .find(entry => entry.resolve === "@medusajs/medusa/locking");
+  assert.deepEqual(module?.options?.providers, [{
+    resolve: "@medusajs/medusa/locking-redis", id: "locking-redis", is_default: true,
+    options: { redisUrl, namespace: "rifare_checkout_fixture:" },
+  }]);
+  for (const url of [undefined, "redis://:synthetic@redis.example:6379/0",
+    "redis://127.0.0.1:16379/0", "redis://:synthetic@127.0.0.1:16379/1",
+    "redis://:synthetic@127.0.0.1:16379/0?host=other"]) {
+    assert.throws(() => localCommerceConfig({ ...redis, RIFARE_TEST_LOCK_REDIS_URL: url }),
+      /DISPOSABLE_LOCK_REDIS_URL_REQUIRED/);
   }
 });

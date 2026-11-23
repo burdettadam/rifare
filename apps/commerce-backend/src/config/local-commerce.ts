@@ -62,9 +62,19 @@ export function localCommerceConfig(env: Environment) {
     throw new Error("RIFARE_COMMERCE_PROFILE_UNQUALIFIED");
   }
   const testCheckoutLock = env.RIFARE_TEST_CHECKOUT_LOCK;
-  if (testCheckoutLock !== undefined && (testCheckoutLock !== "postgres" ||
+  if (testCheckoutLock !== undefined && (!["postgres", "redis"].includes(testCheckoutLock) ||
       env.NODE_ENV !== "test" || env.RIFARE_COMMERCE_VERIFY !== "disposable")) {
     throw new Error("RIFARE_DISPOSABLE_CHECKOUT_LOCK_REQUIRED");
+  }
+  let redisLockUrl: URL | undefined;
+  if (testCheckoutLock === "redis") {
+    try { redisLockUrl = new URL(env.RIFARE_TEST_LOCK_REDIS_URL ?? ""); }
+    catch { throw new Error("RIFARE_DISPOSABLE_LOCK_REDIS_URL_REQUIRED"); }
+    if (redisLockUrl.protocol !== "redis:" || !loopback.has(redisLockUrl.hostname) || !redisLockUrl.port ||
+        redisLockUrl.username || !redisLockUrl.password || !["", "/0"].includes(redisLockUrl.pathname) ||
+        redisLockUrl.search || redisLockUrl.hash) {
+      throw new Error("RIFARE_DISPOSABLE_LOCK_REDIS_URL_REQUIRED");
+    }
   }
   if (env.EXECUTION_CONTEXT || Object.keys(env).some((key) => key.startsWith("MEDUSA_CLOUD_") && env[key])) {
     throw new Error("RIFARE_COMMERCE_CLOUD_CONFIGURATION_UNSUPPORTED");
@@ -118,9 +128,14 @@ export function localCommerceConfig(env: Environment) {
         { resolve: "@medusajs/medusa/auth-emailpass", id: "emailpass" },
         ...(identity ? [{ resolve: "./src/modules/external-identity", id: "external-oidc", options: identity }] : []),
       ] },
-    }, { resolve: "./src/modules/operation-journal" }, ...(testCheckoutLock === "postgres" ? [{
+    }, { resolve: "./src/modules/operation-journal" }, ...(testCheckoutLock ? [{
       resolve: "@medusajs/medusa/locking",
-      options: { providers: [{ resolve: "@medusajs/medusa/locking-postgres", id: "locking-postgres", is_default: true }] },
+      options: { providers: [{
+        resolve: `@medusajs/medusa/locking-${testCheckoutLock}`,
+        id: `locking-${testCheckoutLock}`,
+        is_default: true,
+        ...(redisLockUrl ? { options: { redisUrl: redisLockUrl.href, namespace: "rifare_checkout_fixture:" } } : {}),
+      }] },
     }] : [])],
   };
 }

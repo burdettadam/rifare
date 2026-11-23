@@ -32,9 +32,15 @@ export default async function verifyCommerce({ container }: ExecArgs) {
   if (process.env.NODE_ENV !== "test" || process.env.RIFARE_COMMERCE_VERIFY !== "disposable") {
     throw new Error("RIFARE_DISPOSABLE_COMMERCE_TEST_REQUIRED");
   }
-  const { RIFARE_TEST_LOCK_CART, RIFARE_TEST_LOCK_LINE } = process.env;
+  const { RIFARE_TEST_LOCK_CART, RIFARE_TEST_LOCK_LINE, RIFARE_TEST_LOCK_ACTION } = process.env;
   if (RIFARE_TEST_LOCK_CART || RIFARE_TEST_LOCK_LINE) {
     assert.ok(RIFARE_TEST_LOCK_CART && RIFARE_TEST_LOCK_LINE);
+    if (RIFARE_TEST_LOCK_ACTION === "release") {
+      const released = await container.resolve(Modules.LOCKING).release(RIFARE_TEST_LOCK_CART);
+      console.log("RIFARE_CART_LOCK_CONTENDER=" + JSON.stringify({ pid: process.pid, released }));
+      return;
+    }
+    assert.equal(RIFARE_TEST_LOCK_ACTION, "update");
     const result = await updateLineItemInCartWorkflow(container).run({
       input: { cart_id: RIFARE_TEST_LOCK_CART, item_id: RIFARE_TEST_LOCK_LINE, update: { quantity: 2 } },
       throwOnError: false,
@@ -440,7 +446,7 @@ export default async function verifyCommerce({ container }: ExecArgs) {
     const afterQuantityChange = await graph("cart", staleCart.id, ["id", "total"]);
     assert.ok(MathBN.gt(afterQuantityChange.total, staleSession.amount));
 
-    type PaymentFixtureInput = { cartId: string; paymentSessionId: string };
+    type PaymentFixtureInput = { cartId: string; paymentSessionId: string; ownerId: string };
     const checkPaymentBeforeCompletion = createStep("rifare-fixture-check-payment-before-completion",
       async ({ cartId, paymentSessionId }: PaymentFixtureInput, { container: context }) => {
         const { data: [current] } = await context.resolve(ContainerRegistrationKeys.QUERY).graph({
@@ -456,14 +462,14 @@ export default async function verifyCommerce({ container }: ExecArgs) {
         return new StepResponse();
       });
     const completionWithEntryCheck = createWorkflow("rifare-fixture-completion-with-entry-check", (input: PaymentFixtureInput) => {
-      acquireLockStep({ key: input.cartId, timeout: 10, ttl: 60 });
+      acquireLockStep({ key: input.cartId, ownerId: input.ownerId, timeout: 10, ttl: 60 });
       checkPaymentBeforeCompletion(input);
       const result = completeCartWorkflow.runAsStep({ input: { id: input.cartId } });
-      releaseLockStep({ key: input.cartId });
+      releaseLockStep({ key: input.cartId, ownerId: input.ownerId });
       return new WorkflowResponse(result);
     });
     const beforeEntry = await completionWithEntryCheck(container).run({
-      input: { cartId: staleCart.id, paymentSessionId: staleSession.id }, throwOnError: false,
+      input: { cartId: staleCart.id, paymentSessionId: staleSession.id, ownerId: randomUUID() }, throwOnError: false,
     });
     assert.equal(beforeEntry.errors[0]?.error?.message, "Fixture payment failed entry validation");
     const rejectedAtEntry = await graph("cart", staleCart.id, ["id", "completed_at"]);
@@ -474,7 +480,7 @@ export default async function verifyCommerce({ container }: ExecArgs) {
     });
     const { fixtureCart: matchingCart, session: matchingSession } = await createPaymentCart();
     const { result: matchingOrder } = await completionWithEntryCheck(container).run({
-      input: { cartId: matchingCart.id, paymentSessionId: matchingSession.id },
+      input: { cartId: matchingCart.id, paymentSessionId: matchingSession.id, ownerId: randomUUID() },
     });
     const matched = await graph("order", matchingOrder.id, orderFields);
     check("native-entry-validation-allows-matching-synthetic-payment", () => {
@@ -482,18 +488,20 @@ export default async function verifyCommerce({ container }: ExecArgs) {
       assert.ok(MathBN.eq(matched.payment_collections[0].payments[0].amount, matchingSession.amount));
     });
 
-    if (process.env.RIFARE_TEST_CHECKOUT_LOCK === "postgres") {
+    const checkoutLockProvider = process.env.RIFARE_TEST_CHECKOUT_LOCK;
+    if (checkoutLockProvider === "postgres" || checkoutLockProvider === "redis") {
       const { fixtureCart: sharedCart } = await createPaymentCart();
       const { items: [sharedLine] } = await graph("cart", sharedCart.id, ["items.*"]);
       const locking = container.resolve(Modules.LOCKING);
       const postgres = container.resolve(ContainerRegistrationKeys.PG_CONNECTION);
       const ownerId = randomUUID();
       const execute = promisify(execFile);
-      const runContender = async () => {
+      const runContender = async (action: "update" | "release" = "update") => {
         const { stdout } = await execute(process.execPath, [
           "run.mjs", "exec", `./src/scripts/${basename(__filename)}`,
         ], {
-          env: { ...process.env, RIFARE_TEST_LOCK_CART: sharedCart.id, RIFARE_TEST_LOCK_LINE: sharedLine.id },
+          env: { ...process.env, RIFARE_TEST_LOCK_CART: sharedCart.id,
+            RIFARE_TEST_LOCK_LINE: sharedLine.id, RIFARE_TEST_LOCK_ACTION: action },
           timeout: 45000,
         });
         const prefix = "RIFARE_CART_LOCK_CONTENDER=";
@@ -510,26 +518,52 @@ export default async function verifyCommerce({ container }: ExecArgs) {
         assert.match(blocked.error, /locked|failed to acquire lock/i);
         const lockedCart = await graph("cart", sharedCart.id, ["items.*"]);
         assert.equal(Number(lockedCart.items[0].quantity), 1);
-        check("native-postgres-cart-lock-fences-another-process-while-held", () => {});
+        check(`native-${checkoutLockProvider}-cart-lock-fences-another-process-while-held`, () => {});
       } finally {
         await locking.release(sharedCart.id, { ownerId });
       }
       await locking.acquire(sharedCart.id, { ownerId, expire: 1 });
-      try {
-        await postgres.raw("select pg_sleep(1.1)");
-        const row = await postgres("locking").where({ id: sharedCart.id })
-          .first(postgres.raw("expiration <= now() as expired"));
-        assert.equal(row?.expired, true);
-        const expired = await runContender();
-        assert.match(expired.error, /locked|failed to acquire lock/i);
-        check("native-postgres-cart-lock-does-not-reclaim-another-owners-expired-lease", () => {});
-      } finally {
-        await locking.release(sharedCart.id, { ownerId });
+      if (checkoutLockProvider === "postgres") {
+        try {
+          await postgres.raw("select pg_sleep(1.1)");
+          const row = await postgres("locking").where({ id: sharedCart.id })
+            .first(postgres.raw("expiration <= now() as expired"));
+          assert.equal(row?.expired, true);
+          const expired = await runContender();
+          assert.match(expired.error, /locked|failed to acquire lock/i);
+          check("native-postgres-cart-lock-does-not-reclaim-another-owners-expired-lease", () => {});
+        } finally {
+          await locking.release(sharedCart.id, { ownerId });
+        }
+      } else {
+        const successor = randomUUID();
+        await delay(1200);
+        await locking.acquire(sharedCart.id, { ownerId: successor, expire: 60 });
+        try {
+          assert.equal(await locking.release(sharedCart.id, { ownerId }), false);
+          const blockedSuccessor = await runContender();
+          assert.match(blockedSuccessor.error, /locked|failed to acquire lock/i);
+          check("native-redis-cart-lock-reclaims-expiry-and-rejects-stale-named-release", () => {});
+        } finally {
+          await locking.release(sharedCart.id, { ownerId: successor });
+        }
+
+        // Medusa's native workflow steps omit ownerId and therefore share one Redis owner value.
+        await locking.acquire(sharedCart.id, { expire: 1 });
+        await delay(1200);
+        await locking.acquire(sharedCart.id, { expire: 60 });
+        try {
+          const unownedRelease = await runContender("release");
+          assert.equal(unownedRelease.released, true);
+          check("native-redis-ownerless-release-removes-the-successor-lock", () => {});
+        } finally {
+          await locking.release(sharedCart.id);
+        }
       }
       const released = await runContender();
       assert.equal(released.error, null);
       const changedCart = await graph("cart", sharedCart.id, ["items.*"]);
-      check("native-postgres-cart-lock-allows-mutation-after-owner-release", () => {
+      check(`native-${checkoutLockProvider}-cart-lock-allows-mutation-after-release`, () => {
         assert.equal(Number(changedCart.items[0].quantity), 2);
       });
     }
