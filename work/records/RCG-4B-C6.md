@@ -195,3 +195,27 @@ The temporary relocation directory and database fixtures were removed.
 This qualifies the adapter layout and compiled consumer locally. Full standalone
 application installation, connected provider qualification and C6 acceptance
 remain open.
+
+## Prior decision for additive C6 catalog registration
+
+Before changing catalog controls at d3a9397040166a982e3403396ee96702add10582,
+root as delegated integration owner authorizes the missing public-client entry.
+The retained regression first failed the reviewed TLS-helper pin, then correctly
+reported ADAPTER_CATALOG_UNDECLARED_ADAPTER_SOURCE. Both failures remain in
+ignored evidence. No validator waiver applies.
+
+Declare only delegated_use_public_client, its actual source pin, three bounded
+operations and all 23 public wire cases. Add the corresponding expected coverage.
+Preserve every existing adapter, operation, case, oracle and direct fixture.
+Raise only the catalog-local byte capacity from 262144 to 327680, one 64 KiB
+block, because the pre-addition compact inventory already occupies 260505 bytes.
+Generic configuration limits and overflow rejection remain mandatory.
+
+Validate the exact addition independently before subtracting it for the existing
+frozen C1/C5 preservation checks. Retain their original hashes and denominators.
+The full pre-addition coverage canonical SHA256 is
+06033d81d78481d8225cf83752cdefec171e77cfeadc6d3d79f4e8e9ef9c75ed.
+Independent authority reviewer rifare_authority_review approved this bounded
+proposal before implementation. Both independent roles must inspect the actual
+candidate and rerun evidence. External and production qualification remain false.
+This decision changes local catalog capacity and inventory only.
