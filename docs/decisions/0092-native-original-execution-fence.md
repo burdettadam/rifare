@@ -1,0 +1,121 @@
+# ADR-0092 - Own and fence original native checkout execution
+
+Status: assigned; implementation and mechanism proof pending. No connected or
+production authority is established.
+Base: `c0359132500d1dd6c527819e1142e929283b2593` (Rifare PR12).
+Branch: `feat/medusa-native-execution-fence`; root is sole writer/integration owner
+in the existing primary checkout. Assignment: RCG-4B-C12.
+
+## Required outcome
+
+Advance COMMERCE-AUTHORITY-01's original execution and actual-effect boundary.
+C10 owns exact pending native payment association; C11 owns historical original
+observations. Neither owns a native checkout attempt or fences a stale native
+writer. Existing probes prove that a worker can complete checkout after losing its
+Redis lease, and can still send HTTP after losing its PostgreSQL session. Preserve
+those witnesses and the original parent requirements; do not relabel another
+validate-hook wrapper as a final fence.
+
+Implement one durable original native checkout-attempt owner in the existing
+journal, with immutable original identity, opaque owner and monotonically increasing
+fence generation. Consume the first entry opportunity before invoking upstream
+completion. Interruption, workflow error, lost acknowledgement and owner loss retain
+uncertainty and original identifiers. Expiry, process restart or an empty C11
+observation must never allocate another checkout attempt. Cancellation cannot erase
+an unresolved attempted effect. Extend privacy/hold/export/erasure/uninstall and
+whole-database restore/refusal continuity without restoring execution permission.
+
+Before workflow entry, require current native customer/auth/store/channel/privacy
+ownership, exact original cart facts, original session/currency/raw principal,
+retained C9 final result and genuine current C8 receipt verification. Reject stale,
+expired, changed or unverified input before entering a workflow that has already
+registered payment compensation. Reuse those owners; create no pricing engine,
+alternate payment ledger, authority database or general worker scheduler.
+
+Connected merchant permission and live ElevenID grant/revocation/account-link
+sources are not installed by this task. The normal application must remain held
+without them. An explicitly test/disposable local System qualification profile may
+exercise actual mechanics using genuine independently signed synthetic C7/C8/C9
+fixtures. Such fixtures are not a production authority source. Accept no caller
+boolean, unsigned object or public environment-based request bypass as authority.
+
+## Mechanism proof before claiming a fence
+
+Prove a concrete, server-owned identity on the actual native module transactions.
+A dedicated nonprivileged PostgreSQL login and its own worker connection pool are
+a candidate: session_user can distinguish worker processes without a mutable pooled
+session variable. Prove pool isolation, wrong/missing identity refusal, reconnect,
+backend identity and role-forgery refusal through actual native writes. Do not assume
+AsyncLocalStorage, workflow input or a context field automatically reaches SQL.
+No production role provisioning or shared deployment architecture is assigned.
+
+Where public workflow hooks cannot cover writes, narrowly owned PostgreSQL guards
+must enforce the current original owner/generation at native order/cart/link,
+reservation and payment write boundaries, with transaction ordering against
+revocation. Missing or stale execution identity must fail closed for the protected
+original. Preserve unrelated ordinary native behavior and explicitly distinguish
+trusted administrative/database-owner powers from the bounded worker threat.
+Prove original correlation before the first write; an error followed by compensation
+or soft deletion is not zero stale effects.
+
+Use supported upstream completion and module extension contracts. The pinned public
+completion hook exposes validate only; later internal hooks are not a supported
+extension claim. The public ModuleExports discoveryPath contract may allow a thin
+native Payment service extension to preserve upstream resources/migrations while
+guarding native provider edges. Prove it against the actual pinned implementation
+before relying on it. Do not edit vendor files, replace the System provider under
+an undisclosed identity, or copy completion/payment mechanics.
+
+Database enforcement does not prove that an old process cannot issue an external
+payment request. Native System calls and compensation need an explicit enforceable
+edge in the local profile; external provider-side dispatch/fencing and original
+outcome reconciliation remain distinct unqualified boundaries. No transaction may
+span an external HTTP call. Keep the HTTP-after-session-loss witness intact.
+
+## Required behavioral evidence
+
+Reverse the retained failure: pause A after successful native validation; revoke its
+owner/generation; establish a distinct successor/recovery owner; resume A. Assert
+zero stale native order/cart/link/reservation/payment writes and zero System
+authorization/capture/refund/cancel/compensation calls. A healthy scoped owner must
+complete exactly one actual native order with original money through the same
+owner/enforcement path. Wrong originals and direct native completion/payment calls
+must not bypass it. Prove coverage of early native writes, not only final row state.
+
+Exercise actual separate processes/connections, concurrent first entry, owner/lease
+loss, backend loss and reconnect, deferred-COMMIT rollback, current ownership/privacy
+withdrawal, genuine receipt expiry, captured-payment compensation-safe entry, lost
+acknowledgement after claim and after native effect, and recovery of the original
+without a resend. Preserve unknown/partial effects explicitly. Test privacy and
+restore across each committed stage and prevent refusal-fingerprint reuse.
+
+Fault the actual generation/owner enforcement so the unchanged stale-worker oracle
+detects it, then restore exact source/DDL. Fixed own-dependency compiled qualification,
+populated prior component/schema upgrade/replay, whole-database restore, exact
+input/output/vendor/tool/evidence receipts and both independent review roles remain
+required. Preserve all C7-C11 and relevant native commerce/claim controls. Do not
+change criteria, oracles, catalogs or scope merely to obtain a passing result.
+
+If supported identity propagation, original correlation, provider-edge enforcement
+or complete native write coverage cannot be proved, name the concrete blocker and
+leave this assignment incomplete. A mechanism experiment is progress, not acceptance
+of this contract or the parent authority/purchase goals.
+
+## Existing work and environment
+
+PR12 is normally merged at the base above, tree-equal to publication5e8c1a7.
+Its source82cc019 passed27 new and61 retained groups on Windows PostgreSQL16.16.
+All16 owned Docker clusters and the Windows cluster were preserved/stopped; four
+temporary compiler/fixture targets were retired through106782 nondeleting probes.
+Source/cache/configuration/refs,174 qualified evidence hashes and the immutable
+server-log supplement remain verified. Keep that evidence and the known WSL clock
+regressions; do not repeat them as a new qualification pass. Inspect compatible
+caches and Windows host free space before allocating a new local runtime.
+
+Provider main24e106dc0d87a4085559b8abf159bdcea3dd3626 was inspected read-only.
+Its change since d0e63c9 concerns release authorizations and hosting/OpenBao catalog
+records, not the selected Auth/delegated-use paths. It supplies no newly qualified
+Rifare endpoint, enrolled caller or account-link operation. Other workers own those
+deployments. No ElevenID/Supabase source, settings or service will be changed here.
+Hosted Actions remain skipped under the cost instruction; local checks, explicit
+independent review and normal authorized feature publication/integration apply.
