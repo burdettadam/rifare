@@ -52,8 +52,9 @@ export default async function verifyFencedSystemProvider({ container }: ExecArgs
       assert.match(session.data.rifare_native_execution.handle, /^[a-f0-9]{64}$/);
       assert.notEqual(session.data.rifare_native_execution.handle, "0".repeat(64));
     });
-    await check("C12-PROVIDER-MISSING-GATE absent original worker/journal enforcement refuses before native authorization", async () => {
-      assert.equal((await postgres.raw("select to_regprocedure('public.rifare_require_native_execution_payment(text,text,text)') as gate")).rows[0].gate, null);
+    await check("C12-PROVIDER-WORKER-ONLY installed journal gate refuses an unauthenticated controller before native authorization", async () => {
+      assert.notEqual((await postgres.raw("select to_regprocedure('public.rifare_require_native_execution_payment(text,text,text)') as gate")).rows[0].gate, null);
+      assert.equal((await postgres.raw("select has_function_privilege('public','public.rifare_require_native_execution_payment(text,text,text)','EXECUTE') as permitted")).rows[0].permitted, false);
       await refusedWithoutEffects(() => payments.authorizePaymentSession(session.id, {}));
       await refusedWithoutEffects(() => payments.authorizePaymentSession(session.id, { idempotency_key: legacy.id, verified: true, worker_role: "forged", generation: 999 }));
       assert.equal((await postgres("payment_session").where({ id: session.id }).first()).status, "pending");
@@ -77,7 +78,7 @@ export default async function verifyFencedSystemProvider({ container }: ExecArgs
       finally { process.env.RIFARE_TEST_NATIVE_EXECUTION = previous; }
     });
     console.log("C12_FENCED_SYSTEM_PROVIDER_RESULT=" + JSON.stringify({ result: "pass", checks,
-      actual_native_system_calls: counts, native_authorization_gate_implemented: false, execution_owner_qualified: false,
+      actual_native_system_calls: counts, native_authorization_gate_implemented: true, execution_owner_qualified: false,
       early_native_write_fence_qualified: false, connected_authority_qualified: false, production_qualified: false }));
   } finally { for (const [method, implementation] of original) Native.prototype[method] = implementation; }
 }

@@ -132,11 +132,55 @@ export class Migration20261123200000 extends Migration {
         return coalesce(NEW,OLD);
       end $$;
       revoke all on function public.rifare_guard_native_original() from public;`);
+    this.addSql(`create function public.rifare_require_native_execution_payment(p_session text,p_handle text,p_action text) returns text
+      language plpgsql security definer set search_path=pg_catalog as $$
+      declare original public.rifare_operation%rowtype; selected_cart text; observed timestamptz;
+      begin
+        if session_user::text !~ '^rifare_exec_[a-f0-9]{32}$' or p_action is distinct from 'authorize'
+          or p_session !~ '^payses_[A-Za-z0-9]{1,100}$' or p_handle !~ '^[a-f0-9]{64}$' then
+          raise exception 'Native execution payment unavailable' using errcode='42501';
+        end if;
+        select cart_id into selected_cart from public.rifare_operation
+          where execution_owner_fingerprint='sha256:' || encode(sha256(convert_to(session_user::text,'UTF8')),'hex');
+        if selected_cart is null then raise exception 'Native execution payment unavailable' using errcode='42501'; end if;
+        perform id from public.cart where id=selected_cart and deleted_at is null for share;
+        if not found then raise exception 'Native execution payment unavailable' using errcode='42501'; end if;
+        select * into original from public.rifare_operation
+          where execution_owner_fingerprint='sha256:' || encode(sha256(convert_to(session_user::text,'UTF8')),'hex') for share;
+        observed := clock_timestamp();
+        if not found or original.cart_id is distinct from selected_cart or original.state is distinct from 'unknown'
+          or original.execution_generation is distinct from 1 or original.execution_revoked_at is not null
+          or original.execution_claimed_at is null or original.execution_expires_at is null
+          or observed < original.execution_claimed_at or observed >= original.execution_expires_at
+          or original.payment_session_id is distinct from p_session
+          or original.payment_provider_id is distinct from 'pp_rifare_fenced_system_fixture'
+          or original.execution_payment_handle_fingerprint is distinct from
+            'sha256:' || encode(sha256(convert_to(p_handle,'UTF8')),'hex') then
+          raise exception 'Native execution payment unavailable' using errcode='42501';
+        end if;
+        perform ps.id from public.payment_session ps join public.payment_collection pc on pc.id=ps.payment_collection_id
+          where ps.id=p_session and ps.payment_collection_id=original.payment_collection_id
+            and ps.provider_id='pp_rifare_fenced_system_fixture' and ps.status='pending'
+            and ps.currency_code=original.currency and ps.deleted_at is null and pc.deleted_at is null
+            and ps.amount::numeric=original.payable_minor_units::numeric / power(10::numeric,original.currency_exponent)
+            and (ps.raw_amount->>'value')::numeric=original.payable_minor_units::numeric / power(10::numeric,original.currency_exponent)
+            and ps.raw_amount->>'precision'='20'
+            and ps.data->'rifare_native_execution'->>'profile'='urn:rifare:local-fenced-system-correlation:v1'
+            and ps.data->'rifare_native_execution'->>'session_id'=p_session
+            and ps.data->'rifare_native_execution'->>'handle'=p_handle
+            and not exists(select 1 from public.payment p where p.payment_session_id=p_session or p.payment_collection_id=original.payment_collection_id)
+          for share of ps,pc;
+        if not found then raise exception 'Native execution payment unavailable' using errcode='42501'; end if;
+        return original.original_command_uuid;
+      end $$;
+      revoke all on function public.rifare_require_native_execution_payment(text,text,text) from public;`);
     this.addSql(`create function public.rifare_native_generation_ready() returns boolean
       language plpgsql stable set search_path=pg_catalog as $$
       declare target text; relation_oid oid; guard_oid oid := to_regprocedure('public.rifare_guard_native_generation()');
         original_oid oid := to_regprocedure('public.rifare_guard_native_original()');
+        payment_oid oid := to_regprocedure('public.rifare_require_native_execution_payment(text,text,text)');
       begin
+        if payment_oid is null or has_function_privilege('public',payment_oid,'EXECUTE') then return false; end if;
         foreach target in array array['cart','cart_line_item','order','order_address','order_line_item','order_item','order_summary',
           'order_cart','order_payment_collection','reservation_item','payment_collection','payment_session','payment','capture','refund'] loop
           if to_regclass(format('public.%I',target)) is null then return false; end if;
@@ -208,6 +252,7 @@ export class Migration20261123200000 extends Migration {
     end $$;
     drop function public.rifare_install_native_generation_fences();
     drop function public.rifare_native_generation_ready();
+    drop function public.rifare_require_native_execution_payment(text,text,text);
     drop function public.rifare_guard_native_original();
     drop function public.rifare_guard_native_generation();`);
   }

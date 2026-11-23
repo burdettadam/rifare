@@ -466,3 +466,7 @@ foreign order line. Controller-created foreign rows carry no authenticated marke
 ### Original-row correction round two
 
 Independent review of `019305ca27c0c8aea55c58d37faa63c42467fdf6` retained the prior OLD-row and collision fixes but did not clear the slice. It found that `order_item.order_id` was not bound to the journal's durable execution order, and that textual rendering of divided numeric principal was not a safe comparison with Medusa's raw-money representation. The correction refuses order-item writes until the journal has a durable exact order binding, validates both OLD and NEW parent IDs, compares raw principal numerically while preserving the exact prior raw representation, and adds an unchanged original-session write plus an equal-numeric/differently-rendered raw-value refusal.
+
+## Local provider effect-time gate
+
+The previously demonstrated missing-gate baseline refused the separately named local System adapter before delegation. The next bounded source installs that required worker-only database function. It authenticates the dedicated PostgreSQL login, locks Cart before journal, requires the live generation/expiry and immutable original session/handle/principal, and verifies the still-pending local provider rows before returning the original UUID. PUBLIC has no execute privilege; each transient execution role receives only this function grant. This remains a disposable no-HTTP System qualification edge, not connected provider or ElevenID authority.

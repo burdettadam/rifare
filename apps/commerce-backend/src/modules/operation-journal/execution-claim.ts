@@ -32,6 +32,7 @@ export async function createOriginalExecutionWorker(tx: Postgres) {
     if ((await tx.raw("select pg_catalog.has_schema_privilege(?::name,'public','CREATE') as permitted", [role])).rows[0]?.permitted !== false)
       throw new Error("NATIVE_EXECUTION_SCHEMA_PRIVILEGE_UNAVAILABLE");
     await tx.raw(`grant usage on schema public to "${role}"`);
+    await tx.raw(`grant execute on function public.rifare_require_native_execution_payment(text,text,text) to "${role}"`);
     // Explicit native commerce allowlists; identity, user, API-key, workflow and
     // infrastructure state are never writable by an original execution worker.
     // Row-level original visibility/fencing is still a pending C12 boundary.
