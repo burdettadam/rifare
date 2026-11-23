@@ -46,3 +46,37 @@ preserving source, configuration, refs, screenshots, logs and qualification evid
 This completes only local standalone Admin/browser evidence. Full connected identity,
 commerce authority, legacy data porting, receiving-operator transfer and production
 acceptance retain their existing requirements.
+
+## Proven upstream product-route duplication and selected compatibility fix
+
+Before implementation of a vendor adjustment, the delegated maintainer selects one
+bounded build-time compatibility correction. The actual 2.23.0 product table renders
+its child Outlet, and ProductList wraps it in LayoutComposer with its own default
+Outlet. Native create-product navigation therefore mounts two dialogs; both become
+aria-hidden and the unchanged accessible-dialog assertion fails. A production React
+runtime/JSX build still reproduces the two dialogs, so do not attribute this route
+bug to StrictMode or claim the React build selection resolves it.
+
+The official release API still reports [v2.23.0](https://github.com/medusajs/medusa/releases/tag/v2.23.0)
+as latest on November 23, and official develop's product table retains its Outlet.
+Select the existing LayoutComposer `hasOutlet=false` prop only at ProductList's
+call site, leaving its table-owned Outlet, layout, widgets and permission checks
+unchanged. Apply it through the existing Vite build hook to the exact qualified
+`@medusajs/dashboard` 2.23.0 product-list module. Do not overwrite installed package
+files, add install scripts, replace routes/UI, change RBAC/SSO gates or fork a
+commerce engine. Refuse changed module bytes, a changed marker or an absent target.
+The module is `dist/product-list-SC2CY4XX.mjs`, SHA256
+`3aba92f16ae523ec7ccbdaa44dc1787f066cf1771439420da9e7599816fd3e5c`.
+
+The affected original call site is
+`packages/admin/dashboard/src/routes/products/product-list/product-list.tsx`,
+outside the Enterprise paths enumerated in the selected release's root license
+scope. No permission hook or other Enterprise implementation is changed or copied.
+Retain existing source/license notices and distribution restrictions; this is not
+legal clearance or a public release authorization. Remove the compatibility hook
+when a fixed upstream release is selected and independently requalified.
+
+Require a fresh-browser native create-product/catalog journey and single accessible
+dialog, with a deliberate omission of this exact adjustment reproducing the unchanged
+failure. Static missing-entry fault remains separately required. Scope stays local
+packaged Admin delivery; other upstream features are not accepted by one journey.

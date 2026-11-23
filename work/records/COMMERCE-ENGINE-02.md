@@ -26,3 +26,27 @@ no unrelated cache or user configuration is deleted.
 Next: inspect upstream build/static serving and run the actual Admin-enabled build,
 then reproduce standalone browser behavior and fix demonstrated delivery gaps. Root
 owns the checkout; independent roles will review fixed source and actual evidence.
+
+## Exploratory evidence and prior implementation decision
+
+The first Admin-enabled build and own-dependency runtime served the normal login and
+operator pages. A filesystem regression first showed two positive build controls pass
+while enabled missing-index/missing-entry/path cases incorrectly advertised a runtime.
+The builder now validates the compiled configuration and referenced local entry assets;
+five new and eight retained configuration cases pass. Its first compiled-config read
+used the source CWD and failed custom-module resolution; the corrected builder loads
+the normal source environment, reads config from compiled CWD and restores CWD.
+
+The initial test-profile Admin emitted React development code. Selecting production
+React alone produced a genuine `jsxDEV is not a function` browser failure; production
+JSX in Vite8 OXC must match that runtime. Both observations remain failures, not passes.
+With both selected, the login works but create-product still has two hidden dialogs.
+Source inspection demonstrates separate native table and LayoutComposer Outlets.
+The root maintainer adopted the narrowly pinned compatibility correction in ADR0089
+before implementing it. It does not substitute a custom commerce UI or weaken the
+unchanged single-accessible-dialog requirement. Other workers' deployments stay intact.
+
+The owned runtime keeps the two failed generated Admin bundles outside its served
+public tree for review; both are task-owned rebuildable data and retire with this
+runtime. PostgreSQL and the loopback backend are task-owned and currently active.
+No exact-candidate or completed browser qualification is claimed yet.
