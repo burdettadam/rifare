@@ -403,18 +403,49 @@ export default async function verifyCartContext({ container }: ExecArgs) {
       assert.equal(beforeClaim.start_claimed_at, null);
       await assert.rejects(journal.claimAuthorityDispatch(authorityCommand.command_id,
         randomBytes(32).toString("base64url"), admission), /Original commerce command unavailable/);
+      await assert.rejects(journal.claimAuthorityDispatch(authorityCommand.command_id,
+        creators[0].send_ticket!, admission), /Original commerce command unavailable/);
+      const descriptor = {
+        correlation: {
+          actor: { id: "urn:rifare:synthetic:machine", type: "MACHINE_IDENTITY" },
+          organization_id: "12345678-1234-4234-8234-123456789abc",
+          provider_ref: "synthetic-provider",
+        },
+        grant: { id: "12345678-1234-4234-8234-123456789abc", revision: 1,
+          terms_digest: "sha256:" + "a".repeat(64) },
+      };
+      const descriptorBytes = Buffer.from(JSON.stringify(descriptor));
+      const retainedStart = await journal.retainAuthorityStart(authorityCommand.command_id,
+        creators[0].send_ticket!, descriptorBytes, admission);
+      const expectedStart = JSON.stringify({
+        command: "START_USE", command_id: authorityCommand.command_id, grant: descriptor.grant,
+        operation: { action: "urn:rifare:action:purchase:v1", audience: "urn:rifare:store:" + merchant.store_id,
+          request_digest: "sha256:" + createHash("sha256").update(authorityBytes).digest("hex"),
+          request_profile: "urn:rifare:medusa-original-operation:v1",
+          resource_id: "urn:rifare:cart:" + command.cart_id },
+        profile: "urn:marty:delegation-command:v1",
+      });
+      assert.equal(retainedStart.command_bytes, expectedStart);
+      assert.equal(retainedStart.command_digest, "sha256:" + createHash("sha256").update(expectedStart).digest("hex"));
+      assert.deepEqual(await journal.retainAuthorityStart(authorityCommand.command_id,
+        creators[0].send_ticket!, descriptorBytes, admission), retainedStart);
+      await assert.rejects(journal.retainAuthorityStart(authorityCommand.command_id,
+        creators[0].send_ticket!, Buffer.from(JSON.stringify({ ...descriptor,
+          grant: { ...descriptor.grant, revision: 2 } })), admission), /Original commerce command unavailable/);
       const claims = await Promise.allSettled([
         journal.claimAuthorityDispatch(authorityCommand.command_id, creators[0].send_ticket!, admission),
         journal.claimAuthorityDispatch(authorityCommand.command_id, creators[0].send_ticket!, admission),
       ]);
       assert.equal(claims.filter(result => result.status === "fulfilled").length, 1);
       assert.ok((await authorityRow()).start_claimed_at);
-      assert.equal((await authorityRow()).revision, 1);
+      assert.equal((await authorityRow()).revision, 2);
       const recovered = await journal.admitForAuthority(authorityBytes, admission);
       assert.equal(recovered.recovery_only, true);
       assert.equal(recovered.send_ticket, null);
       assert.equal((await journal.prepareRecovery(authorityCommand.command_id, admission)).id,
         recovered.operation.id);
+      assert.deepEqual((await journal.prepareRecovery(authorityCommand.command_id, admission)).authority_start, retainedStart);
+      console.log("RIFARE_NATIVE_AUTHORITY_START_FIXTURE=" + JSON.stringify(retainedStart));
       const priorOriginal = await journal.admitForAuthority(bytes, admission);
       assert.equal(priorOriginal.recovery_only, true);
       assert.equal(priorOriginal.send_ticket, null);

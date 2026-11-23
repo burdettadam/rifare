@@ -21,6 +21,9 @@ export const minimizedOperationFields = {
   first_observed_at: null,
   start_owner_digest: null,
   start_claimed_at: null,
+  start_command_bytes: null,
+  start_command_digest: null,
+  start_correlation: null,
 };
 
 function privacyRecordId(transaction: Postgres, key: Buffer, purpose: string, scope: InstallationScope, ...subject: string[]) {

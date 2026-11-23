@@ -6,6 +6,7 @@ import { unavailable } from "../../cart-context/policy";
 import { cartContextConfig } from "../../config/local-commerce";
 import { lockCartOwner, readLockedCartFacts } from "./cart-facts";
 import { parseOriginalCommand, requireCommandCartMatch } from "./command";
+import { nativeAuthorityStart } from "./authority-start";
 import {
   eraseJournalSubject, exportJournalSubject, journalSubjectIsSuppressed, minimizedOperationFields,
   restoreJournalRefusalIdentities, setJournalOperationHold, uninstallJournal,
@@ -20,7 +21,8 @@ const originalId = /^(?!00000000-0000-0000-0000-000000000000$)[0-9a-f]{8}-[0-9a-
 const statusColumns = ["id", "original_command_uuid", "state", "revision"];
 const historyColumns = [...statusColumns, "cart_id", "actor_digest", "command_digest",
   "privacy_hold", "first_observation_digest", "first_observed_at", "command_bytes",
-  "start_owner_digest", "start_claimed_at"];
+  "start_owner_digest", "start_claimed_at", "start_command_bytes", "start_command_digest",
+  "start_correlation", "store_id"];
 type JournalConfiguration = ReturnType<typeof journalConfiguration>;
 type Merchant = NonNullable<ReturnType<typeof cartContextConfig>>;
 type JournalRow = {
@@ -28,6 +30,8 @@ type JournalRow = {
   cart_id: string; actor_digest: string; command_digest: string; privacy_hold: boolean;
   first_observation_digest: string | null; first_observed_at: Date | null;
   command_bytes: string; start_owner_digest: string | null; start_claimed_at: Date | null;
+  start_command_bytes: string | null; start_command_digest: string | null;
+  start_correlation: string | null; store_id: string;
 };
 const conflict = () => new MedusaError(MedusaError.Types.CONFLICT, "Original commerce command unavailable");
 
@@ -58,7 +62,7 @@ export default class OperationJournalService {
     const ownerDigest = "sha256:" + createHash("sha256").update(ticket).digest("hex");
     await this.withCurrentOriginal(commandId, context, async (tx, row, configuration) => {
       if (row.state !== "awaiting_authority" || row.start_owner_digest !== ownerDigest ||
-          row.start_claimed_at !== null) throw conflict();
+          row.start_claimed_at !== null || !row.start_command_bytes || !row.start_correlation) throw conflict();
       const locked = await readLockedCartFacts(tx, row.cart_id, configuration.merchant, configuration.verifiedContext);
       requireCommandCartMatch(parseOriginalCommand(Buffer.from(row.command_bytes)), locked);
       const [claimed] = await tx(operations).where(revisionFence(row))
@@ -66,6 +70,31 @@ export default class OperationJournalService {
         .update({ start_claimed_at: tx.fn.now(), revision: row.revision + 1, updated_at: tx.fn.now() })
         .returning("id");
       if (!claimed) throw conflict();
+    }, true);
+  }
+
+  /** Retain complete remote bytes before any transport is opened. */
+  async retainAuthorityStart(commandId: string, ticket: string, descriptor: Uint8Array, context: AdmissionContext) {
+    if (typeof ticket !== "string" || !/^[A-Za-z0-9_-]{43}$/.test(ticket) ||
+        !(descriptor instanceof Uint8Array) || descriptor.byteLength > 4096) throw conflict();
+    const ownerDigest = "sha256:" + createHash("sha256").update(ticket).digest("hex");
+    const detached = Buffer.from(descriptor);
+    return this.withCurrentOriginal(commandId, context, async (tx, row) => {
+      if (row.state !== "awaiting_authority" || row.start_owner_digest !== ownerDigest) throw conflict();
+      const encoded = nativeAuthorityStart(detached, row);
+      if (row.start_command_bytes) {
+        if (row.start_command_bytes !== encoded.command_bytes ||
+            row.start_command_digest !== encoded.command_digest ||
+            row.start_correlation !== encoded.correlation) throw conflict();
+        return encoded;
+      }
+      if (row.start_claimed_at !== null) throw conflict();
+      const [retained] = await tx(operations).where(revisionFence(row)).whereNull("start_command_bytes")
+        .update({ start_command_bytes: encoded.command_bytes, start_command_digest: encoded.command_digest,
+          start_correlation: encoded.correlation, revision: row.revision + 1, updated_at: tx.fn.now() })
+        .returning("id");
+      if (!retained) throw conflict();
+      return encoded;
     }, true);
   }
 
@@ -131,7 +160,11 @@ export default class OperationJournalService {
   async prepareRecovery(commandId: string, context: AdmissionContext) {
     return this.withCurrentOriginal(commandId, context, async (_tx, row) => {
       if (row.state !== "awaiting_authority") throw conflict();
-      return { id: row.id, original_command_uuid: row.original_command_uuid, command_digest: row.command_digest };
+      return { id: row.id, original_command_uuid: row.original_command_uuid, command_digest: row.command_digest,
+        ...(row.start_command_bytes ? { authority_start: {
+          command_bytes: row.start_command_bytes, command_digest: row.start_command_digest,
+          correlation: row.start_correlation,
+        } } : {}) };
     });
   }
 
