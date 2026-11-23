@@ -381,3 +381,13 @@ COMMIT;all five later stale writes were refused with exact snapshots and one
 original Cart audit row. The next fixed probe also attempts exact guard restoration
 if the concurrent retirement itself rejects,before its final credential retirement.
 The actual lock-omission campaign and independent review remain required.
+
+At3ffa61f the actual lock-omission campaign failed the unchanged write-first
+ordering assertion and restored the exact guard definition. Both independent roles
+cleared only that bounded write-first case. The next probe pauses canonical
+retirement after its real journal UPDATE has acquired the original row,using a
+fixture-only transaction advisory lock. It then resumes the existing native worker
+and requires its native Cart write to wait on the actual revoker backend before
+retirement commits and the write refuses. Removing the actual generation function
+body must fail that same ordering oracle. The fixture lock has a bounded deadline,
+spans no network call,and is not runtime enforcement.
