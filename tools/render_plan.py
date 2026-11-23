@@ -15,7 +15,7 @@ def render(root: Path) -> None:
     def write(path: str, content: str) -> None:
         target = root / path
         target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_text(content.strip() + '\n', encoding='utf-8')
+        target.write_text(content.strip() + '\n', encoding='utf-8', newline='\n')
 
     def bullets(items) -> str:
         return '\n'.join('- ' + item for item in items)

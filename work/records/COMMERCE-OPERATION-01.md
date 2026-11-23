@@ -1,6 +1,6 @@
 # COMMERCE-OPERATION-01 — Medusa PostgreSQL original-operation journal
 
-State: implemented and exercised locally. Independent review and formal acceptance are pending.
+State: implemented, locally exercised and independently source-reviewed at `bb30798`. Formal acceptance is pending.
 Protected base: `84e0e0e4c76b6b44eebe802c55ce0820d5608650`.
 Branch: `feat/medusa-operation-journal`.
 Assignment: [ADR-0084](../../docs/decisions/0084-medusa-operation-journal.md).
@@ -36,10 +36,42 @@ Privacy export/hold/erasure/restore/import and suppression hooks are required be
 | Native tests with independent DB connections/processes | Passed, including committed original after lost response |
 | Existing identity/cart/commerce regression | Passed on local checkpoints below |
 | Deliberate unique-constraint/currentness faults | Original uniqueness, cart lock and cross-owner check faults verified |
-| Independent reviews | Not run |
-| Publication of implementation | Not done |
+| Independent reviews | Authority/security and regression source reviews found no scoped blocker at `bb30798`; regression reviewer inspected refreshed native evidence |
+| Publication of implementation | Verified public feature ref at `bb3079882b53ecf93219ee04a8d844ad8c20ace3` |
 
 Checkpoints below identify the exact local evidence and remaining qualification. Acceptance and production qualification remain open.
+
+On November 23, 2026, the same published candidate passed fresh native schema,
+privacy, 32 cart-context/journal groups and 28 synthetic identity checks. An older
+PostgreSQL backup was restored to a fresh database separately after source
+erasure and uninstall. Both current-fact reconciliation paths passed, including
+conflict rollback, repeated reconciliation and refusal of original and fresh
+commands. The independent regression reviewer inspected the refreshed logs and
+resolved the earlier exact-candidate evidence concern. Runtime execution was
+performed by root. Review scope excludes connected authority and production
+dispatch. Raw logs and hashed receipts remain ignored under the candidate's
+`evidence/operation-journal/` directory. The disposable container and backup
+were retired. This record correction is retained locally for the next source
+checkpoint together with the portable renderer correction described below.
+
+## Development integration disposition
+
+The independent authority/security and regression reviewers subsequently
+inspected the composition against development `202ea53` and found no scoped
+development integration blocker at `bb30798`. They verified the preserved
+engine, identity and cart-context review trees and historical C5 product-code
+equivalence. The current diagnostic checkout/receipt interface suite passed
+33 cases in pinned Linux using the existing read-only JOSE cache. This refresh
+does not claim a fresh historical served-browser or fault campaign.
+
+The integration check exposed Windows newline translation in
+`tools/render_plan.py`. Its output now explicitly uses LF, as required by
+`.gitattributes`. The generated-view check then passed without changing any
+generated view. Plan validation and the advertised local demos also passed.
+The reviewers must refresh their disposition for this narrow renderer and
+record change before integration. Root owns the development integration under
+the owner's existing merge instruction. Connected authority, protected dispatch,
+formal product acceptance and production authorization remain open.
 
 ## Branch and dependency checkpoint
 
@@ -50,6 +82,15 @@ branch. There is no open Rifare pull request. All eight historical delegated
 checkout and receipt branch tips are ancestors of this checkpoint. Development
 at `202ea5320606049e0f4f740f6a96fc3bb5a09ebf` has two documentation commits
 whose net tree matches the common base. Preserve the existing refs.
+
+The November 23 reconciliation opened [draft PR #3](https://github.com/burdettadam/rifare/pull/3)
+at `bb3079882b53ecf93219ee04a8d844ad8c20ace3` against
+`feat/medusa-cart-context`. The commerce engine, external identity, cart context
+and journal feature refs are all retained in the journal candidate and none is
+integrated into `development`. Root owns stack reconciliation. Next, disposition
+the historical checkout/receipt work preceding the engine and integrate the
+reviewed prerequisites in order before retargeting this PR. The internal journal
+reviews cover their stated scope and do not approve the entire predecessor stack.
 
 From `apps/commerce-backend`, `npm ci --no-audit --no-fund` passed using
 Node 24.14.1 and npm 11.11.0. It installed 952 packages with the unchanged
