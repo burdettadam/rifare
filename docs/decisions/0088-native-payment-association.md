@@ -1,6 +1,6 @@
 # ADR-0088 - Native original payment association
 
-Status: assigned; implementation and qualification pending.
+Status: implementation checkpoint; fixed qualification and independent reviews pending.
 Base: `f7862128261e22f1febb02ce498cf1a8ea66409b` (C9 PR8).
 Branch: `feat/medusa-payment-binding`; root owns writer/integration in the primary.
 
@@ -33,7 +33,7 @@ and current region/provider eligibility. Use raw native decimal values and exist
 exponent rules without rounding, coercion or a new monetary profile. Bound queries
 and stable lock order under the existing serializable journal transaction.
 
-Qualify only the native pending/unattempted observation profile. Existing native
+Qualify only the native pending observation profile. Existing native
 payments, authorizations, captures, refunds, cancellation, ambiguous sessions or
 nonpending statuses require original-outcome reconciliation; refuse rather than
 calling compensation or choosing another session. Do not inspect or retain provider
@@ -56,6 +56,21 @@ uninstall/restore continuity before persistence. Current refusal identities may 
 one optional payment fingerprint; legacy forms may not discard a retained identity.
 Preserve all existing C7/C8/C9 and legacy diagnostic behavior/criteria. Do not change
 catalog source pins, counts, old oracle hashes or payment execution controls.
+
+## Scoping clarification before persistence implementation
+
+Independent authority scoping confirmed that provider creation/update can precede
+or explicitly retain a pending status. Never describe that as unattempted or as
+proof that no provider interaction/effect occurred. Refuse soft-deleted/replaced
+cart/collection/session history and any recorded native payment outcome rather
+than filtering it away and selecting a fresh clean-looking original.
+
+The selected local-medusa application configures no external payment providers or
+cloud payment options; the pinned native loader always registers its System provider.
+This first observation profile therefore requires `pp_system_default`, current native
+enabled state and region eligibility. No arbitrary enabled database row establishes
+a configured external provider. A real provider profile needs separate selection
+and qualification; do not add a caller allowlist or default-provider substitution.
 
 ## Evidence and integration
 

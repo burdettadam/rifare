@@ -785,6 +785,102 @@
           "enumItems": [],
           "mappedType": "datetime"
         },
+        "payment_fingerprint": {
+          "name": "payment_fingerprint",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "text"
+        },
+        "payment_collection_id": {
+          "name": "payment_collection_id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "text"
+        },
+        "payment_session_id": {
+          "name": "payment_session_id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "text"
+        },
+        "payment_provider_id": {
+          "name": "payment_provider_id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "text"
+        },
+        "payment_context_digest": {
+          "name": "payment_context_digest",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "text"
+        },
+        "payment_observed_at": {
+          "name": "payment_observed_at",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "unique": false,
+          "length": 6,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "datetime"
+        },
         "receipt_fingerprint": {
           "name": "receipt_fingerprint",
           "type": "text",
@@ -1002,6 +1098,15 @@
           "expression": "CREATE UNIQUE INDEX IF NOT EXISTS \"rifare_operation_final_uuid_unique\" ON \"rifare_operation\" (\"final_command_uuid\")"
         },
         {
+          "keyName": "rifare_operation_payment_unique",
+          "columnNames": [],
+          "composite": false,
+          "constraint": false,
+          "primary": false,
+          "unique": false,
+          "expression": "CREATE UNIQUE INDEX IF NOT EXISTS \"rifare_operation_payment_unique\" ON \"rifare_operation\" (\"payment_fingerprint\")"
+        },
+        {
           "keyName": "rifare_operation_receipt_unique",
           "columnNames": [],
           "composite": false,
@@ -1136,6 +1241,21 @@
           "name": "rifare_operation_final_bounds",
           "expression": "octet_length(final_command_bytes) between 1 and 65536 and octet_length(final_response_bytes) between 1 and 65536",
           "definition": "check ((octet_length(final_command_bytes) between 1 and 65536 and octet_length(final_response_bytes) between 1 and 65536))"
+        },
+        {
+          "name": "rifare_operation_payment_tuple",
+          "expression": "(payment_collection_id is null) = (payment_session_id is null)\n    and (payment_collection_id is null) = (payment_provider_id is null) and (payment_collection_id is null) = (payment_context_digest is null)\n    and (payment_collection_id is null) = (payment_observed_at is null)\n    and (payment_collection_id is null or (payment_fingerprint is not null and receipt_bytes is not null and final_command_bytes is not null))\n    and (payment_fingerprint is null or payment_collection_id is not null or state = 'retired')",
+          "definition": "check (((payment_collection_id is null) = (payment_session_id is null)\n    and (payment_collection_id is null) = (payment_provider_id is null) and (payment_collection_id is null) = (payment_context_digest is null)\n    and (payment_collection_id is null) = (payment_observed_at is null)\n    and (payment_collection_id is null or (payment_fingerprint is not null and receipt_bytes is not null and final_command_bytes is not null))\n    and (payment_fingerprint is null or payment_collection_id is not null or state = 'retired')))"
+        },
+        {
+          "name": "rifare_operation_payment_digests",
+          "expression": "payment_fingerprint ~ '^sha256:[0-9a-f]{64}$' and payment_context_digest ~ '^sha256:[0-9a-f]{64}$'",
+          "definition": "check ((payment_fingerprint ~ '^sha256:[0-9a-f]{64}$' and payment_context_digest ~ '^sha256:[0-9a-f]{64}$'))"
+        },
+        {
+          "name": "rifare_operation_payment_ids",
+          "expression": "payment_collection_id ~ '^pay_col_[A-Za-z0-9]{1,100}$' and payment_session_id ~ '^payses_[A-Za-z0-9]{1,100}$' and payment_provider_id ~ '^pp_[A-Za-z0-9_.:-]{1,250}$'",
+          "definition": "check ((payment_collection_id ~ '^pay_col_[A-Za-z0-9]{1,100}$' and payment_session_id ~ '^payses_[A-Za-z0-9]{1,100}$' and payment_provider_id ~ '^pp_[A-Za-z0-9_.:-]{1,250}$'))"
         },
         {
           "name": "rifare_operation_receipt_tuple",

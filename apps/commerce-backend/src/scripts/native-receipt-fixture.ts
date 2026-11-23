@@ -58,9 +58,10 @@ export async function nativeReceiptFixture(container: any, requestOrigin = "http
     const input = bytes(header).toString("base64url") + "." + bytes(payload).toString("base64url");
     return Buffer.from(input + "." + sign("sha256", Buffer.from(input), { key, dsaEncoding: "ieee-p1363" }).toString("base64url"));
   };
-  const makeOriginal = async (retainRequest = true, requestLifetime = 120) => {
-    const { result: cart } = await createCartWorkflow(container).run({ input: { customer_id: customer.id, region_id: regions[0].id,
-      sales_channel_id: channels[0].id, items: [{ variant_id: products[0].variants[0].id, quantity: 1 }] } });
+  const makeCart = async () => (await createCartWorkflow(container).run({ input: { customer_id: customer.id, region_id: regions[0].id,
+    sales_channel_id: channels[0].id, items: [{ variant_id: products[0].variants[0].id, quantity: 1 }] } })).result;
+  const makeOriginal = async (retainRequest = true, requestLifetime = 120, existingCart?: { id: string }) => {
+    const cart = existingCart ?? await makeCart();
     const facts = await postgres.transaction(tx => readLockedCartFacts(tx, cart.id, merchant, context), { isolationLevel: "serializable" });
     const command = { cart_facts_digest: facts.factsDigest, cart_id: cart.id, command_id: randomUUID(), currency: "usd", currency_exponent: 2,
       kind: "prepare_purchase", payable_minor_units: facts.facts.payable_total_minor, profile: "urn:rifare:medusa-original-operation:v1" };
@@ -90,5 +91,5 @@ export async function nativeReceiptFixture(container: any, requestOrigin = "http
     };
     return { command, descriptor, cart, artifact, nonce, challenge, receipt, row: () => postgres("rifare_operation").where({ original_command_uuid: command.command_id }).first() };
   };
-  return { journal, postgres, clock, merchant, customer, context, privacyActor, identity, auth, trust, requestTrust, verifier, requestVerifier, makeOriginal };
+  return { journal, postgres, clock, merchant, customer, context, privacyActor, identity, auth, trust, requestTrust, verifier, requestVerifier, makeCart, makeOriginal };
 }
