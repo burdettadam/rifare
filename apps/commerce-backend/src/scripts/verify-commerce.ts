@@ -5,9 +5,9 @@ import { setTimeout as delay } from "node:timers/promises";
 import type { ExecArgs } from "@medusajs/framework/types";
 import { MedusaModule } from "@medusajs/framework/modules-sdk";
 import { ContainerRegistrationKeys, MathBN, MedusaError, Modules, ProductStatus, PromotionActions } from "@medusajs/framework/utils";
-import { StepResponse } from "@medusajs/framework/workflows-sdk";
+import { createStep, createWorkflow, StepResponse, WorkflowResponse } from "@medusajs/framework/workflows-sdk";
 import {
-  addShippingMethodToCartWorkflow, beginExchangeOrderWorkflow, beginOrderEditOrderWorkflow, beginReturnOrderWorkflow,
+  acquireLockStep, addShippingMethodToCartWorkflow, beginExchangeOrderWorkflow, beginOrderEditOrderWorkflow, beginReturnOrderWorkflow,
   beginReceiveReturnWorkflow,
   cancelOrderWorkflow, capturePaymentWorkflow, completeCartWorkflow, confirmExchangeRequestWorkflow,
   confirmOrderEditRequestWorkflow, confirmReturnRequestWorkflow, confirmReturnReceiveWorkflow, createExchangeShippingMethodWorkflow,
@@ -19,7 +19,7 @@ import {
   linkSalesChannelsToApiKeyWorkflow, linkSalesChannelsToStockLocationWorkflow,
   orderEditAddNewItemWorkflow, orderEditUpdateItemQuantityWorkflow, orderExchangeAddNewItemWorkflow,
   orderExchangeRequestItemReturnWorkflow,
-  receiveItemReturnRequestWorkflow, refundPaymentWorkflow, requestItemReturnWorkflow,
+  receiveItemReturnRequestWorkflow, refundPaymentWorkflow, releaseLockStep, requestItemReturnWorkflow,
   requestOrderEditRequestWorkflow, updateCartPromotionsWorkflow, updateStoresWorkflow,
 } from "@medusajs/medusa/core-flows";
 
@@ -396,16 +396,22 @@ export default async function verifyCommerce({ container }: ExecArgs) {
 
     // This disposable witness checks compensation ordering. It does not add a checkout hook
     // to the application or enable any protected route.
-    const { result: staleCart } = await createCartWorkflow(container).run({
-      input: { ...cartInput, items: [{ variant_id: variant.id, quantity: 1 }] },
-    });
-    await addShippingMethodToCartWorkflow(container).run({ input: { cart_id: staleCart.id, options: [{ id: shipping.id }] } });
-    const { result: staleCollection } = await createPaymentCollectionForCartWorkflow(container).run({
-      input: { cart_id: staleCart.id },
-    });
-    const { result: staleSession } = await createPaymentSessionsWorkflow(container).run({
-      input: { payment_collection_id: staleCollection.id, provider_id: "pp_system_default" },
-    });
+    const createPaymentCart = async () => {
+      const { result: fixtureCart } = await createCartWorkflow(container).run({
+        input: { ...cartInput, items: [{ variant_id: variant.id, quantity: 1 }] },
+      });
+      await addShippingMethodToCartWorkflow(container).run({
+        input: { cart_id: fixtureCart.id, options: [{ id: shipping.id }] },
+      });
+      const { result: collection } = await createPaymentCollectionForCartWorkflow(container).run({
+        input: { cart_id: fixtureCart.id },
+      });
+      const { result: session } = await createPaymentSessionsWorkflow(container).run({
+        input: { payment_collection_id: collection.id, provider_id: "pp_system_default" },
+      });
+      return { fixtureCart, session };
+    };
+    const { fixtureCart: staleCart, session: staleSession } = await createPaymentCart();
     const payments = container.resolve(Modules.PAYMENT);
     const capturedOriginal = await payments.authorizePaymentSession(staleSession.id, {});
     assert.ok(capturedOriginal);
@@ -419,6 +425,48 @@ export default async function verifyCommerce({ container }: ExecArgs) {
     await container.resolve(Modules.CART).updateLineItems(beforeQuantityChange.items[0].id, { quantity: 2 });
     const afterQuantityChange = await graph("cart", staleCart.id, ["id", "total"]);
     assert.ok(MathBN.gt(afterQuantityChange.total, staleSession.amount));
+
+    type PaymentFixtureInput = { cartId: string; paymentSessionId: string };
+    const checkPaymentBeforeCompletion = createStep("rifare-fixture-check-payment-before-completion",
+      async ({ cartId, paymentSessionId }: PaymentFixtureInput, { container: context }) => {
+        const { data: [current] } = await context.resolve(ContainerRegistrationKeys.QUERY).graph({
+          entity: "cart", filters: { id: cartId },
+          fields: ["total", "currency_code", "payment_collection.payment_sessions.id",
+            "payment_collection.payment_sessions.amount", "payment_collection.payment_sessions.currency_code"],
+        });
+        const sessions = current?.payment_collection?.payment_sessions;
+        if (sessions?.length !== 1 || sessions[0].id !== paymentSessionId ||
+            current.currency_code !== sessions[0].currency_code || !MathBN.eq(current.total, sessions[0].amount)) {
+          throw new MedusaError(MedusaError.Types.INVALID_DATA, "Fixture payment failed entry validation");
+        }
+        return new StepResponse();
+      });
+    const completionWithEntryCheck = createWorkflow("rifare-fixture-completion-with-entry-check", (input: PaymentFixtureInput) => {
+      acquireLockStep({ key: input.cartId, timeout: 10, ttl: 60 });
+      checkPaymentBeforeCompletion(input);
+      const result = completeCartWorkflow.runAsStep({ input: { id: input.cartId } });
+      releaseLockStep({ key: input.cartId });
+      return new WorkflowResponse(result);
+    });
+    const beforeEntry = await completionWithEntryCheck(container).run({
+      input: { cartId: staleCart.id, paymentSessionId: staleSession.id }, throwOnError: false,
+    });
+    assert.equal(beforeEntry.errors[0]?.error?.message, "Fixture payment failed entry validation");
+    const rejectedAtEntry = await graph("cart", staleCart.id, ["id", "completed_at"]);
+    const paymentAfterEntryCheck = await payments.retrievePayment(capturedOriginal.id, { relations: ["refunds"] });
+    check("native-entry-validation-refuses-stale-payment-before-compensation", () => {
+      assert.equal(rejectedAtEntry.completed_at, null);
+      assert.equal(paymentAfterEntryCheck.refunds?.length, 0);
+    });
+    const { fixtureCart: matchingCart, session: matchingSession } = await createPaymentCart();
+    const { result: matchingOrder } = await completionWithEntryCheck(container).run({
+      input: { cartId: matchingCart.id, paymentSessionId: matchingSession.id },
+    });
+    const matched = await graph("order", matchingOrder.id, orderFields);
+    check("native-entry-validation-allows-matching-synthetic-payment", () => {
+      assert.ok(MathBN.eq(matched.total, matchingSession.amount));
+      assert.ok(MathBN.eq(matched.payment_collections[0].payments[0].amount, matchingSession.amount));
+    });
 
     completeCartWorkflow.hooks.validate(({ input, cart: checkoutCart }) => {
       if (input.id === staleCart.id) {

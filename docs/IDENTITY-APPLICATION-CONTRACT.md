@@ -138,6 +138,14 @@ was captured for the original amount, then the cart changed. Refusing the
 mismatch in the hook left the cart open and created no order. Medusa still
 recorded a refund of the earlier capture.
 
+A second disposable fixture acquired Medusa's cart lock and checked the
+current amount, currency and single payment session before calling the nested
+completion workflow. Rejecting the stale payment at entry left the cart open
+and the prior capture untouched. A matching control reached native order
+creation with equal order and payment amounts. This uses the local provider
+and one process. Shared lock behavior, current authority and final-effect
+fencing across separate workers still need qualification.
+
 COMMERCE-AUTHORITY-01 must refuse mismatched, expired or unverified authority
 before entering a workflow that can compensate an existing payment. The
 entry must bind the exact original operation, current cart snapshot, selected
