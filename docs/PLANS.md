@@ -97,6 +97,16 @@ were caught and restored. [The record](../work/records/COMMERCE-ENGINE-02.md) pr
 source/dependency hashes, independently checked evidence, compatibility scope and
 remaining broader UI/connected/production/transfer gates.
 
+**COMMERCE-ENGINE-03 ordinary native claims are locally qualified** under
+[ADR-0090](decisions/0090-native-order-claims.md). Upstream claim, inventory,
+fulfillment and receiving behavior now has native evidence. A small PostgreSQL
+activation invariant prevents claims against already-canceled originals across
+native writers without patching dependencies. Exact compiled and restored runs pass
+46 commerce and six admission groups; populated upgrade/replay preserves 152
+nonmigration tables. [The record](../work/records/COMMERCE-ENGINE-03.md) retains the
+caught missing-trigger fault and refund-after-error/recovery limits. Full retained
+resolution equivalence, connected authority and production remain open.
+
 The current source includes the bounded local **M20-G03 item-level drop-off
 handoff** implementation. Start with the [architecture](ARCHITECTURE.md) for
 existing modules and [roadmap](ROADMAP.md) for remaining work.

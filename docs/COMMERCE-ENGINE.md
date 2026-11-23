@@ -29,7 +29,7 @@ its diagnostic source owners; it is not connected to this new database yet.
 | Generic merchant administration | Upstream Medusa Admin | A synthetic native operator signed in through the compiled Admin in Chromium and viewed a seeded product. An independent anonymous context was refused. |
 | Ordinary exchange | Medusa Order exchange and return workflows | Drafting leaves stock untouched. Confirmation reserves one replacement on the original order, and receiving restocks the returned unit. |
 | Equal-price order edit | Medusa Order and Inventory workflows | A pending variant substitution leaves the original line and stock reservation in place. Confirming moves the reservation and preserves the order total and original payment. |
-| Claims | Medusa Order workflows | The retained Rifare scenarios still need to be checked against the native workflows. |
+| Ordinary order claims | Medusa Order claim, Fulfillment and Return workflows | Native draft/cancel/replacement/receiving and resource refusals are locally qualified, with a PostgreSQL activation guard for canceled originals. Full retained-resolution equivalence remains open. |
 | Loyalty, credit and growth | Assess upstream modules/plugins before extending | Specific scope, license and scenario equivalence remain to be assessed. |
 
 Rifare retains product-specific agent/task interfaces, merchant policies, approval
@@ -254,6 +254,48 @@ Admin/browser delivery, hosted identity, connected delegation, legacy data porti
 production cutover or distribution rights. The source dependency graph and license
 controls remain separate from a release decision. See the existing
 [engine work record](../work/records/COMMERCE-ENGINE-01.md) for reviews and failures.
+
+## Ordinary native order claims
+
+The [claim work record](../work/records/COMMERCE-ENGINE-03.md) and
+[ADR-0090](decisions/0090-native-order-claims.md) qualify ordinary upstream claims
+through the local PostgreSQL profile. `test:commerce` now includes claim draft and
+cancellation, one-unit replacement reservation/fulfillment, actual native return
+receiving, foreign/repeated/excess quantity refusals, competing changes and refusal
+to cancel a claim while its return fulfillment is live. These are privileged native
+fixture operations, not customer permission or real physical receipt evidence.
+
+Run normal `db:migrate` before exposing a restored or upgraded local database. The
+existing Rifare module now owns a small PostgreSQL claim-activation guard. A live,
+uncanceled claim's insert, restoration, uncancellation or reassignment locks the
+referenced order and refuses a missing, deleted or already-canceled original. This
+corrects a measured omission in Medusa 2.23.0's begin-claim validation without
+modifying installed vendor files. It preserves historical claim rows and permits
+later order cancellation; it does not establish a permanent cross-table invariant,
+actor permission, quantity allocation or final commerce authority.
+
+On a fresh disposable database with the documented local configuration and applied
+migrations, the additional native admission test is:
+
+```sh
+cd apps/commerce-backend
+NODE_ENV=test RIFARE_COMMERCE_VERIFY=disposable node run.mjs exec ./src/scripts/verify-claim-admission.ts
+```
+
+It creates synthetic native rows and exercises separate PostgreSQL backends. The
+compiled standalone form uses the same path with `.js`. Its checks cover canceled,
+deleted and missing originals, reassignment/restore, cancellation commit versus
+rollback, preserved history and later cancellation. They do not qualify production
+migration/restore operations or privileged database administrators disabling guards.
+
+Claim confirmation is not a provider refund. The qualification also demonstrates
+that a native refund can succeed at the System provider before an active claim or
+canceled-order bookkeeping error. A stable key preserved the original refund; an
+active-claim case recovered bookkeeping after clearing that draft, while a deliberately
+interrupted canceled-order case remained unreconciled. Those observations do not
+authorize automatic retry, order reactivation or an external settlement claim.
+Rifare's original-outcome reconciliation, approvals, exact paid-unit allocation,
+fees/tax/duty accounting and connected services remain separate migration gates.
 
 ## Standalone local Admin
 
