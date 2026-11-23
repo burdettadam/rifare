@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
-import { createHash } from "node:crypto";
+import { createHash, createHmac, randomUUID } from "node:crypto";
 import { writeFileSync } from "node:fs";
 import type { ExecArgs } from "@medusajs/framework/types";
 import { ContainerRegistrationKeys, ModulesSdkUtils } from "@medusajs/framework/utils";
@@ -77,6 +77,29 @@ export default async function verifyNativeExecutionClaim({ container }: ExecArgs
     assert.equal(result.code, 0, result.output); assert.match(result.output, /C12_CLAIM_RESTART_RECOVERY_ONLY/);
     assert.deepEqual(await sample.row(), before); assert.equal(await roleCount(), count);
   });
+  await check("C12-CLAIM-CONCURRENT separate transactions mint exactly one original worker", async () => {
+    const other = await f.makePaymentOriginal(), count = await roleCount();
+    const attempts = await noEffect(() => Promise.allSettled([
+      journal.claimNativeExecution(other.command.command_id, context, verifier),
+      journal.claimNativeExecution(other.command.command_id, context, verifier),
+    ])) as PromiseSettledResult<typeof claim>[];
+    const owners = attempts.filter((row): row is PromiseFulfilledResult<typeof claim> =>
+      row.status === "fulfilled" && row.value.disposition === "claimed_unknown");
+    assert.equal(owners.length, 1); assert.equal(await roleCount(), count + 1);
+    const row = await other.row(); assert.equal(row.execution_owner_fingerprint, executionFingerprint(owners[0].value.worker!.role));
+    writeFileSync(process.env.RIFARE_C12_CLAIM_CUSTODY!.replace("-private.json", "-concurrent-private.json"),
+      JSON.stringify({ source: process.env.RIFARE_C12_SOURCE, original_id: other.command.command_id,
+        worker: owners[0].value.worker, seal: owners[0].value.seal }, null, 2), { flag: "wx", mode: 0o600 });
+    const retry = await journal.claimNativeExecution(other.command.command_id, context, verifier);
+    assert.equal(retry.disposition, "recovery_only"); assert.equal(retry.worker, null);
+  });
+  await check("C12-CLAIM-EXPIRY actual signed receipt deadline cannot mint an attempt", async () => {
+    const other = await f.makePaymentOriginal({ receiptLifetime: 1000 }), before = await other.row(), count = await roleCount();
+    const remaining = before.receipt_expires_at.getTime() - await f.clock();
+    if (remaining > 0) await new Promise(resolve => setTimeout(resolve, remaining + 30));
+    await noEffect(() => assert.rejects(journal.claimNativeExecution(other.command.command_id, context, verifier)));
+    assert.deepEqual(await other.row(), before); assert.equal(await roleCount(), count);
+  });
   await check("C12-CLAIM-IMMUTABLE SQL cannot reset owner generation seal attempt time or uncertainty", async () => {
     const row = await sample.row();
     for (const change of [{ execution_owner_fingerprint: "sha256:" + "1".repeat(64) }, { execution_generation: 0 },
@@ -88,6 +111,25 @@ export default async function verifyNativeExecutionClaim({ container }: ExecArgs
     }
     await assert.rejects(journal.cancel(id, row.revision, context));
   });
+  await check("C12-CLAIM-SQL-NULL first admission and INSERT cannot bypass nonnull generation deadline or order identity", async () => {
+    const other = await f.makePaymentOriginal(), before = await other.row();
+    const proposed = { state: "unknown", execution_owner_fingerprint: executionFingerprint(randomUUID()),
+      execution_seal_fingerprint: executionFingerprint(randomUUID()), execution_payment_handle_fingerprint: executionFingerprint(randomUUID()),
+      execution_generation: 1, execution_claimed_at: new Date(await f.clock()), execution_expires_at: before.receipt_expires_at,
+      payment_fingerprint: executionFingerprint(randomUUID()), payment_collection_id: other.collection.id, payment_session_id: other.session.id,
+      payment_provider_id: "pp_rifare_fenced_system_fixture", payment_context_digest: executionFingerprint(randomUUID()), payment_observed_at: new Date(await f.clock()) };
+    for (const change of [{ execution_generation: null }, { execution_expires_at: null },
+      { execution_order_id: "order_prebound" }, { execution_order_fingerprint: executionFingerprint("prebound") },
+      { execution_order_id: "order_prebound", execution_order_fingerprint: executionFingerprint("prebound") }]) {
+      await assert.rejects(postgres("rifare_operation").where({ id: before.id }).update({ ...proposed, ...change }),
+        (error: any) => error.code === "23514");
+      assert.deepEqual(await other.row(), before);
+    }
+    const inserted = { ...before, ...proposed, id: "rifop_" + randomUUID().replaceAll("-", ""), original_command_uuid: randomUUID(),
+      challenge_fingerprint: executionFingerprint(randomUUID()), receipt_fingerprint: executionFingerprint(randomUUID()), final_command_uuid: randomUUID() };
+    for (const change of [{}, { execution_generation: null }, { execution_expires_at: null }])
+      await assert.rejects(postgres("rifare_operation").insert({ ...inserted, ...change }), (error: any) => error.code === "23514");
+  });
   await check("C12-CLAIM-ROLE native login cannot read or forge journal authority or become controller", async () => {
     const url = new URL(process.env.DATABASE_URL!); url.username = claim!.worker!.role; url.password = claim!.worker!.password;
     const pool = ModulesSdkUtils.createPgConnection({ clientUrl: url.href, pool: { min: 0, max: 1 } });
@@ -95,6 +137,9 @@ export default async function verifyNativeExecutionClaim({ container }: ExecArgs
       assert.equal((await pool.raw("select session_user as role")).rows[0].role, claim!.worker!.role);
       assert.ok(await pool("cart").where({ id: sample.cart.id }).first("id"));
       await assert.rejects(pool("rifare_operation").select("id"), (error: any) => error.code === "42501");
+      for (const table of ["auth_identity", "user", "api_key", "workflow_execution", "rifare_operation_privacy_subject"])
+        await assert.rejects(pool(table).select("id"), (error: any) => error.code === "42501");
+      await assert.rejects(pool("customer").where({ id: f.customer.id }).update({ has_account: false }), (error: any) => error.code === "42501");
       await assert.rejects(pool("rifare_operation").where({ id: (await sample.row()).id }).update({ execution_generation: 999 }), (error: any) => error.code === "42501");
       const controller = (await postgres.raw("select session_user as role")).rows[0].role;
       assert.match(controller, /^[a-zA-Z0-9_]+$/);
@@ -113,6 +158,80 @@ export default async function verifyNativeExecutionClaim({ container }: ExecArgs
     try { await assert.rejects(journal.claimNativeExecution(other.command.command_id, context, verifier)); }
     finally { process.env.RIFARE_TEST_NATIVE_EXECUTION = previous; }
     assert.deepEqual(await other.row(), before); assert.equal(await roleCount(), count);
+  });
+  const requireRetiredCredential = async (other: Awaited<ReturnType<typeof f.makePaymentOriginal>>) => {
+    const row = await other.row(); assert.equal(row.state, "unknown"); assert.equal(row.execution_generation, 2);
+    assert.ok(row.execution_revoked_at instanceof Date);
+    const roles = (await postgres.raw("select rolname, rolcanlogin from pg_roles where 'sha256:' || encode(sha256(convert_to(rolname::text,'UTF8')),'hex') = ?",
+      [row.execution_owner_fingerprint])).rows;
+    assert.equal(roles.length, 1); assert.equal(roles[0].rolcanlogin, false);
+    const retry = await journal.claimNativeExecution(other.command.command_id, context, verifier);
+    assert.equal(retry.disposition, "recovery_only"); assert.equal(retry.worker, null);
+  };
+  await check("C12-CLAIM-COMMIT-OWNER deferred ownership withdrawal never releases credentials", async () => {
+    const other = await f.makePaymentOriginal(), commandId = other.command.command_id;
+    assert.match(commandId, /^[a-f0-9-]{36}$/); assert.match(f.identity.id, /^authid_[A-Za-z0-9]+$/);
+    await postgres.raw(`create function public.c12_claim_owner_commit() returns trigger language plpgsql as $$ begin
+      if NEW.original_command_uuid='${commandId}' and OLD.execution_owner_fingerprint is null and NEW.execution_owner_fingerprint is not null
+        then update public.auth_identity set app_metadata='{"customer_id":"cus_other"}'::jsonb where id='${f.identity.id}'; end if; return NEW; end $$;
+      create constraint trigger c12_claim_owner after update on public.rifare_operation deferrable initially deferred
+      for each row execute function public.c12_claim_owner_commit()`);
+    try { await noEffect(() => assert.rejects(journal.claimNativeExecution(commandId, context, verifier))); }
+    finally {
+      await postgres.raw("drop trigger c12_claim_owner on public.rifare_operation; drop function public.c12_claim_owner_commit()");
+      await postgres("auth_identity").where({ id: f.identity.id }).update({ app_metadata: { customer_id: f.customer.id } });
+    }
+    await requireRetiredCredential(other);
+  });
+  await check("C12-CLAIM-COMMIT-PRIVACY suppression during deferred COMMIT retains uncertainty and retires login", async () => {
+    const other = await f.makePaymentOriginal(), commandId = other.command.command_id;
+    const marker = "hmac-sha256:" + createHmac("sha256", Buffer.from(process.env.RIFARE_JOURNAL_PRIVACY_KEY!, "base64url"))
+      .update(JSON.stringify(["urn:rifare:medusa-journal-privacy-subject:v1", f.merchant.merchant_namespace, f.merchant.store_id, f.customer.id])).digest("hex");
+    assert.ok(await postgres("rifare_operation_privacy_subject").where({ id: marker, suppressed: false }).first());
+    await postgres.raw(`create function public.c12_claim_privacy_commit() returns trigger language plpgsql as $$ begin
+      if NEW.original_command_uuid='${commandId}' and OLD.execution_owner_fingerprint is null and NEW.execution_owner_fingerprint is not null
+        then update public.rifare_operation_privacy_subject set suppressed=true where id='${marker}'; end if; return NEW; end $$;
+      create constraint trigger c12_claim_privacy after update on public.rifare_operation deferrable initially deferred
+      for each row execute function public.c12_claim_privacy_commit()`);
+    try { await noEffect(() => assert.rejects(journal.claimNativeExecution(commandId, context, verifier))); }
+    finally {
+      await postgres.raw("drop trigger c12_claim_privacy on public.rifare_operation; drop function public.c12_claim_privacy_commit()");
+      await postgres("rifare_operation_privacy_subject").where({ id: marker }).update({ suppressed: false });
+    }
+    await requireRetiredCredential(other);
+  });
+  for (const mode of ["abort", "expiry"]) await check("C12-CLAIM-COMMIT-" + mode.toUpperCase() + " actual blocked COMMIT prevents credential release", async () => {
+    const other = await f.makePaymentOriginal(mode === "expiry" ? { receiptLifetime: 1500 } : {}), commandId = other.command.command_id;
+    const controller = new AbortController(), blocker = await postgres.transaction();
+    const blockerPid = (await blocker.raw("select pg_backend_pid() as pid")).rows[0].pid;
+    await blocker.raw("select pg_advisory_xact_lock(120,12)");
+    await postgres.raw(`create function public.c12_claim_wait_commit() returns trigger language plpgsql as $$ begin
+      if NEW.original_command_uuid='${commandId}' and OLD.execution_owner_fingerprint is null and NEW.execution_owner_fingerprint is not null
+        then perform pg_advisory_xact_lock(120,12); end if; return NEW; end $$;
+      create constraint trigger c12_claim_wait after update on public.rifare_operation deferrable initially deferred
+      for each row execute function public.c12_claim_wait_commit()`);
+    const action = noEffect(() => journal.claimNativeExecution(commandId, context, verifier, controller.signal));
+    action.catch(() => undefined);
+    try {
+      const deadline = Date.now() + 8000; let waiting = false;
+      while (Date.now() < deadline) {
+        const rows = (await postgres.raw("select pid from pg_stat_activity where wait_event='advisory' and ? = any(pg_blocking_pids(pid))", [blockerPid])).rows;
+        if (rows.length) { waiting = true; break; }
+        await new Promise(resolve => setTimeout(resolve, 20));
+      }
+      assert.ok(waiting, "Actual first-claim COMMIT must be blocked");
+      if (mode === "abort") controller.abort();
+      else {
+        const remaining = (await other.row()).receipt_expires_at.getTime() - await f.clock();
+        if (remaining >= 0) await new Promise(resolve => setTimeout(resolve, remaining + 30));
+      }
+      await blocker.commit(); await assert.rejects(action);
+    } finally {
+      if (!blocker.isCompleted()) await blocker.rollback();
+      await action.catch(() => undefined);
+      await postgres.raw("drop trigger c12_claim_wait on public.rifare_operation; drop function public.c12_claim_wait_commit()");
+    }
+    await requireRetiredCredential(other);
   });
   await check("C12-CLAIM-PRIVACY hold erasure revokes generation and minimization retains refusal identity", async () => {
     const first = await sample.row();

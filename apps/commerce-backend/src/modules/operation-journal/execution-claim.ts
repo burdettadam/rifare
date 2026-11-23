@@ -27,17 +27,63 @@ export async function createOriginalExecutionWorker(tx: Postgres) {
   if (!tx.isTransaction) throw new Error("NATIVE_EXECUTION_TRANSACTION_REQUIRED");
   const role = "rifare_exec_" + randomUUID().replaceAll("-", ""), password = randomBytes(32).toString("hex");
   try {
-    await tx.raw(`create role "${role}" login password '${password}' nosuperuser nocreatedb nocreaterole noinherit noreplication nobypassrls`);
+    await tx.raw(`create role "${role}" nologin password '${password}' nosuperuser nocreatedb nocreaterole noinherit noreplication nobypassrls`);
     await tx.raw(`grant usage on schema public to "${role}"`);
-    // Journal and privacy state remain inaccessible. Never grant all tables:
-    // doing so would let the worker forge its own durable original owner.
+    // Explicit native commerce allowlists; identity, user, API-key, workflow and
+    // infrastructure state are never writable by an original execution worker.
+    // Row-level original visibility/fencing is still a pending C12 boundary.
+    const writes = new Set([
+      "cart", "cart_address", "cart_line_item", "cart_line_item_adjustment", "cart_line_item_tax_line",
+      "cart_shipping_method", "cart_shipping_method_adjustment", "cart_shipping_method_tax_line", "cart_credit_line",
+      "order", "order_address", "order_item", "order_line_item", "order_line_item_adjustment", "order_line_item_tax_line",
+      "order_shipping", "order_shipping_method", "order_shipping_method_adjustment", "order_shipping_method_tax_line",
+      "order_summary", "order_credit_line", "order_transaction", "reservation_item",
+      "payment_collection", "payment_session", "payment", "capture", "refund",
+      "order_cart", "order_payment_collection", "order_promotion", "cart_payment_collection",
+    ]);
+    const reads = new Set([
+      ...writes, "store", "store_currency", "sales_channel", "region", "region_country", "currency", "country",
+      "customer", "customer_address", "payment_provider", "region_payment_provider", "product", "product_variant",
+      "product_option", "product_option_value", "product_variant_option", "product_image", "product_category",
+      "product_tag", "product_collection", "product_sales_channel", "product_variant_price_set", "price", "price_set",
+      "price_rule", "price_list", "price_preference", "shipping_option", "shipping_profile", "shipping_option_rule",
+      "shipping_option_type", "service_zone", "fulfillment_set", "stock_location", "inventory_item", "inventory_level",
+      "tax_rate", "tax_region", "product_variant_inventory_item", "sales_channel_stock_location",
+    ]);
     const tables = await tx("pg_catalog.pg_tables").where({ schemaname: "public" }).select("tablename");
     for (const { tablename } of tables) {
-      if (tablename.startsWith("rifare_operation")) continue;
+      if (!reads.has(tablename)) continue;
       if (!/^[a-z_][a-z0-9_]*$/.test(tablename)) throw new Error("NATIVE_TABLE_NAME_UNAVAILABLE");
-      await tx.raw(`grant select, insert, update, delete on table public."${tablename}" to "${role}"`);
+      await tx.raw(`grant ${writes.has(tablename) ? "select, insert, update, delete" : "select"} on table public."${tablename}" to "${role}"`);
     }
-    await tx.raw(`grant usage, select on all sequences in schema public to "${role}"`);
+    const sequences = (await tx.raw(`select distinct s.relname as name, t.relname as native_table
+      from pg_catalog.pg_class s join pg_catalog.pg_namespace n on n.oid=s.relnamespace
+      join pg_catalog.pg_depend d on d.objid=s.oid and d.deptype in ('a','i')
+      join pg_catalog.pg_class t on t.oid=d.refobjid
+      where s.relkind='S' and n.nspname='public'`)).rows;
+    for (const sequence of sequences) {
+      if (!writes.has(sequence.native_table)) continue;
+      if (!/^[a-z_][a-z0-9_]*$/.test(sequence.name)) throw new Error("NATIVE_SEQUENCE_NAME_UNAVAILABLE");
+      await tx.raw(`grant usage, select on sequence public."${sequence.name}" to "${role}"`);
+    }
     return { role, password, fingerprint: executionFingerprint(role) };
   } catch { throw new Error("NATIVE_EXECUTION_WORKER_UNAVAILABLE"); }
+}
+
+
+export async function activateOriginalExecutionWorker(tx: Postgres, role: string) {
+  requireNativeExecutionProfile();
+  if (!tx.isTransaction || !/^rifare_exec_[a-f0-9]{32}$/.test(role)) throw new Error("NATIVE_EXECUTION_WORKER_UNAVAILABLE");
+  await tx.raw(`alter role "${role}" login`);
+}
+
+/** Failed delivery retires access, not the original attempt or its uncertainty. */
+export async function retireOriginalExecutionWorker(postgres: Postgres, role: string) {
+  if (!/^rifare_exec_[a-f0-9]{32}$/.test(role)) throw new Error("NATIVE_EXECUTION_WORKER_UNAVAILABLE");
+  await postgres.transaction(async tx => {
+    await tx("rifare_operation").where({ execution_owner_fingerprint: executionFingerprint(role) })
+      .whereNull("execution_revoked_at").update({ execution_generation: tx.raw("execution_generation + 1"),
+        execution_revoked_at: tx.fn.now(), revision: tx.raw("revision + 1"), updated_at: tx.fn.now() });
+    await tx.raw(`alter role "${role}" nologin`);
+  });
 }

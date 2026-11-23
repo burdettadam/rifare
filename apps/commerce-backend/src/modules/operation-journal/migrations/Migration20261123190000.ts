@@ -18,19 +18,26 @@ export class Migration20261123190000 extends Migration {
       and execution_revoked_at is null and execution_order_id is null and execution_order_fingerprint is null)
     or (execution_owner_fingerprint is not null and execution_seal_fingerprint is not null and execution_payment_handle_fingerprint is not null
       and payment_fingerprint is not null and
-      (state = 'retired' or (state in ('unknown','observed','completed') and execution_generation between 1 and 2147483647
-        and execution_claimed_at is not null and execution_expires_at > execution_claimed_at))
-      and (execution_order_id is null or execution_order_fingerprint is not null))),
+      (state = 'retired' or (state in ('unknown','observed','completed') and execution_generation is not null and execution_generation between 1 and 2147483647
+        and execution_claimed_at is not null and execution_expires_at is not null and execution_expires_at > execution_claimed_at))
+      and ((execution_order_id is null) = (execution_order_fingerprint is null) or state = 'retired' and execution_order_id is null))),
       add constraint rifare_operation_execution_shape check(execution_owner_fingerprint ~ '^sha256:[0-9a-f]{64}$' and execution_seal_fingerprint ~ '^sha256:[0-9a-f]{64}$' and execution_payment_handle_fingerprint ~ '^sha256:[0-9a-f]{64}$' and execution_order_fingerprint ~ '^sha256:[0-9a-f]{64}$' and execution_order_id ~ '^order_[A-Za-z0-9]{1,100}$');`);
     this.addSql(`create function public.rifare_keep_original_execution() returns trigger
       language plpgsql set search_path=pg_catalog,public as $$
       begin
+        if TG_OP='INSERT' then
+          if NEW.execution_owner_fingerprint is not null and NEW.state<>'retired' then
+            raise exception 'Original execution requires an existing original' using errcode='23514';
+          end if;
+          return NEW;
+        end if;
         if OLD.execution_owner_fingerprint is null then
           if NEW.execution_owner_fingerprint is not null and NEW.state <> 'retired' and
-            (OLD.state <> 'awaiting_authority' or NEW.state <> 'unknown' or NEW.execution_generation <> 1
+            (OLD.state <> 'awaiting_authority' or NEW.state <> 'unknown' or NEW.execution_generation is distinct from 1
               or NEW.execution_revoked_at is not null or NEW.final_response_bytes is null or NEW.receipt_bytes is null
-              or NEW.payment_provider_id <> 'pp_rifare_fenced_system_fixture'
-              or NEW.execution_expires_at is distinct from NEW.receipt_expires_at
+              or NEW.payment_provider_id is distinct from 'pp_rifare_fenced_system_fixture'
+              or NEW.execution_order_id is not null or NEW.execution_order_fingerprint is not null
+              or NEW.execution_expires_at is null or NEW.execution_expires_at is distinct from NEW.receipt_expires_at
               or NEW.execution_expires_at <= clock_timestamp()) then
             raise exception 'Original execution claim unavailable' using errcode='23514';
           end if;
@@ -63,7 +70,7 @@ export class Migration20261123190000 extends Migration {
         end if;
         return NEW;
       end $$;
-      create trigger rifare_keep_original_execution before update on public.rifare_operation
+      create trigger rifare_keep_original_execution before insert or update on public.rifare_operation
         for each row execute function public.rifare_keep_original_execution();`);
   }
   override async down(): Promise<void> {

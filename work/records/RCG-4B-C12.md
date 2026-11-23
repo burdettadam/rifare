@@ -118,3 +118,15 @@ C11 recovery of the new provider, native row/visibility guards and dispatch rema
 incomplete. No full qualification or production permission follows from this stage.
 The one primary/zero linked Rifare checkouts and root-owned Windows PG instance
 remain active for this bounded implementation and qualification.
+
+
+Independent claim review at142d7f0 found nullable admission predicates, broad worker
+grants and missing post-COMMIT credential validation. The next candidate explicitly
+requires nonnull generation/deadline, rejects active INSERT/prebound orders, uses
+native read/write allowlists and table-owned sequences, and provisions NOLOGIN until
+post-COMMIT current owner/privacy/genuine receipt revalidation. Failed delivery
+revokes the retained unknown claim and leaves its role NOLOGIN, never a replacement.
+Targeted native cases cover each reported malformed tuple and denied security-table
+access plus actual deferred-COMMIT owner/privacy withdrawal, abort and expiry.
+These changes need the next fixed native run and renewed review; no clearance is
+inferred from the earlier seven-group exploratory pass.

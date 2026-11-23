@@ -15,7 +15,7 @@ import { createNativeReceiptVerifier, NativeReceiptVerifier } from "./receipt-ve
 import { retainedNativeReceiptContext } from "./receipt-context";
 import { retainedNativeProofContext } from "./proof-context";
 import { readLockedNativePayment, readLockedNativeExecutionPayment } from "./payment-context";
-import { executionColumns, executionFingerprint, createOriginalExecutionWorker, requireNativeExecutionProfile, type ExecutionRow } from "./execution-claim";
+import { executionColumns, executionFingerprint, createOriginalExecutionWorker, activateOriginalExecutionWorker, retireOriginalExecutionWorker, requireNativeExecutionProfile, type ExecutionRow } from "./execution-claim";
 import { readOriginalPaymentOutcome } from "./payment-outcome";
 import { prepareProofAssociation, PreparedProofAssociation } from "./proof-association";
 import { configure } from "safe-stable-stringify";
@@ -602,7 +602,7 @@ export default class OperationJournalService {
     active();
     const receipt = await OperationJournalService.prototype.recoverVerifiedAuthorityReceipt.call(this, commandId, captured, verifier);
     active();
-    return this.withCurrentOriginal(commandId, captured, async (tx, row, configuration) => {
+    const claimed = await this.withCurrentOriginal(commandId, captured, async (tx, row, configuration) => {
       // Lock before role allocation; concurrent first claim cannot mint another.
       const current = await tx(operations).where({ id: row.id }).forUpdate().first(...executionColumns);
       if (current.execution_owner_fingerprint) throw conflict();
@@ -630,6 +630,37 @@ export default class OperationJournalService {
         execution_authorized: false, native_fence_qualified: false,
         worker: Object.freeze({ role: worker.role, password: worker.password }), seal });
     }, true);
+    try {
+      // The committed claim may have lost its acknowledgement or current
+      // authority. Reverify after COMMIT before enabling this first login.
+      active();
+      await this.withCurrentOriginal(commandId, captured, async (tx, row, configuration) => {
+        if (row.state !== "unknown" || row.execution_owner_fingerprint !== executionFingerprint(claimed.worker.role) ||
+            row.execution_seal_fingerprint !== executionFingerprint(claimed.seal) || row.execution_generation !== 1 ||
+            row.execution_revoked_at || !row.execution_expires_at) throw conflict();
+        const retained = await retainedNativeReceiptContext(row), now = await requestClock(tx);
+        const handle = await verifyReceipt.call(verifier, Buffer.from(row.receipt_bytes!), retained.bytes, now.getTime(), signal);
+        const fresh = { verification: handle, receipt_digest: row.receipt_digest!, first_observed_at: row.receipt_observed_at!,
+          receipt_expires_at: row.receipt_expires_at! };
+        const selected = await this.readCurrentAuthorityPayment(tx, row, configuration, verifier, fresh, active, true);
+        requirePaymentAssociation(row, selected);
+        const full = await readLockedNativeExecutionPayment(tx, parseOriginalCommand(Buffer.from(row.command_bytes)), {
+          ...configuration.merchant, region_id: (await readLockedCartFacts(tx, row.cart_id, configuration.merchant, configuration.verifiedContext)).facts.region_id as string,
+          final_command_uuid: row.final_command_uuid!, final_response_digest: row.final_response_digest!,
+          receipt_digest: row.receipt_digest!, receipt_context_digest: row.receipt_context_digest!, receipt_id: row.receipt_id!,
+        });
+        if (row.execution_payment_handle_fingerprint !== executionFingerprint(full.handle) ||
+            now.getTime() < row.execution_claimed_at!.getTime() || now.getTime() >= row.execution_expires_at.getTime()) throw conflict();
+        active(); await activateOriginalExecutionWorker(tx, claimed.worker.role); active();
+      }, true);
+      active(); describeReceipt.call(verifier, receipt.verification);
+      return claimed;
+    } catch (error) {
+      // Never mint a replacement if delivery fails. A failed retirement remains
+      // a visible error and the immutable unknown claim remains retained.
+      await retireOriginalExecutionWorker(this.postgres, claimed.worker.role);
+      throw error;
+    }
   }
 
   async recoverAuthorityPayment(commandId: string, context: AdmissionContext, verifier: unknown, signal?: AbortSignal) {
@@ -699,7 +730,7 @@ export default class OperationJournalService {
     verifier: NativeReceiptVerifier, receipt: Awaited<ReturnType<OperationJournalService["recoverVerifiedAuthorityReceipt"]>>,
     active: () => void, nativeExecution = false) {
     active();
-    if (row.state !== "awaiting_authority" || !row.final_command_uuid || !row.final_response_bytes || !row.final_response_digest ||
+    if ((row.state !== "awaiting_authority" && !(nativeExecution && row.state === "unknown")) || !row.final_command_uuid || !row.final_response_bytes || !row.final_response_digest ||
         !row.receipt_bytes || !row.receipt_id || !row.receipt_digest || !row.receipt_context_digest ||
         !row.receipt_observed_at || !row.receipt_expires_at) throw conflict();
     const original = parseOriginalCommand(Buffer.from(row.command_bytes));

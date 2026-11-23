@@ -97,9 +97,9 @@ const Operation = model.define("rifare_operation", {
       and execution_revoked_at is null and execution_order_id is null and execution_order_fingerprint is null)
     or (execution_owner_fingerprint is not null and execution_seal_fingerprint is not null and execution_payment_handle_fingerprint is not null
       and payment_fingerprint is not null and
-      (state = 'retired' or (state in ('unknown','observed','completed') and execution_generation between 1 and 2147483647
-        and execution_claimed_at is not null and execution_expires_at > execution_claimed_at))
-      and (execution_order_id is null or execution_order_fingerprint is not null))` },
+      (state = 'retired' or (state in ('unknown','observed','completed') and execution_generation is not null and execution_generation between 1 and 2147483647
+        and execution_claimed_at is not null and execution_expires_at is not null and execution_expires_at > execution_claimed_at))
+      and ((execution_order_id is null) = (execution_order_fingerprint is null) or state = 'retired' and execution_order_id is null))` },
   { name: "rifare_operation_execution_shape", expression: "execution_owner_fingerprint ~ '^sha256:[0-9a-f]{64}$' and execution_seal_fingerprint ~ '^sha256:[0-9a-f]{64}$' and execution_payment_handle_fingerprint ~ '^sha256:[0-9a-f]{64}$' and execution_order_fingerprint ~ '^sha256:[0-9a-f]{64}$' and execution_order_id ~ '^order_[A-Za-z0-9]{1,100}$'" },
   { name: "rifare_operation_original_uuid", expression: "original_command_uuid ~ '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'" },
   { name: "rifare_operation_revision", expression: "revision >= 0" },
