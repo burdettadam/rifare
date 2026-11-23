@@ -190,7 +190,8 @@ export async function exportJournalSubject(transaction: Postgres, scope: Subject
     "payment_fingerprint", "payment_collection_id", "payment_session_id", "payment_provider_id", "payment_context_digest", "payment_observed_at",
     "native_payment_fingerprint", "native_payment_id", "native_payment_observed_at",
     "execution_owner_fingerprint", "execution_seal_fingerprint", "execution_payment_handle_fingerprint",
-    "execution_generation", "execution_claimed_at", "execution_expires_at", "execution_revoked_at", "execution_order_id", "execution_order_fingerprint",
+    "execution_generation", "execution_claimed_at", "execution_expires_at", "execution_revoked_at", "execution_payment_attempted_at",
+    "execution_order_id", "execution_order_fingerprint",
     "receipt_fingerprint", "receipt_bytes", "receipt_digest", "receipt_context_digest", "receipt_id", "receipt_observed_at", "receipt_expires_at",
     "created_at", "updated_at",
   );

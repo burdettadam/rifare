@@ -73,6 +73,7 @@ const Operation = model.define("rifare_operation", {
   execution_owner_fingerprint: model.text().nullable(),
   execution_seal_fingerprint: model.text().nullable(),
   execution_payment_handle_fingerprint: model.text().nullable(),
+  execution_payment_attempted_at: model.dateTime().nullable(),
   execution_generation: model.number().nullable(),
   execution_claimed_at: model.dateTime().nullable(),
   execution_expires_at: model.dateTime().nullable(),

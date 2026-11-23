@@ -4,11 +4,12 @@ import type { ModulesSdkUtils } from "@medusajs/framework/utils";
 type Postgres = ReturnType<typeof ModulesSdkUtils.createPgConnection>;
 export const executionColumns = ["execution_owner_fingerprint", "execution_seal_fingerprint",
   "execution_payment_handle_fingerprint", "execution_generation", "execution_claimed_at",
-  "execution_expires_at", "execution_revoked_at", "execution_order_id", "execution_order_fingerprint"] as const;
+  "execution_expires_at", "execution_revoked_at", "execution_payment_attempted_at", "execution_order_id", "execution_order_fingerprint"] as const;
 export type ExecutionRow = {
   execution_owner_fingerprint: string | null; execution_seal_fingerprint: string | null;
   execution_payment_handle_fingerprint: string | null; execution_generation: number | null;
   execution_claimed_at: Date | null; execution_expires_at: Date | null; execution_revoked_at: Date | null;
+  execution_payment_attempted_at: Date | null;
   execution_order_id: string | null; execution_order_fingerprint: string | null;
 };
 export const executionFingerprint = (value: string) => "sha256:" + createHash("sha256").update(value).digest("hex");

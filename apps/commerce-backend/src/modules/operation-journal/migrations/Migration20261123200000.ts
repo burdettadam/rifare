@@ -4,6 +4,30 @@ import { Migration } from "@medusajs/framework/mikro-orm/migrations";
  * visibility/correlation, dispatch permission or a payment-provider edge. */
 export class Migration20261123200000 extends Migration {
   override async up(): Promise<void> {
+    this.addSql(`alter table public.rifare_operation add column execution_payment_attempted_at timestamptz null;
+      create function public.rifare_keep_native_payment_attempt() returns trigger
+      language plpgsql set search_path=pg_catalog as $$
+      begin
+        if TG_OP='INSERT' or OLD.execution_owner_fingerprint is null then
+          if NEW.execution_payment_attempted_at is not null then
+            raise exception 'Native payment attempt requires an existing execution' using errcode='23514';
+          end if;
+          return NEW;
+        end if;
+        if OLD.execution_payment_attempted_at is not null and NEW.execution_payment_attempted_at is distinct from OLD.execution_payment_attempted_at then
+          raise exception 'Native payment attempt is immutable' using errcode='23514';
+        end if;
+        if OLD.execution_payment_attempted_at is null and NEW.execution_payment_attempted_at is not null
+          and (session_user::text !~ '^rifare_exec_[a-f0-9]{32}$'
+            or NEW.execution_owner_fingerprint is distinct from OLD.execution_owner_fingerprint
+            or NEW.state is distinct from 'unknown' or NEW.execution_generation is distinct from 1
+            or NEW.execution_revoked_at is not null) then
+          raise exception 'Native payment attempt unavailable' using errcode='23514';
+        end if;
+        return NEW;
+      end $$;
+      create trigger rifare_keep_native_payment_attempt before insert or update on public.rifare_operation
+        for each row execute function public.rifare_keep_native_payment_attempt();`);
     this.addSql(`create function public.rifare_guard_native_generation() returns trigger
       language plpgsql security definer set search_path=pg_catalog as $$
       declare original public.rifare_operation%rowtype; selected_cart text; observed timestamptz;
@@ -22,7 +46,7 @@ export class Migration20261123200000 extends Migration {
           raise exception 'Native execution generation unavailable on %',TG_TABLE_NAME using errcode='42501';
         end if;
         select * into original from public.rifare_operation
-          where execution_owner_fingerprint='sha256:' || encode(sha256(convert_to(session_user::text,'UTF8')),'hex') for share;
+          where execution_owner_fingerprint='sha256:' || encode(sha256(convert_to(session_user::text,'UTF8')),'hex') for update;
         observed := clock_timestamp();
         if not found or original.cart_id is distinct from selected_cart or original.state is distinct from 'unknown'
           or original.execution_generation is distinct from 1 or original.execution_revoked_at is not null
@@ -134,7 +158,7 @@ export class Migration20261123200000 extends Migration {
       revoke all on function public.rifare_guard_native_original() from public;`);
     this.addSql(`create function public.rifare_require_native_execution_payment(p_session text,p_handle text,p_action text) returns text
       language plpgsql security definer set search_path=pg_catalog as $$
-      declare original public.rifare_operation%rowtype; selected_cart text; observed timestamptz;
+      declare original public.rifare_operation%rowtype; selected_cart text; observed timestamptz; claimed_original text;
       begin
         if session_user::text !~ '^rifare_exec_[a-f0-9]{32}$' or p_action is distinct from 'authorize'
           or p_session !~ '^payses_[A-Za-z0-9]{1,100}$' or p_handle !~ '^[a-f0-9]{64}$' then
@@ -146,12 +170,13 @@ export class Migration20261123200000 extends Migration {
         perform id from public.cart where id=selected_cart and deleted_at is null for share;
         if not found then raise exception 'Native execution payment unavailable' using errcode='42501'; end if;
         select * into original from public.rifare_operation
-          where execution_owner_fingerprint='sha256:' || encode(sha256(convert_to(session_user::text,'UTF8')),'hex') for share;
+          where execution_owner_fingerprint='sha256:' || encode(sha256(convert_to(session_user::text,'UTF8')),'hex') for update;
         observed := clock_timestamp();
         if not found or original.cart_id is distinct from selected_cart or original.state is distinct from 'unknown'
           or original.execution_generation is distinct from 1 or original.execution_revoked_at is not null
           or original.execution_claimed_at is null or original.execution_expires_at is null
           or observed < original.execution_claimed_at or observed >= original.execution_expires_at
+          or original.execution_payment_attempted_at is not null
           or original.payment_session_id is distinct from p_session
           or original.payment_provider_id is distinct from 'pp_rifare_fenced_system_fixture'
           or original.execution_payment_handle_fingerprint is distinct from
@@ -174,7 +199,12 @@ export class Migration20261123200000 extends Migration {
             and not exists(select 1 from public.payment p where p.payment_session_id=p_session or p.payment_collection_id=original.payment_collection_id)
           for share of ps,pc;
         if not found then raise exception 'Native execution payment unavailable' using errcode='42501'; end if;
-        return original.original_command_uuid;
+        update public.rifare_operation set execution_payment_attempted_at=observed,
+          revision=revision+1,updated_at=clock_timestamp()
+          where id=original.id and execution_payment_attempted_at is null
+          returning original_command_uuid into claimed_original;
+        if not found then raise exception 'Native execution payment unavailable' using errcode='42501'; end if;
+        return claimed_original;
       end $$;
       revoke all on function public.rifare_require_native_execution_payment(text,text,text) from public;`);
     this.addSql(`create function public.rifare_native_generation_ready() returns boolean
@@ -256,6 +286,9 @@ export class Migration20261123200000 extends Migration {
     drop function public.rifare_install_native_generation_fences();
     drop function public.rifare_native_generation_ready();
     drop function public.rifare_require_native_execution_payment(text,text,text);
+    drop trigger rifare_keep_native_payment_attempt on public.rifare_operation;
+    drop function public.rifare_keep_native_payment_attempt();
+    alter table public.rifare_operation drop column execution_payment_attempted_at;
     drop function public.rifare_guard_native_original();
     drop function public.rifare_guard_native_generation();`);
   }

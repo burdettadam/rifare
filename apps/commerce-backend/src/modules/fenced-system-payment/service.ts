@@ -77,22 +77,27 @@ export default class FencedSystemPaymentProvider extends AbstractPaymentProvider
 
   async authorizePayment(input: AuthorizePaymentInput): Promise<AuthorizePaymentOutput> {
     activeProfile(); const selected = correlation(input.data);
+    let original: string;
     try {
-      return await this.postgres.transaction(async tx => {
-        // This required gate is not a boolean supplied by the caller. Until its
-        // journal implementation exists, absence fails closed before delegation.
+      original = await this.postgres.transaction(async tx => {
+        // Atomically consume the original provider-attempt opportunity. Commit
+        // the unknown attempt before delegation; a lost acknowledgement cannot
+        // authorize a replacement call.
         const result = await tx.raw("select public.rifare_require_native_execution_payment(?, ?, ?) as original_id",
           [selected.session_id, selected.handle, "authorize"]);
-        const original = result.rows[0]?.original_id;
-        if (typeof original !== "string" || !uuid.test(original) ||
-            selected.original_command_id && selected.original_command_id !== original) unavailable();
-        activeProfile();
-        // The exact pinned System implementation performs no HTTP. The short
-        // transaction is solely for local ownership ordering, never a real gateway.
-        const native = await this.delegate.authorizePayment({ data: {}, context: {} });
-        activeProfile();
-        return { ...native, data: { ...native.data, rifare_native_execution: { ...selected, original_command_id: original } } };
+        const claimed = result.rows[0]?.original_id;
+        if (typeof claimed !== "string" || !uuid.test(claimed) ||
+            selected.original_command_id && selected.original_command_id !== claimed) unavailable();
+        return claimed;
       });
+    } catch { return unavailable(); }
+    // The installed System delegate performs no HTTP. A future external provider
+    // needs its own provider-side fence/reconciliation and is not qualified here.
+    activeProfile();
+    try {
+      const native = await this.delegate.authorizePayment({ data: {}, context: {} });
+      activeProfile();
+      return { ...native, data: { ...native.data, rifare_native_execution: { ...selected, original_command_id: original } } };
     } catch { return unavailable(); }
   }
 

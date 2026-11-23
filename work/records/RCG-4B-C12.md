@@ -472,3 +472,16 @@ Independent review of `019305ca27c0c8aea55c58d37faa63c42467fdf6` retained the pr
 The previously demonstrated missing-gate baseline refused the separately named local System adapter before delegation. The next bounded source installs that required worker-only database function. It authenticates the dedicated PostgreSQL login, locks Cart before journal, requires the live generation/expiry and immutable original session/handle/principal, and verifies the still-pending local provider rows before returning the original UUID. PUBLIC has no execute privilege; each transient execution role receives only this function grant. This remains a disposable no-HTTP System qualification edge, not connected provider or ElevenID authority.
 
 Initial independent review did not clear `c146795`: its stale call followed a completed native authorization, so pending-status and existing-Payment checks independently hid whether revocation worked, and the fault removed the whole gate. Authority review also found the collection's currency/principal unbound. Correction round one keeps the session pending with no Payment row, calls the actual provider edge once while current and again after revocation, faults only journal currentness, and refuses both changed collection currency and changed raw principal before any System delegation.
+
+Both roles cleared `e6497f8` only as the bounded revoked-generation predicate. Authority review retained a concrete full-C12 blocker: repeated current direct calls could both delegate because the read-only gate consumed no provider attempt. The next source adds one immutable journal attempt time. Its transaction locks Cart then journal, validates the exact pending native rows, commits the attempt before System delegation, and makes a concurrent or repeated call recovery-only. A delegate error or lost acknowledgement retains unknown outcome; it never reopens the call. The pinned System delegate has no network, while external provider-side fencing and reconciliation remain excluded.
+
+Initial review of the one-shot source found two scope/evidence defects. The
+concurrent gate used a shared journal lock before upgrading to an update, which
+could deadlock two contenders, and the parent receipt incorrectly claimed both
+the first backend PID and an effect-time fence. The correction takes the journal
+row `FOR UPDATE` before validation and reports only provider admission currentness
+plus an established post-`NOLOGIN` worker backend. Because the attempt commits
+before the local delegate, withdrawal in that commit-to-call gap remains open.
+The retained C10/C11 privacy and restore regressions pass but do not create the
+new attempted timestamp, so behavioral privacy/restore qualification for that
+field also remains open.

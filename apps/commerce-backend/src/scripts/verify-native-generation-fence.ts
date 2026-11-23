@@ -71,9 +71,24 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
           raw_amount: { value: String(wrong), precision: 20 } });
         await refused("principal");
         await postgres("payment_collection").where({ id: task.collection_id }).update({ amount: collection.amount, raw_amount: collection.raw_amount });
-        const authorized = await provider.authorizePayment({ data: task.original_session_data, context: {} });
-        assert.ok(authorized?.data?.rifare_native_execution?.original_command_id);
+        const raced = await Promise.allSettled([
+          provider.authorizePayment({ data: task.original_session_data, context: {} }),
+          provider.authorizePayment({ data: task.original_session_data, context: {} }),
+        ]);
+        const winners = raced.filter(result => result.status === "fulfilled"), losers = raced.filter(result => result.status === "rejected");
+        if (winners.length === 2) console.log("C12_NATIVE_PROVIDER_ATTEMPT_FAULT=concurrent-system-authorized;calls=" + calls.authorizePayment);
+        assert.equal(winners.length, 1, "Exactly one concurrent provider attempt may delegate");
+        assert.equal(losers.length, 1); assert.match((losers[0] as PromiseRejectedResult).reason?.message ?? "", /Native execution payment is unavailable/);
+        const authorized = (winners[0] as PromiseFulfilledResult<any>).value;
+        assert.ok(authorized?.data?.rifare_native_execution?.original_command_id); assert.equal(calls.authorizePayment, 1);
+        let duplicateError: any;
+        try { await provider.authorizePayment({ data: task.original_session_data, context: {} }); }
+        catch (error) { duplicateError = error; }
+        if (!duplicateError) console.log("C12_NATIVE_PROVIDER_ATTEMPT_FAULT=duplicate-system-authorized;calls=" + calls.authorizePayment);
+        assert.match(duplicateError?.message ?? "", /Native execution payment is unavailable/,
+          "A committed provider attempt must make a duplicate current call recovery-only");
         assert.equal(calls.authorizePayment, 1);
+        console.log("C12_NATIVE_PROVIDER_DUPLICATE_REFUSAL=recovery-only");
         for (const name of names.filter(name => name !== "authorizePayment")) assert.equal(calls[name], 0);
         assert.equal((await postgres("payment_session").where({ id: task.original_session_id }).first("status")).status, "pending");
         assert.equal((await postgres("payment").where({ payment_session_id: task.original_session_id })).length, 0);
@@ -167,7 +182,13 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
       // backend. Neither session labels nor custom GUC assertions authenticate.
       await postgres.raw("select set_config('application_name','postgres',false), set_config('rifare.execution_generation','1',false)");
       const same = (await postgres.raw("select session_user as role, pg_backend_pid() as pid")).rows[0];
-      assert.deepEqual(same, identity, "Stale refusal must exercise the already-open backend");
+      if (task.provider) {
+        // The concurrent provider race warms more than one native pool backend,
+        // so a later acquisition need not return the first PID.  The worker is
+        // NOLOGIN before resume; any successful query as this role therefore
+        // proves reuse of one of its already-authenticated native backends.
+        assert.equal(same.role, identity.role, "Stale refusal must exercise an already-open worker backend");
+      } else assert.deepEqual(same, identity, "Stale refusal must exercise the already-open backend");
       if (task.provider) {
         const provider = (payments as any).paymentProviderService_.retrieveProvider("pp_rifare_fenced_system_fixture");
         let providerError: any;
@@ -194,8 +215,11 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
       await refused("payment_session", () => container.resolve(Modules.PAYMENT).createPaymentSession(task.collection_id, {
         provider_id: "pp_rifare_fenced_system_fixture", currency_code: "usd", amount: 12.5, data: {} }));
       assert.deepEqual(calls, Object.fromEntries(names.map(name => [name, name === "authorizePayment" && task.provider ? 1 : 0])));
-      assert.equal((await postgres.raw("select pg_backend_pid() as pid")).rows[0].pid, identity.pid);
-      console.log("C12_NATIVE_GENERATION_WORKER=" + JSON.stringify({ same_authenticated_backend: true, native_tables: 5, native_system_calls: calls }));
+      const finalIdentity = (await postgres.raw("select session_user as role, pg_backend_pid() as pid")).rows[0];
+      if (task.provider) assert.equal(finalIdentity.role, identity.role);
+      else assert.equal(finalIdentity.pid, identity.pid);
+      console.log("C12_NATIVE_GENERATION_WORKER=" + JSON.stringify({ same_authenticated_backend: !task.provider,
+        established_authenticated_worker_backend: true, native_tables: 5, native_system_calls: calls }));
     } finally { for (const [name, original] of originals) Native.prototype[name] = original; }
     return;
   }
@@ -253,7 +277,7 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
   const correlation = process.env.RIFARE_C12_ORIGINAL === "verify";
   const correlationFault = process.env.RIFARE_C12_ORIGINAL_FAULT === "omit";
   const provider = process.env.RIFARE_C12_PROVIDER === "verify";
-  const providerFault = process.env.RIFARE_C12_PROVIDER_FAULT === "omit-current";
+  const providerFault = process.env.RIFARE_C12_PROVIDER_FAULT === "omit-attempt";
   const orderingFault = process.env.RIFARE_C12_GENERATION_ORDERING_FAULT === "omit-locks";
   try {
   assert.ok(claim.worker); assert.ok(claim.seal);
@@ -286,46 +310,16 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
   }
   if (providerFault) {
     assert.ok(provider && paymentDefinition);
-    await postgres.raw(`create or replace function public.rifare_require_native_execution_payment(p_session text,p_handle text,p_action text) returns text
-      language plpgsql security definer set search_path=pg_catalog as $$
-      declare original public.rifare_operation%rowtype; selected_cart text;
-      begin
-        if session_user::text !~ '^rifare_exec_[a-f0-9]{32}$' or p_action is distinct from 'authorize'
-          or p_session !~ '^payses_[A-Za-z0-9]{1,100}$' or p_handle !~ '^[a-f0-9]{64}$' then
-          raise exception 'Native execution payment unavailable' using errcode='42501';
-        end if;
-        select cart_id into selected_cart from public.rifare_operation
-          where execution_owner_fingerprint='sha256:' || encode(sha256(convert_to(session_user::text,'UTF8')),'hex');
-        if selected_cart is null then raise exception 'Native execution payment unavailable' using errcode='42501'; end if;
-        perform id from public.cart where id=selected_cart and deleted_at is null for share;
+    const attempted = "\n          or original.execution_payment_attempted_at is not null";
+    const claim = `        update public.rifare_operation set execution_payment_attempted_at=observed,
+          revision=revision+1,updated_at=clock_timestamp()
+          where id=original.id and execution_payment_attempted_at is null
+          returning original_command_uuid into claimed_original;
         if not found then raise exception 'Native execution payment unavailable' using errcode='42501'; end if;
-        select * into original from public.rifare_operation
-          where execution_owner_fingerprint='sha256:' || encode(sha256(convert_to(session_user::text,'UTF8')),'hex') for share;
-        if not found or original.cart_id is distinct from selected_cart
-          or original.payment_session_id is distinct from p_session
-          or original.payment_provider_id is distinct from 'pp_rifare_fenced_system_fixture'
-          or original.execution_payment_handle_fingerprint is distinct from
-            'sha256:' || encode(sha256(convert_to(p_handle,'UTF8')),'hex') then
-          raise exception 'Native execution payment unavailable' using errcode='42501';
-        end if;
-        perform ps.id from public.payment_session ps join public.payment_collection pc on pc.id=ps.payment_collection_id
-          where ps.id=p_session and ps.payment_collection_id=original.payment_collection_id
-            and ps.provider_id='pp_rifare_fenced_system_fixture' and ps.status='pending'
-            and ps.currency_code=original.currency and pc.currency_code=original.currency and ps.deleted_at is null and pc.deleted_at is null
-            and ps.amount::numeric=original.payable_minor_units::numeric / power(10::numeric,original.currency_exponent)
-            and (ps.raw_amount->>'value')::numeric=original.payable_minor_units::numeric / power(10::numeric,original.currency_exponent)
-            and ps.raw_amount->>'precision'='20'
-            and pc.amount::numeric=original.payable_minor_units::numeric / power(10::numeric,original.currency_exponent)
-            and (pc.raw_amount->>'value')::numeric=original.payable_minor_units::numeric / power(10::numeric,original.currency_exponent)
-            and pc.raw_amount->>'precision'='20'
-            and ps.data->'rifare_native_execution'->>'profile'='urn:rifare:local-fenced-system-correlation:v1'
-            and ps.data->'rifare_native_execution'->>'session_id'=p_session
-            and ps.data->'rifare_native_execution'->>'handle'=p_handle
-            and not exists(select 1 from public.payment p where p.payment_session_id=p_session or p.payment_collection_id=original.payment_collection_id)
-          for share of ps,pc;
-        if not found then raise exception 'Native execution payment unavailable' using errcode='42501'; end if;
-        return original.original_command_uuid;
-      end $$`);
+        return claimed_original;`;
+    assert.ok(paymentDefinition.includes(attempted)); assert.ok(paymentDefinition.includes(claim));
+    const mutant = paymentDefinition.replace(attempted, "").replace(claim, "        return original.original_command_uuid;");
+    assert.notEqual(mutant, paymentDefinition); await postgres.raw(mutant);
   }
   await postgres.raw(`create table public.rifare_c12_generation_audit(id bigserial primary key,native_table text not null,authenticated_role text not null);
     create function public.rifare_c12_generation_observe() returns trigger language plpgsql security definer set search_path=pg_catalog as $$ begin
@@ -440,6 +434,7 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
           assert.deepEqual(audited, ["cart", "payment_collection", "payment_collection", "payment_collection", "payment_collection"]);
           assert.equal((await postgres("payment_session").where({ id: original.session.id }).first("status")).status, "pending");
           assert.equal((await postgres("payment").where({ payment_session_id: original.session.id })).length, 0);
+          assert.ok((await original.row()).execution_payment_attempted_at);
         } else assert.equal((beforeAudit as any[]).length, correlation ? 2 : 1);
         beforeStale = await snapshot();
         if (revokeFirst) {
@@ -507,10 +502,13 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
     console.log("C12_NATIVE_GENERATION_RESULT=" + JSON.stringify({ result: "pass",
       ...(reconnect ? { actual_backend_loss_and_reconnect: true, active_reconnect_native_writes: 1,
         post_retirement_native_method_acquisition_refusals: 1, same_existing_authenticated_session: false } :
-        { actual_native_stale_write_refusals: 5, same_existing_authenticated_session: true,
+        { actual_native_stale_write_refusals: 5, same_existing_authenticated_session: !provider,
+          established_authenticated_worker_backend: true,
           ...(correlation ? { current_wrong_original_refusals: 10, healthy_original_session_writes: 1 } : {}) }),
       original_visibility_qualified: false, current_authority_fence_qualified: false,
-      provider_effect_time_fence_qualified: provider, connected_provider_qualified: false, full_C12_qualified: false }));
+      provider_admission_currentness_qualified: provider, provider_effect_time_fence_qualified: false,
+      provider_one_shot_attempt_qualified: provider, attempted_state_privacy_restore_qualified: false,
+      connected_provider_qualified: false, full_C12_qualified: false }));
   } finally {
     try {
       try {
