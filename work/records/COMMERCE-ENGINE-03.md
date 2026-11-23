@@ -50,3 +50,30 @@ The initial execution failed and is not a passing qualification. A missing claim
 is an allowed typed refusal for later canceled-draft actions, not resurrection.
 Installed payment/refund/cancel source bytes matched the integrity-verified locked
 registry tar in the existing npm cache; no modified vendor source is assumed.
+
+## Native financial failure/recovery diagnostic
+
+At c21e6b4 the corrected error-record assertions reached native replacement
+confirmation, then the helper's version assertion failed because it had retained
+the pre-capture order version. The original helper now rereads the actual paid,
+fulfilled original before starting a claim. This is an observed-stage correction,
+not a relaxed confirmation-version requirement. The run remains failed.
+
+A separately preserved, local diagnostic on that exact synthetic database confirmed
+native confirmed-claim cancellation released its reservation. It also measured a
+new active refund claim: System provider refund called once for USD 1 and native
+refund succeeded, while the workflow returned existing-active-change and left zero
+refund transactions/credit lines/events and summary refunded_total zero. Same-key
+retry retained the one original refund with no new provider call. Changed amount
+refused. After canceling the draft, same-key recovery created one refund transaction,
+one credit line and one event; replay retained that exact state with no provider
+recall. These are synthetic/native effects, not settlement or a safe automatic
+recovery API. Diagnostic TS package-scope and Windows inline-compiler setup failures
+preceded the actual successful CJS probe and are retained, excluded from passing
+native evidence. No vendor files or application behavior were changed.
+
+The expanded helper encodes those independent expected stages and adds separate
+replacement fulfillment/native return receiving. It preserves all 23 existing
+baseline entries reached in the initial normal-lock profile. Expanded no-emit passes.
+Next: complete adversarial/effect observations and fixed native execution, then exact
+compiled own-dependency qualification, fault/restoration and both final reviews.

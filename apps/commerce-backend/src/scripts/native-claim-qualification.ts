@@ -2,11 +2,12 @@ import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { ContainerRegistrationKeys, Modules, ProductStatus } from "@medusajs/framework/utils";
 import {
-  addShippingMethodToCartWorkflow, beginClaimOrderWorkflow, cancelBeginOrderClaimWorkflow,
+  addShippingMethodToCartWorkflow, beginClaimOrderWorkflow, beginReceiveReturnWorkflow, cancelBeginOrderClaimWorkflow,
   cancelOrderClaimWorkflow, cancelOrderWorkflow, capturePaymentWorkflow, completeCartWorkflow,
-  confirmClaimRequestWorkflow, createCartWorkflow, createClaimShippingMethodWorkflow,
+  confirmClaimRequestWorkflow, confirmReturnReceiveWorkflow, createCartWorkflow, createClaimShippingMethodWorkflow,
   createInventoryLevelsWorkflow, createOrderFulfillmentWorkflow, createPaymentCollectionForCartWorkflow,
   createPaymentSessionsWorkflow, createProductsWorkflow, orderClaimAddNewItemWorkflow, orderClaimItemWorkflow,
+  orderClaimRequestItemReturnWorkflow, receiveItemReturnRequestWorkflow, refundPaymentWorkflow,
 } from "@medusajs/medusa/core-flows";
 
 /** Ordinary upstream claims only; no application route, external provider or settlement. */
@@ -63,7 +64,7 @@ export async function qualifyNativeClaims(container: any, fixture: {
     await capturePaymentWorkflow(container).run({ input: { payment_id: paymentId } });
     await createOrderFulfillmentWorkflow(container).run({ input: { order_id: order.id, location_id: fixture.locationId,
       shipping_option_id: fixture.shippingId, items: [{ id: order.items[0].id, quantity: 2 }], no_notification: true } });
-    return { order, paymentId };
+    return { order: await graph("order", order.id, orderFields), paymentId };
   };
   const rejectUnchanged = async (name: string, invoke: () => Promise<unknown>) => {
     const before = await effects();
@@ -134,6 +135,101 @@ export async function qualifyNativeClaims(container: any, fixture: {
   assert.ok((await orders.retrieveOrderClaim(replacement.claim_id!)).canceled_at);
   assert.deepEqual(await level(), { stock: 6, reserved: 0 }, "Canceled replacement must release its native reservation");
   assert.deepEqual(await financial(), replacementFinancial);
+
+  // A native workflow error can follow a successful provider effect. Observe the
+  // actual System call and bookkeeping; do not infer no-effect from rejection.
+  const { result: active } = await beginClaimOrderWorkflow(container).run({ input: { order_id: refundOriginal.order.id, type: "refund" } });
+  const payments = container.resolve(Modules.PAYMENT), provider = payments.paymentProviderService_;
+  const events = container.resolve(Modules.EVENT_BUS);
+  const originalRefund = provider.refundPayment, originalEmit = events.emit;
+  let providerCalls = 0, refundEvents = 0;
+  provider.refundPayment = async function (...args: any[]) { providerCalls++; return originalRefund.apply(this, args); };
+  events.emit = async function (input: any, ...rest: any[]) {
+    for (const event of (Array.isArray(input) ? input : [input])) if (event.name === "payment.refunded") refundEvents++;
+    return originalEmit.call(this, input, ...rest);
+  };
+  const key = `rifare-claim-refund-${suffix}`;
+  const refundState = async () => {
+    const current = await graph("order", refundOriginal.order.id, ["id", "summary.*", "credit_lines.*"]);
+    return { refunds: await postgres("refund").where({ payment_id: refundOriginal.paymentId }).orderBy("id"),
+      transactions: await postgres("order_transaction").where({ order_id: refundOriginal.order.id, reference: "refund" }).orderBy("id"),
+      credits: current.credit_lines, refunded: Number(current.summary.refunded_total), providerCalls, refundEvents };
+  };
+  const refundInput = { payment_id: refundOriginal.paymentId, amount: 1, idempotency_key: key };
+  const expectRefundError = async (input: typeof refundInput, expression: RegExp) => {
+    await assert.rejects(refundPaymentWorkflow(container).run({ input }), (error: any) => {
+      assert.match(error?.message ?? "", expression); return true;
+    });
+  };
+  try {
+    const baseline = await refundState();
+    assert.equal(baseline.refunds.length, 0); assert.equal(baseline.credits.length, 0);
+    await expectRefundError(refundInput, /existing active order change/i);
+    const first = await refundState();
+    check("native-active-claim-refund-error-can-follow-one-successful-provider-refund", () => {
+      assert.equal(first.providerCalls, 1); assert.equal(first.refundEvents, 0);
+      assert.equal(first.refunds.length, 1); assert.equal(first.refunds[0].status, "succeeded");
+      assert.equal(Number(first.refunds[0].amount), 1); assert.equal(first.refunds[0].idempotency_key, key);
+      assert.equal(first.transactions.length, 0); assert.equal(first.credits.length, 0); assert.equal(first.refunded, 0);
+    });
+    await expectRefundError(refundInput, /existing active order change/i);
+    const sameKey = await refundState();
+    check("native-active-claim-stable-refund-key-retains-original-effect-without-recalling-provider", () => {
+      assert.equal(sameKey.providerCalls, 1); assert.equal(sameKey.refunds.length, 1);
+      assert.equal(sameKey.refunds[0].id, first.refunds[0].id);
+      assert.equal(sameKey.transactions.length, 0); assert.equal(sameKey.credits.length, 0); assert.equal(sameKey.refundEvents, 0);
+    });
+    await expectRefundError({ ...refundInput, amount: 2 }, /different amount/i);
+    const changed = await refundState();
+    check("native-refund-key-changed-amount-refuses-without-another-provider-effect", () => {
+      assert.deepEqual(changed, sameKey);
+    });
+    await cancelBeginOrderClaimWorkflow(container).run({ input: { claim_id: active.claim_id! } });
+    await refundPaymentWorkflow(container).run({ input: refundInput });
+    const recovered = await refundState();
+    check("native-cleared-claim-refund-key-recovers-original-bookkeeping-without-another-provider-call", () => {
+      assert.equal(recovered.providerCalls, 1); assert.equal(recovered.refunds.length, 1);
+      assert.equal(recovered.refunds[0].id, first.refunds[0].id);
+      assert.equal(recovered.transactions.length, 1); assert.equal(recovered.transactions[0].reference_id, first.refunds[0].id);
+      assert.equal(Number(recovered.transactions[0].amount), -1);
+      assert.equal(recovered.credits.length, 1); assert.equal(Number(recovered.credits[0].amount), 1);
+      assert.equal(recovered.refunded, 1); assert.equal(recovered.refundEvents, 1);
+    });
+    await refundPaymentWorkflow(container).run({ input: refundInput });
+    check("native-recovered-refund-key-replay-has-one-provider-call-credit-transaction-and-event", () => {});
+    assert.deepEqual(await refundState(), recovered);
+    console.log("RIFARE_NATIVE_CLAIM_REFUND_RESULT=" + JSON.stringify({ original_order_id: refundOriginal.order.id,
+      original_payment_id: refundOriginal.paymentId, original_refund_id: first.refunds[0].id,
+      provider_calls: providerCalls, refund_events: refundEvents, amount: 1, currency: "usd",
+      initial_workflow_error_after_provider_success: true, recovered_original_bookkeeping: true,
+      real_financial_effect: false, production_qualified: false }));
+  } finally { provider.refundPayment = originalRefund; events.emit = originalEmit; }
+
+  // Separate original: receiving is an actual native transition, not a claim label.
+  const receivingOriginal = await original();
+  assert.deepEqual(await level(), { stock: 4, reserved: 0 });
+  const receivingFinancial = await financial();
+  const { result: receiving } = await beginClaimOrderWorkflow(container).run({ input: { order_id: receivingOriginal.order.id, type: "replace" } });
+  await orderClaimRequestItemReturnWorkflow(container).run({ input: { claim_id: receiving.claim_id!, return_id: "",
+    location_id: fixture.locationId, items: [{ id: receivingOriginal.order.items[0].id, quantity: 1 }] } });
+  await orderClaimAddNewItemWorkflow(container).run({ input: { claim_id: receiving.claim_id!, items: [{ variant_id: variant.id, quantity: 1 }] } });
+  await createClaimShippingMethodWorkflow(container).run({ input: { claim_id: receiving.claim_id!, shipping_option_id: fixture.shippingId } });
+  await confirmClaimRequestWorkflow(container).run({ input: { claim_id: receiving.claim_id! } });
+  const withReturn = await orders.retrieveOrderClaim(receiving.claim_id!, { relations: ["additional_items"] });
+  assert.ok(withReturn.return_id);
+  assert.deepEqual(await level(), { stock: 4, reserved: 1 });
+  await createOrderFulfillmentWorkflow(container).run({ input: { order_id: receivingOriginal.order.id,
+    location_id: fixture.locationId, shipping_option_id: fixture.shippingId,
+    items: [{ id: withReturn.additional_items[0].item_id, quantity: 1 }], no_notification: true } });
+  assert.deepEqual(await level(), { stock: 3, reserved: 0 });
+  check("native-claim-replacement-fulfillment-consumes-only-one-reserved-stock-unit", () => {});
+  await beginReceiveReturnWorkflow(container).run({ input: { return_id: withReturn.return_id } });
+  await receiveItemReturnRequestWorkflow(container).run({ input: { return_id: withReturn.return_id,
+    items: [{ id: receivingOriginal.order.items[0].id, quantity: 1 }] } });
+  await confirmReturnReceiveWorkflow(container).run({ input: { return_id: withReturn.return_id } });
+  assert.deepEqual(await level(), { stock: 4, reserved: 0 });
+  assert.deepEqual(await financial(), receivingFinancial);
+  check("native-claim-return-receiving-restocks-only-one-received-unit-without-payment-effects", () => {});
 
   const { result: canceled } = await createCartWorkflow(container).run({ input: {
     ...fixture.cartInput, items: [{ variant_id: variant.id, quantity: 1 }],
