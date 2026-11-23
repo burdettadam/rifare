@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "id": "rifare-source-inventory",
-  "revision": 73,
+  "revision": 74,
   "status": "proposed",
   "components": [
     {
@@ -1774,7 +1774,9 @@
         "apps/commerce-backend/src/scripts/verify-receipt-upgrade.ts",
         "docs/NATIVE-DELEGATED-RECEIPTS.md",
         "docs/decisions/0087-native-proof-and-finalization.md",
-        "work/records/RCG-4B-C9.md"
+        "work/records/RCG-4B-C9.md",
+        "apps/commerce-backend/src/modules/operation-journal/proof-association.ts",
+        "apps/commerce-backend/src/scripts/verify-proof-association.ts"
       ],
       "notices": []
     },
