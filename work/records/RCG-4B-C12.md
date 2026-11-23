@@ -255,3 +255,20 @@ entry keeps unhandled bootstrap rejection fatal while allowing owned cleanup, an
 records whether that path actually occurs. No unexpected rejection can count as a
 successful worker. A source-only callback typing error is also corrected; the
 previous candidate's noEmit failure is not credited as a passing source check.
+
+
+Atd4e9d40 all restricted worker lifecycle cases passed: normal boot/pool identity,
+rejected execution, registered stop callback, missing-provisioning refusal/partial
+cleanup and actual owned process termination followed by recovery-only/no replacement.
+The completed probe retired its generation and role to NOLOGIN. No commerce,
+provider catalogue or stored workflow state changed. Windows graceful OS signal
+handling and full C12 effect-time controls remain unqualified.
+
+The next fixed candidate preserves complete per-child stdout/stderr after process
+close, including partial-bootstrap rejection and the actual loss signal, rather
+than relying only on aggregate passing assertions. Exported loader direction was
+checked against pinned2.23 exports/types/source and official upstream source:
+https://github.com/medusajs/medusa/blob/4f1baa07fb117a900400a61ebb2e7c6729717e04/packages/core/framework/src/medusa-app-loader.ts
+https://github.com/medusajs/medusa/blob/4f1baa07fb117a900400a61ebb2e7c6729717e04/packages/medusa/src/loaders/index.ts
+The online source is callgraph evidence,not a claim that its commit is the installed
+package's exact source. Actual installed runtime checks bind this local candidate.

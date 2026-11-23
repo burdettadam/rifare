@@ -89,7 +89,9 @@ export default async function verifyNativeExecutionWorker({ container }: ExecArg
     return JSON.stringify(rows);
   };
   const beforeNative = await nativeRows(), beforeOriginal = await original.row();
-  const run = (action: string) => new Promise<{ code: number | null; output: string; killedAtReady: boolean }>((resolve, reject) => {
+  let runNumber = 0;
+  const run = (action: string) => new Promise<{ code: number | null; output: string; killedAtReady: boolean; signal: NodeJS.Signals | null }>((resolve, reject) => {
+    const ordinal = ++runNumber;
     const compiled = __filename.endsWith(".js");
     const entry = resolvePath(__dirname, "native-execution-worker-entry." + (compiled ? "js" : "ts"));
     const args = compiled ? [entry] : ["-r", "ts-node/register", "-r", "tsconfig-paths/register", entry];
@@ -102,7 +104,14 @@ export default async function verifyNativeExecutionWorker({ container }: ExecArg
         killedAtReady = child.kill("SIGKILL");
     });
     child.once("error", error => { clearTimeout(timer); reject(error); });
-    child.once("exit", code => { clearTimeout(timer); resolve({ code, output, killedAtReady }); });
+    child.once("close", (code, signal) => {
+      clearTimeout(timer);
+      try {
+        writeFileSync(process.env.RIFARE_C12_WORKER_CUSTODY!.replace("-private.json", `-${ordinal}-${action}-native.log`), output,
+          { flag: "wx", mode: 0o600 });
+        resolve({ code, output, killedAtReady, signal });
+      } catch (error) { reject(error); }
+    });
   });
   const noSessions = async () => {
     const deadline = Date.now() + 2000;
@@ -152,6 +161,8 @@ export default async function verifyNativeExecutionWorker({ container }: ExecArg
   assert.equal(await nativeRows(), beforeNative); assert.equal(await catalogue(), beforeCatalogue);
   assert.deepEqual(await original.row(), beforeOriginal);
   console.log("C12_NATIVE_WORKER_LIFECYCLE=actual-owned-process-loss:recovery-only-no-replacement");
+  console.log("C12_NATIVE_OWNED_PROCESS_LOSS=" + JSON.stringify({ killed_after_actual_readiness: lost.killedAtReady,
+    observed_exit_code: lost.code, observed_signal: lost.signal }));
   } finally {
     await retireOriginalExecutionWorker(f.postgres, claim.worker!.role);
     f.requestVerifier.close(); f.verifier.close();
