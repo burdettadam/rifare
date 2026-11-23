@@ -29,7 +29,10 @@ export async function openNativeContinuationSession(journal: OperationJournalSer
   const finals = new WeakMap<object, { bytes: string; digest: string; ticket: string | null }>();
   let closed = false; const cancellation = new AbortController();
   const guard = () => { if (closed) unavailable(); };
-  const checkFinal = async () => { guard(); const result = await owner.prepareAuthorityFinalRecovery.call(journal, commandId, captured); guard(); return result; };
+  const checkOrigin = async () => {
+    guard(); if (!matchesOrigin(await owner.authorityProofOrigin.call(journal, commandId, captured))) unavailable(); guard();
+  };
+  const checkFinal = async () => { await checkOrigin(); const result = await owner.prepareAuthorityFinalRecovery.call(journal, commandId, captured); guard(); return result; };
   const submit = async (prepared: PreparedProofAssociation, challenge: unknown, admission: () => Promise<void>) => {
     const summary = PreparedProofAssociation.prototype.describe.call(prepared), form = PreparedProofAssociation.prototype.formBytes.call(prepared);
     try {
@@ -51,7 +54,7 @@ export async function openNativeContinuationSession(journal: OperationJournalSer
       if (!(input instanceof Uint8Array) || !input.byteLength || input.byteLength > 262144) unavailable();
       const proof = Buffer.from(input);
       try {
-        if (!matchesOrigin(await owner.authorityProofOrigin.call(journal, commandId, captured))) unavailable(); guard();
+        await checkOrigin();
         const result = await owner.prepareAuthorityProof.call(journal, commandId, proof, captured, requestVerifier, cancellation.signal);
         if (!result.send_ticket || closed) { result.prepared.close(); unavailable(); }
         const handle = Object.freeze(Object.create(null)); forms.add(result.prepared);
@@ -64,7 +67,7 @@ export async function openNativeContinuationSession(journal: OperationJournalSer
       const ticket = retained!.ticket!; retained!.ticket = null;
       const summary = PreparedProofAssociation.prototype.describe.call(retained!.prepared);
       return submit(retained!.prepared, challenge, async () => {
-        guard(); await owner.claimAuthorityProofDispatch.call(journal, commandId, ticket, summary.proof_digest,
+        await checkOrigin(); await owner.claimAuthorityProofDispatch.call(journal, commandId, ticket, summary.proof_digest,
           captured, requestVerifier, cancellation.signal); guard();
       });
     },
@@ -73,29 +76,29 @@ export async function openNativeContinuationSession(journal: OperationJournalSer
       if (!(input instanceof Uint8Array) || !input.byteLength || input.byteLength > 262144) unavailable();
       const proof = Buffer.from(input), digest = "sha256:" + createHash("sha256").update(proof).digest("hex");
       try {
-        if (!matchesOrigin(await owner.authorityProofOrigin.call(journal, commandId, captured))) unavailable(); guard();
+        await checkOrigin();
         await owner.checkAuthorityProofRecovery.call(journal, commandId, digest, captured); guard();
         const result = await owner.prepareAuthorityProof.call(journal, commandId, proof, captured, undefined, cancellation.signal);
         if (!result.recovery_only || closed) { result.prepared.close(); unavailable(); }
         forms.add(result.prepared);
         return submit(result.prepared, challenge, async () => {
-          guard(); await owner.checkAuthorityProofRecovery.call(journal, commandId, digest, captured); guard();
+          await checkOrigin(); await owner.checkAuthorityProofRecovery.call(journal, commandId, digest, captured); guard();
         });
       } finally { proof.fill(0); }
     },
     async prepareFinalization() {
-      guard(); const result = await owner.prepareAuthorityFinalization.call(journal, commandId, captured); guard();
+      await checkOrigin(); const result = await owner.prepareAuthorityFinalization.call(journal, commandId, captured); guard();
       if (!result.send_ticket) unavailable();
       const handle = Object.freeze(Object.create(null));
       finals.set(handle, { bytes: result.command_bytes, digest: result.command_digest, ticket: result.send_ticket }); return handle;
     },
     async finalize(handle: unknown) {
-      guard(); const retained = handle && typeof handle === "object" ? finals.get(handle) : undefined;
+      await checkOrigin(); const retained = handle && typeof handle === "object" ? finals.get(handle) : undefined;
       if (!retained || !retained.ticket) unavailable();
       const ticket = retained!.ticket!; retained!.ticket = null;
       const original = codec.encodeDelegatedCommand(Buffer.from(retained!.bytes));
       const result = await sendFinal(original.request, async () => {
-        guard(); await owner.claimAuthorityFinalization.call(journal, commandId, ticket, captured, cancellation.signal); guard();
+        await checkOrigin(); await owner.claimAuthorityFinalization.call(journal, commandId, ticket, captured, cancellation.signal); guard();
       }, guard, cancellation.signal);
       const observed = await owner.observeAuthorityFinalization.call(journal, commandId, Buffer.from(JSON.stringify(result.response)), false, captured, cancellation.signal);
       await checkFinal(); return observed;

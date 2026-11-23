@@ -93,7 +93,7 @@ const Operation = model.define("rifare_operation", {
   { name: "rifare_operation_proof_digests", expression: "proof_context_digest ~ '^sha256:[0-9a-f]{64}$' and proof_digest ~ '^sha256:[0-9a-f]{64}$' and proof_owner_digest ~ '^sha256:[0-9a-f]{64}$' and proof_submission_digest ~ '^sha256:[0-9a-f]{64}$'" },
   { name: "rifare_operation_proof_submission_tuple", expression: `(proof_submission_bytes is null) = (proof_submission_digest is null)
     and (proof_submission_bytes is null) = (proof_submission_observed_at is null)
-    and (proof_submission_bytes is null or proof_context_bytes is not null)` },
+    and (proof_submission_bytes is null or (proof_context_bytes is not null and proof_claimed_at is not null))` },
   { name: "rifare_operation_proof_bounds", expression: "octet_length(proof_context_bytes) between 1 and 4096 and octet_length(proof_submission_bytes) between 1 and 4096" },
   { name: "rifare_operation_final_tuple", expression: `(final_command_bytes is null) = (final_command_digest is null)
     and (final_command_bytes is null) = (final_owner_digest is null)

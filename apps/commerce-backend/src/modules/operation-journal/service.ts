@@ -283,7 +283,7 @@ export default class OperationJournalService {
         active();
         if (row.proof_context_bytes) {
           if (row.proof_context_bytes !== selected.bytes.toString() || row.proof_context_digest !== summary.context_digest ||
-              row.proof_digest !== summary.proof_digest || !row.proof_owner_digest) throw conflict();
+              row.proof_digest !== summary.proof_digest || !row.proof_owner_digest || !row.proof_claimed_at) throw conflict();
           return { prepared, send_ticket: null, recovery_only: true };
         }
         if (!verification || !(verifier instanceof PinnedRequestVerifier)) throw conflict();
@@ -356,7 +356,7 @@ export default class OperationJournalService {
    * historical request context. It never invents a currently valid C7 handle. */
   async checkAuthorityProofRecovery(commandId: string, proofDigest: string, context: AdmissionContext) {
     return this.withCurrentOriginal(commandId, context, async (tx, row, configuration) => {
-      if (row.state !== "awaiting_authority" || !row.proof_context_bytes || row.proof_digest !== proofDigest) throw conflict();
+      if (row.state !== "awaiting_authority" || !row.proof_context_bytes || !row.proof_claimed_at || row.proof_digest !== proofDigest) throw conflict();
       const selected = await retainedNativeProofContext(row);
       if (selected.bytes.toString() !== row.proof_context_bytes || factsDigest(JSON.parse(row.proof_context_bytes)) !== row.proof_context_digest) throw conflict();
       requireCommandCartMatch(selected.original,
@@ -376,7 +376,7 @@ export default class OperationJournalService {
     const active = () => { if (signal && signalAborted.call(signal)) throw conflict(); };
     return this.withCurrentOriginal(commandId, context, async (tx, row, configuration) => {
       active();
-      if (row.state !== "awaiting_authority" || !row.proof_context_bytes || row.proof_digest !== proofDigest) throw conflict();
+      if (row.state !== "awaiting_authority" || !row.proof_context_bytes || !row.proof_claimed_at || row.proof_digest !== proofDigest) throw conflict();
       const selected = await retainedNativeProofContext(row);
       if (selected.bytes.toString() !== row.proof_context_bytes || factsDigest(JSON.parse(row.proof_context_bytes)) !== row.proof_context_digest) throw conflict();
       requireCommandCartMatch(selected.original,
@@ -438,7 +438,7 @@ export default class OperationJournalService {
   }
 
   private async retainedProofSubmission(row: JournalRow) {
-    if (!row.proof_context_bytes || !row.proof_submission_bytes || !row.proof_digest ||
+    if (!row.proof_context_bytes || !row.proof_claimed_at || !row.proof_submission_bytes || !row.proof_digest ||
         factsDigest(JSON.parse(row.proof_context_bytes)) !== row.proof_context_digest ||
         "sha256:" + createHash("sha256").update(row.proof_submission_bytes).digest("hex") !== row.proof_submission_digest) throw conflict();
     const selected = await retainedNativeProofContext(row);

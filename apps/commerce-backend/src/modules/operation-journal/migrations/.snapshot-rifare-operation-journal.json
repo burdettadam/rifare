@@ -1104,8 +1104,8 @@
         },
         {
           "name": "rifare_operation_proof_submission_tuple",
-          "expression": "(proof_submission_bytes is null) = (proof_submission_digest is null)\n    and (proof_submission_bytes is null) = (proof_submission_observed_at is null)\n    and (proof_submission_bytes is null or proof_context_bytes is not null)",
-          "definition": "check (((proof_submission_bytes is null) = (proof_submission_digest is null)\n    and (proof_submission_bytes is null) = (proof_submission_observed_at is null)\n    and (proof_submission_bytes is null or proof_context_bytes is not null)))"
+          "expression": "(proof_submission_bytes is null) = (proof_submission_digest is null)\n    and (proof_submission_bytes is null) = (proof_submission_observed_at is null)\n    and (proof_submission_bytes is null or (proof_context_bytes is not null and proof_claimed_at is not null))",
+          "definition": "check (((proof_submission_bytes is null) = (proof_submission_digest is null)\n    and (proof_submission_bytes is null) = (proof_submission_observed_at is null)\n    and (proof_submission_bytes is null or (proof_context_bytes is not null and proof_claimed_at is not null))))"
         },
         {
           "name": "rifare_operation_proof_bounds",

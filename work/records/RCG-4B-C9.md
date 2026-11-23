@@ -196,3 +196,43 @@ old regression, actual dump/restore and populated upgrade/replay qualification.
 No suitable prior Rifare runtime exists: the inspected Temp inventory contained no
 `rifare-*-runtime-*` directory. Reuse source dependencies and generated build output;
 any new runtime has root ownership and retirement after qualification/review.
+
+## First native review and corrective candidate
+
+Authority review of `ffc7900` required changes: a prepared-but-unclaimed proof could
+enter direct_post recovery without a first C7 dispatch admission, and final/receipt
+paths did not enforce the original submission origin. Regression found no separate
+source regression, but withheld final evidence clearance. Neither disposition is
+native acceptance. Both findings are adopted in ADR-0087.
+
+Historical recovery/first acknowledgement now require a committed proof claim;
+prepared-only lost-ticket originals remain pending. Existing fixtures explicitly
+claim before modelling a remote acknowledgement. Generated migration
+`20261123124010` enforces the prerequisite in the database too. All continuation
+operations and their post-TLS admissions now compare the retained origin.
+
+Corrected source runs pass nineteen native groups and ten actual mTLS session
+groups. New refusal cases prove zero proof POST/plaintext after an unclaimed
+preparation with retired C7 and zero result/receipt requests for a different valid
+TLS origin reaching the same actual peer. The latter uses the certificate's
+localhost/127.0.0.1 SANs so DNS/TLS failure cannot substitute for the assertion.
+
+Two deliberate source faults reproduce the review findings. Removing only the two
+historical recovery claim prerequisites reaches the peer and fails the unchanged
+zero-request assertion (3 vs 2). Removing only checkFinal's origin correspondence
+lets original result recovery succeed and fails its unchanged expected rejection.
+Both sources restore byte-exact, with before/after hashes retained in
+`c9-review-correction-faults.json`; raw failures are preserved. These do not substitute
+for the corrected standalone compiled rerun and renewed independent review.
+
+The first isolated runtime at `ffc7900` installed 937 production packages offline
+with scripts disabled and passed 19 native/8 session, old receipt/request/schema/
+privacy, whole-DB erase/uninstall restore and compiled digest-fault diagnostics.
+Its source blockers prevent acceptance despite green diagnostic results. Preserve
+its 85 compiled-file hashes and installed-lock receipt before refreshing this same
+owned runtime. No second dependency installation/cache is needed: installed lock
+SHA256 remains 607396fd2f643cf25348b126859d6de0a83028073ed6d9625e58fd3fccc14a39.
+Host C free space before corrected reuse was 64,354,422,784 bytes. Prior task DBs
+stopped normally, primary remains root-owned active, one primary/zero linked.
+Next: fix corrected source, reuse that installed runtime for full exact qualification,
+run populated C8-component upgrade/replay and renew both roles before integration.

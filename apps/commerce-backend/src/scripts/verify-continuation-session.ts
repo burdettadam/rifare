@@ -87,6 +87,20 @@ export default async function verifyContinuationSession({ container }: ExecArgs)
       client, fixture.requestVerifier, fixture.verifier);
     session = await open(); const challenge = await session.recover();
     let handle: unknown;
+    await check("prepared-unclaimed-restart-with-retired-C7-cannot-first-dispatch-via-recovery", async () => {
+      const main = original, pending = await fixture.makeOriginal(), selected = await fixture.journal.createAuthorityRequestVerifier(bytes(fixture.requestTrust));
+      original = pending;
+      let pendingSession: any;
+      try {
+        const openPending = () => fixture.journal.openContinuationSession(bytes(pending.command), bytes(pending.descriptor), fixture.context, client, selected, fixture.verifier);
+        pendingSession = await openPending(); await pendingSession.prepareProof(proof); pendingSession.close(); selected.close();
+        pendingSession = await openPending(); const bound = await pendingSession.recover();
+        const before = await pending.row(), count = requests.length, plaintext = applicationBytes;
+        assert.equal(before.proof_claimed_at, null); assert.equal(before.proof_submission_bytes, null);
+        await assert.rejects(pendingSession.recoverProof(proof, bound));
+        assert.equal(requests.length, count, "unclaimed recovery emitted proof HTTP bytes"); assert.equal(applicationBytes, plaintext); assert.deepEqual(await pending.row(), before);
+      } finally { pendingSession?.close(); selected.close(); original = main; }
+    });
     await check("proof-snapshot-native-context-and-post-TLS-dispatch", async () => {
       const input = Buffer.from(proof), pending = session.prepareProof(input); input.fill(0); handle = await pending;
       const before = await original.row(); assert.equal(before.proof_digest, proofDigest); assert.equal(before.proof_claimed_at, null);
@@ -123,6 +137,19 @@ export default async function verifyContinuationSession({ container }: ExecArgs)
         wrong, fixture.requestVerifier, fixture.verifier);
       try { const before = requests.length; await assert.rejects(otherSession.prepareProof(proof)); assert.equal(requests.length, before); assert.equal((await another.row()).proof_digest, null); }
       finally { otherSession.close(); wrong.close(); }
+    });
+    await check("changed-origin-existing-final-state-cannot-send-result-or-receipt-recovery", async () => {
+      // Both SANs are valid and hit this actual peer. Without the origin guard,
+      // these requests really reach the server; DNS/TLS refusal cannot fake zero I/O.
+      const wrong = new wire.PublicDelegatedUseClient({ ...config, origin: "https://127.0.0.1:" + address.port });
+      const otherSession = await fixture.journal.openContinuationSession(bytes(original.command), bytes(original.descriptor), fixture.context,
+        wrong, fixture.requestVerifier, fixture.verifier);
+      try {
+        const count = requests.length, plaintext = applicationBytes, before = await original.row();
+        await assert.rejects(otherSession.prepareFinalization());
+        await assert.rejects(otherSession.recoverFinalization(), "changed-origin result recovery was accepted"); await assert.rejects(otherSession.recoverReceipt());
+        assert.equal(requests.length, count); assert.equal(applicationBytes, plaintext); assert.deepEqual(await original.row(), before);
+      } finally { otherSession.close(); wrong.close(); }
     });
     await check("retired-C7-trust-does-not-invent-current-verification-for-identical-proof-recovery", async () => {
       fixture.requestVerifier.close(); session.close(); session = await open(); const challenge = await session.recover();

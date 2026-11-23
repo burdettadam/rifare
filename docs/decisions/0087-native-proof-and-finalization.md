@@ -137,3 +137,17 @@ owner's cost restriction and use the authorized remote/normal merge path when re
 Proof association, FINAL_USE and C8 evidence still confer no merchant execution
 authority. COMMERCE-AUTHORITY-01, live grant status, final effect fencing, payment
 equality, original-outcome reconciliation and the wider goal remain open.
+
+## Corrective review disposition
+
+Native candidate `ffc7900` is not accepted. Independent authority review found that
+proof recovery could create the first remote submission after preparation alone,
+and FINALIZE/recovery omitted the retained request-origin comparison. A provider
+proof recovery POST can insert a submission, so preparation alone is not evidence
+of uncertain dispatch. Historical recovery and first acknowledgement now require
+a committed native proof dispatch claim. A prepared-only original whose transient
+ticket is lost remains pending; neither new C7 validity nor another command/ticket
+is invented. The SQL submission tuple must enforce the same prerequisite. Apply
+original-origin correspondence before all continuation operations and in their
+post-TLS admissions. Add actual native/mTLS refusal cases and renew both reviews.
+The old fixed runtime's results remain diagnostic evidence, not acceptance.
