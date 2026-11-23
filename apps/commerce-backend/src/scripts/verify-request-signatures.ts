@@ -89,6 +89,27 @@ export default async function verifyRequestSignatures(_args: ExecArgs) {
       await assert.rejects(verify(original, { ...context, ...changed }), /REQUEST_CONTEXT_INVALID/);
     }
   });
+  await check("C7-TIME-C1-PRECISION valid nanosecond and offset C1 challenge timestamps remain accepted", async () => {
+    const created = new Date(now - 1000).toISOString().replace(".000Z", ".123456789Z");
+    const expires = new Date(now + 120000 + 3600000).toISOString().replace("Z", "+01:00");
+    await verify(original, { ...context, created_at: created, expires_at: expires });
+  });
+  await check("C7-TIME-STRICT invalid calendars malformed objects and future nanoseconds are finite denials", async () => {
+    for (const created_at of ["2027-02-30T00:00:00Z", { toString: {} },
+      new Date(now).toISOString().replace(".000Z", ".000000001Z")]) {
+      await assert.rejects(verify(original, { ...context, created_at } as any), /REQUEST_TIME_INVALID/);
+    }
+  });
+  await check("C7-TIME-LIFETIME signed expiry cannot exceed independently configured duration", async () => {
+    const bounded = await createPinnedRequestVerifier(bytes({ ...trust, max_lifetime_seconds: 60 }));
+    await assert.rejects(bounded.verify(original, bytes(context), now), /REQUEST_TIME_INVALID/); bounded.close();
+  });
+  await check("C7-COMPACT-STRICT padding malformed alphabet and excessive bytes are refused", async () => {
+    const parts = original.toString().split(".");
+    await assert.rejects(verify(Buffer.from(parts[0] + "." + parts[1] + "=." + parts[2])), /REQUEST_HEADER_INVALID/);
+    await assert.rejects(verify(Buffer.from("!" + original)), /REQUEST_HEADER_INVALID/);
+    await assert.rejects(verify(Buffer.alloc(65537, 65)), /REQUEST_CONTEXT_INVALID/);
+  });
   await check("C7-HANDLES results cannot be forged cloned or transferred between verifier owners", async () => {
     const handle = await verify();
     assert.throws(() => verifier.describe({}), /REQUEST_HANDLE_INVALID/);

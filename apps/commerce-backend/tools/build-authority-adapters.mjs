@@ -76,5 +76,6 @@ mkdirSync(output, { recursive: true });
 writeFileSync(resolve(output, "authority-adapters.mjs"),
   'export * as wire from "./shared/packages/adapters/delegated-commands/public-use-client.mjs";\n' +
   'export * as codec from "./shared/packages/adapters/delegated-commands/command-codec.mjs";\n' +
-  'export * as request_json from "./shared/packages/adapters/delegated-receipts/strict-json.mjs";\n', "utf8");
+  'export * as request_json from "./shared/packages/adapters/delegated-receipts/strict-json.mjs";\n' +
+  'export * as request_time from "./shared/packages/commerce/delegated-receipt-binding.mjs";\n', "utf8");
 console.log(JSON.stringify({ authority_adapter_modules: visited.size, format: "compiled-esm" }));

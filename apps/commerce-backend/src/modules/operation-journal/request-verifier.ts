@@ -76,35 +76,36 @@ function trustConfiguration(value: unknown) {
 
 /** Internal factory: enrollment bytes must come from independently administered
  * server trust. Neither a request header nor an application customer supplies it. */
-export async function createPinnedRequestVerifier(input: Uint8Array) {
+export async function createPinnedRequestVerifier(input: Uint8Array): Promise<PinnedRequestVerifier> {
   let detached: Buffer;
   try { ensure(input instanceof Uint8Array && input.byteLength > 0 && input.byteLength <= 32768, "TRUST_INVALID"); detached = Buffer.from(input); }
   catch { deny("TRUST_INVALID"); }
-  const { request_json } = await authorityAdapters();
+  const { request_json, request_time } = await authorityAdapters();
   try {
     const parse: Parser = request_json.strictReceiptJson;
-    return new PinnedRequestVerifier(factory, parse, trustConfiguration(parse(detached!, 32768)));
-  } catch { deny("TRUST_INVALID"); }
+    return new PinnedRequestVerifier(factory, parse, request_time.receiptTimestampNs, trustConfiguration(parse(detached!, 32768)));
+  } catch { return deny("TRUST_INVALID"); }
 }
 
 export class PinnedRequestVerifier {
   readonly #parse: Parser;
   readonly #trust: Row;
+  readonly #timestamp: (value: string) => bigint;
   readonly #trustDigest: string;
   readonly #results = new WeakMap<object, Readonly<Row>>();
   #closed = false;
   #pending = 0;
   #clockFloor = 0;
-  constructor(token: symbol, parser: Parser, trust: Row) {
+  constructor(token: symbol, parser: Parser, timestamp: (value: string) => bigint, trust: Row) {
     ensure(token === factory, "TRUST_INVALID");
-    this.#parse = parser; this.#trust = trust; this.#trustDigest = digest(stringify(trust)!);
+    this.#parse = parser; this.#timestamp = timestamp; this.#trust = trust; this.#trustDigest = digest(stringify(trust)!);
   }
   close() { this.#closed = true; }
   #active() { if (this.#closed) deny("TRUST_RETIRED"); }
   describe(handle: unknown): Readonly<Row> {
     this.#active();
     const result = handle && typeof handle === "object" ? this.#results.get(handle) : undefined;
-    if (!result) deny("HANDLE_INVALID");
+    if (!result) return deny("HANDLE_INVALID");
     return result;
   }
   async verify(input: Uint8Array, binding: Uint8Array, now: number): Promise<object> {
@@ -149,14 +150,17 @@ export class PinnedRequestVerifier {
         payload!.response_mode === "direct_post" && payload!.response_type === "vp_token" && text(payload!.nonce) &&
         stringify(payload!.dcql_query) === stringify(trust.dcql_query) &&
         stringify(payload!.client_metadata) === stringify(trust.client_metadata), "CONTEXT_INVALID");
-      const created = Date.parse(context!.created_at), expires = Date.parse(context!.expires_at), seconds = Math.floor(now / 1000);
-      ensure(typeof context!.created_at === "string" && typeof context!.expires_at === "string" &&
-        /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}Z$/.test(context!.created_at) &&
-        /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}Z$/.test(context!.expires_at) &&
-        Number.isFinite(created) && Number.isFinite(expires) && created <= now && now < expires &&
-        Number.isSafeInteger(payload!.iat) && Number.isSafeInteger(payload!.exp) && payload!.iat >= Math.floor(created / 1000) &&
-        payload!.iat <= seconds && payload!.exp > seconds && payload!.exp > payload!.iat &&
-        payload!.exp <= Math.floor(expires / 1000) && payload!.exp - payload!.iat <= trust.max_lifetime_seconds, "TIME_INVALID");
+      let created: bigint, expires: bigint;
+      try {
+        ensure(typeof context!.created_at === "string" && typeof context!.expires_at === "string", "TIME_INVALID");
+        created = this.#timestamp(context!.created_at); expires = this.#timestamp(context!.expires_at);
+      } catch { return deny("TIME_INVALID"); }
+      const seconds = Math.floor(now / 1000), nanoseconds = BigInt(now) * 1000000n;
+      ensure(created! <= nanoseconds && nanoseconds < expires! &&
+        Number.isSafeInteger(payload!.iat) && Number.isSafeInteger(payload!.exp) &&
+        BigInt(payload!.iat) >= created! / 1000000000n && payload!.iat <= seconds &&
+        payload!.exp > seconds && payload!.exp > payload!.iat &&
+        BigInt(payload!.exp) <= expires! / 1000000000n && payload!.exp - payload!.iat <= trust.max_lifetime_seconds, "TIME_INVALID");
       const result = Object.freeze({ compact_jws: compact, digest: digest(compact), nonce: payload!.nonce,
         challenge_id: context!.challenge_id, client_id: trust.client_id, key_id: trust.key_id,
         verification_context_digest: digest(stringify({ trust_digest: this.#trustDigest, context: context! })!),
