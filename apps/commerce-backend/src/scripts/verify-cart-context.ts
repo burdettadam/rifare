@@ -14,7 +14,6 @@ import { readLockedCartFacts } from "../modules/operation-journal/cart-facts";
 import { parseOriginalCommand, requireCommandCartMatch } from "../modules/operation-journal/command";
 import { operationJournalModule } from "../modules/operation-journal";
 import type OperationJournalService from "../modules/operation-journal/service";
-import { eraseJournalSubject, setJournalOperationHold } from "../modules/operation-journal/privacy";
 
 /** Actual native PostgreSQL/HTTP fixtures. JWTs are synthetic credentials for
  * native persisted associations, not evidence of a new hosted provider journey.
@@ -352,10 +351,15 @@ export default async function verifyCartContext({ container }: ExecArgs) {
 
     const journal = container.resolve<OperationJournalService>(operationJournalModule);
     const key = randomBytes(32);
+    const users = container.resolve(Modules.USER);
+    const operator = await users.createUsers({ email: "privacy-" + suffix + "@example.invalid" });
+    const operatorIdentity = await auth.createAuthIdentities({ app_metadata: { user_id: operator.id } });
+    const privacyActor = { actor_type: "user", actor_id: operator.id, auth_identity_id: operatorIdentity.id };
     const configuration = {
       RIFARE_MERCHANT_NAMESPACE: merchant.merchant_namespace,
       RIFARE_NATIVE_STORE_ID: merchant.store_id,
       RIFARE_JOURNAL_PRIVACY_KEY: key.toString("base64url"),
+      RIFARE_JOURNAL_PRIVACY_OPERATOR_ID: operator.id,
     };
     const originalEnv = Object.fromEntries(Object.keys(configuration).map(name => [name, process.env[name]]));
     const bytes = Buffer.from(JSON.stringify(command));
@@ -364,6 +368,10 @@ export default async function verifyCartContext({ container }: ExecArgs) {
       delete process.env.RIFARE_JOURNAL_PRIVACY_KEY;
       await assert.rejects(journal.admit(bytes, admission), /Operation journal is unavailable/);
       process.env.RIFARE_JOURNAL_PRIVACY_KEY = configuration.RIFARE_JOURNAL_PRIVACY_KEY;
+
+      process.env.RIFARE_JOURNAL_PRIVACY_OPERATOR_ID = "user_missing";
+      await assert.rejects(journal.admit(bytes, admission), /Operation journal is unavailable/);
+      process.env.RIFARE_JOURNAL_PRIVACY_OPERATOR_ID = operator.id;
 
       const [first, repeated] = await Promise.all([journal.admit(bytes, admission), journal.admit(bytes, admission)]);
       assert.deepEqual(first, repeated);
@@ -467,17 +475,39 @@ export default async function verifyCartContext({ container }: ExecArgs) {
       assert.equal(cancelledRow.command_bytes, null);
       assert.equal(cancelledRow.first_observation_digest, null);
 
-      const subject = { ...merchant, customer_id: alice.customer.id };
-      assert.equal(await postgres.transaction(tx => setJournalOperationHold(tx, subject, key, result.id, 0, true)), true);
+      assert.equal(await journal.setPrivacyHold(alice.customer.id, result.id, 0, true, privacyActor), true);
       const heldCancellation = await journal.cancel(processOriginal.command_id, 1, admission);
       assert.equal(heldCancellation.state, "cancelled");
       await assert.rejects(journal.status(processOriginal.command_id, admission), denied);
       assert.equal((await postgres("rifare_operation").where({ id: result.id }).first()).command_bytes, processBytes.toString());
-      assert.equal(await postgres.transaction(tx => setJournalOperationHold(tx, subject, key, result.id, 2, false)), true);
+      assert.equal(await journal.setPrivacyHold(alice.customer.id, result.id, 2, false, privacyActor), true);
       assert.equal((await postgres("rifare_operation").where({ id: result.id }).first()).command_bytes, null);
       check("journal-history-first-observation-recovery-and-revision-checked-cancellation", () => {});
 
-      await postgres.transaction(tx => eraseJournalSubject(tx, { ...merchant, customer_id: alice.customer.id }, key));
+      await assert.rejects(journal.exportPrivacySubject(alice.customer.id, admission.actor), denied);
+      await assert.rejects(journal.erasePrivacySubject(alice.customer.id, admission.actor), denied);
+      await assert.rejects(journal.restorePrivacyRefusals([], admission.actor), denied);
+      await assert.rejects(journal.uninstallPrivacyJournal(admission.actor), denied);
+      const unrelatedUser = await users.createUsers({ email: "other-" + suffix + "@example.invalid" });
+      const unrelatedIdentity = await auth.createAuthIdentities({ app_metadata: { user_id: unrelatedUser.id } });
+      await assert.rejects(journal.exportPrivacySubject(alice.customer.id, {
+        actor_type: "user", actor_id: unrelatedUser.id, auth_identity_id: unrelatedIdentity.id,
+      }), denied);
+      await auth.updateAuthIdentities({ id: operatorIdentity.id, app_metadata: { user_id: unrelatedUser.id } });
+      await assert.rejects(journal.erasePrivacySubject(alice.customer.id, privacyActor), denied);
+      await auth.updateAuthIdentities({ id: operatorIdentity.id, app_metadata: { user_id: operator.id } });
+      const exported = await journal.exportPrivacySubject(alice.customer.id, privacyActor);
+      assert.ok(exported.some(row => row.id === committed[0].id));
+      assert.equal((await journal.exportPrivacySubject(bob.customer.id, privacyActor)).length, 0);
+      await journal.erasePrivacySubject(alice.customer.id, privacyActor);
+      assert.equal((await journal.exportPrivacySubject(alice.customer.id, privacyActor)).length, 0);
+      const refusal = { id: "rifop_" + randomUUID(), original_command_uuid: randomUUID(), challenge_fingerprint: null };
+      await journal.restorePrivacyRefusals([refusal], privacyActor);
+      assert.equal((await postgres("rifare_operation").where({ id: refusal.id }).first()).state, "retired");
+      await journal.uninstallPrivacyJournal(privacyActor);
+      const bobContext = { ...admission, actor: { actor_type: "customer", actor_id: bob.customer.id, auth_identity_id: bob.identity.id } };
+      await assert.rejects(journal.admit(Buffer.from(JSON.stringify({ ...command, cart_id: bobCart.id })), bobContext), denied);
+      check("journal-privacy-owner-is-native-scoped-and-rechecked", () => {});
       await assert.rejects(journal.admit(bytes, admission), denied);
       const retired = await postgres("rifare_operation").where({ id: first.id }).first();
       assert.equal(retired.state, "retired");

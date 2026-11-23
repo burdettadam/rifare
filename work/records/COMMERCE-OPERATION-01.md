@@ -1,6 +1,6 @@
 # COMMERCE-OPERATION-01 — Medusa PostgreSQL original-operation journal
 
-State: implemented and exercised locally. Privacy-owner integration and independent review are pending.
+State: implemented and exercised locally. Independent review and formal acceptance are pending.
 Protected base: `84e0e0e4c76b6b44eebe802c55ce0820d5608650`.
 Branch: `feat/medusa-operation-journal`.
 Assignment: [ADR-0084](../../docs/decisions/0084-medusa-operation-journal.md).
@@ -306,3 +306,22 @@ money assertion verified that a USD 1.00 adjustment at ten percent tax
 reduced the payable total by 110 minor units. All 29 cart-context groups,
 including the admission and recovery groups, and TypeScript passed.
 The fixture containers were retired.
+
+## Native privacy-owner integration
+
+The journal exposes internal export, erasure, hold, uninstall and refusal
+restore methods through the local Medusa service. The installer selects a
+native Medusa user with RIFARE_JOURNAL_PRIVACY_OPERATOR_ID. Each privacy
+operation checks the verified actor type, configured user, live native user,
+current auth-identity association, and sole configured store inside its
+transaction. Admission requires the selected privacy operator to exist.
+There is no customer or operator HTTP route for these journal methods.
+Whole-database restore and acceptance remain separate verification gates.
+
+On November 22, 2026 (America/Denver), all 30 native cart-context groups,
+the native privacy suite, migration and TypeScript passed on fresh
+disposable PostgreSQL 16. The owner checks refused a customer, an
+unconfigured Medusa operator and a changed auth-identity association.
+The configured owner exercised scoped export, erasure, hold and release,
+refusal import and uninstall. A deleted or missing configured operator
+cannot admit a new operation. The disposable fixture was retired.

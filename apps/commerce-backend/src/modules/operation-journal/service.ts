@@ -6,10 +6,14 @@ import { unavailable } from "../../cart-context/policy";
 import { cartContextConfig } from "../../config/local-commerce";
 import { lockCartOwner, readLockedCartFacts } from "./cart-facts";
 import { parseOriginalCommand, requireCommandCartMatch } from "./command";
-import { journalSubjectIsSuppressed, minimizedOperationFields } from "./privacy";
+import {
+  eraseJournalSubject, exportJournalSubject, journalSubjectIsSuppressed, minimizedOperationFields,
+  restoreJournalRefusalIdentities, setJournalOperationHold, uninstallJournal,
+} from "./privacy";
 
 type Postgres = ReturnType<typeof ModulesSdkUtils.createPgConnection>;
 type AdmissionContext = Parameters<typeof readLockedCartFacts>[3];
+type VerifiedActor = AdmissionContext["actor"];
 
 const operations = "rifare_operation";
 const originalId = /^(?!00000000-0000-0000-0000-000000000000$)[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
@@ -17,6 +21,7 @@ const statusColumns = ["id", "original_command_uuid", "state", "revision"];
 const historyColumns = [...statusColumns, "cart_id", "actor_digest", "command_digest",
   "privacy_hold", "first_observation_digest", "first_observed_at"];
 type JournalConfiguration = ReturnType<typeof journalConfiguration>;
+type Merchant = NonNullable<ReturnType<typeof cartContextConfig>>;
 type JournalRow = {
   id: string; original_command_uuid: string; state: string; revision: number;
   cart_id: string; actor_digest: string; command_digest: string; privacy_hold: boolean;
@@ -33,7 +38,7 @@ export default class OperationJournalService {
 
   /** Internal entry point. The caller supplies framework-verified request context. */
   async admit(input: Uint8Array, context: AdmissionContext) {
-    const { merchant, key, verifiedContext, subject } = journalConfiguration(context);
+    const { merchant, key, privacyOperator, verifiedContext, subject } = journalConfiguration(context);
     const original = parseOriginalCommand(input);
     const { command, commandBytes, commandDigest } = original;
 
@@ -42,6 +47,7 @@ export default class OperationJournalService {
     for (let attempt = 0; ; attempt++) {
       try {
         return await this.postgres.transaction(async tx => {
+          if (!await liveUser(tx, privacyOperator)) throw journalUnavailable();
           if (await journalSubjectIsSuppressed(tx, subject, key)) throw unavailable();
           const locked = await readLockedCartFacts(tx, command.cart_id, merchant, verifiedContext);
 
@@ -139,6 +145,51 @@ export default class OperationJournalService {
     });
   }
 
+  async exportPrivacySubject(customerId: string, actor: VerifiedActor) {
+    return this.withPrivacyOwner(actor, (tx, merchant, key) =>
+      exportJournalSubject(tx, privacySubject(merchant, customerId), key));
+  }
+
+  async erasePrivacySubject(customerId: string, actor: VerifiedActor) {
+    return this.withPrivacyOwner(actor, (tx, merchant, key) =>
+      eraseJournalSubject(tx, privacySubject(merchant, customerId), key));
+  }
+
+  async setPrivacyHold(customerId: string, id: string, expectedRevision: number, held: boolean, actor: VerifiedActor) {
+    return this.withPrivacyOwner(actor, (tx, merchant, key) =>
+      setJournalOperationHold(tx, privacySubject(merchant, customerId), key, id, expectedRevision, held));
+  }
+
+  async uninstallPrivacyJournal(actor: VerifiedActor) {
+    return this.withPrivacyOwner(actor, (tx, merchant, key) => uninstallJournal(tx, merchant, key));
+  }
+
+  async restorePrivacyRefusals(records: Parameters<typeof restoreJournalRefusalIdentities>[3], actor: VerifiedActor) {
+    return this.withPrivacyOwner(actor, (tx, merchant, key) =>
+      restoreJournalRefusalIdentities(tx, merchant, key, records));
+  }
+
+  /** Internal only. Authentication is supplied by the Medusa request boundary. */
+  private async withPrivacyOwner<T>(
+    actor: VerifiedActor,
+    use: (tx: Postgres, merchant: Merchant, key: Buffer) => Promise<T>,
+  ) {
+    const { merchant, key, privacyOperator } = installationConfiguration();
+    const { actor_type, actor_id, auth_identity_id } = actor;
+    if (actor_type !== "user" || actor_id !== privacyOperator || !auth_identity_id) throw unavailable();
+
+    return this.postgres.transaction(async tx => {
+      const user = await liveUser(tx, actor_id);
+      const identity = await tx("auth_identity").where({ id: auth_identity_id }).whereNull("deleted_at")
+        .first({ user_id: tx.raw("app_metadata ->> 'user_id'") });
+      const stores = await tx("store").whereNull("deleted_at").limit(2).select("id");
+      if (!user || identity?.user_id !== actor_id || stores.length !== 1 || stores[0].id !== merchant.store_id) {
+        throw unavailable();
+      }
+      return use(tx, merchant, key);
+    }, { isolationLevel: "serializable" });
+  }
+
   private async withCurrentOriginal<T>(
     commandId: string, context: AdmissionContext,
     use: (tx: Postgres, row: JournalRow, configuration: JournalConfiguration) => Promise<T>,
@@ -158,21 +209,40 @@ export default class OperationJournalService {
   }
 }
 
-function journalConfiguration(context: AdmissionContext) {
+function installationConfiguration() {
   const merchant = cartContextConfig(process.env);
   const encodedKey = process.env.RIFARE_JOURNAL_PRIVACY_KEY ?? "";
   const key = Buffer.from(encodedKey, "base64url");
+  const privacyOperator = process.env.RIFARE_JOURNAL_PRIVACY_OPERATOR_ID ?? "";
   if (!merchant || !/^[A-Za-z0-9_-]{43}$/.test(encodedKey) ||
-      key.length !== 32 || key.toString("base64url") !== encodedKey) {
-    throw new MedusaError(MedusaError.Types.NOT_ALLOWED, "Operation journal is unavailable");
+      key.length !== 32 || key.toString("base64url") !== encodedKey || !/^user_[A-Za-z0-9]{1,100}$/.test(privacyOperator)) {
+    throw journalUnavailable();
   }
+  return { merchant, key, privacyOperator };
+}
+
+function journalConfiguration(context: AdmissionContext) {
+  const installation = installationConfiguration();
   const { actor, salesChannelIds } = context;
   if (actor.actor_type !== "customer" || !/^cus_[A-Za-z0-9]{1,100}$/.test(actor.actor_id) ||
       !actor.auth_identity_id) throw unavailable();
   const verifiedContext = { actor: { ...actor }, salesChannelIds: [...salesChannelIds] };
-  const subject = { ...merchant, customer_id: verifiedContext.actor.actor_id };
+  const subject = privacySubject(installation.merchant, verifiedContext.actor.actor_id);
 
-  return { merchant, key, verifiedContext, subject };
+  return { ...installation, verifiedContext, subject };
+}
+
+function privacySubject(merchant: Merchant, customerId: string) {
+  if (typeof customerId !== "string" || !/^cus_[A-Za-z0-9]{1,100}$/.test(customerId)) throw unavailable();
+  return { ...merchant, customer_id: customerId };
+}
+
+function liveUser(tx: Postgres, userId: string) {
+  return tx("user").where({ id: userId }).whereNull("deleted_at").first("id");
+}
+
+function journalUnavailable() {
+  return new MedusaError(MedusaError.Types.NOT_ALLOWED, "Operation journal is unavailable");
 }
 
 function statusOf(row: JournalRow) {
