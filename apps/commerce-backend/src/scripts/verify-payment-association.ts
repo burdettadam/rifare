@@ -137,6 +137,10 @@ export default async function verifyPaymentAssociation({ container }: ExecArgs) 
     await postgres("payment_provider").where({ id: "pp_system_default" }).update({ is_enabled: false });
     try { await noEffects(() => assert.rejects(journal.recoverAuthorityPayment(id, context, verifier))); }
     finally { await postgres("payment_provider").where({ id: "pp_system_default" }).update({ is_enabled: true }); }
+    const nativeCart = await postgres("cart").where({ id: original.cart.id }).first();
+    await postgres("region").where({ id: nativeCart.region_id }).update({ deleted_at: new Date() });
+    try { await noEffects(() => assert.rejects(journal.recoverAuthorityPayment(id, context, verifier))); }
+    finally { await postgres("region").where({ id: nativeCart.region_id }).update({ deleted_at: null }); }
     const region = await postgres("region_payment_provider").where({ payment_provider_id: "pp_system_default" }).whereNull("deleted_at").first();
     assert.ok(region); await postgres("region_payment_provider").where({ id: region.id }).update({ deleted_at: new Date() });
     try { await noEffects(() => assert.rejects(journal.recoverAuthorityPayment(id, context, verifier))); }
@@ -168,6 +172,15 @@ export default async function verifyPaymentAssociation({ container }: ExecArgs) 
     const paid = await f.makePaymentOriginal(), payment = await payments.authorizePaymentSession(paid.session.id, {});
     assert.ok(payment, "synthetic System payment must authorize before history refusals are exercised");
     await noEffects(() => assert.rejects(journal.associateAuthorityPayment(paid.command.command_id, context, verifier)));
+    // Independent native links cannot conceal an outcome for the selected session.
+    const mismatched = await f.makePaymentOriginal(), otherCollection = await f.makePaymentOriginal();
+    const foreign = { ...(await postgres("payment").where({ id: payment.id }).first()),
+      id: "pay_" + randomUUID().replaceAll("-", ""), payment_session_id: mismatched.session.id,
+      payment_collection_id: otherCollection.collection.id, deleted_at: new Date() };
+    await postgres("payment").insert(foreign);
+    try { await noEffects(() => assert.rejects(journal.associateAuthorityPayment(mismatched.command.command_id, context, verifier))); }
+    finally { await postgres("payment").where({ id: foreign.id }).delete(); }
+    assert.equal((await mismatched.row()).payment_collection_id, null);
     await payments.capturePayment({ payment_id: payment.id });
     await noEffects(() => assert.rejects(journal.associateAuthorityPayment(paid.command.command_id, context, verifier)));
     await payments.refundPayment({ payment_id: payment.id, amount: 1 });

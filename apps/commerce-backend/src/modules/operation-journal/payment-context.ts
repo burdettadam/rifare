@@ -42,12 +42,14 @@ export async function readLockedNativePayment(transaction: Postgres, original: O
   }
   const provider = await live("payment_provider").where({ id: session.provider_id }).first("id", "is_enabled");
   requireValue(provider?.is_enabled === true);
+  const region = await live("region").where({ id: binding.region_id }).first("id");
+  requireValue(region);
   const eligibility = await live("region_payment_provider").where({ region_id: binding.region_id,
     payment_provider_id: session.provider_id }).limit(2).select("id");
   requireValue(eligibility.length === 1);
   // Include soft-deleted native payment history. Absence is still not a remote
   // no-effect proof; presence always requires the separate reconciliation owner.
-  const payment = await transaction("payment").where({ payment_collection_id: collection.id }).orderBy("id").forUpdate().first("id");
+  const payment = await transaction("payment").where(builder => builder.where({ payment_collection_id: collection.id }).orWhere({ payment_session_id: session.id })).orderBy("id").forUpdate().first("id");
   requireValue(!payment);
   const context = { profile: "urn:rifare:native-pending-payment-context:v1", payment_provider_profile: "urn:rifare:local-medusa-system-pending:v1", merchant_namespace: binding.merchant_namespace,
     store_id: binding.store_id, original_command_id: original.command.command_id, command_digest: original.commandDigest,

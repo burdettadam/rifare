@@ -3,6 +3,7 @@ import type { ExecArgs } from "@medusajs/framework/types";
 import { ContainerRegistrationKeys } from "@medusajs/framework/utils";
 import { operationJournalModule } from "../modules/operation-journal";
 import type OperationJournalService from "../modules/operation-journal/service";
+import { bytes } from "./native-receipt-fixture";
 import { nativePaymentFixture } from "./native-payment-fixture";
 
 /** Whole-database backup restore with independently retained current privacy state. */
@@ -16,7 +17,7 @@ export default async function verifyPaymentRestore({ container }: ExecArgs) {
     await journal.associateAuthorityPayment(id, f.context, f.verifier);
     const row = await original.row(); assert.ok(row.payment_fingerprint); assert.ok(row.payment_context_digest);
     console.log("C10_RESTORE_FIXTURE=" + JSON.stringify({ merchant: f.merchant, privacyActor: f.privacyActor, context: f.context,
-      command_id: id, payment_fingerprint: row.payment_fingerprint, payment_context_digest: row.payment_context_digest }));
+      trust: f.trust, command_id: id, payment_fingerprint: row.payment_fingerprint, payment_context_digest: row.payment_context_digest }));
     f.requestVerifier.close(); f.verifier.close(); return;
   }
   assert.ok(["erase", "reconcile-erase", "reconcile-uninstall"].includes(phase ?? ""));
@@ -36,7 +37,9 @@ export default async function verifyPaymentRestore({ container }: ExecArgs) {
   assert.equal(after.payment_fingerprint, f.payment_fingerprint);
   for (const field of ["payment_collection_id", "payment_session_id", "payment_provider_id", "payment_context_digest", "payment_observed_at",
     "command_bytes", "request_bytes", "receipt_bytes", "proof_context_bytes", "proof_submission_bytes", "final_command_bytes", "final_response_bytes"]) assert.equal(after[field], null, field);
-  await assert.rejects(journal.recoverAuthorityPayment(f.command_id, f.context, {}));
+  const verifier = await journal.createAuthorityReceiptVerifier(bytes(f.trust));
+  try { await assert.rejects(journal.recoverAuthorityPayment(f.command_id, f.context, verifier)); }
+  finally { verifier.close(); }
   if (phase === "erase") console.log("C10_RESTORE_CURRENT_REFUSAL=" + JSON.stringify({ id: after.id,
     original_command_uuid: after.original_command_uuid, challenge_fingerprint: after.challenge_fingerprint,
     receipt_fingerprint: after.receipt_fingerprint, final_command_uuid: after.final_command_uuid, payment_fingerprint: after.payment_fingerprint }));

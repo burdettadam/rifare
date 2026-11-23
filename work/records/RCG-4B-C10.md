@@ -61,3 +61,19 @@ dependency compiled consumer, targeted fault, populated C9 component/schema upgr
 restore and retained regressions; then both independent roles and normal integration.
 The user does not know the provider endpoint/enrolled caller evidence path. Keep
 that external boundary pending with the provider worker; no substitute identity.
+
+## Independent source correction round 1
+
+The authority reviewer required payment history lookup by collection OR session,
+including deleted/mismatched links, and an actual live locked Region rather than
+only a surviving eligibility link. Both are corrected with direct native refusal
+assertions. The restore recovery-refusal assertion now uses a genuine synthetic
+receipt verifier/public trust instead of an invalid placeholder. Regression source
+review found no separate scoped blocker; both final reviews remain pending.
+
+The first own-dependency compiled run at df53b12 passed all 18 payment groups plus
+signature/codec checks, but its harness then reused the payment fixture country in
+the C9 retention database. Preserve that setup failure; use separate databases in
+the corrected qualifier. A source exploratory correction run reached C10-CLOSE then
+failed closed in the inherited current C7 request-time gate while creating another
+fixture; it is not a passing run and does not justify relaxing time enforcement.
