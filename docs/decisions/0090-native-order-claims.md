@@ -45,3 +45,17 @@ legacy source until its actual retained behavior is proven through a replacement
 Connected identity, final commerce fences, production, rights and transfer
 acceptance remain open. Upstream refund ordering on active changes requires
 independent observation before any no-effect refusal claim.
+
+## Authority review planning correction
+
+Before implementing the partial-refund witness, require actual original refund
+provider-call counts, native refund status/amount, order transaction/credit-line
+and summary outcomes after active-claim rejection, stable-key retry, changed-amount
+refusal and recovery after clearing the active change. Preserve an unknown effect
+instead of interpreting an error as no payment. Canceled-order cases and native
+foreign/repeated/excess quantity inputs require effect comparisons; record actual
+unsupported behavior without changing retained resolution requirements. Add a
+successful replacement fulfillment and actual native return-receiving witness as
+separate originals from cancellation, rather than claiming those from a draft.
+Installed source evidence motivates these cases; it does not establish runtime
+outcomes. No application execution permission is broadened.
