@@ -28,7 +28,8 @@ its diagnostic source owners; it is not connected to this new database yet.
 | Ordinary returns and receiving | Medusa Order return workflows | Requested return, confirmed receipt and restocking of exactly the received unit. No physical handoff is claimed. |
 | Generic merchant administration | Upstream Medusa Admin | A synthetic native operator signed in through the compiled Admin in Chromium and viewed a seeded product. An independent anonymous context was refused. |
 | Ordinary exchange | Medusa Order exchange and return workflows | Drafting leaves stock untouched. Confirmation reserves one replacement on the original order, and receiving restocks the returned unit. |
-| Claims and order edits | Medusa Order workflows | The retained Rifare scenarios still need to be checked against the native workflows. |
+| Equal-price order edit | Medusa Order and Inventory workflows | A pending variant substitution leaves the original line and stock reservation in place. Confirming moves the reservation and preserves the order total and original payment. |
+| Claims | Medusa Order workflows | The retained Rifare scenarios still need to be checked against the native workflows. |
 | Loyalty, credit and growth | Assess upstream modules/plugins before extending | Specific scope, license and scenario equivalence remain to be assessed. |
 
 Rifare retains product-specific agent/task interfaces, merchant policies, approval
@@ -165,6 +166,12 @@ order and the upstream exchange, shipping, inventory and return workflows.
 Rifare-specific incentives, merchant eligibility, financial settlement and
 recovery after provider uncertainty remain separate. Keep those diagnostic
 contracts until the corresponding native scenarios and their callers qualify.
+
+For an equal-price substitution before fulfillment, the native fixture uses
+the original paid synthetic order. Confirming the requested edit changes the
+item and which variant holds the reservation. Neither variant's on-hand
+stock changes. Price-difference settlement, warehouse holds, address
+changes and original outcome recovery remain separate Rifare scenarios.
 
 ## Dependency and license boundary
 

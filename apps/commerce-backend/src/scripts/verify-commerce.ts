@@ -6,18 +6,20 @@ import type { ExecArgs } from "@medusajs/framework/types";
 import { MedusaModule } from "@medusajs/framework/modules-sdk";
 import { ContainerRegistrationKeys, Modules, ProductStatus, PromotionActions } from "@medusajs/framework/utils";
 import {
-  addShippingMethodToCartWorkflow, beginExchangeOrderWorkflow, beginReturnOrderWorkflow, beginReceiveReturnWorkflow,
+  addShippingMethodToCartWorkflow, beginExchangeOrderWorkflow, beginOrderEditOrderWorkflow, beginReturnOrderWorkflow,
+  beginReceiveReturnWorkflow,
   cancelOrderWorkflow, capturePaymentWorkflow, completeCartWorkflow, confirmExchangeRequestWorkflow,
-  confirmReturnRequestWorkflow, confirmReturnReceiveWorkflow, createExchangeShippingMethodWorkflow,
+  confirmOrderEditRequestWorkflow, confirmReturnRequestWorkflow, confirmReturnReceiveWorkflow, createExchangeShippingMethodWorkflow,
   createApiKeysWorkflow, createCartWorkflow, createInventoryLevelsWorkflow,
   createOrderFulfillmentWorkflow, createPaymentCollectionForCartWorkflow,
   createPaymentSessionsWorkflow, createProductsWorkflow, createPromotionsWorkflow,
   createRegionsWorkflow, createSalesChannelsWorkflow, createShippingOptionsWorkflow,
   createShippingProfilesWorkflow, createStockLocationsWorkflow, createTaxRegionsWorkflow,
   linkSalesChannelsToApiKeyWorkflow, linkSalesChannelsToStockLocationWorkflow,
-  orderExchangeAddNewItemWorkflow, orderExchangeRequestItemReturnWorkflow,
+  orderEditAddNewItemWorkflow, orderEditUpdateItemQuantityWorkflow, orderExchangeAddNewItemWorkflow,
+  orderExchangeRequestItemReturnWorkflow,
   receiveItemReturnRequestWorkflow, refundPaymentWorkflow, requestItemReturnWorkflow,
-  updateCartPromotionsWorkflow, updateStoresWorkflow,
+  requestOrderEditRequestWorkflow, updateCartPromotionsWorkflow, updateStoresWorkflow,
 } from "@medusajs/medusa/core-flows";
 
 /** Creates only synthetic records in an explicitly selected disposable local DB.
@@ -327,6 +329,68 @@ export default async function verifyCommerce({ container }: ExecArgs) {
     check("native-exchange-receipt-restocks-only-the-returned-unit", () => {
       assert.equal(Number(exchangeReceived.stocked_quantity), 5);
       assert.equal(Number(exchangeReceived.reserved_quantity), 1);
+    });
+
+    const { result: replacements } = await createProductsWorkflow(container).run({ input: { products: [{
+      title: `Rifare synthetic replacement ${suffix}`, status: ProductStatus.PUBLISHED,
+      shipping_profile_id: profile.id, sales_channels: [{ id: channel.id }],
+      options: [{ title: "Size", values: ["One"] }],
+      variants: [{ title: "Replacement", sku: `rifare-replacement-${suffix}`, manage_inventory: true,
+        allow_backorder: false, options: { Size: "One" }, prices: [{ currency_code: "usd", amount: 12.5 }] }],
+    }] } });
+    const replacementId = replacements[0].variants[0].id;
+    const replacementGraph = await graph("product_variant", replacementId, ["inventory_items.inventory_item_id"]);
+    const replacementInventoryId = replacementGraph.inventory_items[0].inventory_item_id;
+    await createInventoryLevelsWorkflow(container).run({ input: { inventory_levels: [{
+      inventory_item_id: replacementInventoryId, location_id: location.id, stocked_quantity: 3,
+    }] } });
+    const replacementLevel = async () => (await inventory.listInventoryLevels({
+      inventory_item_id: replacementInventoryId, location_id: location.id,
+    }))[0];
+
+    const { result: editCart } = await createCartWorkflow(container).run({
+      input: { ...cartInput, items: [{ variant_id: variant.id, quantity: 1 }] },
+    });
+    await addShippingMethodToCartWorkflow(container).run({ input: { cart_id: editCart.id, options: [{ id: shipping.id }] } });
+    const { result: editCollection } = await createPaymentCollectionForCartWorkflow(container).run({ input: { cart_id: editCart.id } });
+    await createPaymentSessionsWorkflow(container).run({
+      input: { payment_collection_id: editCollection.id, provider_id: "pp_system_default" },
+    });
+    const { result: editOrder } = await completeCartWorkflow(container).run({ input: { id: editCart.id } });
+    const editSource = await graph("order", editOrder.id, orderFields);
+    const editPaymentId = editSource.payment_collections[0].payments[0].id;
+    await capturePaymentWorkflow(container).run({ input: { payment_id: editPaymentId } });
+    await beginOrderEditOrderWorkflow(container).run({ input: { order_id: editOrder.id } });
+    await orderEditUpdateItemQuantityWorkflow(container).run({ input: {
+      order_id: editOrder.id, items: [{ id: editSource.items[0].id, quantity: 0 }],
+    } });
+    await orderEditAddNewItemWorkflow(container).run({ input: {
+      order_id: editOrder.id, items: [{ variant_id: replacementId, quantity: 1 }],
+    } });
+    await requestOrderEditRequestWorkflow(container).run({ input: { order_id: editOrder.id } });
+    const pendingEdit = await graph("order", editOrder.id, orderFields);
+    const pendingOriginalLevel = await level();
+    const pendingReplacementLevel = await replacementLevel();
+    check("native-order-edit-request-keeps-original-order-and-reservation", () => {
+      assert.deepEqual(pendingEdit.items.map(item => item.variant_id), [variant.id]);
+      assert.equal(Number(pendingOriginalLevel.reserved_quantity), 2);
+      assert.equal(Number(pendingReplacementLevel.reserved_quantity), 0);
+    });
+    await confirmOrderEditRequestWorkflow(container).run({ input: { order_id: editOrder.id } });
+    const edited = await graph("order", editOrder.id, orderFields);
+    const editedOriginalLevel = await level();
+    const editedReplacementLevel = await replacementLevel();
+    check("native-equal-price-order-edit-swaps-only-the-order-line-and-reservation", () => {
+      assert.equal(edited.id, editOrder.id);
+      const activeItems = edited.items.filter(item => Number(item.quantity) > 0);
+      assert.deepEqual(activeItems.map(item => [item.variant_id, Number(item.quantity)]), [[replacementId, 1]]);
+      assert.equal(Number(edited.total), Number(editSource.total));
+      const payments = edited.payment_collections.flatMap(collection => collection.payments);
+      assert.deepEqual(payments.map(payment => payment.id), [editPaymentId]);
+      assert.equal(Number(editedOriginalLevel.stocked_quantity), 5);
+      assert.equal(Number(editedOriginalLevel.reserved_quantity), 1);
+      assert.equal(Number(editedReplacementLevel.stocked_quantity), 3);
+      assert.equal(Number(editedReplacementLevel.reserved_quantity), 1);
     });
     console.log("RIFARE_MEDUSA_RESULT=" + JSON.stringify({ result: "pass", medusa: "2.23.0",
       database: "PostgreSQL", payment_provider: "pp_system_default", checks,
