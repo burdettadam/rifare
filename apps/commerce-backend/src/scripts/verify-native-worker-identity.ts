@@ -6,10 +6,15 @@ import type { ExecArgs } from "@medusajs/framework/types";
 import { ContainerRegistrationKeys, Modules } from "@medusajs/framework/utils";
 
 /** C12 mechanism proof only. It is not the journal execution owner or a final
- * fence. The baseline deliberately demonstrates a stale native write. */
+ * fence. The unguarded baseline demonstrates a stale native write. Optional
+ * fixture guards test transaction ordering, not original authority or order coverage. */
 export default async function verifyNativeWorkerIdentity({ container }: ExecArgs) {
   assert.equal(process.env.NODE_ENV, "test"); assert.equal(process.env.RIFARE_COMMERCE_VERIFY, "disposable");
   assert.equal(process.env.RIFARE_TEST_NATIVE_EXECUTION, "worker-identity");
+  const guarded = process.env.RIFARE_C12_IDENTITY_GUARD === "statement";
+  assert.ok(process.env.RIFARE_C12_IDENTITY_GUARD === undefined || guarded);
+  assert.ok(process.env.RIFARE_C12_IDENTITY_GUARD_FAULT === undefined ||
+    guarded && process.env.RIFARE_C12_IDENTITY_GUARD_FAULT === "omit");
   const postgres = container.resolve(ContainerRegistrationKeys.PG_CONNECTION);
   const carts = container.resolve(Modules.CART), payments: any = container.resolve(Modules.PAYMENT);
   for (const method of ["createPaymentCollections", "createPaymentSession", "authorizePaymentSession"])
@@ -64,6 +69,26 @@ export default async function verifyNativeWorkerIdentity({ container }: ExecArgs
     create trigger rifare_c12_identity after insert on public.payment for each row when (NEW.payment_session_id='${session.id}') execute function public.rifare_c12_observe_identity();
     create trigger rifare_c12_identity after update on public.payment_session for each row when (NEW.id='${session.id}') execute function public.rifare_c12_observe_identity();
     create trigger rifare_c12_identity after update on public.payment_collection for each row when (NEW.id='${collection.id}') execute function public.rifare_c12_observe_identity();`);
+  if (guarded) {
+    // Disposable mechanism only: one fixture control row and two test logins.
+    // This is not durable journal admission or original row correlation.
+    // FOR SHARE orders native write transactions against a revocation update,
+    // including before any native row exists.
+    await postgres.raw(`create function public.rifare_c12_require_current_identity() returns trigger
+      language plpgsql security definer set search_path=pg_catalog,public as $$
+      declare selected_role text;
+      begin
+        select active_role into selected_role from public.rifare_c12_identity_control where id=1 for share;
+        if session_user::text ~ '^rifare_c12_[ab]_[a-f0-9]{32}$' and
+          (selected_role is null or selected_role <> session_user::text) then
+          raise exception 'C12 native worker is unavailable' using errcode='42501';
+        end if;
+        return null;
+      end $$`);
+    for (const table of ["cart", "cart_line_item", "payment", "payment_session", "payment_collection"])
+      await postgres.raw(`create trigger rifare_c12_identity_guard before insert or update or delete on public.${table}
+        for each statement execute function public.rifare_c12_require_current_identity()`);
+  }
   const run = (index: number, action: string, email: string) => new Promise<{ code: number | null; output: string }>((resolve, reject) => {
     const selected = roles[index], foreign = roles[1 - index], database = new URL(process.env.DATABASE_URL!);
     database.username = selected.role; database.password = selected.password;
@@ -96,10 +121,19 @@ export default async function verifyNativeWorkerIdentity({ container }: ExecArgs
   const successorAudit = await postgres("rifare_c12_identity_audit").where({ authenticated_role: roles[1].role });
   assert.ok(successorAudit.some(row => row.native_table === "cart"));
   console.log("C12_NATIVE_ROLE_SUCCESSOR=" + JSON.stringify({ authenticated_role: roles[1].role, native_cart_write_observed: true }));
+  if (process.env.RIFARE_C12_IDENTITY_GUARD_FAULT === "omit") {
+    // Fault actual disposable enforcement, keeping the stale oracle unchanged.
+    await postgres.raw(`create or replace function public.rifare_c12_require_current_identity() returns trigger
+      language plpgsql security definer set search_path=pg_catalog,public as $$ begin return null; end $$`);
+  }
+  const auditBeforeStale = await postgres("rifare_c12_identity_audit").orderBy("id");
   const before = await postgres("cart").where({ id: original.id }).first();
   const stale = await run(0, "cart", "stale-c12@example.invalid");
   assert.notEqual(stale.code, 0, "C12 stale authenticated worker must be refused at the native write boundary");
   assert.deepEqual(await postgres("cart").where({ id: original.id }).first(), before);
+  assert.deepEqual(await postgres("rifare_c12_identity_audit").orderBy("id"), auditBeforeStale,
+    "Refused stale worker must produce zero native audit writes");
   console.log("C12_NATIVE_WORKER_IDENTITY_RESULT=" + JSON.stringify({ result: "pass", qualification_only: true,
+    statement_write_guard_mechanism_qualified: guarded, native_order_coverage_qualified: false,
     execution_authorized: false, full_execution_owner_qualified: false }));
 }
