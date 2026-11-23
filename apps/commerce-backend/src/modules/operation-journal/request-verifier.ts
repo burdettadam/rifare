@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 import { configure } from "safe-stable-stringify";
-import { authorityAdapters } from "./authority-sender";
+import { authorityAdapters } from "./authority-assets";
 
 type Row = Record<string, any>;
 type Parser = (bytes: Uint8Array, maximum?: number) => unknown;

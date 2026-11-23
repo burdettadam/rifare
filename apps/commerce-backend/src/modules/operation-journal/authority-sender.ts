@@ -1,28 +1,12 @@
-import { resolve } from "node:path";
-import { pathToFileURL } from "node:url";
 import { MedusaError } from "@medusajs/framework/utils";
 import { types } from "node:util";
 import OperationJournalService from "./service";
+import { authorityAdapters } from "./authority-assets";
+export { authorityAdapters } from "./authority-assets";
 
 type Context = Parameters<OperationJournalService["admit"]>[1];
 type RetainedStart = { command_bytes: string; command_digest: string; correlation: string };
 const unavailable = () => new MedusaError(MedusaError.Types.NOT_ALLOWED, "Authority sender is unavailable");
-
-/** The repository launcher retains the shared C1 and public transport sources.
- * Use their actual classes/codecs, without importing the diagnostic database owner. */
-export async function authorityAdapters() {
-  if (__filename.endsWith(".js")) {
-    return import(pathToFileURL(resolve(__dirname, "../../../rifare/authority-adapters.mjs")).href);
-  }
-  const directory = resolve(process.cwd(), "../../packages/adapters/delegated-commands");
-  const [wire, codec, request_json, request_time] = await Promise.all([
-    import(pathToFileURL(resolve(directory, "public-use-client.mts")).href),
-    import(pathToFileURL(resolve(directory, "command-codec.mts")).href),
-    import(pathToFileURL(resolve(directory, "../delegated-receipts/strict-json.mts")).href),
-    import(pathToFileURL(resolve(directory, "../../commerce/delegated-receipt-binding.mts")).href),
-  ]);
-  return { wire, codec, request_json, request_time };
-}
 
 export async function openNativeAuthoritySession(
   journal: OperationJournalService, input: Uint8Array, descriptor: Uint8Array,
