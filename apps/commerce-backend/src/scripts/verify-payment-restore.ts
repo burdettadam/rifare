@@ -13,7 +13,7 @@ export default async function verifyPaymentRestore({ container }: ExecArgs) {
   const journal = container.resolve<OperationJournalService>(operationJournalModule), postgres = container.resolve(ContainerRegistrationKeys.PG_CONNECTION);
   const phase = process.env.RIFARE_C10_RESTORE_PHASE;
   if (phase === "seed") {
-    const f = await nativePaymentFixture(container), original = await f.makePaymentOriginal(), id = original.command.command_id;
+    const f = await nativePaymentFixture(container, true), original = await f.makePaymentOriginal(), id = original.command.command_id;
     await journal.associateAuthorityPayment(id, f.context, f.verifier);
     const row = await original.row(); assert.ok(row.payment_fingerprint); assert.ok(row.payment_context_digest);
     console.log("C10_RESTORE_FIXTURE=" + JSON.stringify({ merchant: f.merchant, privacyActor: f.privacyActor, context: f.context,
