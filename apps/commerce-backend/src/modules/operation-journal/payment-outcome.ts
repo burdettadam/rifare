@@ -43,7 +43,7 @@ export async function readOriginalPaymentOutcome(tx: Postgres, original: Origina
     binding.payment_provider_id === "pp_system_default");
   const principal = original.command.payable_minor_units, exponent = original.command.currency_exponent;
   const money = (raw: unknown, signed = false) => { const value = minorUnits(raw, exponent); requireValue(signed || BigInt(value) >= 0n); return value; };
-  const aggregate = (raw: unknown) => raw === null ? "0" : money(raw);
+  const aggregate = (raw: unknown) => raw === null ? null : money(raw);
   const links = await bounded(tx("cart_payment_collection").where(builder => builder.where({ cart_id: original.command.cart_id })
     .orWhere({ payment_collection_id: binding.payment_collection_id })).select("id", "cart_id", "payment_collection_id", "deleted_at"), 1);
   requireValue(links.length === 1 && links[0].cart_id === original.command.cart_id &&
@@ -126,8 +126,8 @@ export async function readOriginalPaymentOutcome(tx: Postgres, original: Origina
     collection: { status: collection.status as string, authorized_minor_units: aggregate(collection.raw_authorized_amount),
       captured_minor_units: aggregate(collection.raw_captured_amount), refunded_minor_units: aggregate(collection.raw_refunded_amount) },
     totals: { live_capture_minor_units: captured, live_succeeded_refund_minor_units: refunded }, order,
-    consistency: { collection_capture_matches_rows: captured === aggregate(collection.raw_captured_amount),
-      collection_refund_matches_rows: refunded === aggregate(collection.raw_refunded_amount),
+    consistency: { collection_capture_matches_rows: collection.raw_captured_amount === null ? null : captured === aggregate(collection.raw_captured_amount),
+      collection_refund_matches_rows: collection.raw_refunded_amount === null ? null : refunded === aggregate(collection.raw_refunded_amount),
       order_refund_transactions_complete: order ? refundFacts.filter(row => !row.deleted && row.status === RefundStatus.SUCCEEDED).every(refund => {
         const matching = transactionFacts.filter(row => !row.deleted && row.reference === "refund" && row.reference_id === refund.id);
         return matching.length === 1 && BigInt(matching[0].amount_minor_units) === -BigInt(refund.amount_minor_units);
