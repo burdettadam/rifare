@@ -267,46 +267,46 @@ legal approval. Both independent reviewers must inspect the actual additive diff
 ## Standalone backend qualification outcome
 
 At cd743e9aacf8a300a70471626865f15a85c406b4 both independent reviewers cleared
-local standalone backend integration. Product packaging is unchanged from640393f.
-The full backend build passed at9fc0093, then the final runtime builder removed
+local standalone backend integration. Product packaging is unchanged from `640393f`.
+The full backend build passed at `9fc0093`, then the final runtime builder removed
 the source-only diagnostic command. Native source compiled in that build is
 unchanged throughout this branch. All qualification ran on that relocated final
 artifact with its own fresh production dependency directory outside the repository.
 
-Offline npm ci --omit=dev --ignore-scripts --no-audit --no-fund installed937
+Offline npm ci --omit=dev --ignore-scripts --no-audit --no-fund installed 937
 packages from the existing cache, without network or installation hooks. The
-original lock and launcher bytes were verified. The receipt binds61 built files,
-Node24.14.1, npm version, candidate and installed lock digest. Exact C1 canonical
+original lock and launcher bytes were verified. The receipt binds 61 built files,
+Node 24.14.1, npm version, candidate and installed lock digest. Exact C1 canonical
 START bytes/digest and public transport module loading passed from the relocated
 compiled dependency closure. No repository dependency directory was linked.
 
-Disposable PostgreSQL16 migration, native journal schema and privacy,25commerce
+Disposable PostgreSQL 16 migration, native journal schema and privacy,25 commerce
 checks and idempotent migration replay passed. A fresh identity database passed
-28synthetic OIDC/Medusa HTTP checks. Normal npm start served health200, anonymous
-Admin401 and exact checkout/payment hold503 with a valid synthetic publishable
+28 synthetic OIDC/Medusa HTTP checks. Normal npm start served health 200, anonymous
+Admin 401 and exact checkout/payment hold 503 with a valid synthetic publishable
 key. The normal-start process tree was stopped and listener retirement verified.
 No financial or physical effect used a real provider. Production stays refused.
 
 Forty focused configuration/checkout cases passed in a complete Linux temporary
-source copy in1.75seconds. Windows retained a genuine symlink EPERM setup failure.
+source copy in 1.75 seconds. Windows retained a genuine symlink EPERM setup failure.
 Two earlier partial Linux copies omitted fixture inputs and remain failed setup
 observations. The first native runner treated an optional ts-node warning as a
 PowerShell stop; no runtime success was inferred. The corrected runner checked
 actual exit codes. A probe cleanup bug initially masked its assertion failure;
 that result was discarded. The corrected driver reported the missing-publishable-
-key400 failure. The final probe supplied the native fixture key and required the
-unchanged503/error-code contract. Original and corrected logs remain distinct.
+key 400 failure. The final probe supplied the native fixture key and required the
+unchanged 503/error-code contract. Original and corrected logs remain distinct.
 
 Four intake attack tests passed. Full distribution inventory, applied license
 texts, repository structure, generated views, retained plan and diff checks pass.
-The source intake now enforces exact reviewed commands and unchanged1016lock
-entries. Inventory adds precisely35 previously omitted original project paths,
+The source intake now enforces exact reviewed commands and unchanged 1016 lock
+entries. Inventory adds precisely 35 previously omitted original project paths,
 preserving every component's prior metadata, notices and license dispositions.
 No green intake result represents distribution qualification or legal clearance.
 
 Authority/security reviewer rifare_authority_review and regression reviewer
 rifare_regression_review independently inspected source and actual logs and
-reported no scoped blocker atcd743e9. Root accepts this bounded local backend
+reported no scoped blocker at `cd743e9`. Root accepts this bounded local backend
 integration under delegated authority. Full standalone Admin/browser, connected
 provider and production acceptance remain open, as does the broader handoff goal.
 
@@ -314,8 +314,8 @@ The disposable PostgreSQL containers and owned listeners were retired. The
 root-owned temporary runtime was removed after preserving artifact hashes and
 its installed lock. PowerShell's first removal hit a long-path limit; normal
 extended-length literal paths completed the same verified Temp target without
-changing permissions. The final pass measured436592640additional Windows host
-bytes free. The61-file generated server cache was also retired after its receipt
+changing permissions. The final pass measured 436592640 additional Windows host
+bytes free. The 61-file generated server cache was also retired after its receipt
 was preserved. Reusable source dependencies remain in the active root checkout
 for subsequent assigned Rifare work. Rifare has one primary and one linked
 checkout; root owns the active linked checkout with qualification evidence.
