@@ -98,3 +98,22 @@ repeated aggregate quantity at preview. The second widened comparison to the ful
 retained separately; these exploratory observations are not fixed qualification.
 The first-class helper now asserts these cases and competing active-claim refusal.
 No native vendor changes, routes or application permission changes were introduced.
+
+## Genuine native canceled-order admission defect
+
+Source 55f354e completed the existing 23 baseline entries and the new replacement,
+foreign/excess/repeated/competing, refund/recovery, live-return-fulfillment refusal,
+replacement fulfillment and receiving assertions. It then failed the required
+canceled-order claim rejection with Missing expected rejection. Native PostgreSQL
+independently shows status canceled with non-null canceled_at and a newly live refund
+claim on that same order. This is a native behavior failure, not fixture setup.
+
+Installed beginClaimOrderWorkflow selects id/status but calls throwIfIsCancelled,
+whose predicate reads canceled_at. That omitted field makes the intended guard
+ineffective. Preserve the required refusal; do not relabel this as a passing claim
+migration. New refusal diagnostics now always collect before/after counts/digests
+across all 25 selected native tables even when the workflow unexpectedly succeeds.
+Next: rerun the exact checkpoint with those observations, independent defect review,
+then select the supported dependency correction/application integration path before
+full compiled qualification and normal merge. No hosted CI, real financial effect,
+provider deployment or acceptance is implied. The broader handoff goal stays active.

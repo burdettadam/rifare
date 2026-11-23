@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import { ContainerRegistrationKeys, Modules, ProductStatus } from "@medusajs/framework/utils";
 import {
   addShippingMethodToCartWorkflow, beginClaimOrderWorkflow, beginReceiveReturnWorkflow, cancelBeginOrderClaimWorkflow,
@@ -70,10 +70,19 @@ export async function qualifyNativeClaims(container: any, fixture: {
   };
   const rejectUnchanged = async (name: string, invoke: () => Promise<unknown>, expression = /cancel|not found/i) => {
     const before = await effects();
-    await assert.rejects(invoke, (error: any) => {
-      assert.match(error?.message ?? "", expression); return true;
-    });
-    assert.deepEqual(await effects(), before, `${name}: rejected call changed native effects`);
+    let refusal: any, returned: any;
+    try { returned = await invoke(); } catch (error) { refusal = error; }
+    const after = await effects();
+    const fingerprints = (values: Record<string, unknown>) => Object.fromEntries(Object.entries(values).map(([table, value]) =>
+      [table, { count: (value as unknown[]).length, sha256: createHash("sha256").update(JSON.stringify(value)).digest("hex") }]));
+    console.log("RIFARE_NATIVE_CLAIM_REFUSAL_RESULT=" + JSON.stringify({ name,
+      refused: !!refusal, error_type: refusal?.type, error_message: refusal?.message,
+      returned_change: returned?.result ? { id: returned.result.id, claim_id: returned.result.claim_id,
+        order_id: returned.result.order_id, status: returned.result.status } : undefined,
+      before: fingerprints(before), after: fingerprints(after) }));
+    assert.ok(refusal, `${name}: expected native refusal`);
+    assert.match(refusal.message ?? "", expression);
+    assert.deepEqual(after, before, `${name}: rejected call changed native effects`);
     check(name, () => {});
   };
   const refundOriginal = await original();
