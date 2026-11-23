@@ -31,3 +31,29 @@ records and order bookkeeping remain independent after a provider-success/error.
 Next: implement the historical reader/first identity/privacy tuple with a failing
 native behavioral case, then actual PostgreSQL cases under ADR-0091, fixed compiled
 qualification/fault/restore and independent reviews. Keep all existing gates intact.
+
+## Baseline and first implementation checkpoint
+
+At862c6015d397acd1d83e88853beff24cf3ba7ad0 the disposable native baseline committed
+a genuine C10 association and actual System authorization. Existing pending-only
+recovery then failed with NATIVE_PAYMENT_ASSOCIATION_UNAVAILABLE, as required for
+its old profile. This is the demonstrated historical-read gap, not a C10 regression
+or passing C11 qualification. Raw native authorization IDs/error/result are retained.
+The initial baseline signing/privacy key was process-local and is not a claimed
+recoverable installation; later explicit recovery fixtures must preserve their own
+synthetic custody. Host C free was checked before the baseline build; one generated
+source output cache is root-owned for this task and retires after review/integration.
+
+The separate historical SQL projection, immutable first native payment ID/fingerprint/
+time, nullable migration/unique constraint, model and privacy export/minimization/
+refusal restoration are implemented. C10's canonical context is factored unchanged;
+its pending selector and method remain strict. Current ownership/privacy checks and
+a new post-COMMIT transaction govern historical reads, without fresh receipt or cart
+admission. Native tables are projected through bounded explicit columns in a
+serializable snapshot, not locked merely to imply financial freshness. New observations
+never call payment/provider workflows and always deny execution/settlement/no-effect
+inferences. TypeScript no-emit passes. No native C11 pass is claimed yet.
+
+Next: actual native stages and adversarial/concurrency/privacy/process recovery,
+then fixed compiled consumer, prior-component/schema upgrade/restore, faults and
+both final independent roles. Other provider/deployment workers remain untouched.

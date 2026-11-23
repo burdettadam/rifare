@@ -16,7 +16,7 @@ export default async function verifyPaymentOutcomes({ container }: ExecArgs) {
   const checks: string[] = [];
   const check = async (name: string, run: () => Promise<void>) => { await run(); checks.push(name); console.log("PAYMENT_OUTCOME_CHECK " + name); };
   const observe = (id: string, selected = context, signal?: AbortSignal): Promise<any> =>
-    (journal as any).recoverNativePaymentOutcome(id, selected, signal);
+    journal.recoverNativePaymentOutcome(id, selected, signal);
   const nativeSnapshot = async () => {
     const value: Record<string, unknown> = {};
     for (const table of ["cart", "cart_line_item", "payment_collection", "payment_session", "payment", "capture", "refund",
