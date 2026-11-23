@@ -200,3 +200,34 @@ restricted to the loopback origin. No hosted identity client or connected
 commerce provider was involved. The build, database and browser fixtures were
 removed. The authenticated evidence manifest SHA-256 is
 `8af4b0bafdd3bba8ddd004d1d4a20dd9df2b99cd3be332ffbf58a27a3c325796`.
+
+## Standalone local qualification assignment
+
+Resume COMMERCE-ENGINE-01 from integrated C6 development
+9abf7156b7a7e785c4189ff9e88845a0748b414e on
+feat/medusa-standalone-qualification. Root is sole writer and integration owner
+in the existing operation-journal checkout. No additional checkout or full build
+cache is allocated. The prior C6 implementation checkout is removed with its
+original ref retained, as recorded in merged PR4.
+
+Qualify the complete built backend away from the repository. The current Medusa
+compiler copies package.json unchanged but omits run.mjs. Its generated scripts
+therefore reference a missing launcher and source-only build tools and .ts paths.
+Demonstrate that actual command failure first, then emit the minimum runtime
+launcher and valid compiled scripts. Preserve the exact dependency lock, telemetry
+suppression, local profile refusal, identity/trust boundaries and protected-effect
+holds. No new database, auth provider or commerce workflow is assigned.
+
+Run a clean production dependency installation from the exact lock in an isolated
+runtime directory with hooks disabled. Then migrate disposable PostgreSQL and run
+native compiled checks and a real HTTP health/held-effect probe from that relocated
+runtime, with no repository modules or installed dependency fallback. Keep the
+complete runtime candidate, toolchain, lock hash and results bound together.
+Full Admin/browser release and hosted connected qualification remain separate.
+
+Authority/security and regression reviewers remain independent and must inspect
+the candidate and results. Root owns the temporary runtime/dependency directory
+and its retirement immediately after qualification and evidence preservation.
+Host free space before allocation is 56641687552 bytes. Reuse the inactive build
+cache and existing npm download cache where compatible. No hosted CI, external
+account change, provider deployment or protected commerce effect is authorized.
