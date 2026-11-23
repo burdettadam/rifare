@@ -9,6 +9,7 @@ import { createApiKeysWorkflow, createCartWorkflow, createCartCreditLinesWorkflo
   linkSalesChannelsToApiKeyWorkflow, updateCartPromotionsWorkflow, updateStoresWorkflow } from "@medusajs/medusa/core-flows";
 import { factsDigest, minorUnits, observationFields, observeCart, projectCart } from "../cart-context/observation";
 import { cartContextConfig } from "../config/local-commerce";
+import { readLockedCartFacts } from "../modules/operation-journal/cart-facts";
 
 /** Actual native PostgreSQL/HTTP fixtures. JWTs are synthetic credentials for
  * native persisted associations, not evidence of a new hosted provider journey.
@@ -257,6 +258,17 @@ export default async function verifyCartContext({ container }: ExecArgs) {
     assert.notEqual(afterCredit.value.observation.facts_digest, afterAddress.value.observation.facts_digest);
     check("native-credit-lines-participate-in-the-projection", () => {});
 
+    const postgres = container.resolve(ContainerRegistrationKeys.PG_CONNECTION);
+    await assert.rejects(readLockedCartFacts(postgres, aliceCart.id, merchant), /transaction is required/);
+    await assert.rejects(postgres.transaction(tx => readLockedCartFacts(tx, aliceCart.id, merchant)),
+      /Serializable isolation is required/);
+    const lockedFacts = await postgres.transaction(tx => readLockedCartFacts(tx, aliceCart.id, merchant),
+      { isolationLevel: "serializable" });
+    check("serializable-cart-facts-match-native-observation", () => {
+      assert.deepEqual(lockedFacts.facts, afterCredit.value.observation.facts);
+      assert.equal(lockedFacts.factsDigest, afterCredit.value.observation.facts_digest);
+    });
+
     await carts.updateCarts([{ id: aliceCart.id, completed_at: new Date() }]);
     assert.equal((await observe()).status, 403);
     await carts.updateCarts([{ id: aliceCart.id, completed_at: null }]);
@@ -286,7 +298,7 @@ export default async function verifyCartContext({ container }: ExecArgs) {
       assert.equal(projectCart({ ...persistedBefore, currency_code: "jpy", raw_total: { value: "35" } }, merchant).payable_total_minor, "35");
       assert.equal(projectCart({ ...persistedBefore, currency_code: "kwd" }, merchant).payable_total_minor, "35200");
       const fraction = structuredClone(persistedBefore); fraction.items[0].raw_unit_price = { value: "12.501" };
-      assert.equal(projectCart(fraction, merchant).items[0].unit_price, "12.501");
+      assert.equal(projectCart(fraction, merchant).items.find(item => item.id === fraction.items[0].id)?.unit_price, "12.501");
     });
     check("merchant-configuration-requires-both-server-values", () => {
       assert.equal(cartContextConfig({}), undefined);

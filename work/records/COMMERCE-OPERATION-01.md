@@ -110,3 +110,25 @@ allowed two rows with one UUID. All 17 native commerce groups, 7 config cases,
 6 external identity config cases and TypeScript also passed. The disposable
 schema fixtures were retired. Codex continues on the linked checkout with the
 transactional admission service, ownership checks and privacy lifecycle.
+
+## Transactional cart facts checkpoint
+
+On November 22, 2026 (America/Denver), the journal cart reader used the
+existing Medusa PostgreSQL connection and required a serializable transaction.
+It locked live native rows in stable order, bounded related-row reads, and
+used the pinned Medusa totals helper and existing Rifare cart projection.
+
+The disposable PostgreSQL 16 run of `npm run test:cart-context` passed all 22
+retained groups and the new transaction group. The new group rejects use
+outside a transaction or at the default isolation level. Within a serializable
+transaction it compares the complete facts and digest with the native HTTP
+observation after an item update, an address change and a credit. The fixture
+also contains an item promotion, taxes and shipping. The decimal assertion now
+follows the changed row ID through canonical sorting. TypeScript passed.
+
+The existing observation profile rejects persisted shipping adjustments that
+lack its required tax-inclusive flag. Medusa 2.23.0 has no such column on
+shipping adjustments. The transaction reader preserves that refusal. The
+admission service still needs native association checks, the journal write in
+the same transaction, and concurrent and privacy lifecycle verification before
+handling personal data. Codex continues on the linked checkout.
