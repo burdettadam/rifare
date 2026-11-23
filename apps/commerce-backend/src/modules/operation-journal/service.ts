@@ -9,6 +9,7 @@ import { parseOriginalCommand, requireCommandCartMatch } from "./command";
 import { nativeAuthorityStart } from "./authority-start";
 import { authorityAdapters, openNativeAuthoritySession } from "./authority-sender";
 import { createPinnedRequestVerifier, PinnedRequestVerifier } from "./request-verifier";
+import { openVerifiedAuthoritySession } from "./request-session";
 import { configure } from "safe-stable-stringify";
 import {
   eraseJournalSubject, exportJournalSubject, journalSubjectIsSuppressed, minimizedOperationFields,
@@ -46,6 +47,7 @@ type JournalRow = {
 const conflict = () => new MedusaError(MedusaError.Types.CONFLICT, "Original commerce command unavailable");
 const verifyRequest = PinnedRequestVerifier.prototype.verify;
 const describeRequest = PinnedRequestVerifier.prototype.describe;
+const signalAborted = Object.getOwnPropertyDescriptor(AbortSignal.prototype, "aborted")!.get!;
 
 export default class OperationJournalService {
   private readonly postgres: Postgres;
@@ -69,11 +71,18 @@ export default class OperationJournalService {
     return createPinnedRequestVerifier(configuration);
   }
 
+  async openVerifiedAuthoritySession(input: Uint8Array, descriptor: Uint8Array, context: AdmissionContext,
+    transport: unknown, verifier: unknown) {
+    return openVerifiedAuthoritySession(this, input, descriptor, context, transport, verifier);
+  }
+
   /** Signature verification records evidence only. No approval or effect occurs. */
-  async verifyAuthorityRequest(commandId: string, input: Uint8Array, context: AdmissionContext, verifier: unknown) {
+  async verifyAuthorityRequest(commandId: string, input: Uint8Array, context: AdmissionContext, verifier: unknown, signal?: AbortSignal) {
     if (!(verifier instanceof PinnedRequestVerifier) || !(input instanceof Uint8Array) ||
         !input.byteLength || input.byteLength > 65536) throw conflict();
     const detached = Buffer.from(input);
+    const active = () => { if (signal && signalAborted.call(signal)) throw conflict(); };
+    active();
     const result = await this.withCurrentOriginal(commandId, context, async (tx, row, configuration) => {
       if (row.state !== "awaiting_authority" || !row.start_command_bytes || !row.start_correlation ||
           !row.start_response_bytes || !row.start_response_digest) throw conflict();
@@ -96,10 +105,12 @@ export default class OperationJournalService {
       const before = await requestClock(tx);
       const handle = await verifyRequest.call(verifier, detached, binding, before.getTime());
       const verified = describeRequest.call(verifier, handle);
+      active();
       requireCommandCartMatch(originalCommand, await readLockedCartFacts(tx, row.cart_id, configuration.merchant, configuration.verifiedContext));
       const observed = await requestClock(tx);
       if (observed.getTime() < verified.observed_at || observed.getTime() >= verified.expires_at * 1000) throw conflict();
       describeRequest.call(verifier, handle);
+      active();
       if (row.request_bytes) {
         if (row.request_bytes !== verified.compact_jws || row.request_digest !== verified.digest ||
             row.request_context_digest !== verified.verification_context_digest || row.request_nonce !== verified.nonce ||
@@ -116,15 +127,18 @@ export default class OperationJournalService {
       if (!saved) throw conflict();
       // Closing trust during the awaited write rolls the entire tuple back.
       describeRequest.call(verifier, handle);
+      active();
       return { verification: handle, request_digest: verified.digest as string, first_observed_at: observed,
         request_expires_at: expires };
     });
     describeRequest.call(verifier, result.verification);
+    active();
     await this.withCurrentOriginal(commandId, context, async (tx, row) => {
       if (row.request_digest !== result.request_digest || row.request_observed_at?.getTime() !== result.first_observed_at.getTime() ||
           (await requestClock(tx)).getTime() >= result.request_expires_at.getTime()) throw conflict();
     });
     describeRequest.call(verifier, result.verification);
+    active();
     return Object.freeze(result);
   }
 
