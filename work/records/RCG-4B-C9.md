@@ -1,8 +1,8 @@
 # RCG-4B-C9 - Native proof association and original finalization
 
-State: codec/transport reviewed; native continuation implemented with exploratory
-PostgreSQL checks passing. Full C9 compiled/session/restore qualification and
-renewed independent review remain pending.
+State: bounded local C9 implementation qualified and independently cleared;
+maintainer integration and owned runtime retirement pending. Connected provider
+qualification and commerce execution remain separate open gates.
 Base: `acab80a787b5e625e16527f22463a86deaa718e0` (merged C8 PR7).
 Writer/integration owner: root, canonical primary `rifare` checkout.
 Branch: `feat/medusa-proof-finalization`.
@@ -236,3 +236,58 @@ Host C free space before corrected reuse was 64,354,422,784 bytes. Prior task DB
 stopped normally, primary remains root-owned active, one primary/zero linked.
 Next: fix corrected source, reuse that installed runtime for full exact qualification,
 run populated C8-component upgrade/replay and renew both roles before integration.
+
+## Fixed native qualification and final independent dispositions
+
+Actual source candidate: `6197fb3281cc49901a7f8451684f1bb8942194ab`.
+Owned standalone runtime uses its own verified unchanged-lock 937-package production
+installation, with no source dependency fallback for the compiled native consumer.
+The synthetic TLS peer uses a separately recorded conservative external fixture graph.
+Compiled runs pass 21 association codec groups, 38 receipt signature cases, 19 native
+continuation groups, 10 actual mTLS session groups, retained 13 C8/11 C7 groups and
+schema/privacy checks. Root reran the maintained 51 wire/catalog and 47 retained
+C1/C5 cases on the fixed source. Backend noEmit and four intake attacks pass.
+
+Actual whole-PostgreSQL dump/restore proves current erasure and uninstall suppression
+minimize all continuation/request/receipt personal fields while retaining refusal
+identities. A populated upgrade uses the exact protected `acab80a` C8 journal service
+component compiled with TS5.9.3, pauses both C9 migrations, seeds authenticated C7/C8
+history and 25 commerce checks, then restores the current component/migrations.
+All fourteen entire table digests/counts survive migration and replay; all sixteen
+new fields are nullable/null on legacy rows. This is a component/schema qualification,
+not a full prior-application rebuild or customer/production migration.
+
+Compiled native digest fault reaches the unchanged wrong-digest rejection after
+four passing controls. Its service is restored byte-exact, SHA256
+242f35fddb39ed558fb15fda7aa3bc3248a869c61a41c381943340d8f8f096ee.
+All task DB containers stopped. Raw logs/dump/receipts are under ignored
+`evidence/operation-journal/6197fb3281cc49901a7f8451684f1bb8942194ab/`.
+
+The input/output receipt SHA256 is
+`d6b53cd9cc1b17372ff6d220613e7b673e17e3118344ea2f1fcf2fa2c1993572`.
+It enumerates 319 source inputs and 86 actual compiled outputs. Its 247 conservative
+external fixture inputs include directory members. Every listed source matches
+fixed Git/disk; every output matches the generated build. Installed lock remains
+607396fd2f643cf25348b126859d6de0a83028073ed6d9625e58fd3fccc14a39.
+The first collector stopped before writing a receipt on a directory-valued fixture
+input; the corrected collector enumerates those tracked members and ran after the
+upgrade restored the runtime. No failed collection is treated as qualification.
+
+Both trusted independent sessions cleared bounded local integration at `6197fb3`:
+`/root/c7_authority_review` and `/root/rifare_regression_review`. Both independently
+recomputed all319 source/all86 output hashes and installed lock/fixture membership;
+authority also directly executed isolated 21 codec/38 receipt checks. Both inspected
+native/session, restore, upgrade and fault logs and confirmed the two prior blockers
+resolved. These are actual independent agent-role dispositions, not fabricated
+GitHub approving reviews. Final acceptance/integration remains with the maintainer.
+
+Final full distribution review caught nine new tracked files absent from the exact
+inventory; append them to the existing first-party component and rerun that gate.
+This inventory/record completion changes no qualified application/shared/fixture
+input. Keep the source candidate and resulting published checkpoint distinct.
+C9 remains an inert internal continuation: no managed-machine custody, live provider,
+live status, merchant execution, payment equality or final-effect qualification is
+inferred. The broad goal remains active. Next: normal authorized PR/merge after
+metadata checks, then retire the inactive owned runtime/generated output and retain
+source/cache/refs/raw evidence. One primary/zero linked Rifare checkouts stay active
+with root; no additional checkout is created or awaiting cleanup.
