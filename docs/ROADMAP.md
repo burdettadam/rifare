@@ -1,16 +1,84 @@
 # What remains to build
 
+## Current owner-selected priority
+
+Replace commodity custom code with the [Medusa commerce application](COMMERCE-ENGINE.md),
+under [ADR-0081](decisions/0081-upstream-commerce-engine.md). Catalog, prices,
+carts, stock, orders and ordinary post-purchase behavior should use upstream
+workflows. The target now has a real local PostgreSQL application and built
+Medusa Admin; existing feature scenarios and the identity bridge still need migration.
+
+The next integration is the [external application identity contract](IDENTITY-APPLICATION-CONTRACT.md)
+and a Medusa cart/approval/original-operation bridge. Map returns, exchanges,
+order edits and loyalty against upstream capabilities before adding custom code.
+The older M20 continuation and domain roadmap below are subordinate to this reuse
+decision, not instructions to build parallel commodity engines.
+
 Rifare already has substantial local commerce code. The [architecture](ARCHITECTURE.md)
 maps that foundation; the [product overview](../README.md) describes the target
 experience. This roadmap covers unfinished work.
 
 ## Next product increments
 
+The delegated-checkout lane has a [customer review page](DELEGATED-CHECKOUT-REVIEW.md)
+over the existing original preparation recovery contract, extended by
+[RCG-5D receipt evidence review](DELEGATED-CHECKOUT-RECEIPT-REVIEW.md) through the
+unchanged native API. Its 33 controller/native HTTP and fourteen actual browser
+cases passed on `40fc973`; both independent reviews found no scoped blocker.
+The [work record](../work/records/RCG-5D.md) binds the closing documentation to
+that tested source. This bounded local increment is complete.
+
+The [RCG-4B-C1 command consumer](DELEGATED-COMMAND-CONSUMER.md) is also complete:
+strict P03 request/result binding, original recovery and receipt-byte correlation,
+without transport or execution. All 42 focused cases and two separate original
+Protocol-vector checks pass; both independent reviews found no scoped blocker.
+The [RCG-4B-C2 journal](DELEGATED-COMMAND-CLAIMS.md) adds durable original
+command/result retention and typed privacy/restore handling. Its bounded scope
+is complete with 112 distinct passing cases and both independent reviews;
+[the work record](../work/records/RCG-4B-C2.md) identifies actual executions and
+unchanged-input equivalence after the catalog correction.
+The completed [RCG-4B-C3 native START source](DELEGATED-CHECKOUT-STARTS.md) composes
+actual current checkout provenance with the existing journal transaction and
+rejects fresh use after the original preview customer's held erasure. Its 115
+distinct cases pass with both independent reviews complete: 62 ran on the final
+candidate and 53 retain verified unchanged inputs. Both assigned behavioral
+faults are detected. [The work record](../work/records/RCG-4B-C3.md) preserves
+actual execution identities, corrections and publication equivalence.
+The additive [RCG-4B-C4 local command application](DELEGATED-CHECKOUT-COMMANDS.md)
+connects those owners to separate customer START/status/recovery/cancel routes
+and an independent Python caller. It also corrects four explicitly bounded
+native owner-composition boundaries. Its bounded gate is complete: all 200 cases
+passed freshly on `ecc34e5`, both independent reviews found no scoped blocker,
+and both assigned faults failed at their intended behavioral assertions. Public
+`6000723` retains the exact reviewed implementation tree. See
+[C4's record](../work/records/RCG-4B-C4.md) for actual executions and closing
+documentation equivalence.
+The completed [C5 internal command transport](DELEGATED-USE-INTERNAL-CLIENT.md)
+adds atomic native START admission and explicit original recovery through the
+documented internal mTLS profile. All 158 focused cases passed freshly on
+`3ecb91e`, both independent reviews found no scoped blocker and both assigned
+faults produced the required actual peer-count failures. Published `9ecb34e`
+retains the exact reviewed tree; [C5's record](../work/records/RCG-4B-C5.md)
+binds the evidence and documentation-only closure. Every admitted original,
+including a failure before HTTP transmission, remains recovery-only.
+
+Closing source inspection found provider draft PR1994 at `3c05227`, adding an
+optional public managed-machine profile and a separate Rust client. Commands,
+challenge request/proof and original receipt recovery use the same mandatory
+mTLS listener when explicitly enabled. The internal contract remains and
+Protocol draft PR38 stays `6126da7`. No provider test or public route ran here.
+Next, assign public commands and original-bound challenge/request handoff through
+the existing native lifecycle, then independent signed request verification,
+proof/FINALIZE and independently sourced current receipt context. General
+wallet/Gateway selection, provisioned endpoint and certificate lifecycle
+qualification, full isolated RCG-5, connected RCG-6, target application integration and
+formal acceptance remain open.
+
 | Area | Remaining outcome | Work entry |
 | --- | --- | --- |
 | Drop-off continuity | Connect accepted original units to consolidation, movement and receiving; finish accurate shopper instructions, accessibility and outage behavior. | [M20-G04/G05](../planning/milestones/M20.md) |
 | Loyalty correctness | Add attributable award/reversal observations, supported multi-unit handling, bounded source retrieval, safe administrative hold resolution and remaining-balance reconciliation. | [Loyalty follow-ups](../planning/milestones/M19.md) |
-| Target application | Implement and exercise the PostgreSQL/React application, including migrations, isolated resources and an actual served-browser journey. The existing SQLite/plain-browser diagnostic environment is reusable. | [Target-stack follow-up](../planning/milestones/M00.md) |
+| Target application | Continue the Medusa/PostgreSQL application: connect identity and protected commerce, qualify isolation/durable infrastructure and a served-browser journey, then migrate retained workflows. | [Engine migration](COMMERCE-ENGINE.md) |
 | Remote callers | Recover or implement sender-bound remote access with issuer validation, sender proof and shared replay protection. Existing local clients do not supply this trust profile. | [M15](../planning/milestones/M15.md) |
 | Managed execution | Recover or implement managed execution and its isolation/operational boundaries. The reported later source is not present in this history. | [M16](../planning/milestones/M16.md) |
 | Actual image assistance | Enable an authorized actual image path and measure it using a frozen independently labeled cohort. Reuse landed intake, exact access, privacy and image suppression. | [Image follow-up](../planning/milestones/M17.md) |
@@ -18,7 +86,8 @@ experience. This roadmap covers unfinished work.
 | Individualized campaigns | Extend existing campaign, consent, approval and delivery controls with the planned individualization. | [M22](../planning/milestones/M22.md) |
 | Browser decision assistance | Build and measure the browser model loader, separate client-observation boundary, compact backend and scoped image path. | [M23](../planning/milestones/M23.md) · [M24](../planning/milestones/M24.md) · [M25](../planning/milestones/M25.md) |
 
-M20-G04 is the next recorded commerce continuation. Other lanes need a deliberate
+M20-G04 remains the older drop-off continuation. The owner-selected Medusa and
+ElevenID integration above takes priority; these remaining lanes need a deliberate
 assignment based on the intended release and available integrations. Milestone
 numbers are identifiers, not a promise that every earlier gate is accepted.
 

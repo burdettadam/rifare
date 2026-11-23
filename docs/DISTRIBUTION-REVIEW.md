@@ -79,10 +79,37 @@ The previous accepted governance and independent review still govern their chang
 
 ## Development dependencies and release duties
 
+[ADR-0081](decisions/0081-upstream-commerce-engine.md) separately permits the exact
+Medusa application package/lock under `apps/commerce-backend`. The source checker
+validates their hashes, registry integrity and bundled-parent provenance, with
+installation hooks disabled. Its output reports this graph separately from the
+root diagnostic and JOSE profiles. The [engine guide](COMMERCE-ENGINE.md) records
+the mixed core/Enterprise license boundary, explicit Ajv security override and
+distribution obligations. An exact source/development intake is not approval to
+redistribute every installed material or enable a licensed Enterprise feature.
+
 The root npm package remains dependency-free. The optional formatter in
 `tools/formatting/` has its own pinned package/lock, with Prettier as the sole
 development dependency. Its installed package, license, and bundled notices stay
 outside this source archive. Changing either manifest requires another review.
+The optional runtime workspace
+[`packages/adapters/delegated-receipts/`](../packages/adapters/delegated-receipts/README.md)
+separately pins `jose` 6.2.18 under
+[ADR-0068](decisions/0068-native-receipt-verification.md). Its two exact manifests,
+one-package graph, official archive integrity and license metadata have their
+own narrow source/development intake. No installation hooks, additional packages
+or unreviewed manifests are accepted. The installed library and its original MIT
+notice remain outside the source archive; binary/container release review is
+unchanged.
+
+The legacy `observed_dependency_inputs` field continues to describe the empty
+root command-profile dependency graph, with that scope now named explicitly.
+`root_demo_dependencies_present` remains false. The reviewed optional runtime
+inputs and package are reported separately, and
+`application_dependencies_present` is true when that workspace is present.
+These source observations do not claim that the package is installed or a
+provider is configured, and do not qualify a shipping artifact.
+
 The development-preview workflow references pinned checkout/setup-node Actions;
 they are not copied into Rifare. The checker accepts only these reviewed paths
 and exact references in addition to the original manual workflow.

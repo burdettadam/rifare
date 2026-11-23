@@ -12,6 +12,13 @@ Start with what happens after checkout. Connect it to the warehouse, the next co
 
 > **Development preview.** The capabilities below describe Rifare's target product. Runnable local implementations are available today; connected services and production qualification are still in development. [See what runs now →](docs/PROJECT-STATUS.md)
 
+**Commerce implementation direction:** Rifare now uses a pinned Medusa/PostgreSQL
+application for the target commerce engine, with upstream catalog, carts, orders,
+inventory and standard post-purchase workflows. ElevenID remains the identity and
+trust supplier. [Run the new local application](docs/COMMERCE-ENGINE.md) ·
+[Identity integration boundary](docs/IDENTITY-APPLICATION-CONTRACT.md).
+The synthetic demonstrations below remain available as retained diagnostics.
+
 ## Watch a refund recover from a lost response
 
 The refund source accepts the request, but its response disappears. Rifare keeps
@@ -160,13 +167,13 @@ For an interactive support and shipment-tracking view:
 npm run demo:support -- --serve
 ```
 
-Open the printed URL and follow the [local session instructions](docs/TRY-RIFARE.md#open-the-support-and-tracking-views). The guide also covers policy customization, recovery demonstrations, and the basic smoke environment. `npm run dev` intentionally exits until the target application stack is qualified; use the explicit demo commands above.
+Open the printed URL and follow the [local session instructions](docs/TRY-RIFARE.md#open-the-support-and-tracking-views). The guide also covers policy customization, recovery demonstrations, and the basic smoke environment. `npm run dev` separately launches the installed and configured [Medusa application](docs/COMMERCE-ENGINE.md); missing prerequisites fail without substituting a demo.
 
 ## What runs now, and what comes next
 
-The repository contains **TypeScript/Node.js and SQLite development implementations**, with the current commerce checkpoint at **M20-G03: item-level drop-off handoffs**. Local work covers returns, order editing, support, shipping, inventory, customer journeys, loyalty, and drop-off foundations.
+The selected commerce application uses **Medusa 2.23.0 and PostgreSQL**. Its upstream Admin builds, and 17 native verification groups exercise real database workflows and local APIs. The retained **TypeScript/Node.js and SQLite diagnostic implementations** cover returns, order editing, support, shipping, inventory, customer journeys, loyalty, and drop-off foundations, including M20-G03 item-level handoffs.
 
-The next recorded commerce increment is consolidation and custody continuity. Connected-provider deployments, physical-service qualification, the target React/PostgreSQL application, and production release remain open. Local progress and product qualification are tracked separately in the [current status guide](docs/PROJECT-STATUS.md).
+The next integration connects the existing ElevenID identity foundation and Rifare approvals to current Medusa cart/order data, then migrates retained workflows to upstream behavior. Public protected commerce remains unavailable until that bridge is qualified. Connected providers, physical-service qualification and production release remain open. The [current status guide](docs/PROJECT-STATUS.md) separates this local implementation from product qualification.
 
 ## Explore the project
 

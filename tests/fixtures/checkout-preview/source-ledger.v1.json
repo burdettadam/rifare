@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "origin": "independent_synthetic_source_ledger_not_candidate_preview",
+  "source": {
+    "merchant": {
+      "tenant_id": "tenant_demo",
+      "store_id": "store_demo",
+      "merchant_id": "merchant_demo",
+      "resource_id": "order_demo",
+      "customer_id": "customer_demo"
+    },
+    "cart": {
+      "cart_id": "cart_demo",
+      "operation_id": "cart_op_demo",
+      "status": "active",
+      "state": "committed",
+      "native_id": "cart_native_demo"
+    },
+    "items": [
+      {
+        "variant_id": "desk_lamp_basic",
+        "product_id": "desk_lamp",
+        "quantity": 1,
+        "unit_minor": "6800",
+        "tax_minor": "0",
+        "total_minor": "6800",
+        "currency": "USD",
+        "source_revision": "catalog_rev_1",
+        "terms": {
+          "id": "standard",
+          "revision": 1,
+          "text": "No promotion."
+        }
+      }
+    ],
+    "shipping_quote": {
+      "quote_id": "ship_demo_zero",
+      "source_identity": "shipping_fixture_v1",
+      "source_revision": "shipping_rev_1",
+      "amount_minor": "0",
+      "currency": "USD",
+      "explicit_zero": true
+    },
+    "fee_quote": {
+      "quote_id": "fee_demo_zero",
+      "source_identity": "fee_fixture_v1",
+      "source_revision": "fee_rev_1",
+      "amount_minor": "0",
+      "currency": "USD",
+      "explicit_zero": true
+    }
+  },
+  "expected_source_evidence": {
+    "cart_preview_digest": "56498ca9542e690dd87cdcec393f0586f7f27ba4770fb1309d467adcf72dcc1f",
+    "pricing_source_identity": "pricing_fixture_v1",
+    "pricing_source_revision": "eed47ad16d5d2bec1013f7ad9df7117fbb36b2a83bb13904c5c8f473a39ac944",
+    "terms_digest": "d67c20a99abcbeb105ff92f82ff3ca4ad3bd7c594f33dec0ec72306c3affff76",
+    "shipping_quote": {
+      "quote_id": "ship_demo_zero",
+      "source_identity": "shipping_fixture_v1",
+      "source_revision": "shipping_rev_1",
+      "amount_minor": "0",
+      "currency": "USD",
+      "explicit_zero": true
+    },
+    "fee_quote": {
+      "quote_id": "fee_demo_zero",
+      "source_identity": "fee_fixture_v1",
+      "source_revision": "fee_rev_1",
+      "amount_minor": "0",
+      "currency": "USD",
+      "explicit_zero": true
+    },
+    "item_facts": {
+      "desk_lamp_basic": {
+        "product_id": "desk_lamp",
+        "quantity": 1,
+        "unit_minor": "6800",
+        "tax_minor": "0",
+        "line_total_minor": "6800",
+        "currency": "USD",
+        "source_revision": "catalog_rev_1",
+        "terms_digest": "53f9f3b448e214ac90836e0744159b9bdcdb39da03b15df48dd22c790aa8b308"
+      }
+    }
+  },
+  "expected_preview": {
+    "total_payable_minor": "6800",
+    "currency": "USD",
+    "qualification": "synthetic_only",
+    "created_at": 1000,
+    "expires_at": 61000,
+    "preview_id": "preview_demo_1",
+    "preview_digest": "c0c5b8d6ecd0202500156e0f05b4431524428e16a4b8e0f19daf70ff16372281"
+  },
+  "notes": [
+    "This expected ledger is authored separately from the checkout implementation, then frozen in Git.",
+    "Do not regenerate ledger expectations from the preview under test.",
+    "item_facts are fixed from the independent source lines, including product, quantity, all priced amounts, currency, revision and independently computed source-terms digests; variant membership is exact."
+  ]
+}

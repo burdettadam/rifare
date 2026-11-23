@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "provenance": "Independently authored Rifare synthetic data. Python standard-library json.dumps with sorted fixed ASCII schema keys, compact separators and safe positive integer revisions supplied canonical bytes; hashlib.sha256 supplied digest expectations. No production JavaScript canonicalizer, private Protocol schema/reference source or upstream fixture bytes were used to compute these values. This is the selected narrow contract subset, not arbitrary RFC 8785 qualification.",
+  "qualification": "synthetic_contract_oracle_only",
+  "protocol_candidate": "6126da7619e057be2ff58dd38a5d50f49891d1b3",
+  "commands": [
+    {
+      "name": "start_use",
+      "request": {
+        "profile": "urn:marty:delegation-command:v1",
+        "command": "START_USE",
+        "command_id": "11111111-2222-4333-8444-555555555555",
+        "grant": {
+          "id": "8ee653e5-8a8a-47ed-b3d0-6953cb907ddc",
+          "revision": 7,
+          "terms_digest": "sha256:094f145c7bfff7d8489b99d305b7bed1fd0cd69b2a31bd4a9ee46744475cf071"
+        },
+        "operation": {
+          "action": "urn:rifare:purchase:review:v1",
+          "resource_id": "urn:rifare:order:synthetic-42",
+          "audience": "https://checkout.example.invalid/tenant/Blue%2FNorth",
+          "request_profile": "urn:rifare:checkout-preview:v1",
+          "request_digest": "sha256:309be6aee436b7e7ebf73566cacd5a3f60a6c519eb4c848c021780a57a924e06"
+        }
+      },
+      "canonical_json": "{\"command\":\"START_USE\",\"command_id\":\"11111111-2222-4333-8444-555555555555\",\"grant\":{\"id\":\"8ee653e5-8a8a-47ed-b3d0-6953cb907ddc\",\"revision\":7,\"terms_digest\":\"sha256:094f145c7bfff7d8489b99d305b7bed1fd0cd69b2a31bd4a9ee46744475cf071\"},\"operation\":{\"action\":\"urn:rifare:purchase:review:v1\",\"audience\":\"https://checkout.example.invalid/tenant/Blue%2FNorth\",\"request_digest\":\"sha256:309be6aee436b7e7ebf73566cacd5a3f60a6c519eb4c848c021780a57a924e06\",\"request_profile\":\"urn:rifare:checkout-preview:v1\",\"resource_id\":\"urn:rifare:order:synthetic-42\"},\"profile\":\"urn:marty:delegation-command:v1\"}",
+      "command_digest": "sha256:11d2a3669f46bb4b6761bfbb93cb8a861f6c985041d6f04d6e308c62392f9fac",
+      "recovery_request": {
+        "profile": "urn:marty:delegation-command:v1",
+        "command": "RECOVER_RESULT",
+        "original_command_id": "11111111-2222-4333-8444-555555555555",
+        "expected_command_digest": "sha256:11d2a3669f46bb4b6761bfbb93cb8a861f6c985041d6f04d6e308c62392f9fac"
+      },
+      "recovery_canonical_json": "{\"command\":\"RECOVER_RESULT\",\"expected_command_digest\":\"sha256:11d2a3669f46bb4b6761bfbb93cb8a861f6c985041d6f04d6e308c62392f9fac\",\"original_command_id\":\"11111111-2222-4333-8444-555555555555\",\"profile\":\"urn:marty:delegation-command:v1\"}"
+    },
+    {
+      "name": "finalize_use",
+      "request": {
+        "profile": "urn:marty:delegation-command:v1",
+        "command": "FINALIZE_USE",
+        "command_id": "66666666-7777-4888-9999-aaaaaaaaaaaa",
+        "challenge_id": "bbbbbbbb-cccc-4ddd-8eee-ffffffffffff",
+        "proof_submission_id": "bbbbbbbb-2222-4333-8444-111111111111"
+      },
+      "canonical_json": "{\"challenge_id\":\"bbbbbbbb-cccc-4ddd-8eee-ffffffffffff\",\"command\":\"FINALIZE_USE\",\"command_id\":\"66666666-7777-4888-9999-aaaaaaaaaaaa\",\"profile\":\"urn:marty:delegation-command:v1\",\"proof_submission_id\":\"bbbbbbbb-2222-4333-8444-111111111111\"}",
+      "command_digest": "sha256:d3fb8ff78b483310428965264ef042268424d17185aaff99abf9755fbca47706",
+      "recovery_request": {
+        "profile": "urn:marty:delegation-command:v1",
+        "command": "RECOVER_RESULT",
+        "original_command_id": "66666666-7777-4888-9999-aaaaaaaaaaaa",
+        "expected_command_digest": "sha256:d3fb8ff78b483310428965264ef042268424d17185aaff99abf9755fbca47706"
+      },
+      "recovery_canonical_json": "{\"command\":\"RECOVER_RESULT\",\"expected_command_digest\":\"sha256:d3fb8ff78b483310428965264ef042268424d17185aaff99abf9755fbca47706\",\"original_command_id\":\"66666666-7777-4888-9999-aaaaaaaaaaaa\",\"profile\":\"urn:marty:delegation-command:v1\"}"
+    }
+  ],
+  "challenge_response": {
+    "profile": "urn:marty:delegation-command-response:v1",
+    "original_command_id": "11111111-2222-4333-8444-555555555555",
+    "command_digest": "sha256:11d2a3669f46bb4b6761bfbb93cb8a861f6c985041d6f04d6e308c62392f9fac",
+    "recovered": false,
+    "result": {
+      "kind": "CHALLENGE",
+      "challenge_id": "bbbbbbbb-cccc-4ddd-8eee-ffffffffffff",
+      "grant": {
+        "id": "8ee653e5-8a8a-47ed-b3d0-6953cb907ddc",
+        "revision": 7,
+        "terms_digest": "sha256:094f145c7bfff7d8489b99d305b7bed1fd0cd69b2a31bd4a9ee46744475cf071"
+      },
+      "operation": {
+        "action": "urn:rifare:purchase:review:v1",
+        "resource_id": "urn:rifare:order:synthetic-42",
+        "audience": "https://checkout.example.invalid/tenant/Blue%2FNorth",
+        "request_profile": "urn:rifare:checkout-preview:v1",
+        "request_digest": "sha256:309be6aee436b7e7ebf73566cacd5a3f60a6c519eb4c848c021780a57a924e06"
+      },
+      "created_at": "2026-01-02T03:04:05.123456789Z",
+      "expires_at": "2026-01-02T03:05:00Z"
+    }
+  },
+  "final_response": {
+    "profile": "urn:marty:delegation-command-response:v1",
+    "original_command_id": "66666666-7777-4888-9999-aaaaaaaaaaaa",
+    "command_digest": "sha256:d3fb8ff78b483310428965264ef042268424d17185aaff99abf9755fbca47706",
+    "recovered": false,
+    "result": {
+      "kind": "FINAL_USE",
+      "challenge_id": "bbbbbbbb-cccc-4ddd-8eee-ffffffffffff",
+      "decision": "PERMIT",
+      "receipt_ref": "urn:rifare:synthetic:receipt:original-42",
+      "receipt_digest": "sha256:edab7a653133b7dea4f800598df5e91a5a3c91e79e6134a2f6216aec7791241f",
+      "recorded_at": "2026-01-02T03:04:15.1Z",
+      "authorization_expires_at": "2026-01-02T03:04:45.100000000Z",
+      "semantics": "EVIDENCE_ONLY"
+    }
+  },
+  "receipt_byte_correlation": {
+    "compact_jws_shape_only": "aGVhZGVy.cGF5bG9hZA.c2lnbmF0dXJl",
+    "sha256": "sha256:edab7a653133b7dea4f800598df5e91a5a3c91e79e6134a2f6216aec7791241f",
+    "signature_verified": false,
+    "warning": "Synthetic shape-only bytes, not a signed or verified receipt. Actual cryptographic integration uses ephemeral native test signatures."
+  }
+}

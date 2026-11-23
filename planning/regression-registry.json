@@ -1982,6 +1982,115 @@
       "contract_files": [
         "packages/commerce/contracts/dropoff-handoffs.v1.json"
       ]
+    },
+    {
+      "id": "FEATURE-RCG-2-NATIVE-CHECKOUT",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/checkout-preview.v1.json",
+        "tests/fixtures/checkout-preview/source-ledger.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-RCG-3-NATIVE-RECEIPTS",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/delegated-checkout-receipts.v1.json",
+        "tests/fixtures/delegated-receipts/provider-source.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-RCG-4A-NATIVE-INTENTS",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/delegated-checkout-intents.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-RCG-4A-HTTP",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/delegated-checkout-api.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-RCG-5A",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "docs/DELEGATED-CHECKOUT-LIFECYCLE.md"
+      ]
+    },
+    {
+      "id": "FEATURE-RCG-5B-RECOVERY",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/delegated-checkout-recovery.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-RCG-5C-CUSTOMER-REVIEW",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/delegated-checkout-api.v1.json",
+        "packages/commerce/contracts/delegated-checkout-recovery.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-RCG-5D-RECEIPT-REVIEW",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/delegated-checkout-api.v1.json",
+        "packages/commerce/contracts/delegated-checkout-intents.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-RCG-4B-C1-COMMAND-CONSUMER",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/adapters/delegated-commands/consumer-contract.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/delegated-command-claims.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-RCG-4B-C3-NATIVE-START",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/delegated-checkout-starts.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "packages/commerce/contracts/delegated-checkout-commands.v1.json"
+      ]
+    },
+    {
+      "id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS",
+      "enabled": true,
+      "qualification": "proposed_not_accepted",
+      "contract_files": [
+        "docs/decisions/0079-internal-delegated-command-transport.md",
+        "docs/DELEGATED-USE-INTERNAL-CLIENT.md"
+      ]
     }
   ],
   "tests": [
@@ -25063,6 +25172,3681 @@
       "runner_case_id": "test_plan_tools.PlanStructureTests.test_followup_group_cannot_hide_present_integration_gate",
       "source": "tests/test_plan_tools.py",
       "capability_id": "FEATURE-BOOTSTRAP"
+    },
+    {
+      "id": "runtime:RCG2-COMPOSER-FIXED-SOURCE-VECTOR",
+      "suite": "runtime",
+      "runner_case_id": "RCG2-COMPOSER-FIXED-SOURCE-VECTOR",
+      "source": "tests/development/checkout-preview.test.mts",
+      "capability_id": "FEATURE-RCG-2-NATIVE-CHECKOUT"
+    },
+    {
+      "id": "runtime:RCG2-COMPOSER-CAPTURED-LIFETIME",
+      "suite": "runtime",
+      "runner_case_id": "RCG2-COMPOSER-CAPTURED-LIFETIME",
+      "source": "tests/development/checkout-preview.test.mts",
+      "capability_id": "FEATURE-RCG-2-NATIVE-CHECKOUT"
+    },
+    {
+      "id": "runtime:RCG2-COMPOSER-CAPTURED-DEPENDENCIES",
+      "suite": "runtime",
+      "runner_case_id": "RCG2-COMPOSER-CAPTURED-DEPENDENCIES",
+      "source": "tests/development/checkout-preview.test.mts",
+      "capability_id": "FEATURE-RCG-2-NATIVE-CHECKOUT"
+    },
+    {
+      "id": "runtime:RCG2-COMPOSER-CLOCK-REWIND-AT-COMPLETION",
+      "suite": "runtime",
+      "runner_case_id": "RCG2-COMPOSER-CLOCK-REWIND-AT-COMPLETION",
+      "source": "tests/development/checkout-preview.test.mts",
+      "capability_id": "FEATURE-RCG-2-NATIVE-CHECKOUT"
+    },
+    {
+      "id": "runtime:RCG2-COMPOSER-FRACTIONAL-COMPLETION-CLOCK",
+      "suite": "runtime",
+      "runner_case_id": "RCG2-COMPOSER-FRACTIONAL-COMPLETION-CLOCK",
+      "source": "tests/development/checkout-preview.test.mts",
+      "capability_id": "FEATURE-RCG-2-NATIVE-CHECKOUT"
+    },
+    {
+      "id": "runtime:RCG2-COMPOSER-INFLIGHT-EXPIRY-MUTATION",
+      "suite": "runtime",
+      "runner_case_id": "RCG2-COMPOSER-INFLIGHT-EXPIRY-MUTATION",
+      "source": "tests/development/checkout-preview.test.mts",
+      "capability_id": "FEATURE-RCG-2-NATIVE-CHECKOUT"
+    },
+    {
+      "id": "runtime:RCG2-COMPOSER-REQUEST-ACCESSOR-REJECTED",
+      "suite": "runtime",
+      "runner_case_id": "RCG2-COMPOSER-REQUEST-ACCESSOR-REJECTED",
+      "source": "tests/development/checkout-preview.test.mts",
+      "capability_id": "FEATURE-RCG-2-NATIVE-CHECKOUT"
+    },
+    {
+      "id": "runtime:RCG2-COMPOSER-SOURCE-RACE",
+      "suite": "runtime",
+      "runner_case_id": "RCG2-COMPOSER-SOURCE-RACE",
+      "source": "tests/development/checkout-preview.test.mts",
+      "capability_id": "FEATURE-RCG-2-NATIVE-CHECKOUT"
+    },
+    {
+      "id": "runtime:RCG2-COMPOSER-QUOTE-DEADLINE-CAPS-PREVIEW",
+      "suite": "runtime",
+      "runner_case_id": "RCG2-COMPOSER-QUOTE-DEADLINE-CAPS-PREVIEW",
+      "source": "tests/development/checkout-preview.test.mts",
+      "capability_id": "FEATURE-RCG-2-NATIVE-CHECKOUT"
+    },
+    {
+      "id": "runtime:RCG2-COMPOSER-DEADLINE-IMMUTABLE-AFTER-QUOTE-RENEWAL",
+      "suite": "runtime",
+      "runner_case_id": "RCG2-COMPOSER-DEADLINE-IMMUTABLE-AFTER-QUOTE-RENEWAL",
+      "source": "tests/development/checkout-preview.test.mts",
+      "capability_id": "FEATURE-RCG-2-NATIVE-CHECKOUT"
+    },
+    {
+      "id": "runtime:RCG2-COMPOSER-EXPIRY-DURING-FINAL-HASHING",
+      "suite": "runtime",
+      "runner_case_id": "RCG2-COMPOSER-EXPIRY-DURING-FINAL-HASHING",
+      "source": "tests/development/checkout-preview.test.mts",
+      "capability_id": "FEATURE-RCG-2-NATIVE-CHECKOUT"
+    },
+    {
+      "id": "runtime:RCG2-COMPOSER-SPARSE-ARRAY-EXTRA-NUMERIC-KEY",
+      "suite": "runtime",
+      "runner_case_id": "RCG2-COMPOSER-SPARSE-ARRAY-EXTRA-NUMERIC-KEY",
+      "source": "tests/development/checkout-preview.test.mts",
+      "capability_id": "FEATURE-RCG-2-NATIVE-CHECKOUT"
+    },
+    {
+      "id": "runtime:RCG2-COMPOSER-EXACT-MONEY-BOUNDS",
+      "suite": "runtime",
+      "runner_case_id": "RCG2-COMPOSER-EXACT-MONEY-BOUNDS",
+      "source": "tests/development/checkout-preview.test.mts",
+      "capability_id": "FEATURE-RCG-2-NATIVE-CHECKOUT"
+    },
+    {
+      "id": "runtime:RCG2-COMPOSER-EXPLICIT-QUOTE-EVIDENCE",
+      "suite": "runtime",
+      "runner_case_id": "RCG2-COMPOSER-EXPLICIT-QUOTE-EVIDENCE",
+      "source": "tests/development/checkout-preview.test.mts",
+      "capability_id": "FEATURE-RCG-2-NATIVE-CHECKOUT"
+    },
+    {
+      "id": "runtime:RCG2-COMPOSER-ITEM-MEMBERSHIP-AND-ARITHMETIC",
+      "suite": "runtime",
+      "runner_case_id": "RCG2-COMPOSER-ITEM-MEMBERSHIP-AND-ARITHMETIC",
+      "source": "tests/development/checkout-preview.test.mts",
+      "capability_id": "FEATURE-RCG-2-NATIVE-CHECKOUT"
+    },
+    {
+      "id": "runtime:RCG2-COMPOSER-REVALIDATION-KEEPS-ORIGINAL-INPUT",
+      "suite": "runtime",
+      "runner_case_id": "RCG2-COMPOSER-REVALIDATION-KEEPS-ORIGINAL-INPUT",
+      "source": "tests/development/checkout-preview.test.mts",
+      "capability_id": "FEATURE-RCG-2-NATIVE-CHECKOUT"
+    },
+    {
+      "id": "runtime:RCG2-NATIVE-SOURCE-FACTS-AND-NO-EFFECTS",
+      "suite": "runtime",
+      "runner_case_id": "RCG2-NATIVE-SOURCE-FACTS-AND-NO-EFFECTS",
+      "source": "tests/development/delegated-checkout.test.mts",
+      "capability_id": "FEATURE-RCG-2-NATIVE-CHECKOUT"
+    },
+    {
+      "id": "runtime:RCG2-NATIVE-LAMP-CEILING-AND-EXPLICIT-COSTS",
+      "suite": "runtime",
+      "runner_case_id": "RCG2-NATIVE-LAMP-CEILING-AND-EXPLICIT-COSTS",
+      "source": "tests/development/delegated-checkout.test.mts",
+      "capability_id": "FEATURE-RCG-2-NATIVE-CHECKOUT"
+    },
+    {
+      "id": "runtime:RCG2-NATIVE-SHIPPING-FEES-AND-CURRENCY",
+      "suite": "runtime",
+      "runner_case_id": "RCG2-NATIVE-SHIPPING-FEES-AND-CURRENCY",
+      "source": "tests/development/delegated-checkout.test.mts",
+      "capability_id": "FEATURE-RCG-2-NATIVE-CHECKOUT"
+    },
+    {
+      "id": "runtime:RCG2-NATIVE-MISSING-AND-EXPIRED-QUOTES",
+      "suite": "runtime",
+      "runner_case_id": "RCG2-NATIVE-MISSING-AND-EXPIRED-QUOTES",
+      "source": "tests/development/delegated-checkout.test.mts",
+      "capability_id": "FEATURE-RCG-2-NATIVE-CHECKOUT"
+    },
+    {
+      "id": "runtime:RCG2-NATIVE-QUOTES-BIND-EXACT-CART",
+      "suite": "runtime",
+      "runner_case_id": "RCG2-NATIVE-QUOTES-BIND-EXACT-CART",
+      "source": "tests/development/delegated-checkout.test.mts",
+      "capability_id": "FEATURE-RCG-2-NATIVE-CHECKOUT"
+    },
+    {
+      "id": "runtime:RCG2-NATIVE-SCOPE-AND-RESOURCE-ISOLATION",
+      "suite": "runtime",
+      "runner_case_id": "RCG2-NATIVE-SCOPE-AND-RESOURCE-ISOLATION",
+      "source": "tests/development/delegated-checkout.test.mts",
+      "capability_id": "FEATURE-RCG-2-NATIVE-CHECKOUT"
+    },
+    {
+      "id": "runtime:RCG2-NATIVE-SAME-CUSTOMER-DIFFERENT-ORDER",
+      "suite": "runtime",
+      "runner_case_id": "RCG2-NATIVE-SAME-CUSTOMER-DIFFERENT-ORDER",
+      "source": "tests/development/delegated-checkout.test.mts",
+      "capability_id": "FEATURE-RCG-2-NATIVE-CHECKOUT"
+    },
+    {
+      "id": "runtime:RCG2-NATIVE-CURRENT-CUSTOMER-PROOF",
+      "suite": "runtime",
+      "runner_case_id": "RCG2-NATIVE-CURRENT-CUSTOMER-PROOF",
+      "source": "tests/development/delegated-checkout.test.mts",
+      "capability_id": "FEATURE-RCG-2-NATIVE-CHECKOUT"
+    },
+    {
+      "id": "runtime:RCG2-NATIVE-REVOKED-SESSION-AND-ERASURE",
+      "suite": "runtime",
+      "runner_case_id": "RCG2-NATIVE-REVOKED-SESSION-AND-ERASURE",
+      "source": "tests/development/delegated-checkout.test.mts",
+      "capability_id": "FEATURE-RCG-2-NATIVE-CHECKOUT"
+    },
+    {
+      "id": "runtime:RCG2-NATIVE-ASYNC-AUTHORITY-LOSS",
+      "suite": "runtime",
+      "runner_case_id": "RCG2-NATIVE-ASYNC-AUTHORITY-LOSS",
+      "source": "tests/development/delegated-checkout.test.mts",
+      "capability_id": "FEATURE-RCG-2-NATIVE-CHECKOUT"
+    },
+    {
+      "id": "runtime:RCG2-NATIVE-POST-AWAIT-AUTHORITY-RECHECK",
+      "suite": "runtime",
+      "runner_case_id": "RCG2-NATIVE-POST-AWAIT-AUTHORITY-RECHECK",
+      "source": "tests/development/delegated-checkout.test.mts",
+      "capability_id": "FEATURE-RCG-2-NATIVE-CHECKOUT"
+    },
+    {
+      "id": "runtime:RCG2-NATIVE-UNCONFIRMED-AND-UNKNOWN-CARTS",
+      "suite": "runtime",
+      "runner_case_id": "RCG2-NATIVE-UNCONFIRMED-AND-UNKNOWN-CARTS",
+      "source": "tests/development/delegated-checkout.test.mts",
+      "capability_id": "FEATURE-RCG-2-NATIVE-CHECKOUT"
+    },
+    {
+      "id": "runtime:RCG2-NATIVE-PURCHASE-AND-OWNER-CHANGE",
+      "suite": "runtime",
+      "runner_case_id": "RCG2-NATIVE-PURCHASE-AND-OWNER-CHANGE",
+      "source": "tests/development/delegated-checkout.test.mts",
+      "capability_id": "FEATURE-RCG-2-NATIVE-CHECKOUT"
+    },
+    {
+      "id": "runtime:RCG2-NATIVE-STOCK-PRICE-AND-TERMS-INVALIDATE",
+      "suite": "runtime",
+      "runner_case_id": "RCG2-NATIVE-STOCK-PRICE-AND-TERMS-INVALIDATE",
+      "source": "tests/development/delegated-checkout.test.mts",
+      "capability_id": "FEATURE-RCG-2-NATIVE-CHECKOUT"
+    },
+    {
+      "id": "runtime:RCG2-NATIVE-PRICE-CHANGE-REQUIRES-NEW-CONFIRMATION",
+      "suite": "runtime",
+      "runner_case_id": "RCG2-NATIVE-PRICE-CHANGE-REQUIRES-NEW-CONFIRMATION",
+      "source": "tests/development/delegated-checkout.test.mts",
+      "capability_id": "FEATURE-RCG-2-NATIVE-CHECKOUT"
+    },
+    {
+      "id": "runtime:RCG2-NATIVE-ASYNC-SOURCE-AND-QUOTE-CHANGE",
+      "suite": "runtime",
+      "runner_case_id": "RCG2-NATIVE-ASYNC-SOURCE-AND-QUOTE-CHANGE",
+      "source": "tests/development/delegated-checkout.test.mts",
+      "capability_id": "FEATURE-RCG-2-NATIVE-CHECKOUT"
+    },
+    {
+      "id": "runtime:RCG2-NATIVE-CAPACITY-INCLUDES-PENDING-WORK",
+      "suite": "runtime",
+      "runner_case_id": "RCG2-NATIVE-CAPACITY-INCLUDES-PENDING-WORK",
+      "source": "tests/development/delegated-checkout.test.mts",
+      "capability_id": "FEATURE-RCG-2-NATIVE-CHECKOUT"
+    },
+    {
+      "id": "runtime:RCG2-NATIVE-FAILED-AND-EXPIRED-SLOTS-RECLAIMED",
+      "suite": "runtime",
+      "runner_case_id": "RCG2-NATIVE-FAILED-AND-EXPIRED-SLOTS-RECLAIMED",
+      "source": "tests/development/delegated-checkout.test.mts",
+      "capability_id": "FEATURE-RCG-2-NATIVE-CHECKOUT"
+    },
+    {
+      "id": "runtime:RCG2-NATIVE-CLOSE-AND-RESTART-LOSE-SNAPSHOTS",
+      "suite": "runtime",
+      "runner_case_id": "RCG2-NATIVE-CLOSE-AND-RESTART-LOSE-SNAPSHOTS",
+      "source": "tests/development/delegated-checkout.test.mts",
+      "capability_id": "FEATURE-RCG-2-NATIVE-CHECKOUT"
+    },
+    {
+      "id": "runtime:RCG2-NATIVE-RECOVERY-FENCE-BEFORE-AND-AFTER-AWAIT",
+      "suite": "runtime",
+      "runner_case_id": "RCG2-NATIVE-RECOVERY-FENCE-BEFORE-AND-AFTER-AWAIT",
+      "source": "tests/development/delegated-checkout.test.mts",
+      "capability_id": "FEATURE-RCG-2-NATIVE-CHECKOUT"
+    },
+    {
+      "id": "runtime:RCG2-NATIVE-CALLER-CANNOT-REPLACE-SNAPSHOT",
+      "suite": "runtime",
+      "runner_case_id": "RCG2-NATIVE-CALLER-CANNOT-REPLACE-SNAPSHOT",
+      "source": "tests/development/delegated-checkout.test.mts",
+      "capability_id": "FEATURE-RCG-2-NATIVE-CHECKOUT"
+    },
+    {
+      "id": "runtime:RCG2-NATIVE-CLOCK-REWIND-AND-FRACTIONAL-TIME",
+      "suite": "runtime",
+      "runner_case_id": "RCG2-NATIVE-CLOCK-REWIND-AND-FRACTIONAL-TIME",
+      "source": "tests/development/delegated-checkout.test.mts",
+      "capability_id": "FEATURE-RCG-2-NATIVE-CHECKOUT"
+    },
+    {
+      "id": "runtime:RCG2-NATIVE-SOURCE-TAX-AND-UNQUALIFIED-ROUNDING",
+      "suite": "runtime",
+      "runner_case_id": "RCG2-NATIVE-SOURCE-TAX-AND-UNQUALIFIED-ROUNDING",
+      "source": "tests/development/delegated-checkout.test.mts",
+      "capability_id": "FEATURE-RCG-2-NATIVE-CHECKOUT"
+    },
+    {
+      "id": "runtime:RCG2-NATIVE-QUOTE-RENEWAL-CANNOT-REFRESH-PREVIEW",
+      "suite": "runtime",
+      "runner_case_id": "RCG2-NATIVE-QUOTE-RENEWAL-CANNOT-REFRESH-PREVIEW",
+      "source": "tests/development/delegated-checkout.test.mts",
+      "capability_id": "FEATURE-RCG-2-NATIVE-CHECKOUT"
+    },
+    {
+      "id": "runtime:RCG2-NATIVE-AUTHORITY-AFTER-FINAL-SOURCE-CALL",
+      "suite": "runtime",
+      "runner_case_id": "RCG2-NATIVE-AUTHORITY-AFTER-FINAL-SOURCE-CALL",
+      "source": "tests/development/delegated-checkout.test.mts",
+      "capability_id": "FEATURE-RCG-2-NATIVE-CHECKOUT"
+    },
+    {
+      "id": "runtime:RCG2-NATIVE-READ-REVALIDATE-FINAL-ASYNC-GUARD",
+      "suite": "runtime",
+      "runner_case_id": "RCG2-NATIVE-READ-REVALIDATE-FINAL-ASYNC-GUARD",
+      "source": "tests/development/delegated-checkout.test.mts",
+      "capability_id": "FEATURE-RCG-2-NATIVE-CHECKOUT"
+    },
+    {
+      "id": "runtime:RCG3-PORT-01",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-PORT-01",
+      "source": "tests/development/delegated-receipt-binding.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-PORT-02",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-PORT-02",
+      "source": "tests/development/delegated-receipt-binding.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-PORT-03",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-PORT-03",
+      "source": "tests/development/delegated-receipt-binding.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-PORT-04",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-PORT-04",
+      "source": "tests/development/delegated-receipt-binding.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-PORT-05",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-PORT-05",
+      "source": "tests/development/delegated-receipt-binding.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-PORT-06",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-PORT-06",
+      "source": "tests/development/delegated-receipt-binding.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-PORT-07",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-PORT-07",
+      "source": "tests/development/delegated-receipt-binding.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-PORT-08",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-PORT-08",
+      "source": "tests/development/delegated-receipt-binding.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-PORT-09",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-PORT-09",
+      "source": "tests/development/delegated-receipt-binding.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-PORT-10",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-PORT-10",
+      "source": "tests/development/delegated-receipt-binding.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-PORT-11",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-PORT-11",
+      "source": "tests/development/delegated-receipt-binding.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-PORT-12",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-PORT-12",
+      "source": "tests/development/delegated-receipt-binding.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-PORT-13",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-PORT-13",
+      "source": "tests/development/delegated-receipt-binding.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-PORT-14",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-PORT-14",
+      "source": "tests/development/delegated-receipt-binding.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-PORT-15",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-PORT-15",
+      "source": "tests/development/delegated-receipt-binding.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-PORT-16",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-PORT-16",
+      "source": "tests/development/delegated-receipt-binding.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-PORT-17",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-PORT-17",
+      "source": "tests/development/delegated-receipt-binding.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-HARDEN-01",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-HARDEN-01",
+      "source": "tests/development/delegated-receipt-hardening.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-HARDEN-02",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-HARDEN-02",
+      "source": "tests/development/delegated-receipt-hardening.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-HARDEN-03",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-HARDEN-03",
+      "source": "tests/development/delegated-receipt-hardening.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-HARDEN-04",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-HARDEN-04",
+      "source": "tests/development/delegated-receipt-hardening.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-HARDEN-05",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-HARDEN-05",
+      "source": "tests/development/delegated-receipt-hardening.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-HARDEN-06",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-HARDEN-06",
+      "source": "tests/development/delegated-receipt-hardening.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-HARDEN-07",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-HARDEN-07",
+      "source": "tests/development/delegated-receipt-hardening.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-HARDEN-08",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-HARDEN-08",
+      "source": "tests/development/delegated-receipt-hardening.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-HARDEN-09",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-HARDEN-09",
+      "source": "tests/development/delegated-receipt-hardening.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-HARDEN-10",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-HARDEN-10",
+      "source": "tests/development/delegated-receipt-hardening.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-HARDEN-11",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-HARDEN-11",
+      "source": "tests/development/delegated-receipt-hardening.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-HARDEN-12",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-HARDEN-12",
+      "source": "tests/development/delegated-receipt-hardening.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-HARDEN-13",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-HARDEN-13",
+      "source": "tests/development/delegated-receipt-hardening.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-HARDEN-14",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-HARDEN-14",
+      "source": "tests/development/delegated-receipt-hardening.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-HARDEN-15",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-HARDEN-15",
+      "source": "tests/development/delegated-receipt-hardening.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-HARDEN-16",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-HARDEN-16",
+      "source": "tests/development/delegated-receipt-hardening.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-HARDEN-17",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-HARDEN-17",
+      "source": "tests/development/delegated-receipt-hardening.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-HARDEN-18",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-HARDEN-18",
+      "source": "tests/development/delegated-receipt-hardening.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-HARDEN-19",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-HARDEN-19",
+      "source": "tests/development/delegated-receipt-hardening.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-HARDEN-20",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-HARDEN-20",
+      "source": "tests/development/delegated-receipt-hardening.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-HARDEN-21",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-HARDEN-21",
+      "source": "tests/development/delegated-receipt-hardening.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-HARDEN-22",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-HARDEN-22",
+      "source": "tests/development/delegated-receipt-hardening.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-HARDEN-23",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-HARDEN-23",
+      "source": "tests/development/delegated-receipt-hardening.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-HARDEN-24",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-HARDEN-24",
+      "source": "tests/development/delegated-receipt-hardening.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-HARDEN-25",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-HARDEN-25",
+      "source": "tests/development/delegated-receipt-hardening.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-HARDEN-26",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-HARDEN-26",
+      "source": "tests/development/delegated-receipt-hardening.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-BIND-FINAL-HASH",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-BIND-FINAL-HASH",
+      "source": "tests/development/delegated-receipt-hardening.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-JOSE-ES256",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-JOSE-ES256",
+      "source": "tests/development/delegated-receipt-jose.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-JOSE-EDDSA",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-JOSE-EDDSA",
+      "source": "tests/development/delegated-receipt-jose.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-JOSE-TAMPER",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-JOSE-TAMPER",
+      "source": "tests/development/delegated-receipt-jose.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-JOSE-TRUST",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-JOSE-TRUST",
+      "source": "tests/development/delegated-receipt-jose.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-JOSE-KEY-CONFIG",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-JOSE-KEY-CONFIG",
+      "source": "tests/development/delegated-receipt-jose.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-JOSE-HEADERS",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-JOSE-HEADERS",
+      "source": "tests/development/delegated-receipt-jose.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-JOSE-HEADER-DUPLICATES",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-JOSE-HEADER-DUPLICATES",
+      "source": "tests/development/delegated-receipt-jose.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-JOSE-PAYLOAD-DUPLICATES",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-JOSE-PAYLOAD-DUPLICATES",
+      "source": "tests/development/delegated-receipt-jose.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-JOSE-UTF8",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-JOSE-UTF8",
+      "source": "tests/development/delegated-receipt-jose.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-JOSE-JSON-VALID",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-JOSE-JSON-VALID",
+      "source": "tests/development/delegated-receipt-jose.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-JOSE-BOUNDS",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-JOSE-BOUNDS",
+      "source": "tests/development/delegated-receipt-jose.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-JOSE-SNAPSHOTS",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-JOSE-SNAPSHOTS",
+      "source": "tests/development/delegated-receipt-jose.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-JOSE-RETIRE",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-JOSE-RETIRE",
+      "source": "tests/development/delegated-receipt-jose.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-JOSE-CANCEL",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-JOSE-CANCEL",
+      "source": "tests/development/delegated-receipt-jose.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-NATIVE-SIGNED-EVIDENCE",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-NATIVE-SIGNED-EVIDENCE",
+      "source": "tests/development/delegated-receipt-native.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-NATIVE-UNAVAILABLE",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-NATIVE-UNAVAILABLE",
+      "source": "tests/development/delegated-receipt-native.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-NATIVE-REQUEST",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-NATIVE-REQUEST",
+      "source": "tests/development/delegated-receipt-native.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-NATIVE-SCOPE",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-NATIVE-SCOPE",
+      "source": "tests/development/delegated-receipt-native.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-NATIVE-CONTEXT-BOUNDARY",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-NATIVE-CONTEXT-BOUNDARY",
+      "source": "tests/development/delegated-receipt-native.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-NATIVE-CLAIM-SUBSTITUTION",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-NATIVE-CLAIM-SUBSTITUTION",
+      "source": "tests/development/delegated-receipt-native.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-NATIVE-LOCAL-CEILING",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-NATIVE-LOCAL-CEILING",
+      "source": "tests/development/delegated-receipt-native.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-NATIVE-CURRENT-AUTHORITY",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-NATIVE-CURRENT-AUTHORITY",
+      "source": "tests/development/delegated-receipt-native.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-NATIVE-CURRENT-SOURCES",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-NATIVE-CURRENT-SOURCES",
+      "source": "tests/development/delegated-receipt-native.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-NATIVE-CONTEXT-REVOCATION",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-NATIVE-CONTEXT-REVOCATION",
+      "source": "tests/development/delegated-receipt-native.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-NATIVE-RETIRE",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-NATIVE-RETIRE",
+      "source": "tests/development/delegated-receipt-native.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-NATIVE-LAST-SOURCE-FENCE",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-NATIVE-LAST-SOURCE-FENCE",
+      "source": "tests/development/delegated-receipt-native.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-NATIVE-DEADLINES",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-NATIVE-DEADLINES",
+      "source": "tests/development/delegated-receipt-native.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-NATIVE-RECOVERY",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-NATIVE-RECOVERY",
+      "source": "tests/development/delegated-receipt-native.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-NATIVE-CAPACITY",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-NATIVE-CAPACITY",
+      "source": "tests/development/delegated-receipt-native.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-NATIVE-TIMEOUT",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-NATIVE-TIMEOUT",
+      "source": "tests/development/delegated-receipt-native.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-NATIVE-REPEATED-EVIDENCE",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-NATIVE-REPEATED-EVIDENCE",
+      "source": "tests/development/delegated-receipt-native.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-NATIVE-CONFIG-CAPTURE",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-NATIVE-CONFIG-CAPTURE",
+      "source": "tests/development/delegated-receipt-native.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-NATIVE-CLOCK",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-NATIVE-CLOCK",
+      "source": "tests/development/delegated-receipt-native.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-NATIVE-REQUEST-SNAPSHOT",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-NATIVE-REQUEST-SNAPSHOT",
+      "source": "tests/development/delegated-receipt-native.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-NATIVE-SYNCHRONOUS-FENCES",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-NATIVE-SYNCHRONOUS-FENCES",
+      "source": "tests/development/delegated-receipt-native.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG3-NATIVE-RAW-REVISION",
+      "suite": "runtime",
+      "runner_case_id": "RCG3-NATIVE-RAW-REVISION",
+      "source": "tests/development/delegated-receipt-native.test.mts",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "python:test_receipt_dependency_intake.ReceiptDependencyIntakeTests.test_assigned_runtime_inputs_are_allowed",
+      "suite": "python",
+      "runner_case_id": "test_receipt_dependency_intake.ReceiptDependencyIntakeTests.test_assigned_runtime_inputs_are_allowed",
+      "source": "tests/test_receipt_dependency_intake.py",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "python:test_receipt_dependency_intake.ReceiptDependencyIntakeTests.test_exact_pair_is_the_only_new_dependency_allowlist",
+      "suite": "python",
+      "runner_case_id": "test_receipt_dependency_intake.ReceiptDependencyIntakeTests.test_exact_pair_is_the_only_new_dependency_allowlist",
+      "source": "tests/test_receipt_dependency_intake.py",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "python:test_receipt_dependency_intake.ReceiptDependencyIntakeTests.test_absent_optional_workspace_is_allowed",
+      "suite": "python",
+      "runner_case_id": "test_receipt_dependency_intake.ReceiptDependencyIntakeTests.test_absent_optional_workspace_is_allowed",
+      "source": "tests/test_receipt_dependency_intake.py",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "python:test_receipt_dependency_intake.ReceiptDependencyIntakeTests.test_partial_pair_is_rejected",
+      "suite": "python",
+      "runner_case_id": "test_receipt_dependency_intake.ReceiptDependencyIntakeTests.test_partial_pair_is_rejected",
+      "source": "tests/test_receipt_dependency_intake.py",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "python:test_receipt_dependency_intake.ReceiptDependencyIntakeTests.test_byte_drift_requires_review",
+      "suite": "python",
+      "runner_case_id": "test_receipt_dependency_intake.ReceiptDependencyIntakeTests.test_byte_drift_requires_review",
+      "source": "tests/test_receipt_dependency_intake.py",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "python:test_receipt_dependency_intake.ReceiptDependencyIntakeTests.test_version_range_is_rejected_even_with_a_new_pin",
+      "suite": "python",
+      "runner_case_id": "test_receipt_dependency_intake.ReceiptDependencyIntakeTests.test_version_range_is_rejected_even_with_a_new_pin",
+      "source": "tests/test_receipt_dependency_intake.py",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "python:test_receipt_dependency_intake.ReceiptDependencyIntakeTests.test_additional_dependency_is_rejected_even_with_a_new_pin",
+      "suite": "python",
+      "runner_case_id": "test_receipt_dependency_intake.ReceiptDependencyIntakeTests.test_additional_dependency_is_rejected_even_with_a_new_pin",
+      "source": "tests/test_receipt_dependency_intake.py",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "python:test_receipt_dependency_intake.ReceiptDependencyIntakeTests.test_optional_dependencies_and_hooks_are_rejected_even_with_new_pins",
+      "suite": "python",
+      "runner_case_id": "test_receipt_dependency_intake.ReceiptDependencyIntakeTests.test_optional_dependencies_and_hooks_are_rejected_even_with_new_pins",
+      "source": "tests/test_receipt_dependency_intake.py",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "python:test_receipt_dependency_intake.ReceiptDependencyIntakeTests.test_extra_locked_package_is_rejected_even_with_a_new_pin",
+      "suite": "python",
+      "runner_case_id": "test_receipt_dependency_intake.ReceiptDependencyIntakeTests.test_extra_locked_package_is_rejected_even_with_a_new_pin",
+      "source": "tests/test_receipt_dependency_intake.py",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "python:test_receipt_dependency_intake.ReceiptDependencyIntakeTests.test_lock_origin_integrity_license_and_hooks_cannot_be_replaced",
+      "suite": "python",
+      "runner_case_id": "test_receipt_dependency_intake.ReceiptDependencyIntakeTests.test_lock_origin_integrity_license_and_hooks_cannot_be_replaced",
+      "source": "tests/test_receipt_dependency_intake.py",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "python:test_receipt_dependency_intake.ReceiptDependencyIntakeTests.test_inconsistent_root_lock_is_rejected_even_with_a_new_pin",
+      "suite": "python",
+      "runner_case_id": "test_receipt_dependency_intake.ReceiptDependencyIntakeTests.test_inconsistent_root_lock_is_rejected_even_with_a_new_pin",
+      "source": "tests/test_receipt_dependency_intake.py",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "python:test_receipt_dependency_intake.ReceiptDependencyIntakeTests.test_unknown_manifest_remains_outside_the_allowlist",
+      "suite": "python",
+      "runner_case_id": "test_receipt_dependency_intake.ReceiptDependencyIntakeTests.test_unknown_manifest_remains_outside_the_allowlist",
+      "source": "tests/test_receipt_dependency_intake.py",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "python:test_receipt_dependency_intake.ReceiptDependencyIntakeTests.test_observation_reports_optional_runtime_dependency_presence",
+      "suite": "python",
+      "runner_case_id": "test_receipt_dependency_intake.ReceiptDependencyIntakeTests.test_observation_reports_optional_runtime_dependency_presence",
+      "source": "tests/test_receipt_dependency_intake.py",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "python:test_receipt_dependency_intake.ReceiptDependencyIntakeTests.test_absent_runtime_observation_does_not_claim_installed_packages",
+      "suite": "python",
+      "runner_case_id": "test_receipt_dependency_intake.ReceiptDependencyIntakeTests.test_absent_runtime_observation_does_not_claim_installed_packages",
+      "source": "tests/test_receipt_dependency_intake.py",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "python:test_receipt_runtime_install.ReceiptRuntimeInstallTests.test_locked_install_promotes_only_jose_and_preserves_root_files",
+      "suite": "python",
+      "runner_case_id": "test_receipt_runtime_install.ReceiptRuntimeInstallTests.test_locked_install_promotes_only_jose_and_preserves_root_files",
+      "source": "tests/test_receipt_runtime_install.py",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "python:test_receipt_runtime_install.ReceiptRuntimeInstallTests.test_identical_repeat_install_is_idempotent",
+      "suite": "python",
+      "runner_case_id": "test_receipt_runtime_install.ReceiptRuntimeInstallTests.test_identical_repeat_install_is_idempotent",
+      "source": "tests/test_receipt_runtime_install.py",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "python:test_receipt_runtime_install.ReceiptRuntimeInstallTests.test_differing_or_empty_destination_is_never_replaced",
+      "suite": "python",
+      "runner_case_id": "test_receipt_runtime_install.ReceiptRuntimeInstallTests.test_differing_or_empty_destination_is_never_replaced",
+      "source": "tests/test_receipt_runtime_install.py",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "python:test_receipt_runtime_install.ReceiptRuntimeInstallTests.test_nested_install_or_shadowing_is_rejected_before_npm",
+      "suite": "python",
+      "runner_case_id": "test_receipt_runtime_install.ReceiptRuntimeInstallTests.test_nested_install_or_shadowing_is_rejected_before_npm",
+      "source": "tests/test_receipt_runtime_install.py",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "python:test_receipt_runtime_install.ReceiptRuntimeInstallTests.test_symlinked_modules_or_destination_and_non_directory_are_rejected",
+      "suite": "python",
+      "runner_case_id": "test_receipt_runtime_install.ReceiptRuntimeInstallTests.test_symlinked_modules_or_destination_and_non_directory_are_rejected",
+      "source": "tests/test_receipt_runtime_install.py",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "python:test_receipt_runtime_install.ReceiptRuntimeInstallTests.test_reviewed_root_or_optional_manifest_drift_denies_before_npm",
+      "suite": "python",
+      "runner_case_id": "test_receipt_runtime_install.ReceiptRuntimeInstallTests.test_reviewed_root_or_optional_manifest_drift_denies_before_npm",
+      "source": "tests/test_receipt_runtime_install.py",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "python:test_receipt_runtime_install.ReceiptRuntimeInstallTests.test_absent_optional_manifests_do_not_install_anything",
+      "suite": "python",
+      "runner_case_id": "test_receipt_runtime_install.ReceiptRuntimeInstallTests.test_absent_optional_manifests_do_not_install_anything",
+      "source": "tests/test_receipt_runtime_install.py",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "python:test_receipt_runtime_install.ReceiptRuntimeInstallTests.test_unexpected_staged_graph_or_hidden_lock_denies_promotion",
+      "suite": "python",
+      "runner_case_id": "test_receipt_runtime_install.ReceiptRuntimeInstallTests.test_unexpected_staged_graph_or_hidden_lock_denies_promotion",
+      "source": "tests/test_receipt_runtime_install.py",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "python:test_receipt_runtime_install.ReceiptRuntimeInstallTests.test_changed_installed_manifest_or_notice_denies_promotion",
+      "suite": "python",
+      "runner_case_id": "test_receipt_runtime_install.ReceiptRuntimeInstallTests.test_changed_installed_manifest_or_notice_denies_promotion",
+      "source": "tests/test_receipt_runtime_install.py",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "python:test_receipt_runtime_install.ReceiptRuntimeInstallTests.test_staged_symlink_hardlink_or_special_file_is_rejected",
+      "suite": "python",
+      "runner_case_id": "test_receipt_runtime_install.ReceiptRuntimeInstallTests.test_staged_symlink_hardlink_or_special_file_is_rejected",
+      "source": "tests/test_receipt_runtime_install.py",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "python:test_receipt_runtime_install.ReceiptRuntimeInstallTests.test_npm_failure_or_timeout_leaves_existing_packages_untouched",
+      "suite": "python",
+      "runner_case_id": "test_receipt_runtime_install.ReceiptRuntimeInstallTests.test_npm_failure_or_timeout_leaves_existing_packages_untouched",
+      "source": "tests/test_receipt_runtime_install.py",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "python:test_receipt_runtime_install.ReceiptRuntimeInstallTests.test_npm_cannot_change_staged_manifest_bytes",
+      "suite": "python",
+      "runner_case_id": "test_receipt_runtime_install.ReceiptRuntimeInstallTests.test_npm_cannot_change_staged_manifest_bytes",
+      "source": "tests/test_receipt_runtime_install.py",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "python:test_receipt_runtime_install.ReceiptRuntimeInstallTests.test_source_change_during_install_is_rechecked_before_promotion",
+      "suite": "python",
+      "runner_case_id": "test_receipt_runtime_install.ReceiptRuntimeInstallTests.test_source_change_during_install_is_rechecked_before_promotion",
+      "source": "tests/test_receipt_runtime_install.py",
+      "capability_id": "FEATURE-RCG-3-NATIVE-RECEIPTS"
+    },
+    {
+      "id": "runtime:RCG4-INTENT-IDENTITY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4-INTENT-IDENTITY",
+      "source": "tests/development/delegated-checkout-intents.test.mts",
+      "capability_id": "FEATURE-RCG-4A-NATIVE-INTENTS"
+    },
+    {
+      "id": "runtime:RCG4-INTENT-CONFLICT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4-INTENT-CONFLICT",
+      "source": "tests/development/delegated-checkout-intents.test.mts",
+      "capability_id": "FEATURE-RCG-4A-NATIVE-INTENTS"
+    },
+    {
+      "id": "runtime:RCG4-INTENT-INPUT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4-INTENT-INPUT",
+      "source": "tests/development/delegated-checkout-intents.test.mts",
+      "capability_id": "FEATURE-RCG-4A-NATIVE-INTENTS"
+    },
+    {
+      "id": "runtime:RCG4-INTENT-SIGNED",
+      "suite": "runtime",
+      "runner_case_id": "RCG4-INTENT-SIGNED",
+      "source": "tests/development/delegated-checkout-intents.test.mts",
+      "capability_id": "FEATURE-RCG-4A-NATIVE-INTENTS"
+    },
+    {
+      "id": "runtime:RCG4-INTENT-RETRY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4-INTENT-RETRY",
+      "source": "tests/development/delegated-checkout-intents.test.mts",
+      "capability_id": "FEATURE-RCG-4A-NATIVE-INTENTS"
+    },
+    {
+      "id": "runtime:RCG4-INTENT-CONCURRENT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4-INTENT-CONCURRENT",
+      "source": "tests/development/delegated-checkout-intents.test.mts",
+      "capability_id": "FEATURE-RCG-4A-NATIVE-INTENTS"
+    },
+    {
+      "id": "runtime:RCG4-INTENT-CANCEL",
+      "suite": "runtime",
+      "runner_case_id": "RCG4-INTENT-CANCEL",
+      "source": "tests/development/delegated-checkout-intents.test.mts",
+      "capability_id": "FEATURE-RCG-4A-NATIVE-INTENTS"
+    },
+    {
+      "id": "runtime:RCG4-INTENT-CANCEL-INFLIGHT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4-INTENT-CANCEL-INFLIGHT",
+      "source": "tests/development/delegated-checkout-intents.test.mts",
+      "capability_id": "FEATURE-RCG-4A-NATIVE-INTENTS"
+    },
+    {
+      "id": "runtime:RCG4-INTENT-CHALLENGE-CLAIM",
+      "suite": "runtime",
+      "runner_case_id": "RCG4-INTENT-CHALLENGE-CLAIM",
+      "source": "tests/development/delegated-checkout-intents.test.mts",
+      "capability_id": "FEATURE-RCG-4A-NATIVE-INTENTS"
+    },
+    {
+      "id": "runtime:RCG4-INTENT-REENTRANT-CLAIM",
+      "suite": "runtime",
+      "runner_case_id": "RCG4-INTENT-REENTRANT-CLAIM",
+      "source": "tests/development/delegated-checkout-intents.test.mts",
+      "capability_id": "FEATURE-RCG-4A-NATIVE-INTENTS"
+    },
+    {
+      "id": "runtime:RCG4-INTENT-RECEIPT-CLAIM",
+      "suite": "runtime",
+      "runner_case_id": "RCG4-INTENT-RECEIPT-CLAIM",
+      "source": "tests/development/delegated-checkout-intents.test.mts",
+      "capability_id": "FEATURE-RCG-4A-NATIVE-INTENTS"
+    },
+    {
+      "id": "runtime:RCG4-INTENT-ORIGINAL-BINDING",
+      "suite": "runtime",
+      "runner_case_id": "RCG4-INTENT-ORIGINAL-BINDING",
+      "source": "tests/development/delegated-checkout-intents.test.mts",
+      "capability_id": "FEATURE-RCG-4A-NATIVE-INTENTS"
+    },
+    {
+      "id": "runtime:RCG4-INTENT-TERMINAL-EXPIRY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4-INTENT-TERMINAL-EXPIRY",
+      "source": "tests/development/delegated-checkout-intents.test.mts",
+      "capability_id": "FEATURE-RCG-4A-NATIVE-INTENTS"
+    },
+    {
+      "id": "runtime:RCG4-INTENT-EXACT-TIME",
+      "suite": "runtime",
+      "runner_case_id": "RCG4-INTENT-EXACT-TIME",
+      "source": "tests/development/delegated-checkout-intents.test.mts",
+      "capability_id": "FEATURE-RCG-4A-NATIVE-INTENTS"
+    },
+    {
+      "id": "runtime:RCG4-INTENT-HISTORICAL-TIME",
+      "suite": "runtime",
+      "runner_case_id": "RCG4-INTENT-HISTORICAL-TIME",
+      "source": "tests/development/delegated-checkout-intents.test.mts",
+      "capability_id": "FEATURE-RCG-4A-NATIVE-INTENTS"
+    },
+    {
+      "id": "runtime:RCG4-INTENT-FINAL-CANCEL",
+      "suite": "runtime",
+      "runner_case_id": "RCG4-INTENT-FINAL-CANCEL",
+      "source": "tests/development/delegated-checkout-intents.test.mts",
+      "capability_id": "FEATURE-RCG-4A-NATIVE-INTENTS"
+    },
+    {
+      "id": "runtime:RCG4-INTENT-AUTHORITY-LOSS",
+      "suite": "runtime",
+      "runner_case_id": "RCG4-INTENT-AUTHORITY-LOSS",
+      "source": "tests/development/delegated-checkout-intents.test.mts",
+      "capability_id": "FEATURE-RCG-4A-NATIVE-INTENTS"
+    },
+    {
+      "id": "runtime:RCG4-INTENT-COMMIT-FENCE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4-INTENT-COMMIT-FENCE",
+      "source": "tests/development/delegated-checkout-intents.test.mts",
+      "capability_id": "FEATURE-RCG-4A-NATIVE-INTENTS"
+    },
+    {
+      "id": "runtime:RCG4-INTENT-COMMIT-EXPIRY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4-INTENT-COMMIT-EXPIRY",
+      "source": "tests/development/delegated-checkout-intents.test.mts",
+      "capability_id": "FEATURE-RCG-4A-NATIVE-INTENTS"
+    },
+    {
+      "id": "runtime:RCG4-INTENT-PROVENANCE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4-INTENT-PROVENANCE",
+      "source": "tests/development/delegated-checkout-intents.test.mts",
+      "capability_id": "FEATURE-RCG-4A-NATIVE-INTENTS"
+    },
+    {
+      "id": "runtime:RCG4-INTENT-SCOPE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4-INTENT-SCOPE",
+      "source": "tests/development/delegated-checkout-intents.test.mts",
+      "capability_id": "FEATURE-RCG-4A-NATIVE-INTENTS"
+    },
+    {
+      "id": "runtime:RCG4-INTENT-RESTART",
+      "suite": "runtime",
+      "runner_case_id": "RCG4-INTENT-RESTART",
+      "source": "tests/development/delegated-checkout-intents.test.mts",
+      "capability_id": "FEATURE-RCG-4A-NATIVE-INTENTS"
+    },
+    {
+      "id": "runtime:RCG4-INTENT-CORRUPTION",
+      "suite": "runtime",
+      "runner_case_id": "RCG4-INTENT-CORRUPTION",
+      "source": "tests/development/delegated-checkout-intents.test.mts",
+      "capability_id": "FEATURE-RCG-4A-NATIVE-INTENTS"
+    },
+    {
+      "id": "runtime:RCG4-PRIVACY-EXPORT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4-PRIVACY-EXPORT",
+      "source": "tests/development/delegated-intent-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4A-NATIVE-INTENTS"
+    },
+    {
+      "id": "runtime:RCG4-PRIVACY-ERASE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4-PRIVACY-ERASE",
+      "source": "tests/development/delegated-intent-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4A-NATIVE-INTENTS"
+    },
+    {
+      "id": "runtime:RCG4-PRIVACY-HELD",
+      "suite": "runtime",
+      "runner_case_id": "RCG4-PRIVACY-HELD",
+      "source": "tests/development/delegated-intent-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4A-NATIVE-INTENTS"
+    },
+    {
+      "id": "runtime:RCG4-PRIVACY-ZERO-RESOURCES",
+      "suite": "runtime",
+      "runner_case_id": "RCG4-PRIVACY-ZERO-RESOURCES",
+      "source": "tests/development/delegated-intent-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4A-NATIVE-INTENTS"
+    },
+    {
+      "id": "runtime:RCG4-PRIVACY-REASSIGNED-HOLD",
+      "suite": "runtime",
+      "runner_case_id": "RCG4-PRIVACY-REASSIGNED-HOLD",
+      "source": "tests/development/delegated-intent-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4A-NATIVE-INTENTS"
+    },
+    {
+      "id": "runtime:RCG4-PRIVACY-ALREADY-ERASED",
+      "suite": "runtime",
+      "runner_case_id": "RCG4-PRIVACY-ALREADY-ERASED",
+      "source": "tests/development/delegated-intent-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4A-NATIVE-INTENTS"
+    },
+    {
+      "id": "runtime:RCG4-PRIVACY-UNINSTALL",
+      "suite": "runtime",
+      "runner_case_id": "RCG4-PRIVACY-UNINSTALL",
+      "source": "tests/development/delegated-intent-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4A-NATIVE-INTENTS"
+    },
+    {
+      "id": "runtime:RCG4-PRIVACY-RESTORE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4-PRIVACY-RESTORE",
+      "source": "tests/development/delegated-intent-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4A-NATIVE-INTENTS"
+    },
+    {
+      "id": "runtime:RCG4-PRIVACY-RESTORE-HELD",
+      "suite": "runtime",
+      "runner_case_id": "RCG4-PRIVACY-RESTORE-HELD",
+      "source": "tests/development/delegated-intent-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4A-NATIVE-INTENTS"
+    },
+    {
+      "id": "runtime:RCG4-PRIVACY-RESTORE-SUPPRESSION",
+      "suite": "runtime",
+      "runner_case_id": "RCG4-PRIVACY-RESTORE-SUPPRESSION",
+      "source": "tests/development/delegated-intent-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4A-NATIVE-INTENTS"
+    },
+    {
+      "id": "runtime:RCG4-PRIVACY-RESTORE-INTEGRITY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4-PRIVACY-RESTORE-INTEGRITY",
+      "source": "tests/development/delegated-intent-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4A-NATIVE-INTENTS"
+    },
+    {
+      "id": "runtime:RCG4-PRIVACY-IMPORT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4-PRIVACY-IMPORT",
+      "source": "tests/development/delegated-intent-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4A-NATIVE-INTENTS"
+    },
+    {
+      "id": "runtime:RCG4-PRIVACY-IMPORT-HELD",
+      "suite": "runtime",
+      "runner_case_id": "RCG4-PRIVACY-IMPORT-HELD",
+      "source": "tests/development/delegated-intent-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4A-NATIVE-INTENTS"
+    },
+    {
+      "id": "runtime:RCG4-PRIVACY-IMPORT-SUPPRESSION",
+      "suite": "runtime",
+      "runner_case_id": "RCG4-PRIVACY-IMPORT-SUPPRESSION",
+      "source": "tests/development/delegated-intent-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4A-NATIVE-INTENTS"
+    },
+    {
+      "id": "runtime:RCG4-PRIVACY-IMPORT-REPEAT-HELD",
+      "suite": "runtime",
+      "runner_case_id": "RCG4-PRIVACY-IMPORT-REPEAT-HELD",
+      "source": "tests/development/delegated-intent-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4A-NATIVE-INTENTS"
+    },
+    {
+      "id": "runtime:RCG4-PRIVACY-IMPORT-DESTINATION-INTEGRITY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4-PRIVACY-IMPORT-DESTINATION-INTEGRITY",
+      "source": "tests/development/delegated-intent-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4A-NATIVE-INTENTS"
+    },
+    {
+      "id": "runtime:RCG4-PRIVACY-IMPORT-SOURCE-INTEGRITY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4-PRIVACY-IMPORT-SOURCE-INTEGRITY",
+      "source": "tests/development/delegated-intent-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4A-NATIVE-INTENTS"
+    },
+    {
+      "id": "runtime:RCG4-PRIVACY-IMPORT-REPLAYED-PERSONAL",
+      "suite": "runtime",
+      "runner_case_id": "RCG4-PRIVACY-IMPORT-REPLAYED-PERSONAL",
+      "source": "tests/development/delegated-intent-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4A-NATIVE-INTENTS"
+    },
+    {
+      "id": "runtime:RCG4-PRIVACY-EXPORT-SUPPRESSION",
+      "suite": "runtime",
+      "runner_case_id": "RCG4-PRIVACY-EXPORT-SUPPRESSION",
+      "source": "tests/development/delegated-intent-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4A-NATIVE-INTENTS"
+    },
+    {
+      "id": "runtime:RCG4HTTP-HISTORY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4HTTP-HISTORY",
+      "source": "tests/development/delegated-checkout-http.test.mts",
+      "capability_id": "FEATURE-RCG-4A-HTTP"
+    },
+    {
+      "id": "runtime:RCG4HTTP-FLOW",
+      "suite": "runtime",
+      "runner_case_id": "RCG4HTTP-FLOW",
+      "source": "tests/development/delegated-checkout-http.test.mts",
+      "capability_id": "FEATURE-RCG-4A-HTTP"
+    },
+    {
+      "id": "runtime:RCG4HTTP-PREVIEW",
+      "suite": "runtime",
+      "runner_case_id": "RCG4HTTP-PREVIEW",
+      "source": "tests/development/delegated-checkout-http.test.mts",
+      "capability_id": "FEATURE-RCG-4A-HTTP"
+    },
+    {
+      "id": "runtime:RCG4HTTP-CONTRACT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4HTTP-CONTRACT",
+      "source": "tests/development/delegated-checkout-http.test.mts",
+      "capability_id": "FEATURE-RCG-4A-HTTP"
+    },
+    {
+      "id": "runtime:RCG4HTTP-UNAVAILABLE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4HTTP-UNAVAILABLE",
+      "source": "tests/development/delegated-checkout-http.test.mts",
+      "capability_id": "FEATURE-RCG-4A-HTTP"
+    },
+    {
+      "id": "runtime:RCG4HTTP-SCOPE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4HTTP-SCOPE",
+      "source": "tests/development/delegated-checkout-http.test.mts",
+      "capability_id": "FEATURE-RCG-4A-HTTP"
+    },
+    {
+      "id": "runtime:RCG4HTTP-AUTH-FIRST",
+      "suite": "runtime",
+      "runner_case_id": "RCG4HTTP-AUTH-FIRST",
+      "source": "tests/development/delegated-checkout-http.test.mts",
+      "capability_id": "FEATURE-RCG-4A-HTTP"
+    },
+    {
+      "id": "runtime:RCG4HTTP-PROOF-FIRST",
+      "suite": "runtime",
+      "runner_case_id": "RCG4HTTP-PROOF-FIRST",
+      "source": "tests/development/delegated-checkout-http.test.mts",
+      "capability_id": "FEATURE-RCG-4A-HTTP"
+    },
+    {
+      "id": "runtime:RCG4HTTP-REVOKED",
+      "suite": "runtime",
+      "runner_case_id": "RCG4HTTP-REVOKED",
+      "source": "tests/development/delegated-checkout-http.test.mts",
+      "capability_id": "FEATURE-RCG-4A-HTTP"
+    },
+    {
+      "id": "runtime:RCG4HTTP-OWNER-BINDING",
+      "suite": "runtime",
+      "runner_case_id": "RCG4HTTP-OWNER-BINDING",
+      "source": "tests/development/delegated-checkout-http.test.mts",
+      "capability_id": "FEATURE-RCG-4A-HTTP"
+    },
+    {
+      "id": "runtime:RCG4HTTP-INPUT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4HTTP-INPUT",
+      "source": "tests/development/delegated-checkout-http.test.mts",
+      "capability_id": "FEATURE-RCG-4A-HTTP"
+    },
+    {
+      "id": "runtime:RCG4HTTP-PARSING",
+      "suite": "runtime",
+      "runner_case_id": "RCG4HTTP-PARSING",
+      "source": "tests/development/delegated-checkout-http.test.mts",
+      "capability_id": "FEATURE-RCG-4A-HTTP"
+    },
+    {
+      "id": "runtime:RCG4HTTP-ROUTING",
+      "suite": "runtime",
+      "runner_case_id": "RCG4HTTP-ROUTING",
+      "source": "tests/development/delegated-checkout-http.test.mts",
+      "capability_id": "FEATURE-RCG-4A-HTTP"
+    },
+    {
+      "id": "runtime:RCG4HTTP-ORIGIN",
+      "suite": "runtime",
+      "runner_case_id": "RCG4HTTP-ORIGIN",
+      "source": "tests/development/delegated-checkout-http.test.mts",
+      "capability_id": "FEATURE-RCG-4A-HTTP"
+    },
+    {
+      "id": "runtime:RCG4HTTP-LONG-RECEIPT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4HTTP-LONG-RECEIPT",
+      "source": "tests/development/delegated-checkout-http.test.mts",
+      "capability_id": "FEATURE-RCG-4A-HTTP"
+    },
+    {
+      "id": "runtime:RCG4HTTP-BODY-LIMIT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4HTTP-BODY-LIMIT",
+      "source": "tests/development/delegated-checkout-http.test.mts",
+      "capability_id": "FEATURE-RCG-4A-HTTP"
+    },
+    {
+      "id": "runtime:RCG4HTTP-OLD-LIMIT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4HTTP-OLD-LIMIT",
+      "source": "tests/development/delegated-checkout-http.test.mts",
+      "capability_id": "FEATURE-RCG-4A-HTTP"
+    },
+    {
+      "id": "runtime:RCG4HTTP-TOKEN-LIMIT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4HTTP-TOKEN-LIMIT",
+      "source": "tests/development/delegated-checkout-http.test.mts",
+      "capability_id": "FEATURE-RCG-4A-HTTP"
+    },
+    {
+      "id": "runtime:RCG4HTTP-SANITIZE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4HTTP-SANITIZE",
+      "source": "tests/development/delegated-checkout-http.test.mts",
+      "capability_id": "FEATURE-RCG-4A-HTTP"
+    },
+    {
+      "id": "runtime:RCG4HTTP-ASYNC-FENCES",
+      "suite": "runtime",
+      "runner_case_id": "RCG4HTTP-ASYNC-FENCES",
+      "source": "tests/development/delegated-checkout-http.test.mts",
+      "capability_id": "FEATURE-RCG-4A-HTTP"
+    },
+    {
+      "id": "runtime:RCG4HTTP-CANCEL-INFLIGHT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4HTTP-CANCEL-INFLIGHT",
+      "source": "tests/development/delegated-checkout-http.test.mts",
+      "capability_id": "FEATURE-RCG-4A-HTTP"
+    },
+    {
+      "id": "runtime:RCG4HTTP-CONCURRENT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4HTTP-CONCURRENT",
+      "source": "tests/development/delegated-checkout-http.test.mts",
+      "capability_id": "FEATURE-RCG-4A-HTTP"
+    },
+    {
+      "id": "runtime:RCG4HTTP-RETRY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4HTTP-RETRY",
+      "source": "tests/development/delegated-checkout-http.test.mts",
+      "capability_id": "FEATURE-RCG-4A-HTTP"
+    },
+    {
+      "id": "runtime:RCG4HTTP-CLIENT-NATIVE-FLOW",
+      "suite": "runtime",
+      "runner_case_id": "RCG4HTTP-CLIENT-NATIVE-FLOW",
+      "source": "tests/development/delegated-checkout-client.test.mts",
+      "capability_id": "FEATURE-RCG-4A-HTTP"
+    },
+    {
+      "id": "runtime:RCG4HTTP-CLIENT-RESTART-RETAINED-STATUS",
+      "suite": "runtime",
+      "runner_case_id": "RCG4HTTP-CLIENT-RESTART-RETAINED-STATUS",
+      "source": "tests/development/delegated-checkout-client.test.mts",
+      "capability_id": "FEATURE-RCG-4A-HTTP"
+    },
+    {
+      "id": "runtime:RCG4HTTP-CLIENT-CURRENT-PROOF",
+      "suite": "runtime",
+      "runner_case_id": "RCG4HTTP-CLIENT-CURRENT-PROOF",
+      "source": "tests/development/delegated-checkout-client.test.mts",
+      "capability_id": "FEATURE-RCG-4A-HTTP"
+    },
+    {
+      "id": "runtime:RCG4HTTP-CLIENT-EXACT-LOOPBACK",
+      "suite": "runtime",
+      "runner_case_id": "RCG4HTTP-CLIENT-EXACT-LOOPBACK",
+      "source": "tests/development/delegated-checkout-client.test.mts",
+      "capability_id": "FEATURE-RCG-4A-HTTP"
+    },
+    {
+      "id": "runtime:RCG4HTTP-CLIENT-PROXY-IGNORED",
+      "suite": "runtime",
+      "runner_case_id": "RCG4HTTP-CLIENT-PROXY-IGNORED",
+      "source": "tests/development/delegated-checkout-client.test.mts",
+      "capability_id": "FEATURE-RCG-4A-HTTP"
+    },
+    {
+      "id": "runtime:RCG4HTTP-CLIENT-NO-REDIRECT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4HTTP-CLIENT-NO-REDIRECT",
+      "source": "tests/development/delegated-checkout-client.test.mts",
+      "capability_id": "FEATURE-RCG-4A-HTTP"
+    },
+    {
+      "id": "runtime:RCG4HTTP-CLIENT-NO-AUTO-RETRY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4HTTP-CLIENT-NO-AUTO-RETRY",
+      "source": "tests/development/delegated-checkout-client.test.mts",
+      "capability_id": "FEATURE-RCG-4A-HTTP"
+    },
+    {
+      "id": "runtime:RCG4HTTP-CLIENT-CREDENTIAL-BOUNDARY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4HTTP-CLIENT-CREDENTIAL-BOUNDARY",
+      "source": "tests/development/delegated-checkout-client.test.mts",
+      "capability_id": "FEATURE-RCG-4A-HTTP"
+    },
+    {
+      "id": "runtime:RCG4HTTP-CLIENT-ARGUMENT-BOUNDS",
+      "suite": "runtime",
+      "runner_case_id": "RCG4HTTP-CLIENT-ARGUMENT-BOUNDS",
+      "source": "tests/development/delegated-checkout-client.test.mts",
+      "capability_id": "FEATURE-RCG-4A-HTTP"
+    },
+    {
+      "id": "runtime:RCG4HTTP-CLIENT-RECEIPT-INPUT-BOUNDS",
+      "suite": "runtime",
+      "runner_case_id": "RCG4HTTP-CLIENT-RECEIPT-INPUT-BOUNDS",
+      "source": "tests/development/delegated-checkout-client.test.mts",
+      "capability_id": "FEATURE-RCG-4A-HTTP"
+    },
+    {
+      "id": "runtime:RCG4HTTP-CLIENT-MAXIMUM-RECEIPT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4HTTP-CLIENT-MAXIMUM-RECEIPT",
+      "source": "tests/development/delegated-checkout-client.test.mts",
+      "capability_id": "FEATURE-RCG-4A-HTTP"
+    },
+    {
+      "id": "runtime:RCG4HTTP-CLIENT-RESPONSE-BOUNDS",
+      "suite": "runtime",
+      "runner_case_id": "RCG4HTTP-CLIENT-RESPONSE-BOUNDS",
+      "source": "tests/development/delegated-checkout-client.test.mts",
+      "capability_id": "FEATURE-RCG-4A-HTTP"
+    },
+    {
+      "id": "runtime:RCG4HTTP-CLIENT-STRICT-JSON",
+      "suite": "runtime",
+      "runner_case_id": "RCG4HTTP-CLIENT-STRICT-JSON",
+      "source": "tests/development/delegated-checkout-client.test.mts",
+      "capability_id": "FEATURE-RCG-4A-HTTP"
+    },
+    {
+      "id": "runtime:RCG4HTTP-CLIENT-RESPONSE-AUTHORITY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4HTTP-CLIENT-RESPONSE-AUTHORITY",
+      "source": "tests/development/delegated-checkout-client.test.mts",
+      "capability_id": "FEATURE-RCG-4A-HTTP"
+    },
+    {
+      "id": "runtime:RCG4HTTP-CLIENT-RESPONSE-CONTEXT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4HTTP-CLIENT-RESPONSE-CONTEXT",
+      "source": "tests/development/delegated-checkout-client.test.mts",
+      "capability_id": "FEATURE-RCG-4A-HTTP"
+    },
+    {
+      "id": "runtime:RCG4HTTP-CLIENT-SECRET-REFLECTION",
+      "suite": "runtime",
+      "runner_case_id": "RCG4HTTP-CLIENT-SECRET-REFLECTION",
+      "source": "tests/development/delegated-checkout-client.test.mts",
+      "capability_id": "FEATURE-RCG-4A-HTTP"
+    },
+    {
+      "id": "runtime:RCG4HTTP-CLIENT-SANITIZED-HTTP-ERRORS",
+      "suite": "runtime",
+      "runner_case_id": "RCG4HTTP-CLIENT-SANITIZED-HTTP-ERRORS",
+      "source": "tests/development/delegated-checkout-client.test.mts",
+      "capability_id": "FEATURE-RCG-4A-HTTP"
+    },
+    {
+      "id": "runtime:RCG4HTTP-CLIENT-MEDIA-TYPE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4HTTP-CLIENT-MEDIA-TYPE",
+      "source": "tests/development/delegated-checkout-client.test.mts",
+      "capability_id": "FEATURE-RCG-4A-HTTP"
+    },
+    {
+      "id": "runtime:RCG4HTTP-CLIENT-HELP",
+      "suite": "runtime",
+      "runner_case_id": "RCG4HTTP-CLIENT-HELP",
+      "source": "tests/development/delegated-checkout-client.test.mts",
+      "capability_id": "FEATURE-RCG-4A-HTTP"
+    },
+    {
+      "id": "runtime:RCG5A-FIXTURE-NATIVE-COMPOSITION",
+      "suite": "runtime",
+      "runner_case_id": "RCG5A-FIXTURE-NATIVE-COMPOSITION",
+      "source": "tests/development/delegated-checkout-fixture.test.mts",
+      "capability_id": "FEATURE-RCG-5A"
+    },
+    {
+      "id": "runtime:RCG5A-FIXTURE-TRANSIENT-SECRETS",
+      "suite": "runtime",
+      "runner_case_id": "RCG5A-FIXTURE-TRANSIENT-SECRETS",
+      "source": "tests/development/delegated-checkout-fixture.test.mts",
+      "capability_id": "FEATURE-RCG-5A"
+    },
+    {
+      "id": "runtime:RCG5A-FIXTURE-HISTORY-WITHOUT-LIVE-OWNERS",
+      "suite": "runtime",
+      "runner_case_id": "RCG5A-FIXTURE-HISTORY-WITHOUT-LIVE-OWNERS",
+      "source": "tests/development/delegated-checkout-fixture.test.mts",
+      "capability_id": "FEATURE-RCG-5A"
+    },
+    {
+      "id": "runtime:RCG5A-FIXTURE-REVOKED-SESSION-RESTART",
+      "suite": "runtime",
+      "runner_case_id": "RCG5A-FIXTURE-REVOKED-SESSION-RESTART",
+      "source": "tests/development/delegated-checkout-fixture.test.mts",
+      "capability_id": "FEATURE-RCG-5A"
+    },
+    {
+      "id": "runtime:RCG5A-FIXTURE-CHANGED-PROOF-RESTART",
+      "suite": "runtime",
+      "runner_case_id": "RCG5A-FIXTURE-CHANGED-PROOF-RESTART",
+      "source": "tests/development/delegated-checkout-fixture.test.mts",
+      "capability_id": "FEATURE-RCG-5A"
+    },
+    {
+      "id": "runtime:RCG5A-FIXTURE-FRESH-REFUSES-EXISTING",
+      "suite": "runtime",
+      "runner_case_id": "RCG5A-FIXTURE-FRESH-REFUSES-EXISTING",
+      "source": "tests/development/delegated-checkout-fixture.test.mts",
+      "capability_id": "FEATURE-RCG-5A"
+    },
+    {
+      "id": "runtime:RCG5A-FIXTURE-PATH-AND-MODE-REFUSAL",
+      "suite": "runtime",
+      "runner_case_id": "RCG5A-FIXTURE-PATH-AND-MODE-REFUSAL",
+      "source": "tests/development/delegated-checkout-fixture.test.mts",
+      "capability_id": "FEATURE-RCG-5A"
+    },
+    {
+      "id": "runtime:RCG5A-FIXTURE-HISTORY-NEVER-INITIALIZES",
+      "suite": "runtime",
+      "runner_case_id": "RCG5A-FIXTURE-HISTORY-NEVER-INITIALIZES",
+      "source": "tests/development/delegated-checkout-fixture.test.mts",
+      "capability_id": "FEATURE-RCG-5A"
+    },
+    {
+      "id": "runtime:RCG5A-FIXTURE-MARKER-IDENTITY",
+      "suite": "runtime",
+      "runner_case_id": "RCG5A-FIXTURE-MARKER-IDENTITY",
+      "source": "tests/development/delegated-checkout-fixture.test.mts",
+      "capability_id": "FEATURE-RCG-5A"
+    },
+    {
+      "id": "runtime:RCG5A-FIXTURE-DATABASE-REFUSAL",
+      "suite": "runtime",
+      "runner_case_id": "RCG5A-FIXTURE-DATABASE-REFUSAL",
+      "source": "tests/development/delegated-checkout-fixture.test.mts",
+      "capability_id": "FEATURE-RCG-5A"
+    },
+    {
+      "id": "runtime:RCG5A-FIXTURE-LINK-REFUSAL",
+      "suite": "runtime",
+      "runner_case_id": "RCG5A-FIXTURE-LINK-REFUSAL",
+      "source": "tests/development/delegated-checkout-fixture.test.mts",
+      "capability_id": "FEATURE-RCG-5A"
+    },
+    {
+      "id": "runtime:RCG5A-FIXTURE-SNAPSHOT-READ-ONLY",
+      "suite": "runtime",
+      "runner_case_id": "RCG5A-FIXTURE-SNAPSHOT-READ-ONLY",
+      "source": "tests/development/delegated-checkout-fixture.test.mts",
+      "capability_id": "FEATURE-RCG-5A"
+    },
+    {
+      "id": "runtime:RCG5A-FIXTURE-CHILD-REQUIRES-IPC",
+      "suite": "runtime",
+      "runner_case_id": "RCG5A-FIXTURE-CHILD-REQUIRES-IPC",
+      "source": "tests/development/delegated-checkout-fixture.test.mts",
+      "capability_id": "FEATURE-RCG-5A"
+    },
+    {
+      "id": "runtime:RCG5A-FIXTURE-CHILD-INVALID-CONFIGURATION",
+      "suite": "runtime",
+      "runner_case_id": "RCG5A-FIXTURE-CHILD-INVALID-CONFIGURATION",
+      "source": "tests/development/delegated-checkout-fixture.test.mts",
+      "capability_id": "FEATURE-RCG-5A"
+    },
+    {
+      "id": "runtime:RCG5A-FIXTURE-CHILD-REJECTS-CLI-ARGUMENTS",
+      "suite": "runtime",
+      "runner_case_id": "RCG5A-FIXTURE-CHILD-REJECTS-CLI-ARGUMENTS",
+      "source": "tests/development/delegated-checkout-fixture.test.mts",
+      "capability_id": "FEATURE-RCG-5A"
+    },
+    {
+      "id": "runtime:RCG5A-FIXTURE-CHILD-DISCONNECT-CLOSES",
+      "suite": "runtime",
+      "runner_case_id": "RCG5A-FIXTURE-CHILD-DISCONNECT-CLOSES",
+      "source": "tests/development/delegated-checkout-fixture.test.mts",
+      "capability_id": "FEATURE-RCG-5A"
+    },
+    {
+      "id": "runtime:RCG5A-PROCESS-JOURNEY",
+      "suite": "runtime",
+      "runner_case_id": "RCG5A-PROCESS-JOURNEY",
+      "source": "tests/development/delegated-checkout-lifecycle.test.mts",
+      "capability_id": "FEATURE-RCG-5A"
+    },
+    {
+      "id": "runtime:RCG5A-PROCESS-COPIED-CLIENT",
+      "suite": "runtime",
+      "runner_case_id": "RCG5A-PROCESS-COPIED-CLIENT",
+      "source": "tests/development/delegated-checkout-lifecycle.test.mts",
+      "capability_id": "FEATURE-RCG-5A"
+    },
+    {
+      "id": "runtime:RCG5A-PROCESS-OWNERSHIP",
+      "suite": "runtime",
+      "runner_case_id": "RCG5A-PROCESS-OWNERSHIP",
+      "source": "tests/development/delegated-checkout-lifecycle.test.mts",
+      "capability_id": "FEATURE-RCG-5A"
+    },
+    {
+      "id": "runtime:RCG5A-PROCESS-ABORT-CLEANUP",
+      "suite": "runtime",
+      "runner_case_id": "RCG5A-PROCESS-ABORT-CLEANUP",
+      "source": "tests/development/delegated-checkout-lifecycle.test.mts",
+      "capability_id": "FEATURE-RCG-5A"
+    },
+    {
+      "id": "runtime:RCG5A-PROCESS-STARTUP-FAILURE-CLEANUP",
+      "suite": "runtime",
+      "runner_case_id": "RCG5A-PROCESS-STARTUP-FAILURE-CLEANUP",
+      "source": "tests/development/delegated-checkout-lifecycle.test.mts",
+      "capability_id": "FEATURE-RCG-5A"
+    },
+    {
+      "id": "runtime:RCG5A-PROCESS-COMMAND-REFUSES-INPUT",
+      "suite": "runtime",
+      "runner_case_id": "RCG5A-PROCESS-COMMAND-REFUSES-INPUT",
+      "source": "tests/development/delegated-checkout-lifecycle.test.mts",
+      "capability_id": "FEATURE-RCG-5A"
+    },
+    {
+      "id": "runtime:RCG5B-NATIVE-ORIGINAL",
+      "suite": "runtime",
+      "runner_case_id": "RCG5B-NATIVE-ORIGINAL",
+      "source": "tests/development/delegated-checkout-recovery.test.mts",
+      "capability_id": "FEATURE-RCG-5B-RECOVERY"
+    },
+    {
+      "id": "runtime:RCG5B-NATIVE-NO-PROVENANCE",
+      "suite": "runtime",
+      "runner_case_id": "RCG5B-NATIVE-NO-PROVENANCE",
+      "source": "tests/development/delegated-checkout-recovery.test.mts",
+      "capability_id": "FEATURE-RCG-5B-RECOVERY"
+    },
+    {
+      "id": "runtime:RCG5B-NATIVE-RESTART",
+      "suite": "runtime",
+      "runner_case_id": "RCG5B-NATIVE-RESTART",
+      "source": "tests/development/delegated-checkout-recovery.test.mts",
+      "capability_id": "FEATURE-RCG-5B-RECOVERY"
+    },
+    {
+      "id": "runtime:RCG5B-NATIVE-ABSENT",
+      "suite": "runtime",
+      "runner_case_id": "RCG5B-NATIVE-ABSENT",
+      "source": "tests/development/delegated-checkout-recovery.test.mts",
+      "capability_id": "FEATURE-RCG-5B-RECOVERY"
+    },
+    {
+      "id": "runtime:RCG5B-NATIVE-INPUT",
+      "suite": "runtime",
+      "runner_case_id": "RCG5B-NATIVE-INPUT",
+      "source": "tests/development/delegated-checkout-recovery.test.mts",
+      "capability_id": "FEATURE-RCG-5B-RECOVERY"
+    },
+    {
+      "id": "runtime:RCG5B-NATIVE-PROOF-FIRST",
+      "suite": "runtime",
+      "runner_case_id": "RCG5B-NATIVE-PROOF-FIRST",
+      "source": "tests/development/delegated-checkout-recovery.test.mts",
+      "capability_id": "FEATURE-RCG-5B-RECOVERY"
+    },
+    {
+      "id": "runtime:RCG5B-NATIVE-REVOKED",
+      "suite": "runtime",
+      "runner_case_id": "RCG5B-NATIVE-REVOKED",
+      "source": "tests/development/delegated-checkout-recovery.test.mts",
+      "capability_id": "FEATURE-RCG-5B-RECOVERY"
+    },
+    {
+      "id": "runtime:RCG5B-NATIVE-SCOPE",
+      "suite": "runtime",
+      "runner_case_id": "RCG5B-NATIVE-SCOPE",
+      "source": "tests/development/delegated-checkout-recovery.test.mts",
+      "capability_id": "FEATURE-RCG-5B-RECOVERY"
+    },
+    {
+      "id": "runtime:RCG5B-NATIVE-RESOURCE",
+      "suite": "runtime",
+      "runner_case_id": "RCG5B-NATIVE-RESOURCE",
+      "source": "tests/development/delegated-checkout-recovery.test.mts",
+      "capability_id": "FEATURE-RCG-5B-RECOVERY"
+    },
+    {
+      "id": "runtime:RCG5B-NATIVE-FULL-IDENTITY",
+      "suite": "runtime",
+      "runner_case_id": "RCG5B-NATIVE-FULL-IDENTITY",
+      "source": "tests/development/delegated-checkout-recovery.test.mts",
+      "capability_id": "FEATURE-RCG-5B-RECOVERY"
+    },
+    {
+      "id": "runtime:RCG5B-NATIVE-EXPIRY",
+      "suite": "runtime",
+      "runner_case_id": "RCG5B-NATIVE-EXPIRY",
+      "source": "tests/development/delegated-checkout-recovery.test.mts",
+      "capability_id": "FEATURE-RCG-5B-RECOVERY"
+    },
+    {
+      "id": "runtime:RCG5B-NATIVE-RECEIPT-EXPIRY",
+      "suite": "runtime",
+      "runner_case_id": "RCG5B-NATIVE-RECEIPT-EXPIRY",
+      "source": "tests/development/delegated-checkout-recovery.test.mts",
+      "capability_id": "FEATURE-RCG-5B-RECOVERY"
+    },
+    {
+      "id": "runtime:RCG5B-NATIVE-CANCELLED-HELD",
+      "suite": "runtime",
+      "runner_case_id": "RCG5B-NATIVE-CANCELLED-HELD",
+      "source": "tests/development/delegated-checkout-recovery.test.mts",
+      "capability_id": "FEATURE-RCG-5B-RECOVERY"
+    },
+    {
+      "id": "runtime:RCG5B-NATIVE-ERASED-RESTORED",
+      "suite": "runtime",
+      "runner_case_id": "RCG5B-NATIVE-ERASED-RESTORED",
+      "source": "tests/development/delegated-checkout-recovery.test.mts",
+      "capability_id": "FEATURE-RCG-5B-RECOVERY"
+    },
+    {
+      "id": "runtime:RCG5B-NATIVE-LATE-AUTHORITY",
+      "suite": "runtime",
+      "runner_case_id": "RCG5B-NATIVE-LATE-AUTHORITY",
+      "source": "tests/development/delegated-checkout-recovery.test.mts",
+      "capability_id": "FEATURE-RCG-5B-RECOVERY"
+    },
+    {
+      "id": "runtime:RCG5B-NATIVE-RECORD-FENCE",
+      "suite": "runtime",
+      "runner_case_id": "RCG5B-NATIVE-RECORD-FENCE",
+      "source": "tests/development/delegated-checkout-recovery.test.mts",
+      "capability_id": "FEATURE-RCG-5B-RECOVERY"
+    },
+    {
+      "id": "runtime:RCG5B-NATIVE-EXPIRY-FENCE",
+      "suite": "runtime",
+      "runner_case_id": "RCG5B-NATIVE-EXPIRY-FENCE",
+      "source": "tests/development/delegated-checkout-recovery.test.mts",
+      "capability_id": "FEATURE-RCG-5B-RECOVERY"
+    },
+    {
+      "id": "runtime:RCG5B-HTTP-CONTRACT-COMPATIBILITY",
+      "suite": "runtime",
+      "runner_case_id": "RCG5B-HTTP-CONTRACT-COMPATIBILITY",
+      "source": "tests/development/delegated-checkout-recovery-http.test.mts",
+      "capability_id": "FEATURE-RCG-5B-RECOVERY"
+    },
+    {
+      "id": "runtime:RCG5B-HTTP-RETAINED-HISTORY",
+      "suite": "runtime",
+      "runner_case_id": "RCG5B-HTTP-RETAINED-HISTORY",
+      "source": "tests/development/delegated-checkout-recovery-http.test.mts",
+      "capability_id": "FEATURE-RCG-5B-RECOVERY"
+    },
+    {
+      "id": "runtime:RCG5B-HTTP-AUTH-BEFORE-BODY",
+      "suite": "runtime",
+      "runner_case_id": "RCG5B-HTTP-AUTH-BEFORE-BODY",
+      "source": "tests/development/delegated-checkout-recovery-http.test.mts",
+      "capability_id": "FEATURE-RCG-5B-RECOVERY"
+    },
+    {
+      "id": "runtime:RCG5B-HTTP-SCOPE-AND-ABSENCE",
+      "suite": "runtime",
+      "runner_case_id": "RCG5B-HTTP-SCOPE-AND-ABSENCE",
+      "source": "tests/development/delegated-checkout-recovery-http.test.mts",
+      "capability_id": "FEATURE-RCG-5B-RECOVERY"
+    },
+    {
+      "id": "runtime:RCG5B-HTTP-EXACT-INPUT",
+      "suite": "runtime",
+      "runner_case_id": "RCG5B-HTTP-EXACT-INPUT",
+      "source": "tests/development/delegated-checkout-recovery-http.test.mts",
+      "capability_id": "FEATURE-RCG-5B-RECOVERY"
+    },
+    {
+      "id": "runtime:RCG5B-HTTP-TRANSPORT-BOUNDS",
+      "suite": "runtime",
+      "runner_case_id": "RCG5B-HTTP-TRANSPORT-BOUNDS",
+      "source": "tests/development/delegated-checkout-recovery-http.test.mts",
+      "capability_id": "FEATURE-RCG-5B-RECOVERY"
+    },
+    {
+      "id": "runtime:RCG5B-HTTP-SANITIZED-FAILURE",
+      "suite": "runtime",
+      "runner_case_id": "RCG5B-HTTP-SANITIZED-FAILURE",
+      "source": "tests/development/delegated-checkout-recovery-http.test.mts",
+      "capability_id": "FEATURE-RCG-5B-RECOVERY"
+    },
+    {
+      "id": "runtime:RCG5B-CLIENT-NATIVE-RECOVERY",
+      "suite": "runtime",
+      "runner_case_id": "RCG5B-CLIENT-NATIVE-RECOVERY",
+      "source": "tests/development/delegated-checkout-recovery-http.test.mts",
+      "capability_id": "FEATURE-RCG-5B-RECOVERY"
+    },
+    {
+      "id": "runtime:RCG5B-CLIENT-ORIGINAL-BINDING",
+      "suite": "runtime",
+      "runner_case_id": "RCG5B-CLIENT-ORIGINAL-BINDING",
+      "source": "tests/development/delegated-checkout-recovery-http.test.mts",
+      "capability_id": "FEATURE-RCG-5B-RECOVERY"
+    },
+    {
+      "id": "runtime:RCG5B-CLIENT-CONTRACT-BOUNDARY",
+      "suite": "runtime",
+      "runner_case_id": "RCG5B-CLIENT-CONTRACT-BOUNDARY",
+      "source": "tests/development/delegated-checkout-recovery-http.test.mts",
+      "capability_id": "FEATURE-RCG-5B-RECOVERY"
+    },
+    {
+      "id": "runtime:RCG5B-CLIENT-NO-RETRY-OR-FALLBACK",
+      "suite": "runtime",
+      "runner_case_id": "RCG5B-CLIENT-NO-RETRY-OR-FALLBACK",
+      "source": "tests/development/delegated-checkout-recovery-http.test.mts",
+      "capability_id": "FEATURE-RCG-5B-RECOVERY"
+    },
+    {
+      "id": "runtime:RCG5B-CLIENT-INPUT-AND-SECRET-BOUNDARY",
+      "suite": "runtime",
+      "runner_case_id": "RCG5B-CLIENT-INPUT-AND-SECRET-BOUNDARY",
+      "source": "tests/development/delegated-checkout-recovery-http.test.mts",
+      "capability_id": "FEATURE-RCG-5B-RECOVERY"
+    },
+    {
+      "id": "runtime:RCG5B-PROCESS-LOST-PREPARATION-RECOVERY",
+      "suite": "runtime",
+      "runner_case_id": "RCG5B-PROCESS-LOST-PREPARATION-RECOVERY",
+      "source": "tests/development/delegated-checkout-recovery-process.test.mts",
+      "capability_id": "FEATURE-RCG-5B-RECOVERY"
+    },
+    {
+      "id": "runtime:RCG5B-PROCESS-LOSS-PROBE-BOUNDARY",
+      "suite": "runtime",
+      "runner_case_id": "RCG5B-PROCESS-LOSS-PROBE-BOUNDARY",
+      "source": "tests/development/delegated-checkout-recovery-process.test.mts",
+      "capability_id": "FEATURE-RCG-5B-RECOVERY"
+    },
+    {
+      "id": "runtime:RCG5B-PROCESS-COMMAND-REFUSES-INPUT",
+      "suite": "runtime",
+      "runner_case_id": "RCG5B-PROCESS-COMMAND-REFUSES-INPUT",
+      "source": "tests/development/delegated-checkout-recovery-process.test.mts",
+      "capability_id": "FEATURE-RCG-5B-RECOVERY"
+    },
+    {
+      "id": "runtime:RCG5C-HTTP-SERVED-ASSETS",
+      "suite": "runtime",
+      "runner_case_id": "RCG5C-HTTP-SERVED-ASSETS",
+      "source": "tests/development/delegated-checkout-review.test.mts",
+      "capability_id": "FEATURE-RCG-5C-CUSTOMER-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5C-CONTROLLER-NATIVE-JOURNEY",
+      "suite": "runtime",
+      "runner_case_id": "RCG5C-CONTROLLER-NATIVE-JOURNEY",
+      "source": "tests/development/delegated-checkout-review.test.mts",
+      "capability_id": "FEATURE-RCG-5C-CUSTOMER-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5C-CONTROLLER-LOST-PREPARE",
+      "suite": "runtime",
+      "runner_case_id": "RCG5C-CONTROLLER-LOST-PREPARE",
+      "source": "tests/development/delegated-checkout-review.test.mts",
+      "capability_id": "FEATURE-RCG-5C-CUSTOMER-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5C-CONTROLLER-ABSENCE-NO-RETRY",
+      "suite": "runtime",
+      "runner_case_id": "RCG5C-CONTROLLER-ABSENCE-NO-RETRY",
+      "source": "tests/development/delegated-checkout-review.test.mts",
+      "capability_id": "FEATURE-RCG-5C-CUSTOMER-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5C-CONTROLLER-LOST-CANCEL",
+      "suite": "runtime",
+      "runner_case_id": "RCG5C-CONTROLLER-LOST-CANCEL",
+      "source": "tests/development/delegated-checkout-review.test.mts",
+      "capability_id": "FEATURE-RCG-5C-CUSTOMER-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5C-CONTROLLER-REVISION-CONFLICT",
+      "suite": "runtime",
+      "runner_case_id": "RCG5C-CONTROLLER-REVISION-CONFLICT",
+      "source": "tests/development/delegated-checkout-review.test.mts",
+      "capability_id": "FEATURE-RCG-5C-CUSTOMER-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5C-CONTROLLER-LATE-READ-CLEARED",
+      "suite": "runtime",
+      "runner_case_id": "RCG5C-CONTROLLER-LATE-READ-CLEARED",
+      "source": "tests/development/delegated-checkout-review.test.mts",
+      "capability_id": "FEATURE-RCG-5C-CUSTOMER-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5C-CONTROLLER-LATE-MUTATION-SESSION",
+      "suite": "runtime",
+      "runner_case_id": "RCG5C-CONTROLLER-LATE-MUTATION-SESSION",
+      "source": "tests/development/delegated-checkout-review.test.mts",
+      "capability_id": "FEATURE-RCG-5C-CUSTOMER-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5C-CONTROLLER-INVALID-MUTATION-RESPONSE",
+      "suite": "runtime",
+      "runner_case_id": "RCG5C-CONTROLLER-INVALID-MUTATION-RESPONSE",
+      "source": "tests/development/delegated-checkout-review.test.mts",
+      "capability_id": "FEATURE-RCG-5C-CUSTOMER-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5C-CONTROLLER-LOOKUP-BINDING",
+      "suite": "runtime",
+      "runner_case_id": "RCG5C-CONTROLLER-LOOKUP-BINDING",
+      "source": "tests/development/delegated-checkout-review.test.mts",
+      "capability_id": "FEATURE-RCG-5C-CUSTOMER-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5C-CONTROLLER-REVOKED-SESSION",
+      "suite": "runtime",
+      "runner_case_id": "RCG5C-CONTROLLER-REVOKED-SESSION",
+      "source": "tests/development/delegated-checkout-review.test.mts",
+      "capability_id": "FEATURE-RCG-5C-CUSTOMER-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5C-CONTROLLER-PAGE-LIFECYCLE",
+      "suite": "runtime",
+      "runner_case_id": "RCG5C-CONTROLLER-PAGE-LIFECYCLE",
+      "source": "tests/development/delegated-checkout-review.test.mts",
+      "capability_id": "FEATURE-RCG-5C-CUSTOMER-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5C-CONTROLLER-BOUNDED-RESPONSE",
+      "suite": "runtime",
+      "runner_case_id": "RCG5C-CONTROLLER-BOUNDED-RESPONSE",
+      "source": "tests/development/delegated-checkout-review.test.mts",
+      "capability_id": "FEATURE-RCG-5C-CUSTOMER-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5C-CONTROLLER-RESPONSE-OPERATION",
+      "suite": "runtime",
+      "runner_case_id": "RCG5C-CONTROLLER-RESPONSE-OPERATION",
+      "source": "tests/development/delegated-checkout-review.test.mts",
+      "capability_id": "FEATURE-RCG-5C-CUSTOMER-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5C-CONTROLLER-CROSS-REFERENCES",
+      "suite": "runtime",
+      "runner_case_id": "RCG5C-CONTROLLER-CROSS-REFERENCES",
+      "source": "tests/development/delegated-checkout-review.test.mts",
+      "capability_id": "FEATURE-RCG-5C-CUSTOMER-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5C-CONTROLLER-HISTORY-NO-OWNERS",
+      "suite": "runtime",
+      "runner_case_id": "RCG5C-CONTROLLER-HISTORY-NO-OWNERS",
+      "source": "tests/development/delegated-checkout-review.test.mts",
+      "capability_id": "FEATURE-RCG-5C-CUSTOMER-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5C-CONTROLLER-LATE-BODY-CLEARED",
+      "suite": "runtime",
+      "runner_case_id": "RCG5C-CONTROLLER-LATE-BODY-CLEARED",
+      "source": "tests/development/delegated-checkout-review.test.mts",
+      "capability_id": "FEATURE-RCG-5C-CUSTOMER-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5C-CONTROLLER-DUPLICATE-RESPONSE",
+      "suite": "runtime",
+      "runner_case_id": "RCG5C-CONTROLLER-DUPLICATE-RESPONSE",
+      "source": "tests/development/delegated-checkout-review.test.mts",
+      "capability_id": "FEATURE-RCG-5C-CUSTOMER-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5C-CONTROLLER-BODY-DEADLINE",
+      "suite": "runtime",
+      "runner_case_id": "RCG5C-CONTROLLER-BODY-DEADLINE",
+      "source": "tests/development/delegated-checkout-review.test.mts",
+      "capability_id": "FEATURE-RCG-5C-CUSTOMER-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5C-CONTROLLER-NESTED-AUTHORITY",
+      "suite": "runtime",
+      "runner_case_id": "RCG5C-CONTROLLER-NESTED-AUTHORITY",
+      "source": "tests/development/delegated-checkout-review.test.mts",
+      "capability_id": "FEATURE-RCG-5C-CUSTOMER-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5C-CONTROLLER-EXPIRY-AT-ACTION",
+      "suite": "runtime",
+      "runner_case_id": "RCG5C-CONTROLLER-EXPIRY-AT-ACTION",
+      "source": "tests/development/delegated-checkout-review.test.mts",
+      "capability_id": "FEATURE-RCG-5C-CUSTOMER-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5C-BROWSER-NATIVE-JOURNEY",
+      "suite": "runtime",
+      "runner_case_id": "RCG5C-BROWSER-NATIVE-JOURNEY",
+      "source": "tests/development/delegated-checkout-browser.test.mts",
+      "capability_id": "FEATURE-RCG-5C-CUSTOMER-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5C-BROWSER-LOST-PREPARE",
+      "suite": "runtime",
+      "runner_case_id": "RCG5C-BROWSER-LOST-PREPARE",
+      "source": "tests/development/delegated-checkout-browser.test.mts",
+      "capability_id": "FEATURE-RCG-5C-CUSTOMER-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5C-BROWSER-ABSENCE-NO-RETRY",
+      "suite": "runtime",
+      "runner_case_id": "RCG5C-BROWSER-ABSENCE-NO-RETRY",
+      "source": "tests/development/delegated-checkout-browser.test.mts",
+      "capability_id": "FEATURE-RCG-5C-CUSTOMER-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5C-BROWSER-LOST-CANCEL",
+      "suite": "runtime",
+      "runner_case_id": "RCG5C-BROWSER-LOST-CANCEL",
+      "source": "tests/development/delegated-checkout-browser.test.mts",
+      "capability_id": "FEATURE-RCG-5C-CUSTOMER-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5C-BROWSER-REVISION-CONFLICT",
+      "suite": "runtime",
+      "runner_case_id": "RCG5C-BROWSER-REVISION-CONFLICT",
+      "source": "tests/development/delegated-checkout-browser.test.mts",
+      "capability_id": "FEATURE-RCG-5C-CUSTOMER-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5C-BROWSER-LATE-CLEAR",
+      "suite": "runtime",
+      "runner_case_id": "RCG5C-BROWSER-LATE-CLEAR",
+      "source": "tests/development/delegated-checkout-browser.test.mts",
+      "capability_id": "FEATURE-RCG-5C-CUSTOMER-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5C-BROWSER-REVOKED-SESSION",
+      "suite": "runtime",
+      "runner_case_id": "RCG5C-BROWSER-REVOKED-SESSION",
+      "source": "tests/development/delegated-checkout-browser.test.mts",
+      "capability_id": "FEATURE-RCG-5C-CUSTOMER-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5C-BROWSER-INVALID-BINDING",
+      "suite": "runtime",
+      "runner_case_id": "RCG5C-BROWSER-INVALID-BINDING",
+      "source": "tests/development/delegated-checkout-browser.test.mts",
+      "capability_id": "FEATURE-RCG-5C-CUSTOMER-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5C-BROWSER-MOBILE-KEYBOARD",
+      "suite": "runtime",
+      "runner_case_id": "RCG5C-BROWSER-MOBILE-KEYBOARD",
+      "source": "tests/development/delegated-checkout-browser.test.mts",
+      "capability_id": "FEATURE-RCG-5C-CUSTOMER-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5C-PROCESS-NORMAL-REAPS-DESCENDANT",
+      "suite": "runtime",
+      "runner_case_id": "RCG5C-PROCESS-NORMAL-REAPS-DESCENDANT",
+      "source": "tests/development/delegated-checkout-browser-process.test.mts",
+      "capability_id": "FEATURE-RCG-5C-CUSTOMER-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5C-PROCESS-CASE-DEADLINE",
+      "suite": "runtime",
+      "runner_case_id": "RCG5C-PROCESS-CASE-DEADLINE",
+      "source": "tests/development/delegated-checkout-browser-process.test.mts",
+      "capability_id": "FEATURE-RCG-5C-CUSTOMER-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5C-PROCESS-OUTER-RUNNER-DEADLINE",
+      "suite": "runtime",
+      "runner_case_id": "RCG5C-PROCESS-OUTER-RUNNER-DEADLINE",
+      "source": "tests/development/delegated-checkout-browser-process.test.mts",
+      "capability_id": "FEATURE-RCG-5C-CUSTOMER-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5D-CONTROLLER-NATIVE-RECEIPT",
+      "suite": "runtime",
+      "runner_case_id": "RCG5D-CONTROLLER-NATIVE-RECEIPT",
+      "source": "tests/development/delegated-checkout-receipt-review.test.mts",
+      "capability_id": "FEATURE-RCG-5D-RECEIPT-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5D-CONTROLLER-LOCAL-INPUT-BOUNDS",
+      "suite": "runtime",
+      "runner_case_id": "RCG5D-CONTROLLER-LOCAL-INPUT-BOUNDS",
+      "source": "tests/development/delegated-checkout-receipt-review.test.mts",
+      "capability_id": "FEATURE-RCG-5D-RECEIPT-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5D-CONTROLLER-WRONG-RECEIPT-BINDING",
+      "suite": "runtime",
+      "runner_case_id": "RCG5D-CONTROLLER-WRONG-RECEIPT-BINDING",
+      "source": "tests/development/delegated-checkout-receipt-review.test.mts",
+      "capability_id": "FEATURE-RCG-5D-RECEIPT-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5D-CONTROLLER-BAD-RECEIPT-SIGNATURE",
+      "suite": "runtime",
+      "runner_case_id": "RCG5D-CONTROLLER-BAD-RECEIPT-SIGNATURE",
+      "source": "tests/development/delegated-checkout-receipt-review.test.mts",
+      "capability_id": "FEATURE-RCG-5D-RECEIPT-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5D-CONTROLLER-LOST-RECEIPT-RESPONSE",
+      "suite": "runtime",
+      "runner_case_id": "RCG5D-CONTROLLER-LOST-RECEIPT-RESPONSE",
+      "source": "tests/development/delegated-checkout-receipt-review.test.mts",
+      "capability_id": "FEATURE-RCG-5D-RECEIPT-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5D-CONTROLLER-UNKNOWN-PREPARED-NO-RESEND",
+      "suite": "runtime",
+      "runner_case_id": "RCG5D-CONTROLLER-UNKNOWN-PREPARED-NO-RESEND",
+      "source": "tests/development/delegated-checkout-receipt-review.test.mts",
+      "capability_id": "FEATURE-RCG-5D-RECEIPT-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5D-CONTROLLER-UNVERIFIED-SUCCESS-REFUSED",
+      "suite": "runtime",
+      "runner_case_id": "RCG5D-CONTROLLER-UNVERIFIED-SUCCESS-REFUSED",
+      "source": "tests/development/delegated-checkout-receipt-review.test.mts",
+      "capability_id": "FEATURE-RCG-5D-RECEIPT-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5D-CONTROLLER-AUTHORITY-SUCCESS-REFUSED",
+      "suite": "runtime",
+      "runner_case_id": "RCG5D-CONTROLLER-AUTHORITY-SUCCESS-REFUSED",
+      "source": "tests/development/delegated-checkout-receipt-review.test.mts",
+      "capability_id": "FEATURE-RCG-5D-RECEIPT-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5D-CONTROLLER-LATE-RECEIPT-BODY-CLEARED",
+      "suite": "runtime",
+      "runner_case_id": "RCG5D-CONTROLLER-LATE-RECEIPT-BODY-CLEARED",
+      "source": "tests/development/delegated-checkout-receipt-review.test.mts",
+      "capability_id": "FEATURE-RCG-5D-RECEIPT-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5D-CONTROLLER-LATE-RECEIPT-SESSION-CHANGE",
+      "suite": "runtime",
+      "runner_case_id": "RCG5D-CONTROLLER-LATE-RECEIPT-SESSION-CHANGE",
+      "source": "tests/development/delegated-checkout-receipt-review.test.mts",
+      "capability_id": "FEATURE-RCG-5D-RECEIPT-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5D-CONTROLLER-RECEIPT-EXPIRY-AT-ACTION",
+      "suite": "runtime",
+      "runner_case_id": "RCG5D-CONTROLLER-RECEIPT-EXPIRY-AT-ACTION",
+      "source": "tests/development/delegated-checkout-receipt-review.test.mts",
+      "capability_id": "FEATURE-RCG-5D-RECEIPT-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5D-CONTROLLER-RECEIPT-PAGE-LIFECYCLE",
+      "suite": "runtime",
+      "runner_case_id": "RCG5D-CONTROLLER-RECEIPT-PAGE-LIFECYCLE",
+      "source": "tests/development/delegated-checkout-receipt-review.test.mts",
+      "capability_id": "FEATURE-RCG-5D-RECEIPT-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5D-BROWSER-NATIVE-RECEIPT",
+      "suite": "runtime",
+      "runner_case_id": "RCG5D-BROWSER-NATIVE-RECEIPT",
+      "source": "tests/development/delegated-checkout-receipt-browser.test.mts",
+      "capability_id": "FEATURE-RCG-5D-RECEIPT-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5D-BROWSER-LOST-RECEIPT",
+      "suite": "runtime",
+      "runner_case_id": "RCG5D-BROWSER-LOST-RECEIPT",
+      "source": "tests/development/delegated-checkout-receipt-browser.test.mts",
+      "capability_id": "FEATURE-RCG-5D-RECEIPT-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5D-BROWSER-WRONG-BINDING",
+      "suite": "runtime",
+      "runner_case_id": "RCG5D-BROWSER-WRONG-BINDING",
+      "source": "tests/development/delegated-checkout-receipt-browser.test.mts",
+      "capability_id": "FEATURE-RCG-5D-RECEIPT-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5D-BROWSER-LATE-CLEAR",
+      "suite": "runtime",
+      "runner_case_id": "RCG5D-BROWSER-LATE-CLEAR",
+      "source": "tests/development/delegated-checkout-receipt-browser.test.mts",
+      "capability_id": "FEATURE-RCG-5D-RECEIPT-REVIEW"
+    },
+    {
+      "id": "runtime:RCG5D-BROWSER-MOBILE-KEYBOARD",
+      "suite": "runtime",
+      "runner_case_id": "RCG5D-BROWSER-MOBILE-KEYBOARD",
+      "source": "tests/development/delegated-checkout-receipt-browser.test.mts",
+      "capability_id": "FEATURE-RCG-5D-RECEIPT-REVIEW"
+    },
+    {
+      "id": "runtime:RCG4BC1-CODEC-ORACLE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC1-CODEC-ORACLE",
+      "source": "tests/development/delegated-command-codec.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C1-COMMAND-CONSUMER"
+    },
+    {
+      "id": "runtime:RCG4BC1-CODEC-CANONICAL",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC1-CODEC-CANONICAL",
+      "source": "tests/development/delegated-command-codec.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C1-COMMAND-CONSUMER"
+    },
+    {
+      "id": "runtime:RCG4BC1-CODEC-DIGEST-SCOPE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC1-CODEC-DIGEST-SCOPE",
+      "source": "tests/development/delegated-command-codec.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C1-COMMAND-CONSUMER"
+    },
+    {
+      "id": "runtime:RCG4BC1-CODEC-CLOSED-REQUEST",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC1-CODEC-CLOSED-REQUEST",
+      "source": "tests/development/delegated-command-codec.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C1-COMMAND-CONSUMER"
+    },
+    {
+      "id": "runtime:RCG4BC1-CODEC-SCALARS",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC1-CODEC-SCALARS",
+      "source": "tests/development/delegated-command-codec.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C1-COMMAND-CONSUMER"
+    },
+    {
+      "id": "runtime:RCG4BC1-CODEC-STRICT-JSON",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC1-CODEC-STRICT-JSON",
+      "source": "tests/development/delegated-command-codec.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C1-COMMAND-CONSUMER"
+    },
+    {
+      "id": "runtime:RCG4BC1-CODEC-SNAPSHOT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC1-CODEC-SNAPSHOT",
+      "source": "tests/development/delegated-command-codec.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C1-COMMAND-CONSUMER"
+    },
+    {
+      "id": "runtime:RCG4BC1-CODEC-RECOVERY-ENCODING",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC1-CODEC-RECOVERY-ENCODING",
+      "source": "tests/development/delegated-command-codec.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C1-COMMAND-CONSUMER"
+    },
+    {
+      "id": "runtime:RCG4BC1-CODEC-START-BINDING",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC1-CODEC-START-BINDING",
+      "source": "tests/development/delegated-command-codec.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C1-COMMAND-CONSUMER"
+    },
+    {
+      "id": "runtime:RCG4BC1-CODEC-ENVELOPE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC1-CODEC-ENVELOPE",
+      "source": "tests/development/delegated-command-codec.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C1-COMMAND-CONSUMER"
+    },
+    {
+      "id": "runtime:RCG4BC1-CODEC-FINAL-BINDING",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC1-CODEC-FINAL-BINDING",
+      "source": "tests/development/delegated-command-codec.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C1-COMMAND-CONSUMER"
+    },
+    {
+      "id": "runtime:RCG4BC1-CODEC-HISTORICAL-TIME",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC1-CODEC-HISTORICAL-TIME",
+      "source": "tests/development/delegated-command-codec.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C1-COMMAND-CONSUMER"
+    },
+    {
+      "id": "runtime:RCG4BC1-CODEC-RECOVERY-FLAG",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC1-CODEC-RECOVERY-FLAG",
+      "source": "tests/development/delegated-command-codec.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C1-COMMAND-CONSUMER"
+    },
+    {
+      "id": "runtime:RCG4BC1-CODEC-RECOVERY-BINDING",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC1-CODEC-RECOVERY-BINDING",
+      "source": "tests/development/delegated-command-codec.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C1-COMMAND-CONSUMER"
+    },
+    {
+      "id": "runtime:RCG4BC1-CODEC-HISTORY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC1-CODEC-HISTORY",
+      "source": "tests/development/delegated-command-codec.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C1-COMMAND-CONSUMER"
+    },
+    {
+      "id": "runtime:RCG4BC1-CODEC-PRIOR-OPTIONS",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC1-CODEC-PRIOR-OPTIONS",
+      "source": "tests/development/delegated-command-codec.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C1-COMMAND-CONSUMER"
+    },
+    {
+      "id": "runtime:RCG4BC1-CODEC-RECEIPT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC1-CODEC-RECEIPT",
+      "source": "tests/development/delegated-command-codec.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C1-COMMAND-CONSUMER"
+    },
+    {
+      "id": "runtime:RCG4BC1-CODEC-RECEIPT-FAULTS",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC1-CODEC-RECEIPT-FAULTS",
+      "source": "tests/development/delegated-command-codec.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C1-COMMAND-CONSUMER"
+    },
+    {
+      "id": "runtime:RCG4BC1-CODEC-BOUNDS",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC1-CODEC-BOUNDS",
+      "source": "tests/development/delegated-command-codec.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C1-COMMAND-CONSUMER"
+    },
+    {
+      "id": "runtime:RCG4BC1-CODEC-NO-AUTHORITY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC1-CODEC-NO-AUTHORITY",
+      "source": "tests/development/delegated-command-codec.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C1-COMMAND-CONSUMER"
+    },
+    {
+      "id": "runtime:RCG4BC1-NATIVE-PREVIEW",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC1-NATIVE-PREVIEW",
+      "source": "tests/development/delegated-command-native.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C1-COMMAND-CONSUMER"
+    },
+    {
+      "id": "runtime:RCG4BC1-NATIVE-RECEIPT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC1-NATIVE-RECEIPT",
+      "source": "tests/development/delegated-command-native.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C1-COMMAND-CONSUMER"
+    },
+    {
+      "id": "runtime:RCG4BC1-NATIVE-FORGED-RECEIPT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC1-NATIVE-FORGED-RECEIPT",
+      "source": "tests/development/delegated-command-native.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C1-COMMAND-CONSUMER"
+    },
+    {
+      "id": "runtime:RCG4BC1-NATIVE-HISTORY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC1-NATIVE-HISTORY",
+      "source": "tests/development/delegated-command-native.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C1-COMMAND-CONSUMER"
+    },
+    {
+      "id": "runtime:RCG4BC1-NATIVE-DENY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC1-NATIVE-DENY",
+      "source": "tests/development/delegated-command-native.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C1-COMMAND-CONSUMER"
+    },
+    {
+      "id": "runtime:RCG4BC2-CLAIM-ORACLE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-CLAIM-ORACLE",
+      "source": "tests/development/delegated-command-claims.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-CLAIM-CONFIG",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-CLAIM-CONFIG",
+      "source": "tests/development/delegated-command-claims.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-CLAIM-IDENTITY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-CLAIM-IDENTITY",
+      "source": "tests/development/delegated-command-claims.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-CLAIM-SCOPE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-CLAIM-SCOPE",
+      "source": "tests/development/delegated-command-claims.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-CLAIM-PROOF-FIRST",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-CLAIM-PROOF-FIRST",
+      "source": "tests/development/delegated-command-claims.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-CLAIM-NAMESPACE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-CLAIM-NAMESPACE",
+      "source": "tests/development/delegated-command-claims.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-CLAIM-OBSERVE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-CLAIM-OBSERVE",
+      "source": "tests/development/delegated-command-claims.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-CLAIM-RESPONSE-BINDING",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-CLAIM-RESPONSE-BINDING",
+      "source": "tests/development/delegated-command-claims.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-CLAIM-HISTORY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-CLAIM-HISTORY",
+      "source": "tests/development/delegated-command-claims.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-CLAIM-RECOVERY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-CLAIM-RECOVERY",
+      "source": "tests/development/delegated-command-claims.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-CLAIM-CANCEL",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-CLAIM-CANCEL",
+      "source": "tests/development/delegated-command-claims.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-CLAIM-FINAL-CHALLENGE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-CLAIM-FINAL-CHALLENGE",
+      "source": "tests/development/delegated-command-claims.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-CLAIM-RESTART",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-CLAIM-RESTART",
+      "source": "tests/development/delegated-command-claims.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-CLAIM-TRANSACTION",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-CLAIM-TRANSACTION",
+      "source": "tests/development/delegated-command-claims.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-CLAIM-COMMIT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-CLAIM-COMMIT",
+      "source": "tests/development/delegated-command-claims.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-CLAIM-ACCESS-FENCE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-CLAIM-ACCESS-FENCE",
+      "source": "tests/development/delegated-command-claims.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-CLAIM-REENTRANT-FENCE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-CLAIM-REENTRANT-FENCE",
+      "source": "tests/development/delegated-command-claims.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-CLAIM-CLOCK",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-CLAIM-CLOCK",
+      "source": "tests/development/delegated-command-claims.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-CLAIM-INTEGRITY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-CLAIM-INTEGRITY",
+      "source": "tests/development/delegated-command-claims.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-CLAIM-NO-AUTHORITY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-CLAIM-NO-AUTHORITY",
+      "source": "tests/development/delegated-command-claims.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-PRIVACY-EXPORT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-PRIVACY-EXPORT",
+      "source": "tests/development/delegated-command-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-PRIVACY-ERASE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-PRIVACY-ERASE",
+      "source": "tests/development/delegated-command-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-PRIVACY-HELD",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-PRIVACY-HELD",
+      "source": "tests/development/delegated-command-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-PRIVACY-DETACHED",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-PRIVACY-DETACHED",
+      "source": "tests/development/delegated-command-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-PRIVACY-REASSIGNED",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-PRIVACY-REASSIGNED",
+      "source": "tests/development/delegated-command-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-PRIVACY-ERASE-REPLAY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-PRIVACY-ERASE-REPLAY",
+      "source": "tests/development/delegated-command-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-PRIVACY-UNINSTALL",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-PRIVACY-UNINSTALL",
+      "source": "tests/development/delegated-command-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-PRIVACY-RESTORE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-PRIVACY-RESTORE",
+      "source": "tests/development/delegated-command-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-PRIVACY-RESTORE-HELD",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-PRIVACY-RESTORE-HELD",
+      "source": "tests/development/delegated-command-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-PRIVACY-RESTORE-SUPPRESSION",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-PRIVACY-RESTORE-SUPPRESSION",
+      "source": "tests/development/delegated-command-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-PRIVACY-RESTORE-INTEGRITY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-PRIVACY-RESTORE-INTEGRITY",
+      "source": "tests/development/delegated-command-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-PRIVACY-IMPORT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-PRIVACY-IMPORT",
+      "source": "tests/development/delegated-command-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-PRIVACY-IMPORT-HELD",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-PRIVACY-IMPORT-HELD",
+      "source": "tests/development/delegated-command-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-PRIVACY-IMPORT-SUPPRESSION",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-PRIVACY-IMPORT-SUPPRESSION",
+      "source": "tests/development/delegated-command-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-PRIVACY-IMPORT-DESTINATION-HOLD",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-PRIVACY-IMPORT-DESTINATION-HOLD",
+      "source": "tests/development/delegated-command-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-PRIVACY-IMPORT-DESTINATION-INTEGRITY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-PRIVACY-IMPORT-DESTINATION-INTEGRITY",
+      "source": "tests/development/delegated-command-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-PRIVACY-IMPORT-SOURCE-INTEGRITY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-PRIVACY-IMPORT-SOURCE-INTEGRITY",
+      "source": "tests/development/delegated-command-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-PRIVACY-IMPORT-REPLAY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-PRIVACY-IMPORT-REPLAY",
+      "source": "tests/development/delegated-command-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-PRIVACY-EXPORT-SUPPRESSION",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-PRIVACY-EXPORT-SUPPRESSION",
+      "source": "tests/development/delegated-command-privacy.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-PROCESS-LOST-CLAIM",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-PROCESS-LOST-CLAIM",
+      "source": "tests/development/delegated-command-process.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-PROCESS-CONTENTION",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-PROCESS-CONTENTION",
+      "source": "tests/development/delegated-command-process.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-PROCESS-CONFLICT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-PROCESS-CONFLICT",
+      "source": "tests/development/delegated-command-process.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-PROCESS-LOST-OBSERVATION",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-PROCESS-LOST-OBSERVATION",
+      "source": "tests/development/delegated-command-process.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-CATALOG-REGISTRATION",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-CATALOG-REGISTRATION",
+      "source": "tests/development/delegated-command-catalog.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-CATALOG-PRESERVATION",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-CATALOG-PRESERVATION",
+      "source": "tests/development/delegated-command-catalog.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-CATALOG-PINS",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-CATALOG-PINS",
+      "source": "tests/development/delegated-command-catalog.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC2-CATALOG-LIMITS",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC2-CATALOG-LIMITS",
+      "source": "tests/development/delegated-command-catalog.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C2-COMMAND-CLAIMS"
+    },
+    {
+      "id": "runtime:RCG4BC3-START-MAPPING",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-START-MAPPING",
+      "source": "tests/development/delegated-checkout-starts.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-START-CONFIG",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-START-CONFIG",
+      "source": "tests/development/delegated-checkout-starts.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-START-DETACHED",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-START-DETACHED",
+      "source": "tests/development/delegated-checkout-starts.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-START-OWNERS",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-START-OWNERS",
+      "source": "tests/development/delegated-checkout-starts.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-START-PROVENANCE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-START-PROVENANCE",
+      "source": "tests/development/delegated-checkout-starts.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-START-INPUT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-START-INPUT",
+      "source": "tests/development/delegated-checkout-starts.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-START-CLAIM",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-START-CLAIM",
+      "source": "tests/development/delegated-checkout-starts.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-START-CONFLICT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-START-CONFLICT",
+      "source": "tests/development/delegated-checkout-starts.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-START-RAW-CONVERGENCE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-START-RAW-CONVERGENCE",
+      "source": "tests/development/delegated-checkout-starts.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-START-SCOPE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-START-SCOPE",
+      "source": "tests/development/delegated-checkout-starts.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-START-SOURCE-CHANGES",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-START-SOURCE-CHANGES",
+      "source": "tests/development/delegated-checkout-starts.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-START-EXPIRY-CLOSE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-START-EXPIRY-CLOSE",
+      "source": "tests/development/delegated-checkout-starts.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-START-PROOF-RECOVERY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-START-PROOF-RECOVERY",
+      "source": "tests/development/delegated-checkout-starts.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-START-TRANSACTION",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-START-TRANSACTION",
+      "source": "tests/development/delegated-checkout-starts.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-START-COMMIT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-START-COMMIT",
+      "source": "tests/development/delegated-checkout-starts.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-START-FINAL-CURRENTNESS",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-START-FINAL-CURRENTNESS",
+      "source": "tests/development/delegated-checkout-starts.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-START-JOURNAL-FENCE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-START-JOURNAL-FENCE",
+      "source": "tests/development/delegated-checkout-starts.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-START-FINAL-AUTHORITY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-START-FINAL-AUTHORITY",
+      "source": "tests/development/delegated-checkout-starts.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-START-REENTRANCY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-START-REENTRANCY",
+      "source": "tests/development/delegated-checkout-starts.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-START-RESTART",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-START-RESTART",
+      "source": "tests/development/delegated-checkout-starts.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-LIFE-EXPORT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-LIFE-EXPORT",
+      "source": "tests/development/delegated-checkout-start-lifecycle.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-LIFE-CANCEL",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-LIFE-CANCEL",
+      "source": "tests/development/delegated-checkout-start-lifecycle.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-LIFE-ERASE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-LIFE-ERASE",
+      "source": "tests/development/delegated-checkout-start-lifecycle.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-LIFE-HOLD",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-LIFE-HOLD",
+      "source": "tests/development/delegated-checkout-start-lifecycle.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-LIFE-UNINSTALL",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-LIFE-UNINSTALL",
+      "source": "tests/development/delegated-checkout-start-lifecycle.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-LIFE-RESTORE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-LIFE-RESTORE",
+      "source": "tests/development/delegated-checkout-start-lifecycle.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-LIFE-IMPORT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-LIFE-IMPORT",
+      "source": "tests/development/delegated-checkout-start-lifecycle.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC3-LIFE-HISTORY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC3-LIFE-HISTORY",
+      "source": "tests/development/delegated-checkout-start-lifecycle.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C3-NATIVE-START"
+    },
+    {
+      "id": "runtime:RCG4BC4-HTTP-CONTRACT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-HTTP-CONTRACT",
+      "source": "tests/development/delegated-checkout-commands.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-HTTP-START",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-HTTP-START",
+      "source": "tests/development/delegated-checkout-commands.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-HTTP-CANCEL",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-HTTP-CANCEL",
+      "source": "tests/development/delegated-checkout-commands.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-HTTP-CONFIG",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-HTTP-CONFIG",
+      "source": "tests/development/delegated-checkout-commands.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-HTTP-SCOPE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-HTTP-SCOPE",
+      "source": "tests/development/delegated-checkout-commands.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-HTTP-PREBODY-CONCRETE-AUTH",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-HTTP-PREBODY-CONCRETE-AUTH",
+      "source": "tests/development/delegated-checkout-commands.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-HTTP-PROOF-FIRST",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-HTTP-PROOF-FIRST",
+      "source": "tests/development/delegated-checkout-commands.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-HTTP-BODY-REVOCATION",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-HTTP-BODY-REVOCATION",
+      "source": "tests/development/delegated-checkout-commands.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-HTTP-INPUT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-HTTP-INPUT",
+      "source": "tests/development/delegated-checkout-commands.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-HTTP-STRICT-JSON",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-HTTP-STRICT-JSON",
+      "source": "tests/development/delegated-checkout-commands.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-HTTP-BODY-LIMIT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-HTTP-BODY-LIMIT",
+      "source": "tests/development/delegated-checkout-commands.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-HTTP-ROUTING",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-HTTP-ROUTING",
+      "source": "tests/development/delegated-checkout-commands.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-HTTP-ORIGIN",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-HTTP-ORIGIN",
+      "source": "tests/development/delegated-checkout-commands.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-HTTP-SOURCE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-HTTP-SOURCE",
+      "source": "tests/development/delegated-checkout-commands.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-HTTP-HELD-ERASURE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-HTTP-HELD-ERASURE",
+      "source": "tests/development/delegated-checkout-commands.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-HTTP-RECOVERY-FENCE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-HTTP-RECOVERY-FENCE",
+      "source": "tests/development/delegated-checkout-commands.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-HTTP-CLOSED-SOURCE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-HTTP-CLOSED-SOURCE",
+      "source": "tests/development/delegated-checkout-commands.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-HTTP-LOST-RESULT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-HTTP-LOST-RESULT",
+      "source": "tests/development/delegated-checkout-commands.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-HTTP-SANITIZE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-HTTP-SANITIZE",
+      "source": "tests/development/delegated-checkout-commands.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-HTTP-CONCURRENT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-HTTP-CONCURRENT",
+      "source": "tests/development/delegated-checkout-commands.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-CLIENT-NATIVE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-CLIENT-NATIVE",
+      "source": "tests/development/delegated-checkout-command-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-CLIENT-HISTORY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-CLIENT-HISTORY",
+      "source": "tests/development/delegated-checkout-command-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-CLIENT-LOST-RESPONSE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-CLIENT-LOST-RESPONSE",
+      "source": "tests/development/delegated-checkout-command-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-CLIENT-ORIGINAL-ID",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-CLIENT-ORIGINAL-ID",
+      "source": "tests/development/delegated-checkout-command-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-CLIENT-RECOVERY-BINDING",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-CLIENT-RECOVERY-BINDING",
+      "source": "tests/development/delegated-checkout-command-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-CLIENT-VIEW-BINDING",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-CLIENT-VIEW-BINDING",
+      "source": "tests/development/delegated-checkout-command-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-CLIENT-AUTHORITY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-CLIENT-AUTHORITY",
+      "source": "tests/development/delegated-checkout-command-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-CLIENT-STRICT-RESPONSE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-CLIENT-STRICT-RESPONSE",
+      "source": "tests/development/delegated-checkout-command-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-CLIENT-INPUT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-CLIENT-INPUT",
+      "source": "tests/development/delegated-checkout-command-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-CLIENT-TRANSPORT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-CLIENT-TRANSPORT",
+      "source": "tests/development/delegated-checkout-command-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-CLIENT-SECRET-PROOF",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-CLIENT-SECRET-PROOF",
+      "source": "tests/development/delegated-checkout-command-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-CLIENT-OBSERVATIONS",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-CLIENT-OBSERVATIONS",
+      "source": "tests/development/delegated-checkout-command-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-OWNER-API-FORGED",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-OWNER-API-FORGED",
+      "source": "tests/development/delegated-checkout-owner-binding.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-OWNER-API-SHADOWS",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-OWNER-API-SHADOWS",
+      "source": "tests/development/delegated-checkout-owner-binding.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-OWNER-API-AUTH",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-OWNER-API-AUTH",
+      "source": "tests/development/delegated-checkout-owner-binding.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-OWNER-SERVER-FORGED",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-OWNER-SERVER-FORGED",
+      "source": "tests/development/delegated-checkout-owner-binding.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-OWNER-SERVER-SHADOWS",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-OWNER-SERVER-SHADOWS",
+      "source": "tests/development/delegated-checkout-owner-binding.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-OWNER-RECEIPT-FORGED",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-OWNER-RECEIPT-FORGED",
+      "source": "tests/development/delegated-checkout-owner-binding.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-OWNER-RECEIPT-SHADOWS",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-OWNER-RECEIPT-SHADOWS",
+      "source": "tests/development/delegated-checkout-owner-binding.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-OWNER-RECEIPT-CLOSED",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-OWNER-RECEIPT-CLOSED",
+      "source": "tests/development/delegated-checkout-owner-binding.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-OWNER-INTENT-FORGED",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-OWNER-INTENT-FORGED",
+      "source": "tests/development/delegated-checkout-owner-binding.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-OWNER-INTENT-SHADOWS",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-OWNER-INTENT-SHADOWS",
+      "source": "tests/development/delegated-checkout-owner-binding.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-OWNER-INTENT-CLOSED",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-OWNER-INTENT-CLOSED",
+      "source": "tests/development/delegated-checkout-owner-binding.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC4-OWNER-DESCRIPTORS",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC4-OWNER-DESCRIPTORS",
+      "source": "tests/development/delegated-checkout-owner-binding.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C4-LOCAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-WIRE-START",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-WIRE-START",
+      "source": "tests/development/delegated-use-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-WIRE-RECOVERY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-WIRE-RECOVERY",
+      "source": "tests/development/delegated-use-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-WIRE-INPUT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-WIRE-INPUT",
+      "source": "tests/development/delegated-use-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-WIRE-RECOVERY-INPUT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-WIRE-RECOVERY-INPUT",
+      "source": "tests/development/delegated-use-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-WIRE-CONFIG-DATA",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-WIRE-CONFIG-DATA",
+      "source": "tests/development/delegated-use-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-WIRE-CONFIG-ORIGIN",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-WIRE-CONFIG-ORIGIN",
+      "source": "tests/development/delegated-use-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-WIRE-IDENTITY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-WIRE-IDENTITY",
+      "source": "tests/development/delegated-use-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-WIRE-DETACH",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-WIRE-DETACH",
+      "source": "tests/development/delegated-use-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-WIRE-TLS",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-WIRE-TLS",
+      "source": "tests/development/delegated-use-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-WIRE-GUARDS",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-WIRE-GUARDS",
+      "source": "tests/development/delegated-use-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-WIRE-CLOSE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-WIRE-CLOSE",
+      "source": "tests/development/delegated-use-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-WIRE-STATUS",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-WIRE-STATUS",
+      "source": "tests/development/delegated-use-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-WIRE-BINDING",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-WIRE-BINDING",
+      "source": "tests/development/delegated-use-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-WIRE-RECOVERY-BINDING",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-WIRE-RECOVERY-BINDING",
+      "source": "tests/development/delegated-use-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-WIRE-STRICT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-WIRE-STRICT",
+      "source": "tests/development/delegated-use-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-WIRE-MEDIA",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-WIRE-MEDIA",
+      "source": "tests/development/delegated-use-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-WIRE-BOUNDS",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-WIRE-BOUNDS",
+      "source": "tests/development/delegated-use-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-WIRE-LOSS",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-WIRE-LOSS",
+      "source": "tests/development/delegated-use-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-WIRE-DEADLINE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-WIRE-DEADLINE",
+      "source": "tests/development/delegated-use-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-WIRE-CAPACITY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-WIRE-CAPACITY",
+      "source": "tests/development/delegated-use-client.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-SENDER-START",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-SENDER-START",
+      "source": "tests/development/delegated-checkout-command-sender.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-SENDER-LOSS",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-SENDER-LOSS",
+      "source": "tests/development/delegated-checkout-command-sender.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-SENDER-PRECLAIM",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-SENDER-PRECLAIM",
+      "source": "tests/development/delegated-checkout-command-sender.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-SENDER-TLS-PRICE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-SENDER-TLS-PRICE",
+      "source": "tests/development/delegated-checkout-command-sender.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-SENDER-TLS-DELETE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-SENDER-TLS-DELETE",
+      "source": "tests/development/delegated-checkout-command-sender.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-SENDER-TLS-PROOF",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-SENDER-TLS-PROOF",
+      "source": "tests/development/delegated-checkout-command-sender.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-SENDER-TLS-OBSERVED",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-SENDER-TLS-OBSERVED",
+      "source": "tests/development/delegated-checkout-command-sender.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-SENDER-POSTWAIT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-SENDER-POSTWAIT",
+      "source": "tests/development/delegated-checkout-command-sender.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-SENDER-BINDING",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-SENDER-BINDING",
+      "source": "tests/development/delegated-checkout-command-sender.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-SENDER-IMMUTABLE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-SENDER-IMMUTABLE",
+      "source": "tests/development/delegated-checkout-command-sender.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-SENDER-CLOSE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-SENDER-CLOSE",
+      "source": "tests/development/delegated-checkout-command-sender.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-SENDER-OWNERS",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-SENDER-OWNERS",
+      "source": "tests/development/delegated-checkout-command-sender.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-SENDER-CORRELATION",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-SENDER-CORRELATION",
+      "source": "tests/development/delegated-checkout-command-sender.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-SENDER-INPUT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-SENDER-INPUT",
+      "source": "tests/development/delegated-checkout-command-sender.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-SENDER-TLS-FAILURE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-SENDER-TLS-FAILURE",
+      "source": "tests/development/delegated-checkout-command-sender.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-ADMIT-ONCE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-ADMIT-ONCE",
+      "source": "tests/development/delegated-command-admission.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-ADMIT-HISTORY",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-ADMIT-HISTORY",
+      "source": "tests/development/delegated-command-admission.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-ADMIT-INPUT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-ADMIT-INPUT",
+      "source": "tests/development/delegated-command-admission.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-ADMIT-ABSENCE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-ADMIT-ABSENCE",
+      "source": "tests/development/delegated-command-admission.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-ADMIT-CURRENT",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-ADMIT-CURRENT",
+      "source": "tests/development/delegated-command-admission.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-ADMIT-FENCE",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-ADMIT-FENCE",
+      "source": "tests/development/delegated-command-admission.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-CATALOG-REGISTRATION",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-CATALOG-REGISTRATION",
+      "source": "tests/development/delegated-use-catalog.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-CATALOG-PRESERVATION",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-CATALOG-PRESERVATION",
+      "source": "tests/development/delegated-use-catalog.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
+    },
+    {
+      "id": "runtime:RCG4BC5-CATALOG-PINS",
+      "suite": "runtime",
+      "runner_case_id": "RCG4BC5-CATALOG-PINS",
+      "source": "tests/development/delegated-use-catalog.test.mts",
+      "capability_id": "FEATURE-RCG-4B-C5-INTERNAL-COMMANDS"
     }
   ],
   "protected_files": [

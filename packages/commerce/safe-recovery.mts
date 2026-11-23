@@ -16,6 +16,8 @@ import { preflightJourneys,revokeJourneysForRestore } from './journey-privacy.mt
 import { preflightFollowups,revokeFollowupsForRestore } from './journey-followup-privacy.mts';
 import {preflightLoyaltyRedemptions,revokeLoyaltyRedemptionsForRestore} from './loyalty-redemption-privacy.mts';
 import {preflightDropoffCredentials,revokeDropoffCredentialsForRestore} from './dropoff-credential-privacy.mts';
+import {preflightDelegatedIntents,revokeDelegatedIntentsForRestore} from './delegated-checkout-intent-privacy.mts';
+import {preflightDelegatedCommands,revokeDelegatedCommandsForRestore} from './delegated-command-claim-privacy.mts';
 import {preflightDropoffHandoffs,revokeDropoffHandoffsForRestore} from './dropoff-handoff-privacy.mts';
 
 const LIMIT=64*1024*1024;
@@ -71,12 +73,16 @@ export function restoreRecoverySnapshot(input:{snapshot:string;destination:strin
     if(contentDigest(migrations(k))!==m.migrations_sha256)throw new Error('RECOVERY_SCHEMA_MISMATCH');
     const restoreId='restore_'+token().slice(0,32);
     k.transaction(()=>{
+      preflightDelegatedIntents(k);
+      preflightDelegatedCommands(k);
       preflightShopperMemory(k);
       preflightJourneys(k);
       preflightFollowups(k);
       preflightLoyaltyRedemptions(k);
       preflightDropoffCredentials(k);
       preflightDropoffHandoffs(k,undefined,undefined,cp);
+      revokeDelegatedIntentsForRestore(k,undefined,cp);
+      revokeDelegatedCommandsForRestore(k,undefined,cp);
       revokeLoyaltyRedemptionsForRestore(k,undefined,cp);
       revokeDropoffHandoffsForRestore(k,undefined,cp);
       revokeDropoffCredentialsForRestore(k,undefined,cp);

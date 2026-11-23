@@ -97,6 +97,21 @@ package/account/rate records belong to synthetic fixture storage. No commerce
 table is added and the original fifteen surface IDs and prior handling clauses
 remain intact.
 
+ADR-0067 adds native synthetic checkout preparation to these same categories.
+`checkout-previews.mts` owns at most 128 short-lived frozen previews in process
+memory, including reserved capacity for pending preparations. The composer
+returns detached frozen values. Entries contain scoped IDs, monetary facts and
+terms digests; no proof/session token, contact address or raw customer envelope
+is retained. Every fresh read rechecks native customer proof, privacy, current
+sources and the recovery egress fence. Expired entries are swept on access and
+owner `close` clears its map; unused heap references are not claimed physically
+erased at an exact deadline. Restart does not restore these records, and they
+are absent from canonical SQL exports and backups. Caller-held values cannot be
+recalled. The separate `checkout-quote-fixture-source.mts` holds at most 256
+explicit scoped synthetic quote observations in its owning process and supplies
+its own `close` cleanup. Canonical erasure does not claim to erase those fixture
+or caller copies. No SQL table, surface ID or existing handling rule is changed.
+
 ## Subject export changes
 
 `PrivacyLifecycle.export(scope, customerId)` now includes

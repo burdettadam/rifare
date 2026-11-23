@@ -1,4 +1,6 @@
 import { ReturnDepthApi } from '../../packages/commerce/return-depth-api.mts';
+import { DelegatedCheckoutApi, CHECKOUT_HTTP_OPERATIONS, CHECKOUT_COMMAND_HTTP_OPERATIONS, CHECKOUT_RECEIPT_BODY_BYTES, checkoutHttpFailure, checkoutRecoveryBody } from '../../packages/commerce/delegated-checkout-api.mts';
+import type { CheckoutHttpOperation, CheckoutCommandHttpOperation } from '../../packages/commerce/delegated-checkout-api.mts';
 import { ReturnPortabilityApi } from '../../packages/commerce/return-portability-api.mts';
 import { RETURN_PORTABILITY_ERRORS } from '../../packages/commerce/return-portability-errors.mts';
 import { RETURN_DEPTH_ERRORS } from '../../packages/commerce/return-depth-errors.mts';
@@ -77,9 +79,24 @@ for(const code of ["APPROVAL_AUTHORITY_CHANGED", "EDIT_ADDRESS_INVALID", "EDIT_A
 for(const code of ['GIFT_VERIFICATION_REQUIRED','GIFT_CHOICE_CONFLICT','GIFT_OUTCOME_DENIED','GIFT_ACTION_DENIED','GIFT_UNITS_DENIED','GIFT_PRIVATE_NOTE_REQUIRES_EVIDENCE','GIFT_RECIPIENT_UNQUALIFIED','GIFT_RECIPIENT_MISMATCH','EXCHANGE_PAYMENT_OUTSTANDING','EXCHANGE_FINANCE_MISMATCH','EXCHANGE_FINANCE_OUTCOME_UNSUPPORTED','CATALOG_CONFIGURATION_CHANGED','CATALOG_PAGE_REQUIRED','BUNDLE_POLICY_UNAPPROVED','BUNDLE_ALLOCATION_INVALID','BUNDLE_ALLOCATION_CHANGED','INSTRUMENT_ROUTING_UNSUPPORTED','INSTRUMENT_BALANCE_EXCEEDED','INSTRUMENT_HISTORY_UNVERIFIED','REFUND_ACCOUNTING_UNVERIFIED'])SAFE_CODES.add(code);
 for(const code of ["ALLOCATION_ALREADY_AUTHORIZED", "APPROVAL_AUTHORITY_CHANGED", "ASYNC_TRANSACTION_DENIED", "BUNDLE_POLICY_UNAPPROVED", "CONVERSION_PROVENANCE_REQUIRED", "CREDIT_UNQUALIFIED", "CURRENCY_ACCOUNT_MISMATCH", "CURRENCY_BINDING_MISMATCH", "CURRENCY_BINDING_REQUIRED", "CURRENCY_COMBINATION_UNQUALIFIED", "CURRENCY_HISTORY_INTEGRITY", "CURRENCY_MISMATCH", "CURRENCY_OUTCOME_UNQUALIFIED", "CURRENCY_QUALIFICATION_CHANGED", "CURRENCY_QUALIFICATION_EXPIRED", "CURRENCY_SOURCE_UNQUALIFIED", "EXCHANGE_CURRENCY_UNQUALIFIED", "EXCHANGE_FINANCE_MISMATCH", "EXCHANGE_FINANCE_OUTCOME_UNSUPPORTED", "EXCHANGE_PAYMENT_OUTSTANDING", "FEE_DIFFERENCE_UNRESOLVED", "FEE_ESTIMATE_MISMATCH", "FEE_ESTIMATE_REQUIRED", "FEE_EVENT_CONFLICT", "FEE_EVENT_MISMATCH", "FEE_EXCEEDS_ORIGINAL_VALUE", "FEE_FINAL_UNQUALIFIED", "FEE_HISTORY_INTEGRITY", "FEE_SOURCE_REQUIRED", "FEE_SOURCE_UNQUALIFIED", "FIXTURE_ONLY", "FIXTURE_RESPONSE_LOST", "FIXTURE_TRANSPORT_FAILURE", "INSTANT_ACCOUNT_REVISION", "INSTANT_ACCOUNT_UNQUALIFIED", "INSTANT_APPROVAL_REQUIRED", "INSTANT_BINDING_CHANGED", "INSTANT_CAPTURE_EXISTS", "INSTANT_COMBINATION_UNQUALIFIED", "INSTANT_COMMAND_BINDING_CHANGED", "INSTANT_CONFIGURATION_CHANGED", "INSTANT_CONSENT_BINDING_CHANGED", "INSTANT_CONSENT_EXPIRED", "INSTANT_CONSENT_REQUIRED", "INSTANT_CONSENT_REVOKED", "INSTANT_CONSENT_UNQUALIFIED", "INSTANT_CONSENT_USED", "INSTANT_DEADLINE_INVALID", "INSTANT_DISABLED", "INSTANT_FRESH_CONSENT_REQUIRED", "INSTANT_GIFT_UNQUALIFIED", "INSTANT_INTEGRITY", "INSTANT_MANDATE_EXPIRED", "INSTANT_MANDATE_INACTIVE", "INSTANT_MANDATE_UNCONFIRMED", "INSTANT_NOT_COLLECTIBLE", "INSTANT_NOT_SENT", "INSTANT_OBLIGATIONS_UNRESOLVED", "INSTANT_OBLIGATION_EXISTS", "INSTANT_OPERATION_EXISTS", "INSTANT_OPERATION_EXPIRED", "INSTANT_ORIGINAL_AMOUNT_CHANGED", "INSTANT_QUOTE_CHANGED", "INSTANT_QUOTE_EXPIRED", "INSTANT_REAUTHORIZATION_REQUIRED", "INSTANT_RECEIPT_CONFLICT", "INSTANT_RECEIPT_INVALID", "INSTANT_RELEASE_CONFLICT", "INSTANT_RELEASE_UNCONFIRMED", "INSTANT_RELEASE_UNRESOLVED", "INSTANT_RESULT_INVALID", "INSTANT_RESULT_MISMATCH", "INSTANT_SOURCE_BINDING_INVALID", "INSTANT_SOURCE_INTEGRITY", "INSTANT_SOURCE_MISMATCH", "INSTANT_SOURCE_NOT_FOUND", "INSTANT_SOURCE_TIMEOUT", "INSTANT_SOURCE_UNAVAILABLE", "INSTANT_STAGE_REGRESSION", "INSTANT_STOCK_SOURCE_UNQUALIFIED", "INSTANT_TERMS_CHANGED", "INSTANT_TERMS_REVISION", "INSTANT_TERMS_UNQUALIFIED", "INSTANT_TRIAL_ACTIVE", "INSTANT_TRIAL_ENDED", "INSTANT_UNITS_INVALID", "INSTANT_UNIT_ALREADY_CLAIMED", "INVALID_INPUT", "INVALID_MONEY", "LINEAGE_COMMAND_CHANGED", "LINEAGE_DELIVERY_REQUIRED", "LINEAGE_GENERATION_LIMIT", "LINEAGE_GIFT_QUALIFICATION_REQUIRED", "LINEAGE_INSTRUMENT_CHANGED", "LINEAGE_INSTRUMENT_UNQUALIFIED", "LINEAGE_INTEGRITY", "LINEAGE_ORIGINAL_IMMUTABLE", "LINEAGE_ORIGINAL_SOURCE_REQUIRED", "LINEAGE_PAID_VALUE_CHANGED", "LINEAGE_PAID_VALUE_EXCEEDED", "LINEAGE_PARENT_ALREADY_CONSUMED", "LINEAGE_PARENT_BALANCE_EXCEEDED", "LINEAGE_PARENT_FINANCIAL_OPERATION", "LINEAGE_PHYSICAL_UNITS_CHANGED", "LINEAGE_REPLACEMENT_UNCONFIRMED", "LINEAGE_SEED_TOO_LATE", "LINEAGE_SETTLEMENT_REQUIRED", "LINEAGE_SOURCE_BINDING_REQUIRED", "LINEAGE_SOURCE_CHANGED", "LINEAGE_SOURCE_INTEGRITY", "LINEAGE_SOURCE_MISMATCH", "LINEAGE_SOURCE_REQUIRED", "LINEAGE_SOURCE_RESPONSE_LOST", "LINEAGE_SOURCE_UNAVAILABLE", "LINEAGE_SOURCE_UNQUALIFIED", "LINEAGE_TRANSFER_UNRESOLVED", "LINEAGE_UNIT_INVALID", "LINEAGE_UNIT_LIMIT", "LINEAGE_VALUE_MISMATCH", "MONEY_AMOUNT_MISMATCH", "MONEY_COMMAND_BINDING_REQUIRED", "MONEY_COMMAND_CHANGED", "MONEY_COMPONENT_MISMATCH", "MONEY_HISTORY_UNQUALIFIED", "MONEY_ORIGINAL_TOTAL_MISMATCH", "MONEY_SOURCE_INTEGRITY", "MONEY_SOURCE_NOT_FOUND", "MONEY_TERMS_CHANGED", "MONEY_UNITS_INVALID", "NATIVE_RETURN_INTEGRITY", "NATIVE_RETURN_REQUIRED", "NATIVE_RETURN_UNAVAILABLE", "NOT_FOUND", "ORIGINAL_MONEY_IMMUTABLE", "ORIGINAL_UNIT_ALREADY_RESOLVED", "OUTCOME_UNSUPPORTED", "PRESENTMENT_BALANCE_EXCEEDED", "REFUND_BALANCE_EXCEEDED", "RESOLUTION_INTEGRITY", "RESOLUTION_SOURCE_MISMATCH", "SEPARATE_FIXTURE_SOURCE_REQUIRED", "UNSUPPORTED_ACTION"])SAFE_CODES.add(code);
 for(const code of RETURN_PORTABILITY_ERRORS)SAFE_CODES.add(code);
-export async function startCommerceServer(options:{support?:SupportService;gifts?:GiftReturns;resolutionExecution?:ResolutionExecution;kernel:CommerceKernel;caps:Capabilities;customers:CustomerAccess;
+export async function startCommerceServer(options:{checkout?:DelegatedCheckoutApi;support?:SupportService;gifts?:GiftReturns;resolutionExecution?:ResolutionExecution;kernel:CommerceKernel;caps:Capabilities;customers:CustomerAccess;
   simulator:StoreSimulator;instantSource?:InstantExchangeFixtureSource;lineageSource?:ExchangeLineageFixtureSource;orderEditSource?:OrderEditFixtureSource;warehouseSource?:WarehouseFixtureSource;nativeChangeSource?:NativeChangeFixtureSource;fulfillmentSource?:FulfillmentFixtureSource;resolutionSource?:ResolutionFixtureSource;evidenceScanner?:EvidenceScanner;reconciliationJournals?:JournalResolver;vault?:SecretVault;inbox?:WebhookInbox;reads?:ReadContext;runner?:{run:(scope:object,taskId:string,configurationId:string,untrustedInput?:unknown)=>Promise<unknown>;receipt:(scope:object,taskId:string,receiptId:string)=>unknown};port?:number;log?:(entry:unknown)=>void}) {
   const {kernel,caps,customers,simulator,vault}=options;const orderEdits=new OrderEdits(kernel,options.orderEditSource),editWorkflow=new OrderEditWorkflow(orderEdits);const reads=options.reads??new ReadContext(kernel,caps);const mcp=new ReadMcp(kernel,reads);const editor=new ProfileEditor(kernel,caps),policies=new Policies(kernel);let port=0;const gateway=new ActionGateway(kernel),actionMcp=new ActionMcp(kernel,gateway),releases=new SkillReleases(kernel);
+  const checkoutSlot=Object.getOwnPropertyDescriptor(options,'checkout');
+  if(checkoutSlot&&(!Object.hasOwn(checkoutSlot,'value')||!checkoutSlot.enumerable))throw new Error('CHECKOUT_CONFIG_INVALID');
+  const checkout=checkoutSlot?.value===undefined?new DelegatedCheckoutApi(kernel):checkoutSlot.value;
+  try {
+    if(!(checkout instanceof DelegatedCheckoutApi)||!DelegatedCheckoutApi.prototype.boundTo.call(checkout,kernel))
+      throw new Error('CHECKOUT_CONFIG_INVALID');
+  } catch { throw new Error('CHECKOUT_CONFIG_INVALID'); }
+  // RCG4BC4-PREBODY-CONCRETE-AUTH: an instance shadow cannot bypass role/proof checks before input collection.
+  const checkoutAuthorize=DelegatedCheckoutApi.prototype.authorize.bind(checkout);
+  const checkoutContract=DelegatedCheckoutApi.prototype.contract.bind(checkout);
+  const checkoutPost=DelegatedCheckoutApi.prototype.post.bind(checkout);
+  const checkoutRecoveryContract=DelegatedCheckoutApi.prototype.recoveryContract.bind(checkout);
+  const checkoutLookup=DelegatedCheckoutApi.prototype.lookup.bind(checkout);
+  const checkoutCommandsContract=DelegatedCheckoutApi.prototype.commandsContract.bind(checkout);
+  const checkoutPostCommand=DelegatedCheckoutApi.prototype.postCommand.bind(checkout);
   if(options.gifts&&options.gifts.kernel!==kernel)throw new Error('GIFT_VERIFICATION_REQUIRED');
   const resolutionLedger=new ResolutionLedger(kernel),refundQuotes=new RefundQuotes(kernel),storeCredit=new StoreCredit(kernel),exchanges=new VariantExchanges(kernel),exchangeFinance=new ExchangeFinance(kernel),resolutionExecution=options.resolutionExecution??(options.resolutionSource?new ResolutionExecution(kernel,options.resolutionSource):null);
   if(resolutionExecution&&resolutionExecution.kernel!==kernel)throw new Error('RESOLUTION_SOURCE_MISMATCH');
@@ -103,6 +120,7 @@ export async function startCommerceServer(options:{support?:SupportService;gifts
       Object.assign(assets,{'/accessibility-client.js':['accessibility-client.js','text/javascript'],'/accessibility.css':['accessibility.css','text/css']});
       Object.assign(assets,{'/locale-presentation.js':['../../packages/presentation/locale-presentation.js','text/javascript'],'/locale-client.js':['locale-client.js','text/javascript']});
       Object.assign(assets,{'/return-portability':['return-portability.html','text/html'],'/return-portability-client.js':['return-portability-client.js','text/javascript'],'/return-portability.css':['return-portability.css','text/css']});
+      Object.assign(assets,{'/checkout-review':['checkout-review.html','text/html'],'/checkout-review-client.js':['checkout-review-client.js','text/javascript'],'/checkout-review.css':['checkout-review.css','text/css']});
       if(req.method==='GET'&&assets[url.pathname]&&!url.search){
         const [file,mime]=assets[url.pathname];res.writeHead(200,{'content-type':mime+'; charset=utf-8','cache-control':'no-store',
           'content-security-policy':"default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'",
@@ -170,6 +188,44 @@ export async function startCommerceServer(options:{support?:SupportService;gifts
         else send(res,404,{error:'NOT_FOUND'});return;
       }
       const scope=kernel.authenticate(auth.slice(7));
+      if(url.pathname==='/v1/delegated-checkout-commands'||url.pathname.startsWith('/v1/delegated-checkout-commands/')){
+        try {
+          checkoutAuthorize(scope);
+          const operation=url.pathname.slice('/v1/delegated-checkout-commands/'.length);
+          if(operation!=='contract'&&!CHECKOUT_COMMAND_HTTP_OPERATIONS.includes(operation as CheckoutCommandHttpOperation))throw new Error('NOT_FOUND');
+          const method=operation==='contract'?'GET':'POST';
+          if(req.method!==method){res.setHeader('allow',method);send(res,405,{error:'METHOD_NOT_ALLOWED'});log(405,'METHOD_NOT_ALLOWED');return;}
+          const result=operation==='contract'?checkoutCommandsContract(scope)
+            :checkoutPostCommand(scope,operation as CheckoutCommandHttpOperation,await checkoutRecoveryBody(req));
+          send(res,200,result);log(200,'DELEGATED_CHECKOUT_COMMAND_OBSERVATION');
+        } catch(error) {const failure=checkoutHttpFailure(error);send(res,failure.status,{error:failure.error});log(failure.status,failure.error);}
+        return;
+      }
+      if(url.pathname==='/v1/delegated-checkout-recovery'||url.pathname.startsWith('/v1/delegated-checkout-recovery/')){
+        try {
+          checkoutAuthorize(scope);
+          const operation=url.pathname.slice('/v1/delegated-checkout-recovery/'.length);
+          if(operation!=='contract'&&operation!=='lookup')throw new Error('NOT_FOUND');
+          const method=operation==='contract'?'GET':'POST';
+          if(req.method!==method){res.setHeader('allow',method);send(res,405,{error:'METHOD_NOT_ALLOWED'});log(405,'METHOD_NOT_ALLOWED');return;}
+          const result=operation==='contract'?checkoutRecoveryContract(scope):checkoutLookup(scope,await checkoutRecoveryBody(req));
+          send(res,200,result);log(200,'DELEGATED_CHECKOUT_RECOVERY_OBSERVATION');
+        } catch(error) {const failure=checkoutHttpFailure(error);send(res,failure.status,{error:failure.error});log(failure.status,failure.error);}
+        return;
+      }
+      if(url.pathname==='/v1/delegated-checkout'||url.pathname.startsWith('/v1/delegated-checkout/')){
+        try {
+          checkoutAuthorize(scope);
+          const operation=url.pathname.slice('/v1/delegated-checkout/'.length);
+          if(operation!=='contract'&&!CHECKOUT_HTTP_OPERATIONS.includes(operation as CheckoutHttpOperation))throw new Error('NOT_FOUND');
+          const method=operation==='contract'?'GET':'POST';
+          if(req.method!==method){res.setHeader('allow',method);send(res,405,{error:'METHOD_NOT_ALLOWED'});log(405,'METHOD_NOT_ALLOWED');return;}
+          const result=operation==='contract'?checkoutContract(scope):await checkoutPost(scope,operation as CheckoutHttpOperation,
+            await body(req,operation==='receipt'?CHECKOUT_RECEIPT_BODY_BYTES:4096));
+          send(res,200,result);log(200,'DELEGATED_CHECKOUT_OBSERVATION');
+        } catch(error) {const failure=checkoutHttpFailure(error);send(res,failure.status,{error:failure.error});log(failure.status,failure.error);}
+        return;
+      }
       if(req.method==='POST'&&url.pathname==='/v1/return-portability/context'){send(res,200,portability.context(scope,await body(req)));return;}
       if(req.method==='POST'&&url.pathname.startsWith('/v1/return-depth/')){send(res,200,await returnDepth.post(scope,url.pathname.slice('/v1/return-depth/'.length),await body(req)));log(200,'RETURN_DEPTH_OPERATION');return;}
       if(req.method==='POST'&&['/v1/gifts/case','/v1/gifts/prepare','/v1/gifts/rebind'].includes(url.pathname)){

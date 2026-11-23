@@ -1,0 +1,11 @@
+{
+  "name": "rifare-delegated-receipts",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Optional local JOSE verification for Rifare delegated receipt evidence.",
+  "license": "AGPL-3.0-only",
+  "dependencies": {
+    "jose": "6.2.18"
+  }
+}

@@ -19,8 +19,13 @@
   ],
   "source_files": [
     "packages/adapters/carrier-quote-fixture-source.mts",
+    "packages/adapters/checkout-quote-fixture-source.mts",
     "packages/adapters/claims-fixture-source.mts",
     "packages/adapters/claims-source-guards.mts",
+    "packages/adapters/delegated-commands/command-codec.mts",
+    "packages/adapters/delegated-commands/internal-use-client.mts",
+    "packages/adapters/delegated-receipts/jose-verifier.mts",
+    "packages/adapters/delegated-receipts/strict-json.mts",
     "packages/adapters/delivery-trial-source-guards.mts",
     "packages/adapters/demand-fixture-source.mts",
     "packages/adapters/dropoff-credential-fixture-source.mts",
@@ -3498,6 +3503,10 @@
         {
           "path": "packages/adapters/upsell-source-guards.mts",
           "sha256": "e31e0d430c6c0dbdf68d6cb5969bda7b84069d678bf9d447ed9db6b352ba0163"
+        },
+        {
+          "path": "packages/adapters/checkout-quote-fixture-source.mts",
+          "sha256": "4da11a8db56fa2a5cecd678bc47fecf3f59523f4ddd84d3081d09df73e749af5"
         }
       ],
       "version": "source-sha256:a125a8b3f9f508b686e74f820c0ff48326f92890f8c11712afb7ee63cbb0b286",
@@ -5568,13 +5577,375 @@
           "direct_fixtures": []
         }
       ]
+    },
+    {
+      "id": "delegated_receipt_signatures",
+      "kind": "diagnostic",
+      "source_files": [
+        {
+          "path": "packages/adapters/delegated-receipts/jose-verifier.mts",
+          "sha256": "42f724028b21e4412a721bbe08aabb0fc144df06924f14d401ede88b6814d502"
+        },
+        {
+          "path": "packages/adapters/delegated-receipts/strict-json.mts",
+          "sha256": "35665ff4c3d7244bb973a24c5dbf661d884e8b1ed52d60c24045fc86c81c5bba"
+        }
+      ],
+      "version": "source-sha256:42f724028b21e4412a721bbe08aabb0fc144df06924f14d401ede88b6814d502",
+      "api_version": "local-delegated-decision-jws-v1",
+      "external_version": null,
+      "external_account": null,
+      "external_scopes_attested": false,
+      "source_oracle": "Original synthetic public-key/signature fixtures verify exact compact bytes, configured issuer/purpose/kid/algorithm pins, strict JSON and trust retirement. No provider transport, final-use, receipt redemption or merchant operation.",
+      "operations": [
+        {
+          "id": "receipt.signature.verify",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "RCG3-JOSE-TRUST",
+              "name": "RCG3-JOSE-TRUST receipt cannot choose another issuer algorithm or unknown key",
+              "path": "tests/development/delegated-receipt-jose.test.mts",
+              "sha256": "ad711f803be37d08f8a72c9c80b84c63b40162e39c7724be24fc6f29cc58cd97"
+            },
+            {
+              "id": "RCG3-JOSE-KEY-CONFIG",
+              "name": "RCG3-JOSE-KEY-CONFIG private symmetric mismatched and ambiguous keys are rejected",
+              "path": "tests/development/delegated-receipt-jose.test.mts",
+              "sha256": "ad711f803be37d08f8a72c9c80b84c63b40162e39c7724be24fc6f29cc58cd97"
+            },
+            {
+              "id": "RCG3-JOSE-HEADERS",
+              "name": "RCG3-JOSE-HEADERS signed unknown remote-key and critical header fields deny",
+              "path": "tests/development/delegated-receipt-jose.test.mts",
+              "sha256": "ad711f803be37d08f8a72c9c80b84c63b40162e39c7724be24fc6f29cc58cd97"
+            },
+            {
+              "id": "RCG3-JOSE-HEADER-DUPLICATES",
+              "name": "RCG3-JOSE-HEADER-DUPLICATES valid signatures do not excuse raw or escaped duplicate names",
+              "path": "tests/development/delegated-receipt-jose.test.mts",
+              "sha256": "ad711f803be37d08f8a72c9c80b84c63b40162e39c7724be24fc6f29cc58cd97"
+            },
+            {
+              "id": "RCG3-JOSE-PAYLOAD-DUPLICATES",
+              "name": "RCG3-JOSE-PAYLOAD-DUPLICATES reject authenticated duplicate fields at nested paths",
+              "path": "tests/development/delegated-receipt-jose.test.mts",
+              "sha256": "ad711f803be37d08f8a72c9c80b84c63b40162e39c7724be24fc6f29cc58cd97"
+            },
+            {
+              "id": "RCG3-JOSE-UTF8",
+              "name": "RCG3-JOSE-UTF8 authenticated invalid UTF8 BOM and unpaired Unicode deny",
+              "path": "tests/development/delegated-receipt-jose.test.mts",
+              "sha256": "ad711f803be37d08f8a72c9c80b84c63b40162e39c7724be24fc6f29cc58cd97"
+            },
+            {
+              "id": "RCG3-JOSE-JSON-VALID",
+              "name": "RCG3-JOSE-JSON-VALID escaped strings arrays and distinct nested names retain exact values",
+              "path": "tests/development/delegated-receipt-jose.test.mts",
+              "sha256": "ad711f803be37d08f8a72c9c80b84c63b40162e39c7724be24fc6f29cc58cd97"
+            },
+            {
+              "id": "RCG3-JOSE-BOUNDS",
+              "name": "RCG3-JOSE-BOUNDS token encoding and JSON nesting remain bounded",
+              "path": "tests/development/delegated-receipt-jose.test.mts",
+              "sha256": "ad711f803be37d08f8a72c9c80b84c63b40162e39c7724be24fc6f29cc58cd97"
+            },
+            {
+              "id": "RCG3-JOSE-SNAPSHOTS",
+              "name": "RCG3-JOSE-SNAPSHOTS caller mutation cannot change configured key or pending trust",
+              "path": "tests/development/delegated-receipt-jose.test.mts",
+              "sha256": "ad711f803be37d08f8a72c9c80b84c63b40162e39c7724be24fc6f29cc58cd97"
+            },
+            {
+              "id": "RCG3-JOSE-RETIRE",
+              "name": "RCG3-JOSE-RETIRE close rejects existing and in-flight key verification",
+              "path": "tests/development/delegated-receipt-jose.test.mts",
+              "sha256": "ad711f803be37d08f8a72c9c80b84c63b40162e39c7724be24fc6f29cc58cd97"
+            },
+            {
+              "id": "RCG3-JOSE-CANCEL",
+              "name": "RCG3-JOSE-CANCEL cancellation before or during import cannot return evidence",
+              "path": "tests/development/delegated-receipt-jose.test.mts",
+              "sha256": "ad711f803be37d08f8a72c9c80b84c63b40162e39c7724be24fc6f29cc58cd97"
+            }
+          ],
+          "direct_fixtures": []
+        }
+      ]
+    },
+    {
+      "id": "delegated_use_commands",
+      "kind": "diagnostic",
+      "source_files": [
+        {
+          "path": "packages/adapters/delegated-commands/command-codec.mts",
+          "sha256": "ac201f5f9202ce5df438e89afdfa34d79fd5e049a311d2139c4e72fa209fcf3c"
+        }
+      ],
+      "version": "source-sha256:ac201f5f9202ce5df438e89afdfa34d79fd5e049a311d2139c4e72fa209fcf3c",
+      "api_version": "optional-p03-delegated-command-v1",
+      "external_version": null,
+      "external_account": null,
+      "external_scopes_attested": false,
+      "source_oracle": "Original synthetic canonical-byte/digest fixtures and unchanged C1 cases validate a candidate-only P03 codec. Recovery keeps the full original mutation; receipt correlation is exact bytes only. No provider authentication, receipt signature verification, transport or execution.",
+      "operations": [
+        {
+          "id": "delegated.command.encode",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "RCG4BC1-CODEC-ORACLE",
+              "name": "RCG4BC1-CODEC-ORACLE independent canonical bodies and mutation digests match",
+              "path": "tests/development/delegated-command-codec.test.mts",
+              "sha256": "3c0dc8aa32ab8aca829ffba8763574b82b1de4f0583cbb99a9a29f54d929d91b"
+            },
+            {
+              "id": "RCG4BC1-CODEC-CANONICAL",
+              "name": "RCG4BC1-CODEC-CANONICAL member order and equivalent escapes retain original digest",
+              "path": "tests/development/delegated-command-codec.test.mts",
+              "sha256": "3c0dc8aa32ab8aca829ffba8763574b82b1de4f0583cbb99a9a29f54d929d91b"
+            },
+            {
+              "id": "RCG4BC1-CODEC-DIGEST-SCOPE",
+              "name": "RCG4BC1-CODEC-DIGEST-SCOPE every original mutation field participates in identity",
+              "path": "tests/development/delegated-command-codec.test.mts",
+              "sha256": "3c0dc8aa32ab8aca829ffba8763574b82b1de4f0583cbb99a9a29f54d929d91b"
+            },
+            {
+              "id": "RCG4BC1-CODEC-CLOSED-REQUEST",
+              "name": "RCG4BC1-CODEC-CLOSED-REQUEST authority and other-command fields are refused",
+              "path": "tests/development/delegated-command-codec.test.mts",
+              "sha256": "3c0dc8aa32ab8aca829ffba8763574b82b1de4f0583cbb99a9a29f54d929d91b"
+            },
+            {
+              "id": "RCG4BC1-CODEC-SCALARS",
+              "name": "RCG4BC1-CODEC-SCALARS identifiers digests revisions and absolute URI subset are strict",
+              "path": "tests/development/delegated-command-codec.test.mts",
+              "sha256": "3c0dc8aa32ab8aca829ffba8763574b82b1de4f0583cbb99a9a29f54d929d91b"
+            },
+            {
+              "id": "RCG4BC1-CODEC-STRICT-JSON",
+              "name": "RCG4BC1-CODEC-STRICT-JSON duplicate decoded names malformed bytes and numeric aliases fail",
+              "path": "tests/development/delegated-command-codec.test.mts",
+              "sha256": "3c0dc8aa32ab8aca829ffba8763574b82b1de4f0583cbb99a9a29f54d929d91b"
+            },
+            {
+              "id": "RCG4BC1-CODEC-SNAPSHOT",
+              "name": "RCG4BC1-CODEC-SNAPSHOT detached native data refuses accessors and caller alias mutation",
+              "path": "tests/development/delegated-command-codec.test.mts",
+              "sha256": "3c0dc8aa32ab8aca829ffba8763574b82b1de4f0583cbb99a9a29f54d929d91b"
+            },
+            {
+              "id": "RCG4BC1-CODEC-BOUNDS",
+              "name": "RCG4BC1-CODEC-BOUNDS complete wire byte limits apply to commands and responses",
+              "path": "tests/development/delegated-command-codec.test.mts",
+              "sha256": "3c0dc8aa32ab8aca829ffba8763574b82b1de4f0583cbb99a9a29f54d929d91b"
+            },
+            {
+              "id": "RCG4BC1-CODEC-NO-AUTHORITY",
+              "name": "RCG4BC1-CODEC-NO-AUTHORITY parsing historical metadata causes no fetch clock or trust promotion",
+              "path": "tests/development/delegated-command-codec.test.mts",
+              "sha256": "3c0dc8aa32ab8aca829ffba8763574b82b1de4f0583cbb99a9a29f54d929d91b"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "delegated.command.recover",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "RCG4BC1-CODEC-RECOVERY-ENCODING",
+              "name": "RCG4BC1-CODEC-RECOVERY-ENCODING recovery retains original identity and digest",
+              "path": "tests/development/delegated-command-codec.test.mts",
+              "sha256": "3c0dc8aa32ab8aca829ffba8763574b82b1de4f0583cbb99a9a29f54d929d91b"
+            },
+            {
+              "id": "RCG4BC1-CODEC-RECOVERY-FLAG",
+              "name": "RCG4BC1-CODEC-RECOVERY-FLAG explicit recovery requires true while duplicate mutation may recover",
+              "path": "tests/development/delegated-command-codec.test.mts",
+              "sha256": "3c0dc8aa32ab8aca829ffba8763574b82b1de4f0583cbb99a9a29f54d929d91b"
+            },
+            {
+              "id": "RCG4BC1-CODEC-RECOVERY-BINDING",
+              "name": "RCG4BC1-CODEC-RECOVERY-BINDING retained full original intent constrains recovered results",
+              "path": "tests/development/delegated-command-codec.test.mts",
+              "sha256": "3c0dc8aa32ab8aca829ffba8763574b82b1de4f0583cbb99a9a29f54d929d91b"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "delegated.response.bind",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "RCG4BC1-CODEC-START-BINDING",
+              "name": "RCG4BC1-CODEC-START-BINDING challenge preserves every original grant and operation fact",
+              "path": "tests/development/delegated-command-codec.test.mts",
+              "sha256": "3c0dc8aa32ab8aca829ffba8763574b82b1de4f0583cbb99a9a29f54d929d91b"
+            },
+            {
+              "id": "RCG4BC1-CODEC-ENVELOPE",
+              "name": "RCG4BC1-CODEC-ENVELOPE exact original identity profile and closed success envelope required",
+              "path": "tests/development/delegated-command-codec.test.mts",
+              "sha256": "3c0dc8aa32ab8aca829ffba8763574b82b1de4f0583cbb99a9a29f54d929d91b"
+            },
+            {
+              "id": "RCG4BC1-CODEC-FINAL-BINDING",
+              "name": "RCG4BC1-CODEC-FINAL-BINDING final result retains challenge decision and evidence semantics",
+              "path": "tests/development/delegated-command-codec.test.mts",
+              "sha256": "3c0dc8aa32ab8aca829ffba8763574b82b1de4f0583cbb99a9a29f54d929d91b"
+            },
+            {
+              "id": "RCG4BC1-CODEC-HISTORICAL-TIME",
+              "name": "RCG4BC1-CODEC-HISTORICAL-TIME calendar nanoseconds and original ordering stay historical",
+              "path": "tests/development/delegated-command-codec.test.mts",
+              "sha256": "3c0dc8aa32ab8aca829ffba8763574b82b1de4f0583cbb99a9a29f54d929d91b"
+            },
+            {
+              "id": "RCG4BC1-CODEC-HISTORY",
+              "name": "RCG4BC1-CODEC-HISTORY immutable prior results permit only recovered flag changes",
+              "path": "tests/development/delegated-command-codec.test.mts",
+              "sha256": "3c0dc8aa32ab8aca829ffba8763574b82b1de4f0583cbb99a9a29f54d929d91b"
+            },
+            {
+              "id": "RCG4BC1-CODEC-PRIOR-OPTIONS",
+              "name": "RCG4BC1-CODEC-PRIOR-OPTIONS prior observations and option objects are independently validated",
+              "path": "tests/development/delegated-command-codec.test.mts",
+              "sha256": "3c0dc8aa32ab8aca829ffba8763574b82b1de4f0583cbb99a9a29f54d929d91b"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "delegated.receipt.correlate",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "RCG4BC1-CODEC-RECEIPT",
+              "name": "RCG4BC1-CODEC-RECEIPT exact byte correlation does not verify a signature or retain token",
+              "path": "tests/development/delegated-command-codec.test.mts",
+              "sha256": "3c0dc8aa32ab8aca829ffba8763574b82b1de4f0583cbb99a9a29f54d929d91b"
+            },
+            {
+              "id": "RCG4BC1-CODEC-RECEIPT-FAULTS",
+              "name": "RCG4BC1-CODEC-RECEIPT-FAULTS changed oversized malformed or non-final receipt data fails",
+              "path": "tests/development/delegated-command-codec.test.mts",
+              "sha256": "3c0dc8aa32ab8aca829ffba8763574b82b1de4f0583cbb99a9a29f54d929d91b"
+            }
+          ],
+          "direct_fixtures": []
+        }
+      ]
+    },
+    {
+      "id": "delegated_use_internal_client",
+      "kind": "diagnostic",
+      "source_files": [
+        {
+          "path": "packages/adapters/delegated-commands/internal-use-client.mts",
+          "sha256": "8d0c09ba2f4f386faf3b679ecce57be99bfe783dcf3e165b5800820c732874dd"
+        }
+      ],
+      "version": "source-sha256:8d0c09ba2f4f386faf3b679ecce57be99bfe783dcf3e165b5800820c732874dd",
+      "api_version": "internal-mtls-p03-start-recovery-v1",
+      "external_version": null,
+      "external_account": null,
+      "external_scopes_attested": false,
+      "source_oracle": "Ephemeral local TLS peers exercise fixed-origin mutual TLS, exact canonical START and original recovery, strict result binding and prewrite guards. These are local Rifare transport observations; no deployed provider, current grant, receipt context, FINALIZE or commerce execution is qualified.",
+      "operations": [
+        {
+          "id": "delegated.internal.start",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "RCG4BC5-WIRE-START",
+              "name": "RCG4BC5-WIRE-START real mTLS transmits only the exact canonical START on its fixed organization path",
+              "path": "tests/development/delegated-use-client.test.mts",
+              "sha256": "1cecc67bcf17fcc6cccd27db4fcf1faf18766f88acd136a2c4ec6cfe30dc0d0e"
+            },
+            {
+              "id": "RCG4BC5-WIRE-INPUT",
+              "name": "RCG4BC5-WIRE-INPUT only original START data is accepted and accessors never run",
+              "path": "tests/development/delegated-use-client.test.mts",
+              "sha256": "1cecc67bcf17fcc6cccd27db4fcf1faf18766f88acd136a2c4ec6cfe30dc0d0e"
+            },
+            {
+              "id": "RCG4BC5-WIRE-IDENTITY",
+              "name": "RCG4BC5-WIRE-IDENTITY the selected non-CA leaf owns the exact key pin validity and sole canonical SPIFFE SAN",
+              "path": "tests/development/delegated-use-client.test.mts",
+              "sha256": "1cecc67bcf17fcc6cccd27db4fcf1faf18766f88acd136a2c4ec6cfe30dc0d0e"
+            },
+            {
+              "id": "RCG4BC5-WIRE-TLS",
+              "name": "RCG4BC5-WIRE-TLS wrong server trust hostname and client chain never reach the HTTP peer",
+              "path": "tests/development/delegated-use-client.test.mts",
+              "sha256": "1cecc67bcf17fcc6cccd27db4fcf1faf18766f88acd136a2c4ec6cfe30dc0d0e"
+            },
+            {
+              "id": "RCG4BC5-WIRE-GUARDS",
+              "name": "RCG4BC5-WIRE-GUARDS synchronous guards run before connection and after TLS before any application byte",
+              "path": "tests/development/delegated-use-client.test.mts",
+              "sha256": "1cecc67bcf17fcc6cccd27db4fcf1faf18766f88acd136a2c4ec6cfe30dc0d0e"
+            },
+            {
+              "id": "RCG4BC5-WIRE-BINDING",
+              "name": "RCG4BC5-WIRE-BINDING successful JSON still requires exact original grant operation and CHALLENGE kind",
+              "path": "tests/development/delegated-use-client.test.mts",
+              "sha256": "1cecc67bcf17fcc6cccd27db4fcf1faf18766f88acd136a2c4ec6cfe30dc0d0e"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "delegated.internal.recover",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "RCG4BC5-WIRE-RECOVERY",
+              "name": "RCG4BC5-WIRE-RECOVERY explicit recovery uses retained original bytes and a fresh authenticated connection",
+              "path": "tests/development/delegated-use-client.test.mts",
+              "sha256": "1cecc67bcf17fcc6cccd27db4fcf1faf18766f88acd136a2c4ec6cfe30dc0d0e"
+            },
+            {
+              "id": "RCG4BC5-WIRE-RECOVERY-BINDING",
+              "name": "RCG4BC5-WIRE-RECOVERY-BINDING recovered true is mandatory only for explicit recovery and historical times stay inert",
+              "path": "tests/development/delegated-use-client.test.mts",
+              "sha256": "1cecc67bcf17fcc6cccd27db4fcf1faf18766f88acd136a2c4ec6cfe30dc0d0e"
+            }
+          ],
+          "direct_fixtures": []
+        }
+      ]
     }
   ],
   "fixture_administration": "Seed, injected faults, and source observation setters are fixture administration, not remote provider operations. Unnamed real gateway/carrier/warehouse/ERP adapters are unavailable.",
   "oracle_pins": [
     {
       "path": "apps/commerce-api/server.mts",
-      "sha256": "73ff170e8c819823cb447d5b6838fb109fe8c499a878fa4a43437e55091a93e0"
+      "sha256": "3afb3705770131fa8311b0632032cc4cee51d36f1159aa3692ff400405ff1719"
     },
     {
       "path": "migrations/commerce/001-foundation.sql",
@@ -5834,11 +6205,11 @@
     },
     {
       "path": "packages/commerce/action-gateway.mts",
-      "sha256": "b2f00084f23b53c0be0e2d69426dd5186393927c76d7d592acf141b35796a65c"
+      "sha256": "77885c013719a6da810627eae561529ba01a2a2c8d886a2ce7656ba104a1bbe0"
     },
     {
       "path": "packages/commerce/authorization.mts",
-      "sha256": "9811f1692f9dc57545b907fcf1c5982dc2cb61c5b9b54d3bd2e001823f87ec75"
+      "sha256": "ef99a16e5af8ba60eea95cd1abdb1bf4f5861695761cc928a8a121b873db9b97"
     },
     {
       "path": "packages/commerce/capabilities.mts",
@@ -5982,7 +6353,7 @@
     },
     {
       "path": "packages/commerce/kernel.mts",
-      "sha256": "f462705e27b2848decee85168381f90d0f89b4840f8bebe2e30605ce6717a58c"
+      "sha256": "03a073a04df511cd730f9fa73bd2bae3d771bdc68402241a612c450575209af3"
     },
     {
       "path": "packages/commerce/knowledge.mts",
@@ -6010,11 +6381,11 @@
     },
     {
       "path": "packages/commerce/operation-receipts.mts",
-      "sha256": "8961c26be8ae9c01123ef5594de6f3766c83e9a95ee90118e7d8636ea28cc3c1"
+      "sha256": "fef8dc6dd20cb13aaae61820bd16e0c593cda976465e475862e9c3937717ec98"
     },
     {
       "path": "packages/commerce/operation-store.mts",
-      "sha256": "56df66aa8ef55031f4d4b253f364c5e64dfb5aabdc47e8a037c8e6c79562d357"
+      "sha256": "2377b7bd122d512b13939bafcf8a8ee68c7865bb5db6f2e318534807072d789e"
     },
     {
       "path": "packages/commerce/order-edit-core.mts",
@@ -6038,7 +6409,7 @@
     },
     {
       "path": "packages/commerce/privacy-lifecycle.mts",
-      "sha256": "e1edd8bc68833888d4d32b2a6b364374f48e0907d92d43f684ff3ce85ec18f50"
+      "sha256": "eb3eda2ceb7de0f317e30cb3203170eaf920bb234e4f4fbbe13ef54030cd11dd"
     },
     {
       "path": "packages/commerce/profile-editor.mts",
@@ -6078,7 +6449,7 @@
     },
     {
       "path": "packages/commerce/resolution-execution.mts",
-      "sha256": "047688506a94a2d3f22c50dd4f4c274ed99b31f65c97bf80825f7b2cf990e24e"
+      "sha256": "80559ecda17b34b5bf4b7999ece781afbb6d11cfa8a07a7678156ada775efb53"
     },
     {
       "path": "packages/commerce/resolution-ledger.mts",
@@ -6174,7 +6545,7 @@
     },
     {
       "path": "packages/commerce/safe-recovery.mts",
-      "sha256": "13c588ca9d4dbfd3583c7f90cc08f3eb73aefe6d215d9f96eb89fc74f8f2fa81"
+      "sha256": "ac29b6d159adcccce93a828f54ec0b130d383f68f5450b760ab3877669a5893f"
     },
     {
       "path": "packages/commerce/secrets.mts",
@@ -6274,7 +6645,7 @@
     },
     {
       "path": "packages/commerce/support-conversations.mts",
-      "sha256": "a25462a44ff5477ebe16bb419b9c121a07f8b52c5845f72594d6de8005be0b06"
+      "sha256": "3cbc57e661f3051277bc5ba16d0346c4931bdfa031edd4249f7846ad08015022"
     },
     {
       "path": "packages/commerce/support-core.mts",
@@ -6282,7 +6653,7 @@
     },
     {
       "path": "packages/commerce/support-delivery.mts",
-      "sha256": "2610b16a44818e4decc814ea0a6f4bc03c18a0820c9ca89292abf6b0da04e940"
+      "sha256": "a7124a5ee7cfe2e3f4927e5a31129968f9faf6f70a24a2d134b4a434e8012d2c"
     },
     {
       "path": "packages/commerce/support-errors.mts",
@@ -6302,7 +6673,7 @@
     },
     {
       "path": "packages/commerce/support-service.mts",
-      "sha256": "e0e9a0a6f742856e61a29b60bff0fa82de898193bce9e060f4edfa0ab0d96d49"
+      "sha256": "0cbb72dd2fdfdd4c89960518bed66a19e110f4d432b8fea90445bd1e626f3638"
     },
     {
       "path": "packages/commerce/support-tracking.mts",
@@ -6326,7 +6697,7 @@
     },
     {
       "path": "packages/development/http.mts",
-      "sha256": "ae40c862caa9d796c7122a630d4085432a673204b2fe4065361559e9162a28ad"
+      "sha256": "9de15a38cab353d9bfe7a2db115cacb5a4a90b92abf4788d3c41765c906a2cdd"
     },
     {
       "path": "tests/development/adapter-catalog-bindings.mts",
@@ -6606,7 +6977,7 @@
     },
     {
       "path": "tests/fixtures/conformance/expected-coverage.v1.json",
-      "sha256": "d0a71324b4b470f8a6dfb70d007d78eb706d9491891be43eb2c0ab69a0d31504"
+      "sha256": "d5667cd660b0808ad1266b21900592e481f14bb645a0ea697de3bc1015e9fdfa"
     },
     {
       "path": "tests/fixtures/conformance/source-inputs.v1.json",
@@ -6614,7 +6985,7 @@
     },
     {
       "path": "tests/fixtures/development/command-manifests.v1.json",
-      "sha256": "79e54714f969fe4ee77daf85965748cdf3e856e6a03d4a5fc498b3a4d216bc21"
+      "sha256": "58af0a5f5a959063f1dff6b48c1bb5e393b6d384de63fb88eb0c316863b327f9"
     },
     {
       "path": "tests/fixtures/exchange-finance/independent-values.json",
@@ -6786,7 +7157,7 @@
     },
     {
       "path": "packages/commerce/merchant-portability.mts",
-      "sha256": "56834166795b56b76d500c1af1a8574ec7fefbcbc6829126cfcc37ec78892b76"
+      "sha256": "12b0f2da7aa9693d23bbec1d0caf91a59e314ba2ba4fc8dfd9b5eadd0c8c6e98"
     },
     {
       "path": "packages/commerce/contracts/carrier-quotes.v1.json",
@@ -8303,6 +8674,106 @@
     {
       "path": "packages/commerce/contracts/dropoff-handoffs.v1.json",
       "sha256": "539fecc28ce49ef7600d504db49ace7856e223c8ce3a21acae95d916d362cf01"
+    },
+    {
+      "path": "packages/commerce/checkout-preview.mts",
+      "sha256": "a130b5730a7610a040b01bcaeda701e81d0433dbd8aa36ff8fbeeecdafb178ac"
+    },
+    {
+      "path": "packages/commerce/delegated-receipt-binding.mts",
+      "sha256": "eb7f43d680c86034e49e9cfd83c5924ee00116d1d596672a9f14faf9d54f6362"
+    },
+    {
+      "path": "tests/development/receipt-signature-helpers.mts",
+      "sha256": "c6707e20284f7aad81e56cc7c7c1e936141c6e3fef1b6e3b17815130a61ff477"
+    },
+    {
+      "path": "packages/adapters/delegated-receipts/package.json",
+      "sha256": "6463478cd08fe663ad196c8bb769fa35ba74645131b67fdbde0e1a9e4fa5baf1"
+    },
+    {
+      "path": "packages/adapters/delegated-receipts/package-lock.json",
+      "sha256": "c1d026d8abb6629ecabe749fbe8a247756217ad68587c81e0e801d3ea2e212e6"
+    },
+    {
+      "path": "packages/commerce/checkout-previews.mts",
+      "sha256": "a88c4a5aa81eb08885694d3a80a4771a5f9afe2a9e5d9dfd5f1536949b56aee5"
+    },
+    {
+      "path": "packages/commerce/delegated-checkout-receipts.mts",
+      "sha256": "1023ec7598ba47b46b30451f37a0f42a804409a462edf3c346aefba1ecb21d58"
+    },
+    {
+      "path": "packages/commerce/delegated-checkout-intents.mts",
+      "sha256": "81e2700150c5a2bdb7631c26c584ca1c1f4a58330ba6acd65f622ddf93a64f41"
+    },
+    {
+      "path": "packages/commerce/delegated-checkout-api.mts",
+      "sha256": "a0a69d5a494be78a7a7d83b4dda89da5bb42bd1b948fc2bec6cffe7368065090"
+    },
+    {
+      "path": "packages/commerce/contracts/delegated-checkout-api.v1.json",
+      "sha256": "2f9f1b124855c0ac404317e5000fe17a45b27fc489d6e5861e46a7f6e61951e8"
+    },
+    {
+      "path": "packages/commerce/delegated-checkout-intent-records.mts",
+      "sha256": "1d91faa2db4cc56cad5c12915d16ccd6eba994d12cb18a2f70d3bbe03fccce4f"
+    },
+    {
+      "path": "packages/commerce/delegated-checkout-intent-privacy.mts",
+      "sha256": "5fc96a48714442a1ae9a36ab425fb729c35f630e70c389b7dc59858675075f5a"
+    },
+    {
+      "path": "packages/commerce/contracts/delegated-checkout-recovery.v1.json",
+      "sha256": "359ab110e73b9c9141b1590a8aa46f38ac8c5415d7300c97f9bb2e2589ea0986"
+    },
+    {
+      "path": "packages/adapters/delegated-commands/consumer-contract.v1.json",
+      "sha256": "7777755b8ebbeec7b0d68c330ae23e6d776d40812636afab94156b8435f8d145"
+    },
+    {
+      "path": "tests/fixtures/delegated-commands/consumer-vectors.v1.json",
+      "sha256": "a01e0ce41eec664f0e4275411c1d14abbbc7433bcda7934017c66f57587f5b19"
+    },
+    {
+      "path": "tests/development/delegated-command-codec.test.mts",
+      "sha256": "3c0dc8aa32ab8aca829ffba8763574b82b1de4f0583cbb99a9a29f54d929d91b"
+    },
+    {
+      "path": "packages/commerce/delegated-command-claim-privacy.mts",
+      "sha256": "91e474554863c3275d02f59b43285072e88e3f59292192e02c7d7098d1a3294c"
+    },
+    {
+      "path": "packages/commerce/delegated-command-claim-records.mts",
+      "sha256": "74a6232a9999c47a1c26cf9b588b9110afa714f98af61c64c518a2add7e8ec8f"
+    },
+    {
+      "path": "packages/commerce/delegated-command-claims.mts",
+      "sha256": "adf9ba359d042b64468eb31110c9bed16dfc864011fcee24c1f71627881e9929"
+    },
+    {
+      "path": "packages/commerce/delegated-checkout-starts.mts",
+      "sha256": "b47cf68fed78cd4b173a0f9e326d41351c7597f46c470204b796c6e358c223a9"
+    },
+    {
+      "path": "packages/commerce/contracts/delegated-checkout-commands.v1.json",
+      "sha256": "0ee26315c30ab7fd5697d3cdab7146f5875325bd688748ef73950de4584c5a74"
+    },
+    {
+      "path": "packages/commerce/migration-fence.mts",
+      "sha256": "ed4aee87268bc83e6146f4ceb94dc6562e4c63033b8c8a21dc1fa1f9f68a0b30"
+    },
+    {
+      "path": "tests/development/delegated-checkout-helpers.mts",
+      "sha256": "e426c219e7b46185ca984ba5a3bb86007e68e2ee37afedd74831645ec19e5d5b"
+    },
+    {
+      "path": "tests/development/delegated-command-claim-helpers.mts",
+      "sha256": "0971d28fd40514cbffa518858afefa014d94b57281cd0b47de334278553480f7"
+    },
+    {
+      "path": "tests/development/delegated-use-client-helpers.mts",
+      "sha256": "1aeff4c969b2fe1eb90cb1ff17c5e43416f00a94c225ba93e615ea6c45f285b7"
     }
   ]
 }

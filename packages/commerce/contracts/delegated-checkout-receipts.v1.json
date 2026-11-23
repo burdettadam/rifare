@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "qualification": "candidate_contract_only",
+  "default_available": false,
+  "owner": "DelegatedCheckoutReceipts over native CheckoutPreviews, growthCustomer and server-owned receipt contexts",
+  "methods": {
+    "verify": ["preview_id", "context_id", "compact_jws"],
+    "close": []
+  },
+  "input_authority": "The caller supplies IDs and a compact signature only. Local scope and purchase facts come from the current native preview; external identity, grant, policy, challenge and ceiling pins come from an independently established server-owned context.",
+  "context_contract": "Synchronous resolve and synchronous side-effect-free assertCurrent, including exact original facts and current authority. A promise or boolean is not a completed assertion. No provider implementation or context store is supplied.",
+  "signature_profile": {
+    "profile": "urn:marty:delegated-decision-receipt:v1",
+    "type": "mip-delegated-decision+jws",
+    "key_purpose": "urn:marty:delegated-decision:jws-v1",
+    "algorithms": ["ES256", "EdDSA"],
+    "curves": ["P-256", "Ed25519"],
+    "library": "jose@6.2.18",
+    "trust": "Pinned server-configured public keys bound to issuer, purpose, algorithm and kid. No dynamic key lookup or caller key input.",
+    "json": "Authenticated original bytes; fatal UTF-8, no BOM, no duplicate decoded names, no unpaired surrogates. Numeric tokens are bare nonnegative decimal safe integers; fraction, exponent and negative spellings are unsupported.",
+    "provenance": "tests/fixtures/delegated-receipts/provider-source.v1.json"
+  },
+  "final_checks": ["original context and trust still current", "native preview and source facts still current", "customer proof and scope still current", "privacy and recovery egress still allowed", "original receipt, proof, status, domain, preview, context and session deadlines"],
+  "limits": {
+    "default_pending": 16,
+    "maximum_pending": 32,
+    "maximum_public_keys": 64,
+    "default_verification_timeout_ms": 5000,
+    "maximum_verification_timeout_ms": 30000,
+    "maximum_compact_characters": 100000,
+    "maximum_header_bytes": 2048,
+    "maximum_json_depth": 16,
+    "retries": 0
+  },
+  "output": "Frozen BoundDelegatedReceipt with execution_authorized false and candidate_contract_only qualification. Repeated verification is allowed; no single-use or receipt-redemption claim.",
+  "effects": "No commerce operation, purchase, payment, reservation, provider transport or approval. Native scope checks may update session last_seen.",
+  "privacy": "Public-key configuration and bounded transient process memory only. Raw tokens are not stored or logged. No new table, durable context map or receipt store; caller copies and JavaScript memory reclamation remain separate concerns.",
+  "unsupported": ["provider current-state authority", "remote sender-bound authentication", "public Gateway routes", "managed signing", "atomic final use", "durable redemption", "merchant execution", "production qualification"]
+}

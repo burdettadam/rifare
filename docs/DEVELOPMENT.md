@@ -76,7 +76,15 @@ On Windows with the Python launcher, substitute `py -3` for `python3`. `make ver
 
 ## What is not configured
 
-The original M00-G05 diagnostic profile supplies isolated API/worker/plain-browser processes using SQLite. Substantial commerce modules, fixture adapters and model interfaces have since landed; see [architecture](ARCHITECTURE.md). The actual PostgreSQL/React application and its target-host qualification remain open. Default target startup fails closed; use the explicit diagnostic and demo commands for current local behavior.
+[ADR-0081](decisions/0081-upstream-commerce-engine.md) adds the separately pinned
+[Medusa commerce application](COMMERCE-ENGINE.md) with actual PostgreSQL migrations
+and an upstream Admin build. `npm run dev` now launches that explicitly configured
+local application when installed; missing prerequisites still fail without a smoke
+fallback. The remaining paragraphs describe the older diagnostic profile. Identity
+integration, production/durable infrastructure and served-browser qualification
+remain open for the new application.
+
+The original M00-G05 diagnostic profile supplies isolated API/worker/plain-browser processes using SQLite. Substantial commerce modules, fixture adapters and model interfaces have since landed; see [architecture](ARCHITECTURE.md). Those diagnostic processes remain available through explicit smoke/demo commands. The selected Medusa application now supplies PostgreSQL and upstream Admin; its production-host and identity integration qualification remain open.
 
 ## Worktrees and evidence
 
@@ -88,7 +96,7 @@ cd ../Rifare-M20-G04
 python3 tools/dev_tests.py
 ```
 
-The command above illustrates the next recorded commerce direction; substitute the assigned scope and actual reviewed base. Record ownership before starting. Code isolation is not runtime isolation: instances need separate ports, databases, storage, queues, callback destinations and provider accounts. Qualify that behavior during the owning goal.
+The command above illustrates an older diagnostic goal; substitute the assigned Medusa migration scope and actual reviewed base. Record ownership before starting. Code isolation is not runtime isolation: instances need separate ports, databases, storage, queues, callback destinations and provider accounts. Qualify that behavior during the owning goal.
 
 Raw reports/recordings go under ignored `evidence/<goal-id>/<candidate-sha>/`. Run `git status --short` and `git diff --cached` before committing. Retain only concise work decisions and source-controlled fixtures. Preserve durable review links and required release records before deleting owned temporary evidence after closure.
 
@@ -208,8 +216,9 @@ python3 tools/verify.py --runtime  # planning + Python helpers + Node smoke test
 
 The process launcher is a local product start/stop script, not an agent scheduler.
 No paid services, model keys or production accounts are used. Root npm metadata
-contains no dependency packages. PostgreSQL, React and OS-level outbound network
-isolation remain unqualified; `npm run dev` exits 2 rather than substituting smoke.
+contains no dependency packages. This diagnostic slice does not qualify PostgreSQL,
+React or OS-level outbound network isolation. The separately installed Medusa
+target uses `npm run dev`; it still exits 2 when its dependencies are absent.
 
 ## M00-G06 native test harness
 
@@ -257,6 +266,75 @@ python3 -m unittest discover -s tests -p test_evidence_gate.py -v
 Full verification discovers these tests automatically. For candidate evidence,
 use the separately exported controller and independently retained pins described
 in the guide; candidate-authored checks alone are not an external trust anchor.
+
+## Local delegated checkout application
+
+The [customer review page](DELEGATED-CHECKOUT-REVIEW.md) is served at
+`/checkout-review`. It uses the existing verified session and original references
+for review, one preparation, explicit recovery and cancellation. The guide keeps
+controller/native HTTP evidence separate from the actual served-browser gate:
+
+```sh
+python3 tools/dev_tests.py --files tests/development/delegated-checkout-review.test.mts
+python3 tools/dev_tests.py --files tests/development/delegated-checkout-browser.test.mts
+```
+
+The second selection requires the documented permitted Playwright/Chromium host;
+startup or connectivity failures cannot count as passing browser evidence.
+
+[Receipt evidence review](DELEGATED-CHECKOUT-RECEIPT-REVIEW.md) adds explicit
+submission through the existing native receipt API. Its controller/native HTTP
+and actual served-browser selections remain distinct:
+
+```sh
+python3 tools/dev_tests.py --files tests/development/delegated-checkout-receipt-review.test.mts
+python3 tools/dev_tests.py --files tests/development/delegated-checkout-receipt-browser.test.mts
+```
+
+Run the unchanged review/controller and nine-case browser files separately when
+changing their shared page assets. Preserve each invocation's normal budget.
+
+The [original preparation recovery guide](DELEGATED-CHECKOUT-RECOVERY.md) closes
+the case where the caller loses preparation's response before learning an intent
+ID. Run the separate no-argument journey to observe actual process replacement
+and explicit lookup by the original preview/context references:
+
+```sh
+python3 tools/install_receipt_runtime.py --offline
+node --experimental-strip-types tools/demo-delegated-checkout-recovery.mts
+```
+
+Its eight synthetic observations preserve the original identity and create no
+replacement intent. The guide includes the separate recovery contract, explicit
+Python commands and focused 32-case selection. The original journey remains:
+
+The [process lifecycle demonstration](DELEGATED-CHECKOUT-LIFECYCLE.md) runs two
+disposable native server processes and the copied independent Python client,
+including lost-response recovery and actual server process loss/restart:
+
+```sh
+python3 tools/install_receipt_runtime.py --offline
+node --experimental-strip-types tools/demo-delegated-checkout.mts
+```
+
+It accepts no arguments or external credentials and cleans its owned temporary
+resources. The report identifies synthetic local observations and the remaining
+provider/deployment boundaries. This is an RCG-5 prerequisite, not full connected
+qualification. The underlying API remains independently usable as below.
+
+The [checkout HTTP guide](DELEGATED-CHECKOUT-HTTP.md) documents the optional
+server-local owner composition, customer-only routes and independent Python
+caller. The focused HTTP/client selection uses actual loopback requests and
+ephemeral synthetic signatures:
+
+```sh
+python3 tools/install_receipt_runtime.py --offline
+python3 tools/dev_tests.py --files tests/development/delegated-checkout-http.test.mts tests/development/delegated-checkout-client.test.mts
+```
+
+This is local evidence access, not provider final use or a complete connected
+checkout journey. Unconfigured native servers preserve current-proof retained
+status and cancellation while fresh preview/receipt work remains unavailable.
 
 ## Portable order-status reads
 

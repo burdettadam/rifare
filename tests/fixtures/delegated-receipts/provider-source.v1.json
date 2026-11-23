@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "repository": "ElevenID/marty-protocol",
+  "commit": "a9ce6a1d912f22a5627faebb482c44b9104d840d",
+  "path": "conformance/delegated-authority/v1/jws/decision-receipt-v1.json",
+  "git_blob": "258060f234ddaf70f360aa6d63c45f5a1727024b",
+  "sha256": "12911c10491e5d0d9bbbe2bdc2ba540daa76e449aee16991bac0a1d8c08e6d31",
+  "envelope_source": "protocol/delegated-authority/DECISION-EVIDENCE.md",
+  "envelope_git_blob": "6945a4158e6f486bdacfea69fc568d20a4e646a6",
+  "profile_status": "draft_not_runtime_qualified",
+  "local_fixture": "evidence/rcg3/provider/decision-receipt-v1.json",
+  "redistributed": false,
+  "rights_observation": "Pinned root LICENSE says proprietary; README says Apache-2.0. Obtain the fixture separately through authorized source access; do not include it in Rifare source exports."
+}
