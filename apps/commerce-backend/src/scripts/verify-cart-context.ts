@@ -14,7 +14,7 @@ import { readLockedCartFacts } from "../modules/operation-journal/cart-facts";
 import { parseOriginalCommand, requireCommandCartMatch } from "../modules/operation-journal/command";
 import { operationJournalModule } from "../modules/operation-journal";
 import type OperationJournalService from "../modules/operation-journal/service";
-import { eraseJournalSubject } from "../modules/operation-journal/privacy";
+import { eraseJournalSubject, setJournalOperationHold } from "../modules/operation-journal/privacy";
 
 /** Actual native PostgreSQL/HTTP fixtures. JWTs are synthetic credentials for
  * native persisted associations, not evidence of a new hosted provider journey.
@@ -402,6 +402,62 @@ export default async function verifyCartContext({ container }: ExecArgs) {
       assert.equal(committed.length, 1);
       assert.equal((await journal.admit(crashBytes, admission)).id, committed[0].id);
       check("independent-journal-processes-recover-the-same-original-after-lost-ack", () => {});
+
+      const initialStatus = await journal.status(command.command_id, admission);
+      assert.equal(initialStatus.id, first.id);
+      assert.equal(initialStatus.revision, 0);
+      assert.equal(initialStatus.first_observation_digest, null);
+      const recovery = await journal.prepareRecovery(command.command_id, admission);
+      assert.deepEqual(recovery, {
+        id: first.id, original_command_uuid: command.command_id, command_digest: owned[0].command_digest,
+      });
+      const otherOwner = {
+        ...admission, actor: { actor_type: "customer", actor_id: bob.customer.id, auth_identity_id: bob.identity.id },
+      };
+      await assert.rejects(journal.status(command.command_id, otherOwner), denied);
+      await assert.rejects(journal.prepareRecovery(command.command_id, otherOwner), denied);
+      await assert.rejects(journal.observe(command.command_id, 0, otherOwner), denied);
+      await assert.rejects(journal.cancel(command.command_id, 0, otherOwner), denied);
+
+      const observed = await journal.observe(command.command_id, 0, admission);
+      assert.equal(observed.state, "awaiting_authority");
+      assert.equal(observed.revision, 1);
+      assert.equal(observed.first_observation_digest, factsDigest({
+        profile: "urn:rifare:medusa-journal-cart-observation:v1",
+        original_operation_id: first.id,
+        original_command_digest: recovery.command_digest,
+        cart_facts_digest: lockedFacts.factsDigest,
+      }));
+      assert.ok(observed.first_observed_at);
+      await assert.rejects(journal.observe(command.command_id, 0, admission), /Original commerce command unavailable/);
+      assert.equal((await request(`/store/carts/${aliceCart.id}`, alice.token, "POST",
+        { shipping_address: { city: "Golden" } })).status, 200);
+      assert.notEqual((await observe()).value.observation.facts_digest, lockedFacts.factsDigest);
+      assert.deepEqual(await journal.observe(command.command_id, 1, admission), observed);
+      assert.deepEqual(await journal.status(command.command_id, admission), observed);
+      assert.deepEqual(await journal.prepareRecovery(command.command_id, admission), recovery);
+
+      await assert.rejects(journal.cancel(command.command_id, 0, admission), /Original commerce command unavailable/);
+      const cancelled = await journal.cancel(command.command_id, 1, admission);
+      assert.equal(cancelled.state, "retired");
+      assert.equal(cancelled.revision, 2);
+      await assert.rejects(journal.status(command.command_id, admission), denied);
+      await assert.rejects(journal.prepareRecovery(command.command_id, admission), denied);
+      await assert.rejects(journal.observe(command.command_id, 2, admission), denied);
+      await assert.rejects(journal.admit(bytes, admission), /Original commerce command unavailable/);
+      const cancelledRow = await postgres("rifare_operation").where({ id: first.id }).first();
+      assert.equal(cancelledRow.command_bytes, null);
+      assert.equal(cancelledRow.first_observation_digest, null);
+
+      const subject = { ...merchant, customer_id: alice.customer.id };
+      assert.equal(await postgres.transaction(tx => setJournalOperationHold(tx, subject, key, result.id, 0, true)), true);
+      const heldCancellation = await journal.cancel(processOriginal.command_id, 1, admission);
+      assert.equal(heldCancellation.state, "cancelled");
+      await assert.rejects(journal.status(processOriginal.command_id, admission), denied);
+      assert.equal((await postgres("rifare_operation").where({ id: result.id }).first()).command_bytes, processBytes.toString());
+      assert.equal(await postgres.transaction(tx => setJournalOperationHold(tx, subject, key, result.id, 2, false)), true);
+      assert.equal((await postgres("rifare_operation").where({ id: result.id }).first()).command_bytes, null);
+      check("journal-history-first-observation-recovery-and-revision-checked-cancellation", () => {});
 
       await postgres.transaction(tx => eraseJournalSubject(tx, { ...merchant, customer_id: alice.customer.id }, key));
       await assert.rejects(journal.admit(bytes, admission), denied);

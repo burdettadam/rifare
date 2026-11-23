@@ -243,3 +243,25 @@ same row by repeating the original bytes. The disposable fixtures were retired.
 Codex continues on the assigned linked checkout with status, immutable first
 observation, revision-bound cancellation, and explicit recovery preparation.
 The authorized privacy-owner integration still requires verification.
+
+## Status, observation, recovery and cancellation checkpoint
+
+The internal Medusa service rechecks current customer, identity, cart, channel
+and store ownership before accessing historical records. Status includes the
+first observed digest and timestamp. Recovery preparation returns the saved
+operation ID, original UUID and command digest. The service records its first
+local cart observation once, without changing authority state. Revision fences
+protect observation and cancellation.
+
+Cancellation retires and minimizes an unheld operation while retaining its
+duplicate-refusal identifiers. A held operation is cancelled and hidden from
+ordinary journal access. Releasing that hold retires and minimizes it. The
+original UUID is never made available again.
+
+On November 22, 2026 (America/Denver), TypeScript, 28 native cart-context
+groups and the native privacy suite passed on freshly migrated disposable
+PostgreSQL 16. Tests covered cross-owner denial at every new method, immutable
+first observation after a cart change, stable recovery, stale revisions,
+terminal non-reuse and hold release. The fixture was retired. Codex retains
+the active checkout for final privacy-owner integration and independent
+qualification and review.

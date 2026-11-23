@@ -24,7 +24,7 @@ const adjustmentFields = ["id", "code", "promotion_id", "provider_id", "is_tax_i
  * and owns the serializable transaction through the journal write.
  * Stable lock order and bounded rows keep the transaction short.
  */
-export async function readLockedCartFacts(transaction: Postgres, id: string, merchant: Merchant, context: AdmissionContext) {
+export async function lockCartOwner(transaction: Postgres, id: string, merchant: Merchant, context: AdmissionContext) {
   if (!transaction.isTransaction) throw new Error("A PostgreSQL transaction is required");
   const { rows } = await transaction.raw("show transaction_isolation");
   if (rows[0]?.transaction_isolation !== "serializable") {
@@ -37,7 +37,7 @@ export async function readLockedCartFacts(transaction: Postgres, id: string, mer
     "shipping_address_id", "billing_address_id",
   );
   const { actor, salesChannelIds } = context;
-  if (!cart || cart.completed_at != null || actor.actor_type !== "customer" ||
+  if (!cart || actor.actor_type !== "customer" ||
       !actor.actor_id || !actor.auth_identity_id || cart.customer_id !== actor.actor_id ||
       !cart.sales_channel_id || !salesChannelIds.includes(cart.sales_channel_id)) throw unavailable();
 
@@ -50,6 +50,20 @@ export async function readLockedCartFacts(transaction: Postgres, id: string, mer
   const identity = await liveRows("auth_identity").where({ id: actor.auth_identity_id })
     .first({ customer_id: transaction.raw("app_metadata ->> 'customer_id'") });
   if (identity?.customer_id !== actor.actor_id) throw unavailable();
+  const actorDigest = factsDigest({
+    profile: "urn:rifare:medusa-operation-actor:v1",
+    merchant_namespace: merchant.merchant_namespace,
+    store_id: merchant.store_id,
+    customer_id: actor.actor_id,
+    auth_identity_id: actor.auth_identity_id,
+  });
+  return { cart, actorDigest };
+}
+
+export async function readLockedCartFacts(transaction: Postgres, id: string, merchant: Merchant, context: AdmissionContext) {
+  const { cart, actorDigest } = await lockCartOwner(transaction, id, merchant, context);
+  if (cart.completed_at != null) throw unavailable();
+  const liveRows = (table: string) => transaction(table).whereNull("deleted_at").orderBy("id").forUpdate();
   const orderLink = await liveRows("order_cart").where({ cart_id: cart.id }).first("id");
   if (orderLink) throw unavailable();
 
@@ -101,15 +115,5 @@ export async function readLockedCartFacts(transaction: Postgres, id: string, mer
   });
   createRawPropertiesFromBigNumber(native);
   const facts = projectCart(native, merchant);
-  return {
-    facts,
-    factsDigest: factsDigest(facts),
-    actorDigest: factsDigest({
-      profile: "urn:rifare:medusa-operation-actor:v1",
-      merchant_namespace: merchant.merchant_namespace,
-      store_id: merchant.store_id,
-      customer_id: actor.actor_id,
-      auth_identity_id: actor.auth_identity_id,
-    }),
-  };
+  return { facts, factsDigest: factsDigest(facts), actorDigest };
 }

@@ -5,7 +5,7 @@ type Postgres = ReturnType<typeof ModulesSdkUtils.createPgConnection>;
 type InstallationScope = Readonly<{ merchant_namespace: string; store_id: string }>;
 type SubjectScope = InstallationScope & Readonly<{ customer_id: string }>;
 
-const minimized = {
+export const minimizedOperationFields = {
   merchant_namespace: null,
   store_id: null,
   customer_id: null,
@@ -74,7 +74,7 @@ async function retireScopedOperations(transaction: Postgres, scope: Installation
     updated_at: transaction.fn.now(),
   };
   await subjectOperations().where({ privacy_hold: true }).whereNot({ state: "retired" }).update(retire);
-  await subjectOperations().where({ privacy_hold: false }).update({ ...retire, ...minimized });
+  await subjectOperations().where({ privacy_hold: false }).update({ ...retire, ...minimizedOperationFields });
 }
 
 /** Hold changes share the subject lock used by admission and erasure. */
@@ -85,16 +85,19 @@ export async function setJournalOperationHold(
   const uninstalled = await lockInstallationForRead(transaction, scope, key);
   const subject = await lockSubject(transaction, scope, key);
   const suppressed = uninstalled || subject.suppressed;
-  if (held && suppressed) return false;
+  const selected = () => transaction(journalTable).where({ ...scope, id, revision: expectedRevision })
+    .whereNot({ privacy_hold: held });
+  const row = await selected().forUpdate().first("state");
+  if (!row) return false;
+  const retired = suppressed || row.state === "cancelled" || row.state === "retired";
+  if (held && retired) return false;
 
   const update = {
     privacy_hold: held,
     updated_at: transaction.fn.now(),
     revision: transaction.raw("revision + 1"),
   };
-  const changed = await transaction(journalTable).where({ ...scope, id, revision: expectedRevision })
-    .whereNot({ privacy_hold: held })
-    .update(suppressed ? { ...update, state: "retired", ...minimized } : update);
+  const changed = await selected().update(retired ? { ...update, state: "retired", ...minimizedOperationFields } : update);
   return changed === 1;
 }
 
