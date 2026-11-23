@@ -191,3 +191,17 @@ requires all catalogue rows to stay byte-identical, refuses catalogue UPDATE and
 rejects swallowed loader errors. It also samples authenticated identity from the
 actual registered fenced adapter's native module pool using trusted test-only
 observation. No identity/control privilege or provider catalogue write is granted.
+
+
+The e4257c9 full CLI boot still failed: createDefaultsWorkflow queries API-key
+state; Locale/Notification catalogues also need reads. No API-key grant is added.
+The next candidate uses exported typed Medusa2.23 module composition APIs to load
+native modules/links/configured workflows/subscribers and lifecycle hooks in server
+mode. Controller-owned server-default provisioning,HTTP routes and background jobs
+are outside this internal worker. This is not a private payment/order engine or an
+upstream service override. Locale/Notification receive SELECT only. Boot success
+requires no swallowed loader errors and unchanged provider catalogue rows, with
+actual native cart/session reads and direct provider-pool authenticated identity.
+The exported framework/native loader source and official repository callgraph were
+checked; this worker composition still needs actual runtime proof and independent
+review before relying on it for complete upstream checkout.

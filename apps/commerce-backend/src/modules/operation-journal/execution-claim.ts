@@ -43,7 +43,7 @@ export async function createOriginalExecutionWorker(tx: Postgres) {
     ]);
     const reads = new Set([
       ...writes, "store", "store_currency", "sales_channel", "region", "region_country", "currency", "country",
-      "customer", "customer_address", "tax_provider", "fulfillment_provider", "payment_provider", "region_payment_provider", "product", "product_variant",
+      "customer", "customer_address", "tax_provider", "fulfillment_provider", "notification_provider", "locale", "payment_provider", "region_payment_provider", "product", "product_variant",
       "product_option", "product_option_value", "product_variant_option", "product_image", "product_category",
       "product_tag", "product_collection", "product_sales_channel", "product_variant_price_set", "price", "price_set",
       "price_rule", "price_list", "price_preference", "shipping_option", "shipping_profile", "shipping_option_rule",
