@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "id": "rifare-source-inventory",
-  "revision": 66,
+  "revision": 67,
   "status": "proposed",
   "components": [
     {
@@ -1757,7 +1757,12 @@
         "apps/commerce-backend/src/modules/operation-journal/request-verifier.ts",
         "apps/commerce-backend/src/scripts/verify-request-signatures.ts",
         "docs/decisions/0085-native-signed-authorization-request.md",
-        "work/records/RCG-4B-C7.md"
+        "work/records/RCG-4B-C7.md",
+        "apps/commerce-backend/src/modules/operation-journal/authority-assets.ts",
+        "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123094926.ts",
+        "apps/commerce-backend/src/modules/operation-journal/request-session.ts",
+        "apps/commerce-backend/src/scripts/verify-request-retention.ts",
+        "apps/commerce-backend/src/scripts/verify-request-upgrade.ts"
       ],
       "notices": []
     },
