@@ -484,8 +484,9 @@ export default async function verifyCommerce({ container }: ExecArgs) {
             "payment_collection.payment_sessions.amount", "payment_collection.payment_sessions.currency_code"],
         });
         const sessions = current?.payment_collection?.payment_sessions;
-        if (sessions?.length !== 1 || sessions[0].id !== paymentSessionId ||
-            current.currency_code !== sessions[0].currency_code || !MathBN.eq(current.total, sessions[0].amount)) {
+        const session = sessions?.length === 1 ? sessions[0] : undefined;
+        if (!current || !session || session.id !== paymentSessionId ||
+            current.currency_code !== session.currency_code || !MathBN.eq(current.total, session.amount)) {
           throw new MedusaError(MedusaError.Types.INVALID_DATA, "Fixture payment failed entry validation");
         }
         if (successor) {
