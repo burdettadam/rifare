@@ -1,3 +1,57 @@
+import { createHash } from "node:crypto";
+
+// ADR-0089: two narrowly pinned native UI corrections, not a replacement
+// dashboard. Remove when fixed upstream releases are selected and requalified.
+const productModule = "/@medusajs/dashboard/dist/product-list-SC2CY4XX.mjs";
+const productModuleDigest = "3aba92f16ae523ec7ccbdaa44dc1787f066cf1771439420da9e7599816fd3e5c";
+const marker = 'widgetsZonePrefix: "product.list",';
+const loginModule = "/@medusajs/dashboard/dist/login-NQL3NNCN.mjs";
+const loginModuleDigest = "b86850b96199e64c8efa01027800be32413f97802722106a7b202dc7e4428d47";
+const loginStart = "  const handleSubmit = form.handleSubmit(async ({ email, password }) => {\n    await mutateAsync(";
+const loginEnd = "    );\n  });\n  const serverError = form.formState.errors?.root?.serverError?.message;";
+
+export function adminBuildConfig() {
+  let correctedProduct = false, correctedLogin = false;
+  return { plugins: [{
+    name: "rifare-static-admin-react",
+    // Keep React and Vite8 OXC JSX in agreement for a static build even when
+    // the backend uses its permitted local test profile. Serving/HMR is unchanged.
+    config: (_config: unknown, { command }: { command: string }) => command === "build" ? {
+      define: { "process.env.NODE_ENV": JSON.stringify("production") },
+      oxc: { jsx: { development: false } },
+    } : undefined,
+  }, {
+    name: "rifare-medusa-admin-compatibility",
+    apply: "build" as const,
+    enforce: "pre" as const,
+    transform(source: string, id: string) {
+      const path = id.split("?")[0].replaceAll("\\", "/");
+      if (path.endsWith(productModule)) {
+        if (createHash("sha256").update(source).digest("hex") !== productModuleDigest || source.split(marker).length !== 2) {
+          throw new Error("RIFARE_ADMIN_PRODUCT_MODULE_UNQUALIFIED");
+        }
+        correctedProduct = true;
+        // Each unchanged native table already owns the route Outlet. Suppress only
+        // the outer composer's second Outlet; preserve both table/permission branches.
+        return { code: source.replace(marker, `${marker}\n      hasOutlet: false,`), map: null };
+      }
+      if (!path.endsWith(loginModule)) return null;
+      if (createHash("sha256").update(source).digest("hex") !== loginModuleDigest || source.split(loginStart).length !== 2 || source.split(loginEnd).length !== 2) {
+        throw new Error("RIFARE_ADMIN_LOGIN_MODULE_UNQUALIFIED");
+      }
+      correctedLogin = true;
+      // Native onError already renders reported HTTP failures. Keep that whole
+      // mutation and its success/MFA callbacks intact; only consume its FetchError
+      // rejection, preserving unexpected exceptions for the normal error boundary.
+      return { code: source.replace(loginStart, loginStart.replace("    await", "    try {\n      await"))
+        .replace(loginEnd, "    );\n    } catch (error) {\n      if (!isFetchError(error)) throw error;\n    }\n  });\n  const serverError = form.formState.errors?.root?.serverError?.message;"), map: null };
+    },
+    buildEnd(error?: Error) {
+      if (!error && (!correctedProduct || !correctedLogin)) throw new Error("RIFARE_ADMIN_REQUIRED_MODULE_NOT_OBSERVED");
+    },
+  }] };
+}
+
 type Environment = Readonly<Record<string, string | undefined>>;
 
 const loopback = new Set(["127.0.0.1", "[::1]"]);
@@ -104,7 +158,7 @@ export function localCommerceConfig(env: Environment) {
   }
   const identity = externalIdentityConfig(env, web.origin);
   return {
-    admin: { disable: env.DISABLE_MEDUSA_ADMIN === "true", backendUrl: "/" },
+    admin: { disable: env.DISABLE_MEDUSA_ADMIN === "true", backendUrl: "/", vite: adminBuildConfig },
     plugins: [{ resolve: "@medusajs/cloud", options: { disabled: true } }],
     projectConfig: {
       databaseUrl: database.href,
