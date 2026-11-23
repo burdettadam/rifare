@@ -67,7 +67,7 @@ export async function qualifyNativeClaims(container: any, fixture: {
   };
   const rejectUnchanged = async (name: string, invoke: () => Promise<unknown>) => {
     const before = await effects();
-    await assert.rejects(invoke, /cancel/i);
+    await assert.rejects(invoke, /cancel|not found/i);
     check(name, () => {});
     assert.deepEqual(await effects(), before, `${name}: rejected call changed native effects`);
   };
@@ -92,7 +92,9 @@ export async function qualifyNativeClaims(container: any, fixture: {
   assert.deepEqual(await financial(), originalFinancial);
   await cancelBeginOrderClaimWorkflow(container).run({ input: { claim_id: draft.claim_id } });
   check("native-draft-claim-cancellation-leaves-original-payment-and-stock", () => {});
-  assert.ok((await orders.retrieveOrderClaim(draft.claim_id)).canceled_at);
+  const canceledDraft = await postgres("order_claim").where({ id: draft.claim_id }).first();
+  assert.ok(canceledDraft.deleted_at, "Native draft cancellation must soft-delete its claim");
+  await assert.rejects(orders.retrieveOrderClaim(draft.claim_id), /not found/i);
   assert.deepEqual(await level(), { stock: 8, reserved: 0 });
   assert.deepEqual(await financial(), originalFinancial);
   await rejectUnchanged("native-canceled-claim-add-refuses-without-effects", () =>

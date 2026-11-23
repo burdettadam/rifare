@@ -37,3 +37,16 @@ reason; corrected to the pinned production_failure enum before runtime execution
 No-emit then passed. Partial-refund, receiving/fulfillment and adversarial quantities
 remain to implement/observe under the prior scope correction. Initial native
 execution will establish actual cancellation behavior before any acceptance claim.
+
+## Initial native execution and oracle correction
+
+At 48e5d73 the unchanged existing commerce groups reached their prior assertions.
+The added draft claim/control ran, then the helper incorrectly expected a visible
+canceled_at claim after draft cancellation. Native PostgreSQL confirms the upstream
+cancel-begin workflow soft-deleted both the draft claim and its pending change;
+normal retrieval correctly refused. Correct the test to assert those native rows
+are soft-deleted and hidden, retaining exact no-financial/stock-effect comparisons.
+The initial execution failed and is not a passing qualification. A missing claim
+is an allowed typed refusal for later canceled-draft actions, not resurrection.
+Installed payment/refund/cancel source bytes matched the integrity-verified locked
+registry tar in the existing npm cache; no modified vendor source is assumed.

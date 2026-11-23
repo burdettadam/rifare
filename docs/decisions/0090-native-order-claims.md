@@ -21,7 +21,7 @@ capture and refund history. Claim confirmation may update a native payment
 collection; it is not a provider refund, settlement or physical return observation.
 Record exact native effects instead of interpreting an error as proof of no effect.
 
-Preserve the existing seventeen baseline commerce workflow groups and public holds.
+Preserve all existing baseline commerce workflow groups and public holds.
 Use a fixed compiled own-dependency consumer and disposable local PostgreSQL; no real
 financial or physical effects, external caller enrollment or credentials. Source
 cache is reused; check host C free space before builds/production install. Bind the
