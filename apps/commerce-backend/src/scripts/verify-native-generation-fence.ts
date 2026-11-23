@@ -346,8 +346,11 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
     assert.deepEqual(await postgres("rifare_c12_generation_audit").orderBy("id"), beforeAudit);
     if (ordering || revokeFirst || reconnect) { assert.ok(orderingObservation); console.log("C12_NATIVE_GENERATION_ORDERING=" + JSON.stringify(orderingObservation)); }
     console.log(result.output.split(/\r?\n/).filter(value => value.startsWith("C12_NATIVE_GENERATION_")).join("\n"));
-    console.log("C12_NATIVE_GENERATION_RESULT=" + JSON.stringify({ result: "pass", actual_native_stale_write_refusals: 5,
-      same_existing_authenticated_session: true, original_visibility_qualified: false, current_authority_fence_qualified: false,
+    console.log("C12_NATIVE_GENERATION_RESULT=" + JSON.stringify({ result: "pass",
+      ...(reconnect ? { actual_backend_loss_and_reconnect: true, active_reconnect_native_writes: 1,
+        post_retirement_native_method_acquisition_refusals: 1, same_existing_authenticated_session: false } :
+        { actual_native_stale_write_refusals: 5, same_existing_authenticated_session: true }),
+      original_visibility_qualified: false, current_authority_fence_qualified: false,
       provider_effect_time_fence_qualified: false, full_C12_qualified: false }));
   } finally {
     try {

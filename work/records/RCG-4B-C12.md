@@ -431,3 +431,12 @@ guard before the credential-refusal assertion. That is valid defense in depth bu
 the wrong targeted fault outcome. The final source records successful retired-role
 reconnection and immediately applies the unchanged PostgreSQL credential-refusal
 assertion;the SQL guard remains installed and is not faulted in this campaign.
+
+Initial regression and authority review of7b7d4d3 found that the terminal summary
+inherited the older five-stale-write/same-session labels even though reconnect
+intentionally changes backends and proves one post-retirement native Cart method
+acquisition refusal. The mechanism assertions and snapshots were unaffected,but
+that evidence claim is invalid. The corrected candidate reports one current
+reconnect native write,one post-retirement method-acquisition refusal,and
+`same_existing...:false`;the five SQL refusals remain exclusive to the completed-
+revocation and transaction-ordering modes.
