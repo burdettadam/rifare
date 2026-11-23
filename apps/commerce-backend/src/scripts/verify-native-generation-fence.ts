@@ -55,6 +55,39 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
           await release;
         });
       } else await carts.updateCarts(task.cart_id, current);
+      if (task.reconnect) {
+        assert.equal(typeof process.send, "function");
+        const wait = (expected: string) => new Promise<void>((resolve, reject) => {
+          const timer = setTimeout(() => reject(new Error("Native reconnect " + expected + " deadline")), 15000);
+          process.once("message", message => { clearTimeout(timer); try { assert.deepEqual(message, { phase: expected }); resolve(); } catch (error) { reject(error); } });
+        });
+        const reconnect = wait("reconnect"); process.send!({ phase: "ready", identity }); await reconnect;
+        let reconnected: any, losses = 0;
+        for (let attempt = 0; attempt < 3 && !reconnected; attempt++) {
+          try { reconnected = (await postgres.raw("select session_user as role,pg_backend_pid() as pid")).rows[0]; }
+          catch (error: any) {
+            assert.ok(["57P01", "57P02", "08003", "08006"].includes(error.code), "Unexpected active reconnect error: " + error.code); losses++;
+          }
+        }
+        assert.ok(reconnected); assert.equal(reconnected.role, task.role); assert.notEqual(reconnected.pid, identity.pid);
+        await carts.updateCarts(task.cart_id, { metadata: { c12_generation_probe: "reconnected-current" } });
+        const resume = wait("resume"); process.send!({ phase: "reconnected", identity: reconnected, previous_pid: identity.pid, losses }); await resume;
+        let refused: any;
+        for (let attempt = 0; attempt < 3 && !refused; attempt++) {
+          try { await postgres.raw("select session_user as role,pg_backend_pid() as pid"); }
+          catch (error: any) {
+            if (["57P01", "57P02", "08003", "08006"].includes(error.code)) continue;
+            refused = error;
+          }
+        }
+        assert.ok(refused && (refused.code === "28P01" || /authentication failed/i.test(refused.message)),
+          "Retired worker must be unable to reconnect");
+        await assert.rejects(carts.updateCarts(task.cart_id, { metadata: { c12_generation_probe: "stale-reconnected" } }));
+        assert.deepEqual(calls, Object.fromEntries(names.map(name => [name, 0])));
+        console.log("C12_NATIVE_GENERATION_RECONNECT=" + JSON.stringify({ active_pool_reconnected: true,
+          backend_changed: true, retired_pool_reconnect_refused: true, native_system_calls: calls }));
+        return;
+      }
       const resumed = new Promise<void>((resolve, reject) => {
         const timer = setTimeout(() => reject(new Error("Native generation resume deadline")), 15000);
         process.once("message", message => { clearTimeout(timer); try { assert.deepEqual(message, { phase: "resume" }); resolve(); } catch (error) { reject(error); } });
@@ -115,6 +148,8 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
   const fault = process.env.RIFARE_C12_GENERATION_FAULT === "omit";
   const ordering = process.env.RIFARE_C12_GENERATION_ORDERING === "write-first";
   const revokeFirst = process.env.RIFARE_C12_GENERATION_ORDERING === "revoke-first";
+  const reconnect = process.env.RIFARE_C12_GENERATION_ORDERING === "reconnect";
+  const reconnectFault = process.env.RIFARE_C12_GENERATION_RECONNECT_FAULT === "restore-login";
   const orderingFault = process.env.RIFARE_C12_GENERATION_ORDERING_FAULT === "omit-locks";
   try {
   assert.ok(claim.worker); assert.ok(claim.seal);
@@ -164,6 +199,9 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
     RIFARE_C12_NATIVE_WORKER: JSON.stringify({ role: claim.worker!.role }), RIFARE_C12_GENERATION_TASK: JSON.stringify({ role: claim.worker!.role,
       cart_id: original.cart.id, customer_id: f.customer.id, collection_id: original.collection.id, line_item_id: line.id,
       inventory_item_id: item.id, location_id: location.id, ordering }) };
+  env.RIFARE_C12_GENERATION_TASK = JSON.stringify({ role: claim.worker!.role, cart_id: original.cart.id,
+    customer_id: f.customer.id, collection_id: original.collection.id, line_item_id: line.id,
+    inventory_item_id: item.id, location_id: location.id, ordering, reconnect });
   for (const key of Object.keys(env)) if (key.startsWith("PG") || key.endsWith("_CUSTODY") || /(?:API_KEY|_TOKEN|_PASSWORD|_SECRET|_PRIVATE_KEY|_CREDENTIALS)$/.test(key) ||
     key.endsWith("DATABASE_URL") && key !== "DATABASE_URL" || key.startsWith("RIFARE_JOURNAL_PRIVACY_") || key.startsWith("RIFARE_C12_CONTROLLER_")) delete env[key];
   env.JWT_SECRET = randomBytes(32).toString("hex"); env.COOKIE_SECRET = randomBytes(32).toString("hex");
@@ -203,6 +241,33 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
           child.send({ phase: "commit" });
           await retirement;
           return;
+        }
+        if (reconnect && phase.phase === "ready") {
+          assert.equal(ready, false); ready = true;
+          assert.equal((await postgres("cart").where({ id: original.cart.id }).first()).metadata.c12_generation_probe, "current");
+          assert.equal((await postgres("rifare_c12_generation_audit")).length, 1);
+          assert.equal((await postgres.raw("select pg_terminate_backend(?) as terminated", [phase.identity.pid])).rows[0].terminated, true);
+          const deadline = Date.now() + 3000;
+          while ((await postgres("pg_catalog.pg_stat_activity").where({ pid: phase.identity.pid })).length) {
+            assert.ok(Date.now() < deadline, "Lost current worker backend must exit"); await new Promise(resolve => setTimeout(resolve, 20));
+          }
+          child.send({ phase: "reconnect" }); return;
+        }
+        if (reconnect && phase.phase === "reconnected") {
+          assert.equal(ready, true); assert.notEqual(phase.identity.pid, phase.previous_pid);
+          assert.equal((await postgres("cart").where({ id: original.cart.id }).first()).metadata.c12_generation_probe, "reconnected-current");
+          beforeAudit = await postgres("rifare_c12_generation_audit").orderBy("id"); assert.equal((beforeAudit as any[]).length, 2);
+          beforeStale = await snapshot(); await retireOriginalExecutionWorker(postgres, claim.worker!.role);
+          if (reconnectFault) await postgres.raw(`alter role "${claim.worker!.role}" login`);
+          const sessions = await postgres("pg_catalog.pg_stat_activity").where({ usename: claim.worker!.role }).select("pid");
+          for (const session of sessions) assert.equal((await postgres.raw("select pg_terminate_backend(?) as terminated", [session.pid])).rows[0].terminated, true);
+          const deadline = Date.now() + 3000;
+          while ((await postgres("pg_catalog.pg_stat_activity").where({ usename: claim.worker!.role })).length) {
+            assert.ok(Date.now() < deadline, "Retired worker backends must exit before reconnect"); await new Promise(resolve => setTimeout(resolve, 20));
+          }
+          orderingObservation = { actual_backend_loss: true, active_reconnect_pid_changed: true,
+            retired_sessions_terminated: sessions.length, fault_restored_login: reconnectFault };
+          child.send({ phase: "resume" }); return;
         }
         assert.equal(ready, false); ready = true;
         assert.equal(phase.phase, "ready");
@@ -258,13 +323,14 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
     });
     writeFileSync(custody.replace("-private.json", "-observations.json"), JSON.stringify({ worker_exit: result.code, before_stale: beforeStale,
       after_stale: await snapshot(), audit: await postgres("rifare_c12_generation_audit").orderBy("id"), fault,
-      ordering, revoke_first: revokeFirst, ordering_fault: orderingFault, ordering_observation: orderingObservation }, null, 2), { flag: "wx" });
+      ordering, revoke_first: revokeFirst, reconnect, reconnect_fault: reconnectFault,
+      ordering_fault: orderingFault, ordering_observation: orderingObservation }, null, 2), { flag: "wx" });
     if (parentFailure) throw parentFailure;
     assert.equal(result.code, 0, result.output);
     assert.match(result.output, /C12_NATIVE_MODULE_WORKER_SHUTDOWN=complete/);
     assert.equal(await snapshot(), beforeStale, "Stale native writes must have zero effects, including early address and reservation rows");
     assert.deepEqual(await postgres("rifare_c12_generation_audit").orderBy("id"), beforeAudit);
-    if (ordering || revokeFirst) { assert.ok(orderingObservation); console.log("C12_NATIVE_GENERATION_ORDERING=" + JSON.stringify(orderingObservation)); }
+    if (ordering || revokeFirst || reconnect) { assert.ok(orderingObservation); console.log("C12_NATIVE_GENERATION_ORDERING=" + JSON.stringify(orderingObservation)); }
     console.log(result.output.split(/\r?\n/).filter(value => value.startsWith("C12_NATIVE_GENERATION_")).join("\n"));
     console.log("C12_NATIVE_GENERATION_RESULT=" + JSON.stringify({ result: "pass", actual_native_stale_write_refusals: 5,
       same_existing_authenticated_session: true, original_visibility_qualified: false, current_authority_fence_qualified: false,
@@ -289,6 +355,7 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
       } finally {
       if (claim.worker) {
         await retireOriginalExecutionWorker(postgres, claim.worker.role);
+        if (reconnectFault) console.log("C12_NATIVE_RECONNECT_FAULT_RESTORED=nologin");
         if (setupFault) {
           const row = await original.row(), role = await postgres("pg_catalog.pg_roles").where({ rolname: claim.worker.role }).first("rolcanlogin");
           assert.equal(row.state, "unknown"); assert.equal(row.execution_generation, 2); assert.ok(row.execution_revoked_at);

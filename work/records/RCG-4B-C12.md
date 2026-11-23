@@ -391,3 +391,14 @@ and requires its native Cart write to wait on the actual revoker backend before
 retirement commits and the write refuses. Removing the actual generation function
 body must fail that same ordering oracle. The fixture lock has a bounded deadline,
 spans no network call,and is not runtime enforcement.
+
+Atad5496d canonical retirement acquired the journal row before the actual native
+Cart write. The native backend visibly waited on the exact revoker PID;after
+retirement committed,all five stale methods refused with exact snapshots and zero
+System calls. Replacing the real generation function with a no-op failed that same
+ordering oracle and committed a stale Cart audit row;exact source was restored.
+Both independent roles cleared only this revoke-first case. The next probe kills
+the worker's actual active backend,requires its native pool to reconnect under the
+still-current original,then retires it,kills every replacement session,and requires
+the same pool's new login plus native write to refuse. A fault re-enables that
+retired role and must fail the unchanged reconnect-refusal assertion.
