@@ -88,3 +88,10 @@ populated upgrade/replay digests, and an isolated missing-trigger fault caught b
 the unchanged native canceled-order assertion. Record deadlock/serialization failure
 as failure; add no automatic business workflow retry. Down migration removes only
 the owned trigger/function. Supabase architecture/deployment work remains untouched.
+
+For the canceled-order refund witness, a privileged native Order module cancellation
+may deliberately establish an interrupted-cancellation state after capture and
+before provider refund/cleanup. Label that fixture explicitly; do not attribute it
+to successful completion of the full cancel-order workflow. The witness must retain
+the original provider/refund identity and show repeated errors do not mean no money
+or authorize blind retry. No automatic order reactivation or recovery is introduced.
