@@ -237,3 +237,12 @@ recovery-only without a replacement role. The probe retires its own role/generat
 in a finally block. Public module registry lifecycle hooks cover partial load when
 MedusaAppLoader has not returned an app. Preserve all failed startup evidence and
 continue generation/visibility/early-write work after this prerequisite is proved.
+
+
+At0ad0345 normal boot and rejected-execution cleanup passed. Calling process.emit
+with SIGTERM terminated the Windows child before its cleanup marker; no graceful
+OS signal qualification is credited, and later cases did not run. Parent finally
+retired the original role/generation. The next fixture directly invokes the exact
+registered stop callback, distinguishing that control from actual OS termination.
+The separate actual hard-loss case must still prove retained unknown/recovery-only
+state and closed sessions. Windows graceful OS signal handling remains unqualified.

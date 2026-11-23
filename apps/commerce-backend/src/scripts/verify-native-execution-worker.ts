@@ -47,7 +47,13 @@ export default async function verifyNativeExecutionWorker({ container }: ExecArg
     console.log("C12_NATIVE_RESTRICTED_WORKER=" + JSON.stringify({ identity, providerIdentity, pools, actual_cart_and_payment_modules_read: true,
       journal_and_identity_tables_inaccessible: true, native_execution_qualified: false }));
     if (task.action === "reject") throw new Error("C12_EXPECTED_EXECUTION_REJECTION");
-    if (task.action === "signal-callback") { process.emit("SIGTERM"); return; }
+    if (task.action === "registered-stop-callback") {
+      // Invoke this entry's actual registered callback directly. Emitting SIGTERM
+      // on this Windows runtime terminated the process before cleanup; do not
+      // relabel a callback check as an OS graceful-signal qualification.
+      const handlers = process.listeners("SIGTERM").filter(handler => handler.name === "stop");
+      assert.equal(handlers.length, 1); handlers[0](); return;
+    }
     if (task.action === "hard-loss") {
       console.log("C12_NATIVE_WORKER_HARD_LOSS_READY");
       await new Promise<void>(() => { setInterval(() => {}, 1000); });
@@ -121,7 +127,7 @@ export default async function verifyNativeExecutionWorker({ container }: ExecArg
   console.log(line);
   const row = await original.row(); assert.equal(row.execution_generation, 1); assert.equal(row.execution_revoked_at, null);
   assert.equal((await f.postgres("payment").where({ payment_session_id: original.session.id })).length, 0);
-  for (const action of ["reject", "signal-callback"]) {
+  for (const action of ["reject", "registered-stop-callback"]) {
     const stopped = await run(action); assert.notEqual(stopped.code, 0, stopped.output);
     assert.match(stopped.output, /C12_NATIVE_MODULE_WORKER_SHUTDOWN=complete/);
     assert.match(stopped.output, action === "reject" ? /C12_EXPECTED_EXECUTION_REJECTION/ : /NATIVE_MODULE_WORKER_INTERRUPTED/);
@@ -154,7 +160,7 @@ export default async function verifyNativeExecutionWorker({ container }: ExecArg
   assert.ok(retired.execution_revoked_at instanceof Date);
   assert.equal((await f.postgres("pg_catalog.pg_roles").where({ rolname: claim.worker!.role }).first()).rolcanlogin, false);
   console.log("C12_RESTRICTED_WORKER_RESULT=" + JSON.stringify({ result: "pass", native_module_application_boot_and_pool_qualified: true, server_defaults_owned_by_controller: true,
-    rejected_execution_and_partial_boot_cleanup: true, controlled_signal_callback_cleanup: true,
+    rejected_execution_and_partial_boot_cleanup: true, controlled_registered_stop_callback_cleanup: true,
     actual_owned_process_loss_recovery_only: true, actual_OS_graceful_signal_qualified: false,
     original_visibility_qualified: false, early_write_fencing_qualified: false, full_C12_qualified: false }));
 }
