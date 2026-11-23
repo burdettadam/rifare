@@ -10,6 +10,8 @@ import { nativeAuthorityStart } from "./authority-start";
 import { authorityAdapters, openNativeAuthoritySession } from "./authority-sender";
 import { createPinnedRequestVerifier, PinnedRequestVerifier } from "./request-verifier";
 import { openVerifiedAuthoritySession } from "./request-session";
+import { createNativeReceiptVerifier, NativeReceiptVerifier } from "./receipt-verifier";
+import { retainedNativeReceiptContext } from "./receipt-context";
 import { configure } from "safe-stable-stringify";
 import {
   eraseJournalSubject, exportJournalSubject, journalSubjectIsSuppressed, minimizedOperationFields,
@@ -29,7 +31,8 @@ const historyColumns = [...statusColumns, "cart_id", "actor_digest", "command_di
   "start_owner_digest", "start_claimed_at", "start_command_bytes", "start_command_digest",
   "start_correlation", "store_id", "start_response_bytes", "start_response_digest", "start_response_observed_at",
   "challenge_fingerprint", "request_bytes", "request_digest", "request_context_digest", "request_nonce",
-  "request_observed_at", "request_expires_at"];
+  "request_observed_at", "request_expires_at", "receipt_fingerprint", "receipt_bytes", "receipt_digest",
+  "receipt_context_digest", "receipt_id", "receipt_observed_at", "receipt_expires_at"];
 type JournalConfiguration = ReturnType<typeof journalConfiguration>;
 type Merchant = NonNullable<ReturnType<typeof cartContextConfig>>;
 type JournalRow = {
@@ -43,10 +46,14 @@ type JournalRow = {
   start_response_observed_at: Date | null; challenge_fingerprint: string | null;
   request_bytes: string | null; request_digest: string | null; request_context_digest: string | null;
   request_nonce: string | null; request_observed_at: Date | null; request_expires_at: Date | null;
+  receipt_fingerprint: string | null; receipt_bytes: string | null; receipt_digest: string | null;
+  receipt_context_digest: string | null; receipt_id: string | null; receipt_observed_at: Date | null; receipt_expires_at: Date | null;
 };
 const conflict = () => new MedusaError(MedusaError.Types.CONFLICT, "Original commerce command unavailable");
 const verifyRequest = PinnedRequestVerifier.prototype.verify;
 const describeRequest = PinnedRequestVerifier.prototype.describe;
+const verifyReceipt = NativeReceiptVerifier.prototype.verify;
+const describeReceipt = NativeReceiptVerifier.prototype.describe;
 const signalAborted = Object.getOwnPropertyDescriptor(AbortSignal.prototype, "aborted")!.get!;
 
 export default class OperationJournalService {
@@ -74,6 +81,69 @@ export default class OperationJournalService {
   async openVerifiedAuthoritySession(input: Uint8Array, descriptor: Uint8Array, context: AdmissionContext,
     transport: unknown, verifier: unknown) {
     return openVerifiedAuthoritySession(this, input, descriptor, context, transport, verifier);
+  }
+
+  /** Internal server construction, never customer-selected trust or keys. */
+  async createAuthorityReceiptVerifier(configuration: Uint8Array) { return createNativeReceiptVerifier(configuration); }
+
+  /** Retain inert signed evidence for the current native original. This neither
+   * promotes its state to approved nor permits a payment/order workflow. */
+  async verifyAuthorityReceipt(commandId: string, input: Uint8Array, context: AdmissionContext, verifier: unknown, signal?: AbortSignal) {
+    if (!(verifier instanceof NativeReceiptVerifier) || !(input instanceof Uint8Array) ||
+        !input.byteLength || input.byteLength > 100000) throw conflict();
+    const detached = Buffer.from(input);
+    const active = () => { if (signal && signalAborted.call(signal)) throw conflict(); };
+    active();
+    const result = await this.withCurrentOriginal(commandId, context, async (tx, row, configuration) => {
+      if (row.state !== "awaiting_authority") throw conflict();
+      const retained = await retainedNativeReceiptContext(row);
+      requireCommandCartMatch(retained.original, await readLockedCartFacts(tx, row.cart_id, configuration.merchant, configuration.verifiedContext));
+      const before = await requestClock(tx);
+      if (before.getTime() < row.request_observed_at!.getTime() ||
+          row.receipt_observed_at && before.getTime() < row.receipt_observed_at.getTime()) throw conflict();
+      const handle = await verifyReceipt.call(verifier, detached, retained.bytes, before.getTime(), signal);
+      const verified = describeReceipt.call(verifier, handle);
+      active();
+      requireCommandCartMatch(retained.original, await readLockedCartFacts(tx, row.cart_id, configuration.merchant, configuration.verifiedContext));
+      const observed = await requestClock(tx);
+      const expires = new Date(verified.expires_at);
+      if (!Number.isFinite(expires.getTime()) || observed.getTime() < verified.observed_at || observed.getTime() >= expires.getTime()) throw conflict();
+      describeReceipt.call(verifier, handle); active();
+      if (row.receipt_bytes) {
+        if (row.receipt_bytes !== verified.compact_jws || row.receipt_digest !== verified.digest ||
+            row.receipt_context_digest !== verified.verification_context_digest || row.receipt_id !== verified.receipt_id ||
+            row.receipt_fingerprint !== verified.receipt_fingerprint || row.receipt_expires_at?.getTime() !== expires.getTime()) throw conflict();
+        return { verification: handle, receipt_digest: row.receipt_digest, first_observed_at: row.receipt_observed_at!,
+          receipt_expires_at: row.receipt_expires_at! };
+      }
+      if (row.receipt_fingerprint) throw conflict();
+      const [saved] = await tx(operations).where(revisionFence(row)).whereNull("receipt_bytes").update({
+        receipt_fingerprint: verified.receipt_fingerprint, receipt_bytes: verified.compact_jws, receipt_digest: verified.digest,
+        receipt_context_digest: verified.verification_context_digest, receipt_id: verified.receipt_id,
+        receipt_observed_at: observed, receipt_expires_at: expires, revision: row.revision + 1, updated_at: tx.fn.now(),
+      }).returning("id");
+      if (!saved) throw conflict();
+      describeReceipt.call(verifier, handle); active();
+      return { verification: handle, receipt_digest: verified.digest as string, first_observed_at: observed, receipt_expires_at: expires };
+    });
+    describeReceipt.call(verifier, result.verification); active();
+    await this.withCurrentOriginal(commandId, context, async (tx, row, configuration) => {
+      requireCommandCartMatch(parseOriginalCommand(Buffer.from(row.command_bytes)),
+        await readLockedCartFacts(tx, row.cart_id, configuration.merchant, configuration.verifiedContext));
+      const current = (await requestClock(tx)).getTime();
+      if (row.state !== "awaiting_authority" || row.receipt_digest !== result.receipt_digest ||
+          row.receipt_observed_at?.getTime() !== result.first_observed_at.getTime() ||
+          current < result.first_observed_at.getTime() || current >= result.receipt_expires_at.getTime()) throw conflict();
+    });
+    describeReceipt.call(verifier, result.verification); active();
+    return Object.freeze(result);
+  }
+
+  async recoverVerifiedAuthorityReceipt(commandId: string, context: AdmissionContext, verifier: unknown) {
+    const bytes = await this.withCurrentOriginal(commandId, context, async (_tx, row) => {
+      if (!row.receipt_bytes) throw conflict(); return Buffer.from(row.receipt_bytes);
+    });
+    return this.verifyAuthorityReceipt(commandId, bytes, context, verifier);
   }
 
   /** Signature verification records evidence only. No approval or effect occurs. */

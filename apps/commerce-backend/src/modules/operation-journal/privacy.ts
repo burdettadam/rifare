@@ -33,6 +33,12 @@ export const minimizedOperationFields = {
   request_nonce: null,
   request_observed_at: null,
   request_expires_at: null,
+  receipt_bytes: null,
+  receipt_digest: null,
+  receipt_context_digest: null,
+  receipt_id: null,
+  receipt_observed_at: null,
+  receipt_expires_at: null,
 };
 
 function privacyRecordId(transaction: Postgres, key: Buffer, purpose: string, scope: InstallationScope, ...subject: string[]) {
@@ -138,6 +144,7 @@ export async function exportJournalSubject(transaction: Postgres, scope: Subject
     "start_owner_digest", "start_claimed_at", "start_command_bytes", "start_command_digest", "start_correlation",
     "start_response_bytes", "start_response_digest", "start_response_observed_at",
     "request_bytes", "request_digest", "request_context_digest", "request_nonce", "request_observed_at", "request_expires_at",
+    "receipt_fingerprint", "receipt_bytes", "receipt_digest", "receipt_context_digest", "receipt_id", "receipt_observed_at", "receipt_expires_at",
     "created_at", "updated_at",
   );
   if (rows.length > 1000) throw new Error("Journal subject export limit exceeded");
@@ -156,12 +163,16 @@ type RefusalIdentity = Readonly<{
   id: string;
   original_command_uuid: string;
   challenge_fingerprint: string | null;
+  receipt_fingerprint?: string | null;
 }>;
 
 const restoreConflict = () => new Error("Invalid or conflicting journal refusal identity");
 
 function validateRefusalIdentity(row: RefusalIdentity) {
-  if (!row || typeof row !== "object" || Object.keys(row).length !== 3 ||
+  const hasReceipt = row && Object.hasOwn(row, "receipt_fingerprint");
+  if (!row || typeof row !== "object" || Object.keys(row).length !== (hasReceipt ? 4 : 3) ||
+      (hasReceipt && row.receipt_fingerprint !== null &&
+        (typeof row.receipt_fingerprint !== "string" || !/^sha256:[0-9a-f]{64}$/.test(row.receipt_fingerprint))) ||
       typeof row.id !== "string" || !/^rifop_[A-Za-z0-9_-]{1,100}$/.test(row.id) ||
       typeof row.original_command_uuid !== "string" ||
       !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(row.original_command_uuid) ||
@@ -170,7 +181,8 @@ function validateRefusalIdentity(row: RefusalIdentity) {
         (typeof row.challenge_fingerprint !== "string" || !/^sha256:[0-9a-f]{64}$/.test(row.challenge_fingerprint)))) {
     throw restoreConflict();
   }
-  return { id: row.id, original_command_uuid: row.original_command_uuid, challenge_fingerprint: row.challenge_fingerprint };
+  return { id: row.id, original_command_uuid: row.original_command_uuid, challenge_fingerprint: row.challenge_fingerprint,
+    ...(hasReceipt ? { receipt_fingerprint: row.receipt_fingerprint! } : {}) };
 }
 
 /**
@@ -188,16 +200,21 @@ export async function restoreJournalRefusalIdentities(
     await transaction(journalTable).insert({ ...row, state: "retired" }).onConflict().ignore();
     const selected = () => transaction(journalTable).where({ original_command_uuid: row.original_command_uuid });
     const retained = await selected().forUpdate().first(
-      "id", "challenge_fingerprint", "state", "merchant_namespace", "store_id", "privacy_hold",
+      "id", "challenge_fingerprint", "receipt_fingerprint", "state", "merchant_namespace", "store_id", "privacy_hold",
     );
-    if (!retained || retained.id !== row.id || retained.challenge_fingerprint !== row.challenge_fingerprint) {
+    if (!retained || retained.id !== row.id || retained.challenge_fingerprint !== row.challenge_fingerprint ||
+        (retained.receipt_fingerprint !== null && retained.receipt_fingerprint !== row.receipt_fingerprint)) {
       throw restoreConflict();
     }
-    if (retained.state === "retired" && retained.merchant_namespace === null && retained.store_id === null) continue;
+    if (retained.state === "retired" && retained.merchant_namespace === null && retained.store_id === null) {
+      if (retained.receipt_fingerprint === null && row.receipt_fingerprint) await selected().update({ receipt_fingerprint: row.receipt_fingerprint });
+      continue;
+    }
     if (retained.privacy_hold || retained.merchant_namespace !== scope.merchant_namespace ||
         retained.store_id !== scope.store_id) throw restoreConflict();
     await selected().update({
       ...minimizedOperationFields,
+      ...(row.receipt_fingerprint ? { receipt_fingerprint: row.receipt_fingerprint } : {}),
       state: "retired",
       revision: transaction.raw("revision + 1"),
       updated_at: transaction.fn.now(),

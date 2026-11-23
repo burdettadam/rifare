@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "id": "rifare-source-inventory",
-  "revision": 67,
+  "revision": 72,
   "status": "proposed",
   "components": [
     {
@@ -1762,7 +1762,17 @@
         "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123094926.ts",
         "apps/commerce-backend/src/modules/operation-journal/request-session.ts",
         "apps/commerce-backend/src/scripts/verify-request-retention.ts",
-        "apps/commerce-backend/src/scripts/verify-request-upgrade.ts"
+        "apps/commerce-backend/src/scripts/verify-request-upgrade.ts",
+        "docs/decisions/0086-native-delegated-receipt-admission.md",
+        "work/records/RCG-4B-C8.md",
+        "apps/commerce-backend/src/modules/operation-journal/receipt-verifier.ts",
+        "apps/commerce-backend/src/scripts/verify-native-receipts.ts",
+        "apps/commerce-backend/src/modules/operation-journal/receipt-context.ts",
+        "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123110127.ts",
+        "apps/commerce-backend/src/scripts/native-receipt-fixture.ts",
+        "apps/commerce-backend/src/scripts/verify-receipt-retention.ts",
+        "apps/commerce-backend/src/scripts/verify-receipt-upgrade.ts",
+        "docs/NATIVE-DELEGATED-RECEIPTS.md"
       ],
       "notices": []
     },

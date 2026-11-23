@@ -529,6 +529,118 @@
           "enumItems": [],
           "mappedType": "datetime"
         },
+        "receipt_fingerprint": {
+          "name": "receipt_fingerprint",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "text"
+        },
+        "receipt_bytes": {
+          "name": "receipt_bytes",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "text"
+        },
+        "receipt_digest": {
+          "name": "receipt_digest",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "text"
+        },
+        "receipt_context_digest": {
+          "name": "receipt_context_digest",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "text"
+        },
+        "receipt_id": {
+          "name": "receipt_id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "text"
+        },
+        "receipt_observed_at": {
+          "name": "receipt_observed_at",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "unique": false,
+          "length": 6,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "datetime"
+        },
+        "receipt_expires_at": {
+          "name": "receipt_expires_at",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "unique": false,
+          "length": 6,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "datetime"
+        },
         "privacy_hold": {
           "name": "privacy_hold",
           "type": "boolean",
@@ -625,6 +737,15 @@
           "expression": "CREATE UNIQUE INDEX IF NOT EXISTS \"rifare_operation_challenge_unique\" ON \"rifare_operation\" (\"challenge_fingerprint\")"
         },
         {
+          "keyName": "rifare_operation_receipt_unique",
+          "columnNames": [],
+          "composite": false,
+          "constraint": false,
+          "primary": false,
+          "unique": false,
+          "expression": "CREATE UNIQUE INDEX IF NOT EXISTS \"rifare_operation_receipt_unique\" ON \"rifare_operation\" (\"receipt_fingerprint\")"
+        },
+        {
           "keyName": "rifare_operation_pkey",
           "columnNames": [
             "id"
@@ -705,6 +826,21 @@
           "name": "rifare_operation_request_bounds",
           "expression": "octet_length(request_bytes) between 1 and 65536 and length(request_nonce) between 1 and 1024 and request_expires_at > request_observed_at",
           "definition": "check ((octet_length(request_bytes) between 1 and 65536 and length(request_nonce) between 1 and 1024 and request_expires_at > request_observed_at))"
+        },
+        {
+          "name": "rifare_operation_receipt_tuple",
+          "expression": "(receipt_bytes is null) = (receipt_digest is null)\n    and (receipt_bytes is null) = (receipt_context_digest is null) and (receipt_bytes is null) = (receipt_id is null)\n    and (receipt_bytes is null) = (receipt_observed_at is null) and (receipt_bytes is null) = (receipt_expires_at is null)\n    and (receipt_bytes is null or (request_bytes is not null and receipt_fingerprint is not null))",
+          "definition": "check (((receipt_bytes is null) = (receipt_digest is null)\n    and (receipt_bytes is null) = (receipt_context_digest is null) and (receipt_bytes is null) = (receipt_id is null)\n    and (receipt_bytes is null) = (receipt_observed_at is null) and (receipt_bytes is null) = (receipt_expires_at is null)\n    and (receipt_bytes is null or (request_bytes is not null and receipt_fingerprint is not null))))"
+        },
+        {
+          "name": "rifare_operation_receipt_digests",
+          "expression": "receipt_fingerprint ~ '^sha256:[0-9a-f]{64}$' and receipt_digest ~ '^sha256:[0-9a-f]{64}$' and receipt_context_digest ~ '^sha256:[0-9a-f]{64}$'",
+          "definition": "check ((receipt_fingerprint ~ '^sha256:[0-9a-f]{64}$' and receipt_digest ~ '^sha256:[0-9a-f]{64}$' and receipt_context_digest ~ '^sha256:[0-9a-f]{64}$'))"
+        },
+        {
+          "name": "rifare_operation_receipt_bounds",
+          "expression": "octet_length(receipt_bytes) between 1 and 100000 and receipt_expires_at > receipt_observed_at and receipt_id ~ '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'",
+          "definition": "check ((octet_length(receipt_bytes) between 1 and 100000 and receipt_expires_at > receipt_observed_at and receipt_id ~ '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'))"
         },
         {
           "name": "rifare_operation_payable",
