@@ -14,6 +14,7 @@ async function fixture(
   linkChange?: (link: string, uri: string) => string | string[],
   artifact = compact,
   media = 'application/oauth-authz-req+jwt',
+  artifactHeaders: Record<string, string | undefined> = {},
 ) {
   const peer = await delegatedUsePeer();
   const challenge = claimOracle.challenge_response.result.challenge_id;
@@ -22,6 +23,12 @@ async function fixture(
     response.statusCode = 200;
     if (request.method === 'GET') {
       response.setHeader('content-type', media);
+      response.setHeader('pragma', 'no-cache');
+      response.setHeader('x-content-type-options', 'nosniff');
+      for (const [name, value] of Object.entries(artifactHeaders)) {
+        if (value === undefined) response.removeHeader(name);
+        else response.setHeader(name, value);
+      }
       response.end(artifact);
       return;
     }
@@ -116,3 +123,14 @@ test('PUBLIC-WIRE-GUARD refuses retrieval without sending application bytes afte
   assert.equal(peer.requests.length, 1);
   assert.equal(peer.applicationBytes, bytes);
 }));
+
+test('PUBLIC-WIRE-HEADERS requires the assigned artifact cache and content protections', async () => {
+  const changes: Record<string, string | undefined>[] = [
+    { 'cache-control': 'public' }, { pragma: undefined },
+    { 'x-content-type-options': undefined }, { 'content-encoding': 'gzip' },
+  ];
+  for (const headers of changes) await fixture(async client => {
+    const bound = await client.start(original.request, () => {});
+    await assert.rejects(client.fetchRequest(original.request, bound, () => {}));
+  }, undefined, compact, 'application/oauth-authz-req+jwt', headers);
+});
