@@ -155,3 +155,11 @@ host/shared database clock is changed. Regression read-only review atfe48fab fou
 no new bounded-stage blocker, while preserving all full-C12 missing qualifications.
 This is the third corrective round after initial142d7f0 review; unresolved findings
 at its final review must be escalated rather than silently restarting that loop.
+
+
+The first third-round run9823ebc stopped in fixture cleanup because Knex.raw is
+nonwritable (though configurable). It is not a20-group pass. The next source uses
+the actual property descriptor only for the clock fault, restores it exactly and
+leaves other modes untouched. The clock fault affects only the terminal root-pool
+SELECT; the transaction snapshot is unmodified. Failing source/log/database remain
+preserved; a new fixed disposable database is required for qualification.

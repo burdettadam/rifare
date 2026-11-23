@@ -268,9 +268,11 @@ export default async function verifyNativeExecutionClaim({ container }: ExecArgs
     // Controlled SQL timestamp fault only: do not alter host/database clocks.
     // The actual delivery SELECT reports one hour earlier only after activation
     // committed; the same unchanged rejection oracle must catch the regression.
-    const raw = postgres.raw;
+    const raw = postgres.raw, rawDescriptor = Object.getOwnPropertyDescriptor(postgres, "raw")!;
     let clockQueries = 0;
-    if (mode === "clock-regression") postgres.raw = function(sql: string, ...args: any[]) {
+    if (mode === "clock-regression") {
+      assert.equal(rawDescriptor.configurable, true);
+      Object.defineProperty(postgres, "raw", { ...rawDescriptor, value: function(sql: string, ...args: any[]) {
       if (sql.startsWith("with snapshot as")) {
         clockQueries++;
         sql = sql.replace("clock_timestamp() as observed_at", `(case when exists(select 1 from public.rifare_c12_activation_phase
@@ -278,7 +280,8 @@ export default async function verifyNativeExecutionClaim({ container }: ExecArgs
           else pg_catalog.clock_timestamp() end) as observed_at`);
       }
       return raw.call(this, sql, ...args);
-    };
+    } });
+    }
     const action = noEffect(() => journal.claimNativeExecution(commandId, context, verifier, controller.signal));
     action.catch(() => undefined);
     try {
@@ -300,11 +303,11 @@ export default async function verifyNativeExecutionClaim({ container }: ExecArgs
       await assert.rejects(action);
       const phase = await postgres("rifare_c12_activation_phase").where({ original_id: commandId }).first();
       assert.ok(phase.activation_xid); assert.notEqual(phase.activation_xid, phase.claim_xid);
-      if (mode === "clock-regression") assert.ok(clockQueries >= 2);
+      if (mode === "clock-regression") assert.equal(clockQueries, 1, "Only the terminal autocommit SELECT is faulted; the transaction snapshot is untouched");
     } finally {
       if (blocker && !blocker.isCompleted()) await blocker.rollback();
       await action.catch(() => undefined);
-      postgres.raw = raw;
+      if (mode === "clock-regression") Object.defineProperty(postgres, "raw", rawDescriptor);
       await postgres.raw(`drop trigger c12_activation_commit on public.rifare_operation_privacy_subject;
         drop function public.c12_activation_commit(); drop trigger c12_remember_claim on public.rifare_operation;
         drop function public.c12_remember_claim_xid(); drop table public.rifare_c12_activation_phase`);
