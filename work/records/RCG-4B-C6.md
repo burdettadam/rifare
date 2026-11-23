@@ -219,3 +219,50 @@ Independent authority reviewer rifare_authority_review approved this bounded
 proposal before implementation. Both independent roles must inspect the actual
 candidate and rerun evidence. External and production qualification remain false.
 This decision changes local catalog capacity and inventory only.
+
+## Final local candidate and integration disposition
+
+Candidate bb39ed16e39f57ee4f10f04cd7b979311930b69e retains the reviewed native
+product tree from 3e74538 and compiled packaging from 6c66999. Later changes
+are documentation, the explicitly authorized catalog addition and its checks.
+The final catalog now has 49 adapters, 230 operations, 359 distinct native cases
+and the unchanged 47 direct fixtures. Both external flags remain false.
+
+Retained selections passed in whole-file batches of 51, 43, 43 and 21 cases,
+plus the three retained C5 catalog cases and two new public catalog cases.
+The final C1 catalog four cases, C5 catalog three cases and public catalog two
+cases all preserve the independently frozen earlier coverage. The exact public
+subtraction restores the pre-addition full coverage hash. Receipt binding's
+17 cases passed. No skipped or cancelled cases count as passing evidence.
+Repository structure, generated views, retained-plan validation and diff checks
+also passed. Ignored operation-journal evidence retains every actual log.
+
+The initial public catalog run correctly found the changed expected-coverage
+oracle pin; the pin now binds the approved additive file. The Windows bind C1
+catalog run passed but took 82 seconds. Its repeat copied the same read-only
+inputs to disposable container tmpfs and passed in 0.41 seconds. Final C5/public
+catalog and receipt batch took 0.39 seconds, retained wire batch 2.54 seconds.
+Node 24.14.1 and the existing pinned dependencies were reused with no install.
+Temporary candidate copies and their containers were removed after each run.
+
+Independent authority/security and regression reviewers inspected bb39ed1.
+Authority review cleared bounded local development integration, carrying forward
+the independent native product review. This supplements the earlier checkpoint
+sections, whose open implementation items are historical. The final independent
+regression disposition is required before merge. Root owns publication and
+integration under the user's explicit feature push and local-check merge
+instructions. Hosted Actions remain skipped due the user's cost restriction.
+
+Provider endpoint and managed caller enrollment could not be located in existing
+workspace records. Provider PR2063 distinguishes image packaging from signed-image
+execution and live Rifare transactions. The provider worker owns that connected
+prerequisite. No duplicate provider deployment is assigned here. Signed request
+verification, account linking, protected effects, standalone application install,
+connected qualification and formal product acceptance remain open.
+
+Worktree inventory remains one primary and two linked checkouts. Root owns the
+active integration checkout. The public implementation checkout is idle at
+626828a64c60daba394d91718972c1ba6183d695 with its original refs preserved.
+Retirement requires final integration/equivalence evidence and fresh Windows
+activity, ignored-data, consumer and DELETE-sharing checks. No checkout is
+reported removed before those gates and normal git worktree remove succeed.
