@@ -90,3 +90,23 @@ were retired. This test establishes the behavior of the native cart row lock
 through Medusa's PostgreSQL connection. The journal must still bind its write
 and every fact contributing to admission to the same transaction. Codex owns
 that next implementation and its independent-process and privacy qualification.
+
+## Journal schema checkpoint
+
+Medusa 2.23.0 generated Migration20261123030615.ts (Git blob 96e000f118e293030e15d6d48620b77edf90252d)
+for the local journal module. The original UUID and challenge fingerprint have
+unconditional PostgreSQL unique indexes. UUIDs are reserved across merchant
+and customer changes, including after retirement. The module exposes no CRUD
+or admission entry point yet. Privacy lifecycle and guarded service methods
+are required before admitting personal data.
+
+On November 22, 2026 (America/Denver), fresh disposable PostgreSQL 16 passed
+npm run db:migrate twice and verify-operation-journal-schema.ts through
+the Medusa exec launcher. The schema check exercised cross-merchant original
+UUID reuse, challenge reuse, missing customer binding, amount overflow, and
+retirement without identity or challenge reuse. Dropping just the original UUID
+index in a disposable fixture made the expected rejection assertion fail and
+allowed two rows with one UUID. All 17 native commerce groups, 7 config cases,
+6 external identity config cases and TypeScript also passed. The disposable
+schema fixtures were retired. Codex continues on the linked checkout with the
+transactional admission service, ownership checks and privacy lifecycle.

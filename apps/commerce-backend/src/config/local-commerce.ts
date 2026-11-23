@@ -113,6 +113,6 @@ export function localCommerceConfig(env: Environment) {
         { resolve: "@medusajs/medusa/auth-emailpass", id: "emailpass" },
         ...(identity ? [{ resolve: "./src/modules/external-identity", id: "external-oidc", options: identity }] : []),
       ] },
-    }],
+    }, { resolve: "./src/modules/operation-journal" }],
   };
 }
