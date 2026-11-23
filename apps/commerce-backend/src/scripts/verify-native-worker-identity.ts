@@ -12,9 +12,8 @@ export default async function verifyNativeWorkerIdentity({ container }: ExecArgs
   assert.equal(process.env.RIFARE_TEST_NATIVE_EXECUTION, "worker-identity");
   const postgres = container.resolve(ContainerRegistrationKeys.PG_CONNECTION);
   const carts = container.resolve(Modules.CART), payments: any = container.resolve(Modules.PAYMENT);
-  assert.deepEqual(payments.nativeExecutionQualificationProfile(), {
-    native_service_extension: true, execution_authorized: false, production_qualified: false,
-  });
+  for (const method of ["createPaymentCollections", "createPaymentSession", "authorizePaymentSession"])
+    assert.equal(typeof payments[method], "function");
   if (process.env.RIFARE_C12_IDENTITY_WORKER) {
     const task = JSON.parse(process.env.RIFARE_C12_IDENTITY_WORKER);
     const identity = (await postgres.raw("select session_user as authenticated_role, current_user as effective_role, pg_backend_pid() as pid")).rows[0];
@@ -91,7 +90,7 @@ export default async function verifyNativeWorkerIdentity({ container }: ExecArgs
   console.log("C12_NATIVE_ROLE_POSITIVE=" + JSON.stringify({ tables: [...new Set(audit.map(row => row.native_table))],
     authenticated_role: roles[0].role, native_backend_count: new Set(audit.map(row => row.backend_pid)).size,
     forged_application_name_and_metadata_did_not_change_identity: true, role_and_control_forgery_refused: true,
-    native_payment_service_extension_preserved_models_migrations_and_system_provider: true }));
+    native_payment_service_models_migrations_and_system_provider_unchanged: true }));
   await postgres("rifare_c12_identity_control").where({ id: 1 }).update({ active_role: roles[1].role, generation: 2 });
   const successor = await run(1, "cart", "successor-c12@example.invalid"); assert.equal(successor.code, 0, successor.output);
   const successorAudit = await postgres("rifare_c12_identity_audit").where({ authenticated_role: roles[1].role });

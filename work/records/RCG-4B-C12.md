@@ -41,3 +41,31 @@ a meaningful baseline/fault before installing journal fields or native guards, t
 continue the whole contract through actual stale-worker and recovery scenarios.
 No public route, provider deployment, paid effect, production enablement or outbound
 Git handoff is assigned. Parent authority/purchase/identity/transfer gates remain open.
+
+## Native mechanism setup finding
+
+At a4c7a7e the resource-preserving service-extension hypothesis failed actual setup:
+normal migrations succeeded,but the application resolved the upstream service and
+the subclass method was absent. This is not the intended stale-worker baseline and
+is not a qualification pass. Original source commits and failing logs/DB are retained.
+Installed2.23.0 load-internal.resolveModuleExports follows a named discoveryPath by
+reimporting that module and selecting its service; module resource discovery also
+selects the discovered main service. The official v2 migration guidance explicitly
+says existing services cannot be extended. Root will not silently override internals
+or patch installed code to conceal that boundary.
+
+The unsupported prototype is removed; normal configuration is restored byte-exact
+to PR12. Native worker-role proof continues against unchanged upstream modules.
+Its required actual cart/payment writes,role and session-identity forgery refusals,
+metadata/session-label spoof controls and distinct native successor remain intact.
+The discarded subclass marker was a setup hypothesis,not a replacement for those
+native behavioral controls. The supported provider-extension alternative is under
+independent authority assessment; any separately named local System adapter must
+preserve legacy C10 semantics and cannot imply a live gateway or deployment grant.
+
+A single root-owned Windows PG16.16 instance was allocated after verifying the old
+C11 cache was retired,no installed native command was available and C host free was
+47.45GiB. The exact official archive matches the preserved C11 SHA256 and binary
+manifest,with valid EDB signatures. No service or shared-clock setting changed.
+One source dependency cache/primary is reused; no compiler output or extra checkout
+was allocated. This instance remains active for the assigned C12 mechanism work.

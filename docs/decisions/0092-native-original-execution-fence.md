@@ -119,3 +119,16 @@ Rifare endpoint, enrolled caller or account-link operation. Other workers own th
 deployments. No ElevenID/Supabase source, settings or service will be changed here.
 Hosted Actions remain skipped under the cost instruction; local checks, explicit
 independent review and normal authorized feature publication/integration apply.
+
+## Initial mechanism disposition
+
+The a4c7a7e native setup disproved the service-subclass/discoveryPath hypothesis.
+It did not reach the intended stale-writer assertion. The pinned loader selects the
+re-exported/discovered native service; the official [v2 migration guidance](https://docs.medusajs.com/learn/introduction/from-v1-to-v2)
+states that existing services cannot be extended. Preserve that finding and use a
+supported extension instead of relying on an undisclosed loader override.
+Worker-authentication proof can proceed against unchanged native modules. A separately
+named provider adapter is a candidate for local provider-edge enforcement,subject
+to explicit profile/binding design and actual native proof. It must not replace
+pp_system_default,change legacy C10 commitments or present itself as connected
+payment authority. No alternative is accepted merely because the first is unsuitable.
