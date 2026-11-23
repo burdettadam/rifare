@@ -548,18 +548,24 @@ export default async function verifyCartContext({ container }: ExecArgs) {
         session.close(); resumed.close();
         check("native-authority-session-retains-before-tls-and-recovers-only-the-original", () => {});
 
-        const authorityWorker = (mode: string, original: typeof command) =>
-          promisify(execFile)(process.execPath, [
-            "run.mjs", "exec", "./src/scripts/verify-authority-recovery-worker.ts",
-          ], { timeout: 45000, env: { ...process.env,
+        const authorityWorker = (mode: string, original: typeof command, compiled = false) =>
+          promisify(execFile)(process.execPath, compiled ? [
+            resolve(process.cwd(), "node_modules/@medusajs/cli/cli.js"), "exec",
+            "./src/scripts/verify-authority-recovery-worker.js",
+          ] : ["run.mjs", "exec", "./src/scripts/verify-authority-recovery-worker.ts"], {
+            cwd: compiled ? resolve(process.cwd(), ".medusa/server") : process.cwd(),
+            timeout: 45000, env: { ...process.env,
+            MEDUSA_DISABLE_TELEMETRY: "true", MEDUSA_FF_ANALYTICS: "false",
+            MEDUSA_FF_RBAC: "false", MEDUSA_FF_RBAC_FILTER_FIELDS: "false",
+            RIFARE_AUTHORITY_TEST_COMPILED: String(compiled),
             RIFARE_AUTHORITY_TEST_MODE: mode,
             RIFARE_AUTHORITY_TEST_COMMAND: Buffer.from(JSON.stringify(original)).toString("base64url"),
             RIFARE_AUTHORITY_TEST_DESCRIPTOR: descriptorBytes.toString("base64url"),
             RIFARE_AUTHORITY_TEST_CONTEXT: JSON.stringify(admission),
             RIFARE_AUTHORITY_TEST_TRANSPORT: JSON.stringify(peer.config),
           } });
-        const acknowledgedRecovery = async (original: typeof command, expectedId: string) => {
-          const restarted = await authorityWorker("recover", original);
+        const acknowledgedRecovery = async (original: typeof command, expectedId: string, compiled = false) => {
+          const restarted = await authorityWorker("recover", original, compiled);
           const prefix = "RIFARE_AUTHORITY_RECOVERY_WORKER=";
           const line = restarted.stdout.split(/\r?\n/).find(value => value.startsWith(prefix));
           assert.ok(line);
@@ -567,6 +573,7 @@ export default async function verifyCartContext({ container }: ExecArgs) {
           assert.notEqual(acknowledgement.pid, process.pid);
           assert.equal(acknowledgement.operation_id, expectedId);
           assert.equal(acknowledgement.recovered, true);
+          assert.equal(acknowledgement.compiled, compiled);
         };
         const lostAuthorityCommand = { ...command, command_id: randomUUID() };
         await assert.rejects(authorityWorker("start-lose-ack", lostAuthorityCommand), error => {
@@ -582,6 +589,10 @@ export default async function verifyCartContext({ container }: ExecArgs) {
         assert.equal(afterRestart.start_response_bytes, originalAfterExit.start_response_bytes);
         assert.equal(afterRestart.start_response_digest, originalAfterExit.start_response_digest);
         assert.equal(afterRestart.revision, originalAfterExit.revision);
+        if (process.env.RIFARE_COMMERCE_VERIFY_COMPILED === "true") {
+          await acknowledgedRecovery(lostAuthorityCommand, originalAfterExit.id, true);
+          check("compiled-native-authority-worker-recovers-using-packaged-adapters", () => {});
+        }
         assert.equal(peer.requests.filter((request: any) =>
           request.body?.command === "START_USE" && request.body.command_id === lostAuthorityCommand.command_id).length, 1);
         check("native-authority-worker-exit-after-observation-recovers-without-another-start", () => {});

@@ -53,6 +53,11 @@ export default class OperationJournalService {
     return openNativeAuthoritySession(this, input, descriptor, context, transport);
   }
 
+  async createAuthorityTransport(configuration: unknown) {
+    const { wire } = await authorityAdapters();
+    return new wire.PublicDelegatedUseClient(configuration);
+  }
+
   /** Internal entry point. The caller supplies framework-verified request context. */
   async admit(input: Uint8Array, context: AdmissionContext) {
     return (await this.admitOriginal(input, context)).operation;

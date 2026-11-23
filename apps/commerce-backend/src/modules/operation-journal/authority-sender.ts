@@ -11,6 +11,9 @@ const unavailable = () => new MedusaError(MedusaError.Types.NOT_ALLOWED, "Author
 /** The repository launcher retains the shared C1 and public transport sources.
  * Use their actual classes/codecs, without importing the diagnostic database owner. */
 export async function authorityAdapters() {
+  if (__filename.endsWith(".js")) {
+    return import(pathToFileURL(resolve(__dirname, "../../../rifare/authority-adapters.mjs")).href);
+  }
   const directory = resolve(process.cwd(), "../../packages/adapters/delegated-commands");
   const [wire, codec] = await Promise.all([
     import(pathToFileURL(resolve(directory, "public-use-client.mts")).href),

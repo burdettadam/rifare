@@ -1,6 +1,4 @@
 import assert from "node:assert/strict";
-import { resolve } from "node:path";
-import { pathToFileURL } from "node:url";
 import type { ExecArgs } from "@medusajs/framework/types";
 import { operationJournalModule } from "../modules/operation-journal";
 import type OperationJournalService from "../modules/operation-journal/service";
@@ -18,10 +16,9 @@ export default async function verifyAuthorityRecoveryWorker({ container }: ExecA
   assert.match(config.origin, /^https:\/\/localhost:[1-9][0-9]{0,4}$/);
   const mode = process.env.RIFARE_AUTHORITY_TEST_MODE;
   assert.ok(mode === "start-lose-ack" || mode === "recover");
-  const module = await import(pathToFileURL(resolve(process.cwd(),
-    "../../packages/adapters/delegated-commands/public-use-client.mts")).href);
-  const transport = new module.PublicDelegatedUseClient(config);
   const journal = container.resolve<OperationJournalService>(operationJournalModule);
+  if (process.env.RIFARE_AUTHORITY_TEST_COMPILED === "true") assert.ok(__filename.endsWith(".js"));
+  const transport = await journal.createAuthorityTransport(config);
   const session = await journal.openAuthoritySession(command, descriptor, context, transport);
   try {
     if (mode === "start-lose-ack") {
@@ -36,6 +33,7 @@ export default async function verifyAuthorityRecoveryWorker({ container }: ExecA
     assert.equal(result.execution_authorized, false);
     console.log("RIFARE_AUTHORITY_RECOVERY_WORKER=" + JSON.stringify({
       pid: process.pid, operation_id: session.operation.id, recovered: true, execution_authorized: false,
+      compiled: process.env.RIFARE_AUTHORITY_TEST_COMPILED === "true",
     }));
   } finally { session.close(); transport.close(); }
 }
