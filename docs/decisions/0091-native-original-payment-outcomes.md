@@ -1,6 +1,7 @@
 # ADR-0091 - Recover original native payment observations
 
-Status: assigned bounded local implementation; no payment dispatch authority.
+Status: implemented, locally qualified and independently reviewed; integration pending.
+No payment dispatch authority or parent-goal acceptance.
 Base: `258904eaa384a6bbe4f9f8084751ac4e42323580` (Rifare PR11).
 Branch: `feat/medusa-original-payment-outcomes`; root is sole writer/integration owner
 in the existing primary checkout. Use the existing work-goal/worktree-flow skills.
@@ -96,3 +97,29 @@ after first-binding COMMIT. Report/refuse ambiguous or inconsistent identity rat
 than migrating the original to another native payment. Keep C10's strict original
 principal/currency checks; native order totals may legitimately change after credit
 lines and are reported separately from the original paid principal.
+
+## Qualified local profile and temporal limit
+
+Qualified source82cc0199ba13603d10dbe51b4ba83ec387ffce36 executes the99-file compiled
+application in its own unchanged-lock dependency installation. Windows PostgreSQL
+16.16,UTC,loopback SCRAM and an owned portable data directory are the explicit
+passing temporal profile; no service registration or shared-clock change occurred.
+The official [EDB binary index](https://www.enterprisedb.com/download-postgresql-binaries)
+resolved its Windows16.16 archive; no archive checksum was published. The retained
+archive SHA256 and valid EnterpriseDB executable signatures bind the actual tool.
+[pg_ctl](https://www.postgresql.org/docs/16/app-pg-ctl.html) controlled only that fixture.
+
+The uninstrumented campaign passes27 C11 groups and retained C10=18,C9=19,C8=13,
+C7=11. A separate100-original native setup probe observed no negative steps but
+is exploratory,not proof of permanent clock stability. Docker PostgreSQL16 provided
+actual populated prior-component/source/compiled schema upgrade/replay and both
+meaningful faults; Docker and Windows provided separately attributed whole-database
+restore evidence. Those profiles are not interchangeable deployment acceptance.
+
+Earlier WSL/Docker native setup captured database backward steps of776ms and1913ms;
+Windows samples surrounding those calls advanced. CPU affinity did not resolve it.
+The host-level cause is unestablished. Original time guards remained unchanged and
+correctly refused affected operations. WSL/Docker temporal qualification and all
+production clock behavior remain open; no retry or time-floor waiver is introduced.
+The [work record](../../work/records/RCG-4B-C11.md) binds the immutable receipt,
+server-log snapshot supplement,actual independent reviewer actions and lifecycle.
