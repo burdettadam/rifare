@@ -225,11 +225,13 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
       provider_effect_time_fence_qualified: false, full_C12_qualified: false }));
   } finally {
     try {
-      if (retirement) await retirement;
-      if ((fault || orderingFault) && definition) {
-        await postgres.raw(definition);
-        assert.equal((await postgres.raw("select pg_get_functiondef('public.rifare_guard_native_generation()'::regprocedure) as definition")).rows[0].definition, definition);
-        console.log("C12_NATIVE_GENERATION_FAULT_RESTORED=exact");
+      try { if (retirement) await retirement; }
+      finally {
+        if ((fault || orderingFault) && definition) {
+          await postgres.raw(definition);
+          assert.equal((await postgres.raw("select pg_get_functiondef('public.rifare_guard_native_generation()'::regprocedure) as definition")).rows[0].definition, definition);
+          console.log("C12_NATIVE_GENERATION_FAULT_RESTORED=exact");
+        }
       }
     } finally {
       if (claim.worker) {

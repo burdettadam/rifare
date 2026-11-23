@@ -374,3 +374,10 @@ the Cart method inside an outer MikroORM transaction had not flushed the SQL yet
 No native audit row committed,and no ordering pass is credited. The corrected
 probe explicitly flushes the same actual module transaction and reads persisted
 Cart metadata through its transaction handle before announcing the pause.
+
+Atd065b43 the flushed actual native Cart transaction blocked canonical retirement
+on an observed pg_blocking_pids relationship. Its COMMIT preceded retirement's
+COMMIT;all five later stale writes were refused with exact snapshots and one
+original Cart audit row. The next fixed probe also attempts exact guard restoration
+if the concurrent retirement itself rejects,before its final credential retirement.
+The actual lock-omission campaign and independent review remain required.
