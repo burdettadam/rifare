@@ -50,7 +50,9 @@ export default async function verifyNativeWriteFence({ container }: ExecArgs) {
     assert.ok(blockedPid, "A separate native Medusa process must wait on the session fence");
     assert.notEqual(blockedPid, ownerPid);
   };
+  let receivedRequests = 0;
   const server = createServer(async (_request, response) => {
+    receivedRequests++;
     try {
       const row = await postgres("cart").where({ id: cart.id }).first("email");
       assert.equal(row.email, "before-fence@example.invalid");
@@ -117,9 +119,16 @@ export default async function verifyNativeWriteFence({ container }: ExecArgs) {
     assert.equal((await carts.listLineItems({ cart_id: cart.id })).length, 1);
     await assert.rejects(async () => { await onOwner("select 1"); },
       "The interrupted owner must lose its database session");
+    const lateResponse = await fetch(`http://127.0.0.1:${address.port}`, {
+      signal: AbortSignal.timeout(3000),
+    });
+    assert.equal(lateResponse.status, 500);
+    await lateResponse.text();
+    assert.equal(receivedRequests, 2, "Losing the database session does not stop the surviving process's HTTP");
     console.log("RIFARE_NATIVE_WRITE_FENCE_RESULT=" + JSON.stringify({
       status: "pass", native_writer_process: true, network_without_transaction: true,
       interrupted_session_releases_child_write: true,
+      interrupted_owner_can_still_send_http: true,
       scope: "disposable-cart-and-line-statement-triggers", production_qualified: false,
     }));
   } finally {
