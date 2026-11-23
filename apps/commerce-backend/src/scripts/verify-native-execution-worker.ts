@@ -35,6 +35,7 @@ export default async function verifyNativeExecutionWorker({ container }: ExecArg
     const links = container.resolve(ContainerRegistrationKeys.LINK);
     await observePool("cart_payment_link", links.getLinkModule(Modules.CART, "cart_id", Modules.PAYMENT, "payment_collection_id"));
     await observePool("order_cart_link", links.getLinkModule(Modules.ORDER, "order_id", Modules.CART, "cart_id"));
+    await assert.rejects(postgres("credit_line").whereRaw("false").update({ reference: "unapproved" }), (error: any) => error.code === "42501");
     // Trusted test observation of the actual registered adapter's private pool;
     // this is not a production extension of the upstream native service.
     const provider = payments.paymentProviderService_.retrieveProvider("pp_rifare_fenced_system_fixture");

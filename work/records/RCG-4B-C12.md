@@ -214,3 +214,10 @@ next candidate preserves its exported loadSearchIndexes initialization and verif
 that the native Search module's actual background-worker flag is false in server
 mode before lifecycle start. No search grant,provider swap or skipped definition is
 introduced. This finding is not a restricted-pool qualification pass.
+
+
+At4793dad module/link/workflow/subscriber loading and lifecycle start succeeded;
+actual native Cart.retrieveCart then refused SELECT on credit_line (the native
+model's real table name). Shutdown completed and the child exited nonzero. The
+next candidate grants this current-cart input SELECT only and explicitly refuses
+its UPDATE. It does not grant a credit ledger or pricing-write capability.
