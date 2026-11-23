@@ -214,6 +214,7 @@ export default async function verifyRequestRetention({ container }: ExecArgs) {
       return input + "." + sign("sha256", Buffer.from(input), { key: key.privateKey, dsaEncoding: "ieee-p1363" }).toString("base64url");
     };
     peer.setHandler((request: any, response: any) => {
+      response.statusCode = 200;
       if (request.method === "GET") {
         response.setHeader("content-type", "application/oauth-authz-req+jwt"); response.setHeader("cache-control", "no-store");
         response.setHeader("pragma", "no-cache"); response.setHeader("x-content-type-options", "nosniff"); response.end(compact); return;
@@ -229,7 +230,7 @@ export default async function verifyRequestRetention({ container }: ExecArgs) {
           exp: Math.floor((now + 120000) / 1000), nonce: "synthetic-c7-wire-" + randomUUID(), state: challenge,
           response_mode: "direct_post", response_type: "vp_token", response_uri: peer.config.origin + "/v1/flows/instances/" + challenge + "/submit",
           dcql_query: trust.dcql_query, client_metadata: trust.client_metadata };
-        compact = signedArtifact(); request.socket.destroy(); return;
+        compact = signedArtifact(); response.destroy(); return;
       }
       assert.equal(command.command, "RECOVER_RESULT"); assert.ok(retainedResponse);
       response.setHeader("content-type", "application/json");
