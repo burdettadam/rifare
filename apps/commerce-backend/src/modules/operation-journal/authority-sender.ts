@@ -15,11 +15,12 @@ export async function authorityAdapters() {
     return import(pathToFileURL(resolve(__dirname, "../../../rifare/authority-adapters.mjs")).href);
   }
   const directory = resolve(process.cwd(), "../../packages/adapters/delegated-commands");
-  const [wire, codec] = await Promise.all([
+  const [wire, codec, request_json] = await Promise.all([
     import(pathToFileURL(resolve(directory, "public-use-client.mts")).href),
     import(pathToFileURL(resolve(directory, "command-codec.mts")).href),
+    import(pathToFileURL(resolve(directory, "../delegated-receipts/strict-json.mts")).href),
   ]);
-  return { wire, codec };
+  return { wire, codec, request_json };
 }
 
 export async function openNativeAuthoritySession(
