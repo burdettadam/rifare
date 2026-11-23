@@ -1,5 +1,6 @@
 import { dirname, resolve } from "node:path";
 import { createRequire } from "node:module";
+import { loadSearchIndexes } from "@medusajs/medusa/loaders/search";
 import { initializeContainer } from "@medusajs/medusa/loaders/index";
 import { MedusaAppLoader, LinkLoader, WorkflowLoader, SubscriberLoader, container as nativeContainer } from "@medusajs/framework";
 import { ContainerRegistrationKeys, Modules, getResolvedPlugins, mergePluginModules } from "@medusajs/framework/utils";
@@ -23,16 +24,19 @@ async function main() {
   try {
     const container = await initializeContainer(directory);
     const config = container.resolve(ContainerRegistrationKeys.CONFIG_MODULE), logger = container.resolve(ContainerRegistrationKeys.LOGGER);
-    if (config.projectConfig.workerMode !== "server" || config.modules?.[Modules.SEARCH])
+    if (config.projectConfig.workerMode !== "server")
       throw new Error("NATIVE_MODULE_WORKER_CONFIGURATION_UNSUPPORTED");
     const plugins = await getResolvedPlugins(directory, config, true);
     mergePluginModules(config, plugins, directory);
     await new LinkLoader(plugins.map(plugin => resolve(plugin.resolve, "links")), logger).load();
+    await loadSearchIndexes({ plugins, configModule: config, logger });
     app = await new MedusaAppLoader({ container }).load();
     await new WorkflowLoader(plugins.map(plugin => resolve(plugin.resolve, "workflows")), container).load();
     const require = createRequire(resolve(directory, "package.json"));
     const medusa = dirname(require.resolve("@medusajs/medusa/package.json"));
     await new SubscriberLoader([resolve(medusa, "dist/subscribers"), ...plugins.map(plugin => resolve(plugin.resolve, "subscribers"))], undefined, container).load();
+    if (container.hasRegistration(Modules.SEARCH) && container.resolve<any>(Modules.SEARCH)?.isWorkerMode !== false)
+      throw new Error("NATIVE_MODULE_SEARCH_BACKGROUND_WORK_UNSUPPORTED");
     if (stopping) throw new Error("NATIVE_MODULE_WORKER_INTERRUPTED");
     await app.onApplicationStart();
     if (stopping) throw new Error("NATIVE_MODULE_WORKER_INTERRUPTED");

@@ -205,3 +205,12 @@ actual native cart/session reads and direct provider-pool authenticated identity
 The exported framework/native loader source and official repository callgraph were
 checked; this worker composition still needs actual runtime proof and independent
 review before relying on it for complete upstream checkout.
+
+
+At2a9909c the explicit unsupported-search guard rejected the normalized default
+Search module before native module initialization; project workerMode was server.
+Owned project cleanup completed. Medusa2.23 now includes Search by default. The
+next candidate preserves its exported loadSearchIndexes initialization and verifies
+that the native Search module's actual background-worker flag is false in server
+mode before lifecycle start. No search grant,provider swap or skipped definition is
+introduced. This finding is not a restricted-pool qualification pass.
