@@ -21,20 +21,23 @@ This advances ADR-0081's target before C6's public transport composition. The
 existing SQLite journal/currentness contracts remain retained behavioral
 requirements; they cannot be replaced by a plain asynchronous cart query.
 
-**COMMERCE-OPERATION-01 is assigned** on `feat/medusa-operation-journal`
-under [ADR-0084](decisions/0084-medusa-operation-journal.md). It will implement
-the native PostgreSQL original-operation journal, database-enforced identity and
-challenge uniqueness, exact cart/customer/store binding, atomic admission and
-privacy lifecycle. It is assignment only: no schema, migration, implementation,
-tests or review have landed yet. The [work record](../work/records/COMMERCE-OPERATION-01.md)
-tracks the evidence gate. The existing public checkout/payment/order/return holds
-remain in place.
+**COMMERCE-OPERATION-01 is implemented and locally verified** on
+`feat/medusa-operation-journal` under [ADR-0084](decisions/0084-medusa-operation-journal.md).
+The PostgreSQL journal enforces original identity and challenge uniqueness and
+binds admission atomically to the native cart, customer and store. The privacy
+owner can export, erase, hold and reconcile work after a logical restore.
+Independent authority/security and regression reviews, branch publication and
+maintainer acceptance remain pending. The
+[work record](../work/records/COMMERCE-OPERATION-01.md) tracks those gates.
+Public checkout, payment, order and return effects remain held.
 
 After that journal is qualified, select the supported ElevenID human/machine
 account-link and authority contract, then compose its evidence with the retained
 operation and enforce final cart currentness/payment equality at Medusa's actual
 effect boundary. C6's public command transport must be re-evaluated against this
 Medusa-native operation owner rather than wired to the old SQLite-specific path.
+The [merchant portability guide](MERCHANT-PORTABILITY.md) records the evidence
+required to qualify a transfer of the Medusa application to a receiving operator.
 
 ## Owner-selected external identity provider
 

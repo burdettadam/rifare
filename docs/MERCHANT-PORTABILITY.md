@@ -149,3 +149,31 @@ python3 tools/dev_tests.py --files tests/development/merchant-portability.test.m
 This is bounded local development evidence. Full regression, connected-provider
 qualification, live merchant migration, and formal prerequisite acceptance remain
 separate. No release or independent-machine observation is inferred.
+
+## Medusa business transfer readiness
+
+The transfer API above covers the SQLite diagnostic. The selected commerce
+application uses Medusa and PostgreSQL. Its operation-journal recovery rehearsal
+restored a database backup and applied separately retained erasures and refusal
+identities for the same installation before serving traffic. The rehearsal left
+the older operation retired and refused both its original UUID and a new original
+for the erased subject. A destination operated by a buyer still needs a transfer
+contract, a rehearsal, and an acceptance decision.
+
+| Responsibility | Evidence required before transfer |
+| --- | --- |
+| Rifare application and business | Inventory the source, domains, deployments, merchant contracts, data, licenses and support assets. Have the receiving operator deploy the pinned application, receive alerts and recover it from a backup using the retained runbooks. |
+| Medusa commerce and PostgreSQL journal | Rehearse a paused import with an exact source revision and the current privacy facts held outside the backup. Reconcile catalog, stock, carts, orders, payments and unresolved originals. Prove erasure, holds and refusal identities survive the transfer and recovered work cannot replay a financial or physical effect. |
+| Supabase authentication | Record the buyer's operational custody and qualify the destination Rifare login, account recovery, client configuration and session revocation. Preserve the separate Rifare and ElevenID clients and actor bindings. |
+| ElevenID trust and delegated authority | Disclose the continuing subscription and the provider responsibilities. Activate the destination's authorized trust and delegation bindings through ElevenID, then prove status and revocation before protected commerce resumes. |
+| Connected commerce accounts | Inventory provider accounts and on-call contacts. Obtain the required account transfer or separately provision destination access. Reconcile the original provider outcomes before enabling destination execution. |
+
+Acceptance requires an independently operated target rehearsal with a receiving
+operator, authorized merchant and evaluator workflows, evidence of usage and
+retention, and an exercised rollback and support handover. The current evidence
+covers a synthetic local restore. A connected delegated purchase, production
+cutover and buyer operation remain open.
+
+See the [operation journal work record](../work/records/COMMERCE-OPERATION-01.md),
+[identity application contract](IDENTITY-APPLICATION-CONTRACT.md) and
+[operator runbooks](OPERATOR-RUNBOOKS.md).

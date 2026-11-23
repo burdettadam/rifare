@@ -396,3 +396,23 @@ trigger, database and container were retired.
 
 Independent authority and regression review and delegated maintainer
 acceptance remain pending. Codex retains the active linked checkout.
+
+## Development reconciliation and native regression
+
+The local merge `e96d2a572a246a069e0976b42e5327cbea7b5389` includes
+`development` at `202ea5320606049e0f4f740f6a96fc3bb5a09ebf`.
+The merge retained the tested source tree of `2607bf4` byte for byte.
+On November 22, 2026 (America/Denver), the merged checkpoint passed TypeScript,
+two migrations, the journal schema, row locking on separate PostgreSQL
+connections, and the native privacy suite. All 31 cart-context and 28 synthetic
+OIDC identity groups passed. All 17 Medusa commerce groups passed in a
+separate fresh database. The loopback PostgreSQL 16 fixture and its temporary
+database data were retired. The Linux runtime suite passed all 52 cases,
+including both symlink tests.
+
+The exact commands and log digests are retained in the local evidence manifest
+with SHA-256 `5cca8eb4a69ed34f6ef3d364d8746242208402fc8c0fb8972bf8dcb2583a3595`.
+The [merchant portability guide](../../docs/MERCHANT-PORTABILITY.md) records
+the separate requirements for a receiving Medusa operator. The journal
+checkpoint is ready for independent review. Publication, maintainer acceptance,
+and connected ElevenID and Supabase qualification remain open.
