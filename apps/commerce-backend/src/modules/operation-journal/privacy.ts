@@ -55,6 +55,9 @@ export const minimizedOperationFields = {
   payment_observed_at: null,
   native_payment_id: null,
   native_payment_observed_at: null,
+  execution_claimed_at: null,
+  execution_expires_at: null,
+  execution_order_id: null,
   receipt_bytes: null,
   receipt_digest: null,
   receipt_context_digest: null,
@@ -172,6 +175,8 @@ export async function exportJournalSubject(transaction: Postgres, scope: Subject
     "final_claimed_at", "final_response_bytes", "final_response_digest", "final_response_observed_at",
     "payment_fingerprint", "payment_collection_id", "payment_session_id", "payment_provider_id", "payment_context_digest", "payment_observed_at",
     "native_payment_fingerprint", "native_payment_id", "native_payment_observed_at",
+    "execution_owner_fingerprint", "execution_seal_fingerprint", "execution_payment_handle_fingerprint",
+    "execution_generation", "execution_claimed_at", "execution_expires_at", "execution_revoked_at", "execution_order_id", "execution_order_fingerprint",
     "receipt_fingerprint", "receipt_bytes", "receipt_digest", "receipt_context_digest", "receipt_id", "receipt_observed_at", "receipt_expires_at",
     "created_at", "updated_at",
   );
@@ -246,8 +251,9 @@ export async function restoreJournalRefusalIdentities(
     await transaction(journalTable).insert({ ...row, state: "retired" }).onConflict().ignore();
     const selected = () => transaction(journalTable).where({ original_command_uuid: row.original_command_uuid });
     const retained = await selected().forUpdate().first(
-      "id", "challenge_fingerprint", "receipt_fingerprint", "final_command_uuid", "payment_fingerprint", "native_payment_fingerprint", "state", "merchant_namespace", "store_id", "privacy_hold",
+      "id", "challenge_fingerprint", "receipt_fingerprint", "final_command_uuid", "payment_fingerprint", "native_payment_fingerprint", "execution_owner_fingerprint", "state", "merchant_namespace", "store_id", "privacy_hold",
     );
+    if (retained?.execution_owner_fingerprint) throw restoreConflict();
     if (!retained || retained.id !== row.id || retained.challenge_fingerprint !== row.challenge_fingerprint ||
         (retained.receipt_fingerprint !== null && retained.receipt_fingerprint !== row.receipt_fingerprint) ||
         (retained.final_command_uuid !== null && retained.final_command_uuid !== row.final_command_uuid) ||

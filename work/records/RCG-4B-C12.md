@@ -92,3 +92,29 @@ calls and financial tables, without a permissive substitute gate. Full journal,
 early-write, visibility, recovery and connected qualification remain outstanding.
 Root remains sole writer in the one primary checkout; zero linked Rifare checkouts.
 The root-owned native PG instance is active for this next component run and C12.
+
+
+## Durable first-claim implementation stage
+
+The native component at c323813 passed six actual provider groups. At 979c106 the
+fixture statement guard passed native propagation and actual blocker ordering;
+omitting its enforcing predicate made the unchanged stale-worker oracle fail.
+The faulty database function was restored exact to the passing definition. These
+are primitive proofs only, not journal/original/order coverage or C12 acceptance.
+Ignored local evidence binds sources and 24 evidence hashes in the existing journal
+folder. Authority review cleared only the component scope; the requested regression
+review errored and is not credited.
+
+The next source stage adds an immutable original-attempt worker fingerprint,
+correlation-seal and payment-handle fingerprints, generation, bounded deadline and
+unknown outcome in the existing journal. Its local disposable claim requires actual
+C9 finalization, current native ownership/money and genuine current C8 verification.
+It never reissues credentials/seal after uncertainty and does not dispatch native
+completion. Native workers cannot access journal/privilege state. A separate C12
+pending-provider context preserves exact C10 canonical bytes. Privacy retirement
+revokes the generation and minimizes observations, retaining refusal identities.
+Execution-refusal transfer remains fail-closed pending its explicit import owner;
+C11 recovery of the new provider, native row/visibility guards and dispatch remain
+incomplete. No full qualification or production permission follows from this stage.
+The one primary/zero linked Rifare checkouts and root-owned Windows PG instance
+remain active for this bounded implementation and qualification.

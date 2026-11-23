@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "id": "rifare-source-inventory",
-  "revision": 92,
+  "revision": 93,
   "status": "proposed",
   "components": [
     {
@@ -1815,6 +1815,9 @@
         "docs/decisions/0092-native-original-execution-fence.md",
         "work/records/RCG-4B-C12.md",
         "apps/commerce-backend/src/scripts/verify-native-worker-identity.ts",
+        "apps/commerce-backend/src/scripts/verify-native-execution-claim.ts",
+        "apps/commerce-backend/src/modules/operation-journal/execution-claim.ts",
+        "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123190000.ts",
         "apps/commerce-backend/src/scripts/verify-fenced-system-provider.ts",
         "apps/commerce-backend/src/modules/fenced-system-payment/index.ts",
         "apps/commerce-backend/src/modules/fenced-system-payment/service.ts"
