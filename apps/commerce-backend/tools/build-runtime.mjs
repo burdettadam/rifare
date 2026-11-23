@@ -16,8 +16,10 @@ manifest.scripts = {
   user: "node run.mjs user",
   "test:commerce": "node run.mjs exec ./src/scripts/verify-commerce.js",
   "test:identity": "node run.mjs exec ./src/scripts/verify-identity.js",
-  "test:cart-context": "node run.mjs exec ./src/scripts/verify-cart-context.js",
 };
+// The cart-context diagnostic deliberately owns repository-local TLS fixture
+// helpers and source mutation checks. Keep its source command in the development
+// manifest rather than advertise it as a standalone runtime entry point.
 copyFileSync(resolve(application, "run.mjs"), resolve(output, "run.mjs"));
 // Keep lock bytes intact. npm ci checks the original dependency graph even
 // though scripts in the standalone manifest select compiled entry points.
