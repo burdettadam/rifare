@@ -26,16 +26,18 @@ requirements; they cannot be replaced by a plain asynchronous cart query.
 The PostgreSQL journal enforces original identity and challenge uniqueness and
 binds admission atomically to the native cart, customer and store. The privacy
 owner can export, erase, hold and reconcile work after a logical restore.
-Independent authority/security and regression reviews, branch publication and
-maintainer acceptance remain pending. The
+The branch was published at `3a3d3e6` for independent authority/security and
+regression review. Both reviews and maintainer acceptance remain pending. The
 [work record](../work/records/COMMERCE-OPERATION-01.md) tracks those gates.
 Public checkout, payment, order and return effects remain held.
 
 After that journal is qualified, select the supported ElevenID human/machine
 account-link and authority contract, then compose its evidence with the retained
 operation and enforce final cart currentness/payment equality at Medusa's actual
-effect boundary. C6's public command transport must be re-evaluated against this
-Medusa-native operation owner rather than wired to the old SQLite-specific path.
+effect boundary. A disposable [Redis takeover test](IDENTITY-APPLICATION-CONTRACT.md#payment-validation-and-compensation)
+shows that the original worker can still write native checkout effects during
+successor ownership. Re-evaluate C6's public command transport against the
+Medusa-native operation owner.
 The [merchant portability guide](MERCHANT-PORTABILITY.md) records the evidence
 required to qualify a transfer of the Medusa application to a receiving operator.
 

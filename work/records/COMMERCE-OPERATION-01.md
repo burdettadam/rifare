@@ -462,3 +462,18 @@ The retained local rehearsal script SHA-256 is
 The fixture uses a synthetic payment provider. This qualifies the selected
 populated schema upgrade in the disposable environment. Legacy SQLite
 porting, connected authority, and production upgrade acceptance remain open.
+
+## Review checkpoint and next effect-boundary test
+
+The Rifare feature branch was fast-forwarded to `3a3d3e656faee80ada8ca105f55674086c387d2d`
+after exact local checks. Independent authority/security and regression review
+and maintainer acceptance are open. The assigned Rifare writer retains the
+linked checkout for follow-up. The ElevenID integration owner supplies the
+connected identity and authority prerequisite.
+
+The [checkout effect-boundary test](../../docs/IDENTITY-APPLICATION-CONTRACT.md#payment-validation-and-compensation)
+records the next authority gate. A worker whose Redis lease expired still
+created an order, completed the cart, reserved inventory and authorized a
+synthetic payment during successor ownership. Production dispatch requires a
+boundary that rejects this late writer before native effects and recovers
+uncertain outcomes by original operation and provider identity.

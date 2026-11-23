@@ -169,6 +169,22 @@ checkout wrapper uses a unique owner for acquisition and release. Named
 release protects the successor lease. A worker that outlives its lease must
 still be fenced at the native effect boundary.
 
+The disposable fixture also paused the original worker immediately after
+payment validation. A separate Medusa process acquired the expired cart key
+with a new owner ID. While that successor still held the key, the original
+worker resumed and completed the cart, created a native order, reserved
+inventory and authorized the synthetic payment. In Medusa 2.23.0, nested
+workflow execution skips the native cart lock steps because those steps
+do not opt in to execution as a subworkflow. An entry check and a unique
+Redis owner ID are insufficient for protected checkout.
+
+Qualify the eventual dispatch boundary by interrupting the original
+worker after validation and resuming it after ownership changes. Check
+the native order, cart, reservation and payment records for zero effects
+from that worker. If an earlier attempt might already have crossed a
+payment boundary, resolve the original operation and provider identifiers
+before allowing another effect.
+
 For the Redis qualification only, select `RIFARE_TEST_CHECKOUT_LOCK=redis`
 with the same disposable profile and set `RIFARE_TEST_LOCK_REDIS_URL` to its
 password-protected loopback fixture. Redis holds lock state only. Commerce
