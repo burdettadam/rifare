@@ -9,7 +9,8 @@
   },
   "scripts": {
     "dev": "node run.mjs develop",
-    "build": "node run.mjs build && node tools/build-authority-adapters.mjs",
+    "start": "node run.mjs start",
+    "build": "node run.mjs build && node tools/build-authority-adapters.mjs && node tools/build-runtime.mjs",
     "db:migrate": "node run.mjs db:migrate",
     "user": "node run.mjs user",
     "test:commerce": "node run.mjs exec ./src/scripts/verify-commerce.ts",

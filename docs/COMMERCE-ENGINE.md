@@ -225,6 +225,36 @@ production cutover and rollback still need separate acceptance. The
 [operation journal work record](../work/records/COMMERCE-OPERATION-01.md)
 retains the pinned source and evidence.
 
+## Standalone local backend
+
+The normal build now includes the telemetry-suppressed `run.mjs` launcher and
+runtime commands that select compiled JavaScript. The upstream build's copied
+development manifest previously referenced an absent launcher and source tools.
+The standalone manifest excludes development/build commands and the cart-context
+diagnostic, whose TLS fixtures and mutation inputs deliberately remain in the
+repository. Its source command and tests are unchanged.
+
+At `cd743e9`, a copy outside the repository installed 937 production packages
+from the exact existing lock using offline `npm ci --omit=dev --ignore-scripts`.
+It had its own dependency directory and no repository fallback. The source lock
+and launcher matched byte for byte. Relocated compiled C1 preserved the frozen
+START bytes and digest and loaded the packaged public transport.
+
+Against disposable PostgreSQL 16, that runtime passed journal schema/privacy,
+25 native commerce checks, migration replay and 28 synthetic OIDC identity checks.
+Normal `npm start` served loopback health, refused anonymous Admin with HTTP 401
+and returned the exact HTTP 503 commerce hold for checkout and payment routes
+with a synthetic publishable key. Owned processes and fixtures were stopped.
+The temporary installed runtime and reused generated server cache were retired
+after preserving receipts and logs under ignored evidence.
+
+This qualifies a local backend with production dependencies. The explicit local
+configuration still refuses production mode. It does not qualify full standalone
+Admin/browser delivery, hosted identity, connected delegation, legacy data porting,
+production cutover or distribution rights. The source dependency graph and license
+controls remain separate from a release decision. See the existing
+[engine work record](../work/records/COMMERCE-ENGINE-01.md) for reviews and failures.
+
 ## Retirement rule
 
 The existing SQLite commerce modules and synthetic sources remain available to

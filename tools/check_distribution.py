@@ -30,7 +30,7 @@ RECEIPT_RUNTIME_MANIFESTS = {
     'packages/adapters/delegated-receipts/package-lock.json': 'c1d026d8abb6629ecabe749fbe8a247756217ad68587c81e0e801d3ea2e212e6',
 }
 COMMERCE_RUNTIME_MANIFESTS = {
-    'apps/commerce-backend/package.json': 'b07d5d3320b3b4264dee72a00a6995c1e15e12b415281a784c7525881f71bad9',
+    'apps/commerce-backend/package.json': '7298fd3a0a6b2b5ce7a8629d055739541616164f83f335c9bcbb535dc04d1a73',
     'apps/commerce-backend/package-lock.json': '8c8b3f4194cb50c91f03e44aa75ea922c3ad86133f6199512fdae62f9355e134',
 }
 RECEIPT_RUNTIME_PACKAGE = {
@@ -339,8 +339,18 @@ def validate_commerce_runtime(root: Path) -> set[str]:
     lock = read_json(root / 'apps/commerce-backend/package-lock.json')
     require(package['private'] is True and package['name'] == 'rifare-commerce-backend',
             'commerce intake: unexpected package')
-    require(set(package['scripts']) == {'dev', 'build', 'db:migrate', 'user', 'test:commerce', 'test:identity', 'test:cart-context'}
-            and all(command.startswith('node run.mjs ') for command in package['scripts'].values()),
+    # Prior standalone intake decision f97b3a5. Pin exact commands, including
+    # both reviewed post-build stages; a launcher prefix is not sufficient.
+    require(package['scripts'] == {
+        'dev': 'node run.mjs develop',
+        'start': 'node run.mjs start',
+        'build': 'node run.mjs build && node tools/build-authority-adapters.mjs && node tools/build-runtime.mjs',
+        'db:migrate': 'node run.mjs db:migrate',
+        'user': 'node run.mjs user',
+        'test:commerce': 'node run.mjs exec ./src/scripts/verify-commerce.ts',
+        'test:identity': 'node run.mjs exec ./src/scripts/verify-identity.ts',
+        'test:cart-context': 'node run.mjs exec ./src/scripts/verify-cart-context.ts',
+    },
             'commerce intake: unreviewed command or lifecycle hook')
     require(read_regular(root, 'apps/commerce-backend/.npmrc') ==
             b'save-exact=true\nengine-strict=true\naudit=false\nfund=false\nignore-scripts=true\n',

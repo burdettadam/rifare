@@ -200,3 +200,122 @@ restricted to the loopback origin. No hosted identity client or connected
 commerce provider was involved. The build, database and browser fixtures were
 removed. The authenticated evidence manifest SHA-256 is
 `8af4b0bafdd3bba8ddd004d1d4a20dd9df2b99cd3be332ffbf58a27a3c325796`.
+
+## Standalone local qualification assignment
+
+Resume COMMERCE-ENGINE-01 from integrated C6 development
+9abf7156b7a7e785c4189ff9e88845a0748b414e on
+feat/medusa-standalone-qualification. Root is sole writer and integration owner
+in the existing operation-journal checkout. No additional checkout or full build
+cache is allocated. The prior C6 implementation checkout is removed with its
+original ref retained, as recorded in merged PR4.
+
+Qualify the complete built backend away from the repository. The current Medusa
+compiler copies package.json unchanged but omits run.mjs. Its generated scripts
+therefore reference a missing launcher and source-only build tools and .ts paths.
+Demonstrate that actual command failure first, then emit the minimum runtime
+launcher and valid compiled scripts. Preserve the exact dependency lock, telemetry
+suppression, local profile refusal, identity/trust boundaries and protected-effect
+holds. No new database, auth provider or commerce workflow is assigned.
+
+Run a clean production dependency installation from the exact lock in an isolated
+runtime directory with hooks disabled. Then migrate disposable PostgreSQL and run
+native compiled checks and a real HTTP health/held-effect probe from that relocated
+runtime, with no repository modules or installed dependency fallback. Keep the
+complete runtime candidate, toolchain, lock hash and results bound together.
+Full Admin/browser release and hosted connected qualification remain separate.
+
+Authority/security and regression reviewers remain independent and must inspect
+the candidate and results. Root owns the temporary runtime/dependency directory
+and its retirement immediately after qualification and evidence preservation.
+Host free space before allocation is 56641687552 bytes. Reuse the inactive build
+cache and existing npm download cache where compatible. No hosted CI, external
+account change, provider deployment or protected commerce effect is authorized.
+
+## Prior decision for standalone command intake refresh
+
+Before changing tools/check_distribution.py, root as delegated integration owner
+approves the source manifest SHA256
+7298fd3a0a6b2b5ce7a8629d055739541616164f83f335c9bcbb535dc04d1a73.
+The changes are the source start command and build finalization through the
+reviewed shared-adapter and runtime builders. Every other source command remains
+unchanged. Replace the generic command-prefix predicate with exact equality to
+this full reviewed source script map. Preserve every dependency, locked version,
+1016-entry count, registry/integrity and license check, the lock SHA256
+8c8b3f4194cb50c91f03e44aa75ea922c3ad86133f6199512fdae62f9355e134,
+and the exact hook-disabled .npmrc. The preexisting C6 package change had not
+refreshed this intake pin. Preserve that actual failed checker result.
+
+Independent authority review approved the bounded proposal before editing the
+checker. No dependency or license waiver applies. New negative validation must
+continue refusing changed scripts and hooks, even if a manifest pin is refreshed.
+
+## Prior decision for source component inventory reconciliation
+
+The distribution check correctly reports 35 unclassified source paths at8883e4f.
+These are the integrated original-operation journal/module/migrations and its
+native verifiers, recovered architecture documentation, C6 public transport and
+its conformance/tests, this standalone builder and intake test, and the existing
+operation work record. Root authorizes adding precisely those currently missing
+tracked project-created paths to rifare-project-material in the proposed source
+inventory. Existing entries and every component's provenance, license status,
+notices, classification and obligation metadata remain unchanged. No vendor source
+or dependency is added. Preserve all license-application texts and hashes and the
+checker itself. The inventory revision records classification, not release or
+legal approval. Both independent reviewers must inspect the actual additive diff.
+
+## Standalone backend qualification outcome
+
+At cd743e9aacf8a300a70471626865f15a85c406b4 both independent reviewers cleared
+local standalone backend integration. Product packaging is unchanged from `640393f`.
+The full backend build passed at `9fc0093`, then the final runtime builder removed
+the source-only diagnostic command. Native source compiled in that build is
+unchanged throughout this branch. All qualification ran on that relocated final
+artifact with its own fresh production dependency directory outside the repository.
+
+Offline npm ci --omit=dev --ignore-scripts --no-audit --no-fund installed 937
+packages from the existing cache, without network or installation hooks. The
+original lock and launcher bytes were verified. The receipt binds 61 built files,
+Node 24.14.1, npm version, candidate and installed lock digest. Exact C1 canonical
+START bytes/digest and public transport module loading passed from the relocated
+compiled dependency closure. No repository dependency directory was linked.
+
+Disposable PostgreSQL 16 migration, native journal schema and privacy,25 commerce
+checks and idempotent migration replay passed. A fresh identity database passed
+28 synthetic OIDC/Medusa HTTP checks. Normal npm start served health 200, anonymous
+Admin 401 and exact checkout/payment hold 503 with a valid synthetic publishable
+key. The normal-start process tree was stopped and listener retirement verified.
+No financial or physical effect used a real provider. Production stays refused.
+
+Forty focused configuration/checkout cases passed in a complete Linux temporary
+source copy in 1.75 seconds. Windows retained a genuine symlink EPERM setup failure.
+Two earlier partial Linux copies omitted fixture inputs and remain failed setup
+observations. The first native runner treated an optional ts-node warning as a
+PowerShell stop; no runtime success was inferred. The corrected runner checked
+actual exit codes. A probe cleanup bug initially masked its assertion failure;
+that result was discarded. The corrected driver reported the missing-publishable-
+key 400 failure. The final probe supplied the native fixture key and required the
+unchanged 503/error-code contract. Original and corrected logs remain distinct.
+
+Four intake attack tests passed. Full distribution inventory, applied license
+texts, repository structure, generated views, retained plan and diff checks pass.
+The source intake now enforces exact reviewed commands and unchanged 1016 lock
+entries. Inventory adds precisely 35 previously omitted original project paths,
+preserving every component's prior metadata, notices and license dispositions.
+No green intake result represents distribution qualification or legal clearance.
+
+Authority/security reviewer rifare_authority_review and regression reviewer
+rifare_regression_review independently inspected source and actual logs and
+reported no scoped blocker at `cd743e9`. Root accepts this bounded local backend
+integration under delegated authority. Full standalone Admin/browser, connected
+provider and production acceptance remain open, as does the broader handoff goal.
+
+The disposable PostgreSQL containers and owned listeners were retired. The
+root-owned temporary runtime was removed after preserving artifact hashes and
+its installed lock. PowerShell's first removal hit a long-path limit; normal
+extended-length literal paths completed the same verified Temp target without
+changing permissions. The final pass measured 436592640 additional Windows host
+bytes free. The 61-file generated server cache was also retired after its receipt
+was preserved. Reusable source dependencies remain in the active root checkout
+for subsequent assigned Rifare work. Rifare has one primary and one linked
+checkout; root owns the active linked checkout with qualification evidence.
