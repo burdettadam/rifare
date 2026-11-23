@@ -89,13 +89,14 @@ export default async function verifyRequestSignatures(_args: ExecArgs) {
       await assert.rejects(verify(original, { ...context, ...changed }), /REQUEST_CONTEXT_INVALID/);
     }
   });
-  await check("C7-TIME-C1-PRECISION valid nanosecond and offset C1 challenge timestamps remain accepted", async () => {
+  await check("C7-TIME-C1-PRECISION valid nanosecond UTC C1 challenge timestamps remain accepted", async () => {
     const created = new Date(now - 1000).toISOString().replace(".000Z", ".123456789Z");
-    const expires = new Date(now + 120000 + 3600000).toISOString().replace("Z", "+01:00");
+    const expires = new Date(now + 120000).toISOString().replace(".000Z", ".000000001Z");
     await verify(original, { ...context, created_at: created, expires_at: expires });
   });
   await check("C7-TIME-STRICT invalid calendars malformed objects and future nanoseconds are finite denials", async () => {
     for (const created_at of ["2027-02-30T00:00:00Z", { toString: {} },
+      new Date(now - 1000 + 3600000).toISOString().replace("Z", "+01:00"),
       new Date(now).toISOString().replace(".000Z", ".000000001Z")]) {
       await assert.rejects(verify(original, { ...context, created_at } as any), /REQUEST_TIME_INVALID/);
     }

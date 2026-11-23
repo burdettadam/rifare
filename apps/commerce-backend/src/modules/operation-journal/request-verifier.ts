@@ -167,6 +167,9 @@ export class PinnedRequestVerifier {
         trust_digest: this.#trustDigest, observed_at: now, issued_at: payload!.iat, expires_at: payload!.exp,
         execution_authorized: false, presentation_verified: false });
       const handle = Object.freeze(Object.create(null)); this.#results.set(handle, result); return handle;
+    } catch (error) {
+      if (error instanceof Error && /^REQUEST_[A-Z_]+$/.test(error.message)) throw error;
+      return deny("CONTEXT_INVALID");
     } finally { this.#pending--; }
   }
 }
