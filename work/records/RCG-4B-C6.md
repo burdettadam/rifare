@@ -77,6 +77,18 @@ No claim of functional support, provider qualification or formal acceptance is m
 
 ## Final local development review
 
+Before publication, root's required retained C5 regression run detected a stale
+oracle pin for `tests/development/delegated-use-client-helpers.mts`. Root, as
+delegated integration owner, authorizes refreshing only that pin after the
+independent reviewer verifies the already-reviewed Windows executable lookup
+and finite fixture-error diagnostics. The protected preimage is
+`1aeff4c969b2fe1eb90cb1ff17c5e43416f00a94c225ba93e615ea6c45f285b7`.
+The reviewed source hash is
+`f3b1ce5dad3aa8adbaf06503b6a2ee90fca4370512880c99f30c9c146c9fc7e4`.
+All source checks, expected cases, coverage shapes and case denominators remain
+required. This decision precedes the pin edit and requires fresh execution of
+the catalog and retained regressions. The earlier pin failure remains evidence.
+
 Both independent review roles inspected `3e745380220129f2fc475baae201eb7a85d44840`
 and its retained source/compiled evidence. They support bounded development
 integration. Runtime execution was performed by root and independently inspected

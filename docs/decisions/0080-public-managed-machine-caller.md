@@ -31,8 +31,9 @@ Protected commerce effects stay gated through this assignment.
 [ADR-0083](0083-medusa-cart-context.md) supersede the SQLite-specific composition
 below. Retain the public transport/request-artifact contracts, but connect them
 only after the target-native source, original-operation journal and atomic
-admission/currentness boundary are assigned and demonstrated. C6 remains
-unimplemented; a cart observation does not satisfy those execution guarantees.
+admission/currentness boundary are assigned and demonstrated. The native C6
+implementation and local evidence now satisfy this assigned composition.
+Connected qualification and final commerce-effect authority remain open.
 Protected base: `c88799bdd0d3b9211be7f8dbf1d04cb7104de1c0`.
 Branch: `feat/rcg4b-public-caller`.
 
