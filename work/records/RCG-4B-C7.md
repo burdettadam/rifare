@@ -91,3 +91,14 @@ Authorize only those two intake fingerprint replacements. Add the four new
 C7 project-created paths (ADR-0085, this record, request-verifier.ts and its native
 signature verifier script) to the existing source component with all component
 metadata and obligations preserved. This is not C7 acceptance or release authority.
+
+## Prior native source classification decision
+
+Before changing the source inventory at43b2e99, root authorizes adding exactly
+five newly written project paths to rifare-project-material: authority-assets.ts,
+request-session.ts, Migration20261123094926.ts, verify-request-retention.ts and
+verify-request-upgrade.ts under the existing commerce backend. The generated
+migration is from the pinned Medusa toolchain. Existing entries, component
+identity, provenance/obligations, license status, notices, dependency inputs and
+capability claims remain unchanged. This is source classification, not release
+or legal authorization. The strict checker and all retained oracles remain intact.
