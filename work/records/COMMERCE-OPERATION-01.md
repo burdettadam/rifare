@@ -265,3 +265,28 @@ first observation after a cart change, stable recovery, stale revisions,
 terminal non-reuse and hold release. The fixture was retired. Codex retains
 the active checkout for final privacy-owner integration and independent
 qualification and review.
+
+## Installation privacy key and regression checkpoint
+
+The verified local database now records a key binding at a stable digest of
+the merchant and store. Subject privacy checks and uninstall verify that
+binding before looking up suppression. A different configured key fails
+closed instead of creating a blank privacy namespace. The deployment must
+preserve its original key and privacy tables together. This checkpoint
+does not qualify rekeying or physical database restore.
+
+On November 22, 2026 (America/Denver), migration 20261123033322 applied on
+fresh disposable PostgreSQL 16 and the migration command reran successfully.
+TypeScript, the native schema suite, the expanded native privacy suite and
+all 28 cart-context groups passed. The privacy suite supplied a different
+key after erasure and after uninstall and verified that neither admission
+checks nor export would accept it. Disposable containers were retired.
+
+The immediately preceding journal checkpoint 1072d48 also passed all 28
+synthetic OIDC identity groups and 17 native commerce groups on PostgreSQL.
+The Linux configuration regression ran with Node 24.14.1 in Docker using
+image sha256:80fc934952c8f1b2b4d39907af7211f8a9fff1a4c2cf673fb49099292c251cec,
+with a read-only source mount and networking disabled. All 16 cases passed,
+including CFG-04 and CFG-06, which Windows could not create fixtures for.
+The local Node image is retained as a reusable qualification dependency.
+Codex continues on the active linked checkout.

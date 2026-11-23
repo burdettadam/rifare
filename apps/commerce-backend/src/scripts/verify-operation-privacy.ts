@@ -41,6 +41,11 @@ export default async function verifyOperationPrivacy({ container }: ExecArgs) {
   await postgres.transaction(tx => eraseJournalSubject(tx, scope, key));
   await postgres.transaction(tx => eraseJournalSubject(tx, scope, key));
   assert.equal(await postgres.transaction(tx => journalSubjectIsSuppressed(tx, scope, key)), true);
+  const changedKey = randomBytes(32);
+  await assert.rejects(postgres.transaction(tx => journalSubjectIsSuppressed(tx, scope, changedKey)),
+    /installation privacy key is unavailable/);
+  await assert.rejects(postgres.transaction(tx => exportJournalSubject(tx, scope, changedKey)),
+    /installation privacy key is unavailable/);
   assert.equal(await postgres.transaction(tx => journalSubjectIsSuppressed(tx, { ...scope, customer_id: "cus_other" }, key)), false);
   const retained = await operations().where({ id: held.id }).first();
   const minimized = await operations().where({ id: unheld.id }).first();
@@ -131,5 +136,9 @@ export default async function verifyOperationPrivacy({ container }: ExecArgs) {
   assert.equal(await postgres.transaction(tx => journalSubjectIsSuppressed(tx, { ...scope, store_id: "store_other" }, key)), false);
   await importRecords([restored]);
   assert.equal(await postgres.transaction(tx => journalSubjectIsSuppressed(tx, scope, key)), true);
+  await assert.rejects(postgres.transaction(tx => journalSubjectIsSuppressed(tx, scope, changedKey)),
+    /installation privacy key is unavailable/);
+  await assert.rejects(postgres.transaction(tx => exportJournalSubject(tx, scope, changedKey)),
+    /installation privacy key is unavailable/);
   console.log("RIFARE_OPERATION_PRIVACY_RESULT=pass");
 }

@@ -1,4 +1,4 @@
-import { createHmac } from "node:crypto";
+import { createHash, createHmac } from "node:crypto";
 import type { ModulesSdkUtils } from "@medusajs/framework/utils";
 
 type Postgres = ReturnType<typeof ModulesSdkUtils.createPgConnection>;
@@ -46,8 +46,19 @@ function lockSubject(transaction: Postgres, scope: SubjectScope, key: Buffer) {
   return lockPrivacyRecord(transaction, privacyRecordId(transaction, key, subjectPurpose, scope, scope.customer_id));
 }
 
+async function requireInstallationKey(transaction: Postgres, scope: InstallationScope, key: Buffer) {
+  const partition = JSON.stringify(["urn:rifare:medusa-journal-installation-key:v1", scope.merchant_namespace, scope.store_id]);
+  const id = `sha256:${createHash("sha256").update(partition).digest("hex")}`;
+  const keyBinding = `hmac-sha256:${createHmac("sha256", key).update(partition).digest("hex")}`;
+  const installations = "rifare_operation_privacy_installation";
+  await transaction(installations).insert({ id, key_binding: keyBinding }).onConflict("id").ignore();
+  const installation = await transaction(installations).where({ id }).forShare().first("key_binding");
+  if (installation?.key_binding !== keyBinding) throw new Error("Journal installation privacy key is unavailable");
+}
+
 async function lockInstallationForRead(transaction: Postgres, scope: InstallationScope, key: Buffer) {
   const id = privacyRecordId(transaction, key, installationPurpose, scope);
+  await requireInstallationKey(transaction, scope, key);
   await transaction(privacyTable).insert({ id }).onConflict("id").ignore();
   const marker = await transaction(privacyTable).where({ id }).forShare().first("suppressed");
   if (!marker) throw new Error("Journal installation marker is unavailable");
@@ -118,6 +129,7 @@ export async function exportJournalSubject(transaction: Postgres, scope: Subject
 
 export async function uninstallJournal(transaction: Postgres, scope: InstallationScope, key: Buffer) {
   const id = privacyRecordId(transaction, key, installationPurpose, scope);
+  await requireInstallationKey(transaction, scope, key);
   await lockPrivacyRecord(transaction, id);
   await transaction(privacyTable).where({ id }).update({ suppressed: true });
   await retireScopedOperations(transaction, { merchant_namespace: scope.merchant_namespace, store_id: scope.store_id });
