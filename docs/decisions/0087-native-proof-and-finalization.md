@@ -47,6 +47,47 @@ Add explicit form content type, proof/form/receipt bounds and protected response
 headers. Preserve all accepted old C5/C6 tests, scope claims and inventories. Any
 required catalog extension must receive its own prior preservation decision.
 
+### Prior catalog preservation decision
+
+Before modifying the shared client or catalog, the maintainer adopts an additive
+continuation profile. Keep the existing public entry's three operations, 23 wire
+cases, API profile, scopes, direct fixtures and qualification claims unchanged.
+Renew only its source hash/version to the actual intentionally extended client.
+Add one distinct diagnostic `delegated_use_public_continuation` entry for proof
+submission, FINALIZE, final-result recovery and receipt recovery. It has no real
+external account/scopes or production qualification, and no direct fixtures.
+Bind its four operations to the actual new whole wire-test file, with a fixed
+case set. Do not change the catalog-only 327680-byte limit or any generic limit.
+
+Protected C6 scope remains 49 adapters, 230 operations, 359 unique native cases
+and 47 direct fixtures. After validating the full current catalog, its existing
+registration test may subtract only the independently validated new entry's exact
+one/four/new-case contribution before its unchanged scoped assertions. Add full
+new-scope assertions and exact subtraction guards. Preserve the original 23 wire
+tests and negative oracles. Earlier public-subtraction helpers must first validate
+and remove the exact continuation addition so their old C5 residual hash stays
+`06033d81d78481d8225cf83752cdefec171e77cfeadc6d3d79f4e8e9ef9c75ed`.
+
+Freeze the complete prior C6 metadata too. Protected expected-coverage canonical
+digest is `a0dd3d8aae778fb027edda176f621d333a6c4d55251fc2064c3f9e28b1cd952d`.
+Compare the catalog/coverage after exact continuation subtraction, restoring only
+the independently checked public-source hash/version and coverage-file oracle pin
+for that historical comparison. No other prior metadata or test hash may drift.
+The old public source SHA-256 is
+`e05461dc4bec360cdcb2ce58cd6965f1c63ee53092e186d174aa9825636bf0a1`.
+
+Inspection of all 721 prior pin paths found one inherited portability mismatch:
+the expected-coverage oracle pin `8c392d78746636a0043c35efbabf95cf884bb5cc9bf876ded4562b41df15b51b`
+is its CRLF encoding; disk and protected Git both have LF bytes with SHA-256
+`d6f5f15a8e60033ecfc585fe1760bd7019ff0523f21008dc784393460e3c6b53`.
+Exact LF-to-CRLF conversion reproduces the prior pin. Correct that pin to the
+committed LF bytes before extending coverage; do not introduce newline
+normalization or change the JSON data. The prior catalog's canonical digest
+after this sole correction is
+`525fe0356ee0912d35ab1cd0c9404837e4054d524f602850ed6293990e37256a`.
+Independent regression review must verify these prior/candidate comparisons and
+the old scoped counts alongside actual new and retained wire executions.
+
 First proof dispatch requires C7's actual current opaque verification and native
 original/cart/ownership/privacy checks. Persist the selected context and exact
 compact-proof digest before I/O. Never persist the VP or nested credential. After
