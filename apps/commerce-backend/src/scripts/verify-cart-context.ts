@@ -606,6 +606,13 @@ export default async function verifyCartContext({ container }: ExecArgs) {
       await auth.updateAuthIdentities({ id: operatorIdentity.id, app_metadata: { user_id: operator.id } });
       const exported = await journal.exportPrivacySubject(alice.customer.id, privacyActor);
       assert.ok(exported.some(row => row.id === committed[0].id));
+      const exportedStart = exported.find(row => row.id === creators[0].operation.id)!;
+      assert.equal(exportedStart.start_command_bytes, retainedStart.command_bytes);
+      assert.equal(exportedStart.start_command_digest, retainedStart.command_digest);
+      assert.equal(exportedStart.start_correlation, retainedStart.correlation);
+      assert.equal(exportedStart.start_owner_digest, beforeClaim.start_owner_digest);
+      assert.ok(exportedStart.start_claimed_at);
+      assert.equal(JSON.stringify(exportedStart).includes(creators[0].send_ticket!), false);
       assert.equal((await journal.exportPrivacySubject(bob.customer.id, privacyActor)).length, 0);
 
       const revocation = await postgres.transaction();
@@ -643,7 +650,16 @@ export default async function verifyCartContext({ container }: ExecArgs) {
       await auth.updateAuthIdentities({ id: operatorIdentity.id, app_metadata: { user_id: operator.id } });
       check("journal-privacy-export-waits-for-in-flight-operator-revocation-and-refuses-disclosure", () => {});
 
+      assert.equal(await journal.setPrivacyHold(alice.customer.id, creators[0].operation.id, 2, true, privacyActor), true);
       await journal.erasePrivacySubject(alice.customer.id, privacyActor);
+      const heldExports = await journal.exportPrivacySubject(alice.customer.id, privacyActor);
+      assert.equal(heldExports.length, 1);
+      assert.equal(heldExports[0].start_command_bytes, retainedStart.command_bytes);
+      assert.equal(heldExports[0].start_correlation, retainedStart.correlation);
+      assert.equal(await journal.setPrivacyHold(alice.customer.id, creators[0].operation.id, 4, false, privacyActor), true);
+      const minimizedStart = await authorityRow();
+      for (const field of ["start_command_bytes", "start_command_digest", "start_correlation",
+        "start_owner_digest", "start_claimed_at"]) assert.equal(minimizedStart[field], null);
       assert.equal((await journal.exportPrivacySubject(alice.customer.id, privacyActor)).length, 0);
       const refusal = { id: "rifop_" + randomUUID(), original_command_uuid: randomUUID(), challenge_fingerprint: null };
       await journal.restorePrivacyRefusals([refusal], privacyActor);

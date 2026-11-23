@@ -126,6 +126,7 @@ export async function exportJournalSubject(transaction: Postgres, scope: Subject
     "merchant_namespace", "store_id", "customer_id", "cart_id", "actor_digest",
     "cart_facts_digest", "payable_minor_units", "currency", "currency_exponent",
     "command_bytes", "command_digest", "first_observation_digest", "first_observed_at",
+    "start_owner_digest", "start_claimed_at", "start_command_bytes", "start_command_digest", "start_correlation",
     "created_at", "updated_at",
   );
   if (rows.length > 1000) throw new Error("Journal subject export limit exceeded");
