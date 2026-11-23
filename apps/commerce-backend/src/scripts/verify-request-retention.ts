@@ -93,7 +93,7 @@ export default async function verifyRequestRetention({ container }: ExecArgs) {
       currency: "usd", currency_exponent: 2, kind: "prepare_purchase", payable_minor_units: facts.facts.payable_total_minor,
       profile: "urn:rifare:medusa-original-operation:v1" };
     const descriptor = { correlation, grant: { id: randomUUID(), revision: 1, terms_digest: "sha256:" + "a".repeat(64) } };
-    const now = Date.now(), challenge = randomUUID();
+    const now = (await postgres.raw("select clock_timestamp() as now")).rows[0].now.getTime(), challenge = randomUUID();
     if (retainChallenge) {
     const admitted = await journal.admitForAuthority(bytes(command), context);
     assert.ok(admitted.send_ticket);
@@ -213,7 +213,7 @@ export default async function verifyRequestRetention({ container }: ExecArgs) {
       const input = bytes({ alg: "ES256", kid: trust.key_id, typ: "oauth-authz-req+jwt" }).toString("base64url") + "." + bytes(claims).toString("base64url");
       return input + "." + sign("sha256", Buffer.from(input), { key: key.privateKey, dsaEncoding: "ieee-p1363" }).toString("base64url");
     };
-    peer.setHandler((request: any, response: any) => {
+    peer.setHandler(async (request: any, response: any) => {
       response.statusCode = 200;
       if (request.method === "GET") {
         response.setHeader("content-type", "application/oauth-authz-req+jwt"); response.setHeader("cache-control", "no-store");
@@ -221,7 +221,7 @@ export default async function verifyRequestRetention({ container }: ExecArgs) {
       }
       const command = JSON.parse(request.raw.toString());
       if (command.command === "START_USE") {
-        const now = Date.now(), challenge = randomUUID();
+        const now = (await postgres.raw("select clock_timestamp() as now")).rows[0].now.getTime(), challenge = randomUUID();
         retainedResponse = { profile: "urn:marty:delegation-command-response:v1", original_command_id: command.command_id,
           command_digest: codec.encodeDelegatedCommand(command).command_digest, recovered: false,
           result: { kind: "CHALLENGE", challenge_id: challenge, grant: command.grant, operation: command.operation,
