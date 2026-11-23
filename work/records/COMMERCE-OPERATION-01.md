@@ -150,3 +150,23 @@ cart-owner comparison removed passed the positive projection check and
 failed the cross-owner refusal assertion at the expected line. The fault
 copies and both containers were retired. Admission and privacy persistence
 remain open. Codex continues on the assigned linked checkout.
+
+## Original command encoding
+
+The local journal accepts one versioned preparation command. The exact
+canonical UTF-8 JSON fields in alphabetical order are cart_facts_digest,
+cart_id, command_id, currency, currency_exponent, kind, payable_minor_units
+and profile. The kind is prepare_purchase and the profile is
+urn:rifare:medusa-original-operation:v1. The service owns all merchant,
+store and actor binding fields. The command parser returns the original
+canonical bytes and their SHA-256 digest. The cart match compares the native
+cart ID, digest, exact payable minor units, currency and exponent.
+
+On November 22, 2026 (America/Denver), all 25 groups in the native
+cart-context suite passed on disposable PostgreSQL 16, including 22
+retained groups. The new group checked the exact-byte digest, rejected
+noncanonical or malformed inputs, and rejected changed facts, cart, amount
+and currency against the locked transaction result. TypeScript passed.
+The fixture was retired. The command remains an internal preparation input.
+Codex continues on the assigned linked checkout with the privacy hooks and
+transactional journal write.

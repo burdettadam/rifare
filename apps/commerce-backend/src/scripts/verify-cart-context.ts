@@ -10,6 +10,7 @@ import { createApiKeysWorkflow, createCartWorkflow, createCartCreditLinesWorkflo
 import { factsDigest, minorUnits, observationFields, observeCart, projectCart } from "../cart-context/observation";
 import { cartContextConfig } from "../config/local-commerce";
 import { readLockedCartFacts } from "../modules/operation-journal/cart-facts";
+import { parseOriginalCommand, requireCommandCartMatch } from "../modules/operation-journal/command";
 
 /** Actual native PostgreSQL/HTTP fixtures. JWTs are synthetic credentials for
  * native persisted associations, not evidence of a new hosted provider journey.
@@ -274,6 +275,46 @@ export default async function verifyCartContext({ container }: ExecArgs) {
       assert.equal(lockedFacts.factsDigest, afterCredit.value.observation.facts_digest);
       assert.match(lockedFacts.actorDigest, /^sha256:[a-f0-9]{64}$/);
     });
+    check("canonical-original-command-is-closed-and-bound-to-locked-cart", () => {
+      const command = {
+        cart_facts_digest: afterCredit.value.observation.facts_digest,
+        cart_id: aliceCart.id,
+        command_id: randomUUID(),
+        currency: "usd",
+        currency_exponent: 2,
+        kind: "prepare_purchase",
+        payable_minor_units: afterCredit.value.observation.facts.payable_total_minor,
+        profile: "urn:rifare:medusa-original-operation:v1",
+      };
+      const bytes = Buffer.from(JSON.stringify(command));
+      const original = parseOriginalCommand(bytes);
+      assert.equal(original.commandBytes, bytes.toString());
+      assert.equal(original.commandDigest, "sha256:" + createHash("sha256").update(bytes).digest("hex"));
+      requireCommandCartMatch(original, lockedFacts);
+      for (const override of [
+        { cart_id: bobCart.id }, { cart_facts_digest: "sha256:" + "0".repeat(64) },
+        { payable_minor_units: "0" }, { currency: "jpy", currency_exponent: 0 },
+      ]) {
+        const changed = parseOriginalCommand(Buffer.from(JSON.stringify({ ...command, ...override })));
+        assert.throws(() => requireCommandCartMatch(changed, lockedFacts), /does not match current cart facts/);
+      }
+
+      for (const invalid of [
+        Buffer.from(" " + bytes.toString()),
+        Buffer.from(bytes.toString().replace('{', '{"currency":"usd",')),
+        Buffer.from(JSON.stringify(Object.fromEntries(Object.entries(command).reverse()))),
+        Buffer.from(JSON.stringify({ ...command, command_id: "00000000-0000-0000-0000-000000000000" })),
+        Buffer.from(JSON.stringify({ ...command, currency_exponent: 3 })),
+        Buffer.from(JSON.stringify({ ...command, payable_minor_units: "01" })),
+        Buffer.from(JSON.stringify({ ...command, payable_minor_units: "9223372036854775808" })),
+        Buffer.from(JSON.stringify({ ...command, kind: "finalize" })),
+        Buffer.from(JSON.stringify({ ...command, merchant_namespace: "caller-choice" })),
+        Buffer.from([0xc0, 0xaf]),
+        Buffer.concat([Buffer.from([0xef, 0xbb, 0xbf]), bytes]),
+        Buffer.alloc(1025, 0x20),
+      ]) assert.throws(() => parseOriginalCommand(invalid), /Invalid original commerce command/);
+    });
+
     const denied = /Cart context unavailable/;
     await assert.rejects(readAdmission(bobCart.id), denied);
     await assert.rejects(readAdmission(guest.id), denied);
