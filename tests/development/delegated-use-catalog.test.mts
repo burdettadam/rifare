@@ -1,4 +1,5 @@
 import test from 'node:test';
+import { removeExactPublicCoverage, removeExactPublicAdapter } from './public-catalog-baseline.mts';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
@@ -13,8 +14,8 @@ const fileHash = (path: string) => createHash('sha256').update(readFileSync(new 
 
 test('RCG4BC5-CATALOG-REGISTRATION internal START and recovery have actual bounded wire cases and no external qualification', () => {
   const catalog = readAdapterCatalog(), result = validateAdapterCatalog(catalog), value = select(catalog);
-  assert.equal(result.adapter_count, 48); assert.equal(result.operation_count, 227);
-  assert.equal(result.native_case_count, 336); assert.equal(result.direct_fixture_count, 47);
+  assert.equal(result.adapter_count, 49); assert.equal(result.operation_count, 230);
+  assert.equal(result.native_case_count, 359); assert.equal(result.direct_fixture_count, 47);
   assert.deepEqual(value.source_files.map((pin: any) => pin.path), [source]);
   assert.deepEqual(value.operations.map((operation: any) => operation.id), ['delegated.internal.start', 'delegated.internal.recover']);
   const names = [...readFileSync(new URL('./delegated-use-client.test.mts', import.meta.url), 'utf8').matchAll(/test\('([^']+)'/g)]
@@ -32,13 +33,13 @@ test('RCG4BC5-CATALOG-REGISTRATION internal START and recovery have actual bound
 });
 
 test('RCG4BC5-CATALOG-PRESERVATION all prior adapters and complete coverage retain independently frozen protected bytes', () => {
-  const catalog = readAdapterCatalog(), previous = catalog.adapters.filter((value: any) => value.id !== adapterId);
+  const catalog = readAdapterCatalog(), previous = removeExactPublicAdapter(catalog).adapters.filter((value: any) => value.id !== adapterId);
   assert.equal(previous.length, 47);
   // Independently computed from public C4 9c61f30 with Python json.dumps
   // sort_keys/separators and hashlib before any C5 control mutation.
   assert.equal(createHash('sha256').update(JSON.stringify(jsonValue(previous, 262144))).digest('hex'),
     'b40a2d53f95055cae9ed4e5d5610f86f17e24775c9de522c2ef6c77b40179bcb');
-  const expected = JSON.parse(readFileSync(new URL('../fixtures/conformance/expected-coverage.v1.json', import.meta.url), 'utf8'));
+  const expected = removeExactPublicCoverage(JSON.parse(readFileSync(new URL('../fixtures/conformance/expected-coverage.v1.json', import.meta.url), 'utf8')));
   delete expected.adapter_operations[adapterId]; delete expected.adapter_contracts[adapterId];
   expected.declarations = expected.declarations.filter((path: string) => path !== source);
   expected.native_cases = expected.native_cases.filter((ref: any) => ref.path !== tests);
@@ -46,10 +47,10 @@ test('RCG4BC5-CATALOG-PRESERVATION all prior adapters and complete coverage reta
   assert.equal(contentDigest(expected), '255cdb8ae87dd0a611cf08e0648728d270b5357a791caa5dda2d5ff99e7ff9e6');
 });
 
-test('RCG4BC5-CATALOG-PINS actual source dependency and case pins remain mandatory within the unchanged byte limit', () => {
+test('RCG4BC5-CATALOG-PINS actual source dependency and case pins remain mandatory within the approved catalog byte limit', () => {
   const catalog = readAdapterCatalog(), value = select(catalog);
   assert.equal(value.source_files[0].sha256, fileHash(source));
-  assert(Buffer.byteLength(JSON.stringify(jsonValue(catalog, 262144))) <= 262144);
+  assert(Buffer.byteLength(JSON.stringify(jsonValue(catalog, 327680))) <= 327680);
   const badSource = structuredClone(catalog); select(badSource).source_files[0].sha256 = '0'.repeat(64);
   assert.throws(() => validateAdapterCatalog(badSource), /ADAPTER_CATALOG_PIN_CHANGED/);
   const badCase = structuredClone(catalog); select(badCase).operations[0].native_cases[0].sha256 = '0'.repeat(64);

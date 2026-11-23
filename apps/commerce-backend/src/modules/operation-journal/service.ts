@@ -1,4 +1,4 @@
-import { randomUUID } from "node:crypto";
+import { createHash, randomBytes, randomUUID } from "node:crypto";
 import type { ModulesSdkUtils } from "@medusajs/framework/utils";
 import { ContainerRegistrationKeys, MedusaError } from "@medusajs/framework/utils";
 import { factsDigest } from "../../cart-context/observation";
@@ -6,6 +6,9 @@ import { unavailable } from "../../cart-context/policy";
 import { cartContextConfig } from "../../config/local-commerce";
 import { lockCartOwner, readLockedCartFacts } from "./cart-facts";
 import { parseOriginalCommand, requireCommandCartMatch } from "./command";
+import { nativeAuthorityStart } from "./authority-start";
+import { authorityAdapters, openNativeAuthoritySession } from "./authority-sender";
+import { configure } from "safe-stable-stringify";
 import {
   eraseJournalSubject, exportJournalSubject, journalSubjectIsSuppressed, minimizedOperationFields,
   restoreJournalRefusalIdentities, setJournalOperationHold, uninstallJournal,
@@ -16,16 +19,25 @@ type AdmissionContext = Parameters<typeof readLockedCartFacts>[3];
 type VerifiedActor = AdmissionContext["actor"];
 
 const operations = "rifare_operation";
+const stringify = configure({ strict: true, deterministic: true, bigint: false });
 const originalId = /^(?!00000000-0000-0000-0000-000000000000$)[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 const statusColumns = ["id", "original_command_uuid", "state", "revision"];
 const historyColumns = [...statusColumns, "cart_id", "actor_digest", "command_digest",
-  "privacy_hold", "first_observation_digest", "first_observed_at"];
+  "privacy_hold", "first_observation_digest", "first_observed_at", "command_bytes",
+  "start_owner_digest", "start_claimed_at", "start_command_bytes", "start_command_digest",
+  "start_correlation", "store_id", "start_response_bytes", "start_response_digest", "start_response_observed_at",
+  "challenge_fingerprint"];
 type JournalConfiguration = ReturnType<typeof journalConfiguration>;
 type Merchant = NonNullable<ReturnType<typeof cartContextConfig>>;
 type JournalRow = {
   id: string; original_command_uuid: string; state: string; revision: number;
   cart_id: string; actor_digest: string; command_digest: string; privacy_hold: boolean;
   first_observation_digest: string | null; first_observed_at: Date | null;
+  command_bytes: string; start_owner_digest: string | null; start_claimed_at: Date | null;
+  start_command_bytes: string | null; start_command_digest: string | null;
+  start_correlation: string | null; store_id: string;
+  start_response_bytes: string | null; start_response_digest: string | null;
+  start_response_observed_at: Date | null; challenge_fingerprint: string | null;
 };
 const conflict = () => new MedusaError(MedusaError.Types.CONFLICT, "Original commerce command unavailable");
 
@@ -36,8 +48,113 @@ export default class OperationJournalService {
     this.postgres = postgres;
   }
 
+  /** Internal composition only. No public route or commerce effect is enabled. */
+  async openAuthoritySession(input: Uint8Array, descriptor: Uint8Array, context: AdmissionContext, transport: unknown) {
+    return openNativeAuthoritySession(this, input, descriptor, context, transport);
+  }
+
+  async createAuthorityTransport(configuration: unknown) {
+    const { wire } = await authorityAdapters();
+    return new wire.PublicDelegatedUseClient(configuration);
+  }
+
   /** Internal entry point. The caller supplies framework-verified request context. */
   async admit(input: Uint8Array, context: AdmissionContext) {
+    return (await this.admitOriginal(input, context)).operation;
+  }
+
+  /** Only the creating invocation receives the transient initial-send ticket. */
+  async admitForAuthority(input: Uint8Array, context: AdmissionContext) {
+    const ticket = randomBytes(32).toString("base64url");
+    const ownerDigest = "sha256:" + createHash("sha256").update(ticket).digest("hex");
+    const result = await this.admitOriginal(input, context, ownerDigest);
+    return { operation: result.operation, recovery_only: !result.created,
+      send_ticket: result.created ? ticket : null };
+  }
+
+  /** Called after TLS. No network activity occurs inside this transaction. */
+  async claimAuthorityDispatch(commandId: string, ticket: string, context: AdmissionContext) {
+    if (typeof ticket !== "string" || !/^[A-Za-z0-9_-]{43}$/.test(ticket)) throw conflict();
+    const ownerDigest = "sha256:" + createHash("sha256").update(ticket).digest("hex");
+    await this.withCurrentOriginal(commandId, context, async (tx, row, configuration) => {
+      if (row.state !== "awaiting_authority" || row.start_owner_digest !== ownerDigest ||
+          row.start_claimed_at !== null || !row.start_command_bytes || !row.start_correlation) throw conflict();
+      const locked = await readLockedCartFacts(tx, row.cart_id, configuration.merchant, configuration.verifiedContext);
+      requireCommandCartMatch(parseOriginalCommand(Buffer.from(row.command_bytes)), locked);
+      const [claimed] = await tx(operations).where(revisionFence(row))
+        .where({ start_owner_digest: ownerDigest }).whereNull("start_claimed_at")
+        .update({ start_claimed_at: tx.fn.now(), revision: row.revision + 1, updated_at: tx.fn.now() })
+        .returning("id");
+      if (!claimed) throw conflict();
+    }, true);
+  }
+
+  /** Retain complete remote bytes before any transport is opened. */
+  async retainAuthorityStart(commandId: string, ticket: string, descriptor: Uint8Array, context: AdmissionContext) {
+    if (typeof ticket !== "string" || !/^[A-Za-z0-9_-]{43}$/.test(ticket) ||
+        !(descriptor instanceof Uint8Array) || descriptor.byteLength > 4096) throw conflict();
+    const ownerDigest = "sha256:" + createHash("sha256").update(ticket).digest("hex");
+    const detached = Buffer.from(descriptor);
+    return this.withCurrentOriginal(commandId, context, async (tx, row) => {
+      if (row.state !== "awaiting_authority" || row.start_owner_digest !== ownerDigest) throw conflict();
+      const encoded = nativeAuthorityStart(detached, row);
+      if (row.start_command_bytes) {
+        if (row.start_command_bytes !== encoded.command_bytes ||
+            row.start_command_digest !== encoded.command_digest ||
+            row.start_correlation !== encoded.correlation) throw conflict();
+        return encoded;
+      }
+      if (row.start_claimed_at !== null) throw conflict();
+      const [retained] = await tx(operations).where(revisionFence(row)).whereNull("start_command_bytes")
+        .update({ start_command_bytes: encoded.command_bytes, start_command_digest: encoded.command_digest,
+          start_correlation: encoded.correlation, revision: row.revision + 1, updated_at: tx.fn.now() })
+        .returning("id");
+      if (!retained) throw conflict();
+      return encoded;
+    }, true);
+  }
+
+  /** Persist only the closed unverified C1 response, never the signed request artifact. */
+  async observeAuthorityResponse(commandId: string, input: Uint8Array, recovered: boolean, context: AdmissionContext) {
+    if (!(input instanceof Uint8Array) || !input.byteLength || input.byteLength > 65536 ||
+        typeof recovered !== "boolean") throw conflict();
+    const bytes = Buffer.from(input);
+    const { codec } = await authorityAdapters();
+    return this.withCurrentOriginal(commandId, context, async (tx, row) => {
+      if (row.state !== "awaiting_authority" || !row.start_command_bytes || !row.start_correlation) throw conflict();
+      const original = codec.encodeDelegatedCommand(Buffer.from(row.start_command_bytes));
+      if (original.canonical_json !== row.start_command_bytes || original.command_digest !== row.start_command_digest ||
+          original.original_command_id !== row.original_command_uuid) throw conflict();
+      if (row.start_response_bytes && row.start_response_digest !==
+          "sha256:" + createHash("sha256").update(row.start_response_bytes).digest("hex")) throw conflict();
+      const bound = codec.bindDelegatedResponse(original.request, bytes, {
+        ...(recovered ? { recovery: codec.createDelegatedRecovery(original.request).request } : {}),
+        ...(row.start_response_bytes ? { previous: Buffer.from(row.start_response_bytes) } : {}),
+      });
+      if (bound.response.result.kind !== "CHALLENGE") throw conflict();
+      if (row.start_response_bytes) return;
+      const responseBytes = stringify(bound.response)!;
+      const fingerprint = factsDigest({
+        profile: "urn:rifare:medusa-authority-challenge:v1",
+        correlation: JSON.parse(row.start_correlation),
+        challenge_id: bound.response.result.challenge_id,
+      });
+      if (row.challenge_fingerprint && row.challenge_fingerprint !== fingerprint) throw conflict();
+      const [observed] = await tx(operations).where(revisionFence(row)).whereNull("start_response_bytes")
+        .update({
+          start_response_bytes: responseBytes,
+          start_response_digest: "sha256:" + createHash("sha256").update(responseBytes).digest("hex"),
+          start_response_observed_at: tx.fn.now(), challenge_fingerprint: fingerprint,
+          revision: row.revision + 1, updated_at: tx.fn.now(),
+        }).returning("id");
+      if (!observed) throw conflict();
+    }).catch(error => {
+      if ((error as { code?: string }).code === "23505") throw conflict();
+      throw error;
+    });
+  }
+
+  private async admitOriginal(input: Uint8Array, context: AdmissionContext, ownerDigest: string | null = null) {
     const { merchant, key, privacyOperator, verifiedContext, subject } = journalConfiguration(context);
     const original = parseOriginalCommand(input);
     const { command, commandBytes, commandDigest } = original;
@@ -60,8 +177,7 @@ export default class OperationJournalService {
                 retained.store_id !== subject.store_id || retained.customer_id !== subject.customer_id ||
                 retained.cart_id !== command.cart_id || retained.actor_digest !== locked.actorDigest ||
                 retained.command_bytes !== commandBytes || retained.command_digest !== commandDigest) throw conflict();
-            return { id: retained.id, original_command_uuid: retained.original_command_uuid,
-              state: retained.state, revision: retained.revision };
+            return { operation: statusOf(retained), created: false };
           }
 
           requireCommandCartMatch(original, locked);
@@ -78,9 +194,10 @@ export default class OperationJournalService {
             payable_minor_units: locked.facts.payable_total_minor,
             currency: locked.facts.currency_code,
             currency_exponent: locked.facts.currency_exponent,
+            start_owner_digest: ownerDigest,
           }).onConflict("original_command_uuid").ignore().returning(statusColumns);
           if (!created) throw conflict();
-          return created;
+          return { operation: statusOf(created), created: true };
         }, { isolationLevel: "serializable" });
       } catch (error) {
         if (attempt >= 3 || (error as { code?: string })?.code !== "40001") throw error;
@@ -99,7 +216,15 @@ export default class OperationJournalService {
   async prepareRecovery(commandId: string, context: AdmissionContext) {
     return this.withCurrentOriginal(commandId, context, async (_tx, row) => {
       if (row.state !== "awaiting_authority") throw conflict();
-      return { id: row.id, original_command_uuid: row.original_command_uuid, command_digest: row.command_digest };
+      return { id: row.id, original_command_uuid: row.original_command_uuid, command_digest: row.command_digest,
+        ...(row.start_command_bytes ? { authority_start: {
+          command_bytes: row.start_command_bytes, command_digest: row.start_command_digest,
+          correlation: row.start_correlation,
+          ...(row.start_response_bytes ? { first_response: {
+            bytes: row.start_response_bytes, digest: row.start_response_digest,
+            observed_at: row.start_response_observed_at,
+          } } : {}),
+        } } : {}) };
     });
   }
 
@@ -216,11 +341,13 @@ export default class OperationJournalService {
   private async withCurrentOriginal<T>(
     commandId: string, context: AdmissionContext,
     use: (tx: Postgres, row: JournalRow, configuration: JournalConfiguration) => Promise<T>,
+    requireAdmissionOperator = false,
   ) {
     if (typeof commandId !== "string" || !originalId.test(commandId)) throw unavailable();
     const configuration = journalConfiguration(context);
     const { merchant, key, verifiedContext, subject } = configuration;
     return this.postgres.transaction(async tx => {
+      if (requireAdmissionOperator && !await liveUser(tx, configuration.privacyOperator)) throw journalUnavailable();
       if (await journalSubjectIsSuppressed(tx, subject, key)) throw unavailable();
       const row = await tx<JournalRow>(operations).where({ ...subject, original_command_uuid: commandId })
         .whereNotIn("state", ["cancelled", "retired"]).first<JournalRow | undefined>(historyColumns);

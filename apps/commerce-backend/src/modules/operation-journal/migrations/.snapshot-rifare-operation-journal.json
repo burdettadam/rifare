@@ -305,6 +305,134 @@
           "enumItems": [],
           "mappedType": "datetime"
         },
+        "start_owner_digest": {
+          "name": "start_owner_digest",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "text"
+        },
+        "start_claimed_at": {
+          "name": "start_claimed_at",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "unique": false,
+          "length": 6,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "datetime"
+        },
+        "start_command_bytes": {
+          "name": "start_command_bytes",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "text"
+        },
+        "start_command_digest": {
+          "name": "start_command_digest",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "text"
+        },
+        "start_correlation": {
+          "name": "start_correlation",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "text"
+        },
+        "start_response_bytes": {
+          "name": "start_response_bytes",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "text"
+        },
+        "start_response_digest": {
+          "name": "start_response_digest",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "text"
+        },
+        "start_response_observed_at": {
+          "name": "start_response_observed_at",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "unique": false,
+          "length": 6,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "datetime"
+        },
         "privacy_hold": {
           "name": "privacy_hold",
           "type": "boolean",
@@ -436,6 +564,36 @@
           "name": "rifare_operation_first_observation_pair",
           "expression": "(first_observation_digest is null) = (first_observed_at is null)",
           "definition": "check (((first_observation_digest is null) = (first_observed_at is null)))"
+        },
+        {
+          "name": "rifare_operation_start_owner",
+          "expression": "start_owner_digest ~ '^sha256:[0-9a-f]{64}$'",
+          "definition": "check ((start_owner_digest ~ '^sha256:[0-9a-f]{64}$'))"
+        },
+        {
+          "name": "rifare_operation_start_claim",
+          "expression": "start_claimed_at is null or start_owner_digest is not null",
+          "definition": "check ((start_claimed_at is null or start_owner_digest is not null))"
+        },
+        {
+          "name": "rifare_operation_start_bytes",
+          "expression": "(start_command_bytes is null) = (start_command_digest is null) and (start_command_bytes is null) = (start_correlation is null)",
+          "definition": "check (((start_command_bytes is null) = (start_command_digest is null) and (start_command_bytes is null) = (start_correlation is null)))"
+        },
+        {
+          "name": "rifare_operation_start_digest",
+          "expression": "start_command_digest ~ '^sha256:[0-9a-f]{64}$'",
+          "definition": "check ((start_command_digest ~ '^sha256:[0-9a-f]{64}$'))"
+        },
+        {
+          "name": "rifare_operation_start_response",
+          "expression": "(start_response_bytes is null) = (start_response_digest is null) and (start_response_bytes is null) = (start_response_observed_at is null)",
+          "definition": "check (((start_response_bytes is null) = (start_response_digest is null) and (start_response_bytes is null) = (start_response_observed_at is null)))"
+        },
+        {
+          "name": "rifare_operation_start_response_digest",
+          "expression": "start_response_digest ~ '^sha256:[0-9a-f]{64}$'",
+          "definition": "check ((start_response_digest ~ '^sha256:[0-9a-f]{64}$'))"
         },
         {
           "name": "rifare_operation_payable",

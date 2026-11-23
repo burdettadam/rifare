@@ -3,6 +3,8 @@ import { execFile, spawn } from "node:child_process";
 import { createHash, randomBytes, randomUUID } from "node:crypto";
 import { setTimeout as delay } from "node:timers/promises";
 import { promisify } from "node:util";
+import { resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 import type { ExecArgs } from "@medusajs/framework/types";
 import { ContainerRegistrationKeys, generateJwtToken, Modules, ProductStatus, PromotionActions } from "@medusajs/framework/utils";
 import { createApiKeysWorkflow, createCartWorkflow, createCartCreditLinesWorkflow, createProductsWorkflow,
@@ -385,6 +387,384 @@ export default async function verifyCartContext({ container }: ExecArgs) {
       assert.equal(owned[0].payable_minor_units, command.payable_minor_units);
       assert.deepEqual(await journal.admit(bytes, admission), first);
 
+      const authorityCommand = { ...command, command_id: randomUUID() };
+      const authorityBytes = Buffer.from(JSON.stringify(authorityCommand));
+      const contenders = await Promise.all([
+        journal.admitForAuthority(authorityBytes, admission),
+        journal.admitForAuthority(authorityBytes, admission),
+      ]);
+      const creators = contenders.filter(result => !result.recovery_only);
+      assert.equal(creators.length, 1);
+      assert.ok(creators[0].send_ticket);
+      assert.equal(contenders.filter(result => result.send_ticket === null).length, 1);
+      const authorityRow = () => postgres("rifare_operation")
+        .where({ original_command_uuid: authorityCommand.command_id }).first();
+      const beforeClaim = await authorityRow();
+      assert.match(beforeClaim.start_owner_digest, /^sha256:[0-9a-f]{64}$/);
+      assert.equal(JSON.stringify(beforeClaim).includes(creators[0].send_ticket), false);
+      assert.equal(beforeClaim.start_claimed_at, null);
+      await assert.rejects(journal.claimAuthorityDispatch(authorityCommand.command_id,
+        randomBytes(32).toString("base64url"), admission), /Original commerce command unavailable/);
+      await assert.rejects(journal.claimAuthorityDispatch(authorityCommand.command_id,
+        creators[0].send_ticket!, admission), /Original commerce command unavailable/);
+      const descriptor = {
+        correlation: {
+          actor: { id: "urn:rifare:synthetic:machine", type: "MACHINE_IDENTITY" },
+          organization_id: "12345678-1234-4234-8234-123456789abc",
+          provider_ref: "synthetic-provider",
+        },
+        grant: { id: "12345678-1234-4234-8234-123456789abc", revision: 1,
+          terms_digest: "sha256:" + "a".repeat(64) },
+      };
+      const descriptorBytes = Buffer.from(JSON.stringify(descriptor));
+      const retainedStart = await journal.retainAuthorityStart(authorityCommand.command_id,
+        creators[0].send_ticket!, descriptorBytes, admission);
+      const expectedStart = JSON.stringify({
+        command: "START_USE", command_id: authorityCommand.command_id, grant: descriptor.grant,
+        operation: { action: "urn:rifare:action:purchase:v1", audience: "urn:rifare:store:" + merchant.store_id,
+          request_digest: "sha256:" + createHash("sha256").update(authorityBytes).digest("hex"),
+          request_profile: "urn:rifare:medusa-original-operation:v1",
+          resource_id: "urn:rifare:cart:" + command.cart_id },
+        profile: "urn:marty:delegation-command:v1",
+      });
+      assert.equal(retainedStart.command_bytes, expectedStart);
+      assert.equal(retainedStart.command_digest, "sha256:" + createHash("sha256").update(expectedStart).digest("hex"));
+      assert.deepEqual(await journal.retainAuthorityStart(authorityCommand.command_id,
+        creators[0].send_ticket!, descriptorBytes, admission), retainedStart);
+      await assert.rejects(journal.retainAuthorityStart(authorityCommand.command_id,
+        creators[0].send_ticket!, Buffer.from(JSON.stringify({ ...descriptor,
+          grant: { ...descriptor.grant, revision: 2 } })), admission), /Original commerce command unavailable/);
+      const claims = await Promise.allSettled([
+        journal.claimAuthorityDispatch(authorityCommand.command_id, creators[0].send_ticket!, admission),
+        journal.claimAuthorityDispatch(authorityCommand.command_id, creators[0].send_ticket!, admission),
+      ]);
+      assert.equal(claims.filter(result => result.status === "fulfilled").length, 1);
+      assert.ok((await authorityRow()).start_claimed_at);
+      assert.equal((await authorityRow()).revision, 2);
+      const recovered = await journal.admitForAuthority(authorityBytes, admission);
+      assert.equal(recovered.recovery_only, true);
+      assert.equal(recovered.send_ticket, null);
+      assert.equal((await journal.prepareRecovery(authorityCommand.command_id, admission)).id,
+        recovered.operation.id);
+      assert.deepEqual((await journal.prepareRecovery(authorityCommand.command_id, admission)).authority_start, retainedStart);
+      console.log("RIFARE_NATIVE_AUTHORITY_START_FIXTURE=" + JSON.stringify(retainedStart));
+      const priorOriginal = await journal.admitForAuthority(bytes, admission);
+      assert.equal(priorOriginal.recovery_only, true);
+      assert.equal(priorOriginal.send_ticket, null);
+      check("journal-authority-start-ticket-is-issued-once-and-claims-once-in-postgres", () => {});
+
+      const wireModule = await import(pathToFileURL(resolve(process.cwd(),
+        "../../packages/adapters/delegated-commands/public-use-client.mts")).href);
+      const peerModule = await import(pathToFileURL(resolve(process.cwd(),
+        "../../tests/development/delegated-use-client-helpers.mts")).href);
+      const peer = await peerModule.delegatedUsePeer();
+      const transport = new wireModule.PublicDelegatedUseClient(peer.config);
+      const remoteResults = new Map<string, unknown>();
+      let discardNextStartResponse = false;
+      peer.setHandler((request: any, response: any) => {
+        response.statusCode = 200;
+        if (request.method === "GET") {
+          response.setHeader("content-type", "application/oauth-authz-req+jwt");
+          response.setHeader("pragma", "no-cache");
+          response.setHeader("x-content-type-options", "nosniff");
+          response.end("eyJhbGciOiJFUzI1NiJ9.eyJub25jZSI6InN5bnRoZXRpYyJ9.c3ludGhldGlj");
+          return;
+        }
+        const id = request.body.command === "START_USE" ? request.body.command_id : request.body.original_command_id;
+        if (request.body.command === "START_USE") {
+          remoteResults.set(id, {
+            profile: "urn:marty:delegation-command-response:v1", original_command_id: id,
+            command_digest: "sha256:" + createHash("sha256").update(request.raw).digest("hex"),
+            result: { kind: "CHALLENGE", challenge_id: randomUUID(),
+              grant: request.body.grant, operation: request.body.operation,
+              created_at: "2026-11-23T00:00:00.000Z", expires_at: "2026-11-23T00:10:00.000Z" },
+          });
+          if (discardNextStartResponse) {
+            discardNextStartResponse = false;
+            response.destroy();
+            return;
+          }
+        }
+        const saved = remoteResults.get(id) as { result: { challenge_id: string } };
+        response.setHeader("link", "<" + peer.config.origin +
+          '/v1/flows/instances/' + saved.result.challenge_id + '/request>; rel="urn:marty:delegated-use:request"');
+        response.end(JSON.stringify({ ...remoteResults.get(id) as object,
+          recovered: request.body.command === "RECOVER_RESULT" }));
+      });
+      let observedSenderId: string | undefined;
+      let observedSenderResponse: string | undefined;
+      try {
+        const senderCommand = { ...command, command_id: randomUUID() };
+        const senderBytes = Buffer.from(JSON.stringify(senderCommand));
+        const session = await journal.openAuthoritySession(senderBytes, descriptorBytes, admission, transport);
+        assert.equal(peer.connections, 0);
+        assert.equal("send_ticket" in session, false);
+        const storedBeforeNetwork = await journal.prepareRecovery(senderCommand.command_id, admission);
+        assert.ok(storedBeforeNetwork.authority_start);
+        const bound = await session.start();
+        observedSenderId = session.operation.id;
+        const observedSender = await postgres("rifare_operation").where({ id: observedSenderId }).first();
+        observedSenderResponse = observedSender.start_response_bytes;
+        assert.ok(observedSender.start_response_observed_at);
+        assert.equal(observedSender.start_response_digest,
+          "sha256:" + createHash("sha256").update(observedSenderResponse!).digest("hex"));
+        assert.equal(observedSender.revision, 3);
+        assert.equal(session.recovery_only, true);
+        assert.equal(peer.requests.length, 1);
+        assert.equal(peer.requests[0].path, "/v1/organizations/" +
+          descriptor.correlation.organization_id + "/delegated-use-commands");
+        assert.equal(peer.requests[0].raw.toString(), storedBeforeNetwork.authority_start!.command_bytes);
+        assert.equal(peer.requests[0].tls_authorized, true);
+        await assert.rejects(session.start(), /Authority sender is unavailable/);
+        assert.equal(peer.requests.length, 1);
+        const resumed = await journal.openAuthoritySession(senderBytes, descriptorBytes, admission, transport);
+        assert.equal(resumed.recovery_only, true);
+        await assert.rejects(resumed.start(), /Authority sender is unavailable/);
+        const recoveredBound = await resumed.recover();
+        const afterRecovery = await postgres("rifare_operation").where({ id: observedSenderId }).first();
+        assert.equal(afterRecovery.start_response_bytes, observedSenderResponse);
+        assert.equal(afterRecovery.revision, 3);
+        assert.equal(peer.requests[1].body.command, "RECOVER_RESULT");
+        assert.equal(peer.requests[1].body.original_command_id, senderCommand.command_id);
+        const artifact = await resumed.requestArtifact(recoveredBound);
+        assert.equal((artifact as { execution_authorized: boolean }).execution_authorized, false);
+        assert.equal(peer.requests[2].method, "GET");
+        assert.equal((bound as { response: { recovered: boolean } }).response.recovered, false);
+        const originalRemote = remoteResults.get(senderCommand.command_id) as any;
+        remoteResults.set(senderCommand.command_id, { ...originalRemote,
+          result: { ...originalRemote.result, challenge_id: randomUUID() } });
+        await assert.rejects(resumed.recover(), /COMMAND_HISTORY_CHANGED/);
+        assert.equal((await postgres("rifare_operation").where({ id: observedSenderId }).first()).start_response_bytes,
+          observedSenderResponse);
+        const mismatchedHandle = await transport.recover(JSON.parse(storedBeforeNetwork.authority_start!.command_bytes), {
+          profile: "urn:marty:delegation-command:v1", command: "RECOVER_RESULT",
+          original_command_id: senderCommand.command_id,
+          expected_command_digest: storedBeforeNetwork.authority_start!.command_digest,
+        }, () => {});
+        const requestsBeforeArtifact = peer.requests.length;
+        await assert.rejects(resumed.requestArtifact(mismatchedHandle), /COMMAND_HISTORY_CHANGED/);
+        assert.equal(peer.requests.length, requestsBeforeArtifact);
+        remoteResults.set(senderCommand.command_id, originalRemote);
+        for (const action of ["recover", "artifact"]) {
+          peer.holdHandshake();
+          const beforeRequests = peer.requests.length;
+          const beforeBytes = peer.applicationBytes;
+          const attempted = (action === "recover" ? resumed.recover() : resumed.requestArtifact(recoveredBound))
+            .then(() => "unexpected-success", error => error);
+          try {
+            await peer.handshakeEntered;
+            await auth.updateAuthIdentities({ id: alice.identity.id,
+              app_metadata: { customer_id: bob.customer.id } });
+            peer.releaseHandshake();
+            assert.ok(await attempted instanceof Error);
+            assert.equal(peer.requests.length, beforeRequests, action + " must refuse before HTTP");
+            assert.equal(peer.applicationBytes, beforeBytes, action + " must send zero application bytes");
+          } finally {
+            await auth.updateAuthIdentities({ id: alice.identity.id,
+              app_metadata: { customer_id: alice.customer.id } });
+            peer.releaseHandshake();
+            await attempted;
+          }
+          check("native-authority-" + action + "-refuses-owner-withdrawal-during-tls", () => {});
+        }
+        session.close(); resumed.close();
+        check("native-authority-session-retains-before-tls-and-recovers-only-the-original", () => {});
+
+        const racingCommand = { ...command, command_id: randomUUID() };
+        const racingBytes = Buffer.from(JSON.stringify(racingCommand));
+        const openings = await Promise.allSettled([
+          journal.openAuthoritySession(racingBytes, descriptorBytes, admission, transport),
+          journal.openAuthoritySession(racingBytes, descriptorBytes, admission, transport),
+        ]);
+        const opened = openings.flatMap(result => result.status === "fulfilled" ? [result.value] : []);
+        const creatorsForOriginal = opened.filter(value => !value.recovery_only);
+        assert.equal(creatorsForOriginal.length, 1);
+        const competingRecovery = await journal.openAuthoritySession(racingBytes, descriptorBytes, admission, transport);
+        assert.equal(competingRecovery.recovery_only, true);
+        try {
+          const started = await Promise.allSettled([
+            creatorsForOriginal[0].start(), competingRecovery.start(),
+          ]);
+          assert.equal(started.filter(result => result.status === "fulfilled").length, 1);
+          assert.equal(started.filter(result => result.status === "rejected").length, 1);
+          assert.equal(peer.requests.filter((request: any) => request.body?.command === "START_USE" &&
+            request.body.command_id === racingCommand.command_id).length, 1);
+          const retainedRacing = await postgres("rifare_operation")
+            .where({ original_command_uuid: racingCommand.command_id });
+          assert.equal(retainedRacing.length, 1);
+          assert.ok(retainedRacing[0].start_claimed_at);
+          assert.ok(retainedRacing[0].start_response_bytes);
+          check("native-authority-competing-sessions-send-one-start-for-one-retained-original", () => {});
+        } finally {
+          for (const value of opened) value.close();
+          competingRecovery.close();
+        }
+
+        const authorityWorker = (mode: string, original: typeof command, compiled = false) =>
+          promisify(execFile)(process.execPath, compiled ? [
+            resolve(process.cwd(), "node_modules/@medusajs/cli/cli.js"), "exec",
+            "./src/scripts/verify-authority-recovery-worker.js",
+          ] : ["run.mjs", "exec", "./src/scripts/verify-authority-recovery-worker.ts"], {
+            cwd: compiled ? resolve(process.cwd(), ".medusa/server") : process.cwd(),
+            timeout: 45000, env: { ...process.env,
+            MEDUSA_DISABLE_TELEMETRY: "true", MEDUSA_FF_ANALYTICS: "false",
+            MEDUSA_FF_RBAC: "false", MEDUSA_FF_RBAC_FILTER_FIELDS: "false",
+            RIFARE_AUTHORITY_TEST_COMPILED: String(compiled),
+            RIFARE_AUTHORITY_TEST_MODE: mode,
+            RIFARE_AUTHORITY_TEST_COMMAND: Buffer.from(JSON.stringify(original)).toString("base64url"),
+            RIFARE_AUTHORITY_TEST_DESCRIPTOR: descriptorBytes.toString("base64url"),
+            RIFARE_AUTHORITY_TEST_CONTEXT: JSON.stringify(admission),
+            RIFARE_AUTHORITY_TEST_TRANSPORT: JSON.stringify(peer.config),
+          } });
+        const acknowledgedRecovery = async (original: typeof command, expectedId: string, compiled = false) => {
+          const restarted = await authorityWorker("recover", original, compiled);
+          const prefix = "RIFARE_AUTHORITY_RECOVERY_WORKER=";
+          const line = restarted.stdout.split(/\r?\n/).find(value => value.startsWith(prefix));
+          assert.ok(line);
+          const acknowledgement = JSON.parse(line.slice(prefix.length));
+          assert.notEqual(acknowledgement.pid, process.pid);
+          assert.equal(acknowledgement.operation_id, expectedId);
+          assert.equal(acknowledgement.recovered, true);
+          assert.equal(acknowledgement.compiled, compiled);
+        };
+        const lostAuthorityCommand = { ...command, command_id: randomUUID() };
+        await assert.rejects(authorityWorker("start-lose-ack", lostAuthorityCommand), error => {
+          const exited = error as { code?: number; stdout?: string };
+          return exited.code === 79 && !exited.stdout?.includes("RIFARE_AUTHORITY_RECOVERY_WORKER=");
+        });
+        const originalAfterExit = await postgres("rifare_operation")
+          .where({ original_command_uuid: lostAuthorityCommand.command_id }).first();
+        assert.ok(originalAfterExit.start_response_bytes);
+        assert.equal(originalAfterExit.revision, 3);
+        await acknowledgedRecovery(lostAuthorityCommand, originalAfterExit.id);
+        const afterRestart = await postgres("rifare_operation").where({ id: originalAfterExit.id }).first();
+        assert.equal(afterRestart.start_response_bytes, originalAfterExit.start_response_bytes);
+        assert.equal(afterRestart.start_response_digest, originalAfterExit.start_response_digest);
+        assert.equal(afterRestart.revision, originalAfterExit.revision);
+        if (process.env.RIFARE_COMMERCE_VERIFY_COMPILED === "true") {
+          await acknowledgedRecovery(lostAuthorityCommand, originalAfterExit.id, true);
+          check("compiled-native-authority-worker-recovers-using-packaged-adapters", () => {});
+        }
+        assert.equal(peer.requests.filter((request: any) =>
+          request.body?.command === "START_USE" && request.body.command_id === lostAuthorityCommand.command_id).length, 1);
+        check("native-authority-worker-exit-after-observation-recovers-without-another-start", () => {});
+
+        const rollbackCommand = { ...command, command_id: randomUUID() };
+        const rollbackSession = await journal.openAuthoritySession(Buffer.from(JSON.stringify(rollbackCommand)),
+          descriptorBytes, admission, transport);
+        await postgres.raw(`
+          create function rifare_fixture_reject_observation() returns trigger language plpgsql as $$
+          begin raise exception 'RIFARE_AUTHORITY_OBSERVATION_COMMIT_ABORT' using errcode = '23514'; end $$;
+          create constraint trigger rifare_fixture_observation_fault after update on rifare_operation
+          deferrable initially deferred for each row
+          when (new.original_command_uuid = '${rollbackCommand.command_id}' and new.start_response_bytes is not null)
+          execute function rifare_fixture_reject_observation()
+        `);
+        try {
+          await assert.rejects(rollbackSession.start(), /RIFARE_AUTHORITY_OBSERVATION_COMMIT_ABORT/);
+        } finally {
+          rollbackSession.close();
+          await postgres.raw("drop trigger if exists rifare_fixture_observation_fault on rifare_operation");
+          await postgres.raw("drop function if exists rifare_fixture_reject_observation()");
+        }
+        const rolledBack = await postgres("rifare_operation")
+          .where({ original_command_uuid: rollbackCommand.command_id }).first();
+        assert.ok(rolledBack.start_claimed_at);
+        assert.equal(rolledBack.start_response_bytes, null);
+        assert.equal(rolledBack.start_response_digest, null);
+        assert.equal(rolledBack.start_response_observed_at, null);
+        assert.equal(rolledBack.challenge_fingerprint, null);
+        assert.equal(rolledBack.revision, 2);
+        assert.ok(remoteResults.has(rollbackCommand.command_id));
+        await acknowledgedRecovery(rollbackCommand, rolledBack.id);
+        const reconciled = await postgres("rifare_operation").where({ id: rolledBack.id }).first();
+        assert.ok(reconciled.start_response_bytes);
+        assert.equal(JSON.parse(reconciled.start_response_bytes).recovered, true);
+        assert.equal(reconciled.revision, 3);
+        assert.equal(peer.requests.filter((request: any) =>
+          request.body?.command === "START_USE" && request.body.command_id === rollbackCommand.command_id).length, 1);
+        check("native-authority-observation-commit-rollback-keeps-original-recovery-only", () => {});
+
+        const lostResponseCommand = { ...command, command_id: randomUUID() };
+        const lostResponseSession = await journal.openAuthoritySession(
+          Buffer.from(JSON.stringify(lostResponseCommand)), descriptorBytes, admission, transport);
+        try {
+          discardNextStartResponse = true;
+          await assert.rejects(lostResponseSession.start(), /PUBLIC_USE_/);
+          assert.ok(remoteResults.has(lostResponseCommand.command_id));
+        } finally { lostResponseSession.close(); discardNextStartResponse = false; }
+        const uncertain = await postgres("rifare_operation")
+          .where({ original_command_uuid: lostResponseCommand.command_id }).first();
+        assert.ok(uncertain.start_claimed_at);
+        assert.equal(uncertain.start_response_bytes, null);
+        await acknowledgedRecovery(lostResponseCommand, uncertain.id);
+        assert.equal(peer.requests.filter((request: any) =>
+          request.body?.command === "START_USE" && request.body.command_id === lostResponseCommand.command_id).length, 1);
+        assert.ok((await postgres("rifare_operation").where({ id: uncertain.id }).first()).start_response_bytes);
+        check("native-authority-lost-http-response-recovers-the-original-in-another-process", () => {});
+
+        const closeCommand = { ...command, command_id: randomUUID() };
+        const closing = await journal.openAuthoritySession(Buffer.from(JSON.stringify(closeCommand)),
+          descriptorBytes, admission, transport);
+        const blocker = await postgres.transaction();
+        let pendingClose: Promise<unknown> | undefined;
+        try {
+          const blockerPid = (await blocker.raw("select pg_backend_pid() as pid")).rows[0].pid;
+          await blocker("user").where({ id: operator.id }).forUpdate().first("id");
+          const count = peer.requests.length;
+          const applicationBytes = peer.applicationBytes;
+          pendingClose = closing.start().then(() => "unexpected-success", error => error);
+          let blocked = false;
+          const deadline = Date.now() + 5000;
+          while (!blocked && Date.now() < deadline) {
+            const { rows } = await postgres.raw(
+              "select exists(select 1 from pg_stat_activity where ?::integer = any(pg_blocking_pids(pid))) as blocked",
+              [blockerPid]);
+            blocked = rows[0].blocked;
+            if (!blocked) await delay(10);
+          }
+          assert.equal(blocked, true, "The actual native post-TLS claim must wait on the held owner row");
+          closing.close();
+          await blocker.commit();
+          assert.ok(await pendingClose instanceof Error);
+          const claimDeadline = Date.now() + 5000;
+          let spent = false;
+          while (!spent && Date.now() < claimDeadline) {
+            const row = await postgres("rifare_operation").where({ original_command_uuid: closeCommand.command_id }).first();
+            spent = row.start_claimed_at !== null;
+            if (!spent) await delay(10);
+          }
+          assert.equal(spent, true);
+          assert.equal(peer.requests.length, count);
+          assert.equal(peer.applicationBytes, applicationBytes);
+          check("native-authority-session-close-during-database-admission-sends-no-bytes", () => {});
+        } finally {
+          closing.close();
+          if (!blocker.isCompleted()) await blocker.rollback();
+          await pendingClose;
+        }
+
+        const staleCommand = { ...command, command_id: randomUUID() };
+        const staleSession = await journal.openAuthoritySession(Buffer.from(JSON.stringify(staleCommand)),
+          descriptorBytes, admission, transport);
+        peer.holdHandshake();
+        const countBeforeStale = peer.requests.length;
+        const staleResult = staleSession.start().then(() => "unexpected-success", error => error);
+        try {
+          await peer.handshakeEntered;
+          const line = await postgres("cart_line_item").where({ cart_id: command.cart_id }).first("id", "quantity");
+          await carts.updateLineItems(line.id, { quantity: Number(line.quantity) + 1 });
+          try {
+            peer.releaseHandshake();
+            assert.ok(await staleResult instanceof Error);
+            assert.equal(peer.requests.length, countBeforeStale);
+          } finally { await carts.updateLineItems(line.id, { quantity: Number(line.quantity) }); }
+          await assert.rejects(staleSession.start(), /Authority sender is unavailable/);
+          assert.equal(peer.requests.length, countBeforeStale);
+          check("native-authority-cart-change-during-tls-refuses-and-consumes-original-opportunity", () => {});
+        } finally { staleSession.close(); peer.releaseHandshake(); await staleResult; }
+      } finally { transport.close(); await peer.close(); }
+
       const changed = Buffer.from(JSON.stringify({ ...command, payable_minor_units: "0" }));
       await assert.rejects(journal.admit(changed, admission), /Original commerce command unavailable/);
       const wrongFacts = { ...command, command_id: randomUUID(), payable_minor_units: "0" };
@@ -540,6 +920,17 @@ export default async function verifyCartContext({ container }: ExecArgs) {
       await auth.updateAuthIdentities({ id: operatorIdentity.id, app_metadata: { user_id: operator.id } });
       const exported = await journal.exportPrivacySubject(alice.customer.id, privacyActor);
       assert.ok(exported.some(row => row.id === committed[0].id));
+      const exportedStart = exported.find(row => row.id === creators[0].operation.id)!;
+      assert.equal(exportedStart.start_command_bytes, retainedStart.command_bytes);
+      assert.equal(exportedStart.start_command_digest, retainedStart.command_digest);
+      assert.equal(exportedStart.start_correlation, retainedStart.correlation);
+      assert.equal(exportedStart.start_owner_digest, beforeClaim.start_owner_digest);
+      assert.ok(exportedStart.start_claimed_at);
+      assert.equal(JSON.stringify(exportedStart).includes(creators[0].send_ticket!), false);
+      const exportedResponse = exported.find(row => row.id === observedSenderId)!;
+      assert.equal(exportedResponse.start_response_bytes, observedSenderResponse);
+      assert.ok(exportedResponse.start_response_digest);
+      assert.ok(exportedResponse.start_response_observed_at);
       assert.equal((await journal.exportPrivacySubject(bob.customer.id, privacyActor)).length, 0);
 
       const revocation = await postgres.transaction();
@@ -577,7 +968,24 @@ export default async function verifyCartContext({ container }: ExecArgs) {
       await auth.updateAuthIdentities({ id: operatorIdentity.id, app_metadata: { user_id: operator.id } });
       check("journal-privacy-export-waits-for-in-flight-operator-revocation-and-refuses-disclosure", () => {});
 
+      assert.equal(await journal.setPrivacyHold(alice.customer.id, creators[0].operation.id, 2, true, privacyActor), true);
+      assert.equal(await journal.setPrivacyHold(alice.customer.id, observedSenderId!, 3, true, privacyActor), true);
       await journal.erasePrivacySubject(alice.customer.id, privacyActor);
+      const heldExports = await journal.exportPrivacySubject(alice.customer.id, privacyActor);
+      assert.equal(heldExports.length, 2);
+      const heldStart = heldExports.find(row => row.id === creators[0].operation.id)!;
+      assert.equal(heldStart.start_command_bytes, retainedStart.command_bytes);
+      assert.equal(heldStart.start_correlation, retainedStart.correlation);
+      assert.equal(heldExports.find(row => row.id === observedSenderId)!.start_response_bytes, observedSenderResponse);
+      assert.equal(await journal.setPrivacyHold(alice.customer.id, creators[0].operation.id, 4, false, privacyActor), true);
+      assert.equal(await journal.setPrivacyHold(alice.customer.id, observedSenderId!, 5, false, privacyActor), true);
+      const minimizedResponse = await postgres("rifare_operation").where({ id: observedSenderId }).first();
+      assert.equal(minimizedResponse.start_response_bytes, null);
+      assert.equal(minimizedResponse.start_response_digest, null);
+      assert.equal(minimizedResponse.start_response_observed_at, null);
+      const minimizedStart = await authorityRow();
+      for (const field of ["start_command_bytes", "start_command_digest", "start_correlation",
+        "start_owner_digest", "start_claimed_at"]) assert.equal(minimizedStart[field], null);
       assert.equal((await journal.exportPrivacySubject(alice.customer.id, privacyActor)).length, 0);
       const refusal = { id: "rifop_" + randomUUID(), original_command_uuid: randomUUID(), challenge_fingerprint: null };
       await journal.restorePrivacyRefusals([refusal], privacyActor);

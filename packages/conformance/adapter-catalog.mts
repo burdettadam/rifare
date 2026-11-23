@@ -12,7 +12,8 @@ const catalogFile='tests/fixtures/conformance/adapter-catalog.v1.json';
 const coverageFile='tests/fixtures/conformance/expected-coverage.v1.json';
 // ADR-0038: retaining the additive source/case inventory exceeds the generic
 // configuration ceiling. Only this local catalog receives the bounded budget.
-const CATALOG_BYTES=262144;
+// C6 prior owner decision efe6dc5 adds one 64 KiB block for public inventory.
+const CATALOG_BYTES=327680;
 const fail=(reason:string):never=>{throw new Error('ADAPTER_CATALOG_'+reason);};
 export const fileHash=(bytes:Buffer|string)=>createHash('sha256').update(bytes).digest('hex');
 export function catalogPath(root:string,path:unknown){if(typeof path!=='string'||! /^(?:apps|packages|migrations|tests|planning|examples)\/[A-Za-z0-9_./-]+$/.test(path)||path.split('/').includes('..'))fail('PATH_INVALID');

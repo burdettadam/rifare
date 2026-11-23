@@ -24,6 +24,7 @@
     "packages/adapters/claims-source-guards.mts",
     "packages/adapters/delegated-commands/command-codec.mts",
     "packages/adapters/delegated-commands/internal-use-client.mts",
+    "packages/adapters/delegated-commands/public-use-client.mts",
     "packages/adapters/delegated-receipts/jose-verifier.mts",
     "packages/adapters/delegated-receipts/strict-json.mts",
     "packages/adapters/delivery-trial-source-guards.mts",
@@ -5939,6 +5940,468 @@
           "direct_fixtures": []
         }
       ]
+    },
+    {
+      "id": "delegated_use_public_client",
+      "kind": "diagnostic",
+      "source_files": [
+        {
+          "path": "packages/adapters/delegated-commands/public-use-client.mts",
+          "sha256": "e05461dc4bec360cdcb2ce58cd6965f1c63ee53092e186d174aa9825636bf0a1"
+        }
+      ],
+      "version": "source-sha256:e05461dc4bec360cdcb2ce58cd6965f1c63ee53092e186d174aa9825636bf0a1",
+      "api_version": "public-mtls-p03-start-recovery-request-v1",
+      "external_version": null,
+      "external_account": null,
+      "external_scopes_attested": false,
+      "source_oracle": "Synthetic local mutual-TLS peers exercise public START, retained-original recovery and exact unverified request retrieval. No connected provider, signature verification, proof submission, FINALIZE or protected commerce effect is qualified.",
+      "operations": [
+        {
+          "id": "delegated.public.start",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "PUBLIC-WIRE-START",
+              "name": "PUBLIC-WIRE-START sends the exact original to the public command route",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-ARTIFACT",
+              "name": "PUBLIC-WIRE-ARTIFACT retains exact unverified bytes on a fresh authenticated connection",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-RECOVER",
+              "name": "PUBLIC-WIRE-RECOVER preserves the original recovery bytes and request binding",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-LINK",
+              "name": "PUBLIC-WIRE-LINK refuses duplicate, foreign, altered challenge and decorated destinations",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-BINDING",
+              "name": "PUBLIC-WIRE-BINDING refuses copied responses and changed originals before request retrieval",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-ARTIFACT-INVALID",
+              "name": "PUBLIC-WIRE-ARTIFACT-INVALID refuses malformed bytes, excess size and incorrect media",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-GUARD",
+              "name": "PUBLIC-WIRE-GUARD refuses retrieval without sending application bytes after withdrawal",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-HEADERS",
+              "name": "PUBLIC-WIRE-HEADERS requires the assigned artifact cache and content protections",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-TLS",
+              "name": "PUBLIC-WIRE-TLS refuses foreign server trust before application bytes",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-TLS-GUARD",
+              "name": "PUBLIC-WIRE-TLS-GUARD checks withdrawal after the handshake before any HTTP bytes",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-LOSS",
+              "name": "PUBLIC-WIRE-LOSS requires explicit original recovery after a lost response",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-CLOSE",
+              "name": "PUBLIC-WIRE-CLOSE refuses further calls and exposes no proof or finalization method",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-HOSTNAME",
+              "name": "PUBLIC-WIRE-HOSTNAME refuses a trusted certificate for another server name",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-CLIENT",
+              "name": "PUBLIC-WIRE-CLIENT refuses a foreign chain and invalid local identity bindings",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-ASYNC",
+              "name": "PUBLIC-WIRE-ASYNC refuses an asynchronous guard without opening a connection",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-DEADLINE",
+              "name": "PUBLIC-WIRE-DEADLINE bounds a stalled response and never retries",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-CAPACITY",
+              "name": "PUBLIC-WIRE-CAPACITY bounds pending exchanges and close terminates active requests",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-RESPONSE-BOUNDS",
+              "name": "PUBLIC-WIRE-RESPONSE-BOUNDS refuses oversized headers, streaming bodies and truncated commands",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-ARTIFACT-STREAM",
+              "name": "PUBLIC-WIRE-ARTIFACT-STREAM bounds a chunked request artifact without a declared length",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-NATIVE-ADMISSION",
+              "name": "PUBLIC-WIRE-NATIVE-ADMISSION runs after TLS and sends only captured bytes after commit",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-NATIVE-REFUSAL",
+              "name": "PUBLIC-WIRE-NATIVE-REFUSAL sends zero bytes when native admission fails",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-NATIVE-CLOSE",
+              "name": "PUBLIC-WIRE-NATIVE-CLOSE cannot resume transmission after closing during admission",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-NATIVE-HANDSHAKE",
+              "name": "PUBLIC-WIRE-NATIVE-HANDSHAKE cannot admit an original before TLS completes",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "delegated.public.recover",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "PUBLIC-WIRE-START",
+              "name": "PUBLIC-WIRE-START sends the exact original to the public command route",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-ARTIFACT",
+              "name": "PUBLIC-WIRE-ARTIFACT retains exact unverified bytes on a fresh authenticated connection",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-RECOVER",
+              "name": "PUBLIC-WIRE-RECOVER preserves the original recovery bytes and request binding",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-LINK",
+              "name": "PUBLIC-WIRE-LINK refuses duplicate, foreign, altered challenge and decorated destinations",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-BINDING",
+              "name": "PUBLIC-WIRE-BINDING refuses copied responses and changed originals before request retrieval",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-ARTIFACT-INVALID",
+              "name": "PUBLIC-WIRE-ARTIFACT-INVALID refuses malformed bytes, excess size and incorrect media",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-GUARD",
+              "name": "PUBLIC-WIRE-GUARD refuses retrieval without sending application bytes after withdrawal",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-HEADERS",
+              "name": "PUBLIC-WIRE-HEADERS requires the assigned artifact cache and content protections",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-TLS",
+              "name": "PUBLIC-WIRE-TLS refuses foreign server trust before application bytes",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-TLS-GUARD",
+              "name": "PUBLIC-WIRE-TLS-GUARD checks withdrawal after the handshake before any HTTP bytes",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-LOSS",
+              "name": "PUBLIC-WIRE-LOSS requires explicit original recovery after a lost response",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-CLOSE",
+              "name": "PUBLIC-WIRE-CLOSE refuses further calls and exposes no proof or finalization method",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-HOSTNAME",
+              "name": "PUBLIC-WIRE-HOSTNAME refuses a trusted certificate for another server name",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-CLIENT",
+              "name": "PUBLIC-WIRE-CLIENT refuses a foreign chain and invalid local identity bindings",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-ASYNC",
+              "name": "PUBLIC-WIRE-ASYNC refuses an asynchronous guard without opening a connection",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-DEADLINE",
+              "name": "PUBLIC-WIRE-DEADLINE bounds a stalled response and never retries",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-CAPACITY",
+              "name": "PUBLIC-WIRE-CAPACITY bounds pending exchanges and close terminates active requests",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-RESPONSE-BOUNDS",
+              "name": "PUBLIC-WIRE-RESPONSE-BOUNDS refuses oversized headers, streaming bodies and truncated commands",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-ARTIFACT-STREAM",
+              "name": "PUBLIC-WIRE-ARTIFACT-STREAM bounds a chunked request artifact without a declared length",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-NATIVE-ADMISSION",
+              "name": "PUBLIC-WIRE-NATIVE-ADMISSION runs after TLS and sends only captured bytes after commit",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-NATIVE-REFUSAL",
+              "name": "PUBLIC-WIRE-NATIVE-REFUSAL sends zero bytes when native admission fails",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-NATIVE-CLOSE",
+              "name": "PUBLIC-WIRE-NATIVE-CLOSE cannot resume transmission after closing during admission",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-NATIVE-HANDSHAKE",
+              "name": "PUBLIC-WIRE-NATIVE-HANDSHAKE cannot admit an original before TLS completes",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            }
+          ],
+          "direct_fixtures": []
+        },
+        {
+          "id": "delegated.public.request_artifact",
+          "semantics": "native",
+          "qualification": "sandbox-only",
+          "required_scopes": [],
+          "scope_kind": "server_local_fixture_only",
+          "native_cases": [
+            {
+              "id": "PUBLIC-WIRE-START",
+              "name": "PUBLIC-WIRE-START sends the exact original to the public command route",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-ARTIFACT",
+              "name": "PUBLIC-WIRE-ARTIFACT retains exact unverified bytes on a fresh authenticated connection",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-RECOVER",
+              "name": "PUBLIC-WIRE-RECOVER preserves the original recovery bytes and request binding",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-LINK",
+              "name": "PUBLIC-WIRE-LINK refuses duplicate, foreign, altered challenge and decorated destinations",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-BINDING",
+              "name": "PUBLIC-WIRE-BINDING refuses copied responses and changed originals before request retrieval",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-ARTIFACT-INVALID",
+              "name": "PUBLIC-WIRE-ARTIFACT-INVALID refuses malformed bytes, excess size and incorrect media",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-GUARD",
+              "name": "PUBLIC-WIRE-GUARD refuses retrieval without sending application bytes after withdrawal",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-HEADERS",
+              "name": "PUBLIC-WIRE-HEADERS requires the assigned artifact cache and content protections",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-TLS",
+              "name": "PUBLIC-WIRE-TLS refuses foreign server trust before application bytes",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-TLS-GUARD",
+              "name": "PUBLIC-WIRE-TLS-GUARD checks withdrawal after the handshake before any HTTP bytes",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-LOSS",
+              "name": "PUBLIC-WIRE-LOSS requires explicit original recovery after a lost response",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-CLOSE",
+              "name": "PUBLIC-WIRE-CLOSE refuses further calls and exposes no proof or finalization method",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-HOSTNAME",
+              "name": "PUBLIC-WIRE-HOSTNAME refuses a trusted certificate for another server name",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-CLIENT",
+              "name": "PUBLIC-WIRE-CLIENT refuses a foreign chain and invalid local identity bindings",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-ASYNC",
+              "name": "PUBLIC-WIRE-ASYNC refuses an asynchronous guard without opening a connection",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-DEADLINE",
+              "name": "PUBLIC-WIRE-DEADLINE bounds a stalled response and never retries",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-CAPACITY",
+              "name": "PUBLIC-WIRE-CAPACITY bounds pending exchanges and close terminates active requests",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-RESPONSE-BOUNDS",
+              "name": "PUBLIC-WIRE-RESPONSE-BOUNDS refuses oversized headers, streaming bodies and truncated commands",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-ARTIFACT-STREAM",
+              "name": "PUBLIC-WIRE-ARTIFACT-STREAM bounds a chunked request artifact without a declared length",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-NATIVE-ADMISSION",
+              "name": "PUBLIC-WIRE-NATIVE-ADMISSION runs after TLS and sends only captured bytes after commit",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-NATIVE-REFUSAL",
+              "name": "PUBLIC-WIRE-NATIVE-REFUSAL sends zero bytes when native admission fails",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-NATIVE-CLOSE",
+              "name": "PUBLIC-WIRE-NATIVE-CLOSE cannot resume transmission after closing during admission",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            },
+            {
+              "id": "PUBLIC-WIRE-NATIVE-HANDSHAKE",
+              "name": "PUBLIC-WIRE-NATIVE-HANDSHAKE cannot admit an original before TLS completes",
+              "path": "tests/development/public-delegated-use.test.mts",
+              "sha256": "82b76e7f0c2abc44587213dc0e26651d58c675157bbd75368f5a5741f145241e"
+            }
+          ],
+          "direct_fixtures": []
+        }
+      ]
     }
   ],
   "fixture_administration": "Seed, injected faults, and source observation setters are fixture administration, not remote provider operations. Unnamed real gateway/carrier/warehouse/ERP adapters are unavailable.",
@@ -6977,7 +7440,7 @@
     },
     {
       "path": "tests/fixtures/conformance/expected-coverage.v1.json",
-      "sha256": "d5667cd660b0808ad1266b21900592e481f14bb645a0ea697de3bc1015e9fdfa"
+      "sha256": "8c392d78746636a0043c35efbabf95cf884bb5cc9bf876ded4562b41df15b51b"
     },
     {
       "path": "tests/fixtures/conformance/source-inputs.v1.json",
@@ -8773,7 +9236,7 @@
     },
     {
       "path": "tests/development/delegated-use-client-helpers.mts",
-      "sha256": "1aeff4c969b2fe1eb90cb1ff17c5e43416f00a94c225ba93e615ea6c45f285b7"
+      "sha256": "f3b1ce5dad3aa8adbaf06503b6a2ee90fca4370512880c99f30c9c146c9fc7e4"
     }
   ]
 }
