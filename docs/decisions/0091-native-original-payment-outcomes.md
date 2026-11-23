@@ -1,0 +1,77 @@
+# ADR-0091 - Recover original native payment observations
+
+Status: assigned bounded local implementation; no payment dispatch authority.
+Base: `258904eaa384a6bbe4f9f8084751ac4e42323580` (Rifare PR11).
+Branch: `feat/medusa-original-payment-outcomes`; root is sole writer/integration owner
+in the existing primary checkout. Use the existing work-goal/worktree-flow skills.
+
+## Assignment RCG-4B-C11
+
+Continue COMMERCE-AUTHORITY-01's original-outcome recovery requirement. C10 already
+binds an exact pending native collection/session/provider, but its pending-only
+recovery refuses after actual payment progress. Add a separate internal historical
+observer over that committed association. Preserve C10's pending behavior/profile,
+all existing C7/C8/C9 evidence/criteria, public holds and operation states. This is
+an application recovery feature, not permission to perform or repeat a payment.
+
+Use the actual retained original command and C10 association. Search native payments
+matching collection OR session, including deleted history. Require one consistent
+original with exact IDs, provider, original currency and raw principal. Refuse
+replacement/extra/mismatched/aliased identity; do not choose the first convenient
+row. Persist the first native payment ID, scoped refusal fingerprint and observation
+time once in the existing journal, with revision/privacy locks and a unique
+constraint. Future reads recover that identity or refuse. Native payment absence is
+explicitly unresolved, never proof of no provider effect. Retain contradictory data
+for the owning reconciliation path; add no provider call, resend or compensation.
+
+Keep current native customer/auth identity, merchant/store/channel ownership and
+privacy checks. Completed carts, expired original request/receipt evidence, changed
+cart totals and retired provider/region eligibility do not themselves invalidate a
+historical financial observation. Do not run fresh cart/receipt admission or promote
+historical evidence into execution authority. Copy verified server context before
+awaits, sample the database clock after lock waits, reject regression and recheck
+ownership/privacy/original binding after first-binding COMMIT and before return.
+
+Return a bounded allowlist of native IDs, exact raw-derived minor amounts, statuses,
+deletion markers and observation times. Keep payment/capture/refund facts separate
+from original order transactions/credits/summaries. Bind any completed order through
+both original cart and original collection links with matching current party/channel
+access. A refund-success/bookkeeping-error must remain visibly distinct from a
+reconciled outcome. Never expose provider data, metadata, notes, tokens, keys or
+customer addresses. Never infer external settlement/current provider status or a
+safe no-effect retry from native status, captured_at, missing rows or workflow errors.
+
+Add only nullable fields/constraints/indexes to the existing journal model/migration.
+Privacy export/hold/minimization/uninstall/whole-database restore must preserve the
+new refusal fingerprint and immutable first identity. Legacy refusal records remain
+valid only when they do not discard a retained newer fingerprint. No new ledger,
+payment engine, account-link service, public route, provider adapter, deployment,
+policy exception, source-catalog rebaseline or release is assigned. A pure factoring
+of the C10 canonical identity/digest is allowed only if its exact profile/output and
+retained controls remain unchanged.
+
+## Required evidence
+
+Use actual PostgreSQL/Medusa System fixtures and genuine synthetic C7/C8/C9 originals.
+Demonstrate pending absence, authorization, partial/full capture, refund/cancellation,
+completed-order binding, expired receipt and changed-cart recovery, native refund
+bookkeeping failure, missing/replaced/aliased/ambiguous identities, raw money and
+provider/region retirement semantics. Assert zero provider/workflow calls and native
+financial/order table changes during observation. No external settlement is implied.
+
+Exercise concurrent first observations, fresh-process lost acknowledgement recovery,
+deferred COMMIT rollback, post-wait/post-COMMIT ownership/privacy/abort changes,
+immutable identity replacement refusal, unique fingerprint reuse after minimization,
+privacy hold/export/erase/uninstall and whole-database restore. Fixed integration
+requires own-dependency compiled execution, populated prior-C10 component/schema
+upgrade/replay, exact input/output/lock/evidence receipt and both actual independent
+review roles. Fault original session/payment equality and the unique refusal guard;
+unchanged independent assertions must detect them, then verify exact restoration.
+
+Reuse the existing source cache/primary before any runtime allocation; check Windows
+host free space first. A later owned runtime/generated output retires after review
+and integration with the workspace lifecycle gates. Hosted Actions remain skipped
+under the cost instruction; normal authorized feature push/review/merge applies.
+Provider/Supabase deployments and enrollment/account-link evidence stay with their
+other owners. Full COMMERCE-AUTHORITY-01, IDENTITY-APP-02, DELEGATED-PURCHASE-01,
+provider reconciliation, final-effect fencing and production/transfer stay open.

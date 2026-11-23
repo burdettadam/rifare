@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "id": "rifare-source-inventory",
-  "revision": 84,
+  "revision": 85,
   "status": "proposed",
   "components": [
     {
@@ -1805,7 +1805,9 @@
         "work/records/COMMERCE-ENGINE-03.md",
         "apps/commerce-backend/src/scripts/native-claim-qualification.ts",
         "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123162000.ts",
-        "apps/commerce-backend/src/scripts/verify-claim-admission.ts"
+        "apps/commerce-backend/src/scripts/verify-claim-admission.ts",
+        "docs/decisions/0091-native-original-payment-outcomes.md",
+        "work/records/RCG-4B-C11.md"
       ],
       "notices": []
     },
