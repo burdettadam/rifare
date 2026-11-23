@@ -168,6 +168,13 @@ export class PublicDelegatedUseClient {
     this.#available(); const encoded = this.#original(original);
     return this.#send(encoded, encoded, guard);
   }
+  async startAfterAdmission(original: unknown, admission: () => Promise<void>,
+    guard: () => void): Promise<BoundDelegatedResponse> {
+    this.#available();
+    const encoded = this.#original(original);
+    if (typeof admission !== 'function') fail('PUBLIC_USE_INPUT_INVALID');
+    return this.#send(encoded, encoded, guard, admission);
+  }
   async recover(original: unknown, recovery: unknown, guard: () => void): Promise<BoundDelegatedResponse> {
     this.#available(); const retained = this.#original(original);
     let encoded: EncodedDelegatedCommand;
@@ -199,7 +206,7 @@ export class PublicDelegatedUseClient {
     });
   }
   #send(original: EncodedDelegatedCommand, outbound: EncodedDelegatedCommand,
-    guard: () => void): Promise<BoundDelegatedResponse> {
+    guard: () => void, admission?: () => Promise<void>): Promise<BoundDelegatedResponse> {
     return this.#exchange(this.#url, outbound, guard, (body, response) => {
       let bound: BoundDelegatedResponse;
       try {
@@ -218,10 +225,11 @@ export class PublicDelegatedUseClient {
         this.#requests.set(bound, Object.freeze({ original: original.canonical_json, uri, challengeId }));
       } else if (links.length) fail('PUBLIC_USE_RESPONSE_INVALID');
       return bound;
-    });
+    }, admission);
   }
   #exchange<T>(url: URL, outbound: EncodedDelegatedCommand | undefined, guard: () => void,
-    parse: (body: Buffer, response: IncomingMessage) => T): Promise<T> {
+    parse: (body: Buffer, response: IncomingMessage) => T,
+    admission?: () => Promise<void>): Promise<T> {
     if (typeof guard !== 'function') fail('PUBLIC_USE_INPUT_INVALID');
     this.#available();
     if (this.#pending.size >= MAX_PENDING) fail('PUBLIC_USE_CAPACITY');
@@ -279,7 +287,7 @@ export class PublicDelegatedUseClient {
         active.once('error', () => finish(new PublicUseClientDenied('PUBLIC_USE_TRANSPORT_FAILED')));
         active.once('socket', socket => {
           if (!(socket instanceof TLSSocket)) { failure(new PublicUseClientDenied('PUBLIC_USE_TRANSPORT_FAILED')); return; }
-          socket.once('secureConnect', () => {
+          socket.once('secureConnect', async () => {
             if (settled) return;
             try {
               if (!socket.authorized || socket.authorizationError) fail('PUBLIC_USE_TRANSPORT_FAILED');
@@ -288,6 +296,22 @@ export class PublicDelegatedUseClient {
               this.#guard(guard);
               this.#available(deadline);
               if (settled || active!.destroyed || socket.destroyed) fail('PUBLIC_USE_UNAVAILABLE');
+              if (admission) {
+                try {
+                  const returned = admission();
+                  if (!types.isPromise(returned)) fail('PUBLIC_USE_GUARD_DENIED');
+                  // Attach through the intrinsic Promise operation. An arbitrary
+                  // thenable or an overridden public then method is never called.
+                  const result = await new Promise<void>((resolve, reject) => {
+                    Promise.prototype.then.call(returned, resolve, reject);
+                  });
+                  if (result !== undefined) fail('PUBLIC_USE_GUARD_DENIED');
+                } catch { fail('PUBLIC_USE_GUARD_DENIED'); }
+                // Admission may have committed while this exchange timed out or
+                // closed. Only captured bytes and private transport state remain.
+                this.#available(deadline);
+                if (settled || active!.destroyed || socket.destroyed) fail('PUBLIC_USE_UNAVAILABLE');
+              }
               // All caller/native callbacks are finished. No await or further
               // owner dispatch may intervene before these exact application bytes.
               active!.end(bytes);
