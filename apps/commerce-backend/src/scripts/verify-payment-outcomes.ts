@@ -107,7 +107,8 @@ export default async function verifyPaymentOutcomes({ container }: ExecArgs) {
     const line = (await carts.listLineItems({ cart_id: expired.cart.id }))[0];
     await carts.updateLineItems(line.id, { quantity: 2 });
     const expiry = (await expired.row()).receipt_expires_at.getTime();
-    await delay(Math.max(0, expiry - await f.clock()) + 30);
+    const expiryDeadline = performance.now() + 10000;
+    while (await f.clock() < expiry && performance.now() < expiryDeadline) await delay(50);
     await check("C11-HISTORICAL expired receipt and changed cart do not manufacture fresh authority", async () => {
       assert.ok(await f.clock() >= expiry);
       const result = await noEffects(() => observe(expiredId));
