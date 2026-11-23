@@ -31,7 +31,7 @@ export default async function verifyPaymentOutcomes({ container }: ExecArgs) {
       (payments as any)[name] = async () => { calls.push(name); throw new Error("C11_UNEXPECTED_NATIVE_PAYMENT_CALL"); };
     }
     const provider = (payments as any).paymentProviderService_, providerMethods = new Map<string, any>();
-    for (const name of ["authorizePayment", "capturePayment", "cancelPayment", "refundPayment", "getPaymentStatus"]) {
+    for (const name of ["authorizePayment", "capturePayment", "cancelPayment", "refundPayment", "getStatus"]) {
       assert.equal(typeof provider[name], "function"); providerMethods.set(name, provider[name]);
       provider[name] = async () => { calls.push("provider." + name); throw new Error("C11_UNEXPECTED_PROVIDER_CALL"); };
     }
