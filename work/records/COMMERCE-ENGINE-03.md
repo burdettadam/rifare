@@ -150,3 +150,28 @@ later cancellation after earlier admission. No-emit passed. Runtime/migration, u
 fault and independent final review are pending; no passing behavior is preclaimed.
 The generic PostgreSQL practices skill was applied only to this local guard, not
 to Supabase architecture, configuration or deployments.
+
+## Guarded source and populated upgrade evidence
+
+At 6b0cb47 a fresh disposable database bootstrapped the new migration normally and
+passed 44 real native commerce groups: all 25 retained groups (23 emitted entries
+plus two retained non-emitting entries) and 19 added claim/refund groups. The exact
+same canceled-order assertion now refuses and preserves all 23 measured native
+tables. Six separate admission groups pass, including independent backend wait
+witnesses for cancellation commit/rollback and explicit later-cancellation limits.
+
+A preserved dump of the actual populated pre-guard 4f43188 fixture includes the
+previously admitted canceled-order claim. Applying the new migration and replaying
+normal db:migrate preserve whole-row counts/SHA256 for all 152 non-migration public
+tables exactly, including historical claims. No native table/row was added, removed
+or rewritten by the admission migration/replay. These source and upgrade observations
+are not yet the fixed own-dependency compiled qualification.
+
+The helper now additionally measures an explicitly modeled native interrupted
+cancellation: provider refund success followed by canceled-order bookkeeping refusal,
+stable original-key retry, unchanged original captures/inventory and no refund event.
+That partial-cancellation fixture uses the native Order module to mark the original;
+it is not attributed to a successfully completed full cancel-order workflow.
+No-emit passed before the final added measurement refinements; recheck the fixed
+checkpoint. Full compiled execution, missing-trigger fault, final reviews and normal
+integration/retirement remain outstanding.

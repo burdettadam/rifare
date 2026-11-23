@@ -53,7 +53,7 @@ export async function qualifyNativeClaims(container: any, fixture: {
     return { stock: Number(value.stocked_quantity), reserved: Number(value.reserved_quantity) };
   };
   const orderFields = ["id", "version", "items.*", "payment_collections.payments.*"];
-  const original = async () => {
+  const original = async (fulfill = true) => {
     const { result: cart } = await createCartWorkflow(container).run({ input: {
       ...fixture.cartInput, items: [{ variant_id: variant.id, quantity: 2 }],
     } });
@@ -64,7 +64,7 @@ export async function qualifyNativeClaims(container: any, fixture: {
     const order = await graph("order", result.id, orderFields);
     const paymentId = order.payment_collections[0].payments[0].id;
     await capturePaymentWorkflow(container).run({ input: { payment_id: paymentId } });
-    await createOrderFulfillmentWorkflow(container).run({ input: { order_id: order.id, location_id: fixture.locationId,
+    if (fulfill) await createOrderFulfillmentWorkflow(container).run({ input: { order_id: order.id, location_id: fixture.locationId,
       shipping_option_id: fixture.shippingId, items: [{ id: order.items[0].id, quantity: 2 }], no_notification: true } });
     return { order: await graph("order", order.id, orderFields), paymentId };
   };
@@ -307,4 +307,56 @@ export async function qualifyNativeClaims(container: any, fixture: {
   await cancelOrderWorkflow(container).run({ input: { order_id: canceledOrder.id, no_notification: true } });
   await rejectUnchanged("native-canceled-order-claim-refuses-without-effects", () =>
     beginClaimOrderWorkflow(container).run({ input: { order_id: canceledOrder.id, type: "refund" } }));
+
+  // Deliberately interrupted cancellation: the native module marks status before
+  // the full cancel workflow's provider refund/reservation cleanup. Not a claim
+  // that successful full cancellation leaves money or inventory unresolved.
+  const interrupted = await original(false);
+  await orders.cancel(interrupted.order.id);
+  const nativeCanceled = await postgres("order").where({ id: interrupted.order.id }).first();
+  assert.equal(nativeCanceled.status, "canceled"); assert.ok(nativeCanceled.canceled_at);
+  const interruptedKey = `rifare-canceled-refund-${suffix}`;
+  const interruptedPayment = await postgres("payment").where({ id: interrupted.paymentId }).first();
+  assert.equal(interruptedPayment.currency_code, "usd"); assert.ok(interruptedPayment.captured_at);
+  let canceledProviderCalls = 0, canceledRefundEvents = 0;
+  const canceledArguments: any[] = [];
+  provider.refundPayment = async function (...args: any[]) {
+    canceledProviderCalls++; canceledArguments.push({ provider_id: args[0], amount: args[1].amount, key: args[1].context.idempotency_key });
+    return originalRefund.apply(this, args);
+  };
+  events.emit = async function (input: any, ...rest: any[]) {
+    for (const event of (Array.isArray(input) ? input : [input])) if (event.name === "payment.refunded") canceledRefundEvents++;
+    return originalEmit.call(this, input, ...rest);
+  };
+  const interruptedRefund = () => refundPaymentWorkflow(container).run({ input: {
+    payment_id: interrupted.paymentId, amount: 1, idempotency_key: interruptedKey,
+  } });
+  const canceledHistory = async () => ({
+    refunds: await postgres("refund").where({ payment_id: interrupted.paymentId }).orderBy("id"),
+    transactions: await postgres("order_transaction").where({ order_id: interrupted.order.id, reference: "refund" }).orderBy("id"),
+    credits: await postgres("order_credit_line").where({ order_id: interrupted.order.id }).orderBy("id"),
+  });
+  try {
+    assert.equal((await canceledHistory()).refunds.length, 0);
+    const originalCaptures = await postgres("capture").where({ payment_id: interrupted.paymentId }).orderBy("id");
+    const originalInventory = await rows(["inventory_level", "reservation_item"]);
+    await assert.rejects(interruptedRefund, (error: any) => { assert.match(error.message, /order.*canceled/i); return true; });
+    const failed = await canceledHistory();
+    check("native-canceled-order-refund-error-can-follow-original-provider-refund", () => {
+      assert.equal(canceledProviderCalls, 1); assert.equal(failed.refunds.length, 1);
+      assert.equal(interruptedPayment.provider_id, "pp_system_default"); assert.equal(canceledRefundEvents, 0);
+      assert.equal(failed.refunds[0].status, "succeeded"); assert.equal(failed.refunds[0].raw_amount.value, "1");
+      assert.equal(failed.transactions.length, 0); assert.equal(failed.credits.length, 0);
+      assert.deepEqual(canceledArguments, [{ provider_id: interruptedPayment.provider_id,
+        amount: { value: "1", precision: 20 }, key: interruptedKey }]);
+    });
+    await assert.rejects(interruptedRefund, (error: any) => { assert.match(error.message, /order.*canceled/i); return true; });
+    assert.equal(canceledProviderCalls, 1); assert.deepEqual(await canceledHistory(), failed);
+    assert.equal(canceledRefundEvents, 0);
+    assert.deepEqual(await postgres("capture").where({ payment_id: interrupted.paymentId }).orderBy("id"), originalCaptures);
+    assert.deepEqual(await rows(["inventory_level", "reservation_item"]), originalInventory);
+    const canceledCurrent = await graph("order", interrupted.order.id, ["id", "status", "summary.*"]);
+    assert.equal(canceledCurrent.status, "canceled"); assert.equal(Number(canceledCurrent.summary.refunded_total), 0);
+    check("native-canceled-order-stable-refund-key-preserves-original-unreconciled-outcome", () => {});
+  } finally { provider.refundPayment = originalRefund; events.emit = originalEmit; }
 }
