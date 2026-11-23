@@ -161,10 +161,13 @@ export class Migration20261123200000 extends Migration {
         perform ps.id from public.payment_session ps join public.payment_collection pc on pc.id=ps.payment_collection_id
           where ps.id=p_session and ps.payment_collection_id=original.payment_collection_id
             and ps.provider_id='pp_rifare_fenced_system_fixture' and ps.status='pending'
-            and ps.currency_code=original.currency and ps.deleted_at is null and pc.deleted_at is null
+            and ps.currency_code=original.currency and pc.currency_code=original.currency and ps.deleted_at is null and pc.deleted_at is null
             and ps.amount::numeric=original.payable_minor_units::numeric / power(10::numeric,original.currency_exponent)
             and (ps.raw_amount->>'value')::numeric=original.payable_minor_units::numeric / power(10::numeric,original.currency_exponent)
             and ps.raw_amount->>'precision'='20'
+            and pc.amount::numeric=original.payable_minor_units::numeric / power(10::numeric,original.currency_exponent)
+            and (pc.raw_amount->>'value')::numeric=original.payable_minor_units::numeric / power(10::numeric,original.currency_exponent)
+            and pc.raw_amount->>'precision'='20'
             and ps.data->'rifare_native_execution'->>'profile'='urn:rifare:local-fenced-system-correlation:v1'
             and ps.data->'rifare_native_execution'->>'session_id'=p_session
             and ps.data->'rifare_native_execution'->>'handle'=p_handle

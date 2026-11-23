@@ -56,13 +56,29 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
         });
       } else await carts.updateCarts(task.cart_id, current);
       if (task.provider) {
-        const payment = await payments.authorizePaymentSession(task.original_session_id, {});
-        assert.ok(payment?.id);
-        assert.equal((await postgres("payment").where({ id: payment.id }).first("payment_session_id")).payment_session_id, task.original_session_id);
+        const provider = (payments as any).paymentProviderService_.retrieveProvider("pp_rifare_fenced_system_fixture");
+        const collection = await postgres("payment_collection").where({ id: task.collection_id }).first("currency_code", "amount", "raw_amount");
+        const refused = async (field: string) => {
+          await assert.rejects(provider.authorizePayment({ data: task.original_session_data, context: {} }),
+            /Native execution payment is unavailable/); assert.equal(calls.authorizePayment, 0);
+          console.log("C12_NATIVE_PROVIDER_COLLECTION_REFUSAL=" + field);
+        };
+        await postgres("payment_collection").where({ id: task.collection_id }).update({ currency_code: "eur" });
+        await refused("currency");
+        await postgres("payment_collection").where({ id: task.collection_id }).update({ currency_code: collection.currency_code });
+        const wrong = Number(collection.amount) + 1;
+        await postgres("payment_collection").where({ id: task.collection_id }).update({ amount: wrong,
+          raw_amount: { value: String(wrong), precision: 20 } });
+        await refused("principal");
+        await postgres("payment_collection").where({ id: task.collection_id }).update({ amount: collection.amount, raw_amount: collection.raw_amount });
+        const authorized = await provider.authorizePayment({ data: task.original_session_data, context: {} });
+        assert.ok(authorized?.data?.rifare_native_execution?.original_command_id);
         assert.equal(calls.authorizePayment, 1);
         for (const name of names.filter(name => name !== "authorizePayment")) assert.equal(calls[name], 0);
-        console.log("C12_NATIVE_PROVIDER_CURRENT=" + JSON.stringify({ payment_id: payment.id,
-          session_id: task.original_session_id, actual_system_authorizations: 1 }));
+        assert.equal((await postgres("payment_session").where({ id: task.original_session_id }).first("status")).status, "pending");
+        assert.equal((await postgres("payment").where({ payment_session_id: task.original_session_id })).length, 0);
+        console.log("C12_NATIVE_PROVIDER_CURRENT=" + JSON.stringify({ session_id: task.original_session_id,
+          pending_session: true, payment_rows: 0, actual_system_authorizations: 1 }));
       }
       if (task.correlation) {
         const refused = async (table: string, run: () => Promise<unknown>) => {
@@ -271,9 +287,45 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
   if (providerFault) {
     assert.ok(provider && paymentDefinition);
     await postgres.raw(`create or replace function public.rifare_require_native_execution_payment(p_session text,p_handle text,p_action text) returns text
-      language sql security definer set search_path=pg_catalog as $$
-      select original_command_uuid from public.rifare_operation
-        where execution_owner_fingerprint='sha256:' || encode(sha256(convert_to(session_user::text,'UTF8')),'hex') $$`);
+      language plpgsql security definer set search_path=pg_catalog as $$
+      declare original public.rifare_operation%rowtype; selected_cart text;
+      begin
+        if session_user::text !~ '^rifare_exec_[a-f0-9]{32}$' or p_action is distinct from 'authorize'
+          or p_session !~ '^payses_[A-Za-z0-9]{1,100}$' or p_handle !~ '^[a-f0-9]{64}$' then
+          raise exception 'Native execution payment unavailable' using errcode='42501';
+        end if;
+        select cart_id into selected_cart from public.rifare_operation
+          where execution_owner_fingerprint='sha256:' || encode(sha256(convert_to(session_user::text,'UTF8')),'hex');
+        if selected_cart is null then raise exception 'Native execution payment unavailable' using errcode='42501'; end if;
+        perform id from public.cart where id=selected_cart and deleted_at is null for share;
+        if not found then raise exception 'Native execution payment unavailable' using errcode='42501'; end if;
+        select * into original from public.rifare_operation
+          where execution_owner_fingerprint='sha256:' || encode(sha256(convert_to(session_user::text,'UTF8')),'hex') for share;
+        if not found or original.cart_id is distinct from selected_cart
+          or original.payment_session_id is distinct from p_session
+          or original.payment_provider_id is distinct from 'pp_rifare_fenced_system_fixture'
+          or original.execution_payment_handle_fingerprint is distinct from
+            'sha256:' || encode(sha256(convert_to(p_handle,'UTF8')),'hex') then
+          raise exception 'Native execution payment unavailable' using errcode='42501';
+        end if;
+        perform ps.id from public.payment_session ps join public.payment_collection pc on pc.id=ps.payment_collection_id
+          where ps.id=p_session and ps.payment_collection_id=original.payment_collection_id
+            and ps.provider_id='pp_rifare_fenced_system_fixture' and ps.status='pending'
+            and ps.currency_code=original.currency and pc.currency_code=original.currency and ps.deleted_at is null and pc.deleted_at is null
+            and ps.amount::numeric=original.payable_minor_units::numeric / power(10::numeric,original.currency_exponent)
+            and (ps.raw_amount->>'value')::numeric=original.payable_minor_units::numeric / power(10::numeric,original.currency_exponent)
+            and ps.raw_amount->>'precision'='20'
+            and pc.amount::numeric=original.payable_minor_units::numeric / power(10::numeric,original.currency_exponent)
+            and (pc.raw_amount->>'value')::numeric=original.payable_minor_units::numeric / power(10::numeric,original.currency_exponent)
+            and pc.raw_amount->>'precision'='20'
+            and ps.data->'rifare_native_execution'->>'profile'='urn:rifare:local-fenced-system-correlation:v1'
+            and ps.data->'rifare_native_execution'->>'session_id'=p_session
+            and ps.data->'rifare_native_execution'->>'handle'=p_handle
+            and not exists(select 1 from public.payment p where p.payment_session_id=p_session or p.payment_collection_id=original.payment_collection_id)
+          for share of ps,pc;
+        if not found then raise exception 'Native execution payment unavailable' using errcode='42501'; end if;
+        return original.original_command_uuid;
+      end $$`);
   }
   await postgres.raw(`create table public.rifare_c12_generation_audit(id bigserial primary key,native_table text not null,authenticated_role text not null);
     create function public.rifare_c12_generation_observe() returns trigger language plpgsql security definer set search_path=pg_catalog as $$ begin
@@ -385,7 +437,9 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
         beforeAudit = await postgres("rifare_c12_generation_audit").orderBy("id");
         if (provider) {
           const audited = (beforeAudit as any[]).map(row => row.native_table);
-          for (const table of ["cart", "payment_session", "payment"]) assert.ok(audited.includes(table), "Missing provider audit table " + table);
+          assert.deepEqual(audited, ["cart", "payment_collection", "payment_collection", "payment_collection", "payment_collection"]);
+          assert.equal((await postgres("payment_session").where({ id: original.session.id }).first("status")).status, "pending");
+          assert.equal((await postgres("payment").where({ payment_session_id: original.session.id })).length, 0);
         } else assert.equal((beforeAudit as any[]).length, correlation ? 2 : 1);
         beforeStale = await snapshot();
         if (revokeFirst) {
