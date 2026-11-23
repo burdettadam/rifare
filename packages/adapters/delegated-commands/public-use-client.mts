@@ -8,8 +8,10 @@ import { canonical } from '../../commerce/configuration-values.mts';
 import { exact } from '../../commerce/kernel.mts';
 import { commandCorrelation } from '../../commerce/delegated-command-claim-records.mts';
 import type { CommandCorrelation } from '../../commerce/delegated-command-claim-records.mts';
-import { encodeDelegatedCommand, createDelegatedRecovery, bindDelegatedResponse, MAX_COMMAND_BYTES } from './command-codec.mts';
+import { encodeDelegatedCommand, createDelegatedRecovery, bindDelegatedResponse, correlateDelegatedReceipt, MAX_COMMAND_BYTES } from './command-codec.mts';
 import type { BoundDelegatedResponse, EncodedDelegatedCommand } from './command-codec.mts';
+import { strictReceiptJson } from '../delegated-receipts/strict-json.mts';
+import { receiptTimestampNs } from '../../commerce/delegated-receipt-binding.mts';
 
 export type PublicUseConfiguration = Readonly<{
   origin: string; correlation: CommandCorrelation; ca_pem: string; certificate_pem: string;
@@ -40,6 +42,13 @@ export type UnverifiedRequestArtifact = Readonly<{
   request_signature_verified: false; qualification: 'candidate_contract_only';
 }>;
 type RetainedRequest = Readonly<{ original: string; uri: string; challengeId: string }>;
+type ExchangeProfile = Readonly<{ body?: Uint8Array; contentType?: string; responseLimit?: number; protectedResponse?: boolean }>;
+const uuid = /^(?!00000000-0000-0000-0000-000000000000$)[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+const isUuid = (value: unknown): value is string => typeof value === 'string' && uuid.test(value);
+export type ProofSubmissionArtifact = Readonly<{ submission_id: string; challenge_id: string; proof_digest: string;
+  received_at: string; recovered: boolean; presentation_verified: false; execution_authorized: false }>;
+export type UnverifiedReceiptArtifact = Readonly<{ original_response: BoundDelegatedResponse['response']; receipt_ref: string;
+  receipt_digest: string; compact_jws: string; semantics: 'EVIDENCE_ONLY'; receipt_signature_verified: false; execution_authorized: false }>;
 const CERTIFICATE = /-----BEGIN CERTIFICATE-----\r?\n(?:[A-Za-z0-9+/=]+\r?\n)+-----END CERTIFICATE-----\r?\n?/g;
 const PRIVATE_KEY = /^-----BEGIN (PRIVATE KEY|EC PRIVATE KEY|RSA PRIVATE KEY)-----\r?\n(?:[A-Za-z0-9+/=]+\r?\n)+-----END \1-----\r?\n?$/;
 function certificates(value: unknown, maximum: number): X509Certificate[] {
@@ -74,7 +83,8 @@ function workload(value: unknown): string {
     segments.some(segment => segment === '.' || segment === '..')) fail('PUBLIC_USE_CONFIG_INVALID');
   return value;
 }
-function responseHeaders(response: IncomingMessage, artifact: boolean): void {
+function responseHeaders(response: IncomingMessage, artifact: boolean, maximum = artifact ? MAX_REQUEST_BYTES : MAX_COMMAND_BYTES,
+  protectedResponse = artifact): void {
   if (response.statusCode !== 200) fail('PUBLIC_USE_HTTP_UNRESOLVED');
   const count = new Map<string, number>();
   for (let i = 0; i < response.rawHeaders.length; i += 2) {
@@ -86,9 +96,9 @@ function responseHeaders(response: IncomingMessage, artifact: boolean): void {
   if (typeof media !== 'string' || !(artifact ? media === 'application/oauth-authz-req+jwt' : /^application\/json(?:;\s*charset=utf-8)?$/i.test(media)) ||
     (artifact ? encoding !== undefined : (encoding !== undefined && encoding !== 'identity'))) fail('PUBLIC_USE_RESPONSE_INVALID');
   const length = response.headers['content-length'];
-  if (length !== undefined && (!/^(?:0|[1-9][0-9]*)$/.test(length) || Number(length) > (artifact ? MAX_REQUEST_BYTES : MAX_COMMAND_BYTES)))
+  if (length !== undefined && (!/^(?:0|[1-9][0-9]*)$/.test(length) || Number(length) > maximum))
     fail('PUBLIC_USE_RESPONSE_INVALID');
-  if (artifact && (count.get('cache-control') !== 1 || response.headers['cache-control'] !== 'no-store' ||
+  if (protectedResponse && (count.get('cache-control') !== 1 || response.headers['cache-control'] !== 'no-store' ||
     count.get('pragma') !== 1 || response.headers.pragma !== 'no-cache' ||
     count.get('x-content-type-options') !== 1 || response.headers['x-content-type-options'] !== 'nosniff'))
     fail('PUBLIC_USE_RESPONSE_INVALID');
@@ -97,7 +107,8 @@ function responseHeaders(response: IncomingMessage, artifact: boolean): void {
 
 /** Explicit public mTLS candidate only. Configured machine correlation is
  * bootstrap data, not observed provider actor/grant authority. The client has no
- * retry, durable state, proof construction, FINALIZE or receipt verification. */
+ * retry, durable state, proof construction or signature verification. Continuation
+ * requires native admission; transport evidence never grants business authority. */
 export class PublicDelegatedUseClient {
   readonly #correlation: CommandCorrelation;
   readonly #url: URL;
@@ -140,6 +151,8 @@ export class PublicDelegatedUseClient {
     try { return canonical(commandCorrelation(correlation)) === canonical(retained); }
     catch { return false; }
   }
+  /** Configuration correspondence only; this is not provider authentication. */
+  boundToOrigin(selected: unknown): boolean { return typeof selected === 'string' && selected === this.#url.origin; }
   close(): void {
     if (this.#closed) return; this.#closed = true;
     for (const cancel of [...this.#pending]) cancel();
@@ -165,10 +178,10 @@ export class PublicDelegatedUseClient {
       }
     } catch { fail('PUBLIC_USE_GUARD_DENIED'); }
   }
-  #original(input: unknown): EncodedDelegatedCommand {
+  #original(input: unknown, kind: 'START_USE' | 'FINALIZE_USE' = 'START_USE'): EncodedDelegatedCommand {
     try {
       const original = encodeDelegatedCommand(input);
-      if (original.request.command !== 'START_USE') fail('PUBLIC_USE_INPUT_INVALID');
+      if (original.request.command !== kind) fail('PUBLIC_USE_INPUT_INVALID');
       return original;
     } catch { fail('PUBLIC_USE_INPUT_INVALID'); }
   }
@@ -232,7 +245,7 @@ export class PublicDelegatedUseClient {
     }, admission, signal);
   }
   #send(original: EncodedDelegatedCommand, outbound: EncodedDelegatedCommand,
-    guard: () => void, admission?: () => Promise<void>, signal?: AbortSignal): Promise<BoundDelegatedResponse> {
+    guard: () => void, admission?: () => Promise<void>, signal?: AbortSignal, continuation = false): Promise<BoundDelegatedResponse> {
     return this.#exchange(this.#url, outbound, guard, (body, response) => {
       let bound: BoundDelegatedResponse;
       try {
@@ -250,18 +263,119 @@ export class PublicDelegatedUseClient {
           fail('PUBLIC_USE_RESPONSE_INVALID');
         this.#requests.set(bound, Object.freeze({ original: original.canonical_json, uri, challengeId }));
       } else if (links.length) fail('PUBLIC_USE_RESPONSE_INVALID');
+      if (continuation) this.#finalResponse(bound);
       return bound;
-    }, admission, signal);
+    }, admission, signal, continuation ? { protectedResponse: true } : undefined);
   }
+
+  #finalResponse(bound: BoundDelegatedResponse): void {
+    const result = bound.response.result;
+    if (result.kind !== 'FINAL_USE' || !result.receipt_ref.startsWith('urn:marty:delegated-receipt:') ||
+      !isUuid(result.receipt_ref.slice('urn:marty:delegated-receipt:'.length))) fail('PUBLIC_USE_RESPONSE_INVALID');
+  }
+
+  /** C7 verification and currentness belong to the concrete native owner, not a
+   * caller flag. This method constrains the bytes/destination and association. */
+  async submitProofAfterAdmission(original: unknown, challenge: BoundDelegatedResponse, queryId: string, input: Uint8Array,
+    admission: () => Promise<void>, guard: () => void, signal?: AbortSignal): Promise<ProofSubmissionArtifact> {
+    this.#available();
+    const encoded = this.#original(original), retained = this.#requests.get(challenge);
+    if (!retained || retained.original !== encoded.canonical_json || challenge.response.result.kind !== 'CHALLENGE' ||
+      typeof queryId !== 'string' || !/^[A-Za-z0-9_-]{1,128}$/.test(queryId) || typeof admission !== 'function' ||
+      !(input instanceof Uint8Array) || !input.byteLength || input.byteLength > 786432) fail('PUBLIC_USE_INPUT_INVALID');
+    const form = Buffer.from(input);
+    try {
+      let proof: string;
+      try {
+        if (form.some(value => value > 127)) fail('PUBLIC_USE_INPUT_INVALID');
+        const fields = new URLSearchParams(form.toString('ascii'));
+        if ([...fields.keys()].join(',') !== 'state,vp_token' || fields.get('state') !== retained.challengeId ||
+          fields.toString() !== form.toString('ascii')) fail('PUBLIC_USE_INPUT_INVALID');
+        // C9's selected encoder has one ASCII query key and one ASCII compact
+        // string. Exact closed spelling rejects duplicate/escaped/extra keys
+        // without enlarging the shared generic JSON snapshot ceiling.
+        const map = fields.get('vp_token')!, prefix = '{"' + queryId + '":["', suffix = '"]}';
+        if (!map.startsWith(prefix) || !map.endsWith(suffix)) fail('PUBLIC_USE_INPUT_INVALID');
+        proof = map.slice(prefix.length, -suffix.length);
+        if (proof.length > 262144 || !/^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/.test(proof)) fail('PUBLIC_USE_INPUT_INVALID');
+      } catch { fail('PUBLIC_USE_INPUT_INVALID'); }
+      const digest = 'sha256:' + createHash('sha256').update(proof!).digest('hex');
+      const interval = challenge.response.result;
+      return await this.#exchange(new URL(this.#url.origin + '/v1/flows/instances/' + retained.challengeId + '/submit'), undefined,
+        guard, body => {
+          try {
+            const result = strictReceiptJson(body, 4096) as Record<string, unknown>;
+            exact(result, ['submission_id', 'challenge_id', 'proof_digest', 'received_at', 'recovered']);
+            if (!isUuid(result.submission_id) || result.challenge_id !== retained.challengeId || result.proof_digest !== digest ||
+              typeof result.recovered !== 'boolean' || typeof result.received_at !== 'string') fail('PUBLIC_USE_RESPONSE_INVALID');
+            const received = receiptTimestampNs(result.received_at);
+            if (received < receiptTimestampNs(interval.created_at) || received >= receiptTimestampNs(interval.expires_at)) fail('PUBLIC_USE_RESPONSE_INVALID');
+            return Object.freeze({ submission_id: result.submission_id as string, challenge_id: retained.challengeId,
+              proof_digest: digest, received_at: result.received_at, recovered: result.recovered,
+              presentation_verified: false, execution_authorized: false });
+          } catch { fail('PUBLIC_USE_RESPONSE_INVALID'); }
+        }, admission, signal, { body: form, contentType: 'application/x-www-form-urlencoded', responseLimit: 4096, protectedResponse: true });
+    } finally { form.fill(0); }
+  }
+
+  async finalizeAfterAdmission(original: unknown, admission: () => Promise<void>, guard: () => void,
+    signal?: AbortSignal): Promise<BoundDelegatedResponse> {
+    this.#available(); const encoded = this.#original(original, 'FINALIZE_USE');
+    if (typeof admission !== 'function') fail('PUBLIC_USE_INPUT_INVALID');
+    return this.#send(encoded, encoded, guard, admission, signal, true);
+  }
+
+  #finalRecovery(original: unknown, recovery: unknown) {
+    const retained = this.#original(original, 'FINALIZE_USE');
+    let encoded: EncodedDelegatedCommand;
+    try {
+      encoded = encodeDelegatedCommand(recovery);
+      if (encoded.canonical_json !== createDelegatedRecovery(retained.request).canonical_json) fail('PUBLIC_USE_INPUT_INVALID');
+    } catch { fail('PUBLIC_USE_INPUT_INVALID'); }
+    return { retained, encoded: encoded! };
+  }
+
+  async recoverFinalAfterAdmission(original: unknown, recovery: unknown, admission: () => Promise<void>, guard: () => void,
+    signal?: AbortSignal): Promise<BoundDelegatedResponse> {
+    this.#available(); const { retained, encoded } = this.#finalRecovery(original, recovery);
+    if (typeof admission !== 'function') fail('PUBLIC_USE_INPUT_INVALID');
+    return this.#send(retained, encoded, guard, admission, signal, true);
+  }
+
+  async recoverReceiptAfterAdmission(original: unknown, recovery: unknown, admission: () => Promise<void>, guard: () => void,
+    signal?: AbortSignal): Promise<UnverifiedReceiptArtifact> {
+    this.#available(); const { retained, encoded } = this.#finalRecovery(original, recovery);
+    if (typeof admission !== 'function') fail('PUBLIC_USE_INPUT_INVALID');
+    const url = new URL(this.#url.origin + '/v1/organizations/' + this.#correlation.organization_id + '/delegated-use/receipts/recover');
+    return this.#exchange(url, encoded, guard, (body, response) => {
+      try {
+        const wire = strictReceiptJson(body, 131072) as Record<string, any>;
+        exact(wire, ['original_response', 'receipt_ref', 'receipt_digest', 'compact_jws', 'semantics']);
+        const bound = correlateDelegatedReceipt(retained.request, wire.original_response, wire.compact_jws, { recovery: encoded.request });
+        this.#finalResponse(bound);
+        const result = bound.response.result;
+        if (result.kind !== 'FINAL_USE' || wire.receipt_ref !== result.receipt_ref || wire.receipt_digest !== result.receipt_digest ||
+          wire.semantics !== 'EVIDENCE_ONLY' || response.rawHeaders.some((name, i) => i % 2 === 0 && name.toLowerCase() === 'link'))
+          fail('PUBLIC_USE_RESPONSE_INVALID');
+        const artifact = { original_response: bound.response, receipt_ref: wire.receipt_ref, receipt_digest: wire.receipt_digest,
+          semantics: 'EVIDENCE_ONLY', receipt_signature_verified: false, execution_authorized: false };
+        Object.defineProperty(artifact, 'compact_jws', { value: wire.compact_jws, enumerable: false });
+        return Object.freeze(artifact) as UnverifiedReceiptArtifact;
+      } catch { fail('PUBLIC_USE_RESPONSE_INVALID'); }
+    }, admission, signal, { responseLimit: 131072, protectedResponse: true });
+  }
+
   #exchange<T>(url: URL, outbound: EncodedDelegatedCommand | undefined, guard: () => void,
     parse: (body: Buffer, response: IncomingMessage) => T,
-    admission?: () => Promise<void>, signal?: AbortSignal): Promise<T> {
+    admission?: () => Promise<void>, signal?: AbortSignal, profile: ExchangeProfile = {}): Promise<T> {
     if (typeof guard !== 'function') fail('PUBLIC_USE_INPUT_INVALID');
     if (signalAborted(signal)) fail('PUBLIC_USE_UNAVAILABLE');
     this.#available();
     if (this.#pending.size >= MAX_PENDING) fail('PUBLIC_USE_CAPACITY');
     return new Promise((resolve, reject) => {
-      const bytes = Buffer.from(outbound?.canonical_json ?? ''), deadline = performance.now() + this.#timeout;
+      const artifact = outbound === undefined && profile.body === undefined;
+      const maximum = profile.responseLimit ?? (artifact ? MAX_REQUEST_BYTES : MAX_COMMAND_BYTES);
+      const bytes = Buffer.from(profile.body ?? outbound?.canonical_json ?? ''), deadline = performance.now() + this.#timeout;
       let active: ClientRequest | undefined, incoming: IncomingMessage | undefined, agent: Agent | undefined;
       let settled = false, listening = false, timer: ReturnType<typeof setTimeout>;
       const finish = (error?: PublicUseClientDenied, result?: T) => {
@@ -287,19 +401,19 @@ export class PublicDelegatedUseClient {
         // an explicitly empty proxy environment, never the process proxy config.
         agent = new Agent({ keepAlive: false, maxCachedSessions: 0, maxSockets: 1,
           maxTotalSockets: 1, proxyEnv: {} });
-        active = request(url, { method: outbound ? 'POST' : 'GET', agent, ...this.#credentials!, rejectUnauthorized: true,
+        active = request(url, { method: artifact ? 'GET' : 'POST', agent, ...this.#credentials!, rejectUnauthorized: true,
           minVersion: 'TLSv1.2', maxHeaderSize: MAX_HEADERS,
-          headers: outbound ? { 'content-type': 'application/json', accept: 'application/json',
+          headers: !artifact ? { 'content-type': profile.contentType ?? 'application/json', accept: 'application/json',
             'content-length': String(bytes.length), connection: 'close' }
             : { accept: 'application/oauth-authz-req+jwt', connection: 'close' } }, response => {
           incoming = response;
           if (settled) { response.destroy(); return; }
-          try { responseHeaders(response, !outbound); } catch (error) { failure(error); return; }
+          try { responseHeaders(response, artifact, maximum, profile.protectedResponse ?? artifact); } catch (error) { failure(error); return; }
           const chunks: Buffer[] = []; let received = 0;
           response.on('data', chunk => {
             if (settled) return;
             received += chunk.length;
-            if (received > (outbound ? MAX_COMMAND_BYTES : MAX_REQUEST_BYTES)) finish(new PublicUseClientDenied('PUBLIC_USE_RESPONSE_INVALID'));
+            if (received > maximum) finish(new PublicUseClientDenied('PUBLIC_USE_RESPONSE_INVALID'));
             else chunks.push(chunk);
           });
           response.once('error', () => finish(new PublicUseClientDenied('PUBLIC_USE_TRANSPORT_FAILED')));

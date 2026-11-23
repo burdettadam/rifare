@@ -1,3 +1,4 @@
+import { withoutContinuationCatalog, continuationCases } from './continuation-catalog-baseline.mts';
 import test from 'node:test';
 import { removeExactPublicCoverage, removeExactPublicAdapter } from './public-catalog-baseline.mts';
 import assert from 'node:assert/strict';
@@ -11,7 +12,10 @@ const cases = 'tests/development/delegated-command-codec.test.mts';
 const adapter = (catalog: any) => catalog.adapters.find((value: any) => value.id === 'delegated_use_commands');
 
 test('RCG4BC2-CATALOG-REGISTRATION unchanged C1 codec has four bounded operations and all twenty real cases', () => {
-  const catalog = readAdapterCatalog(), checked = validateAdapterCatalog(catalog), value = adapter(catalog);
+  const catalog = readAdapterCatalog(), value = adapter(catalog);
+  withoutContinuationCatalog(catalog); const full = validateAdapterCatalog(catalog);
+  const checked = { ...full, adapter_count: full.adapter_count - 1, operation_count: full.operation_count - 4,
+    native_case_count: full.native_case_count - continuationCases };
   assert.equal(checked.adapter_count, 49); assert.equal(checked.operation_count, 230);
   assert.equal(checked.native_case_count, 359); assert.equal(checked.direct_fixture_count, 47);
   assert.equal(value.kind, 'diagnostic');

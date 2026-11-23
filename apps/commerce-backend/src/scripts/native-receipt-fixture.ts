@@ -12,7 +12,7 @@ export const bytes = (value: unknown) => Buffer.from(stringify(value)!);
 
 /** Test-only native Medusa setup and independently generated request/receipt
  * signatures. No product constructor selects these keys or claims. */
-export async function nativeReceiptFixture(container: any) {
+export async function nativeReceiptFixture(container: any, requestOrigin = "https://authority.example.invalid", preservePrivacyKey = false) {
   const journal = container.resolve(operationJournalModule) as OperationJournalService;
   const postgres = container.resolve(ContainerRegistrationKeys.PG_CONNECTION);
   const clock = async (): Promise<number> => (await postgres.raw("select clock_timestamp() as now")).rows[0].now.getTime();
@@ -34,14 +34,14 @@ export async function nativeReceiptFixture(container: any) {
   const operatorIdentity = await auth.createAuthIdentities({ app_metadata: { user_id: operator.id } });
   const privacyActor = { actor_type: "user" as const, actor_id: operator.id, auth_identity_id: operatorIdentity.id };
   process.env.RIFARE_MERCHANT_NAMESPACE = merchant.merchant_namespace; process.env.RIFARE_NATIVE_STORE_ID = store.id;
-  if (process.env.RIFARE_C8_RESTORE_PHASE === "seed") assert.match(process.env.RIFARE_JOURNAL_PRIVACY_KEY ?? "", /^[A-Za-z0-9_-]{43}$/);
+  if (preservePrivacyKey || process.env.RIFARE_C8_RESTORE_PHASE === "seed") assert.match(process.env.RIFARE_JOURNAL_PRIVACY_KEY ?? "", /^[A-Za-z0-9_-]{43}$/);
   else process.env.RIFARE_JOURNAL_PRIVACY_KEY = randomBytes(32).toString("base64url");
   process.env.RIFARE_JOURNAL_PRIVACY_OPERATOR_ID = operator.id;
   const context = { actor: { actor_type: "customer" as const, actor_id: customer.id, auth_identity_id: identity.id }, salesChannelIds: [channels[0].id] };
   const requestKey = generateKeyPairSync("ec", { namedCurve: "prime256v1" }), receiptKey = generateKeyPairSync("ec", { namedCurve: "prime256v1" });
   const correlation = { actor: { type: "MACHINE_IDENTITY", id: "urn:rifare:synthetic:machine" }, organization_id: randomUUID(), provider_ref: "synthetic-provider" };
   const requestTrust = { profile: "urn:rifare:managed-authorization-request-trust:v1", ...correlation,
-    origin: "https://authority.example.invalid", verifier_did: "did:web:verifier.example.invalid", client_id: "decentralized_identifier:did:web:verifier.example.invalid",
+    origin: requestOrigin, verifier_did: "did:web:verifier.example.invalid", client_id: "decentralized_identifier:did:web:verifier.example.invalid",
     key_id: "did:web:verifier.example.invalid#request", key_purpose: "oid4vp_request_signing", algorithm: "ES256", public_jwk: requestKey.publicKey.export({ format: "jwk" }),
     max_lifetime_seconds: 300, dcql_query: { credentials: [{ id: "machine", format: "jwt_vc_json", require_cryptographic_holder_binding: true,
       meta: { marty_securing_profile: "marty_nested_vc2_jwt_v1", type_values: [["MachineCredential"]] } }] }, client_metadata: { vp_formats_supported: {
@@ -88,7 +88,7 @@ export async function nativeReceiptFixture(container: any) {
           status: { issuer, grant: descriptor.grant, state: "ACTIVE", checked_at: issued, valid_until: new Date(until).toISOString(), evidence_ref: "urn:synthetic:status" },
           evaluated_at: issued }, ...overrides }, receiptKey.privateKey);
     };
-    return { command, cart, artifact, nonce, challenge, receipt, row: () => postgres("rifare_operation").where({ original_command_uuid: command.command_id }).first() };
+    return { command, descriptor, cart, artifact, nonce, challenge, receipt, row: () => postgres("rifare_operation").where({ original_command_uuid: command.command_id }).first() };
   };
-  return { journal, postgres, clock, merchant, customer, context, privacyActor, identity, auth, trust, verifier, requestVerifier, makeOriginal };
+  return { journal, postgres, clock, merchant, customer, context, privacyActor, identity, auth, trust, requestTrust, verifier, requestVerifier, makeOriginal };
 }

@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
+import { withoutContinuationCatalog, withoutContinuationCoverage } from './continuation-catalog-baseline.mts';
 const id = 'delegated_use_public_client';
 const source = 'packages/adapters/delegated-commands/public-use-client.mts';
 const tests = 'tests/development/public-delegated-use.test.mts';
@@ -14,6 +15,7 @@ assert.equal(refs.length, 23);
 const sorted = (values: any[]) => [...values].sort((a, b) => a.id.localeCompare(b.id, 'en'));
 const contracts = Object.fromEntries(operations.map(op => [op, { required_scopes: [], scope_kind: 'server_local_fixture_only' }]));
 export function removeExactPublicAdapter(catalog: any) {
+  catalog = withoutContinuationCatalog(catalog);
   const entries = catalog.adapters.filter((value: any) => value.id === id);
   assert.equal(entries.length, 1);
   const value = entries[0];
@@ -31,6 +33,7 @@ export function removeExactPublicAdapter(catalog: any) {
   return { ...catalog, adapters: catalog.adapters.filter((value: any) => value.id !== id) };
 }
 export function removeExactPublicCoverage(expected: any) {
+  expected = withoutContinuationCoverage(expected);
   assert.deepEqual(expected.adapter_operations[id], Object.fromEntries(operations.map(op => [op, { semantics: 'native', qualification: 'sandbox-only' }])));
   assert.deepEqual(expected.adapter_contracts[id], { version, api_version, operations: contracts });
   assert.equal(expected.declarations.filter((path: string) => path === source).length, 1);

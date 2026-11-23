@@ -1,3 +1,4 @@
+import { withoutContinuationCatalog, continuationCases } from './continuation-catalog-baseline.mts';
 import test from 'node:test';
 import { removeExactPublicCoverage, removeExactPublicAdapter } from './public-catalog-baseline.mts';
 import assert from 'node:assert/strict';
@@ -13,7 +14,10 @@ const select = (catalog: any) => catalog.adapters.find((value: any) => value.id 
 const fileHash = (path: string) => createHash('sha256').update(readFileSync(new URL('../../' + path, import.meta.url))).digest('hex');
 
 test('RCG4BC5-CATALOG-REGISTRATION internal START and recovery have actual bounded wire cases and no external qualification', () => {
-  const catalog = readAdapterCatalog(), result = validateAdapterCatalog(catalog), value = select(catalog);
+  const catalog = readAdapterCatalog(), value = select(catalog);
+  withoutContinuationCatalog(catalog); const full = validateAdapterCatalog(catalog);
+  const result = { ...full, adapter_count: full.adapter_count - 1, operation_count: full.operation_count - 4,
+    native_case_count: full.native_case_count - continuationCases };
   assert.equal(result.adapter_count, 49); assert.equal(result.operation_count, 230);
   assert.equal(result.native_case_count, 359); assert.equal(result.direct_fixture_count, 47);
   assert.deepEqual(value.source_files.map((pin: any) => pin.path), [source]);

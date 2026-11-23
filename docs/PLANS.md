@@ -235,8 +235,21 @@ and atomically retains one immutable PostgreSQL observation. Recovery, replay
 refusal and privacy remain original-bound. The isolated compiled runtime, populated
 prior-schema migration/replay and whole-database restore reconciliation passed
 locally; [the record](../work/records/RCG-4B-C8.md) preserves exact evidence.
-The observation remains inert. Proof submission, FINALIZE, provider enrollment,
-live grant status and final commerce execution controls remain separate open work.
+The observation remains inert. C9 composes proof/finalization with this receipt owner.
+
+**RCG-4B-C9 is implemented and independently reviewed locally** under
+[ADR-0087](decisions/0087-native-proof-and-finalization.md). The internal
+[native continuation](NATIVE-DELEGATED-CONTINUATION.md) retains selected proof
+context/digest without a VP, admits first dispatch after TLS, preserves original
+submission evidence and uses a distinct durable FINALIZE UUID. Explicit recovery
+requires original identities/bytes; prepared-only lost-ticket intent stays pending.
+All continuation operations retain the authenticated submission origin. DENY,
+receipt/result correlation and privacy refusal identities remain immutable/inert.
+The own-dependency compiled consumer, actual mTLS session, populated C8-component
+schema upgrade/replay and whole-database erasure/uninstall restore passed locally;
+[the C9 record](../work/records/RCG-4B-C9.md) preserves source and review limits.
+Connected provider enrollment/managed-machine presentation custody, live grant
+status and final commerce execution controls remain separate open work.
 
 The full isolated **RCG-5 cross-service journey** and connected **RCG-6 profile**
 follow those bounded integrations. Preserve original recovery and Rifare's

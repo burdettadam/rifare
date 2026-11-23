@@ -38,6 +38,22 @@ const Operation = model.define("rifare_operation", {
   request_nonce: model.text().nullable(),
   request_observed_at: model.dateTime().nullable(),
   request_expires_at: model.dateTime().nullable(),
+  proof_context_bytes: model.text().nullable(),
+  proof_context_digest: model.text().nullable(),
+  proof_digest: model.text().nullable(),
+  proof_owner_digest: model.text().nullable(),
+  proof_claimed_at: model.dateTime().nullable(),
+  proof_submission_bytes: model.text().nullable(),
+  proof_submission_digest: model.text().nullable(),
+  proof_submission_observed_at: model.dateTime().nullable(),
+  final_command_uuid: model.text().nullable(),
+  final_command_bytes: model.text().nullable(),
+  final_command_digest: model.text().nullable(),
+  final_owner_digest: model.text().nullable(),
+  final_claimed_at: model.dateTime().nullable(),
+  final_response_bytes: model.text().nullable(),
+  final_response_digest: model.text().nullable(),
+  final_response_observed_at: model.dateTime().nullable(),
   receipt_fingerprint: model.text().nullable(),
   receipt_bytes: model.text().nullable(),
   receipt_digest: model.text().nullable(),
@@ -50,6 +66,7 @@ const Operation = model.define("rifare_operation", {
   // An original cannot be reminted by changing its merchant, store or customer.
   { name: "rifare_operation_original_unique", on: ["original_command_uuid"], unique: true, where: null },
   { name: "rifare_operation_challenge_unique", on: ["challenge_fingerprint"], unique: true, where: null },
+  { name: "rifare_operation_final_uuid_unique", on: ["final_command_uuid"], unique: true, where: null },
   { name: "rifare_operation_receipt_unique", on: ["receipt_fingerprint"], unique: true, where: null },
 ]).checks([
   { name: "rifare_operation_original_uuid", expression: "original_command_uuid ~ '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'" },
@@ -69,6 +86,26 @@ const Operation = model.define("rifare_operation", {
     and (request_bytes is null or start_response_bytes is not null)` },
   { name: "rifare_operation_request_digest", expression: "request_digest ~ '^sha256:[0-9a-f]{64}$' and request_context_digest ~ '^sha256:[0-9a-f]{64}$'" },
   { name: "rifare_operation_request_bounds", expression: "octet_length(request_bytes) between 1 and 65536 and length(request_nonce) between 1 and 1024 and request_expires_at > request_observed_at" },
+  { name: "rifare_operation_proof_context_tuple", expression: `(proof_context_bytes is null) = (proof_context_digest is null)
+    and (proof_context_bytes is null) = (proof_digest is null) and (proof_context_bytes is null) = (proof_owner_digest is null)
+    and (proof_context_bytes is null or request_bytes is not null)
+    and (proof_claimed_at is null or proof_context_bytes is not null)` },
+  { name: "rifare_operation_proof_digests", expression: "proof_context_digest ~ '^sha256:[0-9a-f]{64}$' and proof_digest ~ '^sha256:[0-9a-f]{64}$' and proof_owner_digest ~ '^sha256:[0-9a-f]{64}$' and proof_submission_digest ~ '^sha256:[0-9a-f]{64}$'" },
+  { name: "rifare_operation_proof_submission_tuple", expression: `(proof_submission_bytes is null) = (proof_submission_digest is null)
+    and (proof_submission_bytes is null) = (proof_submission_observed_at is null)
+    and (proof_submission_bytes is null or (proof_context_bytes is not null and proof_claimed_at is not null))` },
+  { name: "rifare_operation_proof_bounds", expression: "octet_length(proof_context_bytes) between 1 and 4096 and octet_length(proof_submission_bytes) between 1 and 4096" },
+  { name: "rifare_operation_final_tuple", expression: `(final_command_bytes is null) = (final_command_digest is null)
+    and (final_command_bytes is null) = (final_owner_digest is null)
+    and (final_command_bytes is null or (final_command_uuid is not null and proof_submission_bytes is not null))
+    and (final_command_uuid is null or final_command_bytes is not null or state = 'retired')
+    and (final_claimed_at is null or final_command_bytes is not null)` },
+  { name: "rifare_operation_final_uuid", expression: "final_command_uuid ~ '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$' and final_command_uuid <> '00000000-0000-0000-0000-000000000000' and final_command_uuid <> original_command_uuid" },
+  { name: "rifare_operation_final_digests", expression: "final_command_digest ~ '^sha256:[0-9a-f]{64}$' and final_owner_digest ~ '^sha256:[0-9a-f]{64}$' and final_response_digest ~ '^sha256:[0-9a-f]{64}$'" },
+  { name: "rifare_operation_final_response_tuple", expression: `(final_response_bytes is null) = (final_response_digest is null)
+    and (final_response_bytes is null) = (final_response_observed_at is null)
+    and (final_response_bytes is null or final_command_bytes is not null)` },
+  { name: "rifare_operation_final_bounds", expression: "octet_length(final_command_bytes) between 1 and 65536 and octet_length(final_response_bytes) between 1 and 65536" },
   { name: "rifare_operation_receipt_tuple", expression: `(receipt_bytes is null) = (receipt_digest is null)
     and (receipt_bytes is null) = (receipt_context_digest is null) and (receipt_bytes is null) = (receipt_id is null)
     and (receipt_bytes is null) = (receipt_observed_at is null) and (receipt_bytes is null) = (receipt_expires_at is null)

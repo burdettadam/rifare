@@ -10,8 +10,11 @@ import { nativeAuthorityStart } from "./authority-start";
 import { authorityAdapters, openNativeAuthoritySession } from "./authority-sender";
 import { createPinnedRequestVerifier, PinnedRequestVerifier } from "./request-verifier";
 import { openVerifiedAuthoritySession } from "./request-session";
+import { openNativeContinuationSession } from "./continuation-session";
 import { createNativeReceiptVerifier, NativeReceiptVerifier } from "./receipt-verifier";
 import { retainedNativeReceiptContext } from "./receipt-context";
+import { retainedNativeProofContext } from "./proof-context";
+import { prepareProofAssociation, PreparedProofAssociation } from "./proof-association";
 import { configure } from "safe-stable-stringify";
 import {
   eraseJournalSubject, exportJournalSubject, journalSubjectIsSuppressed, minimizedOperationFields,
@@ -32,7 +35,11 @@ const historyColumns = [...statusColumns, "cart_id", "actor_digest", "command_di
   "start_correlation", "store_id", "start_response_bytes", "start_response_digest", "start_response_observed_at",
   "challenge_fingerprint", "request_bytes", "request_digest", "request_context_digest", "request_nonce",
   "request_observed_at", "request_expires_at", "receipt_fingerprint", "receipt_bytes", "receipt_digest",
-  "receipt_context_digest", "receipt_id", "receipt_observed_at", "receipt_expires_at"];
+  "receipt_context_digest", "receipt_id", "receipt_observed_at", "receipt_expires_at",
+  "proof_context_bytes", "proof_context_digest", "proof_digest", "proof_owner_digest", "proof_claimed_at",
+  "proof_submission_bytes", "proof_submission_digest", "proof_submission_observed_at",
+  "final_command_uuid", "final_command_bytes", "final_command_digest", "final_owner_digest", "final_claimed_at",
+  "final_response_bytes", "final_response_digest", "final_response_observed_at"];
 type JournalConfiguration = ReturnType<typeof journalConfiguration>;
 type Merchant = NonNullable<ReturnType<typeof cartContextConfig>>;
 type JournalRow = {
@@ -46,6 +53,12 @@ type JournalRow = {
   start_response_observed_at: Date | null; challenge_fingerprint: string | null;
   request_bytes: string | null; request_digest: string | null; request_context_digest: string | null;
   request_nonce: string | null; request_observed_at: Date | null; request_expires_at: Date | null;
+  final_command_uuid: string | null; final_command_bytes: string | null; final_command_digest: string | null;
+  final_owner_digest: string | null; final_claimed_at: Date | null; final_response_bytes: string | null;
+  final_response_digest: string | null; final_response_observed_at: Date | null;
+  proof_context_bytes: string | null; proof_context_digest: string | null; proof_digest: string | null;
+  proof_owner_digest: string | null; proof_claimed_at: Date | null; proof_submission_bytes: string | null;
+  proof_submission_digest: string | null; proof_submission_observed_at: Date | null;
   receipt_fingerprint: string | null; receipt_bytes: string | null; receipt_digest: string | null;
   receipt_context_digest: string | null; receipt_id: string | null; receipt_observed_at: Date | null; receipt_expires_at: Date | null;
 };
@@ -83,6 +96,11 @@ export default class OperationJournalService {
     return openVerifiedAuthoritySession(this, input, descriptor, context, transport, verifier);
   }
 
+  async openContinuationSession(input: Uint8Array, descriptor: Uint8Array, context: AdmissionContext,
+    transport: unknown, requestVerifier: unknown, receiptVerifier: unknown) {
+    return openNativeContinuationSession(this, input, descriptor, context, transport, requestVerifier, receiptVerifier);
+  }
+
   /** Internal server construction, never customer-selected trust or keys. */
   async createAuthorityReceiptVerifier(configuration: Uint8Array) { return createNativeReceiptVerifier(configuration); }
 
@@ -103,6 +121,18 @@ export default class OperationJournalService {
           row.receipt_observed_at && before.getTime() < row.receipt_observed_at.getTime()) throw conflict();
       const handle = await verifyReceipt.call(verifier, detached, retained.bytes, before.getTime(), signal);
       const verified = describeReceipt.call(verifier, handle);
+      if (row.final_command_uuid) {
+        if (!row.final_response_bytes) throw conflict();
+        const bound = await this.bindFinalResponse(row, Buffer.from(row.final_response_bytes));
+        const result = bound.response.result;
+        const { request_json, request_time } = await authorityAdapters();
+        const claims = request_json.strictReceiptJson(Buffer.from(verified.compact_jws.split(".")[1], "base64url"), 100000);
+        if (result.kind !== "FINAL_USE" || result.decision !== "PERMIT" || claims.decision !== result.decision ||
+            result.receipt_ref !== "urn:marty:delegated-receipt:" + verified.receipt_id || result.receipt_digest !== verified.digest ||
+            request_time.receiptTimestampNs(claims.issued_at) > request_time.receiptTimestampNs(result.recorded_at) ||
+            request_time.receiptTimestampNs(result.recorded_at) > BigInt(before.getTime()) * 1000000n ||
+            request_time.receiptTimestampNs(claims.expires_at) !== request_time.receiptTimestampNs(result.authorization_expires_at)) throw conflict();
+      }
       active();
       requireCommandCartMatch(retained.original, await readLockedCartFacts(tx, row.cart_id, configuration.merchant, configuration.verifiedContext));
       const observed = await requestClock(tx);
@@ -219,6 +249,291 @@ export default class OperationJournalService {
       if (!row.request_bytes) throw conflict(); return Buffer.from(row.request_bytes);
     });
     return this.verifyAuthorityRequest(commandId, bytes, context, verifier);
+  }
+
+  async authorityProofOrigin(commandId: string, context: AdmissionContext) {
+    return this.withCurrentOriginal(commandId, context, async (_tx, row) => {
+      if (row.state !== "awaiting_authority") throw conflict();
+      const selected = await retainedNativeProofContext(row);
+      return JSON.parse(selected.bytes.toString()).origin as string;
+    });
+  }
+
+  /** Capture a selected digest/context before proof I/O. The compact proof never
+   * enters PostgreSQL. Existing intent is explicit historical recovery only. */
+  async prepareAuthorityProof(commandId: string, input: Uint8Array, context: AdmissionContext,
+    verifier?: unknown, signal?: AbortSignal) {
+    if (!(input instanceof Uint8Array) || !input.byteLength || input.byteLength > 262144) throw conflict();
+    const proof = Buffer.from(input), ticket = randomBytes(32).toString("base64url");
+    const ownerDigest = "sha256:" + createHash("sha256").update(ticket).digest("hex");
+    let prepared: PreparedProofAssociation | undefined;
+    const active = () => { if (signal && signalAborted.call(signal)) throw conflict(); };
+    try {
+      active();
+      const existing = await this.withCurrentOriginal(commandId, context, async (_tx, row) => !!row.proof_context_bytes);
+      const verification = existing ? null : await this.recoverVerifiedAuthorityRequest(commandId, context, verifier);
+      active();
+      const result = await this.withCurrentOriginal(commandId, context, async (tx, row, configuration) => {
+        if (row.state !== "awaiting_authority") throw conflict();
+        const selected = await retainedNativeProofContext(row);
+        requireCommandCartMatch(selected.original,
+          await readLockedCartFacts(tx, row.cart_id, configuration.merchant, configuration.verifiedContext));
+        prepared = await prepareProofAssociation(selected.bytes, proof);
+        const summary = prepared.describe();
+        active();
+        if (row.proof_context_bytes) {
+          if (row.proof_context_bytes !== selected.bytes.toString() || row.proof_context_digest !== summary.context_digest ||
+              row.proof_digest !== summary.proof_digest || !row.proof_owner_digest || !row.proof_claimed_at) throw conflict();
+          return { prepared, send_ticket: null, recovery_only: true };
+        }
+        if (!verification || !(verifier instanceof PinnedRequestVerifier)) throw conflict();
+        this.requireCurrentProofRequest(row, verifier, verification, (await requestClock(tx)).getTime());
+        active();
+        const [saved] = await tx(operations).where(revisionFence(row)).whereNull("proof_context_bytes").update({
+          proof_context_bytes: selected.bytes.toString(), proof_context_digest: summary.context_digest,
+          proof_digest: summary.proof_digest, proof_owner_digest: ownerDigest,
+          revision: row.revision + 1, updated_at: tx.fn.now(),
+        }).returning("id");
+        if (!saved) throw conflict();
+        this.requireCurrentProofRequest(row, verifier, verification, (await requestClock(tx)).getTime());
+        active(); return { prepared, send_ticket: ticket, recovery_only: false };
+      });
+      if (verification && verifier instanceof PinnedRequestVerifier && !result.recovery_only) {
+        await this.withCurrentOriginal(commandId, context, async (tx, row, configuration) => {
+          const selected = await retainedNativeProofContext(row);
+          requireCommandCartMatch(selected.original,
+            await readLockedCartFacts(tx, row.cart_id, configuration.merchant, configuration.verifiedContext));
+          this.requireCurrentProofRequest(row, verifier, verification, (await requestClock(tx)).getTime());
+        });
+      }
+      active(); return Object.freeze(result);
+    } catch (error) { prepared?.close(); throw error; }
+    finally { proof.fill(0); }
+  }
+
+  private requireCurrentProofRequest(row: JournalRow, verifier: PinnedRequestVerifier,
+    verification: Awaited<ReturnType<OperationJournalService["recoverVerifiedAuthorityRequest"]>>, now: number) {
+    const current = describeRequest.call(verifier, verification.verification);
+    if (current.digest !== row.request_digest || current.verification_context_digest !== row.request_context_digest ||
+        current.nonce !== row.request_nonce || !row.request_observed_at || !row.request_expires_at ||
+        now < current.observed_at || now < row.request_observed_at.getTime() || now >= row.request_expires_at.getTime()) throw conflict();
+  }
+
+  /** Actual first proof admission occurs only after authenticated TLS. */
+  async claimAuthorityProofDispatch(commandId: string, ticket: string, proofDigest: string,
+    context: AdmissionContext, verifier: unknown, signal?: AbortSignal) {
+    if (typeof ticket !== "string" || !/^[A-Za-z0-9_-]{43}$/.test(ticket) ||
+        typeof proofDigest !== "string" || !/^sha256:[0-9a-f]{64}$/.test(proofDigest) ||
+        !(verifier instanceof PinnedRequestVerifier)) throw conflict();
+    const active = () => { if (signal && signalAborted.call(signal)) throw conflict(); };
+    active();
+    const verification = await this.recoverVerifiedAuthorityRequest(commandId, context, verifier);
+    const ownerDigest = "sha256:" + createHash("sha256").update(ticket).digest("hex");
+    await this.withCurrentOriginal(commandId, context, async (tx, row, configuration) => {
+      if (row.state !== "awaiting_authority" || !row.proof_context_bytes || row.proof_digest !== proofDigest ||
+          row.proof_owner_digest !== ownerDigest || row.proof_claimed_at || row.proof_submission_bytes) throw conflict();
+      const selected = await retainedNativeProofContext(row);
+      if (selected.bytes.toString() !== row.proof_context_bytes || factsDigest(JSON.parse(row.proof_context_bytes)) !== row.proof_context_digest) throw conflict();
+      requireCommandCartMatch(selected.original,
+        await readLockedCartFacts(tx, row.cart_id, configuration.merchant, configuration.verifiedContext));
+      this.requireCurrentProofRequest(row, verifier, verification, (await requestClock(tx)).getTime()); active();
+      const [saved] = await tx(operations).where(revisionFence(row)).whereNull("proof_claimed_at").update({
+        proof_claimed_at: tx.fn.now(), revision: row.revision + 1, updated_at: tx.fn.now(),
+      }).returning("id");
+      if (!saved) throw conflict();
+      this.requireCurrentProofRequest(row, verifier, verification, (await requestClock(tx)).getTime()); active();
+    }, true);
+    await this.withCurrentOriginal(commandId, context, async (tx, row, configuration) => {
+      if (row.proof_owner_digest !== ownerDigest || row.proof_digest !== proofDigest || !row.proof_claimed_at) throw conflict();
+      requireCommandCartMatch(parseOriginalCommand(Buffer.from(row.command_bytes)),
+        await readLockedCartFacts(tx, row.cart_id, configuration.merchant, configuration.verifiedContext));
+      this.requireCurrentProofRequest(row, verifier, verification, (await requestClock(tx)).getTime());
+    });
+    describeRequest.call(verifier, verification.verification); active();
+  }
+
+  /** Recovery checks current native ownership/privacy/cart while retaining the
+   * historical request context. It never invents a currently valid C7 handle. */
+  async checkAuthorityProofRecovery(commandId: string, proofDigest: string, context: AdmissionContext) {
+    return this.withCurrentOriginal(commandId, context, async (tx, row, configuration) => {
+      if (row.state !== "awaiting_authority" || !row.proof_context_bytes || !row.proof_claimed_at || row.proof_digest !== proofDigest) throw conflict();
+      const selected = await retainedNativeProofContext(row);
+      if (selected.bytes.toString() !== row.proof_context_bytes || factsDigest(JSON.parse(row.proof_context_bytes)) !== row.proof_context_digest) throw conflict();
+      requireCommandCartMatch(selected.original,
+        await readLockedCartFacts(tx, row.cart_id, configuration.merchant, configuration.verifiedContext));
+      return { context_bytes: row.proof_context_bytes, context_digest: row.proof_context_digest,
+        proof_digest: row.proof_digest, first_submission: row.proof_submission_bytes,
+        first_submission_digest: row.proof_submission_digest };
+    });
+  }
+
+  /** Preserve the first semantic acknowledgement, excluding the per-transport
+   * recovered observation. No presentation signature or permission is inferred. */
+  async observeAuthorityProof(commandId: string, input: Uint8Array, proofDigest: string,
+    context: AdmissionContext, signal?: AbortSignal) {
+    if (!(input instanceof Uint8Array) || !input.byteLength || input.byteLength > 4096) throw conflict();
+    const bytes = Buffer.from(input), { request_json, request_time } = await authorityAdapters();
+    const active = () => { if (signal && signalAborted.call(signal)) throw conflict(); };
+    return this.withCurrentOriginal(commandId, context, async (tx, row, configuration) => {
+      active();
+      if (row.state !== "awaiting_authority" || !row.proof_context_bytes || !row.proof_claimed_at || row.proof_digest !== proofDigest) throw conflict();
+      const selected = await retainedNativeProofContext(row);
+      if (selected.bytes.toString() !== row.proof_context_bytes || factsDigest(JSON.parse(row.proof_context_bytes)) !== row.proof_context_digest) throw conflict();
+      requireCommandCartMatch(selected.original,
+        await readLockedCartFacts(tx, row.cart_id, configuration.merchant, configuration.verifiedContext));
+      const ack = request_json.strictReceiptJson(bytes, 4096);
+      if (!ack || typeof ack !== "object" || Array.isArray(ack) || Object.keys(ack).length !== 5 ||
+          !["submission_id", "challenge_id", "proof_digest", "received_at", "recovered"].every(key => Object.hasOwn(ack, key)) ||
+          typeof ack.submission_id !== "string" || !originalId.test(ack.submission_id) ||
+          ack.challenge_id !== selected.bound.response.result.challenge_id || ack.proof_digest !== row.proof_digest ||
+          typeof ack.recovered !== "boolean" || typeof ack.received_at !== "string") throw conflict();
+      const challenge = selected.bound.response.result;
+      const received = request_time.receiptTimestampNs(ack.received_at);
+      if (received < request_time.receiptTimestampNs(challenge.created_at) ||
+          received >= request_time.receiptTimestampNs(challenge.expires_at)) throw conflict();
+      const semantic = stringify({ submission_id: ack.submission_id, challenge_id: ack.challenge_id,
+        proof_digest: ack.proof_digest, received_at: ack.received_at })!;
+      const digest = "sha256:" + createHash("sha256").update(semantic).digest("hex");
+      if (row.proof_submission_bytes) {
+        if (row.proof_submission_bytes !== semantic || row.proof_submission_digest !== digest) throw conflict();
+        return { submission_id: ack.submission_id, semantic_digest: digest, first_observed_at: row.proof_submission_observed_at };
+      }
+      const [saved] = await tx(operations).where(revisionFence(row)).whereNull("proof_submission_bytes").update({
+        proof_submission_bytes: semantic, proof_submission_digest: digest, proof_submission_observed_at: tx.fn.now(),
+        revision: row.revision + 1, updated_at: tx.fn.now(),
+      }).returning("proof_submission_observed_at");
+      if (!saved) throw conflict(); active();
+      return { submission_id: ack.submission_id, semantic_digest: digest, first_observed_at: saved.proof_submission_observed_at };
+    });
+  }
+
+  /** A separate server-selected UUID is retained before FINALIZE I/O. A lost
+   * ticket or acknowledgement always returns original recovery, never new intent. */
+  async prepareAuthorityFinalization(commandId: string, context: AdmissionContext) {
+    const ticket = randomBytes(32).toString("base64url");
+    return this.withCurrentOriginal(commandId, context, async (tx, row, configuration) => {
+      if (row.state !== "awaiting_authority") throw conflict();
+      const { selected, ack } = await this.retainedProofSubmission(row);
+      requireCommandCartMatch(selected.original,
+        await readLockedCartFacts(tx, row.cart_id, configuration.merchant, configuration.verifiedContext));
+      const { codec } = await authorityAdapters();
+      if (row.final_command_bytes) {
+        const encoded = await this.retainedFinalization(row);
+        return { command_bytes: encoded.canonical_json, command_digest: encoded.command_digest,
+          send_ticket: null, recovery_only: true };
+      }
+      if (row.final_command_uuid) throw conflict();
+      const encoded = codec.encodeDelegatedCommand({ profile: "urn:marty:delegation-command:v1", command: "FINALIZE_USE",
+        command_id: randomUUID(), challenge_id: ack.challenge_id, proof_submission_id: ack.submission_id });
+      const [saved] = await tx(operations).where(revisionFence(row)).whereNull("final_command_uuid").update({
+        final_command_uuid: encoded.original_command_id, final_command_bytes: encoded.canonical_json,
+        final_command_digest: encoded.command_digest,
+        final_owner_digest: "sha256:" + createHash("sha256").update(ticket).digest("hex"),
+        revision: row.revision + 1, updated_at: tx.fn.now(),
+      }).returning("id");
+      if (!saved) throw conflict();
+      return { command_bytes: encoded.canonical_json, command_digest: encoded.command_digest,
+        send_ticket: ticket, recovery_only: false };
+    });
+  }
+
+  private async retainedProofSubmission(row: JournalRow) {
+    if (!row.proof_context_bytes || !row.proof_claimed_at || !row.proof_submission_bytes || !row.proof_digest ||
+        factsDigest(JSON.parse(row.proof_context_bytes)) !== row.proof_context_digest ||
+        "sha256:" + createHash("sha256").update(row.proof_submission_bytes).digest("hex") !== row.proof_submission_digest) throw conflict();
+    const selected = await retainedNativeProofContext(row);
+    if (selected.bytes.toString() !== row.proof_context_bytes || factsDigest(JSON.parse(row.proof_context_bytes)) !== row.proof_context_digest) throw conflict();
+    const { request_json, request_time } = await authorityAdapters();
+    const ack = request_json.strictReceiptJson(Buffer.from(row.proof_submission_bytes), 4096);
+    if (!ack || typeof ack !== "object" || Array.isArray(ack) || Object.keys(ack).length !== 4 ||
+        !["submission_id", "challenge_id", "proof_digest", "received_at"].every(key => Object.hasOwn(ack, key)) ||
+        typeof ack.submission_id !== "string" || !originalId.test(ack.submission_id) ||
+        ack.challenge_id !== selected.bound.response.result.challenge_id || ack.proof_digest !== row.proof_digest) throw conflict();
+    const received = request_time.receiptTimestampNs(ack.received_at);
+    const challenge = selected.bound.response.result;
+    if (received < request_time.receiptTimestampNs(challenge.created_at) || received >= request_time.receiptTimestampNs(challenge.expires_at)) throw conflict();
+    return { selected, ack };
+  }
+
+  private async retainedFinalization(row: JournalRow) {
+    const { ack } = await this.retainedProofSubmission(row);
+    if (!row.final_command_uuid || !row.final_command_bytes || !row.final_owner_digest) throw conflict();
+    const { codec } = await authorityAdapters();
+    const encoded = codec.encodeDelegatedCommand(Buffer.from(row.final_command_bytes));
+    if (encoded.request.command !== "FINALIZE_USE" || encoded.canonical_json !== row.final_command_bytes ||
+        encoded.original_command_id !== row.final_command_uuid || row.final_command_uuid === row.original_command_uuid ||
+        encoded.command_digest !== row.final_command_digest || encoded.request.challenge_id !== ack.challenge_id ||
+        encoded.request.proof_submission_id !== ack.submission_id) throw conflict();
+    return encoded;
+  }
+
+  async claimAuthorityFinalization(commandId: string, ticket: string, context: AdmissionContext, signal?: AbortSignal) {
+    if (typeof ticket !== "string" || !/^[A-Za-z0-9_-]{43}$/.test(ticket)) throw conflict();
+    const ownerDigest = "sha256:" + createHash("sha256").update(ticket).digest("hex");
+    const active = () => { if (signal && signalAborted.call(signal)) throw conflict(); };
+    await this.withCurrentOriginal(commandId, context, async (tx, row, configuration) => {
+      active();
+      if (row.state !== "awaiting_authority" || row.final_owner_digest !== ownerDigest || row.final_claimed_at || row.final_response_bytes) throw conflict();
+      await this.retainedFinalization(row);
+      requireCommandCartMatch(parseOriginalCommand(Buffer.from(row.command_bytes)),
+        await readLockedCartFacts(tx, row.cart_id, configuration.merchant, configuration.verifiedContext));
+      const [saved] = await tx(operations).where(revisionFence(row)).whereNull("final_claimed_at").update({
+        final_claimed_at: tx.fn.now(), revision: row.revision + 1, updated_at: tx.fn.now(),
+      }).returning("id");
+      if (!saved) throw conflict(); active();
+    }, true);
+    const current = await this.prepareAuthorityFinalRecovery(commandId, context);
+    if (current.first_response) throw conflict(); active();
+  }
+
+  async prepareAuthorityFinalRecovery(commandId: string, context: AdmissionContext) {
+    return this.withCurrentOriginal(commandId, context, async (tx, row, configuration) => {
+      if (row.state !== "awaiting_authority") throw conflict();
+      const encoded = await this.retainedFinalization(row);
+      requireCommandCartMatch(parseOriginalCommand(Buffer.from(row.command_bytes)),
+        await readLockedCartFacts(tx, row.cart_id, configuration.merchant, configuration.verifiedContext));
+      if (row.final_response_bytes) await this.bindFinalResponse(row, Buffer.from(row.final_response_bytes));
+      return { command_bytes: encoded.canonical_json, command_digest: encoded.command_digest,
+        first_response: row.final_response_bytes, first_response_digest: row.final_response_digest };
+    });
+  }
+
+  private async bindFinalResponse(row: JournalRow, bytes: Uint8Array, recovered?: boolean) {
+    const encoded = await this.retainedFinalization(row), { codec } = await authorityAdapters();
+    if (row.final_response_bytes && "sha256:" + createHash("sha256").update(row.final_response_bytes).digest("hex") !== row.final_response_digest) throw conflict();
+    const bound = codec.bindDelegatedResponse(encoded.request, bytes, {
+      ...(recovered ? { recovery: codec.createDelegatedRecovery(encoded.request).request } : {}),
+      ...(row.final_response_bytes ? { previous: Buffer.from(row.final_response_bytes) } : {}),
+    });
+    const result = bound.response.result;
+    if (result.kind !== "FINAL_USE" || !result.receipt_ref.startsWith("urn:marty:delegated-receipt:") ||
+        !originalId.test(result.receipt_ref.slice("urn:marty:delegated-receipt:".length))) throw conflict();
+    const { selected, ack } = await this.retainedProofSubmission(row), { request_time } = await authorityAdapters();
+    const recorded = request_time.receiptTimestampNs(result.recorded_at), expiry = request_time.receiptTimestampNs(result.authorization_expires_at);
+    if (recorded < request_time.receiptTimestampNs(ack.received_at) ||
+        expiry > request_time.receiptTimestampNs(selected.bound.response.result.expires_at)) throw conflict();
+    return bound;
+  }
+
+  async observeAuthorityFinalization(commandId: string, input: Uint8Array, recovered: boolean, context: AdmissionContext,
+    signal?: AbortSignal) {
+    if (!(input instanceof Uint8Array) || !input.byteLength || input.byteLength > 65536 || typeof recovered !== "boolean") throw conflict();
+    const bytes = Buffer.from(input), active = () => { if (signal && signalAborted.call(signal)) throw conflict(); };
+    return this.withCurrentOriginal(commandId, context, async (tx, row, configuration) => {
+      active(); if (row.state !== "awaiting_authority") throw conflict();
+      const bound = await this.bindFinalResponse(row, bytes, recovered);
+      requireCommandCartMatch(parseOriginalCommand(Buffer.from(row.command_bytes)),
+        await readLockedCartFacts(tx, row.cart_id, configuration.merchant, configuration.verifiedContext));
+      if (!row.final_response_bytes) {
+        const response = stringify(bound.response)!;
+        const [saved] = await tx(operations).where(revisionFence(row)).whereNull("final_response_bytes").update({
+          final_response_bytes: response, final_response_digest: "sha256:" + createHash("sha256").update(response).digest("hex"),
+          final_response_observed_at: tx.fn.now(), revision: row.revision + 1, updated_at: tx.fn.now(),
+        }).returning("id");
+        if (!saved) throw conflict(); active();
+      }
+      return Object.freeze({ decision: bound.response.result.decision, execution_authorized: false });
+    });
   }
 
   /** Internal entry point. The caller supplies framework-verified request context. */

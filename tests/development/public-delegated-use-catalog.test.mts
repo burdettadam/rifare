@@ -4,11 +4,15 @@ import { readFileSync } from 'node:fs';
 import { readAdapterCatalog, validateAdapterCatalog } from '../../packages/conformance/adapter-catalog.mts';
 import { contentDigest } from '../../packages/commerce/configuration-values.mts';
 import { removeExactPublicAdapter, removeExactPublicCoverage } from './public-catalog-baseline.mts';
+import { withoutContinuationCatalog, continuationCases } from './continuation-catalog-baseline.mts';
 
 test('RCG4BC6-CATALOG-REGISTRATION exact public inventory retains all earlier coverage bytes', () => {
   const catalog = readAdapterCatalog();
   removeExactPublicAdapter(catalog);
-  const result = validateAdapterCatalog(catalog);
+  withoutContinuationCatalog(catalog);
+  const full = validateAdapterCatalog(catalog);
+  const result = { ...full, adapter_count: full.adapter_count - 1, operation_count: full.operation_count - 4,
+    native_case_count: full.native_case_count - continuationCases };
   assert.equal(result.adapter_count, 49); assert.equal(result.operation_count, 230);
   assert.equal(result.native_case_count, 359); assert.equal(result.direct_fixture_count, 47);
   assert.equal(result.external_qualification, false); assert.equal(result.production_qualified, false);
