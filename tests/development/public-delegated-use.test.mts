@@ -14,7 +14,7 @@ async function fixture(
   linkChange?: (link: string, uri: string) => string | string[],
   artifact = compact,
   media = 'application/oauth-authz-req+jwt',
-  artifactHeaders: Record<string, string | undefined> = {},
+  artifactHeaders: Record<string, string | string[] | undefined> = {},
 ) {
   const peer = await delegatedUsePeer();
   const challenge = claimOracle.challenge_response.result.challenge_id;
@@ -88,6 +88,9 @@ test('PUBLIC-WIRE-LINK refuses duplicate, foreign, altered challenge and decorat
     (_: string, uri: string) => '<' + uri + '?extra=1>; rel="urn:marty:delegated-use:request"',
     (_: string, uri: string) => '<' + uri + '#extra>; rel="urn:marty:delegated-use:request"',
     (link: string) => link.replace('urn:marty:delegated-use:request', 'alternate'),
+    (link: string) => link + '; extra="value"',
+    (_: string, uri: string) => '<' + uri.replace('https://', 'https://user@') + '>; rel="urn:marty:delegated-use:request"',
+    (_: string, uri: string) => '<' + uri.replace('/request', '/%72equest') + '>; rel="urn:marty:delegated-use:request"',
   ];
   for (const change of changes) await fixture(async (client, peer) => {
     await assert.rejects(client.start(original.request, () => {}));
@@ -125,9 +128,10 @@ test('PUBLIC-WIRE-GUARD refuses retrieval without sending application bytes afte
 }));
 
 test('PUBLIC-WIRE-HEADERS requires the assigned artifact cache and content protections', async () => {
-  const changes: Record<string, string | undefined>[] = [
+  const changes: Record<string, string | string[] | undefined>[] = [
     { 'cache-control': 'public' }, { pragma: undefined },
     { 'x-content-type-options': undefined }, { 'content-encoding': 'gzip' },
+    { pragma: ['no-cache', 'no-cache'] },
   ];
   for (const headers of changes) await fixture(async client => {
     const bound = await client.start(original.request, () => {});
@@ -180,4 +184,57 @@ test('PUBLIC-WIRE-CLOSE refuses further calls and exposes no proof or finalizati
   client.close();
   await assert.rejects(client.start(original.request, () => {}));
   assert.equal(peer.connections, 0);
+}));
+
+test('PUBLIC-WIRE-HOSTNAME refuses a trusted certificate for another server name', async () => {
+  const peer = await delegatedUsePeer({ server_identity: 'wrong-host' });
+  const client = new PublicDelegatedUseClient(peer.config);
+  try {
+    await assert.rejects(client.start(original.request, () => {}));
+    assert.equal(peer.applicationBytes, 0);
+    assert.equal(peer.requests.length, 0);
+  } finally { client.close(); await peer.close(); }
+});
+
+test('PUBLIC-WIRE-CLIENT refuses a foreign chain and invalid local identity bindings', () => fixture(async (_client, peer) => {
+  const foreign = new PublicDelegatedUseClient({ ...peer.config, ...peer.credentials.foreignClient });
+  try {
+    await assert.rejects(foreign.start(original.request, () => {}));
+    assert.equal(peer.requests.length, 0);
+  } finally { foreign.close(); }
+  for (const identity of [peer.credentials.expiredClient, peer.credentials.ambiguousClient, peer.credentials.noUriClient]) {
+    assert.throws(() => new PublicDelegatedUseClient({ ...peer.config, ...identity }));
+  }
+  assert.throws(() => new PublicDelegatedUseClient({ ...peer.config, certificate_sha256: 'sha256:' + '0'.repeat(64) }));
+}));
+
+test('PUBLIC-WIRE-ASYNC refuses an asynchronous guard without opening a connection', () => fixture(async (client, peer) => {
+  await assert.rejects(client.start(original.request, async () => {}));
+  assert.equal(peer.connections, 0);
+  assert.equal(peer.applicationBytes, 0);
+}));
+
+test('PUBLIC-WIRE-DEADLINE bounds a stalled response and never retries', () => fixture(async (_client, peer) => {
+  peer.setHandler(() => {});
+  const client = new PublicDelegatedUseClient({ ...peer.config, timeout_ms: 60 });
+  try {
+    await assert.rejects(client.start(original.request, () => {}), error =>
+      error instanceof Error && error.message === 'PUBLIC_USE_TIMEOUT');
+    assert.equal(peer.requests.length, 1);
+  } finally { client.close(); }
+}));
+
+test('PUBLIC-WIRE-CAPACITY bounds pending exchanges and close terminates active requests', () => fixture(async (client, peer) => {
+  peer.setHandler(() => {});
+  const pending = Array.from({ length: 8 }, () => client.start(original.request, () => {})
+    .then(() => 'unexpected-success', error => (error as Error).message));
+  await assert.rejects(client.start(original.request, () => {}), error =>
+    error instanceof Error && error.message === 'PUBLIC_USE_CAPACITY');
+  const deadline = Date.now() + 1000;
+  while (peer.requests.length < 8 && Date.now() < deadline) {
+    await new Promise(resolve => setTimeout(resolve, 5));
+  }
+  assert.equal(peer.requests.length, 8);
+  client.close();
+  assert.deepEqual(await Promise.all(pending), Array(8).fill('PUBLIC_USE_UNAVAILABLE'));
 }));
