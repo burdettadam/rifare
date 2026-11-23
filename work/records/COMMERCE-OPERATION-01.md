@@ -438,3 +438,27 @@ The local evidence manifest SHA-256 is
 `1694a0889f66fc5458e2dfcae43a8652b00b63379d6c0646c9093490a3b5c065`.
 The operator still supplies current facts from outside the backup. This
 test covers an offline same-installation recovery.
+
+## Populated native Medusa upgrade
+
+On November 22, 2026 (America/Denver), the archived application from
+`1c28a13eea3cbebdb3df191d96096e4a2d7b4ff2` migrated an empty PostgreSQL 16
+database and passed all 17 commerce groups, leaving actual Medusa cart, order,
+payment and inventory records. The Linux fixture used Node 24.14.1 and
+npm 11.11.0. A fresh `npm ci` installed 952 packages from the byte-identical
+predecessor and candidate manifests.
+
+The journal, privacy subject and installation tables were absent before the
+upgrade. Applying `ac75cbc62c4ebbfafb7b727a3fe32486923eca3b` created all
+three. Canonical row counts and SHA-256 digests of 11 native commerce tables
+matched before migration, after migration and after running it again.
+The new journal constraints passed on the upgraded database. Source archives,
+the installed npm tree, both containers and temporary database data were
+retired. The log SHA-256 is
+`c7a225dea5ffb287dab802b97e8d5d3f0120251536826e0b3dcb8e9aa4ac30aa`.
+The retained local rehearsal script SHA-256 is
+`b73721a60e1b657affe82459a538bb8182c747ebf044eee2cc6a3f9807524783`.
+
+The fixture uses a synthetic payment provider. This qualifies the selected
+populated schema upgrade in the disposable environment. Legacy SQLite
+porting, connected authority, and production upgrade acceptance remain open.

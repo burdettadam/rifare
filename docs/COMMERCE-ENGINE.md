@@ -180,6 +180,26 @@ license metadata field; source and included license texts must be retained for
 an actual distribution. The source checker pins this exact development graph;
 it does not approve a binary/container distribution or grant Enterprise rights.
 
+## Journal upgrade on an existing Medusa installation
+
+The journal migrations extend the existing PostgreSQL database. Keep the
+previous application and database checkpoint available during a paused
+upgrade. Reconcile current erasure, uninstall and other refusal facts from
+outside any restored checkpoint before returning it to service.
+
+On disposable PostgreSQL 16, the project upgraded a populated Medusa 2.23.0
+database from `1c28a13` to `ac75cbc` with the unchanged npm lockfile.
+All 17 predecessor commerce groups passed before migration. Cart, order,
+payment, inventory, product, store and channel records in the 11 sampled
+tables retained their exact row counts and digests after migration and an
+idempotent rerun. The new journal schema then passed its constraint checks.
+
+This rehearsal covers the native Medusa-to-Medusa upgrade with synthetic
+commerce. Legacy SQLite data porting, connected provider continuity, and
+production cutover and rollback still need separate acceptance. The
+[operation journal work record](../work/records/COMMERCE-OPERATION-01.md)
+retains the pinned source and evidence.
+
 ## Retirement rule
 
 The existing SQLite commerce modules and synthetic sources remain available to
