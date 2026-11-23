@@ -176,6 +176,15 @@ export class PublicDelegatedUseClient {
     return this.#send(encoded, encoded, guard, admission);
   }
   async recover(original: unknown, recovery: unknown, guard: () => void): Promise<BoundDelegatedResponse> {
+    return this.#recover(original, recovery, guard);
+  }
+  async recoverAfterAdmission(original: unknown, recovery: unknown, admission: () => Promise<void>,
+    guard: () => void): Promise<BoundDelegatedResponse> {
+    if (typeof admission !== 'function') fail('PUBLIC_USE_INPUT_INVALID');
+    return this.#recover(original, recovery, guard, admission);
+  }
+  #recover(original: unknown, recovery: unknown, guard: () => void,
+    admission?: () => Promise<void>): Promise<BoundDelegatedResponse> {
     this.#available(); const retained = this.#original(original);
     let encoded: EncodedDelegatedCommand;
     try {
@@ -183,10 +192,19 @@ export class PublicDelegatedUseClient {
       if (encoded.canonical_json !== createDelegatedRecovery(retained.request).canonical_json)
         fail('PUBLIC_USE_INPUT_INVALID');
     } catch { fail('PUBLIC_USE_INPUT_INVALID'); }
-    return this.#send(retained, encoded, guard);
+    return this.#send(retained, encoded, guard, admission);
   }
   async fetchRequest(original: unknown, challenge: BoundDelegatedResponse,
     guard: () => void): Promise<UnverifiedRequestArtifact> {
+    return this.#fetchRequest(original, challenge, guard);
+  }
+  async fetchRequestAfterAdmission(original: unknown, challenge: BoundDelegatedResponse,
+    admission: () => Promise<void>, guard: () => void): Promise<UnverifiedRequestArtifact> {
+    if (typeof admission !== 'function') fail('PUBLIC_USE_INPUT_INVALID');
+    return this.#fetchRequest(original, challenge, guard, admission);
+  }
+  #fetchRequest(original: unknown, challenge: BoundDelegatedResponse,
+    guard: () => void, admission?: () => Promise<void>): Promise<UnverifiedRequestArtifact> {
     this.#available();
     const encoded = this.#original(original), retained = this.#requests.get(challenge);
     if (!retained || retained.original !== encoded.canonical_json) fail('PUBLIC_USE_INPUT_INVALID');
@@ -203,7 +221,7 @@ export class PublicDelegatedUseClient {
         evidence_status: 'unverified_authorization_request', execution_authorized: false,
         request_signature_verified: false, qualification: 'candidate_contract_only',
       });
-    });
+    }, admission);
   }
   #send(original: EncodedDelegatedCommand, outbound: EncodedDelegatedCommand,
     guard: () => void, admission?: () => Promise<void>): Promise<BoundDelegatedResponse> {
