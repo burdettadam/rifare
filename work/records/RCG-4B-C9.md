@@ -1,8 +1,7 @@
 # RCG-4B-C9 - Native proof association and original finalization
 
-State: bounded local C9 implementation qualified and independently cleared;
-maintainer integration and owned runtime retirement pending. Connected provider
-qualification and commerce execution remain separate open gates.
+State: bounded local C9 integrated via PR8 and owned generated outputs retired.
+Connected provider qualification and commerce execution remain separate open gates.
 Base: `acab80a787b5e625e16527f22463a86deaa718e0` (merged C8 PR7).
 Writer/integration owner: root, canonical primary `rifare` checkout.
 Branch: `feat/medusa-proof-finalization`.
@@ -291,3 +290,26 @@ inferred. The broad goal remains active. Next: normal authorized PR/merge after
 metadata checks, then retire the inactive owned runtime/generated output and retain
 source/cache/refs/raw evidence. One primary/zero linked Rifare checkouts stay active
 with root; no additional checkout is created or awaiting cleanup.
+
+## Integrated source and completed runtime lifecycle
+
+[PR8](https://github.com/burdettadam/rifare/pull/8) merged normally at
+`f7862128261e22f1febb02ce498cf1a8ea66409b`; its full source tree matches published
+`ea8589c811b487875ab34b5207a112256f762912`. Both independent roles explicitly
+carried clearance to that publication metadata checkpoint. Hosted checks were
+intentionally skipped, with no admin bypass or fabricated approval.
+
+Both owned generated targets are absent and feature/source refs still reach their
+recorded commits. All task DB containers stopped. Retirement preserved all raw
+qualification/review evidence and installed-lock bytes. First normal Windows
+removal hit a verified261-character dependency path after partial generated cleanup.
+A fresh full audit and65,765 DELETE/share probes, with no delete-on-close, preceded
+successful extended-path removal of the remainder. Retry FileStandardInfo measured
+418,877,568 allocated bytes; observed Windows host free-space increase429,719,552
+bytes is recorded with concurrent-activity limits. Unreadable process metadata and
+residual uncertainty remain explicit in `c9-runtime-retirement-final.json`.
+
+Rifare has one active primary and zero linked checkouts, root owning its next
+[RCG-4B-C10](RCG-4B-C10.md) payment-association assignment. Source cache, required local
+configuration and refs remain preserved. The broad handoff goal stays active; C9
+local integration grants no connected provider or commerce-effect authority.

@@ -48,6 +48,11 @@ export const minimizedOperationFields = {
   final_response_bytes: null,
   final_response_digest: null,
   final_response_observed_at: null,
+  payment_collection_id: null,
+  payment_session_id: null,
+  payment_provider_id: null,
+  payment_context_digest: null,
+  payment_observed_at: null,
   receipt_bytes: null,
   receipt_digest: null,
   receipt_context_digest: null,
@@ -163,6 +168,7 @@ export async function exportJournalSubject(transaction: Postgres, scope: Subject
     "proof_claimed_at", "proof_submission_bytes", "proof_submission_digest", "proof_submission_observed_at",
     "final_command_uuid", "final_command_bytes", "final_command_digest", "final_owner_digest",
     "final_claimed_at", "final_response_bytes", "final_response_digest", "final_response_observed_at",
+    "payment_fingerprint", "payment_collection_id", "payment_session_id", "payment_provider_id", "payment_context_digest", "payment_observed_at",
     "receipt_fingerprint", "receipt_bytes", "receipt_digest", "receipt_context_digest", "receipt_id", "receipt_observed_at", "receipt_expires_at",
     "created_at", "updated_at",
   );
@@ -184,6 +190,7 @@ type RefusalIdentity = Readonly<{
   challenge_fingerprint: string | null;
   receipt_fingerprint?: string | null;
   final_command_uuid?: string | null;
+  payment_fingerprint?: string | null;
 }>;
 
 const restoreConflict = () => new Error("Invalid or conflicting journal refusal identity");
@@ -191,7 +198,11 @@ const restoreConflict = () => new Error("Invalid or conflicting journal refusal 
 function validateRefusalIdentity(row: RefusalIdentity) {
   const hasReceipt = row && Object.hasOwn(row, "receipt_fingerprint");
   const hasFinal = row && Object.hasOwn(row, "final_command_uuid");
-  if (!row || typeof row !== "object" || Object.keys(row).length !== (3 + Number(hasReceipt) + Number(hasFinal)) ||
+  const hasPayment = row && Object.hasOwn(row, "payment_fingerprint");
+  if (!row || typeof row !== "object" || Object.keys(row).length !== (3 + Number(hasReceipt) + Number(hasFinal) + Number(hasPayment)) ||
+      (hasPayment && (!hasFinal || !hasReceipt || row.payment_fingerprint !== null &&
+        (typeof row.payment_fingerprint !== "string" || !/^sha256:[0-9a-f]{64}$/.test(row.payment_fingerprint) ||
+          !row.final_command_uuid || !row.receipt_fingerprint))) ||
       (hasFinal && (!hasReceipt || row.final_command_uuid !== null &&
         (typeof row.final_command_uuid !== "string" ||
           !/^(?!00000000-0000-0000-0000-000000000000$)[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(row.final_command_uuid) ||
@@ -208,7 +219,8 @@ function validateRefusalIdentity(row: RefusalIdentity) {
   }
   return { id: row.id, original_command_uuid: row.original_command_uuid, challenge_fingerprint: row.challenge_fingerprint,
     ...(hasReceipt ? { receipt_fingerprint: row.receipt_fingerprint! } : {}),
-    ...(hasFinal ? { final_command_uuid: row.final_command_uuid! } : {}) };
+    ...(hasFinal ? { final_command_uuid: row.final_command_uuid! } : {}),
+    ...(hasPayment ? { payment_fingerprint: row.payment_fingerprint! } : {}) };
 }
 
 /**
@@ -226,16 +238,18 @@ export async function restoreJournalRefusalIdentities(
     await transaction(journalTable).insert({ ...row, state: "retired" }).onConflict().ignore();
     const selected = () => transaction(journalTable).where({ original_command_uuid: row.original_command_uuid });
     const retained = await selected().forUpdate().first(
-      "id", "challenge_fingerprint", "receipt_fingerprint", "final_command_uuid", "state", "merchant_namespace", "store_id", "privacy_hold",
+      "id", "challenge_fingerprint", "receipt_fingerprint", "final_command_uuid", "payment_fingerprint", "state", "merchant_namespace", "store_id", "privacy_hold",
     );
     if (!retained || retained.id !== row.id || retained.challenge_fingerprint !== row.challenge_fingerprint ||
         (retained.receipt_fingerprint !== null && retained.receipt_fingerprint !== row.receipt_fingerprint) ||
-        (retained.final_command_uuid !== null && retained.final_command_uuid !== row.final_command_uuid)) {
+        (retained.final_command_uuid !== null && retained.final_command_uuid !== row.final_command_uuid) ||
+        (retained.payment_fingerprint !== null && retained.payment_fingerprint !== row.payment_fingerprint)) {
       throw restoreConflict();
     }
     if (retained.state === "retired" && retained.merchant_namespace === null && retained.store_id === null) {
       if (retained.receipt_fingerprint === null && row.receipt_fingerprint) await selected().update({ receipt_fingerprint: row.receipt_fingerprint });
       if (retained.final_command_uuid === null && row.final_command_uuid) await selected().update({ final_command_uuid: row.final_command_uuid });
+      if (retained.payment_fingerprint === null && row.payment_fingerprint) await selected().update({ payment_fingerprint: row.payment_fingerprint });
       continue;
     }
     if (retained.privacy_hold || retained.merchant_namespace !== scope.merchant_namespace ||
@@ -244,6 +258,7 @@ export async function restoreJournalRefusalIdentities(
       ...minimizedOperationFields,
       ...(row.receipt_fingerprint ? { receipt_fingerprint: row.receipt_fingerprint } : {}),
       ...(row.final_command_uuid ? { final_command_uuid: row.final_command_uuid } : {}),
+      ...(row.payment_fingerprint ? { payment_fingerprint: row.payment_fingerprint } : {}),
       state: "retired",
       revision: transaction.raw("revision + 1"),
       updated_at: transaction.fn.now(),

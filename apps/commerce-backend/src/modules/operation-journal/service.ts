@@ -14,6 +14,7 @@ import { openNativeContinuationSession } from "./continuation-session";
 import { createNativeReceiptVerifier, NativeReceiptVerifier } from "./receipt-verifier";
 import { retainedNativeReceiptContext } from "./receipt-context";
 import { retainedNativeProofContext } from "./proof-context";
+import { readLockedNativePayment } from "./payment-context";
 import { prepareProofAssociation, PreparedProofAssociation } from "./proof-association";
 import { configure } from "safe-stable-stringify";
 import {
@@ -39,7 +40,8 @@ const historyColumns = [...statusColumns, "cart_id", "actor_digest", "command_di
   "proof_context_bytes", "proof_context_digest", "proof_digest", "proof_owner_digest", "proof_claimed_at",
   "proof_submission_bytes", "proof_submission_digest", "proof_submission_observed_at",
   "final_command_uuid", "final_command_bytes", "final_command_digest", "final_owner_digest", "final_claimed_at",
-  "final_response_bytes", "final_response_digest", "final_response_observed_at"];
+  "final_response_bytes", "final_response_digest", "final_response_observed_at",
+  "payment_fingerprint", "payment_collection_id", "payment_session_id", "payment_provider_id", "payment_context_digest", "payment_observed_at"];
 type JournalConfiguration = ReturnType<typeof journalConfiguration>;
 type Merchant = NonNullable<ReturnType<typeof cartContextConfig>>;
 type JournalRow = {
@@ -53,6 +55,8 @@ type JournalRow = {
   start_response_observed_at: Date | null; challenge_fingerprint: string | null;
   request_bytes: string | null; request_digest: string | null; request_context_digest: string | null;
   request_nonce: string | null; request_observed_at: Date | null; request_expires_at: Date | null;
+  payment_fingerprint: string | null; payment_collection_id: string | null; payment_session_id: string | null;
+  payment_provider_id: string | null; payment_context_digest: string | null; payment_observed_at: Date | null;
   final_command_uuid: string | null; final_command_bytes: string | null; final_command_digest: string | null;
   final_owner_digest: string | null; final_claimed_at: Date | null; final_response_bytes: string | null;
   final_response_digest: string | null; final_response_observed_at: Date | null;
@@ -536,6 +540,84 @@ export default class OperationJournalService {
     });
   }
 
+  /** Native pending payment identity only. No workflow/provider action or
+   * execution authority follows from this immutable association. */
+  async associateAuthorityPayment(commandId: string, context: AdmissionContext, verifier: unknown, signal?: AbortSignal) {
+    if (!(verifier instanceof NativeReceiptVerifier)) throw conflict();
+    const captured = { actor: { ...context.actor }, salesChannelIds: [...context.salesChannelIds] };
+    const active = () => { if (signal && signalAborted.call(signal)) throw conflict(); };
+    active();
+    const receipt = await OperationJournalService.prototype.recoverVerifiedAuthorityReceipt.call(this, commandId, captured, verifier);
+    active();
+    const result = await this.withCurrentOriginal(commandId, captured, async (tx, row, configuration) => {
+      const selected = await this.readCurrentAuthorityPayment(tx, row, configuration, verifier, receipt, active);
+      const now = await requestClock(tx); active();
+      if (row.payment_collection_id) {
+        requirePaymentAssociation(row, selected);
+        if (!row.payment_observed_at || row.payment_observed_at.getTime() > now.getTime()) throw conflict();
+        return paymentAssociationResult(selected, row.payment_observed_at);
+      }
+      if (row.payment_fingerprint) throw conflict();
+      const [saved] = await tx(operations).where(revisionFence(row)).whereNull("payment_collection_id").update({
+        payment_fingerprint: selected.payment_fingerprint, payment_collection_id: selected.payment_collection_id,
+        payment_session_id: selected.payment_session_id, payment_provider_id: selected.payment_provider_id,
+        payment_context_digest: selected.payment_context_digest, payment_observed_at: now,
+        revision: row.revision + 1, updated_at: tx.fn.now(),
+      }).returning("id");
+      if (!saved) throw conflict();
+      const after = await this.readCurrentAuthorityPayment(tx, row, configuration, verifier, receipt, active);
+      if (after.payment_context_digest !== selected.payment_context_digest || after.payment_fingerprint !== selected.payment_fingerprint) throw conflict();
+      active(); return paymentAssociationResult(selected, now);
+    }, true).catch(error => {
+      if ((error as { code?: string }).code === "23505") throw conflict(); throw error;
+    });
+    active();
+    await this.withCurrentOriginal(commandId, captured, async (tx, row, configuration) => {
+      const selected = await this.readCurrentAuthorityPayment(tx, row, configuration, verifier, receipt, active);
+      requirePaymentAssociation(row, selected);
+      if (row.payment_context_digest !== result.payment_context_digest ||
+          row.payment_observed_at?.getTime() !== result.first_observed_at.getTime() ||
+          (await requestClock(tx)).getTime() < result.first_observed_at.getTime()) throw conflict();
+    }, true);
+    describeReceipt.call(verifier, receipt.verification); active();
+    return Object.freeze(result);
+  }
+
+  async recoverAuthorityPayment(commandId: string, context: AdmissionContext, verifier: unknown, signal?: AbortSignal) {
+    const captured = { actor: { ...context.actor }, salesChannelIds: [...context.salesChannelIds] };
+    await this.withCurrentOriginal(commandId, captured, async (_tx, row) => {
+      if (!row.payment_collection_id || !row.payment_fingerprint || !row.payment_observed_at) throw conflict();
+    });
+    return OperationJournalService.prototype.associateAuthorityPayment.call(this, commandId, captured, verifier, signal);
+  }
+
+  private async readCurrentAuthorityPayment(tx: Postgres, row: JournalRow, configuration: JournalConfiguration,
+    verifier: NativeReceiptVerifier, receipt: Awaited<ReturnType<OperationJournalService["recoverVerifiedAuthorityReceipt"]>>,
+    active: () => void) {
+    active();
+    if (row.state !== "awaiting_authority" || !row.final_command_uuid || !row.final_response_bytes || !row.final_response_digest ||
+        !row.receipt_bytes || !row.receipt_id || !row.receipt_digest || !row.receipt_context_digest ||
+        !row.receipt_observed_at || !row.receipt_expires_at) throw conflict();
+    const original = parseOriginalCommand(Buffer.from(row.command_bytes));
+    const locked = await readLockedCartFacts(tx, row.cart_id, configuration.merchant, configuration.verifiedContext);
+    requireCommandCartMatch(original, locked);
+    const bound = await this.bindFinalResponse(row, Buffer.from(row.final_response_bytes));
+    if (bound.response.result.decision !== "PERMIT" || typeof locked.facts.region_id !== "string") throw conflict();
+    const selected = await readLockedNativePayment(tx, original, { ...configuration.merchant, region_id: locked.facts.region_id,
+      final_command_uuid: row.final_command_uuid, final_response_digest: row.final_response_digest,
+      receipt_digest: row.receipt_digest, receipt_context_digest: row.receipt_context_digest, receipt_id: row.receipt_id });
+    const current = describeReceipt.call(verifier, receipt.verification), now = (await requestClock(tx)).getTime();
+    if (current.digest !== row.receipt_digest || current.verification_context_digest !== row.receipt_context_digest ||
+        current.original_command_id !== row.original_command_uuid || current.operation_digest !== row.command_digest ||
+        new Date(current.expires_at).getTime() !== row.receipt_expires_at.getTime() ||
+        current.receipt_id !== row.receipt_id || receipt.receipt_digest !== row.receipt_digest ||
+        receipt.first_observed_at.getTime() !== row.receipt_observed_at.getTime() ||
+        now < current.observed_at || now < row.receipt_observed_at.getTime() || now >= row.receipt_expires_at.getTime()) throw conflict();
+    if (row.payment_observed_at && now < row.payment_observed_at.getTime()) throw conflict();
+    describeReceipt.call(verifier, receipt.verification); active();
+    return selected;
+  }
+
   /** Internal entry point. The caller supplies framework-verified request context. */
   async admit(input: Uint8Array, context: AdmissionContext) {
     return (await this.admitOriginal(input, context)).operation;
@@ -881,6 +963,19 @@ function requireAwaitingRevision(row: JournalRow, expectedRevision: number) {
   if (row.state !== "awaiting_authority" || !Number.isSafeInteger(expectedRevision) || row.revision !== expectedRevision) {
     throw conflict();
   }
+}
+
+function requirePaymentAssociation(row: JournalRow, selected: Awaited<ReturnType<typeof readLockedNativePayment>>) {
+  if (row.payment_fingerprint !== selected.payment_fingerprint || row.payment_collection_id !== selected.payment_collection_id ||
+      row.payment_session_id !== selected.payment_session_id || row.payment_provider_id !== selected.payment_provider_id ||
+      row.payment_context_digest !== selected.payment_context_digest) throw conflict();
+}
+
+function paymentAssociationResult(selected: Awaited<ReturnType<typeof readLockedNativePayment>>, firstObserved: Date) {
+  return { payment_collection_id: selected.payment_collection_id, payment_session_id: selected.payment_session_id,
+    payment_provider_id: selected.payment_provider_id, payment_context_digest: selected.payment_context_digest,
+    first_observed_at: firstObserved, evidence_status: "native_pending_payment_observation", execution_authorized: false,
+    live_provider_status_verified: false };
 }
 
 function revisionFence(row: JournalRow) {
