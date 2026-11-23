@@ -135,3 +135,18 @@ of exact published metadata checkpoint after review carry-forward; retire owned
 inactive runtime/compiler output with Windows gates and retain source/cache/refs,
 installed-lock bytes, logs, dump and review evidence. Rifare audit scope remains
 one active primary (root) and zero linked checkouts; no verification checkout exists.
+
+## Verified integration and retirement
+
+PR9 merged normally at `5aa050e9ccdf8b8156c2e0455605ef4011a5d633`, with the whole
+merged tree equal to published `b0d3cfb5d82b6a4dcc07d4148a7b7f526c52b4b4`. Both
+independent roles explicitly carried clearance to that metadata checkpoint. The
+feature ref and qualified source remain reachable. All owned DB containers stopped.
+The standalone runtime and 91-file compiler output are absent after the recorded
+fresh Windows activity/link/mount/consumer gates and 88,799 nondeleting share probes.
+Windows allocated file bytes retired were 563,001,512; observed host free-space gain
+343,678,976 is not exclusively attributed under concurrent unrelated workloads.
+`c10-runtime-retirement-final.json` retains residual metadata uncertainty explicitly.
+Rifare audit scope: one active primary (root), zero linked or verification checkouts.
+Root continues the standalone native Admin assignment in COMMERCE-ENGINE-02. The
+broad objective and connected/effect authority gates remain open.

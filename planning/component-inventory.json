@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "id": "rifare-source-inventory",
-  "revision": 79,
+  "revision": 80,
   "status": "proposed",
   "components": [
     {
@@ -1790,7 +1790,9 @@
         "apps/commerce-backend/src/scripts/verify-continuation-upgrade.ts",
         "docs/NATIVE-DELEGATED-CONTINUATION.md",
         "docs/decisions/0088-native-payment-association.md",
+        "docs/decisions/0089-standalone-admin-delivery.md",
         "work/records/RCG-4B-C10.md",
+        "work/records/COMMERCE-ENGINE-02.md",
         "apps/commerce-backend/src/modules/operation-journal/payment-context.ts",
         "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123133906.ts",
         "apps/commerce-backend/src/scripts/native-payment-fixture.ts",
