@@ -1,7 +1,8 @@
 import assert from "node:assert/strict";
-import { spawn } from "node:child_process";
-import { createHash, randomUUID } from "node:crypto";
+import { execFile, spawn } from "node:child_process";
+import { createHash, randomBytes, randomUUID } from "node:crypto";
 import { setTimeout as delay } from "node:timers/promises";
+import { promisify } from "node:util";
 import type { ExecArgs } from "@medusajs/framework/types";
 import { ContainerRegistrationKeys, generateJwtToken, Modules, ProductStatus, PromotionActions } from "@medusajs/framework/utils";
 import { createApiKeysWorkflow, createCartWorkflow, createCartCreditLinesWorkflow, createProductsWorkflow,
@@ -11,6 +12,9 @@ import { factsDigest, minorUnits, observationFields, observeCart, projectCart } 
 import { cartContextConfig } from "../config/local-commerce";
 import { readLockedCartFacts } from "../modules/operation-journal/cart-facts";
 import { parseOriginalCommand, requireCommandCartMatch } from "../modules/operation-journal/command";
+import { operationJournalModule } from "../modules/operation-journal";
+import type OperationJournalService from "../modules/operation-journal/service";
+import { eraseJournalSubject } from "../modules/operation-journal/privacy";
 
 /** Actual native PostgreSQL/HTTP fixtures. JWTs are synthetic credentials for
  * native persisted associations, not evidence of a new hosted provider journey.
@@ -275,17 +279,17 @@ export default async function verifyCartContext({ container }: ExecArgs) {
       assert.equal(lockedFacts.factsDigest, afterCredit.value.observation.facts_digest);
       assert.match(lockedFacts.actorDigest, /^sha256:[a-f0-9]{64}$/);
     });
+    const command = {
+      cart_facts_digest: afterCredit.value.observation.facts_digest,
+      cart_id: aliceCart.id,
+      command_id: randomUUID(),
+      currency: "usd",
+      currency_exponent: 2,
+      kind: "prepare_purchase",
+      payable_minor_units: afterCredit.value.observation.facts.payable_total_minor,
+      profile: "urn:rifare:medusa-original-operation:v1",
+    };
     check("canonical-original-command-is-closed-and-bound-to-locked-cart", () => {
-      const command = {
-        cart_facts_digest: afterCredit.value.observation.facts_digest,
-        cart_id: aliceCart.id,
-        command_id: randomUUID(),
-        currency: "usd",
-        currency_exponent: 2,
-        kind: "prepare_purchase",
-        payable_minor_units: afterCredit.value.observation.facts.payable_total_minor,
-        profile: "urn:rifare:medusa-original-operation:v1",
-      };
       const bytes = Buffer.from(JSON.stringify(command));
       const original = parseOriginalCommand(bytes);
       assert.equal(original.commandBytes, bytes.toString());
@@ -327,6 +331,90 @@ export default async function verifyCartContext({ container }: ExecArgs) {
     await assert.rejects(readAdmission(), denied);
     await auth.updateAuthIdentities({ id: alice.identity.id, app_metadata: { customer_id: alice.customer.id } });
     check("serializable-admission-refuses-wrong-owner-identity-store-and-channel", () => {});
+
+    const journal = container.resolve<OperationJournalService>(operationJournalModule);
+    const key = randomBytes(32);
+    const configuration = {
+      RIFARE_MERCHANT_NAMESPACE: merchant.merchant_namespace,
+      RIFARE_NATIVE_STORE_ID: merchant.store_id,
+      RIFARE_JOURNAL_PRIVACY_KEY: key.toString("base64url"),
+    };
+    const originalEnv = Object.fromEntries(Object.keys(configuration).map(name => [name, process.env[name]]));
+    const bytes = Buffer.from(JSON.stringify(command));
+    try {
+      Object.assign(process.env, configuration);
+      delete process.env.RIFARE_JOURNAL_PRIVACY_KEY;
+      await assert.rejects(journal.admit(bytes, admission), /Operation journal is unavailable/);
+      process.env.RIFARE_JOURNAL_PRIVACY_KEY = configuration.RIFARE_JOURNAL_PRIVACY_KEY;
+
+      const [first, repeated] = await Promise.all([journal.admit(bytes, admission), journal.admit(bytes, admission)]);
+      assert.deepEqual(first, repeated);
+      assert.equal(first.state, "awaiting_authority");
+      assert.equal(first.original_command_uuid, command.command_id);
+      const owned = await postgres("rifare_operation").where({ original_command_uuid: command.command_id });
+      assert.equal(owned.length, 1);
+      assert.equal(owned[0].command_bytes, bytes.toString());
+      assert.equal(owned[0].actor_digest, lockedFacts.actorDigest);
+      assert.equal(owned[0].cart_facts_digest, lockedFacts.factsDigest);
+      assert.equal(owned[0].payable_minor_units, command.payable_minor_units);
+      assert.deepEqual(await journal.admit(bytes, admission), first);
+
+      const changed = Buffer.from(JSON.stringify({ ...command, payable_minor_units: "0" }));
+      await assert.rejects(journal.admit(changed, admission), /Original commerce command unavailable/);
+      const wrongFacts = { ...command, command_id: randomUUID(), payable_minor_units: "0" };
+      await assert.rejects(journal.admit(Buffer.from(JSON.stringify(wrongFacts)), admission), /does not match current cart facts/);
+      assert.equal(await postgres("rifare_operation").where({ original_command_uuid: wrongFacts.command_id }).first(), undefined);
+      await assert.rejects(journal.admit(bytes, {
+        ...admission, actor: { actor_type: "customer", actor_id: bob.customer.id, auth_identity_id: bob.identity.id },
+      }), denied);
+
+      const processOriginal = { ...command, command_id: randomUUID() };
+      const processBytes = Buffer.from(JSON.stringify(processOriginal));
+      const executeWorker = promisify(execFile);
+      const worker = (loseAcknowledgement: boolean, input = processBytes) => executeWorker(process.execPath,
+        ["run.mjs", "exec", "./src/scripts/verify-operation-journal-worker.ts"], {
+          cwd: process.cwd(),
+          timeout: 45000,
+          env: {
+            ...process.env,
+            RIFARE_JOURNAL_TEST_COMMAND: input.toString("base64url"),
+            RIFARE_JOURNAL_TEST_CONTEXT: JSON.stringify(admission),
+            RIFARE_JOURNAL_TEST_LOSE_ACK: String(loseAcknowledgement),
+          },
+        });
+      const lostAck = (error: unknown) => {
+        const outcome = error as { code?: number; stdout?: string };
+        return outcome.code === 79 && !outcome.stdout?.includes("RIFARE_JOURNAL_WORKER=");
+      };
+      const [acknowledged] = await Promise.all([worker(false), assert.rejects(worker(true), lostAck)]);
+      const reply = acknowledged.stdout.split("\n").find(line => line.startsWith("RIFARE_JOURNAL_WORKER="));
+      assert.ok(reply, "Independent process returned its operation");
+      const { pid, result } = JSON.parse(reply.slice("RIFARE_JOURNAL_WORKER=".length));
+      assert.notEqual(pid, process.pid);
+      assert.deepEqual(result, await journal.admit(processBytes, admission));
+      const processRows = await postgres("rifare_operation").where({ original_command_uuid: processOriginal.command_id });
+      assert.equal(processRows.length, 1);
+      assert.equal(processRows[0].id, result.id);
+      const crashed = { ...command, command_id: randomUUID() };
+      const crashBytes = Buffer.from(JSON.stringify(crashed));
+      await assert.rejects(worker(true, crashBytes), lostAck);
+      const committed = await postgres("rifare_operation").where({ original_command_uuid: crashed.command_id });
+      assert.equal(committed.length, 1);
+      assert.equal((await journal.admit(crashBytes, admission)).id, committed[0].id);
+      check("independent-journal-processes-recover-the-same-original-after-lost-ack", () => {});
+
+      await postgres.transaction(tx => eraseJournalSubject(tx, { ...merchant, customer_id: alice.customer.id }, key));
+      await assert.rejects(journal.admit(bytes, admission), denied);
+      const retired = await postgres("rifare_operation").where({ id: first.id }).first();
+      assert.equal(retired.state, "retired");
+      assert.equal(retired.command_bytes, null);
+      check("journal-admission-is-durable-idempotent-and-privacy-gated", () => {});
+    } finally {
+      for (const [name, value] of Object.entries(originalEnv)) {
+        if (value === undefined) delete process.env[name];
+        else process.env[name] = value;
+      }
+    }
 
     await carts.updateCarts([{ id: aliceCart.id, completed_at: new Date() }]);
     assert.equal((await observe()).status, 403);

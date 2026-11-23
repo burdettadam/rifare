@@ -219,3 +219,27 @@ and the native PostgreSQL privacy suite passed. The suite demonstrated
 held export, scoped uninstall, repeat import, conflict rollback, rejection
 of personal payloads and retained suppression after import. Both disposable
 fixtures were retired. Codex continues on the assigned checkout.
+
+## Transactional admission checkpoint
+
+The local Medusa module now admits an original preparation command only with
+verified native customer and channel context, the configured merchant/store
+and a valid installation privacy key. One serializable transaction checks
+privacy suppression, locks and reads native ownership and cart facts, then
+inserts the exact canonical bytes and digests under the original UUID.
+An exact repeat returns the original operation. A conflicting original,
+wrong owner, stale facts or erased subject is refused. Local serialization
+failures retry the same transaction and original. The only created state
+is awaiting_authority.
+
+On November 22, 2026 (America/Denver), TypeScript and all 27 native cart
+groups passed on disposable PostgreSQL 16. The journal cases checked missing
+configuration, unchanged retry, conflicting bytes, stale amount with no
+admitted row, cross-owner denial and erasure. Independent Medusa processes
+converged on one original. In a separate attempt the first process committed
+a fresh original and exited before returning its ID. The parent recovered the
+same row by repeating the original bytes. The disposable fixtures were retired.
+
+Codex continues on the assigned linked checkout with status, immutable first
+observation, revision-bound cancellation, and explicit recovery preparation.
+The authorized privacy-owner integration still requires verification.

@@ -1,7 +1,6 @@
 ﻿import { Module } from "@medusajs/framework/utils";
+import OperationJournalService from "./service";
 
-// Keep journal rows private to the module. Future writes go through the
-// ownership-checked service rather than generic entity CRUD.
-class OperationJournalService {}
+export const operationJournalModule = "rifareOperationJournal";
 
-export default Module("rifareOperationJournal", { service: OperationJournalService });
+export default Module(operationJournalModule, { service: OperationJournalService });
