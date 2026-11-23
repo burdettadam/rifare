@@ -134,3 +134,19 @@ that later cancellation is prevented or that refund/effect authority is solved.
 Use the existing module/primary/cache. One primary, zero linked checkouts. Next:
 implement and exercise the guard, concurrency and replay/fault contracts, then
 resume fixed compiled qualification and both independent final reviews.
+
+## Admission implementation checkpoint
+
+The new owned migration installs only a schema-qualified invoker trigger/function
+on native claim activation, using FOR NO KEY UPDATE on the referenced original.
+It checks missing/deleted originals and both cancellation representations, covers
+INSERT plus relevant UPDATE activation/reassignment, and leaves historical rows and
+later order cancellation intact. Down removes only those two owned objects.
+
+A separate native verification now exercises direct and native module insertion,
+status/timestamp/deletion representations, restoration/reassignment/uncancellation,
+historical cleanup, two independent-backend cancellation commit/rollback races and
+later cancellation after earlier admission. No-emit passed. Runtime/migration, upgrade,
+fault and independent final review are pending; no passing behavior is preclaimed.
+The generic PostgreSQL practices skill was applied only to this local guard, not
+to Supabase architecture, configuration or deployments.
