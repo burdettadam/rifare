@@ -71,6 +71,16 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
       } else await carts.updateCarts(task.cart_id, current);
       if (task.provider) {
         const provider = (payments as any).paymentProviderService_.retrieveProvider("pp_rifare_fenced_system_fixture");
+        if (task.provider_expiry) {
+          let expiryError: any;
+          try { await provider.authorizePayment({ data: task.original_session_data, context: {} }); }
+          catch (error) { expiryError = error; }
+          if (!expiryError) console.log("C12_NATIVE_PROVIDER_EXPIRY_FAULT=system-authorized;calls=" + calls.authorizePayment);
+          assert.match(expiryError?.message ?? "", /Native execution payment is unavailable/,
+            "A payment-row wait crossing execution expiry must refuse before System");
+          assert.equal(calls.authorizePayment, 0);
+          console.log("C12_NATIVE_PROVIDER_EXPIRY_REFUSAL=after-payment-row-wait");
+        } else {
         const collection = await postgres("payment_collection").where({ id: task.collection_id }).first("currency_code", "amount", "raw_amount");
         const refused = async (field: string) => {
           await assert.rejects(provider.authorizePayment({ data: task.original_session_data, context: {} }),
@@ -108,6 +118,7 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
         assert.equal((await postgres("payment").where({ payment_session_id: task.original_session_id })).length, 0);
         console.log("C12_NATIVE_PROVIDER_CURRENT=" + JSON.stringify({ session_id: task.original_session_id,
           pending_session: true, payment_rows: 0, actual_system_authorizations: 1 }));
+        }
       }
       if (task.correlation) {
         const refused = async (table: string, run: () => Promise<unknown>) => {
@@ -211,7 +222,7 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
         if (!providerError) console.log("C12_NATIVE_PROVIDER_FAULT=retired-system-authorized;calls=" + calls.authorizePayment);
         assert.match(providerError?.message ?? "", /Native execution payment is unavailable/,
           "Retired current backend must be refused before another native System authorization");
-        assert.equal(calls.authorizePayment, 1);
+        assert.equal(calls.authorizePayment, task.provider_expiry ? 0 : 1);
         console.log("C12_NATIVE_PROVIDER_RETIRED_REFUSAL=before-system-delegate");
       }
       const refused = async (table: string, run: () => Promise<unknown>) => {
@@ -228,7 +239,8 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
         location_id: task.location_id, quantity: 1, line_item_id: task.line_item_id }));
       await refused("payment_session", () => container.resolve(Modules.PAYMENT).createPaymentSession(task.collection_id, {
         provider_id: "pp_rifare_fenced_system_fixture", currency_code: "usd", amount: 12.5, data: {} }));
-      assert.deepEqual(calls, Object.fromEntries(names.map(name => [name, name === "authorizePayment" && task.provider ? 1 : 0])));
+      assert.deepEqual(calls, Object.fromEntries(names.map(name => [name,
+        name === "authorizePayment" && task.provider && !task.provider_expiry ? 1 : 0])));
       const finalIdentity = (await postgres.raw("select session_user as role, pg_backend_pid() as pid")).rows[0];
       if (task.provider) assert.equal(finalIdentity.role, identity.role);
       else assert.equal(finalIdentity.pid, identity.pid);
@@ -282,7 +294,7 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
   const claim = await f.journal.claimNativeExecution(original.command.command_id, f.context, f.verifier);
   let definition: string | null = null, originalDefinition: string | null = null, paymentDefinition: string | null = null;
   let deliveredLogin: boolean | undefined, retirement: Promise<void> | undefined;
-  let revocationPause: any;
+  let revocationPause: any, expiryPause: any, paymentHold: any, expiryHolder: number | undefined;
   const fault = process.env.RIFARE_C12_GENERATION_FAULT === "omit";
   const ordering = process.env.RIFARE_C12_GENERATION_ORDERING === "write-first";
   const revokeFirst = process.env.RIFARE_C12_GENERATION_ORDERING === "revoke-first";
@@ -294,6 +306,8 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
   const providerFault = process.env.RIFARE_C12_PROVIDER_FAULT === "omit-attempt";
   const providerOrdering = process.env.RIFARE_C12_PROVIDER_ORDERING === "delegate-open";
   const providerOrderingFault = process.env.RIFARE_C12_PROVIDER_ORDERING_FAULT === "omit-delegate-lock";
+  const providerExpiry = process.env.RIFARE_C12_PROVIDER_EXPIRY === "payment-wait";
+  const providerExpiryFault = process.env.RIFARE_C12_PROVIDER_EXPIRY_FAULT === "omit-post-lock-clock";
   const orderingFault = process.env.RIFARE_C12_GENERATION_ORDERING_FAULT === "omit-locks";
   try {
   assert.ok(claim.worker); assert.ok(claim.seal);
@@ -357,6 +371,16 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
     assert.ok(paymentDefinition.includes(checked));
     const mutant = paymentDefinition.replace(checked, () => bypass); assert.notEqual(mutant, paymentDefinition); await postgres.raw(mutant);
   }
+  if (providerExpiryFault) {
+    assert.ok(providerExpiry && provider && paymentDefinition && !providerFault && !providerOrderingFault);
+    const postLock = `        observed := clock_timestamp();
+        if observed >= original.execution_expires_at then
+          raise exception 'Native execution payment unavailable' using errcode='42501';
+        end if;
+`;
+    assert.ok(paymentDefinition.includes(postLock));
+    const mutant = paymentDefinition.replace(postLock, ""); assert.notEqual(mutant, paymentDefinition); await postgres.raw(mutant);
+  }
   await postgres.raw(`create table public.rifare_c12_generation_audit(id bigserial primary key,native_table text not null,authenticated_role text not null);
     create function public.rifare_c12_generation_observe() returns trigger language plpgsql security definer set search_path=pg_catalog as $$ begin
       if session_user::text ~ '^rifare_exec_[a-f0-9]{32}$' then insert into public.rifare_c12_generation_audit(native_table,authenticated_role) values(TG_TABLE_NAME,session_user); end if;
@@ -374,6 +398,20 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
     end $$;
     create trigger rifare_c12_pause_retirement after update on public.rifare_operation
       for each row execute function public.rifare_c12_pause_retirement()`);
+  if (providerExpiry) {
+    await postgres.raw(`create function public.rifare_c12_delay_provider_expiry() returns trigger
+      language plpgsql set search_path=pg_catalog as $$ begin
+        if OLD.execution_payment_attempted_at is null and NEW.execution_payment_attempted_at is not null then
+          perform pg_advisory_xact_lock(1940052,3);
+        end if;
+        return NEW;
+      end $$;
+      create trigger aaa_rifare_c12_delay_provider_expiry before update on public.rifare_operation
+        for each row execute function public.rifare_c12_delay_provider_expiry()`);
+    expiryPause = await postgres.transaction();
+    await expiryPause.raw("select pg_advisory_xact_lock(1940052,3)");
+    expiryHolder = (await expiryPause.raw("select pg_backend_pid() as pid")).rows[0].pid;
+  }
   const snapshot = async () => {
     const rows: Record<string, unknown> = {}; for (const table of tables) rows[table] = await postgres(table).orderBy("id");
     return createHash("sha256").update(JSON.stringify(rows)).digest("hex");
@@ -386,7 +424,7 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
   env.RIFARE_C12_GENERATION_TASK = JSON.stringify({ role: claim.worker!.role, cart_id: original.cart.id,
     customer_id: f.customer.id, collection_id: original.collection.id, line_item_id: line.id,
     inventory_item_id: item.id, location_id: location.id, ordering, reconnect, correlation, provider,
-    provider_ordering: providerOrdering,
+    provider_ordering: providerOrdering, provider_expiry: providerExpiry,
     other_cart_id: otherCart.id, other_line_id: otherLine[0].id, other_collection_id: otherCollection.id,
     other_session_id: otherSession.id, foreign_address_id: foreignAddressId, foreign_order_id: foreignOrder.id,
     foreign_order_line_id: foreignOrderItem.item_id, original_session_id: original.session.id, original_session_data: original.session.data,
@@ -406,7 +444,61 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
       const child = spawn(process.execPath, args, { cwd: process.cwd(), env, stdio: ["ignore", "pipe", "pipe", "ipc"] });
       let output = "", ready = false;
       const handlers = new Set<Promise<void>>();
-      const timer = setTimeout(() => { parentFailure ??= new Error("Native generation worker deadline"); child.kill("SIGKILL"); }, 45000);
+      const timer = setTimeout(() => { parentFailure ??= new Error("Native generation worker deadline"); child.kill("SIGKILL"); }, providerExpiry ? 90000 : 45000);
+      if (providerExpiry) {
+        const coordinating = (async () => {
+          assert.ok(expiryPause && expiryHolder);
+          let attemptedWriter: any;
+          const blockedDeadline = Date.now() + 12000;
+          while (Date.now() < blockedDeadline) {
+            attemptedWriter = (await postgres.raw(`select pid from pg_catalog.pg_stat_activity
+              where datname=current_database() and usename=? and ?::integer=any(pg_blocking_pids(pid))
+                and query ilike '%rifare_require_native_execution_payment%'`, [claim.worker!.role, expiryHolder])).rows[0];
+            if (attemptedWriter) break;
+            await new Promise(resolve => setTimeout(resolve, 20));
+          }
+          assert.ok(attemptedWriter, "Provider admission must reach the actual attempt trigger");
+          paymentHold = await postgres.transaction();
+          const paymentHolder = (await paymentHold.raw("select pg_backend_pid() as pid")).rows[0].pid;
+          let paymentAcquired = false;
+          const acquiring = paymentHold.raw("update public.payment_session set updated_at=updated_at where id=?", [original.session.id])
+            .then((value: any) => { paymentAcquired = true; return value; });
+          let paymentQueued: any;
+          const queueDeadline = Date.now() + 4000;
+          while (Date.now() < queueDeadline && !paymentAcquired) {
+            paymentQueued = (await postgres.raw(`select pid,pg_blocking_pids(pid) as blockers from pg_catalog.pg_stat_activity
+              where pid=? and ?::integer=any(pg_blocking_pids(pid))`, [paymentHolder, attemptedWriter.pid])).rows[0];
+            if (paymentQueued) break;
+            await new Promise(resolve => setTimeout(resolve, 20));
+          }
+          assert.ok(paymentQueued && !paymentAcquired, "Controller payment UPDATE must queue behind provider admission");
+          await expiryPause.commit();
+          await acquiring;
+          let delegateWaiter: any;
+          const delegateDeadline = Date.now() + 4000;
+          while (Date.now() < delegateDeadline) {
+            delegateWaiter = (await postgres.raw(`select pid,pg_blocking_pids(pid) as blockers from pg_catalog.pg_stat_activity
+              where datname=current_database() and usename=? and ?::integer=any(pg_blocking_pids(pid))
+                and query ilike '%rifare_require_native_execution_payment%'`, [claim.worker!.role, paymentHolder])).rows[0];
+            if (delegateWaiter) break;
+            await new Promise(resolve => setTimeout(resolve, 20));
+          }
+          assert.ok(delegateWaiter, "Delegate gate must wait on the controller-held payment row");
+          const attempted = await original.row(); assert.ok(attempted.execution_payment_attempted_at);
+          const expiresAt = attempted.execution_expires_at;
+          assert.equal((await postgres.raw("select clock_timestamp()<?::timestamptz as current", [expiresAt])).rows[0].current, true,
+            "Delegate payment-row wait must be observed before immutable execution expiry");
+          while (!(await postgres.raw("select clock_timestamp()>=?::timestamptz as expired", [expiresAt])).rows[0].expired)
+            await new Promise(resolve => setTimeout(resolve, 20));
+          await paymentHold.commit();
+          orderingObservation = { payment_row_wait_crossed_expiry: true, attempted_writer_pid: attemptedWriter.pid,
+            payment_update_pid: paymentHolder, delegate_waiter_pid: delegateWaiter.pid,
+            queued_before_admission_release: true, delegate_blocked_on_payment_row: true,
+            attempt_committed_before_expiry: true,
+            payment_session_id: original.session.id };
+        })().catch(error => { parentFailure ??= error; child.kill("SIGKILL"); });
+        handlers.add(coordinating); void coordinating.finally(() => handlers.delete(coordinating));
+      }
       for (const stream of [child.stdout!, child.stderr!]) stream.on("data", data => { output = (output + data).slice(-30000); });
       child.on("message", message => {
         const handling = (async () => {
@@ -492,7 +584,8 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
         beforeAudit = await postgres("rifare_c12_generation_audit").orderBy("id");
         if (provider) {
           const audited = (beforeAudit as any[]).map(row => row.native_table);
-          assert.deepEqual(audited, ["cart", "payment_collection", "payment_collection", "payment_collection", "payment_collection"]);
+          assert.deepEqual(audited, providerExpiry ? ["cart"] :
+            ["cart", "payment_collection", "payment_collection", "payment_collection", "payment_collection"]);
           assert.equal((await postgres("payment_session").where({ id: original.session.id }).first("status")).status, "pending");
           assert.equal((await postgres("payment").where({ payment_session_id: original.session.id })).length, 0);
           assert.ok((await original.row()).execution_payment_attempted_at);
@@ -550,6 +643,7 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
       ordering, revoke_first: revokeFirst, reconnect, reconnect_fault: reconnectFault,
       correlation, correlation_fault: correlationFault, provider, provider_fault: providerFault,
       provider_ordering: providerOrdering, provider_ordering_fault: providerOrderingFault,
+      provider_expiry: providerExpiry, provider_expiry_fault: providerExpiryFault,
       ordering_fault: orderingFault, ordering_observation: orderingObservation }, null, 2), { flag: "wx" });
     if (parentFailure) throw parentFailure;
     assert.equal(result.code, 0, result.output);
@@ -560,7 +654,7 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
       assert.deepEqual(finalAudit.map((row: any) => row.native_table), ["cart", "payment_session"]);
       assert.ok(finalAudit.every((row: any) => row.authenticated_role === claim.worker!.role));
     } else assert.deepEqual(finalAudit, beforeAudit);
-    if (ordering || revokeFirst || reconnect || providerOrdering) {
+    if (ordering || revokeFirst || reconnect || providerOrdering || providerExpiry) {
       assert.ok(orderingObservation); console.log("C12_NATIVE_GENERATION_ORDERING=" + JSON.stringify(orderingObservation));
     }
     console.log(result.output.split(/\r?\n/).filter(value => value.startsWith("C12_NATIVE_")).join("\n"));
@@ -572,13 +666,15 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
           ...(correlation ? { current_wrong_original_refusals: 10, healthy_original_session_writes: 1 } : {}) }),
       original_visibility_qualified: false, current_authority_fence_qualified: false,
       provider_admission_currentness_qualified: provider, provider_revocation_ordering_qualified: providerOrdering,
-      provider_effect_time_fence_qualified: false, provider_expiry_at_delegate_qualified: false,
+      provider_effect_time_fence_qualified: false, provider_expiry_at_delegate_qualified: providerExpiry,
       provider_one_shot_attempt_qualified: provider, attempted_state_privacy_restore_qualified: false,
       connected_provider_qualified: false, full_C12_qualified: false }));
   } finally {
     try {
       try {
         if (revocationPause && !revocationPause.isCompleted()) await revocationPause.rollback();
+        if (paymentHold && !paymentHold.isCompleted()) await paymentHold.rollback();
+        if (expiryPause && !expiryPause.isCompleted()) await expiryPause.rollback();
         if (retirement) await retirement;
       }
       finally {
@@ -592,16 +688,19 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
           assert.equal((await postgres.raw("select pg_get_functiondef('public.rifare_guard_native_original()'::regprocedure) as definition")).rows[0].definition, originalDefinition);
           console.log("C12_NATIVE_ORIGINAL_FAULT_RESTORED=exact");
         }
-        if ((providerFault || providerOrderingFault) && paymentDefinition) {
+        if ((providerFault || providerOrderingFault || providerExpiryFault) && paymentDefinition) {
           await postgres.raw(paymentDefinition);
           assert.equal((await postgres.raw("select pg_get_functiondef('public.rifare_require_native_execution_payment(text,text,text)'::regprocedure) as definition")).rows[0].definition, paymentDefinition);
-          console.log(providerOrderingFault ? "C12_NATIVE_PROVIDER_EFFECT_FAULT_RESTORED=exact" : "C12_NATIVE_PROVIDER_FAULT_RESTORED=exact");
+          console.log(providerExpiryFault ? "C12_NATIVE_PROVIDER_EXPIRY_FAULT_RESTORED=exact" :
+            providerOrderingFault ? "C12_NATIVE_PROVIDER_EFFECT_FAULT_RESTORED=exact" : "C12_NATIVE_PROVIDER_FAULT_RESTORED=exact");
         }
       }
     } finally {
       try {
-        if (revokeFirst) await postgres.raw(`drop trigger if exists rifare_c12_pause_retirement on public.rifare_operation;
+          if (revokeFirst) await postgres.raw(`drop trigger if exists rifare_c12_pause_retirement on public.rifare_operation;
           drop function if exists public.rifare_c12_pause_retirement()`);
+          if (providerExpiry) await postgres.raw(`drop trigger if exists aaa_rifare_c12_delay_provider_expiry on public.rifare_operation;
+            drop function if exists public.rifare_c12_delay_provider_expiry()`);
       } finally {
       if (claim.worker) {
         await retireOriginalExecutionWorker(postgres, claim.worker.role);

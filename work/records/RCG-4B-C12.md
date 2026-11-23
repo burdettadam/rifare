@@ -497,3 +497,11 @@ the gate samples its clock before its final payment-session/collection lock wait
 A controller-held payment row could therefore delay the delegate phase past the
 execution expiry. This source does not claim an expiry-aware effect-time fence;
 that requires a post-wait clock check and an actual delayed-row-lock expiry case.
+
+Both roles cleared `825bd1f` for the bounded local revocation-ordering claim. The
+next source resamples database time after the payment-session/collection locks.
+Its fixed campaign queues a real controller payment-session UPDATE ahead of the
+delegate transaction, holds that row beyond a trigger-shortened execution expiry,
+and requires refusal before the pinned System method. Removing only the post-lock
+clock check must let System run and fail the unchanged expiry oracle; the original
+gate definition is then restored exactly.

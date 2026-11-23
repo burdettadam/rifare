@@ -200,6 +200,10 @@ export class Migration20261123200000 extends Migration {
             and not exists(select 1 from public.payment p where p.payment_session_id=p_session or p.payment_collection_id=original.payment_collection_id)
           for share of ps,pc;
         if not found then raise exception 'Native execution payment unavailable' using errcode='42501'; end if;
+        observed := clock_timestamp();
+        if observed >= original.execution_expires_at then
+          raise exception 'Native execution payment unavailable' using errcode='42501';
+        end if;
         if p_action='authorize' then
           update public.rifare_operation set execution_payment_attempted_at=observed,
             revision=revision+1,updated_at=clock_timestamp()
