@@ -1,6 +1,7 @@
 # RCG-4B-C6 — Public managed-machine command and request handoff
 
-State: assigned; no implementation, test execution, independent review or publication claim yet.
+State: public wire component implemented and locally tested; native composition,
+fault qualification, independent reviews and publication remain pending.
 
 Resumed November 23 from integrated `8cd2a09` on
 `feat/rcg4b-public-caller`. Root owns tests, native composition and integration.
@@ -62,10 +63,10 @@ public implementation is integrated and the actual tests pass.
 | --- | --- |
 | Provider source inspection | Complete; source-only |
 | Assignment/ADR | Complete |
-| Implementation | Not started |
-| Local TLS tests | Not run |
+| Implementation | Separate public wire adapter at `c527439`; native composition pending |
+| Local TLS tests | Eight public and 20 unchanged internal groups passed on `c527439` |
 | Native integration tests | Not run |
-| C5 regression | Not run |
+| C5 regression | Unchanged internal wire file passed all 20 groups; other native regressions pending |
 | Fault injections | Not run |
 | Independent reviews | Not run |
 | Publication of implementation | Not done |

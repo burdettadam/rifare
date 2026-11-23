@@ -134,3 +134,50 @@ test('PUBLIC-WIRE-HEADERS requires the assigned artifact cache and content prote
     await assert.rejects(client.fetchRequest(original.request, bound, () => {}));
   }, undefined, compact, 'application/oauth-authz-req+jwt', headers);
 });
+
+test('PUBLIC-WIRE-TLS refuses foreign server trust before application bytes', () => fixture(async (_client, peer) => {
+  const client = new PublicDelegatedUseClient({ ...peer.config, ca_pem: peer.credentials.otherCa.certificate_pem });
+  try {
+    await assert.rejects(client.start(original.request, () => {}));
+    assert.equal(peer.requests.length, 0);
+    assert.equal(peer.applicationBytes, 0);
+  } finally { client.close(); }
+}));
+
+test('PUBLIC-WIRE-TLS-GUARD checks withdrawal after the handshake before any HTTP bytes', () => fixture(async (client, peer) => {
+  peer.holdHandshake();
+  let allowed = true;
+  const pending = client.start(original.request, () => { if (!allowed) throw new Error('withdrawn'); });
+  const rejected = assert.rejects(pending);
+  await peer.handshakeEntered;
+  allowed = false;
+  peer.releaseHandshake();
+  await rejected;
+  assert.equal(peer.requests.length, 0);
+  assert.equal(peer.applicationBytes, 0);
+}));
+
+test('PUBLIC-WIRE-LOSS requires explicit original recovery after a lost response', () => fixture(async (client, peer) => {
+  peer.setHandler((_request, response) => response.destroy());
+  await assert.rejects(client.start(original.request, () => {}));
+  assert.equal(peer.requests.length, 1);
+  assert.equal(peer.requests[0].raw.toString(), original.canonical_json);
+  peer.setHandler((request, response) => {
+    response.statusCode = 200;
+    response.setHeader('link', '<' + peer.config.origin + '/v1/flows/instances/' +
+      claimOracle.challenge_response.result.challenge_id + '/request>; rel="urn:marty:delegated-use:request"');
+    response.end(JSON.stringify({ ...claimOracle.challenge_response, recovered: true }));
+  });
+  const recovered = await client.recover(original.request, original.recovery_request, () => {});
+  assert.equal(recovered.response.recovered, true);
+  assert.equal(peer.requests.length, 2);
+  assert.equal(peer.requests[1].raw.toString(), original.recovery_canonical_json);
+}));
+
+test('PUBLIC-WIRE-CLOSE refuses further calls and exposes no proof or finalization method', () => fixture(async (client, peer) => {
+  assert.equal('finalize' in client, false);
+  assert.equal('submitProof' in client, false);
+  client.close();
+  await assert.rejects(client.start(original.request, () => {}));
+  assert.equal(peer.connections, 0);
+}));
