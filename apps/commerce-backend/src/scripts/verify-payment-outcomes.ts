@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { createHash } from "node:crypto";
+import { createHash, createHmac } from "node:crypto";
 import { randomUUID } from "node:crypto";
 import { spawn } from "node:child_process";
 import { setTimeout as delay } from "node:timers/promises";
@@ -79,6 +79,13 @@ export default async function verifyPaymentOutcomes({ container }: ExecArgs) {
     try { await action(); } finally {
       await postgres(table).where({ id: values.id ?? key }).update(Object.fromEntries(Object.keys(values).map(name => [name, before[name]])));
     }
+  };
+  const waitForLock = async (needle: string) => {
+    for (let n = 0; n < 150; n++) {
+      const result = await postgres.raw("select 1 from pg_stat_activity where datname=current_database() and pid<>pg_backend_pid() and wait_event_type='Lock' and query like ?", ["%" + needle + "%"]);
+      if (result.rows.length) return; await delay(20);
+    }
+    assert.fail("required real PostgreSQL lock wait not observed: " + needle);
   };
   try {
     const original = await makeAssociated(), id = original.command.command_id;
@@ -261,6 +268,81 @@ export default async function verifyPaymentOutcomes({ container }: ExecArgs) {
         });
       });
     });
+    await check("C11-DELETED-ROWS native record deletion is visible and bounded history never truncates", async () => {
+      const capture = await postgres("capture").where({ payment_id: native.id }).orderBy("id").first();
+      const refund = await postgres("refund").where({ payment_id: native.id }).first();
+      for (const [table, record] of [["capture", capture], ["refund", refund]] as const) {
+        await changed(table, record.id, { deleted_at: new Date() }, async () => {
+          const result = await noEffects(() => observe(id));
+          assert.equal(result[table === "capture" ? "captures" : "refunds"].find((row: any) => row.id === record.id).deleted, true);
+          assert.equal(result.consistency[table === "capture" ? "collection_capture_matches_rows" : "collection_refund_matches_rows"], false);
+        });
+      }
+      const extra = Array.from({ length: 100 }, () => ({ ...capture, id: "capt_" + randomUUID().replaceAll("-", ""), deleted_at: new Date() }));
+      await postgres("capture").insert(extra);
+      try { await noEffects(() => assert.rejects(observe(id))); }
+      finally { await postgres("capture").whereIn("id", extra.map(row => row.id)).delete(); }
+    });
+    await check("C11-WAIT-ABORT actual blocked first binding rolls back on cancellation", async () => {
+      const sample = await makeAssociated(); await payments.authorizePaymentSession(sample.session.id, {});
+      const before = await sample.row(), blocker = await postgres.transaction(), controller = new AbortController();
+      await blocker("rifare_operation").where({ id: before.id }).forUpdate().first();
+      const action = noEffects(() => assert.rejects(observe(sample.command.command_id, context, controller.signal)));
+      try { await waitForLock('update "rifare_operation"'); controller.abort(); }
+      finally { await blocker.commit(); }
+      await action; assert.deepEqual(await sample.row(), before);
+    });
+    await check("C11-CONTEXT actor and channels are copied before actual lock waits", async () => {
+      const sample = await makeAssociated(); const payment = await payments.authorizePaymentSession(sample.session.id, {}); assert.ok(payment);
+      const before = await sample.row(), blocker = await postgres.transaction();
+      await blocker("rifare_operation").where({ id: before.id }).forUpdate().first();
+      const supplied = { actor: { ...context.actor }, salesChannelIds: [...context.salesChannelIds] };
+      const action = noEffects(() => observe(sample.command.command_id, supplied));
+      try { await waitForLock('update "rifare_operation"'); supplied.actor.actor_id = "cus_other"; supplied.salesChannelIds.length = 0; }
+      finally { await blocker.commit(); }
+      const result = await action; assert.equal(result.native_payment.id, payment.id);
+    });
+    await check("C11-COMMIT-OWNER current ownership withdrawn by deferred COMMIT prevents return", async () => {
+      const sample = await makeAssociated(); const payment = await payments.authorizePaymentSession(sample.session.id, {}); assert.ok(payment);
+      const commandId = sample.command.command_id;
+      await postgres.raw(`create function public.c11_owner_commit() returns trigger language plpgsql as $$ begin if new.original_command_uuid='${commandId}' and new.native_payment_id is not null then update auth_identity set app_metadata='{"customer_id":"cus_other"}'::jsonb where id='${f.identity.id}'; end if; return new; end $$`);
+      await postgres.raw("create constraint trigger c11_owner after update on rifare_operation deferrable initially deferred for each row execute function public.c11_owner_commit()");
+      try { await noEffects(() => assert.rejects(observe(commandId))); }
+      finally {
+        await postgres.raw("drop trigger c11_owner on rifare_operation; drop function public.c11_owner_commit()");
+        await postgres("auth_identity").where({ id: f.identity.id }).update({ app_metadata: { customer_id: f.customer.id } });
+      }
+      const retained = await sample.row(); assert.equal(retained.native_payment_id, payment.id);
+      assert.equal((await noEffects(() => observe(commandId))).first_payment_observed_at.getTime(), retained.native_payment_observed_at.getTime());
+    });
+    await check("C11-COMMIT-PRIVACY suppression committed with first binding prevents historical return", async () => {
+      const sample = await makeAssociated(); const payment = await payments.authorizePaymentSession(sample.session.id, {}); assert.ok(payment);
+      const commandId = sample.command.command_id;
+      const marker = "hmac-sha256:" + createHmac("sha256", Buffer.from(process.env.RIFARE_JOURNAL_PRIVACY_KEY!, "base64url"))
+        .update(JSON.stringify(["urn:rifare:medusa-journal-privacy-subject:v1", f.merchant.merchant_namespace, f.merchant.store_id, f.customer.id])).digest("hex");
+      assert.ok(await postgres("rifare_operation_privacy_subject").where({ id: marker, suppressed: false }).first());
+      await postgres.raw(`create function public.c11_privacy_commit() returns trigger language plpgsql as $$ begin if new.original_command_uuid='${commandId}' and new.native_payment_id is not null then update rifare_operation_privacy_subject set suppressed=true where id='${marker}'; end if; return new; end $$`);
+      await postgres.raw("create constraint trigger c11_privacy after update on rifare_operation deferrable initially deferred for each row execute function public.c11_privacy_commit()");
+      try { await noEffects(() => assert.rejects(observe(commandId))); assert.equal((await sample.row()).native_payment_id, payment.id); }
+      finally {
+        await postgres.raw("drop trigger c11_privacy on rifare_operation; drop function public.c11_privacy_commit()");
+        await postgres("rifare_operation_privacy_subject").where({ id: marker }).update({ suppressed: false });
+      }
+      assert.equal((await noEffects(() => observe(commandId))).native_payment.id, payment.id);
+    });
+    await check("C11-COMMIT-ABORT cancellation during deferred COMMIT keeps identity without returning it", async () => {
+      const sample = await makeAssociated(); const payment = await payments.authorizePaymentSession(sample.session.id, {}); assert.ok(payment);
+      const commandId = sample.command.command_id, blocker = await postgres.transaction(), controller = new AbortController();
+      await blocker.raw("select pg_advisory_xact_lock(117, 911)");
+      await postgres.raw(`create function public.c11_abort_commit() returns trigger language plpgsql as $$ begin if new.original_command_uuid='${commandId}' and new.native_payment_id is not null then perform pg_advisory_xact_lock(117, 911); end if; return new; end $$`);
+      await postgres.raw("create constraint trigger c11_abort after update on rifare_operation deferrable initially deferred for each row execute function public.c11_abort_commit()");
+      const action = noEffects(() => assert.rejects(observe(commandId, context, controller.signal)));
+      try { await waitForLock('update "rifare_operation"'); controller.abort(); }
+      finally { await blocker.commit(); }
+      try { await action; assert.equal((await sample.row()).native_payment_id, payment.id); }
+      finally { await postgres.raw("drop trigger c11_abort on rifare_operation; drop function public.c11_abort_commit()"); }
+      assert.equal((await noEffects(() => observe(commandId))).native_payment.id, payment.id);
+    });
     await check("C11-RACE concurrent first observations retain one immutable identity", async () => {
       const sample = await makeAssociated(); await payments.authorizePaymentSession(sample.session.id, {});
       const outcomes = await noEffects(() => Promise.allSettled([1, 2].map(() => observe(sample.command.command_id))));
@@ -315,6 +397,9 @@ export default async function verifyPaymentOutcomes({ container }: ExecArgs) {
         challenge_fingerprint: null, receipt_fingerprint: null, final_command_uuid: null,
         payment_fingerprint: "sha256:" + "1".repeat(64) };
       await assert.rejects(postgres("rifare_operation").insert(duplicate), (error: any) => error.code === "23505" && error.constraint === "rifare_operation_native_payment_unique");
+      await journal.uninstallPrivacyJournal(f.privacyActor);
+      assert.equal((await original.row()).native_payment_fingerprint, before.native_payment_fingerprint);
+      await noEffects(() => assert.rejects(observe(id)));
     });
     console.log("RIFARE_NATIVE_PAYMENT_OUTCOMES_RESULT=" + JSON.stringify({ result: "pass", checks,
       profile: "native-historical-observation", actual_financial_effects: false, execution_authorized: false, production_qualified: false }));
