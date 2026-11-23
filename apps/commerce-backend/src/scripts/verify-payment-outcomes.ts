@@ -337,7 +337,7 @@ export default async function verifyPaymentOutcomes({ container }: ExecArgs) {
       await postgres.raw(`create function public.c11_abort_commit() returns trigger language plpgsql as $$ begin if new.original_command_uuid='${commandId}' and new.native_payment_id is not null then perform pg_advisory_xact_lock(117, 911); end if; return new; end $$`);
       await postgres.raw("create constraint trigger c11_abort after update on rifare_operation deferrable initially deferred for each row execute function public.c11_abort_commit()");
       const action = noEffects(() => assert.rejects(observe(commandId, context, controller.signal)));
-      try { await waitForLock('update "rifare_operation"'); controller.abort(); }
+      try { await waitForLock('COMMIT;'); controller.abort(); }
       finally { await blocker.commit(); }
       try { await action; assert.equal((await sample.row()).native_payment_id, payment.id); }
       finally { await postgres.raw("drop trigger c11_abort on rifare_operation; drop function public.c11_abort_commit()"); }
