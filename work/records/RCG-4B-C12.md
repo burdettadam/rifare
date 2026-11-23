@@ -306,3 +306,16 @@ revoked/expired original identity refuses. Required native targets cannot be sil
 skipped. Ordinary non-worker behavior stays outside this primitive; original-specific
 row visibility,missing-identity protected-cart cases,current authority and provider
 calls are still unqualified. This guard cannot by itself satisfy C12.
+
+
+The8e4cc51 fresh migration stopped because native link tables are created after
+module migrations; no guarded runtime pass is credited. The next candidate installs
+available targets during migration,then the provisioning controller completes
+static attachment at normal module lifecycle start after link migration. Restricted
+workers only verify readiness. Role creation also requires full target readiness,
+including exact enabled BEFORE-statement and deferred-COMMIT trigger shapes; missing
+links or disabled/mismatched guards cannot silently count as ready. Existing named
+triggers are not overwritten. The installer is invoker-only,owner-checked and not
+PUBLIC-executable; no superuser DDL event trigger or new mandatory command layer is
+introduced. Deferred native write checks repeat generation/clock validation at
+COMMIT. Current authority/original row visibility/provider effects remain separate.

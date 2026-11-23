@@ -25,6 +25,7 @@ export function requireNativeExecutionProfile() {
 export async function createOriginalExecutionWorker(tx: Postgres) {
   requireNativeExecutionProfile();
   if (!tx.isTransaction) throw new Error("NATIVE_EXECUTION_TRANSACTION_REQUIRED");
+  if (!(await postgresGenerationReady(tx))) throw new Error("NATIVE_GENERATION_FENCE_NOT_READY");
   const role = "rifare_exec_" + randomUUID().replaceAll("-", ""), password = randomBytes(32).toString("hex");
   try {
     await tx.raw(`create role "${role}" nologin password '${password}' nosuperuser nocreatedb nocreaterole noinherit noreplication nobypassrls`);
@@ -86,4 +87,20 @@ export async function retireOriginalExecutionWorker(postgres: Postgres, role: st
         execution_revoked_at: tx.fn.now(), revision: tx.raw("revision + 1"), updated_at: tx.fn.now() });
     await tx.raw(`alter role "${role}" nologin`);
   });
+}
+
+
+async function postgresGenerationReady(postgres: Postgres) {
+  return (await postgres.raw("select public.rifare_native_generation_ready() as ready")).rows[0]?.ready === true;
+}
+
+/** Native links migrate after modules. The provisioning controller completes
+ * static guard attachment at lifecycle start; restricted workers only verify it.
+ * No superuser event trigger or separate mandatory migration command is added. */
+export async function ensureNativeGenerationInstallation(postgres: Postgres) {
+  if (await postgresGenerationReady(postgres)) return;
+  const role = (await postgres.raw("select session_user as role")).rows[0]?.role;
+  if (typeof role !== "string" || /^rifare_exec_[a-f0-9]{32}$/.test(role)) throw new Error("NATIVE_GENERATION_FENCE_NOT_READY");
+  await postgres.raw("select public.rifare_install_native_generation_fences()");
+  if (!(await postgresGenerationReady(postgres))) throw new Error("NATIVE_GENERATION_FENCE_NOT_READY");
 }

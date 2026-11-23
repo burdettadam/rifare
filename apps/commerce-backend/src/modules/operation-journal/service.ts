@@ -16,7 +16,7 @@ import { retainedNativeReceiptContext } from "./receipt-context";
 import { retainedNativeProofContext } from "./proof-context";
 import { readLockedNativePayment, readLockedNativeExecutionPayment } from "./payment-context";
 import { nativeExecutionDeliverySnapshot } from "./execution-delivery";
-import { executionColumns, executionFingerprint, createOriginalExecutionWorker, activateOriginalExecutionWorker, retireOriginalExecutionWorker, requireNativeExecutionProfile, type ExecutionRow } from "./execution-claim";
+import { executionColumns, executionFingerprint, ensureNativeGenerationInstallation, createOriginalExecutionWorker, activateOriginalExecutionWorker, retireOriginalExecutionWorker, requireNativeExecutionProfile, type ExecutionRow } from "./execution-claim";
 import { readOriginalPaymentOutcome } from "./payment-outcome";
 import { prepareProofAssociation, PreparedProofAssociation } from "./proof-association";
 import { configure } from "safe-stable-stringify";
@@ -80,6 +80,7 @@ const signalAborted = Object.getOwnPropertyDescriptor(AbortSignal.prototype, "ab
 
 export default class OperationJournalService {
   private readonly postgres: Postgres;
+  readonly __hooks = { onApplicationStart: async () => ensureNativeGenerationInstallation(this.postgres) };
 
   constructor({ [ContainerRegistrationKeys.PG_CONNECTION]: postgres }: { [ContainerRegistrationKeys.PG_CONNECTION]: Postgres }) {
     this.postgres = postgres;
