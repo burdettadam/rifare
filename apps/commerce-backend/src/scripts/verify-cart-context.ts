@@ -263,6 +263,24 @@ export default async function verifyCartContext({ container }: ExecArgs) {
     assert.notEqual(afterCredit.value.observation.facts_digest, afterAddress.value.observation.facts_digest);
     check("native-credit-lines-participate-in-the-projection", () => {});
 
+    await carts.addShippingMethods(aliceCart.id, [{ name: "Synthetic discount shipping", amount: 5,
+      tax_lines: [{ rate: 10, code: "synthetic-ten-percent", provider_id: "tp_system" }] }]);
+    const beforeShippingDiscount = await observe();
+    assert.equal(beforeShippingDiscount.status, 200);
+    const shippingMethod = beforeShippingDiscount.value.observation.facts.shipping_methods[0];
+    await carts.addShippingMethodAdjustments(aliceCart.id, [{
+      shipping_method_id: shippingMethod.id, code: "SYNTHETIC-SHIPPING-DISCOUNT", amount: 1,
+    }]);
+    const afterShippingDiscount = await observe();
+    check("native-shipping-adjustment-without-tax-inclusion-flag", () => {
+      assert.equal(afterShippingDiscount.status, 200, JSON.stringify(afterShippingDiscount.value));
+      const facts = afterShippingDiscount.value.observation.facts;
+      assert.equal(facts.shipping_methods[0].adjustments[0].amount, "1");
+      assert.equal(facts.shipping_methods[0].adjustments[0].is_tax_inclusive, false);
+      assert.equal(BigInt(beforeShippingDiscount.value.observation.facts.payable_total_minor) -
+        BigInt(facts.payable_total_minor), 110n);
+    });
+
     const postgres = container.resolve(ContainerRegistrationKeys.PG_CONNECTION);
     const admission = {
       actor: { actor_type: "customer", actor_id: alice.customer.id, auth_identity_id: alice.identity.id },
@@ -275,18 +293,18 @@ export default async function verifyCartContext({ container }: ExecArgs) {
       /Serializable isolation is required/);
     const lockedFacts = await readAdmission();
     check("serializable-cart-facts-match-native-observation", () => {
-      assert.deepEqual(lockedFacts.facts, afterCredit.value.observation.facts);
-      assert.equal(lockedFacts.factsDigest, afterCredit.value.observation.facts_digest);
+      assert.deepEqual(lockedFacts.facts, afterShippingDiscount.value.observation.facts);
+      assert.equal(lockedFacts.factsDigest, afterShippingDiscount.value.observation.facts_digest);
       assert.match(lockedFacts.actorDigest, /^sha256:[a-f0-9]{64}$/);
     });
     const command = {
-      cart_facts_digest: afterCredit.value.observation.facts_digest,
+      cart_facts_digest: afterShippingDiscount.value.observation.facts_digest,
       cart_id: aliceCart.id,
       command_id: randomUUID(),
       currency: "usd",
       currency_exponent: 2,
       kind: "prepare_purchase",
-      payable_minor_units: afterCredit.value.observation.facts.payable_total_minor,
+      payable_minor_units: afterShippingDiscount.value.observation.facts.payable_total_minor,
       profile: "urn:rifare:medusa-original-operation:v1",
     };
     check("canonical-original-command-is-closed-and-bound-to-locked-cart", () => {

@@ -1,6 +1,6 @@
 # COMMERCE-OPERATION-01 — Medusa PostgreSQL original-operation journal
 
-State: assigned; implementation and verification not yet performed.
+State: implemented and exercised locally. Privacy-owner integration and independent review are pending.
 Protected base: `84e0e0e4c76b6b44eebe802c55ce0820d5608650`.
 Branch: `feat/medusa-operation-journal`.
 Assignment: [ADR-0084](../../docs/decisions/0084-medusa-operation-journal.md).
@@ -31,15 +31,15 @@ Privacy export/hold/erasure/restore/import and suppression hooks are required be
 |---|---|
 | Protected base and branch | Complete |
 | ADR and assignment | Complete |
-| Medusa/PostgreSQL schema and migration | Not started |
-| Transaction/unique constraint design | Specified; implementation pending |
-| Native tests with independent DB connections/processes | Not run |
-| Existing identity/cart/commerce regression | Not run |
-| Deliberate unique-constraint/currentness faults | Not run |
+| Medusa/PostgreSQL schema and migrations | Applied and rerun on disposable PostgreSQL 16 |
+| Serializable admission and database uniqueness | Implemented and locally exercised |
+| Native tests with independent DB connections/processes | Passed, including committed original after lost response |
+| Existing identity/cart/commerce regression | Passed on local checkpoints below |
+| Deliberate unique-constraint/currentness faults | Original uniqueness, cart lock and cross-owner check faults verified |
 | Independent reviews | Not run |
 | Publication of implementation | Not done |
 
-No implementation, test, review, publication, acceptance or production claim is made by this assignment record.
+Checkpoints below identify the exact local evidence and remaining qualification. Acceptance and production qualification remain open.
 
 ## Branch and dependency checkpoint
 
@@ -290,3 +290,19 @@ with a read-only source mount and networking disabled. All 16 cases passed,
 including CFG-04 and CFG-06, which Windows could not create fixtures for.
 The local Node image is retained as a reusable qualification dependency.
 Codex continues on the active linked checkout.
+
+## Native shipping discount checkpoint
+
+On November 22, 2026 (America/Denver), a freshly persisted Medusa shipping
+adjustment reproduced the observation refusal recorded above. Medusa
+2.23.0 persists no per-adjustment tax-inclusion flag on shipping adjustments
+and its native totals treat the absent flag as tax-exclusive. The shared
+projection now follows that convention only for shipping adjustments.
+Line-item validation and previously representable digests are preserved.
+
+On fresh disposable PostgreSQL 16, the native HTTP observation and locked
+reader agreed on the discounted facts and canonical digest. An independent
+money assertion verified that a USD 1.00 adjustment at ten percent tax
+reduced the payable total by 110 minor units. All 29 cart-context groups,
+including the admission and recovery groups, and TypeScript passed.
+The fixture containers were retired.

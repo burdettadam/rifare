@@ -69,10 +69,13 @@ function nativeNumber(value: unknown): string {
 function money(record: Row, names: string[]) {
   return Object.fromEntries(names.map((name) => [name, decimal(record[`raw_${name}`])]));
 }
-function adjustments(value: unknown) {
+function adjustments(value: unknown, kind: "line-item" | "shipping") {
+  // Native shipping adjustments have no tax-inclusion column. Medusa totals
+  // treats that missing value as exclusive of tax.
   return collection(value, 50).map((entry) => ({ id: text(entry.id), code: text(entry.code, true),
     promotion_id: text(entry.promotion_id, true), provider_id: text(entry.provider_id, true),
-    is_tax_inclusive: flag(entry.is_tax_inclusive), amount: decimal(entry.raw_amount) }));
+    is_tax_inclusive: kind === "shipping" && entry.is_tax_inclusive === undefined ? false : flag(entry.is_tax_inclusive),
+    amount: decimal(entry.raw_amount) }));
 }
 function taxes(value: unknown) {
   return collection(value, 50).map((entry) => ({ id: text(entry.id), code: text(entry.code, true),
@@ -109,12 +112,12 @@ export function projectCart(source: unknown, merchant: { merchant_namespace: str
       requires_shipping: flag(item.requires_shipping), is_giftcard: flag(item.is_giftcard),
       is_discountable: flag(item.is_discountable), is_tax_inclusive: flag(item.is_tax_inclusive),
       is_custom_price: flag(item.is_custom_price), totals: money(item, lineTotals),
-      adjustments: adjustments(item.adjustments), tax_lines: taxes(item.tax_lines),
+      adjustments: adjustments(item.adjustments, "line-item"), tax_lines: taxes(item.tax_lines),
     })),
     shipping_methods: collection(cart.shipping_methods, 20).map((method) => ({
       id: text(method.id), shipping_option_id: text(method.shipping_option_id, true),
       amount: decimal(method.raw_amount), is_tax_inclusive: flag(method.is_tax_inclusive),
-      totals: money(method, lineTotals), adjustments: adjustments(method.adjustments),
+      totals: money(method, lineTotals), adjustments: adjustments(method.adjustments, "shipping"),
       tax_lines: taxes(method.tax_lines),
     })),
     credit_lines: collection(cart.credit_lines, 100).map((credit) => ({
