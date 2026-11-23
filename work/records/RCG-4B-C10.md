@@ -1,6 +1,6 @@
 # RCG-4B-C10 - Native original payment association
 
-State: implementation checkpoint; fixed qualification and independent reviews pending.
+State: bounded local implementation accepted by delegated maintainer; normal PR9 integration pending.
 Base: `f7862128261e22f1febb02ce498cf1a8ea66409b`.
 Branch: `feat/medusa-payment-binding`.
 Writer/integration owner: root, existing primary Rifare checkout.
@@ -77,3 +77,61 @@ the C9 retention database. Preserve that setup failure; use separate databases i
 the corrected qualifier. A source exploratory correction run reached C10-CLOSE then
 failed closed in the inherited current C7 request-time gate while creating another
 fixture; it is not a passing run and does not justify relaxing time enforcement.
+
+## Fixed qualification and independent final disposition
+
+Qualified source: `66504d0b4a3f463a8480bb5b1a6524bd0bf3a8fd`, against the C9 base above.
+[PR9](https://github.com/burdettadam/rifare/pull/9) preserves the published branch.
+Root reused the source dependency cache and the task-owned unchanged-lock production
+installation after source correction; no linked checkout was created. Initial
+installation used offline npm ci, omitted development dependencies and disabled
+scripts. Host C free-space checks preceded allocation and correction qualification.
+
+The fixed own-dependency compiled consumer passed payment association 18, real C9
+native continuation 19 and synthetic mTLS session 10, receipt signatures 38 and proof
+codec 21, retained C8 receipt 13 and final unchanged uninstrumented C7 request 11,
+plus native schema/privacy. The money selector fault removed only the session raw
+amount equality: FIRST passed, then MONEY failed the unchanged expected-refusal
+assertion. Restoring exact compiled bytes returned selector SHA256
+`32fbd5c060e985cdd401cdd6919b972dfdd600681068ab06c677b6357143be0c`.
+
+Whole PostgreSQL dump/restore erasure and uninstall reconciliation passed with a
+genuine synthetic receipt verifier. Populated prior-C9 service/component and schema
+upgrade/replay preserved all 14 checked whole-table counts/digests, including retained
+C7/C8/C9 evidence and native commerce history. The real prior f786212 service was
+transpiled with TypeScript 5.9.3 while only the new migration was paused. This was
+not a whole prior-application rebuild. All six added columns were nullable and null
+for existing rows. All signatures/providers/records were synthetic; native System
+authorization/capture/refund setup qualifies local history refusal, not live effects.
+
+Fixed receipt `evidence/operation-journal/66504d0b4a3f463a8480bb5b1a6524bd0bf3a8fd/c10-runtime-input-output-receipt.json`
+has SHA256 `432debd78ebdf7144b7d8ed2864a34d00557e53f6b68ce0e2781552ca0fe3db0`.
+Both actual independent roles, `/root/c7_authority_review` and
+`/root/rifare_regression_review`, recomputed all 324 Git/disk inputs and 91 compiled
+outputs, dependency locks, fixture membership and listed evidence hashes. Both
+cleared bounded local integration with no remaining scoped blocker. These are
+actual separate reviewer sessions, not fabricated GitHub approving reviews.
+Root accepts this bounded local prerequisite under the existing delegated authority.
+
+Earlier corrected-candidate C7 executions failed in REQUEST_TIME_INVALID and the
+WIRE blocked-UPDATE probe. Diagnostic and final uninstrumented executions passed
+the same unchanged 11 cases. The cause remains unestablished: do not claim a clock
+jump, deterministic reliability or a diagnosed product fix. Both independent roles
+dispositioned this as nonblocking local qualification uncertainty; retain the failed
+logs and diagnose recurrence during subsequent qualification without relaxing guards
+or assertions. Other exploratory fixture/harness failures remain excluded as above.
+
+Repository/generated/plan checks, TypeScript no-emit, full distribution and license
+inventory, runtime intake four cases and Gitleaks passed. Shared public protocol 51
+and retained client/catalog 47 cases passed unchanged. The first shared run selected
+an incompatible host OpenSSL; the documented task-local Git OpenSSL PATH passed
+with no test changes. No whole project suite, connected provider or release claim.
+
+The selected profile is inert local pending System payment identity. Protected
+execution, live status, remote outcome reconciliation, enrolled machine custody,
+identity linking and final effects remain open. Supabase/ElevenID deployments stay
+with their other workers. The broad handoff goal remains active. Next: normal merge
+of exact published metadata checkpoint after review carry-forward; retire owned
+inactive runtime/compiler output with Windows gates and retain source/cache/refs,
+installed-lock bytes, logs, dump and review evidence. Rifare audit scope remains
+one active primary (root) and zero linked checkouts; no verification checkout exists.

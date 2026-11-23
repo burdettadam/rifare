@@ -1,6 +1,6 @@
 # ADR-0088 - Native original payment association
 
-Status: implementation checkpoint; fixed qualification and independent reviews pending.
+Status: implemented and independently reviewed locally; bounded integration accepted.
 Base: `f7862128261e22f1febb02ce498cf1a8ea66409b` (C9 PR8).
 Branch: `feat/medusa-payment-binding`; root owns writer/integration in the primary.
 
@@ -98,3 +98,7 @@ or Supabase deployment, new signer/custody service, tagged release or paid effec
 
 Full COMMERCE-AUTHORITY-01, IDENTITY-APP-02 and DELEGATED-PURCHASE-01 remain open.
 The provider worker still owns endpoint/enrolled machine/presentation custody.
+
+Qualified source and exact local evidence, independent review disposition and known
+qualification uncertainty are recorded in [RCG-4B-C10](../../work/records/RCG-4B-C10.md).
+Local pending identity does not satisfy the remaining connected/dispatch/effect gates.

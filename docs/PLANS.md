@@ -251,6 +251,18 @@ schema upgrade/replay and whole-database erasure/uninstall restore passed locall
 Connected provider enrollment/managed-machine presentation custody, live grant
 status and final commerce execution controls remain separate open work.
 
+**RCG-4B-C10 is implemented and independently reviewed locally** under
+[ADR-0088](decisions/0088-native-payment-association.md). It derives one native
+pending System payment identity from the authenticated original, exact money,
+retained C9 final result and current C8 receipt verification. It refuses ambiguous
+or deleted links, prior payment outcomes, retired regions and ineligible providers.
+Immutable identity and privacy refusal continuity remain inert. The own-dependency
+compiled consumer, populated C9 component/schema upgrade/replay and whole-database
+erasure/uninstall restore passed; [the C10 record](../work/records/RCG-4B-C10.md)
+preserves exact evidence and unexplained intermittent inherited C7 qualification
+failures. Live provider outcome/status, connected custody, identity linking and
+final commerce execution authority remain open.
+
 The full isolated **RCG-5 cross-service journey** and connected **RCG-6 profile**
 follow those bounded integrations. Preserve original recovery and Rifare's
 execution, budget, reservation and business-idempotency ownership. Reuse the
