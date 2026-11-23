@@ -27,7 +27,8 @@ its diagnostic source owners; it is not connected to this new database yet.
 | Orders and payment records | Medusa cart-completion and Payment workflows | One native order for repeated completion of the same cart; manual-provider capture/refund records. No real payment provider is configured. |
 | Ordinary returns and receiving | Medusa Order return workflows | Requested return, confirmed receipt and restocking of exactly the received unit. No physical handoff is claimed. |
 | Generic merchant administration | Upstream Medusa Admin | A synthetic native operator signed in through the compiled Admin in Chromium and viewed a seeded product. An independent anonymous context was refused. |
-| Exchanges, claims and order edits | Reuse the existing upstream Order capabilities | Available upstream, but not yet mapped against all retained Rifare scenarios. Do not keep duplicate engines by default. |
+| Ordinary exchange | Medusa Order exchange and return workflows | Drafting leaves stock untouched. Confirmation reserves one replacement on the original order, and receiving restocks the returned unit. |
+| Claims and order edits | Medusa Order workflows | The retained Rifare scenarios still need to be checked against the native workflows. |
 | Loyalty, credit and growth | Assess upstream modules/plugins before extending | Specific scope, license and scenario equivalence remain to be assessed. |
 
 Rifare retains product-specific agent/task interfaces, merchant policies, approval
@@ -158,6 +159,12 @@ listing, and rendered the product seeded by the native commerce fixture.
 A fresh anonymous browser context received HTTP 401 on the same endpoint.
 This verifies local sign-in and catalog read. Hosted identity and the
 remaining merchant workflows still need qualification.
+
+For a like-for-like exchange the native test reuses the original fulfilled
+order and the upstream exchange, shipping, inventory and return workflows.
+Rifare-specific incentives, merchant eligibility, financial settlement and
+recovery after provider uncertainty remain separate. Keep those diagnostic
+contracts until the corresponding native scenarios and their callers qualify.
 
 ## Dependency and license boundary
 

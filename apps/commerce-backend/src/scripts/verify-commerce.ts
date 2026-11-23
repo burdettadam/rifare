@@ -6,14 +6,16 @@ import type { ExecArgs } from "@medusajs/framework/types";
 import { MedusaModule } from "@medusajs/framework/modules-sdk";
 import { ContainerRegistrationKeys, Modules, ProductStatus, PromotionActions } from "@medusajs/framework/utils";
 import {
-  addShippingMethodToCartWorkflow, beginReturnOrderWorkflow, beginReceiveReturnWorkflow, cancelOrderWorkflow,
-  capturePaymentWorkflow, completeCartWorkflow, confirmReturnRequestWorkflow, confirmReturnReceiveWorkflow,
+  addShippingMethodToCartWorkflow, beginExchangeOrderWorkflow, beginReturnOrderWorkflow, beginReceiveReturnWorkflow,
+  cancelOrderWorkflow, capturePaymentWorkflow, completeCartWorkflow, confirmExchangeRequestWorkflow,
+  confirmReturnRequestWorkflow, confirmReturnReceiveWorkflow, createExchangeShippingMethodWorkflow,
   createApiKeysWorkflow, createCartWorkflow, createInventoryLevelsWorkflow,
   createOrderFulfillmentWorkflow, createPaymentCollectionForCartWorkflow,
   createPaymentSessionsWorkflow, createProductsWorkflow, createPromotionsWorkflow,
   createRegionsWorkflow, createSalesChannelsWorkflow, createShippingOptionsWorkflow,
   createShippingProfilesWorkflow, createStockLocationsWorkflow, createTaxRegionsWorkflow,
   linkSalesChannelsToApiKeyWorkflow, linkSalesChannelsToStockLocationWorkflow,
+  orderExchangeAddNewItemWorkflow, orderExchangeRequestItemReturnWorkflow,
   receiveItemReturnRequestWorkflow, refundPaymentWorkflow, requestItemReturnWorkflow,
   updateCartPromotionsWorkflow, updateStoresWorkflow,
 } from "@medusajs/medusa/core-flows";
@@ -275,6 +277,56 @@ export default async function verifyCommerce({ container }: ExecArgs) {
     check("upstream-cancellation-releases-original-reservation", () => {
       assert.equal(canceled.status, "canceled"); assert.equal(Number(finalStock.stocked_quantity), 4);
       assert.equal(Number(finalStock.reserved_quantity), 0);
+    });
+
+    // The first order has one fulfilled unit left to return after the partial return above.
+    const orderService = container.resolve(Modules.ORDER);
+    const { result: requestedExchange } = await beginExchangeOrderWorkflow(container).run({ input: { order_id: order.id } });
+    assert.ok(requestedExchange.exchange_id);
+    const exchangeId = requestedExchange.exchange_id;
+    const draftExchange = await orderService.retrieveOrderExchange(exchangeId);
+    const { result: inbound } = await orderExchangeRequestItemReturnWorkflow(container).run({ input: {
+      exchange_id: exchangeId,
+      // In 2.23 the type requires a string, but the workflow creates a return from the exchange.
+      return_id: draftExchange.return_id ?? "",
+      location_id: location.id,
+      items: [{ id: order.items[0].id, quantity: 1 }],
+    } });
+    const exchangeReturnId = inbound.order_change.return_id;
+    assert.ok(exchangeReturnId);
+    await orderExchangeAddNewItemWorkflow(container).run({ input: {
+      exchange_id: exchangeId, items: [{ variant_id: variant.id, quantity: 1 }],
+    } });
+    await createExchangeShippingMethodWorkflow(container).run({ input: {
+      exchange_id: exchangeId, shipping_option_id: shipping.id,
+    } });
+    const draftStock = await level();
+    check("native-exchange-draft-does-not-reserve-or-restock", () => {
+      assert.equal(Number(draftStock.stocked_quantity), 4);
+      assert.equal(Number(draftStock.reserved_quantity), 0);
+    });
+
+    await confirmExchangeRequestWorkflow(container).run({ input: { exchange_id: exchangeId } });
+    const exchange = await orderService.retrieveOrderExchange(exchangeId, { relations: ["additional_items"] });
+    const confirmedStock = await level();
+    check("native-exchange-confirms-one-outbound-reservation-on-the-original-order", () => {
+      assert.equal(exchange.order_id, order.id);
+      assert.equal(exchange.return_id, exchangeReturnId);
+      assert.equal(exchange.additional_items.length, 1);
+      assert.equal(Number(exchange.additional_items[0].quantity), 1);
+      assert.equal(Number(confirmedStock.stocked_quantity), 4);
+      assert.equal(Number(confirmedStock.reserved_quantity), 1);
+    });
+
+    await beginReceiveReturnWorkflow(container).run({ input: { return_id: exchangeReturnId } });
+    await receiveItemReturnRequestWorkflow(container).run({ input: {
+      return_id: exchangeReturnId, items: [{ id: order.items[0].id, quantity: 1 }],
+    } });
+    await confirmReturnReceiveWorkflow(container).run({ input: { return_id: exchangeReturnId } });
+    const exchangeReceived = await level();
+    check("native-exchange-receipt-restocks-only-the-returned-unit", () => {
+      assert.equal(Number(exchangeReceived.stocked_quantity), 5);
+      assert.equal(Number(exchangeReceived.reserved_quantity), 1);
     });
     console.log("RIFARE_MEDUSA_RESULT=" + JSON.stringify({ result: "pass", medusa: "2.23.0",
       database: "PostgreSQL", payment_provider: "pp_system_default", checks,
