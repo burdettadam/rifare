@@ -249,3 +249,17 @@ refreshed this intake pin. Preserve that actual failed checker result.
 Independent authority review approved the bounded proposal before editing the
 checker. No dependency or license waiver applies. New negative validation must
 continue refusing changed scripts and hooks, even if a manifest pin is refreshed.
+
+## Prior decision for source component inventory reconciliation
+
+The distribution check correctly reports 35 unclassified source paths at8883e4f.
+These are the integrated original-operation journal/module/migrations and its
+native verifiers, recovered architecture documentation, C6 public transport and
+its conformance/tests, this standalone builder and intake test, and the existing
+operation work record. Root authorizes adding precisely those currently missing
+tracked project-created paths to rifare-project-material in the proposed source
+inventory. Existing entries and every component's provenance, license status,
+notices, classification and obligation metadata remain unchanged. No vendor source
+or dependency is added. Preserve all license-application texts and hashes and the
+checker itself. The inventory revision records classification, not release or
+legal approval. Both independent reviewers must inspect the actual additive diff.
