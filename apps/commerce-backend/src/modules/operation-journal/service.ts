@@ -103,6 +103,7 @@ export default class OperationJournalService {
       const originalCommand = parseOriginalCommand(Buffer.from(row.command_bytes));
       requireCommandCartMatch(originalCommand, await readLockedCartFacts(tx, row.cart_id, configuration.merchant, configuration.verifiedContext));
       const before = await requestClock(tx);
+      if (row.request_observed_at && before.getTime() < row.request_observed_at.getTime()) throw conflict();
       const handle = await verifyRequest.call(verifier, detached, binding, before.getTime());
       const verified = describeRequest.call(verifier, handle);
       active();
@@ -134,8 +135,9 @@ export default class OperationJournalService {
     describeRequest.call(verifier, result.verification);
     active();
     await this.withCurrentOriginal(commandId, context, async (tx, row) => {
+      const current = (await requestClock(tx)).getTime();
       if (row.request_digest !== result.request_digest || row.request_observed_at?.getTime() !== result.first_observed_at.getTime() ||
-          (await requestClock(tx)).getTime() >= result.request_expires_at.getTime()) throw conflict();
+          current < result.first_observed_at.getTime() || current >= result.request_expires_at.getTime()) throw conflict();
     });
     describeRequest.call(verifier, result.verification);
     active();

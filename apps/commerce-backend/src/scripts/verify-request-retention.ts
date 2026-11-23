@@ -21,6 +21,12 @@ export default async function verifyRequestRetention({ container }: ExecArgs) {
   }
   const journal = container.resolve<OperationJournalService>(operationJournalModule);
   const postgres = container.resolve(ContainerRegistrationKeys.PG_CONNECTION);
+  const clockSamples: number[] = [];
+  postgres.on("query-response", (result: any, query: any) => {
+    if (query.sql === "select clock_timestamp() as now" && result?.rows?.[0]?.now instanceof Date) {
+      clockSamples.push(result.rows[0].now.getTime()); if (clockSamples.length > 20) clockSamples.shift();
+    }
+  });
   if (process.env.RIFARE_C7_COMPILED === "true") {
     assert.ok(__filename.endsWith(".js"));
     assert.ok(journal instanceof require("../modules/operation-journal/service").default);
@@ -166,7 +172,9 @@ export default async function verifyRequestRetention({ container }: ExecArgs) {
     assert.equal((await fixture.row()).request_bytes, null);
     await assert.rejects(postgres("rifare_operation").where({ original_command_uuid: fixture.command.command_id })
       .update({ request_nonce: "orphan" }), /rifare_operation_request_tuple/);
-    const first = await journal.verifyAuthorityRequest(fixture.command.command_id, artifact, context, verifier);
+    let first: Awaited<ReturnType<OperationJournalService["verifyAuthorityRequest"]>>;
+    try { first = await journal.verifyAuthorityRequest(fixture.command.command_id, artifact, context, verifier); }
+    catch (error) { console.error("C7_CLOCK_DIAGNOSTIC=" + JSON.stringify(clockSamples)); throw error; }
     const stored = await fixture.row(); assert.equal(stored.request_bytes, artifact.toString());
     assert.equal(stored.request_digest, "sha256:" + createHash("sha256").update(artifact).digest("hex"));
     assert.match(stored.request_context_digest, /^sha256:[a-f0-9]{64}$/); assert.ok(stored.request_nonce);
