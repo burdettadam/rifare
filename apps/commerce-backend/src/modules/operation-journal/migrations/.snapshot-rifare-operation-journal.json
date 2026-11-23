@@ -305,6 +305,38 @@
           "enumItems": [],
           "mappedType": "datetime"
         },
+        "start_owner_digest": {
+          "name": "start_owner_digest",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "text"
+        },
+        "start_claimed_at": {
+          "name": "start_claimed_at",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "unique": false,
+          "length": 6,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "datetime"
+        },
         "privacy_hold": {
           "name": "privacy_hold",
           "type": "boolean",
@@ -436,6 +468,16 @@
           "name": "rifare_operation_first_observation_pair",
           "expression": "(first_observation_digest is null) = (first_observed_at is null)",
           "definition": "check (((first_observation_digest is null) = (first_observed_at is null)))"
+        },
+        {
+          "name": "rifare_operation_start_owner",
+          "expression": "start_owner_digest ~ '^sha256:[0-9a-f]{64}$'",
+          "definition": "check ((start_owner_digest ~ '^sha256:[0-9a-f]{64}$'))"
+        },
+        {
+          "name": "rifare_operation_start_claim",
+          "expression": "start_claimed_at is null or start_owner_digest is not null",
+          "definition": "check ((start_claimed_at is null or start_owner_digest is not null))"
         },
         {
           "name": "rifare_operation_payable",

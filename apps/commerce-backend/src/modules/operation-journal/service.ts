@@ -1,4 +1,4 @@
-import { randomUUID } from "node:crypto";
+import { createHash, randomBytes, randomUUID } from "node:crypto";
 import type { ModulesSdkUtils } from "@medusajs/framework/utils";
 import { ContainerRegistrationKeys, MedusaError } from "@medusajs/framework/utils";
 import { factsDigest } from "../../cart-context/observation";
@@ -19,13 +19,15 @@ const operations = "rifare_operation";
 const originalId = /^(?!00000000-0000-0000-0000-000000000000$)[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 const statusColumns = ["id", "original_command_uuid", "state", "revision"];
 const historyColumns = [...statusColumns, "cart_id", "actor_digest", "command_digest",
-  "privacy_hold", "first_observation_digest", "first_observed_at"];
+  "privacy_hold", "first_observation_digest", "first_observed_at", "command_bytes",
+  "start_owner_digest", "start_claimed_at"];
 type JournalConfiguration = ReturnType<typeof journalConfiguration>;
 type Merchant = NonNullable<ReturnType<typeof cartContextConfig>>;
 type JournalRow = {
   id: string; original_command_uuid: string; state: string; revision: number;
   cart_id: string; actor_digest: string; command_digest: string; privacy_hold: boolean;
   first_observation_digest: string | null; first_observed_at: Date | null;
+  command_bytes: string; start_owner_digest: string | null; start_claimed_at: Date | null;
 };
 const conflict = () => new MedusaError(MedusaError.Types.CONFLICT, "Original commerce command unavailable");
 
@@ -38,6 +40,36 @@ export default class OperationJournalService {
 
   /** Internal entry point. The caller supplies framework-verified request context. */
   async admit(input: Uint8Array, context: AdmissionContext) {
+    return (await this.admitOriginal(input, context)).operation;
+  }
+
+  /** Only the creating invocation receives the transient initial-send ticket. */
+  async admitForAuthority(input: Uint8Array, context: AdmissionContext) {
+    const ticket = randomBytes(32).toString("base64url");
+    const ownerDigest = "sha256:" + createHash("sha256").update(ticket).digest("hex");
+    const result = await this.admitOriginal(input, context, ownerDigest);
+    return { operation: result.operation, recovery_only: !result.created,
+      send_ticket: result.created ? ticket : null };
+  }
+
+  /** Called after TLS. No network activity occurs inside this transaction. */
+  async claimAuthorityDispatch(commandId: string, ticket: string, context: AdmissionContext) {
+    if (typeof ticket !== "string" || !/^[A-Za-z0-9_-]{43}$/.test(ticket)) throw conflict();
+    const ownerDigest = "sha256:" + createHash("sha256").update(ticket).digest("hex");
+    await this.withCurrentOriginal(commandId, context, async (tx, row, configuration) => {
+      if (row.state !== "awaiting_authority" || row.start_owner_digest !== ownerDigest ||
+          row.start_claimed_at !== null) throw conflict();
+      const locked = await readLockedCartFacts(tx, row.cart_id, configuration.merchant, configuration.verifiedContext);
+      requireCommandCartMatch(parseOriginalCommand(Buffer.from(row.command_bytes)), locked);
+      const [claimed] = await tx(operations).where(revisionFence(row))
+        .where({ start_owner_digest: ownerDigest }).whereNull("start_claimed_at")
+        .update({ start_claimed_at: tx.fn.now(), revision: row.revision + 1, updated_at: tx.fn.now() })
+        .returning("id");
+      if (!claimed) throw conflict();
+    }, true);
+  }
+
+  private async admitOriginal(input: Uint8Array, context: AdmissionContext, ownerDigest: string | null = null) {
     const { merchant, key, privacyOperator, verifiedContext, subject } = journalConfiguration(context);
     const original = parseOriginalCommand(input);
     const { command, commandBytes, commandDigest } = original;
@@ -60,8 +92,7 @@ export default class OperationJournalService {
                 retained.store_id !== subject.store_id || retained.customer_id !== subject.customer_id ||
                 retained.cart_id !== command.cart_id || retained.actor_digest !== locked.actorDigest ||
                 retained.command_bytes !== commandBytes || retained.command_digest !== commandDigest) throw conflict();
-            return { id: retained.id, original_command_uuid: retained.original_command_uuid,
-              state: retained.state, revision: retained.revision };
+            return { operation: statusOf(retained), created: false };
           }
 
           requireCommandCartMatch(original, locked);
@@ -78,9 +109,10 @@ export default class OperationJournalService {
             payable_minor_units: locked.facts.payable_total_minor,
             currency: locked.facts.currency_code,
             currency_exponent: locked.facts.currency_exponent,
+            start_owner_digest: ownerDigest,
           }).onConflict("original_command_uuid").ignore().returning(statusColumns);
           if (!created) throw conflict();
-          return created;
+          return { operation: statusOf(created), created: true };
         }, { isolationLevel: "serializable" });
       } catch (error) {
         if (attempt >= 3 || (error as { code?: string })?.code !== "40001") throw error;
@@ -216,11 +248,13 @@ export default class OperationJournalService {
   private async withCurrentOriginal<T>(
     commandId: string, context: AdmissionContext,
     use: (tx: Postgres, row: JournalRow, configuration: JournalConfiguration) => Promise<T>,
+    requireAdmissionOperator = false,
   ) {
     if (typeof commandId !== "string" || !originalId.test(commandId)) throw unavailable();
     const configuration = journalConfiguration(context);
     const { merchant, key, verifiedContext, subject } = configuration;
     return this.postgres.transaction(async tx => {
+      if (requireAdmissionOperator && !await liveUser(tx, configuration.privacyOperator)) throw journalUnavailable();
       if (await journalSubjectIsSuppressed(tx, subject, key)) throw unavailable();
       const row = await tx<JournalRow>(operations).where({ ...subject, original_command_uuid: commandId })
         .whereNotIn("state", ["cancelled", "retired"]).first<JournalRow | undefined>(historyColumns);

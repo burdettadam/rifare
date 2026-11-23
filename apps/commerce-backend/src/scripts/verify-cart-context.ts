@@ -385,6 +385,41 @@ export default async function verifyCartContext({ container }: ExecArgs) {
       assert.equal(owned[0].payable_minor_units, command.payable_minor_units);
       assert.deepEqual(await journal.admit(bytes, admission), first);
 
+      const authorityCommand = { ...command, command_id: randomUUID() };
+      const authorityBytes = Buffer.from(JSON.stringify(authorityCommand));
+      const contenders = await Promise.all([
+        journal.admitForAuthority(authorityBytes, admission),
+        journal.admitForAuthority(authorityBytes, admission),
+      ]);
+      const creators = contenders.filter(result => !result.recovery_only);
+      assert.equal(creators.length, 1);
+      assert.ok(creators[0].send_ticket);
+      assert.equal(contenders.filter(result => result.send_ticket === null).length, 1);
+      const authorityRow = () => postgres("rifare_operation")
+        .where({ original_command_uuid: authorityCommand.command_id }).first();
+      const beforeClaim = await authorityRow();
+      assert.match(beforeClaim.start_owner_digest, /^sha256:[0-9a-f]{64}$/);
+      assert.equal(JSON.stringify(beforeClaim).includes(creators[0].send_ticket), false);
+      assert.equal(beforeClaim.start_claimed_at, null);
+      await assert.rejects(journal.claimAuthorityDispatch(authorityCommand.command_id,
+        randomBytes(32).toString("base64url"), admission), /Original commerce command unavailable/);
+      const claims = await Promise.allSettled([
+        journal.claimAuthorityDispatch(authorityCommand.command_id, creators[0].send_ticket!, admission),
+        journal.claimAuthorityDispatch(authorityCommand.command_id, creators[0].send_ticket!, admission),
+      ]);
+      assert.equal(claims.filter(result => result.status === "fulfilled").length, 1);
+      assert.ok((await authorityRow()).start_claimed_at);
+      assert.equal((await authorityRow()).revision, 1);
+      const recovered = await journal.admitForAuthority(authorityBytes, admission);
+      assert.equal(recovered.recovery_only, true);
+      assert.equal(recovered.send_ticket, null);
+      assert.equal((await journal.prepareRecovery(authorityCommand.command_id, admission)).id,
+        recovered.operation.id);
+      const priorOriginal = await journal.admitForAuthority(bytes, admission);
+      assert.equal(priorOriginal.recovery_only, true);
+      assert.equal(priorOriginal.send_ticket, null);
+      check("journal-authority-start-ticket-is-issued-once-and-claims-once-in-postgres", () => {});
+
       const changed = Buffer.from(JSON.stringify({ ...command, payable_minor_units: "0" }));
       await assert.rejects(journal.admit(changed, admission), /Original commerce command unavailable/);
       const wrongFacts = { ...command, command_id: randomUUID(), payable_minor_units: "0" };
