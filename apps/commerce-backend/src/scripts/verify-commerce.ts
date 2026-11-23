@@ -4,7 +4,8 @@ import { randomUUID } from "node:crypto";
 import { setTimeout as delay } from "node:timers/promises";
 import type { ExecArgs } from "@medusajs/framework/types";
 import { MedusaModule } from "@medusajs/framework/modules-sdk";
-import { ContainerRegistrationKeys, Modules, ProductStatus, PromotionActions } from "@medusajs/framework/utils";
+import { ContainerRegistrationKeys, MathBN, MedusaError, Modules, ProductStatus, PromotionActions } from "@medusajs/framework/utils";
+import { StepResponse } from "@medusajs/framework/workflows-sdk";
 import {
   addShippingMethodToCartWorkflow, beginExchangeOrderWorkflow, beginOrderEditOrderWorkflow, beginReturnOrderWorkflow,
   beginReceiveReturnWorkflow,
@@ -391,6 +392,56 @@ export default async function verifyCommerce({ container }: ExecArgs) {
       assert.equal(Number(editedOriginalLevel.reserved_quantity), 1);
       assert.equal(Number(editedReplacementLevel.stocked_quantity), 3);
       assert.equal(Number(editedReplacementLevel.reserved_quantity), 1);
+    });
+
+    // This disposable witness checks compensation ordering. It does not add a checkout hook
+    // to the application or enable any protected route.
+    const { result: staleCart } = await createCartWorkflow(container).run({
+      input: { ...cartInput, items: [{ variant_id: variant.id, quantity: 1 }] },
+    });
+    await addShippingMethodToCartWorkflow(container).run({ input: { cart_id: staleCart.id, options: [{ id: shipping.id }] } });
+    const { result: staleCollection } = await createPaymentCollectionForCartWorkflow(container).run({
+      input: { cart_id: staleCart.id },
+    });
+    const { result: staleSession } = await createPaymentSessionsWorkflow(container).run({
+      input: { payment_collection_id: staleCollection.id, provider_id: "pp_system_default" },
+    });
+    const payments = container.resolve(Modules.PAYMENT);
+    const capturedOriginal = await payments.authorizePaymentSession(staleSession.id, {});
+    assert.ok(capturedOriginal);
+    await capturePaymentWorkflow(container).run({ input: { payment_id: capturedOriginal.id } });
+    const paymentBeforeRefusal = await payments.retrievePayment(capturedOriginal.id, { relations: ["refunds"] });
+    assert.ok(paymentBeforeRefusal.captured_at);
+    assert.equal(paymentBeforeRefusal.refunds?.length, 0);
+    const beforeQuantityChange = await graph("cart", staleCart.id, ["id", "total", "items.*"]);
+    assert.ok(MathBN.eq(beforeQuantityChange.total, staleSession.amount));
+    // Simulate a cart change for which the stored payment session was not refreshed.
+    await container.resolve(Modules.CART).updateLineItems(beforeQuantityChange.items[0].id, { quantity: 2 });
+    const afterQuantityChange = await graph("cart", staleCart.id, ["id", "total"]);
+    assert.ok(MathBN.gt(afterQuantityChange.total, staleSession.amount));
+
+    completeCartWorkflow.hooks.validate(({ input, cart: checkoutCart }) => {
+      if (input.id === staleCart.id) {
+        const sessions = checkoutCart.payment_collection?.payment_sessions;
+        if (sessions?.length !== 1 || sessions[0].id !== staleSession.id ||
+            !MathBN.eq(checkoutCart.total, sessions[0].amount)) {
+          throw new MedusaError(MedusaError.Types.INVALID_DATA, "Fixture payment amount does not match the cart");
+        }
+      }
+      return new StepResponse();
+    });
+    const refused = await completeCartWorkflow(container).run({ input: { id: staleCart.id }, throwOnError: false });
+    assert.equal(refused.errors[0]?.error?.message, "Fixture payment amount does not match the cart");
+    const afterRefusal = await graph("cart", staleCart.id, ["id", "completed_at"]);
+    const { data: unexpectedOrder } = await query.graph({
+      entity: "order_cart", fields: ["order_id"], filters: { cart_id: staleCart.id },
+    });
+    const paymentAfterRefusal = await payments.retrievePayment(capturedOriginal.id, { relations: ["refunds"] });
+    check("native-checkout-validation-refuses-order-but-can-refund-a-prior-capture", () => {
+      assert.equal(afterRefusal.completed_at, null);
+      assert.equal(unexpectedOrder.length, 0);
+      assert.equal(paymentAfterRefusal.refunds?.length, 1);
+      assert.ok(MathBN.eq(paymentAfterRefusal.refunds![0].amount, capturedOriginal.amount));
     });
     console.log("RIFARE_MEDUSA_RESULT=" + JSON.stringify({ result: "pass", medusa: "2.23.0",
       database: "PostgreSQL", payment_provider: "pp_system_default", checks,

@@ -130,6 +130,23 @@ before the consumer claims it: Protocol contract where needed, Marty/provider
 implementation next, Rifare integration last. Another worker owns Marty changes;
 this branch changes no ElevenID repository.
 
+## Payment validation and compensation
+
+Medusa 2.23.0 registers payment compensation before the cart-completion
+`validate` hook. In the disposable PostgreSQL fixture, a synthetic payment
+was captured for the original amount, then the cart changed. Refusing the
+mismatch in the hook left the cart open and created no order. Medusa still
+recorded a refund of the earlier capture.
+
+COMMERCE-AUTHORITY-01 must refuse mismatched, expired or unverified authority
+before entering a workflow that can compensate an existing payment. The
+entry must bind the exact original operation, current cart snapshot, selected
+payment session, currency and amount under the native currentness controls.
+Any compensation for an earlier payment must run through the authorized
+original-outcome reconciliation path. The hook can provide an additional
+check after those conditions hold. Protected checkout stays held until the
+entry and reconciliation controls are qualified.
+
 ## Medusa integration choice
 
 Medusa's current built-in OIDC SSO provider is an Enterprise feature requiring
