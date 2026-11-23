@@ -169,10 +169,21 @@ export async function restoreJournalRefusalIdentities(
   await lockInstallationForRead(transaction, scope, key);
   for (const row of incoming) {
     await transaction(journalTable).insert({ ...row, state: "retired" }).onConflict().ignore();
-    const retained = await transaction(journalTable).where({ original_command_uuid: row.original_command_uuid })
-      .forShare().first("id", "challenge_fingerprint");
+    const selected = () => transaction(journalTable).where({ original_command_uuid: row.original_command_uuid });
+    const retained = await selected().forUpdate().first(
+      "id", "challenge_fingerprint", "state", "merchant_namespace", "store_id", "privacy_hold",
+    );
     if (!retained || retained.id !== row.id || retained.challenge_fingerprint !== row.challenge_fingerprint) {
       throw restoreConflict();
     }
+    if (retained.state === "retired" && retained.merchant_namespace === null && retained.store_id === null) continue;
+    if (retained.privacy_hold || retained.merchant_namespace !== scope.merchant_namespace ||
+        retained.store_id !== scope.store_id) throw restoreConflict();
+    await selected().update({
+      ...minimizedOperationFields,
+      state: "retired",
+      revision: transaction.raw("revision + 1"),
+      updated_at: transaction.fn.now(),
+    });
   }
 }

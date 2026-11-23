@@ -325,3 +325,36 @@ unconfigured Medusa operator and a changed auth-identity association.
 The configured owner exercised scoped export, erasure, hold and release,
 refusal import and uninstall. A deleted or missing configured operator
 cannot admit a new operation. The disposable fixture was retired.
+
+## Fixed-revision qualification
+
+On November 22, 2026 (America/Denver), the clean revision
+5faf2e49265b5eea60dc459ab718dd05058652cd passed TypeScript, two migration runs,
+journal schema constraints, PostgreSQL cart row locking, privacy, 30 native
+cart-context groups and 28 synthetic OIDC identity groups. Disposable
+PostgreSQL 16 and the unchanged npm lockfile were used. All 17 commerce
+groups passed on the same clean revision in a separate fresh database. The
+first combined run failed commerce fixture setup because a preceding suite
+had already assigned the US to a region. Each commerce run needs a fresh
+database.
+
+Raw logs under evidence/operation-journal/5faf2e49265b5eea60dc459ab718dd05058652cd
+remain local. Qualification manifest SHA-256
+4a4ede6940b88d799d8341de8a3758f91b4af7bb79598003c76ac7abfbccd45e records the
+commands and outcomes of the combined run. The separate successful commerce
+log SHA-256 is 7863d198e108e1e2d0c41312383b5bbc229c982e6cc66c5ec67694e1c7a09ac7.
+
+## Refusal restore over an older active row
+
+The native privacy regression reproduced a matching refusal identifier
+leaving an older active row in awaiting_authority. The restore hook now
+locks the matched row, verifies its installation, and retires and minimizes
+a same-installation unheld copy. An exact repeat does not change the revision.
+An active hold or other installation causes the enclosing transaction to
+reject the restore. Original UUID and challenge uniqueness remain in force.
+
+TypeScript and the native privacy suite passed on a fresh disposable
+PostgreSQL 16 database on November 22, 2026 (America/Denver). Both fixture
+containers and their database data were retired. This check validates the
+journal reconciliation hook on older rows. Whole-database restore and
+operator sequencing still need independent qualification.

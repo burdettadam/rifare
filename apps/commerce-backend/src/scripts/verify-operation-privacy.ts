@@ -107,6 +107,14 @@ export default async function verifyOperationPrivacy({ container }: ExecArgs) {
   } finally {
     if (!writer.isCompleted()) await writer.rollback();
   }
+  const oldBackupRow = fixtureOperation("cus_backup");
+  const heldBackupRow = { ...fixtureOperation("cus_backup"), privacy_hold: true };
+  const foreignBackupRow = { ...fixtureOperation("cus_backup"), store_id: "store_other" };
+  await operations().insert([oldBackupRow, heldBackupRow, foreignBackupRow]);
+  const refusalOf = (row: typeof oldBackupRow) => ({
+    id: row.id, original_command_uuid: row.original_command_uuid, challenge_fingerprint: null,
+  });
+
   const fresh = () => ({ id: "rifop_" + randomUUID(), original_command_uuid: randomUUID(),
     challenge_fingerprint: null });
   const restored = fresh();
@@ -119,6 +127,16 @@ export default async function verifyOperationPrivacy({ container }: ExecArgs) {
   assert.equal(imported.state, "retired");
   assert.equal(imported.command_bytes, null);
   assert.equal(imported.customer_id, null);
+  await importRecords([refusalOf(oldBackupRow)]);
+  await importRecords([refusalOf(oldBackupRow)]);
+  const reconciled = await operations().where({ id: oldBackupRow.id }).first();
+  assert.equal(reconciled.state, "retired");
+  assert.equal(reconciled.command_bytes, null);
+  assert.equal(reconciled.revision, 1);
+  await assert.rejects(importRecords([refusalOf(heldBackupRow)]), /Invalid or conflicting/);
+  assert.equal((await operations().where({ id: heldBackupRow.id }).first()).command_bytes, "{}");
+  await assert.rejects(importRecords([refusalOf(foreignBackupRow)]), /Invalid or conflicting/);
+  assert.equal((await operations().where({ id: foreignBackupRow.id }).first()).state, "awaiting_authority");
   await assert.rejects(importRecords([{ ...restored, ...{ command_bytes: "{}" } }]), /Invalid or conflicting/);
   const first = { ...fresh(), original_command_uuid: "10000000-0000-0000-0000-000000000000" };
   const conflicting = { ...fresh(), original_command_uuid: "20000000-0000-0000-0000-000000000000",
