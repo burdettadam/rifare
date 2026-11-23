@@ -32,6 +32,12 @@ const Operation = model.define("rifare_operation", {
   start_response_bytes: model.text().nullable(),
   start_response_digest: model.text().nullable(),
   start_response_observed_at: model.dateTime().nullable(),
+  request_bytes: model.text().nullable(),
+  request_digest: model.text().nullable(),
+  request_context_digest: model.text().nullable(),
+  request_nonce: model.text().nullable(),
+  request_observed_at: model.dateTime().nullable(),
+  request_expires_at: model.dateTime().nullable(),
   privacy_hold: model.boolean().default(false),
 }).indexes([
   // An original cannot be reminted by changing its merchant, store or customer.
@@ -49,6 +55,12 @@ const Operation = model.define("rifare_operation", {
   { name: "rifare_operation_start_digest", expression: "start_command_digest ~ '^sha256:[0-9a-f]{64}$'" },
   { name: "rifare_operation_start_response", expression: "(start_response_bytes is null) = (start_response_digest is null) and (start_response_bytes is null) = (start_response_observed_at is null)" },
   { name: "rifare_operation_start_response_digest", expression: "start_response_digest ~ '^sha256:[0-9a-f]{64}$'" },
+  { name: "rifare_operation_request_tuple", expression: `(request_bytes is null) = (request_digest is null)
+    and (request_bytes is null) = (request_context_digest is null) and (request_bytes is null) = (request_nonce is null)
+    and (request_bytes is null) = (request_observed_at is null) and (request_bytes is null) = (request_expires_at is null)
+    and (request_bytes is null or start_response_bytes is not null)` },
+  { name: "rifare_operation_request_digest", expression: "request_digest ~ '^sha256:[0-9a-f]{64}$' and request_context_digest ~ '^sha256:[0-9a-f]{64}$'" },
+  { name: "rifare_operation_request_bounds", expression: "octet_length(request_bytes) between 1 and 65536 and length(request_nonce) between 1 and 1024 and request_expires_at > request_observed_at" },
   { name: "rifare_operation_payable", expression: "payable_minor_units ~ '^(0|[1-9][0-9]{0,18})$' and (length(payable_minor_units) < 19 or payable_minor_units collate \"C\" <= '9223372036854775807')" },
   { name: "rifare_operation_currency", expression: "currency ~ '^[a-z]{3}$' and currency_exponent between 0 and 4" },
   { name: "rifare_operation_active_binding", expression: `
