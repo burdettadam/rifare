@@ -20,6 +20,7 @@ export default async function verifyNativeWorkerIdentity({ container }: ExecArgs
     const identity = (await postgres.raw("select session_user as authenticated_role, current_user as effective_role, pg_backend_pid() as pid")).rows[0];
     assert.equal(identity.authenticated_role, task.role); assert.equal(identity.effective_role, task.role);
     await assert.rejects(postgres.raw('set role "' + task.foreign_role + '"'), (error: any) => error.code === "42501");
+    await assert.rejects(postgres.raw('set session authorization "' + task.foreign_role + '"'), (error: any) => error.code === "42501");
     await assert.rejects(postgres("rifare_c12_identity_control").update({ active_role: task.role }), (error: any) => error.code === "42501");
     // Neither a session label nor a native metadata assertion authenticates a role.
     await postgres.raw("select set_config('application_name', ?, false)", [task.foreign_role]);
@@ -92,6 +93,10 @@ export default async function verifyNativeWorkerIdentity({ container }: ExecArgs
     forged_application_name_and_metadata_did_not_change_identity: true, role_and_control_forgery_refused: true,
     native_payment_service_extension_preserved_models_migrations_and_system_provider: true }));
   await postgres("rifare_c12_identity_control").where({ id: 1 }).update({ active_role: roles[1].role, generation: 2 });
+  const successor = await run(1, "cart", "successor-c12@example.invalid"); assert.equal(successor.code, 0, successor.output);
+  const successorAudit = await postgres("rifare_c12_identity_audit").where({ authenticated_role: roles[1].role });
+  assert.ok(successorAudit.some(row => row.native_table === "cart"));
+  console.log("C12_NATIVE_ROLE_SUCCESSOR=" + JSON.stringify({ authenticated_role: roles[1].role, native_cart_write_observed: true }));
   const before = await postgres("cart").where({ id: original.id }).first();
   const stale = await run(0, "cart", "stale-c12@example.invalid");
   assert.notEqual(stale.code, 0, "C12 stale authenticated worker must be refused at the native write boundary");
