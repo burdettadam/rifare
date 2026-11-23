@@ -91,8 +91,8 @@ status, data-refusal or page-error assertion is relaxed.
 
 Qualified source: `1ed7ebfab03fd95c015dc100e5dc40498be31ca6`, against base
 `5aa050e9ccdf8b8156c2e0455605ef4011a5d633`. The own-dependency relocated backend
-serves static Admin under test/local-medusa; its locked installation includes TypeScript 5.9.3 as a devOptional dependency and excludes ts-node
-installed. It does not use a repository dependency link or a Vite development server.
+serves static Admin under test/local-medusa. Its locked installation includes
+TypeScript 5.9.3 as a devOptional dependency; ts-node is absent. It does not use a repository dependency link or a Vite development server.
 The source dependency cache and the one task-owned production installation are reused.
 
 Fixed and exact-restored fresh-browser executions each passed eleven stages: anonymous

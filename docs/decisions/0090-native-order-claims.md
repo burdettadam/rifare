@@ -1,6 +1,6 @@
 # ADR-0090 - Qualify upstream native order claims
 
-Status: assigned local migration qualification; no release acceptance.
+Status: implemented and independently reviewed locally; bounded development integration accepted.
 Base: `c949b1763d55be05561331adca450a90fdd856b5` (PR10). Branch: `feat/medusa-native-claims`.
 Root is sole writer, delegated integration/acceptance owner.
 
@@ -95,3 +95,12 @@ before provider refund/cleanup. Label that fixture explicitly; do not attribute 
 to successful completion of the full cancel-order workflow. The witness must retain
 the original provider/refund identity and show repeated errors do not mean no money
 or authorize blind retry. No automatic order reactivation or recovery is introduced.
+
+## Fixed local disposition
+
+Source 0508e8b1fb7e262af109ce59cac492f37f830f12 is qualified and both actual
+independent roles cleared it through documentation checkpoint c181538. The
+[work record](../../work/records/COMMERCE-ENGINE-03.md) binds source/build/native
+results, source and compiled populated upgrade/replay, fault/restoration and exact
+review identities. Root accepts only the bounded local claim/admission scope.
+No retained legacy requirement, production or external-provider gate is accepted.

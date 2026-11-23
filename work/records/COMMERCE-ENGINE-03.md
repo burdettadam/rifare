@@ -1,6 +1,6 @@
 # COMMERCE-ENGINE-03 - Native ordinary order claims
 
-State: assigned; implementation and qualification pending.
+State: bounded local implementation accepted by delegated maintainer; normal integration pending.
 Base: `c949b1763d55be05561331adca450a90fdd856b5`. Branch: `feat/medusa-native-claims`.
 Writer/integration owner: root, existing primary checkout.
 Contract: [ADR-0090](../../docs/decisions/0090-native-order-claims.md).
@@ -188,3 +188,73 @@ packages. Qualified consumer code must execute compiled .js, independent of sour
 and ts-node. Preserve the locked optional graph and record actual presence truthfully.
 This installation/preflight refusal is excluded from native qualification; reuse the
 same complete owned install after correcting only the harness assertion.
+
+## Fixed compiled qualification and independent final disposition
+
+Qualified source: `0508e8b1fb7e262af109ce59cac492f37f830f12` against c949b176.
+Metadata checkpoint c181538 corrected only the two work records; all qualified
+application/build inputs remain identical. Root reused the producer cache and one
+owned offline production-dependency installation, with the exact prior installed
+lock hash 607396fd2f643cf25348b126859d6de0a83028073ed6d9625e58fd3fccc14a39.
+TypeScript 5.9.3 is present as a locked devOptional dependency; ts-node is absent.
+Execution used compiled .js and that runtime's own dependencies, not source fallback.
+
+Compiled and restored complete runs each pass 46 native commerce groups (25 retained,
+21 added) and six native admission groups. No assertion, case, oracle or existing
+commerce source behavior was removed. The new helper is appended after all prior
+checks. Public holds remain. Actual native return/fulfillment records bind original
+order/item, replacement item, location and exact unit quantities. All providers,
+identities, payments and receiving are synthetic/local; no real settlement or receipt.
+
+Removing only the owned trigger in a separate disposable database admitted a canceled-
+order claim and failed the unchanged native-canceled-order assertion after positive
+claim/receiving controls. The exact trigger DDL and unchanged function digest
+5c4dadf9baa6d3316af65831d6fe1f0b02b8df415fc3028e1e6afcbcc52562f6 were restored.
+A fresh restored-profile database then passed the complete 46+6 again. The first
+fault preflight refused pg_get_triggerdef's omitted visible function namespace;
+its database remained empty. A schema-qualified function-OID check corrected that
+harness assumption, and the same prepared database was resumed, not recreated.
+
+Both source and compiled upgrade/replay campaigns preserve whole-row counts/SHA256
+across all 152 nonmigration public tables, 97 populated. The compiled campaign
+actually restored the preserved populated pre-guard dump before migration/replay.
+Historical invalid claims remain byte-equivalent; activation guards do not repair
+or erase them. Actual separate backend blocking proves cancellation-commit refusal
+and cancellation-rollback success. Later native cancellation after earlier admission
+remains permitted and does not rewrite the earlier claim.
+
+Receipt: `evidence/operation-journal/0508e8b1fb7e262af109ce59cac492f37f830f12/native-claims-runtime-receipt.json`.
+SHA256: `2471771abcad3af732e4ef7687d1cbd5207bba6b1e2d9b0a8fa8b0f197454d30`.
+It binds 103 Git/disk source inputs, 95 compiled outputs, four preserved native type
+inputs, six installed vendor modules matched to integrity-verified locked registry
+tars, and 91 raw evidence/harness hashes. The raw set includes explicitly identified
+failed/exploratory attempts; only the named final runs are passing qualification.
+
+Actual independent roles `/root/c7_authority_review` and
+`/root/rifare_regression_review` independently recomputed those inputs/outputs,
+evidence hashes, locks and vendor tar contents. Both cleared the exact source and
+c181538 metadata with no scoped blocker. Root executed native tests; reviewers
+independently inspected them and did not claim separate runtime execution. These
+are actual reviewer sessions, not fabricated GitHub approving reviews. Root accepts
+this bounded local claim/admission implementation under existing delegated authority.
+
+No-emit, 13 focused build/config cases, four intake tests, repository/generated/plan,
+full distribution/license inventory and Gitleaks passed locally. Gitleaks first
+hit PowerShell's stderr-as-error behavior on an informational line; the retained
+corrected invocation captured actual exit zero and no leaks. No hosted Actions or
+whole-project release qualification is claimed.
+
+Read-only provider follow-up verifies current main d0e63c9eec762a13534d079471987ec580e4478b
+(PR2071, independent Keycloak renewal). Its changed paths do not alter the selected
+Auth/delegated-use sources or supply endpoint enrollment/account-link evidence.
+Other workers retain architecture/deployment ownership; no provider checkout was
+modified. Connected identity/delegation and full commerce fences remain open, as do
+refund uncertainty/reconciliation, full retained resolution equivalence, insurer/
+warranty/dispute services, production, rights and commercial transfer acceptance.
+
+Next: metadata-only review carry-forward, authorized feature push, normal exact-head
+PR integration, then stop the owned compiled fixture and retire only its temporary
+runtime plus generated .medusa/server after fresh Windows gates. Preserve source
+node_modules, four preexisting native types, local configuration, refs and all raw
+evidence. Rifare audit scope: one active primary owned by root and zero linked or
+verification checkouts. The broad handoff goal stays active.
