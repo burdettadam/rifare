@@ -200,9 +200,31 @@ export default async function verifyRequestRetention({ container }: ExecArgs) {
     await assert.rejects(journal.recoverVerifiedAuthorityRequest(fixture.command.command_id, context, verifier));
     assert.deepEqual(await fixture.row(), row);
   });
+  await check("C7-NATIVE-COMMIT-OWNER ownership withdrawn at COMMIT refuses the returning verification", async () => {
+    const fixture = await makeOriginal(), artifact = fixture.artifact();
+    await postgres.raw(`create function public.c7_withdraw_request_owner() returns trigger language plpgsql as $$ begin
+      if new.original_command_uuid = '${fixture.command.command_id}' and new.request_bytes is not null then
+      update auth_identity set app_metadata = '{"customer_id":"cus_other"}'::jsonb where id = '${identity.id}';
+      end if; return new; end $$`);
+    await postgres.raw("create constraint trigger c7_request_owner after update on rifare_operation deferrable initially deferred for each row execute function public.c7_withdraw_request_owner()");
+    try { await assert.rejects(journal.verifyAuthorityRequest(fixture.command.command_id, artifact, context, verifier), /Cart context unavailable/); }
+    finally {
+      await postgres.raw("drop trigger c7_request_owner on rifare_operation; drop function public.c7_withdraw_request_owner()");
+      await auth.updateAuthIdentities({ id: identity.id, app_metadata: { customer_id: customer.id } });
+    }
+    const row = await fixture.row(); assert.equal(row.request_bytes, artifact.toString());
+    await journal.recoverVerifiedAuthorityRequest(fixture.command.command_id, context, verifier);
+    assert.deepEqual(await fixture.row(), row);
+  });
   await check("C7-NATIVE-WIRE actual C6 recovery and mTLS retrieval compose with original-bound native verification", async () => {
     const fixture = await makeOriginal(false);
-    const helpers = await import(pathToFileURL(resolve(process.cwd(), "../../tests/development/delegated-use-client-helpers.mts")).href);
+    if (process.env.RIFARE_C7_COMPILED === "true") {
+      assert.ok(__filename.endsWith(".js"));
+      assert.ok(journal instanceof (await import("../modules/operation-journal/service")).default);
+    }
+    const fixtureRoot = process.env.RIFARE_C7_COMPILED === "true" ? process.env.RIFARE_C7_TEST_FIXTURE_ROOT : resolve(process.cwd(), "../..");
+    assert.ok(fixtureRoot, "compiled qualification explicitly supplies external test fixtures");
+    const helpers = await import(pathToFileURL(resolve(fixtureRoot!, "tests/development/delegated-use-client-helpers.mts")).href);
     const peer = await helpers.delegatedUsePeer();
     const selectedTrust = { ...trust, ...peer.correlation, origin: peer.config.origin };
     const selected = await journal.createAuthorityRequestVerifier(bytes(selectedTrust));
@@ -243,7 +265,20 @@ export default async function verifyRequestRetention({ container }: ExecArgs) {
       first = await journal.openVerifiedAuthoritySession(bytes(fixture.command), descriptor, context, transport, selected);
       await assert.rejects(first.start()); first.close();
       session = await journal.openVerifiedAuthoritySession(bytes(fixture.command), descriptor, context, transport, selected);
-      const challenge = await session.recover(); const handle = await session.verifyRequest(challenge);
+      let challenge = await session.recover();
+      const blocker = await postgres.transaction();
+      await blocker("rifare_operation").where({ original_command_uuid: fixture.command.command_id }).forUpdate().first();
+      const pending = session.verifyRequest(challenge), rejected = assert.rejects(pending);
+      try {
+        let blocked = false; for (let n = 0; n < 100; n++) {
+          const result = await postgres.raw("select 1 from pg_stat_activity where datname=current_database() and pid<>pg_backend_pid() and wait_event_type='Lock' and query like 'update %rifare_operation%'");
+          if (result.rows.length) { blocked = true; break; } await delay(20);
+        }
+        assert.ok(blocked); session.close();
+      } finally { await blocker.commit(); }
+      await rejected; assert.equal((await fixture.row()).request_bytes, null);
+      session = await journal.openVerifiedAuthoritySession(bytes(fixture.command), descriptor, context, transport, selected);
+      challenge = await session.recover(); const handle = await session.verifyRequest(challenge);
       assert.equal((await fixture.row()).request_bytes, compact);
       assert.equal(JSON.parse((await fixture.row()).start_response_bytes).recovered, true);
       const current = await session.describeVerifiedRequest(handle); assert.equal(current.execution_authorized, false);
@@ -254,7 +289,7 @@ export default async function verifyRequestRetention({ container }: ExecArgs) {
       claims.nonce = "synthetic-replacement"; compact = signedArtifact();
       await assert.rejects(session.verifyRequest(challenge));
       assert.equal(peer.requests.filter((request: any) => request.method === "POST" && JSON.parse(request.raw.toString()).command === "START_USE").length, 1);
-      assert.equal(peer.requests.filter((request: any) => request.method === "GET").length, 2);
+      assert.equal(peer.requests.filter((request: any) => request.method === "GET").length, 3);
     } finally { first?.close(); session?.close(); other?.close(); selected.close(); transport.close(); await peer.close(); }
   });
   await check("C7-NATIVE-PRIVACY holds export exact request while erasure and hold release minimize it", async () => {
