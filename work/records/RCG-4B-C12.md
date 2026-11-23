@@ -130,3 +130,16 @@ Targeted native cases cover each reported malformed tuple and denied security-ta
 access plus actual deferred-COMMIT owner/privacy withdrawal, abort and expiry.
 These changes need the next fixed native run and renewed review; no clearance is
 inferred from the earlier seven-group exploratory pass.
+
+
+At20a45b4 all14 source claim groups and18 retained C10 groups passed. Renewed review
+confirmed the null/INSERT/prebinding and broad-grant corrections, but identified
+that activation has its own awaited COMMIT after the last clock check. The next
+candidate compares a transient bounded SHA256 snapshot of the already validated
+native/journal/privacy inputs in one read-only autocommit query after activation.
+It samples database time with a conservative full-await delivery allowance, and
+has no later asynchronous activation. A mismatch or deadline failure retires login
+and retains/revokes the unknown original. Four targeted cases distinguish the first
+claim transaction from activation using actual transaction IDs and test activation
+COMMIT owner/privacy withdrawal, abort and expiry. This is delivery evidence only;
+it does not replace native effect-time row/provider fencing or authorize dispatch.

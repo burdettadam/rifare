@@ -233,6 +233,67 @@ export default async function verifyNativeExecutionClaim({ container }: ExecArgs
     }
     await requireRetiredCredential(other);
   });
+  for (const mode of ["owner", "privacy", "abort", "expiry"]) await check("C12-CLAIM-ACTIVATION-" + mode.toUpperCase() + " terminal activation boundary prevents credential release", async () => {
+    const other = await f.makePaymentOriginal(mode === "expiry" ? { receiptLifetime: 2000 } : {}), commandId = other.command.command_id;
+    const marker = "hmac-sha256:" + createHmac("sha256", Buffer.from(process.env.RIFARE_JOURNAL_PRIVACY_KEY!, "base64url"))
+      .update(JSON.stringify(["urn:rifare:medusa-journal-privacy-subject:v1", f.merchant.merchant_namespace, f.merchant.store_id, f.customer.id])).digest("hex");
+    await postgres.raw(`create table public.rifare_c12_activation_phase(original_id text primary key, claim_xid bigint not null, activation_xid bigint null);
+      create function public.c12_remember_claim_xid() returns trigger language plpgsql as $$ begin
+        if NEW.original_command_uuid='${commandId}' and OLD.execution_owner_fingerprint is null and NEW.execution_owner_fingerprint is not null then
+          insert into public.rifare_c12_activation_phase(original_id,claim_xid) values(NEW.original_command_uuid,txid_current());
+        end if; return NEW; end $$;
+      create trigger c12_remember_claim after update on public.rifare_operation for each row execute function public.c12_remember_claim_xid()`);
+    const actionSql = mode === "owner" ? `update public.auth_identity set app_metadata='{"customer_id":"cus_other"}'::jsonb where id='${f.identity.id}';` :
+      mode === "privacy" ? `update public.rifare_operation_privacy_subject set suppressed=true where id='${marker}';` :
+        "perform pg_advisory_xact_lock(120,13);";
+    await postgres.raw(`create function public.c12_activation_commit() returns trigger language plpgsql as $$
+      declare selected text; begin
+        if NEW.id='${marker}' then
+          update public.rifare_c12_activation_phase set activation_xid=txid_current()
+            where original_id='${commandId}' and claim_xid<>txid_current() and activation_xid is null returning original_id into selected;
+          if selected is not null then ${actionSql} end if;
+        end if; return NEW; end $$;
+      create constraint trigger c12_activation_commit after update on public.rifare_operation_privacy_subject
+        deferrable initially deferred for each row execute function public.c12_activation_commit()`);
+    const controller = new AbortController();
+    const blocker = ["abort", "expiry"].includes(mode) ? await postgres.transaction() : undefined;
+    let blockerPid: number | undefined;
+    if (blocker) {
+      blockerPid = (await blocker.raw("select pg_backend_pid() as pid")).rows[0].pid;
+      await blocker.raw("select pg_advisory_xact_lock(120,13)");
+    }
+    const action = noEffect(() => journal.claimNativeExecution(commandId, context, verifier, controller.signal));
+    action.catch(() => undefined);
+    try {
+      if (blocker) {
+        const deadline = Date.now() + 8000; let waiting = false;
+        while (Date.now() < deadline) {
+          const rows = (await postgres.raw("select pid from pg_stat_activity where wait_event='advisory' and ? = any(pg_blocking_pids(pid))", [blockerPid!])).rows;
+          if (rows.length) { waiting = true; break; }
+          await new Promise(resolve => setTimeout(resolve, 20));
+        }
+        assert.ok(waiting, "Actual activation COMMIT, after first claim COMMIT, must be blocked");
+        if (mode === "abort") controller.abort();
+        else {
+          const remaining = (await other.row()).receipt_expires_at.getTime() - await f.clock();
+          if (remaining >= 0) await new Promise(resolve => setTimeout(resolve, remaining + 30));
+        }
+        await blocker.commit();
+      }
+      await assert.rejects(action);
+      const phase = await postgres("rifare_c12_activation_phase").where({ original_id: commandId }).first();
+      assert.ok(phase.activation_xid); assert.notEqual(phase.activation_xid, phase.claim_xid);
+    } finally {
+      if (blocker && !blocker.isCompleted()) await blocker.rollback();
+      await action.catch(() => undefined);
+      await postgres.raw(`drop trigger c12_activation_commit on public.rifare_operation_privacy_subject;
+        drop function public.c12_activation_commit(); drop trigger c12_remember_claim on public.rifare_operation;
+        drop function public.c12_remember_claim_xid(); drop table public.rifare_c12_activation_phase`);
+      if (mode === "owner") await postgres("auth_identity").where({ id: f.identity.id }).update({ app_metadata: { customer_id: f.customer.id } });
+      if (mode === "privacy") await postgres("rifare_operation_privacy_subject").where({ id: marker }).update({ suppressed: false });
+    }
+    await requireRetiredCredential(other);
+  });
   await check("C12-CLAIM-PRIVACY hold erasure revokes generation and minimization retains refusal identity", async () => {
     const first = await sample.row();
     assert.equal(await journal.setPrivacyHold(f.customer.id, first.id, first.revision, true, f.privacyActor), true);

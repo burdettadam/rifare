@@ -15,12 +15,13 @@ import { createNativeReceiptVerifier, NativeReceiptVerifier } from "./receipt-ve
 import { retainedNativeReceiptContext } from "./receipt-context";
 import { retainedNativeProofContext } from "./proof-context";
 import { readLockedNativePayment, readLockedNativeExecutionPayment } from "./payment-context";
+import { nativeExecutionDeliverySnapshot } from "./execution-delivery";
 import { executionColumns, executionFingerprint, createOriginalExecutionWorker, activateOriginalExecutionWorker, retireOriginalExecutionWorker, requireNativeExecutionProfile, type ExecutionRow } from "./execution-claim";
 import { readOriginalPaymentOutcome } from "./payment-outcome";
 import { prepareProofAssociation, PreparedProofAssociation } from "./proof-association";
 import { configure } from "safe-stable-stringify";
 import {
-  eraseJournalSubject, exportJournalSubject, journalSubjectIsSuppressed, minimizedOperationFields,
+  eraseJournalSubject, exportJournalSubject, journalSubjectIsSuppressed, journalPrivacyMarkerIds, minimizedOperationFields,
   restoreJournalRefusalIdentities, setJournalOperationHold, uninstallJournal,
 } from "./privacy";
 
@@ -630,6 +631,8 @@ export default class OperationJournalService {
         execution_authorized: false, native_fence_qualified: false,
         worker: Object.freeze({ role: worker.role, password: worker.password }), seal });
     }, true);
+    let deliveryBinding: Parameters<typeof nativeExecutionDeliverySnapshot>[1] | undefined;
+    let deliveryFingerprint: string | undefined, deliveryDeadline = 0;
     try {
       // The committed claim may have lost its acknowledgement or current
       // authority. Reverify after COMMIT before enabling this first login.
@@ -651,9 +654,21 @@ export default class OperationJournalService {
         });
         if (row.execution_payment_handle_fingerprint !== executionFingerprint(full.handle) ||
             now.getTime() < row.execution_claimed_at!.getTime() || now.getTime() >= row.execution_expires_at.getTime()) throw conflict();
+        deliveryBinding = { operationId: row.id, cartId: row.cart_id, collectionId: row.payment_collection_id!,
+          sessionId: row.payment_session_id!, customerId: captured.actor.actor_id!, identityId: captured.actor.auth_identity_id!,
+          storeId: configuration.merchant.store_id, operatorId: configuration.privacyOperator,
+          privacyIds: journalPrivacyMarkerIds(tx, configuration.subject, configuration.key), role: claimed.worker.role };
+        deliveryFingerprint = (await nativeExecutionDeliverySnapshot(tx, deliveryBinding)).fingerprint;
+        deliveryDeadline = row.execution_expires_at.getTime();
         active(); await activateOriginalExecutionWorker(tx, claimed.worker.role); active();
       }, true);
+      // No write transaction or activation follows this terminal read. Include
+      // the entire await interval as a conservative clock-delivery allowance.
+      const began = performance.now();
+      const delivered = await nativeExecutionDeliverySnapshot(this.postgres, deliveryBinding!);
       active(); describeReceipt.call(verifier, receipt.verification);
+      if (!delivered.canLogin || delivered.fingerprint !== deliveryFingerprint ||
+          delivered.observedAt.getTime() + Math.ceil(performance.now() - began) >= deliveryDeadline) throw conflict();
       return claimed;
     } catch (error) {
       // Never mint a replacement if delivery fails. A failed retirement remains

@@ -87,6 +87,12 @@ async function lockPrivacyRecord(transaction: Postgres, id: string) {
   return record as { id: string; suppressed: boolean };
 }
 
+/** Internal read-only delivery comparison uses the same canonical marker IDs. */
+export function journalPrivacyMarkerIds(transaction: Postgres, scope: SubjectScope, key: Buffer) {
+  return [privacyRecordId(transaction, key, installationPurpose, scope),
+    privacyRecordId(transaction, key, subjectPurpose, scope, scope.customer_id)];
+}
+
 function lockSubject(transaction: Postgres, scope: SubjectScope, key: Buffer) {
   return lockPrivacyRecord(transaction, privacyRecordId(transaction, key, subjectPurpose, scope, scope.customer_id));
 }
