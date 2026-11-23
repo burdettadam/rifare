@@ -1,7 +1,8 @@
 # RCG-4B-C7 — Native signed authorization request
 
-State: cryptographic foundation locally verified and independently reviewed;
-native composition and full C7 acceptance remain open.
+State: native composition implemented, locally qualified and independently
+reviewed for development integration. Connected and formal product acceptance
+remain open.
 Base: `c5bf5d422a584133efbdb8eaac710119e4ecb823`.
 Owner/writer: root, active `rifare-operation-journal` linked checkout.
 Branch: `feat/medusa-signed-request`.
@@ -102,3 +103,87 @@ migration is from the pinned Medusa toolchain. Existing entries, component
 identity, provenance/obligations, license status, notices, dependency inputs and
 capability claims remain unchanged. This is source classification, not release
 or legal authorization. The strict checker and all retained oracles remain intact.
+
+## Native implementation and qualification
+
+Root implemented the six-field verified-request tuple in the existing journal,
+using the generated `Migration20261123094926`. It stores exact JWS bytes/digest,
+verification-context digest, provider nonce, first observation and expiry.
+The service derives the binding from retained C1 START and first CHALLENGE,
+checks current ownership/facts and database time, verifies through the concrete
+verifier and atomically retains one result. Retries preserve the complete tuple;
+different valid artifacts or changed trust cannot replace it.
+
+The separate C7 session composes actual C6 retrieval. Its session-owned opaque
+results cannot be cloned or transferred to another session. Cancellation and
+verifier retirement during a blocked native write roll back retention. Post-COMMIT
+ownership/time checks refuse a stale result while retaining committed history.
+Recovery respects the persisted clock floor even with a fresh verifier instance.
+No proof submission, FINALIZE, presentation verification or commerce effect exists.
+
+The first seven native groups passed at `2d59513`. The composed suite passed ten
+groups at `33f8bab` and in the relocated compiled consumer at `44bf90d`. Final candidate
+`43b2e9960f2c44c57444c3895078f2cb7f489449` adds only the persisted-clock-floor test
+to `44bf90d` and passes all 11 compiled native groups. These exercise concurrent valid
+artifacts, exact retry/configuration refusal, actual deferred COMMIT rollback,
+worker exit 79 after retention and fresh-process recovery, blocked-write retirement,
+expiry/ownership withdrawal at COMMIT, actual public mTLS response loss/recovery/
+request retrieval, session cancellation and result isolation, hold/export/erasure,
+uninstall and stale-row reconciliation. Native peer counts prove one START and
+three selected request GETs in the composed cancellation/replacement scenario.
+
+A source-only native fault removed the existing-request replacement/context
+check at `33f8bab`. The unchanged assertion at retention-test line 138 detected the
+otherwise valid alternate signed request with Missing expected rejection. The
+source was restored byte for byte and the disposable fixture retired. The earlier
+signature fault remains separately applicable. No mutation was committed.
+
+The standalone consumer uses its own 937-package production dependency install,
+offline with hooks disabled, outside the repository. It executes compiled native
+services/classes and packaged adapters. External synthetic TLS test fixtures are
+explicit test inputs; product loading has no repository fallback. At44bf90d it
+passed all 34 signature cases, native schema/privacy and the retained source C6
+cart/journal file in a separate fresh database. The optional missing-ts-node
+warning is caught by the upstream CLI within the same successful compiled
+invocation; it is not a separate failed backend startup.
+
+At3413268 the compiled candidate ran the unchanged predecessor migrations with
+only the new migration held outside its search directory in the temporary runtime.
+The pre-C7 schema passed 25 commerce groups and seeded a native original. The actual
+upgrade and replay preserved exact counts/digests across 14 commerce/identity/
+journal tables. The checker confirmed zero new request columns before, six nullable
+columns afterward and no nonnull new values in existing rows. No source checkout
+or predecessor migration was changed for this paused schema rehearsal.
+
+At44bf90d actual pg_dump/pg_restore restored the complete disposable PostgreSQL
+database twice. The restored old verified artifact was present before applying
+the independently retained current erasure or uninstall facts. Both reconciliation
+paths cleared all request fields, preserved refusal identity and refused recovery.
+The backup digest and actual commands/logs remain under ignored evidence. This
+supplements the logical stale-row cases rather than relabeling them as a dump.
+
+The runtime receipt binds 75 product input hashes, 68 compiled file hashes and the
+installed lock to source `43b2e99`, Node 24.14.1, TypeScript 5.9.3 and the pinned
+PostgreSQL 16 image. Both independent reviewers recomputed all receipt hashes.
+Receipt SHA256 is 9087673f9c3f3bb9f86f1235264c70a63df064b20158a1b59a26f58084b15ddd.
+Source tree is f90baefc01698082d1cd1d5bc504e3bab3750102. Raw receipts are root-owned;
+reviewers verified them read-only and did not claim independent execution.
+
+Actual failed observations remain distinct. An initial migration-generator
+attempt used an unavailable placeholder database; its uniquely identified owned
+process was stopped before rerunning on disposable PostgreSQL. TLS setup initially
+selected the wrong Windows OpenSSL, corrected with a task-local Git OpenSSL PATH.
+The new peer fixture initially retained its internal default HTTP status, corrected
+to the selected public 200 response and actual response destruction for loss. Fixture
+timestamps now come from the database owner clock. A relocated `3413268` run refused
+the post-verification time check; its exact cause was not recorded, so no confirmed
+clock-regression diagnosis is claimed. Strict checks were retained. The later
+clock-floor strengthening and diagnostic hook passed on the final candidate.
+
+The original authority-review worker returned classification errors twice instead
+of native reviews. No clearance was inferred. Fresh reviewer c7_authority_review
+independently read the native code/evidence and cleared `43b2e99`, separately from
+the earlier foundation review. Independent rifare_regression_review also cleared
+that exact candidate. Both found no scoped blocker. Root accepts bounded local
+development integration only; provider enrollment, nonce generation, connected
+qualification, signed presentations, final authority and production remain open.

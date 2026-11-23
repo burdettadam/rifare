@@ -1,6 +1,7 @@
 # ADR-0085 — Native signed authorization-request verification
 
-Status: assigned, implementation and qualification remain open.
+Status: implemented and independently reviewed for bounded local development
+integration. Connected provider and formal product qualification remain open.
 Protected base: `c5bf5d422a584133efbdb8eaac710119e4ecb823`.
 Branch: `feat/medusa-signed-request`.
 
