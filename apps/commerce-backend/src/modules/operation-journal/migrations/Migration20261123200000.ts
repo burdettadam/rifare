@@ -33,9 +33,60 @@ export class Migration20261123200000 extends Migration {
         return null;
       end $$;
       revoke all on function public.rifare_guard_native_generation() from public;`);
+    this.addSql(`create function public.rifare_guard_native_original() returns trigger
+      language plpgsql security definer set search_path=pg_catalog as $$
+      declare original public.rifare_operation%rowtype; selected jsonb;
+      begin
+        if session_user::text !~ '^rifare_exec_[a-f0-9]{32}$' then return coalesce(NEW,OLD); end if;
+        select * into original from public.rifare_operation
+          where execution_owner_fingerprint='sha256:' || encode(sha256(convert_to(session_user::text,'UTF8')),'hex');
+        if not found then raise exception 'Native original unavailable on %',TG_TABLE_NAME using errcode='42501'; end if;
+        selected := case when TG_OP='DELETE' then to_jsonb(OLD) else to_jsonb(NEW) end;
+        if TG_TABLE_NAME='cart' then
+          if selected->>'id' is distinct from original.cart_id then raise exception 'Native original unavailable on %',TG_TABLE_NAME using errcode='42501'; end if;
+        elsif TG_TABLE_NAME='cart_line_item' then
+          if selected->>'cart_id' is distinct from original.cart_id then raise exception 'Native original unavailable on %',TG_TABLE_NAME using errcode='42501'; end if;
+        elsif TG_TABLE_NAME='order_address' then
+          if not exists(select 1 from public.cart c join public.cart_address a
+            on a.id in (c.shipping_address_id,c.billing_address_id) and a.deleted_at is null
+            where c.id=original.cart_id and c.deleted_at is null
+              and a.customer_id is not distinct from selected->>'customer_id'
+              and a.company is not distinct from selected->>'company'
+              and a.first_name is not distinct from selected->>'first_name'
+              and a.last_name is not distinct from selected->>'last_name'
+              and a.address_1 is not distinct from selected->>'address_1'
+              and a.address_2 is not distinct from selected->>'address_2'
+              and a.city is not distinct from selected->>'city'
+              and a.country_code is not distinct from selected->>'country_code'
+              and a.province is not distinct from selected->>'province'
+              and a.postal_code is not distinct from selected->>'postal_code'
+              and a.phone is not distinct from selected->>'phone'
+              and a.metadata is not distinct from nullif(selected->'metadata','null'::jsonb)) then
+            raise exception 'Native original unavailable on %',TG_TABLE_NAME using errcode='42501';
+          end if;
+        elsif TG_TABLE_NAME='reservation_item' then
+          if not exists(select 1 from public.order_item oi join public.order_line_item li on li.id=oi.item_id and li.deleted_at is null
+            join public.cart_line_item ci on ci.cart_id=original.cart_id and ci.deleted_at is null
+              and ci.variant_id is not distinct from li.variant_id and ci.product_id is not distinct from li.product_id
+              and ci.unit_price is not distinct from li.unit_price and ci.quantity::numeric is not distinct from oi.quantity
+            where oi.item_id=selected->>'line_item_id' and oi.deleted_at is null) then
+            raise exception 'Native original unavailable on %',TG_TABLE_NAME using errcode='42501';
+          end if;
+        elsif TG_TABLE_NAME='payment_session' then
+          if selected->>'payment_collection_id' is distinct from original.payment_collection_id
+            or selected->>'provider_id' is distinct from 'pp_rifare_fenced_system_fixture'
+            or selected->>'currency_code' is distinct from original.currency
+            or (selected->>'amount')::numeric is distinct from original.payable_minor_units::numeric / power(10::numeric,original.currency_exponent) then
+            raise exception 'Native original unavailable on %',TG_TABLE_NAME using errcode='42501';
+          end if;
+        end if;
+        return coalesce(NEW,OLD);
+      end $$;
+      revoke all on function public.rifare_guard_native_original() from public;`);
     this.addSql(`create function public.rifare_native_generation_ready() returns boolean
       language plpgsql stable set search_path=pg_catalog as $$
       declare target text; relation_oid oid; guard_oid oid := to_regprocedure('public.rifare_guard_native_generation()');
+        original_oid oid := to_regprocedure('public.rifare_guard_native_original()');
       begin
         foreach target in array array['cart','cart_line_item','order','order_address','order_line_item','order_item','order_summary',
           'order_cart','order_payment_collection','reservation_item','payment_collection','payment_session','payment','capture','refund'] loop
@@ -54,6 +105,11 @@ export class Migration20261123200000 extends Migration {
             and tgname='rifare_native_generation' and tgfoid=guard_oid and tgtype=62 and tgenabled='O')
             or not exists(select 1 from pg_catalog.pg_trigger where tgrelid=relation_oid
             and tgname='rifare_native_generation_commit' and tgfoid=guard_oid and tgtype=29 and tgenabled='O' and tgdeferrable and tginitdeferred)) then return false; end if;
+        end loop;
+        foreach target in array array['cart','cart_line_item','order_address','reservation_item','payment_session'] loop
+          relation_oid := to_regclass(format('public.%I',target));
+          if relation_oid is null or not exists(select 1 from pg_catalog.pg_trigger where tgrelid=relation_oid
+            and tgname='rifare_native_original' and tgfoid=original_oid and tgtype=31 and tgenabled='O') then return false; end if;
         end loop;
         return true;
       end $$;`);
@@ -80,6 +136,10 @@ export class Migration20261123200000 extends Migration {
             if not exists(select 1 from pg_catalog.pg_trigger where tgrelid=relation_oid and tgname='rifare_native_generation_commit') then
               execute format('create constraint trigger rifare_native_generation_commit after insert or update or delete on public.%I deferrable initially deferred for each row execute function public.rifare_guard_native_generation()',target);
             end if;
+            if target in ('cart','cart_line_item','order_address','reservation_item','payment_session')
+              and not exists(select 1 from pg_catalog.pg_trigger where tgrelid=relation_oid and tgname='rifare_native_original') then
+              execute format('create trigger rifare_native_original before insert or update or delete on public.%I for each row execute function public.rifare_guard_native_original()',target);
+            end if;
           end if;
         end loop;
       end $$;
@@ -93,12 +153,13 @@ export class Migration20261123200000 extends Migration {
         raise exception 'Original execution records require generation-fence retention';
       end if;
       for target in select c.relname,t.tgname from pg_catalog.pg_trigger t join pg_catalog.pg_class c on c.oid=t.tgrelid
-        join pg_catalog.pg_namespace n on n.oid=c.relnamespace where t.tgname in ('rifare_native_generation','rifare_native_generation_commit') and n.nspname='public' loop
+        join pg_catalog.pg_namespace n on n.oid=c.relnamespace where t.tgname in ('rifare_native_generation','rifare_native_generation_commit','rifare_native_original') and n.nspname='public' loop
         execute format('drop trigger %I on public.%I',target.tgname,target.relname);
       end loop;
     end $$;
     drop function public.rifare_install_native_generation_fences();
     drop function public.rifare_native_generation_ready();
+    drop function public.rifare_guard_native_original();
     drop function public.rifare_guard_native_generation();`);
   }
 }

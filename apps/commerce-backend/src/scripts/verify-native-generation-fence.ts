@@ -55,6 +55,24 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
           await release;
         });
       } else await carts.updateCarts(task.cart_id, current);
+      if (task.correlation) {
+        const refused = async (table: string, run: () => Promise<unknown>) => {
+          await assert.rejects(run(), (error: any) => error.code === "42501" && error.message.includes("Native original unavailable on " + table),
+            "Current worker must be confined to its exact native original");
+          console.log("C12_NATIVE_ORIGINAL_REFUSAL=" + table);
+        };
+        await refused("cart", () => carts.updateCarts(task.other_cart_id, { metadata: { c12_wrong_original: true } }));
+        await refused("cart_line_item", () => carts.addLineItems({ cart_id: task.other_cart_id, title: "Wrong original", quantity: 1, unit_price: 1 }));
+        await refused("order_address", () => container.resolve(Modules.ORDER).createOrders({ customer_id: task.customer_id,
+          currency_code: "usd", email: "wrong-original@example.invalid", shipping_address: { first_name: "Wrong", last_name: "Original",
+            address_1: "2 Synthetic Street", city: "Synthetic", country_code: "us", postal_code: "00000" } }));
+        await refused("reservation_item", () => container.resolve(Modules.INVENTORY).createReservationItems({ inventory_item_id: task.inventory_item_id,
+          location_id: task.location_id, quantity: 1, line_item_id: task.other_line_id }));
+        await refused("payment_session", () => container.resolve(Modules.PAYMENT).createPaymentSession(task.other_collection_id, {
+          provider_id: "pp_rifare_fenced_system_fixture", currency_code: "usd", amount: 12.5, data: {} }));
+        assert.deepEqual(calls, Object.fromEntries(names.map(name => [name, 0])));
+        console.log("C12_NATIVE_ORIGINAL_RESULT=" + JSON.stringify({ current_wrong_original_refusals: 5, native_system_calls: calls }));
+      }
       if (task.reconnect) {
         assert.equal(typeof process.send, "function");
         // Bound the actual native pools' acquisition wait so a retired login
@@ -141,6 +159,10 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
   const location = await locations.createStockLocations({ name: "C12 synthetic generation" });
   await inventory.createInventoryLevels({ inventory_item_id: item.id, location_id: location.id, stocked_quantity: 5 });
   const line = await postgres("cart_line_item").where({ cart_id: original.cart.id }).first("id");
+  const carts = container.resolve(Modules.CART), payments = container.resolve(Modules.PAYMENT);
+  const otherCart = await carts.createCarts({ currency_code: "usd", email: "wrong-original@example.invalid" });
+  const otherLine = await carts.addLineItems({ cart_id: otherCart.id, title: "Wrong original fixture", quantity: 1, unit_price: 1 });
+  const otherCollection = (await payments.createPaymentCollections([{ currency_code: "usd", amount: 12.5 }]))[0];
   for (const trigger of ["rifare_native_generation", "rifare_native_generation_commit"]) {
     const before = await original.row();
     const roles = Number((await postgres.raw("select count(*) as n from pg_roles where rolname ~ '^rifare_exec_[a-f0-9]{32}$'")).rows[0].n);
@@ -157,13 +179,16 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
   const setupFault = process.env.RIFARE_C12_GENERATION_SETUP_FAULT === "occupied";
   if (setupFault) writeFileSync(custody, JSON.stringify({ fixture: "occupied before claim" }), { flag: "wx", mode: 0o600 });
   const claim = await f.journal.claimNativeExecution(original.command.command_id, f.context, f.verifier);
-  let definition: string | null = null, deliveredLogin: boolean | undefined, retirement: Promise<void> | undefined;
+  let definition: string | null = null, originalDefinition: string | null = null;
+  let deliveredLogin: boolean | undefined, retirement: Promise<void> | undefined;
   let revocationPause: any;
   const fault = process.env.RIFARE_C12_GENERATION_FAULT === "omit";
   const ordering = process.env.RIFARE_C12_GENERATION_ORDERING === "write-first";
   const revokeFirst = process.env.RIFARE_C12_GENERATION_ORDERING === "revoke-first";
   const reconnect = process.env.RIFARE_C12_GENERATION_ORDERING === "reconnect";
   const reconnectFault = process.env.RIFARE_C12_GENERATION_RECONNECT_FAULT === "restore-login";
+  const correlation = process.env.RIFARE_C12_ORIGINAL === "verify";
+  const correlationFault = process.env.RIFARE_C12_ORIGINAL_FAULT === "omit";
   const orderingFault = process.env.RIFARE_C12_GENERATION_ORDERING_FAULT === "omit-locks";
   try {
   assert.ok(claim.worker); assert.ok(claim.seal);
@@ -182,10 +207,16 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
   writeFileSync(custody, JSON.stringify({ source: process.env.RIFARE_C12_SOURCE, original_id: original.command.command_id,
     worker: claim.worker, seal: claim.seal }, null, 2), { flag: "wx", mode: 0o600 });
   definition = (await postgres.raw("select pg_get_functiondef(to_regprocedure('public.rifare_guard_native_generation()')) as definition")).rows[0].definition as string | null;
+  originalDefinition = (await postgres.raw("select pg_get_functiondef(to_regprocedure('public.rifare_guard_native_original()')) as definition")).rows[0].definition as string | null;
   if (fault || orderingFault) assert.ok(definition, "The enforcement fault requires an installed generation function");
   if (orderingFault) {
     assert.ok(ordering); assert.equal((definition!.match(/for share/gi) ?? []).length, 2);
     await postgres.raw(definition!.replace(/for share/gi, ""));
+  }
+  if (correlationFault) {
+    assert.ok(correlation && originalDefinition);
+    await postgres.raw(`create or replace function public.rifare_guard_native_original() returns trigger
+      language plpgsql security definer set search_path=pg_catalog as $$ begin return coalesce(NEW,OLD); end $$`);
   }
   await postgres.raw(`create table public.rifare_c12_generation_audit(id bigserial primary key,native_table text not null,authenticated_role text not null);
     create function public.rifare_c12_generation_observe() returns trigger language plpgsql security definer set search_path=pg_catalog as $$ begin
@@ -215,12 +246,14 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
       inventory_item_id: item.id, location_id: location.id, ordering }) };
   env.RIFARE_C12_GENERATION_TASK = JSON.stringify({ role: claim.worker!.role, cart_id: original.cart.id,
     customer_id: f.customer.id, collection_id: original.collection.id, line_item_id: line.id,
-    inventory_item_id: item.id, location_id: location.id, ordering, reconnect });
+    inventory_item_id: item.id, location_id: location.id, ordering, reconnect, correlation,
+    other_cart_id: otherCart.id, other_line_id: otherLine[0].id, other_collection_id: otherCollection.id });
   for (const key of Object.keys(env)) if (key.startsWith("PG") || key.endsWith("_CUSTODY") || /(?:API_KEY|_TOKEN|_PASSWORD|_SECRET|_PRIVATE_KEY|_CREDENTIALS)$/.test(key) ||
     key.endsWith("DATABASE_URL") && key !== "DATABASE_URL" || key.startsWith("RIFARE_JOURNAL_PRIVACY_") || key.startsWith("RIFARE_C12_CONTROLLER_")) delete env[key];
   env.JWT_SECRET = randomBytes(32).toString("hex"); env.COOKIE_SECRET = randomBytes(32).toString("hex");
   let beforeStale: string | undefined, beforeAudit: unknown, parentFailure: unknown;
   let orderingObservation: unknown;
+    if (correlation) { beforeStale = await snapshot(); beforeAudit = await postgres("rifare_c12_generation_audit").orderBy("id"); }
     const result = await new Promise<{ code: number | null; output: string }>((complete, reject) => {
       const compiled = __filename.endsWith(".js"), entry = resolvePath();
       function resolvePath() { return resolve(dirname(__filename), "native-execution-worker-entry." + (compiled ? "js" : "ts")); }
@@ -338,6 +371,7 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
     writeFileSync(custody.replace("-private.json", "-observations.json"), JSON.stringify({ worker_exit: result.code, before_stale: beforeStale,
       after_stale: await snapshot(), audit: await postgres("rifare_c12_generation_audit").orderBy("id"), fault,
       ordering, revoke_first: revokeFirst, reconnect, reconnect_fault: reconnectFault,
+      correlation, correlation_fault: correlationFault,
       ordering_fault: orderingFault, ordering_observation: orderingObservation }, null, 2), { flag: "wx" });
     if (parentFailure) throw parentFailure;
     assert.equal(result.code, 0, result.output);
@@ -349,7 +383,8 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
     console.log("C12_NATIVE_GENERATION_RESULT=" + JSON.stringify({ result: "pass",
       ...(reconnect ? { actual_backend_loss_and_reconnect: true, active_reconnect_native_writes: 1,
         post_retirement_native_method_acquisition_refusals: 1, same_existing_authenticated_session: false } :
-        { actual_native_stale_write_refusals: 5, same_existing_authenticated_session: true }),
+        { actual_native_stale_write_refusals: 5, same_existing_authenticated_session: true,
+          ...(correlation ? { current_wrong_original_refusals: 5 } : {}) }),
       original_visibility_qualified: false, current_authority_fence_qualified: false,
       provider_effect_time_fence_qualified: false, full_C12_qualified: false }));
   } finally {
@@ -363,6 +398,11 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
           await postgres.raw(definition);
           assert.equal((await postgres.raw("select pg_get_functiondef('public.rifare_guard_native_generation()'::regprocedure) as definition")).rows[0].definition, definition);
           console.log("C12_NATIVE_GENERATION_FAULT_RESTORED=exact");
+        }
+        if (correlationFault && originalDefinition) {
+          await postgres.raw(originalDefinition);
+          assert.equal((await postgres.raw("select pg_get_functiondef('public.rifare_guard_native_original()'::regprocedure) as definition")).rows[0].definition, originalDefinition);
+          console.log("C12_NATIVE_ORIGINAL_FAULT_RESTORED=exact");
         }
       }
     } finally {

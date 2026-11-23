@@ -440,3 +440,15 @@ that evidence claim is invalid. The corrected candidate reports one current
 reconnect native write,one post-retirement method-acquisition refusal,and
 `same_existing...:false`;the five SQL refusals remain exclusive to the completed-
 revocation and transaction-ordering modes.
+
+At85e2e1b both independent roles cleared the corrected backend-loss/reconnect
+scope. The next source adds a separate original-row trigger on the five directly
+observed native boundaries. A current worker may update only its journal-selected
+Cart and line items;Order address input must exactly match one of that Cart's live
+addresses;reservation input must resolve through an exact copied order/cart line;
+and a payment session must match the journal's collection,provider,currency and
+raw principal. Current wrong Cart,line,address,reservation and payment inputs must
+all refuse before their first row. Replacing only this row-correlation function
+with a no-op must make the unchanged wrong-Cart oracle fail and is restored exactly.
+Read visibility,full order-child coverage and a healthy complete checkout remain
+unqualified by this bounded row-write stage.
