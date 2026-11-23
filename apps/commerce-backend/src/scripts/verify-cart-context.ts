@@ -460,6 +460,7 @@ export default async function verifyCartContext({ container }: ExecArgs) {
       const peer = await peerModule.delegatedUsePeer();
       const transport = new wireModule.PublicDelegatedUseClient(peer.config);
       const remoteResults = new Map<string, unknown>();
+      let discardNextStartResponse = false;
       peer.setHandler((request: any, response: any) => {
         response.statusCode = 200;
         if (request.method === "GET") {
@@ -478,6 +479,11 @@ export default async function verifyCartContext({ container }: ExecArgs) {
               grant: request.body.grant, operation: request.body.operation,
               created_at: "2026-11-23T00:00:00.000Z", expires_at: "2026-11-23T00:10:00.000Z" },
           });
+          if (discardNextStartResponse) {
+            discardNextStartResponse = false;
+            response.destroy();
+            return;
+          }
         }
         const saved = remoteResults.get(id) as { result: { challenge_id: string } };
         response.setHeader("link", "<" + peer.config.origin +
@@ -541,6 +547,98 @@ export default async function verifyCartContext({ container }: ExecArgs) {
         remoteResults.set(senderCommand.command_id, originalRemote);
         session.close(); resumed.close();
         check("native-authority-session-retains-before-tls-and-recovers-only-the-original", () => {});
+
+        const authorityWorker = (mode: string, original: typeof command) =>
+          promisify(execFile)(process.execPath, [
+            "run.mjs", "exec", "./src/scripts/verify-authority-recovery-worker.ts",
+          ], { timeout: 45000, env: { ...process.env,
+            RIFARE_AUTHORITY_TEST_MODE: mode,
+            RIFARE_AUTHORITY_TEST_COMMAND: Buffer.from(JSON.stringify(original)).toString("base64url"),
+            RIFARE_AUTHORITY_TEST_DESCRIPTOR: descriptorBytes.toString("base64url"),
+            RIFARE_AUTHORITY_TEST_CONTEXT: JSON.stringify(admission),
+            RIFARE_AUTHORITY_TEST_TRANSPORT: JSON.stringify(peer.config),
+          } });
+        const acknowledgedRecovery = async (original: typeof command, expectedId: string) => {
+          const restarted = await authorityWorker("recover", original);
+          const prefix = "RIFARE_AUTHORITY_RECOVERY_WORKER=";
+          const line = restarted.stdout.split(/\r?\n/).find(value => value.startsWith(prefix));
+          assert.ok(line);
+          const acknowledgement = JSON.parse(line.slice(prefix.length));
+          assert.notEqual(acknowledgement.pid, process.pid);
+          assert.equal(acknowledgement.operation_id, expectedId);
+          assert.equal(acknowledgement.recovered, true);
+        };
+        const lostAuthorityCommand = { ...command, command_id: randomUUID() };
+        await assert.rejects(authorityWorker("start-lose-ack", lostAuthorityCommand), error => {
+          const exited = error as { code?: number; stdout?: string };
+          return exited.code === 79 && !exited.stdout?.includes("RIFARE_AUTHORITY_RECOVERY_WORKER=");
+        });
+        const originalAfterExit = await postgres("rifare_operation")
+          .where({ original_command_uuid: lostAuthorityCommand.command_id }).first();
+        assert.ok(originalAfterExit.start_response_bytes);
+        assert.equal(originalAfterExit.revision, 3);
+        await acknowledgedRecovery(lostAuthorityCommand, originalAfterExit.id);
+        const afterRestart = await postgres("rifare_operation").where({ id: originalAfterExit.id }).first();
+        assert.equal(afterRestart.start_response_bytes, originalAfterExit.start_response_bytes);
+        assert.equal(afterRestart.start_response_digest, originalAfterExit.start_response_digest);
+        assert.equal(afterRestart.revision, originalAfterExit.revision);
+        assert.equal(peer.requests.filter((request: any) =>
+          request.body?.command === "START_USE" && request.body.command_id === lostAuthorityCommand.command_id).length, 1);
+        check("native-authority-worker-exit-after-observation-recovers-without-another-start", () => {});
+
+        const rollbackCommand = { ...command, command_id: randomUUID() };
+        const rollbackSession = await journal.openAuthoritySession(Buffer.from(JSON.stringify(rollbackCommand)),
+          descriptorBytes, admission, transport);
+        await postgres.raw(`
+          create function rifare_fixture_reject_observation() returns trigger language plpgsql as $$
+          begin raise exception 'RIFARE_AUTHORITY_OBSERVATION_COMMIT_ABORT' using errcode = '23514'; end $$;
+          create constraint trigger rifare_fixture_observation_fault after update on rifare_operation
+          deferrable initially deferred for each row
+          when (new.original_command_uuid = '${rollbackCommand.command_id}' and new.start_response_bytes is not null)
+          execute function rifare_fixture_reject_observation()
+        `);
+        try {
+          await assert.rejects(rollbackSession.start(), /RIFARE_AUTHORITY_OBSERVATION_COMMIT_ABORT/);
+        } finally {
+          rollbackSession.close();
+          await postgres.raw("drop trigger if exists rifare_fixture_observation_fault on rifare_operation");
+          await postgres.raw("drop function if exists rifare_fixture_reject_observation()");
+        }
+        const rolledBack = await postgres("rifare_operation")
+          .where({ original_command_uuid: rollbackCommand.command_id }).first();
+        assert.ok(rolledBack.start_claimed_at);
+        assert.equal(rolledBack.start_response_bytes, null);
+        assert.equal(rolledBack.start_response_digest, null);
+        assert.equal(rolledBack.start_response_observed_at, null);
+        assert.equal(rolledBack.challenge_fingerprint, null);
+        assert.equal(rolledBack.revision, 2);
+        assert.ok(remoteResults.has(rollbackCommand.command_id));
+        await acknowledgedRecovery(rollbackCommand, rolledBack.id);
+        const reconciled = await postgres("rifare_operation").where({ id: rolledBack.id }).first();
+        assert.ok(reconciled.start_response_bytes);
+        assert.equal(JSON.parse(reconciled.start_response_bytes).recovered, true);
+        assert.equal(reconciled.revision, 3);
+        assert.equal(peer.requests.filter((request: any) =>
+          request.body?.command === "START_USE" && request.body.command_id === rollbackCommand.command_id).length, 1);
+        check("native-authority-observation-commit-rollback-keeps-original-recovery-only", () => {});
+
+        const lostResponseCommand = { ...command, command_id: randomUUID() };
+        const lostResponseSession = await journal.openAuthoritySession(
+          Buffer.from(JSON.stringify(lostResponseCommand)), descriptorBytes, admission, transport);
+        try {
+          discardNextStartResponse = true;
+          await assert.rejects(lostResponseSession.start(), /PUBLIC_USE_/);
+          assert.ok(remoteResults.has(lostResponseCommand.command_id));
+        } finally { lostResponseSession.close(); discardNextStartResponse = false; }
+        const uncertain = await postgres("rifare_operation")
+          .where({ original_command_uuid: lostResponseCommand.command_id }).first();
+        assert.ok(uncertain.start_claimed_at);
+        assert.equal(uncertain.start_response_bytes, null);
+        await acknowledgedRecovery(lostResponseCommand, uncertain.id);
+        assert.equal(peer.requests.filter((request: any) =>
+          request.body?.command === "START_USE" && request.body.command_id === lostResponseCommand.command_id).length, 1);
+        assert.ok((await postgres("rifare_operation").where({ id: uncertain.id }).first()).start_response_bytes);
+        check("native-authority-lost-http-response-recovers-the-original-in-another-process", () => {});
 
         const closeCommand = { ...command, command_id: randomUUID() };
         const closing = await journal.openAuthoritySession(Buffer.from(JSON.stringify(closeCommand)),
