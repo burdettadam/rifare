@@ -1,6 +1,7 @@
 # ADR-0080 — Public managed-machine command and request handoff
 
-Status: assigned; implementation and qualification not yet performed.
+Status: implemented and independently reviewed for bounded local development
+integration. Connected provider and formal product qualification remain open.
 
 ## November 23 implementation resumption
 

@@ -1,7 +1,8 @@
 # RCG-4B-C6 — Public managed-machine command and request handoff
 
-State: public wire component implemented and locally tested; native composition,
-fault qualification, independent reviews and publication remain pending.
+State: implemented and independently reviewed for bounded local development
+integration at `3e74538`. Publication and integration are the next checkpoints.
+Connected provider qualification and formal product acceptance remain open.
 
 Resumed November 23 from integrated `8cd2a09` on
 `feat/rcg4b-public-caller`. Root owns tests, native composition and integration.
@@ -17,10 +18,11 @@ Assignment: [ADR-0080](../../docs/decisions/0080-public-managed-machine-caller.m
 Target update: ADR-0081 and [ADR-0083](../../docs/decisions/0083-medusa-cart-context.md)
 supersede the old SQLite-specific composition. COMMERCE-CONTEXT-01 now supplies
 locally verified native cart ownership and persisted observations, with no sender
-or approval authority. C6 still needs the supported ElevenID authority selection,
-native original-operation journal and atomic admission/currentness boundary.
-Refresh upstream pins before its implementation; this record's original source
-facts below remain historical assignment evidence, not current runtime qualification.
+or approval authority. COMMERCE-OPERATION-01 supplies the qualified native journal,
+and C6 composes its serializable dispatch admission with the selected machine
+transport. This record's original source facts below remain historical
+assignment evidence. The refreshed provider pin and current results are recorded
+separately from connected qualification.
 
 ## Objective
 
@@ -63,15 +65,30 @@ public implementation is integrated and the actual tests pass.
 | --- | --- |
 | Provider source inspection | Complete; source-only |
 | Assignment/ADR | Complete |
-| Implementation | Public adapter and internal native authority session composed at `60fdc8a`; durable response observation remains pending |
+| Implementation | Native START/correlation and first response retention, sole initial-send claim, recovery and unverified request retrieval implemented |
 | Local TLS tests | 23 public and 20 unchanged internal groups passed on `60fdc8a` |
-| Native integration tests | Native PostgreSQL plus real local mTLS START, original recovery, request retrieval, cart change during TLS and close during blocked database admission passed on `60fdc8a` |
+| Native integration tests | Exact `3e74538` native suite passed, including competing sessions, withdrawal during TLS, process exit, lost response, observation commit rollback and privacy |
 | C5 regression | Unchanged internal wire file passed all 20 groups; other native regressions pending |
-| Fault injections | Link destination and duplicate acceptance faults caught at unchanged rejection assertions; later implementation refresh pending |
-| Independent reviews | Scoped authority reviews found and verified correction of export omission and session-close race; final C6 reviews pending |
+| Fault injections | Link destination/duplicate faults and native recovery/artifact post-TLS ownership faults caught by unchanged behavioral assertions |
+| Independent reviews | Authority/security and regression reviewers found no blocker for bounded development integration of `3e74538` |
 | Publication of implementation | Not done |
 
 No claim of functional support, provider qualification or formal acceptance is made by this assignment record.
+
+## Final local development review
+
+Both independent review roles inspected `3e745380220129f2fc475baae201eb7a85d44840`
+and its retained source/compiled evidence. They support bounded development
+integration. Runtime execution was performed by root and independently inspected
+by those reviewers. The native ownership faults caused actual unexpected HTTP
+requests and failed the unchanged peer-count assertions. Source bytes were
+restored and disposable fixtures retired.
+
+Root owns publication and integration under the owner's existing instruction
+to use local checks while Actions are cost-restricted. The remaining connected
+endpoint and caller enrollment evidence belongs to the provider worker.
+Signed-request verification, human linking, proof submission, FINALIZE,
+commerce-effect authority and production authorization remain open.
 
 ## Native fence interruption rehearsal
 
