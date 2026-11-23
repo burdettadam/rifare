@@ -181,3 +181,13 @@ journal/identity/control tables remain inaccessible. Any bootstrap permission ga
 must be resolved through a supported narrow boundary,not broad grants to identity
 or workflow state. This source probe dispatches no completion or financial action.
 The first-claim and prior fixture propagation evidence do not prove this new path.
+
+
+At9e2b50c the actual restricted worker boot failed: native Tax needed SELECT on
+tax_provider; Fulfillment also reported a swallowed catalogue-read failure. The
+pinned loaders call upsert/update, but the ORM can avoid writes for unchanged
+managed records. The next candidate adds only SELECT on those two catalogues,
+requires all catalogue rows to stay byte-identical, refuses catalogue UPDATE and
+rejects swallowed loader errors. It also samples authenticated identity from the
+actual registered fenced adapter's native module pool using trusted test-only
+observation. No identity/control privilege or provider catalogue write is granted.
