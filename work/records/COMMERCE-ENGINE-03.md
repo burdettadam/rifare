@@ -94,7 +94,7 @@ physical receiving or independent external provider is claimed.
 Two targeted native adversarial diagnostics on the already-populated synthetic
 expanded database refused foreign-order item, excessive original quantity and
 repeated aggregate quantity at preview. The second widened comparison to the full
-25-table refusal snapshot and found no changed rows/tables. Raw probes/logs are
+23-table refusal snapshot and found no changed rows/tables. Raw probes/logs are
 retained separately; these exploratory observations are not fixed qualification.
 The first-class helper now asserts these cases and competing active-claim refusal.
 No native vendor changes, routes or application permission changes were introduced.
@@ -112,8 +112,25 @@ Installed beginClaimOrderWorkflow selects id/status but calls throwIfIsCancelled
 whose predicate reads canceled_at. That omitted field makes the intended guard
 ineffective. Preserve the required refusal; do not relabel this as a passing claim
 migration. New refusal diagnostics now always collect before/after counts/digests
-across all 25 selected native tables even when the workflow unexpectedly succeeds.
+across all 23 selected native tables even when the workflow unexpectedly succeeds.
 Next: rerun the exact checkpoint with those observations, independent defect review,
 then select the supported dependency correction/application integration path before
 full compiled qualification and normal merge. No hosted CI, real financial effect,
 provider deployment or acceptance is implied. The broader handoff goal stays active.
+
+## Guard correction selected before implementation
+
+At 4f43188, exact source execution again failed the unchanged canceled-order
+assertion. Native refusal fingerprints show claim count 5 to 6 and order-change
+count 20 to 21; the other 21 measured native tables stay byte-equivalent. Count
+correction: the expanded native list contains 23 tables, not the 25 mistakenly
+reported in earlier prose; no compared source/table or requirement was removed.
+
+Both independent roles confirmed the installed query/validator mismatch and the
+actual native failure. Root selects the bounded admission migration and test scope
+in ADR-0090 before writing them. It serializes activation against an already-canceled
+original, preserves historical rows and cancellation/deletion, and does not promise
+that later cancellation is prevented or that refund/effect authority is solved.
+Use the existing module/primary/cache. One primary, zero linked checkouts. Next:
+implement and exercise the guard, concurrency and replay/fault contracts, then
+resume fixed compiled qualification and both independent final reviews.
