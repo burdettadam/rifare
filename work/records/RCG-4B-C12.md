@@ -272,3 +272,22 @@ https://github.com/medusajs/medusa/blob/4f1baa07fb117a900400a61ebb2e7c6729717e04
 https://github.com/medusajs/medusa/blob/4f1baa07fb117a900400a61ebb2e7c6729717e04/packages/medusa/src/loaders/index.ts
 The online source is callgraph evidence,not a claim that its commit is the installed
 package's exact source. Actual installed runtime checks bind this local candidate.
+
+
+## Journal-backed native generation boundary
+
+Both independent roles cleared the worker prerequisite at7915a53, and20 claim
+groups passed on that same source. Its bounded record binds47 evidence hashes.
+Nine completed worker probe logins were reconciled:five earlier active logins were
+retired after confirming no sessions and preserving before rows;four already were
+retired. Source/custody/logs remain. The same native instance is active,with24 owned
+DBs and zero observed client sessions at that reconciliation;one primary/zero linked.
+
+Next reverse the failure with a genuine claimed restricted native worker held on
+its already-open backend. The controller revokes the actual journal generation and
+LOGIN,then resumes native Cart/line,early Order address,Reservation and Payment
+session writes. SQL statement guards must refuse before rows or System calls.
+An actual predicate omission must make the unchanged stale-write oracle fail,then
+restore the exact function. This is generation-mechanism proof only; current
+native authority,original visibility/row correlation,provider edge and complete
+upstream completion remain required before any full-C12 acceptance.

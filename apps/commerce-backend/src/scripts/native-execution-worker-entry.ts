@@ -6,6 +6,7 @@ import { initializeContainer } from "@medusajs/medusa/loaders/index";
 import { MedusaAppLoader, LinkLoader, WorkflowLoader, SubscriberLoader, container as nativeContainer } from "@medusajs/framework";
 import { ContainerRegistrationKeys, Modules, getResolvedPlugins, mergePluginModules } from "@medusajs/framework/utils";
 import { requireNativeExecutionProfile } from "../modules/operation-journal/execution-claim";
+import verifyNativeGenerationFence from "./verify-native-generation-fence";
 import verifyNativeExecutionWorker from "./verify-native-execution-worker";
 
 /** Internal disposable native-module composition. Server-default provisioning is
@@ -48,7 +49,8 @@ async function main() {
     if (stopping) throw new Error("NATIVE_MODULE_WORKER_INTERRUPTED");
     await app.onApplicationStart();
     if (stopping) throw new Error("NATIVE_MODULE_WORKER_INTERRUPTED");
-    await verifyNativeExecutionWorker({ container, args: [] });
+    if (process.env.RIFARE_C12_GENERATION_TASK) await verifyNativeGenerationFence({ container, args: [] });
+    else await verifyNativeExecutionWorker({ container, args: [] });
     if (stopping) throw new Error("NATIVE_MODULE_WORKER_INTERRUPTED");
   } finally {
     // Attempt every owned cleanup even when loading/start/execution rejects.
@@ -66,6 +68,7 @@ async function main() {
       nativeContainer.resolve(ContainerRegistrationKeys.PG_CONNECTION) : undefined;
     await cleanup(() => nativeContainer.dispose());
     if (postgres) await cleanup(() => postgres.destroy());
+    if (process.connected) process.disconnect?.();
     process.off("SIGINT", stop); process.off("SIGTERM", stop);
     if (failures.length) throw new AggregateError(failures, "Native module worker cleanup failed");
     console.log("C12_NATIVE_MODULE_WORKER_SHUTDOWN=complete");
