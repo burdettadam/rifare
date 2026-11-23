@@ -170,3 +170,29 @@ and currency against the locked transaction result. TypeScript passed.
 The fixture was retired. The command remains an internal preparation input.
 Codex continues on the assigned linked checkout with the privacy hooks and
 transactional journal write.
+
+## Subject erasure and hold checkpoint
+
+The generated Medusa migration adds a privacy subject table keyed by an
+HMAC of the native customer and configured merchant/store partition. It
+stores the keyed digest, suppression flag and timestamps. The transaction
+upsert takes the same subject row lock for admission checks, erasure and
+hold changes. The caller must keep the privacy key stable and private.
+
+Erasure retires held rows while retaining the data required by the hold.
+Unheld rows and held rows released after erasure clear cart and customer
+references, merchant/store linkage, actor/facts/command/observation digests,
+canonical bytes, and money fields. They retain the original operation ID,
+original command UUID, challenge fingerprint, retired state, revision and
+timestamps. Retained identifiers are duplicate-refusal data. Privacy
+exports, uninstall, restore and import still require their owning callers
+and verification before the admission service is enabled.
+
+On November 22, 2026 (America/Denver), TypeScript, two migration runs on
+fresh disposable PostgreSQL 16, the native schema check and the new native
+privacy check passed. The privacy check covered atomic rollback, durable
+suppression, stable repeat erasure, row scoping, stale holds, release
+minimization and two independent PostgreSQL connections. PostgreSQL reported
+that a competing suppression check waited for the in-flight erasure, then
+the check saw suppression after commit. The disposable fixture was retired.
+Codex continues on the assigned linked checkout.
