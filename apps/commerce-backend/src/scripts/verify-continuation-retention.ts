@@ -1,4 +1,7 @@
 import assert from "node:assert/strict";
+import { spawn } from "node:child_process";
+import { operationJournalModule } from "../modules/operation-journal";
+import type OperationJournalService from "../modules/operation-journal/service";
 import { createHash, randomUUID } from "node:crypto";
 import { setTimeout as delay } from "node:timers/promises";
 import type { ExecArgs } from "@medusajs/framework/types";
@@ -9,12 +12,40 @@ import { authorityAdapters } from "../modules/operation-journal/authority-assets
  * No provider, presentation signature or commerce effect is qualified. */
 export default async function verifyContinuationRetention({ container }: ExecArgs) {
   if (process.env.NODE_ENV !== "test" || process.env.RIFARE_COMMERCE_VERIFY !== "disposable") throw new Error("RIFARE_DISPOSABLE_CONTINUATION_REQUIRED");
+  if (process.env.RIFARE_C9_COMPILED === "true") assert.ok(__filename.endsWith(".js"));
+  if (process.env.RIFARE_C9_WORKER) {
+    const journal = container.resolve<OperationJournalService>(operationJournalModule), task = JSON.parse(process.env.RIFARE_C9_WORKER);
+    if (task.mode === "proof-intent-lose-ack") {
+      const verifier = await journal.createAuthorityRequestVerifier(bytes(task.requestTrust));
+      const result = await journal.prepareAuthorityProof(task.command_id, Buffer.from(task.proof, "base64"), task.context, verifier);
+      result.prepared.close(); verifier.close(); process.exit(79);
+    }
+    if (task.mode === "proof-ack-lose-ack") {
+      await journal.observeAuthorityProof(task.command_id, bytes(task.ack), task.proof_digest, task.context); process.exit(79);
+    }
+    if (task.mode === "final-intent-lose-ack") {
+      await journal.prepareAuthorityFinalization(task.command_id, task.context); process.exit(79);
+    }
+    if (task.mode === "recover") {
+      const result = await journal.prepareAuthorityFinalRecovery(task.command_id, task.context);
+      console.log("C9_RECOVERED=" + JSON.stringify(result)); return;
+    }
+    throw new Error("C9_UNKNOWN_WORKER_MODE");
+  }
   const fixture = await nativeReceiptFixture(container);
   const { journal, context, requestVerifier, verifier, postgres, clock, makeOriginal, privacyActor } = fixture;
   const checks: string[] = [];
   const check = async (name: string, run: () => unknown) => { await run(); checks.push(name); console.log("CONTINUATION_RETENTION_CHECK " + name); };
   const { codec } = await authorityAdapters();
   const proof = Buffer.from("e30.e30.c3ludGhldGljLXByb29m"), digest = "sha256:" + createHash("sha256").update(proof).digest("hex");
+  const runWorker = (task: unknown) => new Promise<{ code: number | null; output: string }>((resolve, reject) => {
+    const child = spawn(process.execPath, ["run.mjs", "exec", __filename], { cwd: process.cwd(),
+      env: { ...process.env, RIFARE_C9_WORKER: JSON.stringify(task) }, stdio: ["ignore", "pipe", "pipe"] });
+    let output = ""; const timer = setTimeout(() => { child.kill(); reject(new Error("C9 child deadline")); }, 45000);
+    for (const stream of [child.stdout, child.stderr]) stream.on("data", data => { output = (output + data).slice(-16000); });
+    child.once("error", error => { clearTimeout(timer); reject(error); });
+    child.once("exit", code => { clearTimeout(timer); resolve({ code, output }); });
+  });
   const original = await makeOriginal(), id = original.command.command_id;
   const intent = await journal.prepareAuthorityProof(id, proof, context, requestVerifier);
   const ack = { submission_id: randomUUID(), challenge_id: original.challenge, proof_digest: digest,
@@ -122,6 +153,62 @@ export default async function verifyContinuationRetention({ container }: ExecArg
     await assert.rejects(journal.recoverVerifiedAuthorityRequest(historicalId, context, requestVerifier));
     const recovered = await journal.prepareAuthorityProof(historicalId, proof, context); assert.equal(recovered.recovery_only, true); recovered.prepared.close();
     await journal.checkAuthorityProofRecovery(historicalId, digest, context);
+  });
+  await check("fresh-process-lost-proof-and-FINALIZE-acknowledgements-preserve-one-original", async () => {
+    const another = await makeOriginal(), command_id = another.command.command_id;
+    const task = { command_id, context, requestTrust: fixture.requestTrust };
+    const lostProof = await runWorker({ ...task, mode: "proof-intent-lose-ack", proof: proof.toString("base64") }); assert.equal(lostProof.code, 79, lostProof.output);
+    const before = await another.row(); assert.equal(before.proof_digest, digest);
+    const recovered = await journal.prepareAuthorityProof(command_id, proof, context); assert.equal(recovered.send_ticket, null); recovered.prepared.close();
+    const originalAck = { ...ack, submission_id: randomUUID(), challenge_id: another.challenge, received_at: new Date(await clock()).toISOString() };
+    const lostAck = await runWorker({ ...task, mode: "proof-ack-lose-ack", ack: originalAck, proof_digest: digest }); assert.equal(lostAck.code, 79, lostAck.output);
+    const retainedAck = await another.row(); await journal.observeAuthorityProof(command_id, bytes({ ...originalAck, recovered: true }), digest, context);
+    assert.equal((await another.row()).proof_submission_observed_at.getTime(), retainedAck.proof_submission_observed_at.getTime());
+    const lostFinal = await runWorker({ ...task, mode: "final-intent-lose-ack" }); assert.equal(lostFinal.code, 79, lostFinal.output);
+    const retainedFinal = await another.row(); assert.ok(retainedFinal.final_command_uuid); assert.equal(retainedFinal.final_claimed_at, null);
+    const newProcess = await runWorker({ ...task, mode: "recover" }); assert.equal(newProcess.code, 0, newProcess.output);
+    assert.ok(newProcess.output.includes(retainedFinal.final_command_digest)); assert.ok(newProcess.output.includes(retainedFinal.final_command_uuid));
+    assert.deepEqual(await another.row(), retainedFinal);
+  });
+  await check("deferred-COMMIT-failure-rolls-back-proof-and-final-intent", async () => {
+    const another = await makeOriginal(), commandId = another.command.command_id;
+    await postgres.raw(`create function public.c9_fail_commit() returns trigger language plpgsql as $$ begin if new.original_command_uuid='${commandId}' and (new.proof_context_bytes is not null or new.final_command_uuid is not null) then raise exception 'C9_TEST_COMMIT_FAILURE'; end if; return new; end $$`);
+    await postgres.raw("create constraint trigger c9_commit after update on rifare_operation deferrable initially deferred for each row execute function public.c9_fail_commit()");
+    const before = await another.row();
+    try { await assert.rejects(journal.prepareAuthorityProof(commandId, proof, context, requestVerifier), /C9_TEST_COMMIT_FAILURE/); }
+    finally { await postgres.raw("drop trigger c9_commit on rifare_operation; drop function public.c9_fail_commit()"); }
+    assert.deepEqual(await another.row(), before);
+    const prepared = await journal.prepareAuthorityProof(commandId, proof, context, requestVerifier); prepared.prepared.close();
+    await journal.observeAuthorityProof(commandId, bytes({ ...ack, submission_id: randomUUID(), challenge_id: another.challenge, received_at: new Date(await clock()).toISOString() }), digest, context);
+    const proofOnly = await another.row();
+    await postgres.raw(`create function public.c9_fail_final() returns trigger language plpgsql as $$ begin if new.original_command_uuid='${commandId}' and new.final_command_uuid is not null then raise exception 'C9_TEST_FINAL_COMMIT_FAILURE'; end if; return new; end $$`);
+    await postgres.raw("create constraint trigger c9_final after update on rifare_operation deferrable initially deferred for each row execute function public.c9_fail_final()");
+    try { await assert.rejects(journal.prepareAuthorityFinalization(commandId, context), /C9_TEST_FINAL_COMMIT_FAILURE/); }
+    finally { await postgres.raw("drop trigger c9_final on rifare_operation; drop function public.c9_fail_final()"); }
+    assert.deepEqual(await another.row(), proofOnly);
+  });
+  await check("cancellation-during-actual-blocked-proof-UPDATE-rolls-back-context", async () => {
+    const another = await makeOriginal(), commandId = another.command.command_id, before = await another.row(), cancellation = new AbortController();
+    const blocker = await postgres.transaction(); await blocker("rifare_operation").where({ original_command_uuid: commandId }).forUpdate().first();
+    const rejected = assert.rejects(journal.prepareAuthorityProof(commandId, proof, context, requestVerifier, cancellation.signal));
+    try {
+      let blocked = false;
+      for (let n = 0; n < 100; n++) {
+        const result = await postgres.raw("select 1 from pg_stat_activity where datname=current_database() and pid<>pg_backend_pid() and wait_event_type='Lock' and query like 'update %rifare_operation%proof_context_bytes%'");
+        if (result.rows.length) { blocked = true; break; } await delay(20);
+      }
+      assert.ok(blocked, "actual proof-context UPDATE must block"); cancellation.abort();
+    } finally { await blocker.commit(); }
+    await rejected; assert.deepEqual(await another.row(), before);
+  });
+  await check("late-COMMIT-retains-proof-history-without-returning-current-dispatch", async () => {
+    const another = await makeOriginal(true, 2), commandId = another.command.command_id;
+    await postgres.raw(`create function public.c9_delay_commit() returns trigger language plpgsql as $$ begin if new.original_command_uuid='${commandId}' and new.proof_context_bytes is not null then perform pg_sleep(2.2); end if; return new; end $$`);
+    await postgres.raw("create constraint trigger c9_delay after update on rifare_operation deferrable initially deferred for each row execute function public.c9_delay_commit()");
+    try { await assert.rejects(journal.prepareAuthorityProof(commandId, proof, context, requestVerifier)); }
+    finally { await postgres.raw("drop trigger c9_delay on rifare_operation; drop function public.c9_delay_commit()"); }
+    const retained = await another.row(); assert.equal(retained.proof_digest, digest); assert.equal(retained.proof_claimed_at, null);
+    const recovered = await journal.prepareAuthorityProof(commandId, proof, context); assert.equal(recovered.send_ticket, null); recovered.prepared.close();
   });
   await check("ownership-withdrawal-blocks-proof-and-final-recovery", async () => {
     await postgres("auth_identity").where({ id: fixture.identity.id }).update({ app_metadata: { customer_id: "cus_withdrawn" } });

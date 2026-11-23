@@ -165,3 +165,34 @@ upgrade/whole-DB restore assertions and standalone own-dependency qualification;
 fix exact candidate, renew both roles, then use the authorized normal integration.
 Provider endpoint/enrollment/presentation custody and commerce-effect gates remain
 open. No merge, deployment, external qualification or full-goal completion is claimed.
+
+## Session and lifecycle qualification candidate
+
+The actual internal session passed eight source-executed PostgreSQL/mTLS groups:
+private captured proof dispatch, consumed-handle refusal, byte-identical proof
+recovery, distinct durable FINALIZE, fresh-session original result/receipt recovery,
+origin mismatch before intent/I/O, historical proof recovery with retired C7 trust,
+and session retirement. The peer uses real synthetic mutual TLS and real synthetic
+C7/C8 signatures, but never verifies a presentation or represents a live provider.
+Raw evidence: `c9-session-continuation-session.log` (eight requests, all TLS).
+
+Extended retention passes nineteen source groups. Additional cases use actual fresh
+processes exiting after proof intent, submission observation and FINALIZE intent;
+a fourth fresh process recovers the same UUID/digest. Deferred COMMIT failures roll
+back proof/final tuples. Cancellation during a witnessed blocked proof UPDATE rolls
+back. A delayed COMMIT retains historical proof intent while refusing a current
+first-dispatch ticket, allowing explicit identical-proof recovery only. Logs:
+`c9-extended-continuation-retention.log`. No separately installed runtime was used
+for these source runs. Backend noEmit passes after the test additions.
+
+The existing synthetic receipt fixture now accepts an optional request origin and
+privacy-key preservation selector, and exposes its synthetic descriptor/request
+public trust for the new tests. Its original defaults are retained. This test-only
+change needs the retained C8 run in the exact compiled candidate. New whole-DB
+restore and populated pre-C9 upgrade assertion scripts are implemented but have not
+yet been run. Next: fix this source checkpoint and build one owned standalone runtime
+with its own unchanged-lock production dependencies for compiled native/session,
+old regression, actual dump/restore and populated upgrade/replay qualification.
+No suitable prior Rifare runtime exists: the inspected Temp inventory contained no
+`rifare-*-runtime-*` directory. Reuse source dependencies and generated build output;
+any new runtime has root ownership and retirement after qualification/review.
