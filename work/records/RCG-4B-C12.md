@@ -333,3 +333,11 @@ native write privileges are checked against both installed trigger shapes to
 expose list drift. The worker cannot change replication mode,disable its guards or
 invoke the owner-only installer. The installer owner comparison is explicitly
 NULL-safe. The unchanged stale oracle remains the predicate-fault detector.
+
+
+At1b66f7c readiness/control-plane cases and all five actual stale-write refusals
+passed. The next fixed candidate resolves schema-guard function names only through
+pg_catalog; all native relations are already explicitly public-qualified. A newly
+provisioned worker must lack effective CREATE on public,checked before admission
+can commit. No global schema privilege is changed. This tightens the bounded SQL
+primitive without claiming original-row or provider-call authority.

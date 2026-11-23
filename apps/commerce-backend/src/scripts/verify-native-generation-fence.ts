@@ -21,6 +21,7 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
     assert.equal(identity.role, task.role);
     await assert.rejects(postgres.raw('set role "postgres"'), (error: any) => error.code === "42501");
     await assert.rejects(postgres.raw('set session authorization "postgres"'), (error: any) => error.code === "42501");
+    assert.equal((await postgres.raw("select pg_catalog.has_schema_privilege(session_user,'public','CREATE') as permitted")).rows[0].permitted, false);
     await assert.rejects(postgres.raw("set session_replication_role='replica'"), (error: any) => error.code === "42501");
     await assert.rejects(postgres.raw("alter table public.cart disable trigger rifare_native_generation"), (error: any) => error.code === "42501");
     await assert.rejects(postgres.raw("select public.rifare_install_native_generation_fences()"), (error: any) => error.code === "42501");
@@ -101,7 +102,7 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
   const fault = process.env.RIFARE_C12_GENERATION_FAULT === "omit";
   if (fault) assert.ok(definition, "The enforcement fault requires an installed generation function");
   await postgres.raw(`create table public.rifare_c12_generation_audit(id bigserial primary key,native_table text not null,authenticated_role text not null);
-    create function public.rifare_c12_generation_observe() returns trigger language plpgsql security definer set search_path=pg_catalog,public as $$ begin
+    create function public.rifare_c12_generation_observe() returns trigger language plpgsql security definer set search_path=pg_catalog as $$ begin
       if session_user::text ~ '^rifare_exec_[a-f0-9]{32}$' then insert into public.rifare_c12_generation_audit(native_table,authenticated_role) values(TG_TABLE_NAME,session_user); end if;
       return coalesce(NEW,OLD); end $$`);
   const tables = ["cart", "cart_line_item", "order_address", "order", "order_item", "order_line_item", "order_summary", "order_cart", "order_payment_collection",
@@ -139,7 +140,7 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
         await retireOriginalExecutionWorker(postgres, claim.worker!.role);
         const revoked = await original.row(); assert.equal(revoked.execution_generation, 2); assert.ok(revoked.execution_revoked_at);
         if (fault) await postgres.raw(`create or replace function public.rifare_guard_native_generation() returns trigger
-          language plpgsql security definer set search_path=pg_catalog,public as $$ begin return null; end $$`);
+          language plpgsql security definer set search_path=pg_catalog as $$ begin return null; end $$`);
         child.send({ phase: "resume" });
       })().catch(error => { parentFailure = error; child.kill(); }); });
       child.once("error", error => { clearTimeout(timer); reject(error); });

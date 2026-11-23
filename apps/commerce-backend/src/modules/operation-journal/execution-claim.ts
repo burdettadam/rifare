@@ -29,6 +29,8 @@ export async function createOriginalExecutionWorker(tx: Postgres) {
   const role = "rifare_exec_" + randomUUID().replaceAll("-", ""), password = randomBytes(32).toString("hex");
   try {
     await tx.raw(`create role "${role}" nologin password '${password}' nosuperuser nocreatedb nocreaterole noinherit noreplication nobypassrls`);
+    if ((await tx.raw("select pg_catalog.has_schema_privilege(?::name,'public','CREATE') as permitted", [role])).rows[0]?.permitted !== false)
+      throw new Error("NATIVE_EXECUTION_SCHEMA_PRIVILEGE_UNAVAILABLE");
     await tx.raw(`grant usage on schema public to "${role}"`);
     // Explicit native commerce allowlists; identity, user, API-key, workflow and
     // infrastructure state are never writable by an original execution worker.

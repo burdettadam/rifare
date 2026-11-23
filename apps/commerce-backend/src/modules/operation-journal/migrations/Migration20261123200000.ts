@@ -5,7 +5,7 @@ import { Migration } from "@medusajs/framework/mikro-orm/migrations";
 export class Migration20261123200000 extends Migration {
   override async up(): Promise<void> {
     this.addSql(`create function public.rifare_guard_native_generation() returns trigger
-      language plpgsql security definer set search_path=pg_catalog,public as $$
+      language plpgsql security definer set search_path=pg_catalog as $$
       declare original public.rifare_operation%rowtype; selected_cart text; observed timestamptz;
       begin
         if session_user::text !~ '^rifare_exec_[a-f0-9]{32}$' then return null; end if;
@@ -34,7 +34,7 @@ export class Migration20261123200000 extends Migration {
       end $$;
       revoke all on function public.rifare_guard_native_generation() from public;`);
     this.addSql(`create function public.rifare_native_generation_ready() returns boolean
-      language plpgsql stable set search_path=pg_catalog,public as $$
+      language plpgsql stable set search_path=pg_catalog as $$
       declare target text; relation_oid oid; guard_oid oid := to_regprocedure('public.rifare_guard_native_generation()');
       begin
         foreach target in array array['cart','cart_line_item','order','order_address','order_line_item','order_item','order_summary',
@@ -58,7 +58,7 @@ export class Migration20261123200000 extends Migration {
         return true;
       end $$;`);
     this.addSql(`create function public.rifare_install_native_generation_fences() returns void
-      language plpgsql set search_path=pg_catalog,public as $$
+      language plpgsql set search_path=pg_catalog as $$
       declare target text; relation_oid oid;
       begin
         if current_user is distinct from pg_get_userbyid((select relowner from pg_catalog.pg_class where oid='public.rifare_operation'::regclass)) then
