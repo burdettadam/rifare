@@ -57,3 +57,40 @@ inferences. TypeScript no-emit passes. No native C11 pass is claimed yet.
 Next: actual native stages and adversarial/concurrency/privacy/process recovery,
 then fixed compiled consumer, prior-component/schema upgrade/restore, faults and
 both final independent roles. Other provider/deployment workers remain untouched.
+
+## Native source boundary qualification
+
+At c61dbdc the unchanged-guard source run passes 27 native groups: original pending,
+authorization, partial/full capture/refund/cancellation, completed order and actual
+refund-success/bookkeeping-error, expired/changed-cart recovery, raw money/provider,
+session/collection identity, deleted/ambiguous history, retired eligibility, null
+aggregate projection, current access/abort/clock floor, both order links, payload
+minimization, bounded/deleted records, actual blocked-write abort/context copy,
+deferred-COMMIT ownership/privacy/abort, concurrent first identity, rollback,
+fresh-process lost acknowledgement and privacy export/hold/erase/refusal uniqueness/
+uninstall. No provider action or native financial/order mutation occurs in reads.
+The authority reviewer identified null totals being projected as zero; corrected
+before this run and independently asserted. No acceptance is inferred from counts.
+
+Two prior exploratory runs stopped in inherited C7 currentness guards: one during
+proof-dispatch recheck, one REQUEST_TIME_INVALID at its clock-floor guard. Those
+failures/logs/fixtures remain retained; no guard was relaxed and no clock regression
+cause is established. A later 2,000-sample PostgreSQL probe found zero negative
+steps, which does not explain those failures. Temporary throw-only clock diagnostics
+were removed exactly; their exploratory run exposed a separate test wait-query
+error (deferred trigger waits under COMMIT, not UPDATE). The corrected uninstrumented
+run above passes. This inherited intermittent qualification risk remains explicit.
+
+The 96-file/2,324,746-byte prior compiled component from862c601 is preserved separately
+without dependencies before rebuilding; its source/baseline receipt remains retained.
+The prior authorized fixture's privacy custody was not preserved and is not claimed
+as an authenticated recovery installation. Added a separate multi-phase restore
+fixture with explicitly retained synthetic custody for genuine whole-database restore.
+TypeScript no-emit, repository/generated/plan/distribution checks pass so far.
+
+Next: fixed compiled own-dependency qualification, prior populated component/schema
+upgrade/replay, whole-database restore, retained C7-C10 regressions, both required
+faults and exact receipt, then independent candidate reviews and authorized normal
+integration. Other deployment workers remain untouched. One active primary(root),
+zero linked checkouts; owned diagnostic containers/output remain active root resources
+until evidence capture and lifecycle retirement. No public/production effects enabled.

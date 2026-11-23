@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "id": "rifare-source-inventory",
-  "revision": 87,
+  "revision": 88,
   "status": "proposed",
   "components": [
     {
@@ -1810,7 +1810,8 @@
         "work/records/RCG-4B-C11.md",
         "apps/commerce-backend/src/scripts/verify-payment-outcomes.ts",
         "apps/commerce-backend/src/modules/operation-journal/payment-outcome.ts",
-        "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123171000.ts"
+        "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123171000.ts",
+        "apps/commerce-backend/src/scripts/verify-payment-outcomes-restore.ts"
       ],
       "notices": []
     },
