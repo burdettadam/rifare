@@ -75,7 +75,7 @@ export async function readOriginalPaymentOutcome(tx: Postgres, original: Origina
   requireValue(!binding.native_payment_id || payment && payment.id === binding.native_payment_id && fingerprint === binding.native_payment_fingerprint);
   const captures = payment ? await bounded(tx("capture").where({ payment_id: payment.id }).select("id", "raw_amount", "deleted_at")) : [];
   const refunds = payment ? await bounded(tx("refund").where({ payment_id: payment.id }).select("id", "raw_amount", "status", "deleted_at")) : [];
-  const captureFacts = captures.map(row => ({ id: nativeId(row.id, "cap_"), amount_minor_units: money(row.raw_amount), deleted: timestamp(row.deleted_at) !== null }));
+  const captureFacts = captures.map(row => ({ id: nativeId(row.id, "capt_"), amount_minor_units: money(row.raw_amount), deleted: timestamp(row.deleted_at) !== null }));
   const refundFacts = refunds.map(row => {
     requireValue(Object.values(RefundStatus).includes(row.status));
     return { id: nativeId(row.id, "ref_"), amount_minor_units: money(row.raw_amount), status: row.status as string, deleted: timestamp(row.deleted_at) !== null };
