@@ -30,8 +30,8 @@ RECEIPT_RUNTIME_MANIFESTS = {
     'packages/adapters/delegated-receipts/package-lock.json': 'c1d026d8abb6629ecabe749fbe8a247756217ad68587c81e0e801d3ea2e212e6',
 }
 COMMERCE_RUNTIME_MANIFESTS = {
-    'apps/commerce-backend/package.json': 'ec4ea4c86c55ae71b155eaf506a81df785f61ec93bc42d9db6dfee9b9efa8c74',
-    'apps/commerce-backend/package-lock.json': 'a466b77a6a141584b0aa1656fc56b70e6ed9120853fe2bf1dbbdd8726b840fbc',
+    'apps/commerce-backend/package.json': 'e919ba12131958f439bdbd229832cdffe6c108f54bfe0626a5a3b63140d48f47',
+    'apps/commerce-backend/package-lock.json': '853af121bebf48ec6a836945e78cd014f3dbd76601a9bd986e24257ff1aa5780',
 }
 RECEIPT_RUNTIME_PACKAGE = {
     'name': 'rifare-delegated-receipts', 'version': '0.0.0', 'private': True,

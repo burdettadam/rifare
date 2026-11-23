@@ -6,6 +6,7 @@ import argparse
 import json
 import os
 from pathlib import Path
+import shutil
 import stat
 import subprocess
 import sys
@@ -141,7 +142,7 @@ def install(root: Path, *, offline: bool = False) -> dict:
         for name, data in expected.items():
             (prefix / name).write_bytes(data)
         command = [
-            'npm', 'ci', '--prefix', str(prefix), '--ignore-scripts',
+            shutil.which('npm') or 'npm', 'ci', '--prefix', str(prefix), '--ignore-scripts',
             '--no-audit', '--no-fund', '--install-strategy=hoisted',
             '--global=false', '--package-lock=true', '--workspaces=false',
         ]

@@ -49,7 +49,7 @@ class ReceiptRuntimeInstallTests(unittest.TestCase):
         self.addCleanup(self.tmp.cleanup)
 
     def npm(self, command, **kwargs):
-        self.assertEqual(command[:2], ['npm', 'ci'])
+        self.assertEqual(command[:2], [shutil.which('npm') or 'npm', 'ci'])
         self.assertIn('--ignore-scripts', command)
         self.assertIn('--no-audit', command)
         self.assertIn('--no-fund', command)

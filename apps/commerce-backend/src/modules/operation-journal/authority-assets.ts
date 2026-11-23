@@ -15,3 +15,9 @@ export async function authorityAdapters() {
   ]);
   return { wire, codec, request_json, request_time };
 }
+
+/** Source receipt crypto is optional until its native owner is constructed. */
+export async function receiptJoseAdapter() {
+  if (__filename.endsWith(".js")) return (await authorityAdapters()).receipt_jose;
+  return import(pathToFileURL(resolve(process.cwd(), "../../packages/adapters/delegated-receipts/jose-verifier.mts")).href);
+}

@@ -72,6 +72,27 @@ the standalone runtime's own JOSE for compiled resolution. New first-party sourc
 and records belong to the existing Rifare source-inventory component and retain
 its license classification and obligations; update only that inventory list.
 
+The existing installer invokes bare `npm`, which Python's Windows subprocess
+cannot resolve to npm.CMD. Resolve that same executable through the system PATH
+before launching it, retaining all locked manifests, flags and package checks.
+The installer test's literal executable spelling may follow this platform
+resolution; preserve its arguments, graph, promotion and tamper assertions. Run
+the unchanged symlink assertions in a Linux container rather than skipping them
+when the Windows user lacks symlink creation privilege.
+
+### Inherited manifest byte-pin correction
+
+Before changing intake pins, the maintainer inspected committed C7 `43b2e99`
+and current Git blobs: the backend package/lock are unchanged LF text. C7's
+checker instead pins their CRLF encodings. Converting only LF to CRLF reproduces
+both accepted pin hashes exactly. The fresh primary therefore fails the old
+byte check despite having the exact committed manifests. Pin those two exact
+Git LF blobs: package `e919ba12131958f439bdbd229832cdffe6c108f54bfe0626a5a3b63140d48f47`,
+lock `853af121bebf48ec6a836945e78cd014f3dbd76601a9bd986e24257ff1aa5780`.
+No manifest, dependency graph, script or package integrity changes are authorized
+by this correction. Do not add generic newline normalization or relax the exact
+byte check. Independent review must verify both encodings against the prior pins.
+
 This assignment does not send a proof, issue FINALIZE, enable checkout, verify
 current live revocation, acquire final business authority or perform payment/order
 effects. Those are remaining steps toward DELEGATED-PURCHASE-01 and
