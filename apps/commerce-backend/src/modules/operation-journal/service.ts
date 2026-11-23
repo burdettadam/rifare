@@ -21,7 +21,7 @@ import { readOriginalPaymentOutcome } from "./payment-outcome";
 import { prepareProofAssociation, PreparedProofAssociation } from "./proof-association";
 import { configure } from "safe-stable-stringify";
 import {
-  eraseJournalSubject, exportJournalSubject, journalSubjectIsSuppressed, journalPrivacyMarkerIds, minimizedOperationFields,
+  eraseJournalSubject, exportJournalSubject, journalSubjectIsSuppressed, journalPrivacyMarkerIds, journalPrivacyInstallationId, minimizedOperationFields,
   restoreJournalRefusalIdentities, setJournalOperationHold, uninstallJournal,
 } from "./privacy";
 
@@ -632,7 +632,7 @@ export default class OperationJournalService {
         worker: Object.freeze({ role: worker.role, password: worker.password }), seal });
     }, true);
     let deliveryBinding: Parameters<typeof nativeExecutionDeliverySnapshot>[1] | undefined;
-    let deliveryFingerprint: string | undefined, deliveryDeadline = 0;
+    let deliveryFingerprint: string | undefined, deliveryDeadline = 0, deliveryClockFloor = 0;
     try {
       // The committed claim may have lost its acknowledgement or current
       // authority. Reverify after COMMIT before enabling this first login.
@@ -657,8 +657,13 @@ export default class OperationJournalService {
         deliveryBinding = { operationId: row.id, cartId: row.cart_id, collectionId: row.payment_collection_id!,
           sessionId: row.payment_session_id!, customerId: captured.actor.actor_id!, identityId: captured.actor.auth_identity_id!,
           storeId: configuration.merchant.store_id, operatorId: configuration.privacyOperator,
-          privacyIds: journalPrivacyMarkerIds(tx, configuration.subject, configuration.key), role: claimed.worker.role };
-        deliveryFingerprint = (await nativeExecutionDeliverySnapshot(tx, deliveryBinding)).fingerprint;
+          privacyIds: journalPrivacyMarkerIds(tx, configuration.subject, configuration.key),
+          installationId: journalPrivacyInstallationId(configuration.merchant), role: claimed.worker.role };
+        const verifiedAt = await requestClock(tx);
+        const delivery = await nativeExecutionDeliverySnapshot(tx, deliveryBinding);
+        if (verifiedAt.getTime() < now.getTime() || delivery.observedAt.getTime() < verifiedAt.getTime()) throw conflict();
+        deliveryFingerprint = delivery.fingerprint;
+        deliveryClockFloor = delivery.observedAt.getTime();
         deliveryDeadline = row.execution_expires_at.getTime();
         active(); await activateOriginalExecutionWorker(tx, claimed.worker.role); active();
       }, true);
@@ -668,6 +673,7 @@ export default class OperationJournalService {
       const delivered = await nativeExecutionDeliverySnapshot(this.postgres, deliveryBinding!);
       active(); describeReceipt.call(verifier, receipt.verification);
       if (!delivered.canLogin || delivered.fingerprint !== deliveryFingerprint ||
+          delivered.observedAt.getTime() < deliveryClockFloor ||
           delivered.observedAt.getTime() + Math.ceil(performance.now() - began) >= deliveryDeadline) throw conflict();
       return claimed;
     } catch (error) {

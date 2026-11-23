@@ -2,7 +2,7 @@ import type { ModulesSdkUtils } from "@medusajs/framework/utils";
 
 type Postgres = ReturnType<typeof ModulesSdkUtils.createPgConnection>;
 type Binding = { operationId: string; cartId: string; collectionId: string; sessionId: string;
-  customerId: string; identityId: string; storeId: string; operatorId: string; privacyIds: readonly string[]; role: string };
+  customerId: string; identityId: string; storeId: string; operatorId: string; privacyIds: readonly string[]; installationId: string; role: string };
 
 /** Transient delivery comparison, not a ledger, grant, pricing engine or effect
  * fence. The first snapshot is captured after actual native/C8/C9 validation in
@@ -35,6 +35,7 @@ export async function nativeExecutionDeliverySnapshot(postgres: Postgres, b: Bin
     ["provider", "select * from public.payment_provider where id='pp_rifare_fenced_system_fixture'", [], 1],
     ["eligibility", "select * from public.region_payment_provider where payment_provider_id='pp_rifare_fenced_system_fixture' and region_id in(select region_id from public.cart where id=?)", [b.cartId], 1],
     ["operator", "select * from public.\"user\" where id=?", [b.operatorId], 1],
+    ["installation", "select * from public.rifare_operation_privacy_installation where id=?", [b.installationId], 1],
     ["privacy", "select * from public.rifare_operation_privacy_subject where id in (?,?)", [...b.privacyIds], 2],
   ];
   const bindings: string[] = [];

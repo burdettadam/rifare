@@ -97,9 +97,17 @@ function lockSubject(transaction: Postgres, scope: SubjectScope, key: Buffer) {
   return lockPrivacyRecord(transaction, privacyRecordId(transaction, key, subjectPurpose, scope, scope.customer_id));
 }
 
+function installationKeyPartition(scope: InstallationScope) {
+  return JSON.stringify(["urn:rifare:medusa-journal-installation-key:v1", scope.merchant_namespace, scope.store_id]);
+}
+
+export function journalPrivacyInstallationId(scope: InstallationScope) {
+  return `sha256:${createHash("sha256").update(installationKeyPartition(scope)).digest("hex")}`;
+}
+
 async function requireInstallationKey(transaction: Postgres, scope: InstallationScope, key: Buffer) {
-  const partition = JSON.stringify(["urn:rifare:medusa-journal-installation-key:v1", scope.merchant_namespace, scope.store_id]);
-  const id = `sha256:${createHash("sha256").update(partition).digest("hex")}`;
+  const partition = installationKeyPartition(scope);
+  const id = journalPrivacyInstallationId(scope);
   const keyBinding = `hmac-sha256:${createHmac("sha256", key).update(partition).digest("hex")}`;
   const installations = "rifare_operation_privacy_installation";
   await transaction(installations).insert({ id, key_binding: keyBinding }).onConflict("id").ignore();

@@ -143,3 +143,15 @@ and retains/revokes the unknown original. Four targeted cases distinguish the fi
 claim transaction from activation using actual transaction IDs and test activation
 COMMIT owner/privacy withdrawal, abort and expiry. This is delivery evidence only;
 it does not replace native effect-time row/provider fencing or authorize dispatch.
+
+
+The second corrective candidatefe48fab passed18 claim groups. Authority review found
+two remaining terminal omissions: lower clock floor and installation key-binding
+row. The third corrective candidate includes the exact canonical installation row
+and retains/checks the verified initial database clock floor. Two additional native
+cases mutate the installation binding at actual activation COMMIT and inject a
+controlled SQL timestamp regression only into the terminal comparison SELECT; no
+host/shared database clock is changed. Regression read-only review atfe48fab found
+no new bounded-stage blocker, while preserving all full-C12 missing qualifications.
+This is the third corrective round after initial142d7f0 review; unresolved findings
+at its final review must be escalated rather than silently restarting that loop.

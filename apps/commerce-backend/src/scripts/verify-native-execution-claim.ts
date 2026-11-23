@@ -8,6 +8,7 @@ import { nativePaymentFixture } from "./native-payment-fixture";
 import { bytes } from "./native-receipt-fixture";
 import { operationJournalModule } from "../modules/operation-journal";
 import type OperationJournalService from "../modules/operation-journal/service";
+import { journalPrivacyInstallationId } from "../modules/operation-journal/privacy";
 import { executionFingerprint, requireNativeExecutionProfile } from "../modules/operation-journal/execution-claim";
 
 /** Genuine retained C7/C8/C9 evidence plus actual PostgreSQL durable first claim.
@@ -233,7 +234,7 @@ export default async function verifyNativeExecutionClaim({ container }: ExecArgs
     }
     await requireRetiredCredential(other);
   });
-  for (const mode of ["owner", "privacy", "abort", "expiry"]) await check("C12-CLAIM-ACTIVATION-" + mode.toUpperCase() + " terminal activation boundary prevents credential release", async () => {
+  for (const mode of ["owner", "privacy", "abort", "expiry", "installation-key", "clock-regression"]) await check("C12-CLAIM-ACTIVATION-" + mode.toUpperCase() + " terminal activation boundary prevents credential release", async () => {
     const other = await f.makePaymentOriginal(mode === "expiry" ? { receiptLifetime: 2000 } : {}), commandId = other.command.command_id;
     const marker = "hmac-sha256:" + createHmac("sha256", Buffer.from(process.env.RIFARE_JOURNAL_PRIVACY_KEY!, "base64url"))
       .update(JSON.stringify(["urn:rifare:medusa-journal-privacy-subject:v1", f.merchant.merchant_namespace, f.merchant.store_id, f.customer.id])).digest("hex");
@@ -243,7 +244,9 @@ export default async function verifyNativeExecutionClaim({ container }: ExecArgs
           insert into public.rifare_c12_activation_phase(original_id,claim_xid) values(NEW.original_command_uuid,txid_current());
         end if; return NEW; end $$;
       create trigger c12_remember_claim after update on public.rifare_operation for each row execute function public.c12_remember_claim_xid()`);
-    const actionSql = mode === "owner" ? `update public.auth_identity set app_metadata='{"customer_id":"cus_other"}'::jsonb where id='${f.identity.id}';` :
+    const installation = await postgres("rifare_operation_privacy_installation").where({ id: journalPrivacyInstallationId(f.merchant) }).first();
+    const actionSql = mode === "installation-key" ? `update public.rifare_operation_privacy_installation set key_binding='hmac-sha256:${"d".repeat(64)}' where id='${installation.id}';` :
+      mode === "clock-regression" ? "perform 1;" : mode === "owner" ? `update public.auth_identity set app_metadata='{"customer_id":"cus_other"}'::jsonb where id='${f.identity.id}';` :
       mode === "privacy" ? `update public.rifare_operation_privacy_subject set suppressed=true where id='${marker}';` :
         "perform pg_advisory_xact_lock(120,13);";
     await postgres.raw(`create function public.c12_activation_commit() returns trigger language plpgsql as $$
@@ -262,6 +265,20 @@ export default async function verifyNativeExecutionClaim({ container }: ExecArgs
       blockerPid = (await blocker.raw("select pg_backend_pid() as pid")).rows[0].pid;
       await blocker.raw("select pg_advisory_xact_lock(120,13)");
     }
+    // Controlled SQL timestamp fault only: do not alter host/database clocks.
+    // The actual delivery SELECT reports one hour earlier only after activation
+    // committed; the same unchanged rejection oracle must catch the regression.
+    const raw = postgres.raw;
+    let clockQueries = 0;
+    if (mode === "clock-regression") postgres.raw = function(sql: string, ...args: any[]) {
+      if (sql.startsWith("with snapshot as")) {
+        clockQueries++;
+        sql = sql.replace("clock_timestamp() as observed_at", `(case when exists(select 1 from public.rifare_c12_activation_phase
+          where original_id='${commandId}' and activation_xid is not null) then pg_catalog.clock_timestamp()-interval '1 hour'
+          else pg_catalog.clock_timestamp() end) as observed_at`);
+      }
+      return raw.call(this, sql, ...args);
+    };
     const action = noEffect(() => journal.claimNativeExecution(commandId, context, verifier, controller.signal));
     action.catch(() => undefined);
     try {
@@ -283,12 +300,16 @@ export default async function verifyNativeExecutionClaim({ container }: ExecArgs
       await assert.rejects(action);
       const phase = await postgres("rifare_c12_activation_phase").where({ original_id: commandId }).first();
       assert.ok(phase.activation_xid); assert.notEqual(phase.activation_xid, phase.claim_xid);
+      if (mode === "clock-regression") assert.ok(clockQueries >= 2);
     } finally {
       if (blocker && !blocker.isCompleted()) await blocker.rollback();
       await action.catch(() => undefined);
+      postgres.raw = raw;
       await postgres.raw(`drop trigger c12_activation_commit on public.rifare_operation_privacy_subject;
         drop function public.c12_activation_commit(); drop trigger c12_remember_claim on public.rifare_operation;
         drop function public.c12_remember_claim_xid(); drop table public.rifare_c12_activation_phase`);
+      if (mode === "installation-key") await postgres("rifare_operation_privacy_installation")
+        .where({ id: installation.id }).update({ key_binding: installation.key_binding });
       if (mode === "owner") await postgres("auth_identity").where({ id: f.identity.id }).update({ app_metadata: { customer_id: f.customer.id } });
       if (mode === "privacy") await postgres("rifare_operation_privacy_subject").where({ id: marker }).update({ suppressed: false });
     }
