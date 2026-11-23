@@ -81,16 +81,20 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
         assert.ok(reconnected); assert.equal(reconnected.role, task.role); assert.notEqual(reconnected.pid, identity.pid);
         await carts.updateCarts(task.cart_id, { metadata: { c12_generation_probe: "reconnected-current" } });
         const resume = wait("resume"); process.send!({ phase: "reconnected", identity: reconnected, previous_pid: identity.pid, losses }); await resume;
-        let refused: any;
-        for (let attempt = 0; attempt < 3 && !refused; attempt++) {
-          try { await postgres.raw("select session_user as role,pg_backend_pid() as pid"); }
-          catch (error: any) {
-            if (["57P01", "57P02", "08003", "08006"].includes(error.code)) continue;
-            refused = error;
-          }
-        }
-        assert.ok(refused && (refused.code === "28P01" || /authentication failed/i.test(refused.message)),
-          "Retired worker must be unable to reconnect");
+        let direct: any, directError: any;
+        try { direct = await postgres.client.acquireRawConnection(); }
+        catch (error) { directError = error; }
+        if (direct) await postgres.client.destroyRawConnection(direct);
+        let pooled: any, poolError: any;
+        try { pooled = await postgres.raw("select session_user as role,pg_backend_pid() as pid"); }
+        catch (error) { poolError = error; }
+        // Under the deliberate fault, preserve the concrete stale effect before
+        // the unchanged credential and pool-refusal assertions fail.
+        if (pooled) await carts.updateCarts(task.cart_id, { metadata: { c12_generation_probe: "stale-reconnected" } });
+        assert.ok(directError && (directError.code === "28000" || /not permitted to log in/i.test(directError.message)),
+          "PostgreSQL must reject the retired credential");
+        assert.ok(poolError && (poolError.name === "KnexTimeoutError" || /acquiring a connection/i.test(poolError.message)),
+          "The installed native pool must refuse retired credential acquisition");
         await assert.rejects(carts.updateCarts(task.cart_id, { metadata: { c12_generation_probe: "stale-reconnected" } }));
         assert.deepEqual(calls, Object.fromEntries(names.map(name => [name, 0])));
         console.log("C12_NATIVE_GENERATION_RECONNECT=" + JSON.stringify({ active_pool_reconnected: true,

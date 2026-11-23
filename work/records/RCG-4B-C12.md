@@ -409,3 +409,11 @@ pool waited past the harness deadline while repeatedly failing connection creati
 No reconnect-refusal pass is credited. The next candidate bounds only the two
 actually exercised native pools' acquire wait below the harness deadline and keeps
 PostgreSQL authentication as the refusal source;it changes no runtime enforcement.
+
+Ata5c3eae the bounded pool returned a Knex acquisition-timeout refusal rather than
+surfacing PostgreSQL's login SQLSTATE directly,so the overly specific assertion
+failed and no reconnect pass is credited. The corrected oracle attempts one direct
+connection through the installed Knex driver's unchanged credential settings to
+observe PostgreSQL's role-login refusal,then separately requires the installed pool
+and actual native Cart method to refuse. The role-login fault must first commit a
+stale Cart update before those unchanged refusal assertions fail.
