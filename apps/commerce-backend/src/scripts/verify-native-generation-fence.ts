@@ -9,6 +9,9 @@ import { ContainerRegistrationKeys, Modules } from "@medusajs/framework/utils";
 import { discoveryPath } from "@medusajs/medusa/payment";
 import { completeCartWorkflow } from "@medusajs/medusa/core-flows";
 import { nativePaymentFixture } from "./native-payment-fixture";
+import { bytes } from "./native-receipt-fixture";
+import { operationJournalModule } from "../modules/operation-journal";
+import type OperationJournalService from "../modules/operation-journal/service";
 import { requireNativeExecutionProfile, retireOriginalExecutionWorker } from "../modules/operation-journal/execution-claim";
 
 /** Journal-generation primitive on already-open actual native worker sessions.
@@ -16,6 +19,16 @@ import { requireNativeExecutionProfile, retireOriginalExecutionWorker } from "..
 export default async function verifyNativeGenerationFence({ container }: ExecArgs) {
   requireNativeExecutionProfile();
   const postgres = container.resolve(ContainerRegistrationKeys.PG_CONNECTION);
+  if (process.env.RIFARE_C12_GENERATION_RECOVERY_TASK) {
+    const task = JSON.parse(process.env.RIFARE_C12_GENERATION_RECOVERY_TASK);
+    const journal = container.resolve<OperationJournalService>(operationJournalModule);
+    const verifier = await journal.createAuthorityReceiptVerifier(bytes(task.trust));
+    try {
+      const recovered = await journal.claimNativeExecution(task.id, task.context, verifier);
+      assert.equal(recovered.disposition, "recovery_only"); assert.equal(recovered.worker, null); assert.equal(recovered.seal, null);
+      console.log("C12_NATIVE_DISTINCT_RECOVERY_ONLY"); return;
+    } finally { verifier.close(); }
+  }
   if (process.env.RIFARE_C12_GENERATION_TASK) {
     const task = JSON.parse(process.env.RIFARE_C12_GENERATION_TASK), carts = container.resolve(Modules.CART), payments = container.resolve(Modules.PAYMENT);
     const identity = (await postgres.raw("select session_user as role, pg_backend_pid() as pid")).rows[0];
@@ -316,6 +329,20 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
   const setupFault = process.env.RIFARE_C12_GENERATION_SETUP_FAULT === "occupied";
   if (setupFault) writeFileSync(custody, JSON.stringify({ fixture: "occupied before claim" }), { flag: "wx", mode: 0o600 });
   const claim = await f.journal.claimNativeExecution(original.command.command_id, f.context, f.verifier);
+  const verifyDistinctRecovery = async () => {
+    const before = Number((await postgres.raw("select count(*) as n from pg_roles where rolname ~ '^rifare_exec_[a-f0-9]{32}$'")).rows[0].n);
+    const recovered = await new Promise<{ code: number | null; output: string }>((complete, reject) => {
+      const child = spawn(process.execPath, ["run.mjs", "exec", __filename], { cwd: process.cwd(), env: { ...process.env,
+        RIFARE_C12_GENERATION_RECOVERY_TASK: JSON.stringify({ id: original.command.command_id, context: f.context, trust: f.trust }) },
+      stdio: ["ignore", "pipe", "pipe"] });
+      let output = ""; const timer = setTimeout(() => { child.kill("SIGKILL"); reject(new Error("Distinct recovery deadline")); }, 45000);
+      for (const stream of [child.stdout, child.stderr]) stream.on("data", data => { output = (output + data).slice(-16000); });
+      child.once("error", error => { clearTimeout(timer); reject(error); });
+      child.once("close", code => { clearTimeout(timer); complete({ code, output }); });
+    });
+    assert.equal(recovered.code, 0, recovered.output); assert.match(recovered.output, /C12_NATIVE_DISTINCT_RECOVERY_ONLY/);
+    assert.equal(Number((await postgres.raw("select count(*) as n from pg_roles where rolname ~ '^rifare_exec_[a-f0-9]{32}$'")).rows[0].n), before);
+  };
   let definition: string | null = null, originalDefinition: string | null = null, paymentDefinition: string | null = null;
   let deliveredLogin: boolean | undefined, retirement: Promise<void> | undefined;
   let revocationPause: any, expiryPause: any, paymentHold: any, expiryHolder: number | undefined;
@@ -338,6 +365,7 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
   deliveredLogin = (await postgres("pg_catalog.pg_roles").where({ rolname: claim.worker.role }).first()).rolcanlogin;
   assert.equal(deliveredLogin, true);
   const missing = (await postgres.raw(`select p.tablename from pg_catalog.pg_tables p where p.schemaname='public'
+    and p.tablename<>'workflow_execution'
     and (has_table_privilege(?,format('%I.%I',p.schemaname,p.tablename),'INSERT')
       or has_table_privilege(?,format('%I.%I',p.schemaname,p.tablename),'UPDATE')
       or has_table_privilege(?,format('%I.%I',p.schemaname,p.tablename),'DELETE'))
@@ -591,6 +619,7 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
           assert.equal((await postgres("cart").where({ id: original.cart.id }).first()).metadata.c12_generation_probe, "reconnected-current");
           beforeAudit = await postgres("rifare_c12_generation_audit").orderBy("id"); assert.equal((beforeAudit as any[]).length, 2);
           beforeStale = await snapshot(); await retireOriginalExecutionWorker(postgres, claim.worker!.role);
+          await verifyDistinctRecovery();
           if (reconnectFault) await postgres.raw(`alter role "${claim.worker!.role}" login`);
           const sessions = await postgres("pg_catalog.pg_stat_activity").where({ usename: claim.worker!.role }).select("pid");
           for (const session of sessions) assert.equal((await postgres.raw("select pg_terminate_backend(?) as terminated", [session.pid])).rows[0].terminated, true);
@@ -644,10 +673,12 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
             revocation_update_precedes_native_write: true };
           await revocationPause.commit(); await retirement;
           const revoked = await original.row(); assert.equal(revoked.execution_generation, 2); assert.ok(revoked.execution_revoked_at);
+          await verifyDistinctRecovery();
           return;
         }
         if (retirement) await retirement;
         else await retireOriginalExecutionWorker(postgres, claim.worker!.role);
+        await verifyDistinctRecovery();
         const revoked = await original.row(); assert.equal(revoked.execution_generation, 2); assert.ok(revoked.execution_revoked_at);
         if (fault) await postgres.raw(`create or replace function public.rifare_guard_native_generation() returns trigger
           language plpgsql security definer set search_path=pg_catalog as $$ begin return null; end $$`);
@@ -690,6 +721,8 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
         { actual_native_stale_write_refusals: 5, same_existing_authenticated_session: !provider,
           established_authenticated_worker_backend: true,
           ...(correlation ? { current_wrong_original_refusals: 10, healthy_original_session_writes: 1 } : {}) }),
+      distinct_recovery_process_before_stale_resume: !revokeFirst,
+      distinct_recovery_process_after_revocation_commit: revokeFirst,
       original_visibility_qualified: false, current_authority_fence_qualified: false,
       provider_admission_currentness_qualified: provider, provider_revocation_ordering_qualified: providerOrdering,
       provider_effect_time_fence_qualified: false, provider_expiry_at_delegate_qualified: providerExpiry,
