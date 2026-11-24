@@ -8,6 +8,8 @@
     "emitDecoratorMetadata": true,
     "skipLibCheck": true,
     "strictNullChecks": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "resolveJsonModule": true,
     "jsx": "react-jsx",
     "outDir": "./.medusa/server",

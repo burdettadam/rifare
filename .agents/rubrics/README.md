@@ -1,9 +1,11 @@
 # Review roles
 
 Use `review-commerce-authority/` and `review-commerce-regression/` for independent
-review of meaningful boundary changes. Current writer/checkout instructions are
-in AGENTS.md and .agents/skills. These roles do not confer external authority.
+review of meaningful boundary changes. Writer and checkout guidance lives in
+AGENTS.md and .agents/skills. No role grants external authority.
 
-The older execute/close milestone rubrics are historical references to the retired
-planning workflow. Do not use them to reinstate its scheduler, templates or broad
-qualification campaigns. There is no separate worker service to maintain.
+Tagged/public releases require explicit human approval. Do not publish, create external issues, contact others or spend funds merely because work appears ready. Existing authorization for a development branch does not grant release or production authority.
+
+The obsolete milestone execution/closure rubrics and draft workflow templates
+are retired. Use concise current work records and the actual requirements;
+do not resurrect their removed planner, scheduler or qualification machinery.

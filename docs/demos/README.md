@@ -1,6 +1,6 @@
 # Recorded refund recovery
 
-This is a recording of the running local synthetic implementation. It shows a
+This is a historical recording of the retired local synthetic implementation. It shows a
 refund being accepted by its fixture source, a lost response, a repeated dispatch
 that retains the original uncertain operation, and a read-only lookup that finds
 the original result. A later fixture settlement is explicitly observed separately.
@@ -12,20 +12,13 @@ the original result. A later fixture settlement is explicitly observed separatel
 
 ![Final recorded scene showing one send attempt and no external calls](refund-recovery-poster.png)
 
-## Reproduce the scenario
+## Historical reproduction
 
-Use the [supported Node version and checkout setup](../TRY-RIFARE.md):
-
-```sh
-npm ci --offline --ignore-scripts
-npm run demo:recovery
-```
-
-The guided mode narrates the same runtime operations as `npm run demo:returns`.
-Each scene is emitted after its corresponding operation and assertions complete.
-The default command still produces one JSON result. The guided mode adds only
-presentation output and pauses. `npm run check:preview` verifies the returns and
-support JSON demonstrations with the retained network-denial hook.
+This recording belongs to the retired SQLite application. It is preserved as
+historical evidence; today's Medusa runtime does not expose its demo commands.
+Use the recording's source revision (or recovery/pre-medusa-simplification-9b2fbec)
+to inspect its original implementation and instructions. For current development,
+see [the Medusa guide](../DEVELOPMENT.md).
 
 ## Recording provenance
 

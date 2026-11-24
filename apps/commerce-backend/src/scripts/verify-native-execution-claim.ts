@@ -3,7 +3,7 @@ import { spawn } from "node:child_process";
 import { createHash, createHmac, randomUUID } from "node:crypto";
 import { writeFileSync } from "node:fs";
 import type { ExecArgs } from "@medusajs/framework/types";
-import { ContainerRegistrationKeys, ModulesSdkUtils } from "@medusajs/framework/utils";
+import { ModulesSdkUtils } from "@medusajs/framework/utils";
 import { nativePaymentFixture } from "./native-payment-fixture";
 import { bytes } from "./native-receipt-fixture";
 import { operationJournalModule } from "../modules/operation-journal";

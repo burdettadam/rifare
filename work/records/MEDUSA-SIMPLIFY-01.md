@@ -64,3 +64,26 @@ cancellations, skips or todos, in 4.341 seconds. TypeScript passes. Quoted nativ
 Node test discovery finds the same 158 cases as the former explicit file list;
 new whole test files need no package-script edit. This does not pass retired
 composer tests or grant native/provider/release acceptance. No CI was dispatched.
+
+## Third audit and cleanup pass
+
+The backend compiler audit with unused-local/parameter diagnostics found one
+unused ContainerRegistrationKeys import in a native verification script. Remove
+that binding and enable the two built-in compiler options. No native assertion,
+SQL guard, application policy or provider/deployment configuration changes.
+
+Retire the exact 11 reviewed old workflow templates and execution/closure rubrics.
+Before deletion, preserve their explicit human tagged/public-release approval and
+no automatic publication/outreach/spending constraints in active guidance. Keep
+the independent authority/regression roles. Reconcile ADR guidance and mark old
+evidence/checkpoint documents historical rather than active machinery.
+
+The docs index and Try Rifare now lead to current Medusa setup. Recorded demo
+media, capture/manifest data, canonical requirements and work evidence remain;
+only the demo README changes to describe historical reproduction accurately.
+
+Validation: TypeScript passes with both unused checks enabled; all 158 development
+cases pass, zero failures/cancellations/skips/todos, Node duration 5.495 seconds.
+An audit of the eleven current entry-point guides finds no broken local Markdown
+links. The earlier compiler diagnostic and current logs remain private evidence.
+No hosted CI, native database campaign or whole-vendor rehash was run.

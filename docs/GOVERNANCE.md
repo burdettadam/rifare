@@ -23,3 +23,7 @@ remain owned by other workers.
 Hosted Actions are unavailable for cost reasons. Use local checks and `[skip ci]`;
 do not dispatch Actions. Normal authorized PR integration must still respect
 actual repository review and protection requirements.
+
+## External actions and releases
+
+Tagged/public releases require explicit human approval. Do not publish, create external issues, contact others or spend funds merely because work appears ready. Existing authorization for a development branch does not grant release or production authority.
