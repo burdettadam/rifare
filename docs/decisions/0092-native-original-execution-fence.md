@@ -161,6 +161,18 @@ ungranted link, `product_shipping_profile`, with the 31-table native write diges
 unchanged and zero System authorizations. This is a cart-link read-visibility slice,
 not healthy completion or full C12 qualification.
 
+Fresh `productread1` and `completion14` at
+`8d4ad1d30e4665531c9381e55b39dee7f5c1277d` scope
+`product_shipping_profile` to products actually present on the claimed cart. Own
+product links are visible, foreign-product links are hidden, writes are ungranted,
+policy drift prevents worker creation and ordinary nonworker access is preserved.
+The actual workflow then completes its cart queries and enters upstream
+`create-orders`; the existing original guard refuses the first `order_item` because
+no execution order has yet been bound. The workflow transaction rolls back with the
+31-table native write digest unchanged and zero System authorizations. This proves
+product-link read visibility and exposes the order-binding boundary; it does not
+qualify healthy completion or full C12.
+
 ## Initial mechanism disposition
 
 The a4c7a7e native setup disproved the service-subclass/discoveryPath hypothesis.
