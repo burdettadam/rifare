@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "id": "rifare-source-inventory",
-  "revision": 100,
+  "revision": 101,
   "status": "proposed",
   "components": [
     {
@@ -682,6 +682,7 @@
         "packages/commerce/pre-fulfillment-upsells.mts",
         "packages/commerce/prevention-experiments.mts",
         "packages/commerce/privacy-coverage.mts",
+        "packages/commerce/privacy-runtime-sources.mts",
         "packages/commerce/privacy-lifecycle.mts",
         "packages/commerce/procurement-approvals.mts",
         "packages/commerce/procurement-core.mts",
@@ -1051,6 +1052,7 @@
         "tests/development/prevention-experiments.test.mts",
         "tests/development/prevention-helpers.mts",
         "tests/development/privacy-coverage.test.mts",
+        "tests/development/privacy-runtime-sources.test.mts",
         "tests/development/privacy-lifecycle.test.mts",
         "tests/development/procurement-inventory-helpers.mts",
         "tests/development/procurement-inventory.test.mts",
@@ -1818,6 +1820,8 @@
         "apps/commerce-backend/src/scripts/verify-native-worker-identity.ts",
         "apps/commerce-backend/src/scripts/verify-native-execution-claim.ts",
         "apps/commerce-backend/src/scripts/verify-native-execution-worker.ts",
+        "apps/commerce-backend/src/scripts/verify-native-claim-interruption.ts",
+        "apps/commerce-backend/src/scripts/verify-native-prefix-restore-seed.ts",
         "apps/commerce-backend/src/scripts/verify-native-generation-fence.ts",
         "apps/commerce-backend/src/scripts/native-execution-worker-entry.ts",
         "apps/commerce-backend/src/modules/operation-journal/execution-claim.ts",

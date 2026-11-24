@@ -571,6 +571,18 @@ classification. Fixed original-clause hashing and new negative cases refuse
 relabeling native storage or borrowing SQLite coverage. The contract hash uses
 the privacy reader's existing 2 MiB bound; generic 128 KiB inputs remain unchanged.
 
+The retained release-audit fixture also needed current mandatory licensing inputs:
+the exact applied-license record, scope/authority references, license texts, DCO
+and upstream notices. The fixture now copies those reviewed source bytes and
+preserves the reproduced-document component's full membership. No production
+checker, policy, license pin or legal/release decision changes. Existing SBOM,
+scan and artifact oracles remain; missing application/DCO records also remain
+distribution blockers in the existing license-negative case.
+An actual checkout review separately found four previously reviewed source/test
+files absent from the component inventory. They are added only to the existing
+project-material component with its historical ownership/licensing declarations
+unchanged; no policy, scope grant, third-party obligation or release gate is renewed.
+
 Both roles cleared `f5742f7` for the bounded pinned local post-lock expiry case.
 The next source adds attempt-specific privacy behavior without invoking a provider:
 privacy export must contain the durable attempt time; erasure under hold must keep

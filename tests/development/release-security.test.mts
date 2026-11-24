@@ -35,6 +35,7 @@ function fixture() {
   const inventory = read(join(ROOT, 'planning/component-inventory.json'));
   const obligations = read(join(ROOT, 'tests/fixtures/licensing/retained-obligations.v1.json'));
   const policy = read(join(ROOT, 'planning/licensing-policy.json'));
+  const application = read(join(ROOT, 'LICENSES/application.json'));
   const wanted = new Set<string>([
     'README.md', 'planning/component-inventory.json', 'planning/licensing-policy.json',
     'tests/fixtures/licensing/expected-policy.v1.json', 'tests/fixtures/licensing/retained-obligations.v1.json',
@@ -42,6 +43,10 @@ function fixture() {
     ...inventory.components.map((c: any) => c.files[0]), ...Object.keys(obligations.required_notice_sha256),
     ...obligations.upstream_files, ...obligations.workflow_references.map((x: any) => x.path),
     ...policy.public_examples.map((x: any) => x.path),
+    'LICENSES/application.json', application.scope_notice.path, application.authority.record,
+    application.contribution_terms.text_path, application.retained_upstream.notice,
+    ...application.retained_upstream.files, ...application.license_texts.map((x: any) => x.path),
+    ...application.inventory_component.files,
   ]);
   for (const name of wanted) { mkdirSync(dirname(join(source, name)), { recursive: true }); cpSync(join(ROOT, name), join(source, name)); }
   inventory.components = inventory.components.map((c: any) => ({ ...c, files: c.files.filter((p: string) => wanted.has(p)) }));
@@ -155,6 +160,14 @@ test('M07-G13-LICENSE unknown source license and removed notice remain mandatory
     assert.ok(codes(report).has('SOURCE_LICENSE_UNRESOLVED'));
     assert.equal(report.sbom.components.find((x: any) => x.id === 'git-agent-adaptations').license_declared, 'LicenseRef-Unknown');
   } finally { f.close(); }
+  for (const path of ['LICENSES/application.json', '.github/DCO.txt']) {
+    const missing = fixture(); try {
+      rmSync(join(missing.source, path)); missing.commit(); missing.stage();
+      const report = auditRelease(missing.request());
+      assert.equal(report.local_checks, 'fail'); assert.ok(codes(report).has('DISTRIBUTION_REVIEW_BLOCKED'));
+      assert.equal(report.release_authorized, false);
+    } finally { missing.close(); }
+  }
 });
 
 test('M07-G13-SCAN-FRESHNESS stale scans and stale advisory databases cannot establish current security posture', () => {
