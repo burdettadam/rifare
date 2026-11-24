@@ -1,7 +1,8 @@
+import { createHash } from "node:crypto";
 import type { ModulesSdkUtils } from "@medusajs/framework/utils";
 import { OrderStatus, PaymentCollectionStatus, PaymentSessionStatus, RefundStatus } from "@medusajs/framework/utils";
 import { factsDigest, minorUnits } from "../../cart-context/observation";
-import { nativePaymentCommitments } from "./payment-context";
+import { nativeExecutionPaymentCommitments, nativePaymentCommitments } from "./payment-context";
 import type { parseOriginalCommand } from "./command";
 
 type Postgres = ReturnType<typeof ModulesSdkUtils.createPgConnection>;
@@ -12,6 +13,7 @@ export type OutcomeAssociation = {
   payment_collection_id: string; payment_session_id: string; payment_provider_id: string;
   payment_context_digest: string; payment_fingerprint: string;
   native_payment_id: string | null; native_payment_fingerprint: string | null;
+  execution_order_id: string | null; execution_order_fingerprint: string | null;
 };
 const unavailable = (): never => { throw new Error("NATIVE_ORIGINAL_PAYMENT_OUTCOME_UNAVAILABLE"); };
 const requireValue = (value: unknown) => { if (!value) unavailable(); };
@@ -38,9 +40,10 @@ export async function readOriginalPaymentOutcome(tx: Postgres, original: Origina
   requireValue(tx.isTransaction && process.env.RIFARE_COMMERCE_PROFILE === "local-medusa" &&
     [undefined, "development", "test"].includes(process.env.NODE_ENV));
   requireValue((await tx.raw("show transaction_isolation")).rows[0]?.transaction_isolation === "serializable");
-  const identity = nativePaymentCommitments(original, binding, binding);
+  const fenced = binding.payment_provider_id === "pp_rifare_fenced_system_fixture";
+  const identity = (fenced ? nativeExecutionPaymentCommitments : nativePaymentCommitments)(original, binding, binding);
   requireValue(identity.payment_context_digest === binding.payment_context_digest && identity.payment_fingerprint === binding.payment_fingerprint &&
-    binding.payment_provider_id === "pp_system_default");
+    (binding.payment_provider_id === "pp_system_default" || fenced));
   const principal = original.command.payable_minor_units, exponent = original.command.currency_exponent;
   const money = (raw: unknown, signed = false) => { const value = minorUnits(raw, exponent); requireValue(signed || BigInt(value) >= 0n); return value; };
   const aggregate = (raw: unknown) => raw === null ? null : money(raw);
@@ -113,6 +116,8 @@ export async function readOriginalPaymentOutcome(tx: Postgres, original: Origina
   const transactionFacts = transactions.map(row => ({ id: nativeId(row.id, "ordtrx_"), reference: row.reference as string,
     reference_id: row.reference_id as string, amount_minor_units: money(row.raw_amount, true), deleted: timestamp(row.deleted_at) !== null }));
   if (order) order.transactions = transactionFacts;
+  if (fenced) requireValue(order && binding.execution_order_id === order.id &&
+    binding.execution_order_fingerprint === "sha256:" + createHash("sha256").update(order.id).digest("hex"));
   const captured = sum(captureFacts.filter(row => !row.deleted).map(row => row.amount_minor_units));
   const refunded = sum(refundFacts.filter(row => !row.deleted && row.status === RefundStatus.SUCCEEDED).map(row => row.amount_minor_units));
   const financial = { profile: "urn:rifare:native-original-payment-observation:v1", original_command_id: original.command.command_id,

@@ -57,7 +57,9 @@ an approval service or select a worker runtime.
 
 `runPinnedCatalogCases` validates the catalog before starting and after the
 subprocess finishes. It runs the exact first-token ID selection with explicit
-TAP output, preserves nonzero exits and raw output, rejects missing/duplicate or
+TAP output across six isolated file workers inside the unchanged 120-second
+controller bound; the outer cumulative inventory remains serial. It preserves
+nonzero exits and raw output, rejects missing/duplicate or
 unexpected IDs, and requires zero failed, cancelled, skipped and todo cases.
 It removes only Node's private inherited `NODE_TEST_CONTEXT` flag so a nested
 runner emits native TAP rather than a parent's V8 IPC protocol. The executable

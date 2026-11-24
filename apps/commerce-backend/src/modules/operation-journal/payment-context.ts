@@ -13,6 +13,21 @@ const requireValue = (value: unknown) => { if (!value) unavailable(); };
 /** Read only current native payment identity/money. This performs no provider
  * lookup or workflow, and pending native state does not prove no remote effect. */
 export async function readLockedNativePayment(transaction: Postgres, original: Original, binding: Binding) {
+  return readPendingPayment(transaction, original, binding, false);
+}
+
+/** Separate C12 profile. The C10 function and its canonical commitments stay exact. */
+export async function readLockedNativeExecutionPayment(transaction: Postgres, original: Original, binding: Binding) {
+  const selected = await readPendingPayment(transaction, original, binding, true);
+  const data = (await transaction("payment_session").where({ id: selected.payment_session_id }).first("data")).data;
+  const correlation = data?.rifare_native_execution;
+  requireValue(correlation && Object.keys(correlation).sort().join(",") === "handle,profile,session_id" &&
+    correlation.profile === "urn:rifare:local-fenced-system-correlation:v1" &&
+    correlation.session_id === selected.payment_session_id && typeof correlation.handle === "string" && /^[a-f0-9]{64}$/.test(correlation.handle));
+  return { ...selected, handle: correlation.handle as string };
+}
+
+async function readPendingPayment(transaction: Postgres, original: Original, binding: Binding, fenced: boolean) {
   requireValue(transaction.isTransaction && process.env.RIFARE_COMMERCE_PROFILE === "local-medusa" &&
     [undefined, "development", "test"].includes(process.env.NODE_ENV));
   const isolation = (await transaction.raw("show transaction_isolation")).rows[0]?.transaction_isolation;
@@ -33,7 +48,7 @@ export async function readLockedNativePayment(transaction: Postgres, original: O
   requireValue(sessions.length === 1 && sessions[0].deleted_at === null); const session = sessions[0];
   requireValue(/^payses_[A-Za-z0-9]{1,100}$/.test(session.id) && session.currency_code === original.command.currency &&
     session.status === PaymentSessionStatus.PENDING && session.authorized_at === null &&
-    session.provider_id === "pp_system_default");
+    session.provider_id === (fenced ? "pp_rifare_fenced_system_fixture" : "pp_system_default"));
   const exponent = original.command.currency_exponent;
   requireValue(minorUnits(collection.raw_amount, exponent) === original.command.payable_minor_units &&
     minorUnits(session.raw_amount, exponent) === original.command.payable_minor_units);
@@ -52,7 +67,7 @@ export async function readLockedNativePayment(transaction: Postgres, original: O
   const payment = await transaction("payment").where(builder => builder.where({ payment_collection_id: collection.id }).orWhere({ payment_session_id: session.id })).orderBy("id").forUpdate().first("id");
   requireValue(!payment);
   return Object.freeze({ payment_collection_id: collection.id as string, payment_session_id: session.id as string,
-    payment_provider_id: session.provider_id as string, ...nativePaymentCommitments(original, binding, {
+    payment_provider_id: session.provider_id as string, ...(fenced ? nativeExecutionPaymentCommitments : nativePaymentCommitments)(original, binding, {
       payment_collection_id: collection.id, payment_session_id: session.id, payment_provider_id: session.provider_id }),
     execution_authorized: false, live_provider_status_verified: false });
 }
@@ -69,4 +84,14 @@ export function nativePaymentCommitments(original: Original, binding: Omit<Bindi
   return { payment_context_digest: factsDigest(context), payment_fingerprint: factsDigest({
     profile: "urn:rifare:medusa-payment-refusal:v1", merchant_namespace: binding.merchant_namespace,
     store_id: binding.store_id, provider_id: identity.payment_provider_id, payment_session_id: identity.payment_session_id }) };
+}
+
+
+export function nativeExecutionPaymentCommitments(original: Original, binding: Omit<Binding, "region_id">,
+  identity: { payment_collection_id: string; payment_session_id: string; payment_provider_id: string }) {
+  const legacy = nativePaymentCommitments(original, binding, identity);
+  return { payment_fingerprint: legacy.payment_fingerprint, payment_context_digest: factsDigest({
+    profile: "urn:rifare:native-execution-payment-context:v1", payment_provider_profile: "urn:rifare:local-fenced-system-pending:v1",
+    original_context_digest: legacy.payment_context_digest,
+  }) };
 }

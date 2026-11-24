@@ -14,12 +14,14 @@ import { openNativeContinuationSession } from "./continuation-session";
 import { createNativeReceiptVerifier, NativeReceiptVerifier } from "./receipt-verifier";
 import { retainedNativeReceiptContext } from "./receipt-context";
 import { retainedNativeProofContext } from "./proof-context";
-import { readLockedNativePayment } from "./payment-context";
+import { readLockedNativePayment, readLockedNativeExecutionPayment } from "./payment-context";
+import { nativeExecutionDeliverySnapshot } from "./execution-delivery";
+import { executionColumns, executionFingerprint, ensureNativeGenerationInstallation, createOriginalExecutionWorker, activateOriginalExecutionWorker, retireOriginalExecutionWorker, requireNativeExecutionProfile, type ExecutionRow } from "./execution-claim";
 import { readOriginalPaymentOutcome } from "./payment-outcome";
 import { prepareProofAssociation, PreparedProofAssociation } from "./proof-association";
 import { configure } from "safe-stable-stringify";
 import {
-  eraseJournalSubject, exportJournalSubject, journalSubjectIsSuppressed, minimizedOperationFields,
+  eraseJournalSubject, exportJournalSubject, journalSubjectIsSuppressed, journalPrivacyMarkerIds, journalPrivacyInstallationId, minimizedOperationFields,
   restoreJournalRefusalIdentities, setJournalOperationHold, uninstallJournal,
 } from "./privacy";
 
@@ -43,10 +45,10 @@ const historyColumns = [...statusColumns, "cart_id", "actor_digest", "command_di
   "final_command_uuid", "final_command_bytes", "final_command_digest", "final_owner_digest", "final_claimed_at",
   "final_response_bytes", "final_response_digest", "final_response_observed_at",
   "payment_fingerprint", "payment_collection_id", "payment_session_id", "payment_provider_id", "payment_context_digest", "payment_observed_at",
-  "native_payment_fingerprint", "native_payment_id", "native_payment_observed_at"];
+  "native_payment_fingerprint", "native_payment_id", "native_payment_observed_at", ...executionColumns];
 type JournalConfiguration = ReturnType<typeof journalConfiguration>;
 type Merchant = NonNullable<ReturnType<typeof cartContextConfig>>;
-type JournalRow = {
+type JournalRow = ExecutionRow & {
   id: string; original_command_uuid: string; state: string; revision: number;
   cart_id: string; actor_digest: string; command_digest: string; privacy_hold: boolean;
   first_observation_digest: string | null; first_observed_at: Date | null;
@@ -78,6 +80,7 @@ const signalAborted = Object.getOwnPropertyDescriptor(AbortSignal.prototype, "ab
 
 export default class OperationJournalService {
   private readonly postgres: Postgres;
+  readonly __hooks = { onApplicationStart: async () => ensureNativeGenerationInstallation(this.postgres) };
 
   constructor({ [ContainerRegistrationKeys.PG_CONNECTION]: postgres }: { [ContainerRegistrationKeys.PG_CONNECTION]: Postgres }) {
     this.postgres = postgres;
@@ -586,6 +589,108 @@ export default class OperationJournalService {
     return Object.freeze(result);
   }
 
+  /** First claim only, committed before any future native dispatch. No retry ticket
+   * is reissued after uncertainty. Normal application profiles cannot call this.
+   * Worker credentials are internal transient custody, never an HTTP response.
+   * Dispatch/early-write/provider qualification is deliberately still pending. */
+  async claimNativeExecution(commandId: string, context: AdmissionContext, verifier: unknown, signal?: AbortSignal) {
+    requireNativeExecutionProfile();
+    if (!(verifier instanceof NativeReceiptVerifier)) throw conflict();
+    const captured = { actor: { ...context.actor }, salesChannelIds: [...context.salesChannelIds] };
+    const active = () => { if (signal && signalAborted.call(signal)) throw conflict(); requireNativeExecutionProfile(); };
+    const existing = await this.withCurrentOriginal(commandId, captured, async (_tx, row) => row.execution_owner_fingerprint !== null);
+    if (existing) return Object.freeze({ disposition: "recovery_only" as const, original_command_id: commandId,
+      execution_authorized: false, native_fence_qualified: false, worker: null, seal: null });
+    active();
+    const receipt = await OperationJournalService.prototype.recoverVerifiedAuthorityReceipt.call(this, commandId, captured, verifier);
+    active();
+    const claimed = await this.withCurrentOriginal(commandId, captured, async (tx, row, configuration) => {
+      // Lock before role allocation; concurrent first claim cannot mint another.
+      const current = await tx(operations).where({ id: row.id }).forUpdate().first(...executionColumns);
+      if (current.execution_owner_fingerprint) throw conflict();
+      const selected = await this.readCurrentAuthorityPayment(tx, row, configuration, verifier, receipt, active, true);
+      const full = await readLockedNativeExecutionPayment(tx, parseOriginalCommand(Buffer.from(row.command_bytes)), {
+        ...configuration.merchant, region_id: (await readLockedCartFacts(tx, row.cart_id, configuration.merchant, configuration.verifiedContext)).facts.region_id as string,
+        final_command_uuid: row.final_command_uuid!, final_response_digest: row.final_response_digest!,
+        receipt_digest: row.receipt_digest!, receipt_context_digest: row.receipt_context_digest!, receipt_id: row.receipt_id!,
+      });
+      if (row.payment_fingerprint) throw conflict(); // Never repurpose a C10 association.
+      const worker = await createOriginalExecutionWorker(tx), seal = randomBytes(32).toString("hex"), now = await requestClock(tx);
+      active(); describeReceipt.call(verifier, receipt.verification);
+      if (now.getTime() >= row.receipt_expires_at!.getTime()) throw conflict();
+      const [saved] = await tx(operations).where(revisionFence(row)).whereNull("execution_owner_fingerprint").update({
+        payment_fingerprint: selected.payment_fingerprint, payment_collection_id: selected.payment_collection_id,
+        payment_session_id: selected.payment_session_id, payment_provider_id: selected.payment_provider_id,
+        payment_context_digest: selected.payment_context_digest, payment_observed_at: now,
+        execution_owner_fingerprint: worker.fingerprint, execution_seal_fingerprint: executionFingerprint(seal),
+        execution_payment_handle_fingerprint: executionFingerprint(full.handle), execution_generation: 1,
+        execution_claimed_at: now, execution_expires_at: row.receipt_expires_at, state: "unknown",
+        revision: row.revision + 1, updated_at: tx.fn.now(),
+      }).returning("id");
+      if (!saved) throw conflict(); active();
+      return Object.freeze({ disposition: "claimed_unknown" as const, original_command_id: commandId,
+        execution_authorized: false, native_fence_qualified: false,
+        worker: Object.freeze({ role: worker.role, password: worker.password }), seal });
+    }, true);
+    let deliveryBinding: Parameters<typeof nativeExecutionDeliverySnapshot>[1] | undefined;
+    let deliveryFingerprint: string | undefined, deliveryDeadline = 0, deliveryClockFloor = 0;
+    try {
+      // The committed claim may have lost its acknowledgement or current
+      // authority. Reverify after COMMIT before enabling this first login.
+      active();
+      await this.withCurrentOriginal(commandId, captured, async (tx, row, configuration) => {
+        if (row.state !== "unknown" || row.execution_owner_fingerprint !== executionFingerprint(claimed.worker.role) ||
+            row.execution_seal_fingerprint !== executionFingerprint(claimed.seal) || row.execution_generation !== 1 ||
+            row.execution_revoked_at || !row.execution_expires_at) throw conflict();
+        const retained = await retainedNativeReceiptContext(row), now = await requestClock(tx);
+        const handle = await verifyReceipt.call(verifier, Buffer.from(row.receipt_bytes!), retained.bytes, now.getTime(), signal);
+        const fresh = { verification: handle, receipt_digest: row.receipt_digest!, first_observed_at: row.receipt_observed_at!,
+          receipt_expires_at: row.receipt_expires_at! };
+        const selected = await this.readCurrentAuthorityPayment(tx, row, configuration, verifier, fresh, active, true);
+        requirePaymentAssociation(row, selected);
+        const full = await readLockedNativeExecutionPayment(tx, parseOriginalCommand(Buffer.from(row.command_bytes)), {
+          ...configuration.merchant, region_id: (await readLockedCartFacts(tx, row.cart_id, configuration.merchant, configuration.verifiedContext)).facts.region_id as string,
+          final_command_uuid: row.final_command_uuid!, final_response_digest: row.final_response_digest!,
+          receipt_digest: row.receipt_digest!, receipt_context_digest: row.receipt_context_digest!, receipt_id: row.receipt_id!,
+        });
+        if (row.execution_payment_handle_fingerprint !== executionFingerprint(full.handle) ||
+            now.getTime() < row.execution_claimed_at!.getTime() || now.getTime() >= row.execution_expires_at.getTime()) throw conflict();
+        deliveryBinding = { operationId: row.id, cartId: row.cart_id, collectionId: row.payment_collection_id!,
+          sessionId: row.payment_session_id!, customerId: captured.actor.actor_id!, identityId: captured.actor.auth_identity_id!,
+          storeId: configuration.merchant.store_id, operatorId: configuration.privacyOperator,
+          privacyIds: journalPrivacyMarkerIds(tx, configuration.subject, configuration.key),
+          installationId: journalPrivacyInstallationId(configuration.merchant), role: claimed.worker.role };
+        const cart = await tx("cart").where({ id: row.cart_id }).whereNull("deleted_at").forUpdate().first("metadata");
+        if (!cart || cart.metadata?.rifare_execution_owner &&
+          cart.metadata.rifare_execution_owner !== row.execution_owner_fingerprint) throw conflict();
+        await tx("cart").where({ id: row.cart_id }).update({ metadata: {
+          ...(cart.metadata ?? {}), rifare_execution_owner: row.execution_owner_fingerprint,
+        } });
+        const verifiedAt = await requestClock(tx);
+        const delivery = await nativeExecutionDeliverySnapshot(tx, deliveryBinding);
+        if (verifiedAt.getTime() < now.getTime() || delivery.observedAt.getTime() < verifiedAt.getTime()) throw conflict();
+        deliveryFingerprint = delivery.fingerprint;
+        deliveryClockFloor = delivery.observedAt.getTime();
+        deliveryDeadline = row.execution_expires_at.getTime();
+        active(); await activateOriginalExecutionWorker(tx, claimed.worker.role); active();
+      }, true);
+      // No write transaction or activation follows this terminal read. Include
+      // the entire await interval as a conservative clock-delivery allowance.
+      const began = performance.now();
+      const delivered = await nativeExecutionDeliverySnapshot(this.postgres, deliveryBinding!);
+      active(); describeReceipt.call(verifier, receipt.verification);
+      if (!delivered.canLogin || delivered.fingerprint !== deliveryFingerprint ||
+          delivered.observedAt.getTime() < deliveryClockFloor ||
+          delivered.observedAt.getTime() + Math.ceil(performance.now() - began) >= deliveryDeadline) throw conflict();
+      return claimed;
+    } catch (error) {
+      // Never mint a replacement if delivery fails. A failed retirement remains
+      // a visible error and the immutable unknown claim remains retained.
+      await retireOriginalExecutionWorker(this.postgres, claimed.worker.role);
+      throw error;
+    }
+  }
+
   async recoverAuthorityPayment(commandId: string, context: AdmissionContext, verifier: unknown, signal?: AbortSignal) {
     const captured = { actor: { ...context.actor }, salesChannelIds: [...context.salesChannelIds] };
     await this.withCurrentOriginal(commandId, captured, async (_tx, row) => {
@@ -642,7 +747,8 @@ export default class OperationJournalService {
       payment_collection_id: row.payment_collection_id, payment_session_id: row.payment_session_id,
       payment_provider_id: row.payment_provider_id, payment_context_digest: row.payment_context_digest,
       payment_fingerprint: row.payment_fingerprint, native_payment_id: row.native_payment_id,
-      native_payment_fingerprint: row.native_payment_fingerprint }, configuration.verifiedContext.actor, configuration.verifiedContext.salesChannelIds);
+      native_payment_fingerprint: row.native_payment_fingerprint, execution_order_id: row.execution_order_id,
+      execution_order_fingerprint: row.execution_order_fingerprint }, configuration.verifiedContext.actor, configuration.verifiedContext.salesChannelIds);
     const observed = await requestClock(tx);
     if (observed.getTime() < row.payment_observed_at.getTime() ||
         row.native_payment_observed_at && observed.getTime() < row.native_payment_observed_at.getTime()) throw conflict();
@@ -651,9 +757,9 @@ export default class OperationJournalService {
 
   private async readCurrentAuthorityPayment(tx: Postgres, row: JournalRow, configuration: JournalConfiguration,
     verifier: NativeReceiptVerifier, receipt: Awaited<ReturnType<OperationJournalService["recoverVerifiedAuthorityReceipt"]>>,
-    active: () => void) {
+    active: () => void, nativeExecution = false) {
     active();
-    if (row.state !== "awaiting_authority" || !row.final_command_uuid || !row.final_response_bytes || !row.final_response_digest ||
+    if ((row.state !== "awaiting_authority" && !(nativeExecution && row.state === "unknown")) || !row.final_command_uuid || !row.final_response_bytes || !row.final_response_digest ||
         !row.receipt_bytes || !row.receipt_id || !row.receipt_digest || !row.receipt_context_digest ||
         !row.receipt_observed_at || !row.receipt_expires_at) throw conflict();
     const original = parseOriginalCommand(Buffer.from(row.command_bytes));
@@ -661,7 +767,7 @@ export default class OperationJournalService {
     requireCommandCartMatch(original, locked);
     const bound = await this.bindFinalResponse(row, Buffer.from(row.final_response_bytes));
     if (bound.response.result.decision !== "PERMIT" || typeof locked.facts.region_id !== "string") throw conflict();
-    const selected = await readLockedNativePayment(tx, original, { ...configuration.merchant, region_id: locked.facts.region_id,
+    const selected = await (nativeExecution ? readLockedNativeExecutionPayment : readLockedNativePayment)(tx, original, { ...configuration.merchant, region_id: locked.facts.region_id,
       final_command_uuid: row.final_command_uuid, final_response_digest: row.final_response_digest,
       receipt_digest: row.receipt_digest, receipt_context_digest: row.receipt_context_digest, receipt_id: row.receipt_id });
     const current = describeReceipt.call(verifier, receipt.verification), now = (await requestClock(tx)).getTime();

@@ -12,7 +12,7 @@ export const bytes = (value: unknown) => Buffer.from(stringify(value)!);
 
 /** Test-only native Medusa setup and independently generated request/receipt
  * signatures. No product constructor selects these keys or claims. */
-export async function nativeReceiptFixture(container: any, requestOrigin = "https://authority.example.invalid", preservePrivacyKey = false) {
+export async function nativeReceiptFixture(container: any, requestOrigin = "https://authority.example.invalid", preservePrivacyKey = false, paymentProviders = ["pp_system_default"]) {
   const journal = container.resolve(operationJournalModule) as OperationJournalService;
   const postgres = container.resolve(ContainerRegistrationKeys.PG_CONNECTION);
   const clock = async (): Promise<number> => (await postgres.raw("select clock_timestamp() as now")).rows[0].now.getTime();
@@ -24,7 +24,7 @@ export async function nativeReceiptFixture(container: any, requestOrigin = "http
     supported_currencies: [{ currency_code: "usd", is_default: true }], default_sales_channel_id: channels[0].id,
   } } });
   const { result: regions } = await createRegionsWorkflow(container).run({ input: { regions: [{ name: "C8 " + suffix,
-    currency_code: "usd", countries: ["us"], automatic_taxes: false, payment_providers: ["pp_system_default"] }] } });
+    currency_code: "usd", countries: ["us"], automatic_taxes: false, payment_providers: paymentProviders }] } });
   const { result: products } = await createProductsWorkflow(container).run({ input: { products: [{ title: "C8 " + suffix,
     status: ProductStatus.PUBLISHED, sales_channels: [{ id: channels[0].id }], options: [{ title: "Size", values: ["One"] }],
     variants: [{ title: "One", options: { Size: "One" }, manage_inventory: false, prices: [{ currency_code: "usd", amount: 12.5 }] }] }] } });

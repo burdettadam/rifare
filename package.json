@@ -3,20 +3,21 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "Rifare commerce development preview with local synthetic demonstrations.",
+  "description": "Rifare commerce application powered by Medusa and PostgreSQL.",
   "engines": {
-    "node": ">=22.16.0 <23 || >=24.0.0 <25"
+    "node": ">=22.22.0 <23 || >=24.0.0 <25"
   },
   "scripts": {
     "dev": "node --experimental-strip-types tools/dev-target.mts",
-    "dev:smoke": "node --experimental-strip-types tools/dev-smoke.mts",
-    "stop:smoke": "node --experimental-strip-types tools/dev-stop.mts",
-    "db:migrate:smoke": "node --experimental-strip-types tools/dev-migrate.mts",
-    "test:runtime": "node --experimental-strip-types --test --test-concurrency=1 tests/development/config.test.mts tests/development/store.test.mts tests/development/integration.test.mts tests/development/review.test.mts",
-    "verify": "python3 tools/verify.py",
-    "demo:returns": "node --experimental-strip-types tools/demo-return-resolution.mts",
-    "demo:support": "node --experimental-strip-types tools/demo-support.mts",
-    "demo:recovery": "node --experimental-strip-types tools/demo-return-resolution.mts --guided",
-    "check:preview": "python3 tools/check_publication_preview.py"
+    "install:dependencies": "npm ci --prefix apps/commerce-backend --ignore-scripts && npm ci --prefix packages/adapters/delegated-receipts --ignore-scripts",
+    "test": "node --experimental-strip-types --test --test-concurrency=1 \"tests/development/*.test.mts\"",
+    "typecheck": "node apps/commerce-backend/node_modules/typescript/bin/tsc --project apps/commerce-backend/tsconfig.json --noEmit --pretty false --incremental false",
+    "check": "npm run typecheck && npm test",
+    "build": "npm --prefix apps/commerce-backend run build",
+    "db:migrate": "npm --prefix apps/commerce-backend run db:migrate",
+    "test:commerce": "npm --prefix apps/commerce-backend run test:commerce",
+    "test:identity": "npm --prefix apps/commerce-backend run test:identity",
+    "test:cart-context": "npm --prefix apps/commerce-backend run test:cart-context",
+    "test:provider-vectors": "node --experimental-strip-types --test tests/qualification/provider-receipts.test.mts"
   }
 }

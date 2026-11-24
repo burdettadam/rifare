@@ -70,6 +70,16 @@ const Operation = model.define("rifare_operation", {
   receipt_id: model.text().nullable(),
   receipt_observed_at: model.dateTime().nullable(),
   receipt_expires_at: model.dateTime().nullable(),
+  execution_owner_fingerprint: model.text().nullable(),
+  execution_seal_fingerprint: model.text().nullable(),
+  execution_payment_handle_fingerprint: model.text().nullable(),
+  execution_payment_attempted_at: model.dateTime().nullable(),
+  execution_generation: model.number().nullable(),
+  execution_claimed_at: model.dateTime().nullable(),
+  execution_expires_at: model.dateTime().nullable(),
+  execution_revoked_at: model.dateTime().nullable(),
+  execution_order_id: model.text().nullable(),
+  execution_order_fingerprint: model.text().nullable(),
   privacy_hold: model.boolean().default(false),
 }).indexes([
   // An original cannot be reminted by changing its merchant, store or customer.
@@ -79,7 +89,19 @@ const Operation = model.define("rifare_operation", {
   { name: "rifare_operation_payment_unique", on: ["payment_fingerprint"], unique: true, where: null },
   { name: "rifare_operation_native_payment_unique", on: ["native_payment_fingerprint"], unique: true, where: null },
   { name: "rifare_operation_receipt_unique", on: ["receipt_fingerprint"], unique: true, where: null },
+  { name: "rifare_operation_execution_owner_unique", on: ["execution_owner_fingerprint"], unique: true, where: null },
+  { name: "rifare_operation_execution_seal_unique", on: ["execution_seal_fingerprint"], unique: true, where: null },
+  { name: "rifare_operation_execution_order_unique", on: ["execution_order_fingerprint"], unique: true, where: null },
 ]).checks([
+  { name: "rifare_operation_execution_tuple", expression: `(execution_owner_fingerprint is null and execution_seal_fingerprint is null and execution_payment_handle_fingerprint is null
+      and execution_generation is null and execution_claimed_at is null and execution_expires_at is null
+      and execution_revoked_at is null and execution_order_id is null and execution_order_fingerprint is null)
+    or (execution_owner_fingerprint is not null and execution_seal_fingerprint is not null and execution_payment_handle_fingerprint is not null
+      and payment_fingerprint is not null and
+      (state = 'retired' or (state in ('unknown','observed','completed') and execution_generation is not null and execution_generation between 1 and 2147483647
+        and execution_claimed_at is not null and execution_expires_at is not null and execution_expires_at > execution_claimed_at))
+      and ((execution_order_id is null) = (execution_order_fingerprint is null) or state = 'retired' and execution_order_id is null))` },
+  { name: "rifare_operation_execution_shape", expression: "execution_owner_fingerprint ~ '^sha256:[0-9a-f]{64}$' and execution_seal_fingerprint ~ '^sha256:[0-9a-f]{64}$' and execution_payment_handle_fingerprint ~ '^sha256:[0-9a-f]{64}$' and execution_order_fingerprint ~ '^sha256:[0-9a-f]{64}$' and execution_order_id ~ '^order_[A-Za-z0-9]{1,100}$'" },
   { name: "rifare_operation_original_uuid", expression: "original_command_uuid ~ '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'" },
   { name: "rifare_operation_revision", expression: "revision >= 0" },
   { name: "rifare_operation_no_soft_delete", expression: "deleted_at is null" },

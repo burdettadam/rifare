@@ -1,4 +1,5 @@
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
+import { authorityOutput } from "./authority-output.mjs";
 import { dirname, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import ts from "typescript";
@@ -7,6 +8,7 @@ const application = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const repository = resolve(application, "../..");
 const packages = resolve(repository, "packages");
 const output = resolve(application, ".medusa/server/rifare");
+const generated = authorityOutput(application, output);
 const entries = [
   "packages/adapters/delegated-commands/public-use-client.mts",
   "packages/adapters/delegated-commands/command-codec.mts",
@@ -70,14 +72,15 @@ while (pending.length) {
     throw new Error("Cannot compile shared authority source " + local);
   }
   const destination = resolve(output, "shared", modulePath(relative(repository, path)));
-  mkdirSync(dirname(destination), { recursive: true });
-  writeFileSync(destination, compiled.outputText, "utf8");
+  generated.write(destination, compiled.outputText);
 }
-mkdirSync(output, { recursive: true });
-writeFileSync(resolve(output, "authority-adapters.mjs"),
+const expected = new Set([...visited].map(path => resolve(output, "shared", modulePath(relative(repository, path)))));
+expected.add(resolve(output, "authority-adapters.mjs"));
+generated.prune(expected);
+generated.write(resolve(output, "authority-adapters.mjs"),
   'export * as wire from "./shared/packages/adapters/delegated-commands/public-use-client.mjs";\n' +
   'export * as codec from "./shared/packages/adapters/delegated-commands/command-codec.mjs";\n' +
   'export * as request_json from "./shared/packages/adapters/delegated-receipts/strict-json.mjs";\n' +
   'export * as request_time from "./shared/packages/commerce/delegated-receipt-binding.mjs";\n' +
-  'export * as receipt_jose from "./shared/packages/adapters/delegated-receipts/jose-verifier.mjs";\n', "utf8");
+  'export * as receipt_jose from "./shared/packages/adapters/delegated-receipts/jose-verifier.mjs";\n');
 console.log(JSON.stringify({ authority_adapter_modules: visited.size, format: "compiled-esm" }));

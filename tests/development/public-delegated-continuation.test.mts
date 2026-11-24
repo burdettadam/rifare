@@ -7,7 +7,7 @@ import type { ServerResponse } from 'node:http';
 import type { Socket } from 'node:net';
 import { PublicDelegatedUseClient } from '../../packages/adapters/delegated-commands/public-use-client.mts';
 import { createDelegatedRecovery } from '../../packages/adapters/delegated-commands/command-codec.mts';
-import { claimOracle } from './delegated-command-claim-helpers.mts';
+import { claimOracle } from './command-fixtures.mts';
 import { delegatedUsePeer } from './delegated-use-client-helpers.mts';
 
 const start = claimOracle.commands.find((value: any) => value.name === 'start_use');

@@ -116,6 +116,11 @@ export function localCommerceConfig(env: Environment) {
     throw new Error("RIFARE_COMMERCE_PROFILE_UNQUALIFIED");
   }
   const testCheckoutLock = env.RIFARE_TEST_CHECKOUT_LOCK;
+  const testNativeExecution = env.RIFARE_TEST_NATIVE_EXECUTION;
+  if (testNativeExecution !== undefined && (!["worker-identity", "fenced-system"].includes(testNativeExecution) ||
+      env.NODE_ENV !== "test" || env.RIFARE_COMMERCE_VERIFY !== "disposable")) {
+    throw new Error("RIFARE_DISPOSABLE_NATIVE_EXECUTION_REQUIRED");
+  }
   if (testCheckoutLock !== undefined && (!["postgres", "redis"].includes(testCheckoutLock) ||
       env.NODE_ENV !== "test" || env.RIFARE_COMMERCE_VERIFY !== "disposable")) {
     throw new Error("RIFARE_DISPOSABLE_CHECKOUT_LOCK_REQUIRED");
@@ -182,7 +187,11 @@ export function localCommerceConfig(env: Environment) {
         { resolve: "@medusajs/medusa/auth-emailpass", id: "emailpass" },
         ...(identity ? [{ resolve: "./src/modules/external-identity", id: "external-oidc", options: identity }] : []),
       ] },
-    }, { resolve: "./src/modules/operation-journal" }, ...(testCheckoutLock ? [{
+    }, { resolve: "./src/modules/operation-journal" }, ...(testNativeExecution === "fenced-system" ? [{
+      resolve: "@medusajs/medusa/payment", options: { providers: [{
+        resolve: "./src/modules/fenced-system-payment", id: "fixture",
+      }] },
+    }] : []), ...(testCheckoutLock ? [{
       resolve: "@medusajs/medusa/locking",
       options: { providers: [{
         resolve: `@medusajs/medusa/locking-${testCheckoutLock}`,

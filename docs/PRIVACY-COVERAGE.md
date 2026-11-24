@@ -21,6 +21,16 @@ an array of independently inventoried surface IDs. Matching that array is only
 a declaration comparison and is explicitly not authenticated deployment evidence.
 An unknown, omitted or duplicate surface fails the comparison.
 
+The source observer covers first-party executable/HTML files under `apps` and
+`packages`. It excludes only real directories named `node_modules`, `.medusa` or
+`.cache`; links and junctions are rejected before that exclusion. Lookalike
+names and ordinary added code remain visible. Bracketed route identifiers such
+as `[id]` are literal path segments, never glob expressions. The original
+entry, file-count and byte limits still apply. Installed dependencies, generated
+outputs and dynamically loaded stores require separate input and privacy audits;
+this source boundary supplies no deployment coverage. New Medusa source families
+remain subject to review before the retained source manifest may be renewed.
+
 For a running kernel, a server-local caller with the existing `privacy.manage`
 authority can call:
 
@@ -32,15 +42,19 @@ const report = auditPrivacyCoverage(kernel, ownerScope, {
 });
 ```
 
-The report accounts for all 170 shipped commerce tables exactly once, retains
-their existing handling rules, and returns row counts only for the caller's
+The report accounts for the declared diagnostic SQLite tables exactly once,
+including the original 170-table baseline and its reviewed extensions. It retains
+their existing handling rules and returns row counts only for the caller's
 merchant. Tables without merchant scope report no row counts. No customer body,
 credential, secret envelope, bearer token or suppression hash is returned by
 this inventory audit. Existing authorization, migration and recovery fences
 still apply; this helper does not bypass a paused installation.
 
-`local_inventory_current` means the actual SQLite schema, explicit table-to-surface
-mapping, and current source bytes match their reviewed declarations. It does
+`local_inventory_current` means the actual diagnostic SQLite schema, explicit
+table-to-surface mapping, and first-party source bytes match reviewed declarations.
+Native Medusa PostgreSQL tables are outside those SQLite assignments and row counts;
+the separate `native_medusa_storage` surface stays `operator` / `not_verified`.
+It does
 not mean every subject copy was populated or erased. The report therefore always
 sets `deployment_coverage_verified`, `privacy_qualified`, `physical_erasure` and
 `legal_compliance_certification` to `false`. The audit itself reports subject-copy
@@ -52,6 +66,12 @@ for synthetic fixtures.
 The additive contract is
 `packages/commerce/contracts/privacy-storage-surfaces.v1.json`. The original
 storage inventory and its schema extensions are unchanged.
+
+The original fifteen surface clauses remain exact. The additive
+`native_medusa_storage` surface has no SQLite table assignments. It identifies
+Rifare-operated native PostgreSQL, identity state and associated runtime/artifact
+storage as separately outstanding; native tables do not enter the SQLite schema
+digest or satisfy its row-count audit.
 
 | Surface ID | Shipped storage and handling |
 | --- | --- |
@@ -70,6 +90,7 @@ storage inventory and its schema extensions are unchanged.
 | `caller_export_artifacts` | Customer/merchant JSON exports, downloaded media and caller-owned pilot enrollment/event/report artifacts; destination-specific inventory, access control and retention remain operator work. |
 | `recovery_files_and_database_pages` | Old backups, staged upgrades, database free pages/journals/WAL, replicas and wrapping keys; logical suppression does not physically delete these artifacts. |
 | `synthetic_fixture_storage` | Independent smoke databases/files and adapter fixture ledgers; commerce privacy operations do not erase another fixture's storage. Only synthetic data is qualified here. |
+| `native_medusa_storage` | Rifare-operated native PostgreSQL, identity state and associated qualification/build/browser/custody artifacts; operator review remains outstanding, with no SQLite table assignments or native privacy certification. |
 
 Each contract entry names actual implementation paths, export treatment, erasure
 treatment, retained records and the observations still needed. This finite table
@@ -152,6 +173,33 @@ release or expiry; uninstall disconnects the store and leaves held records for
 server-local retention administration. The required operator/provider surfaces
 remain individually listed as unverified.
 
+## Native Medusa remains outstanding
+
+Native Auth/provider identities, verified email/customer associations, customer
+contacts/addresses, carts, orders, payment/provider records and workflow
+checkpoints live outside the legacy SQLite database. Journal commands, signed
+requests/responses/receipts and suppression/refusal records occupy separate native
+PostgreSQL tables. Scoped journal export, hold/minimization and restore refusal
+handling do not erase those other native records. UUIDs, HMACs, fingerprints and
+attempt times remain potentially linkable evidence; neither anonymization nor
+legal retention is established by preserving them.
+
+OIDC state/nonce/PKCE storage is delegated to native Auth state; this inventory does
+not establish its deployed cache backend. Browser cookies, bearer credentials,
+TLS keys and proof buffers need separate runtime review. Qualification tools may
+read installed native tables and emit restore contexts or credential-bearing
+custody files, even while creating synthetic fixtures. Worker seals/credentials,
+Admin customer-token fixtures, stdout/logs, IPC, database dumps/WAL/pages,
+generated outputs, screenshots and browser state require operator-managed scope,
+permissions, retention and cleanup. In particular, the current Admin fixture
+writer lacks an explicit restrictive file mode. Disposable/test flags do not
+certify an arbitrary database or output directory as safe, private or synthetic.
+
+Rifare owns this native storage review. The SQLite audit does not query those
+tables or perform their cleanup. Native deployment privacy, whole-customer
+treatment and connected-provider copies remain unverified until separately
+qualified evidence and an authorized retention decision exist.
+
 ## Review on new stores or runtime source changes
 
 The observer reads executable/HTML formats under the actual `apps/` and
@@ -169,24 +217,17 @@ named handling and behavioral evidence before refreshing source pins. Do not
 silently accept an unexplained source change by regenerating the list.
 
 After reviewing the exact assigned changes, the integration owner may refresh
-only the proposed runtime source observations with ordinary Python:
+only the proposed runtime source observations using the actual observer. From
+the repository root, run this as a Node module with supported type stripping:
 
-```python
-from pathlib import Path
-import hashlib, json
+```js
+import { readFileSync, writeFileSync } from 'node:fs';
+import { observePrivacyRuntimeSources } from './packages/commerce/privacy-runtime-sources.mts';
 
-path = Path('packages/commerce/contracts/privacy-storage-surfaces.v1.json')
-contract = json.loads(path.read_text())
-sources = []
-for root in contract['runtime_roots']:
-    for source in Path(root).rglob('*'):
-        if source.is_file() and source.suffix in contract['runtime_extensions']:
-            if source.is_symlink():
-                raise ValueError('Unreviewed source link')
-            sources.append({'path': source.as_posix(),
-                            'sha256': hashlib.sha256(source.read_bytes()).hexdigest()})
-contract['runtime_sources'] = sorted(sources, key=lambda row: row['path'])
-path.write_text(json.dumps(contract, indent=2) + '\n')
+const path = 'packages/commerce/contracts/privacy-storage-surfaces.v1.json';
+const contract = JSON.parse(readFileSync(path, 'utf8'));
+contract.runtime_sources = observePrivacyRuntimeSources();
+writeFileSync(path, JSON.stringify(contract, null, 2) + '\n');
 ```
 
 The named surfaces, table assignments and handling requirements must stay intact
@@ -195,13 +236,18 @@ reads the current source itself rather than trusting this snippet's output.
 
 ## Focused development evidence
 
-`tests/development/privacy-coverage.test.mts` contains nine whole native cases.
+`tests/development/privacy-coverage.test.mts` retains the nine original native
+cases and adds an ownership-classification negative case for native Medusa.
 The three goal IDs cover the representative copy lifecycle, a real omitted-table
 fault and the current-suppression import. Supporting cases cover exact 170-table
 mapping, omitted agent/analytics surfaces, changed/new cache source, same-store
 customer isolation, retention holds and uninstall. Tests were written before the
 implementation. The final integrated focused run and separate nonauthor reviews
 are the evidence of execution; static parsing alone does not prove behavior.
+The added case refuses relabeling native storage as synthetic-only or borrowing a
+real SQLite table assignment while keeping the total at 262. Frozen original
+surface clauses remain exact, and a current local audit still reports native
+Medusa as unverified with all deployment/privacy certification flags false.
 
 Run the single assigned combined development selection through `tools/dev_tests.py`
 after a coherent candidate is committed. A local five-goal batch does not trigger

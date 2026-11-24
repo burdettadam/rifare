@@ -1,6 +1,11 @@
 # Decisions
 
-Create reviewed records from [`ADR.md`](../../planning/templates/ADR.md). Record the actual decision-maker, date, source/context, affected IDs and consequences. Preserve earlier decisions in their historical context rather than replacing accepted controls retroactively.
+Current implementation direction: [ADR-0093](0093-medusa-only-development.md)
+retires the replaced SQLite application and bespoke development framework.
+Earlier decisions below remain historical; use docs/DEVELOPMENT.md for current
+commands, and do not infer acceptance from an old catalogue or inventory.
+
+Write a concise Markdown decision with its status, actual decision-maker, date, context, alternatives, evidence and consequences. Preserve earlier decisions in their historical context; a new document cannot retroactively grant authority or acceptance.
 
 ## Publication readiness
 

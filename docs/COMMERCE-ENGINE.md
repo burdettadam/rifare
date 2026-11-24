@@ -1,5 +1,9 @@
 # Rifare commerce engine
 
+Current setup and workflow: [development](DEVELOPMENT.md). ADR-0093 retired the
+old diagnostic source owners; older migration observations below remain bound to
+their recorded revisions and are not current setup instructions.
+
 The locally verified [Medusa cart context](MEDUSA-CART-CONTEXT.md) follows
 [ADR-0083](decisions/0083-medusa-cart-context.md). It protects registered
 cart ownership and projects native persisted values for observation. It retains
@@ -14,8 +18,8 @@ to replace commodity implementations and reduce custom code.
 
 This is a runnable **local development profile**. The upstream Admin builds, and
 the native commerce verification exercises a real PostgreSQL database and local
-HTTP server. The existing ElevenID/delegated-checkout implementation still uses
-its diagnostic source owners; it is not connected to this new database yet.
+HTTP server. The native identity/cart/journal adapters now live in this application. Real
+provider/caller provisioning and connected qualification remain open.
 
 ## What moves upstream
 
@@ -41,9 +45,9 @@ interfaces. Merchant business permission remains at the commerce action boundary
 ## Run the local application
 
 Use Node 24 or a supported Node 22 release at least 22.22.0, npm and a local
-PostgreSQL database dedicated to this application. The observed validation host
-uses Node 24.22.3 and PostgreSQL 17.12. The root's older `.node-version` remains a
-diagnostic-profile input; it is not the new application's minimum version.
+PostgreSQL database dedicated to this application. The original migration validation record
+used Node 24.22.3 and PostgreSQL 17.12; those are historical observations, not
+a claim about the current development host. The root `.node-version` selects the current development toolchain.
 
 From the repository root:
 

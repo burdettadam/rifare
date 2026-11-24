@@ -4,10 +4,11 @@ import { nativeReceiptFixture, bytes } from "./native-receipt-fixture";
 
 /** Test-only native pending session and genuine synthetic C7/C8 signing setup.
  * The presentation is syntax-only and no live provider/custody is represented. */
-export async function nativePaymentFixture(container: any, preservePrivacyKey = false) {
-  const f = await nativeReceiptFixture(container, "https://authority.example.invalid", preservePrivacyKey);
+export async function nativePaymentFixture(container: any, preservePrivacyKey = false, nativeExecution = false) {
+  const f = await nativeReceiptFixture(container, "https://authority.example.invalid", preservePrivacyKey,
+    nativeExecution ? ["pp_system_default", "pp_rifare_fenced_system_fixture"] : ["pp_system_default"]);
   const makeOriginal = async (options: { existingCart?: { id: string }; reusePayment?: boolean; withFinalization?: boolean;
-    retainReceipt?: boolean; receiptLifetime?: number } = {}) => {
+    retainReceipt?: boolean; receiptLifetime?: number; providerId?: string } = {}) => {
     const cart = options.existingCart ?? await f.makeCart();
     let collection: any, session: any;
     if (options.reusePayment) {
@@ -16,7 +17,7 @@ export async function nativePaymentFixture(container: any, preservePrivacyKey = 
       session = await f.postgres("payment_session").where({ payment_collection_id: collection.id }).whereNull("deleted_at").first();
     } else {
       collection = (await createPaymentCollectionForCartWorkflow(container).run({ input: { cart_id: cart.id } })).result;
-      session = (await createPaymentSessionsWorkflow(container).run({ input: { payment_collection_id: collection.id, provider_id: "pp_system_default" } })).result;
+      session = (await createPaymentSessionsWorkflow(container).run({ input: { payment_collection_id: collection.id, provider_id: options.providerId ?? (nativeExecution ? "pp_rifare_fenced_system_fixture" : "pp_system_default") } })).result;
     }
     const original = await f.makeOriginal(true, 120, cart), id = original.command.command_id;
     const proof = Buffer.from("e30.e30.cGF5bWVudC1hc3NvY2lhdGlvbi1zeW50aGV0aWM"), hash = (value: Uint8Array) => "sha256:" + createHash("sha256").update(value).digest("hex");

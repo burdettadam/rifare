@@ -80,3 +80,18 @@ test("shared checkout locking qualification is limited to a disposable test prof
       /DISPOSABLE_LOCK_REDIS_URL_REQUIRED/);
   }
 });
+
+
+test("native execution provider requires explicit disposable qualification and preserves ordinary configuration", () => {
+  for (const profile of [undefined, "worker-identity"]) {
+    const config = localCommerceConfig({ ...valid(), RIFARE_COMMERCE_VERIFY: "disposable", RIFARE_TEST_NATIVE_EXECUTION: profile });
+    assert.equal(config.modules.some(module => module.resolve === "@medusajs/medusa/payment"), false);
+  }
+  const selected = { ...valid(), RIFARE_COMMERCE_VERIFY: "disposable", RIFARE_TEST_NATIVE_EXECUTION: "fenced-system" };
+  const payment = localCommerceConfig(selected).modules.find(module => module.resolve === "@medusajs/medusa/payment");
+  assert.deepEqual(payment?.options.providers, [{ resolve: "./src/modules/fenced-system-payment", id: "fixture" }]);
+  for (const input of [{ ...selected, NODE_ENV: "development" }, { ...selected, RIFARE_COMMERCE_VERIFY: undefined },
+    { ...selected, RIFARE_TEST_NATIVE_EXECUTION: "unknown" }]) {
+    assert.throws(() => localCommerceConfig(input), /DISPOSABLE_NATIVE_EXECUTION_REQUIRED/);
+  }
+});

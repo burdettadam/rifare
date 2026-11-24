@@ -1,3 +1,5 @@
+> Historical workflow specification. Its planner/templates/check tools were retired under ADR-0093. Inspect the recorded Git revision (or 9b2fbec) for those inputs. Current commands and evidence boundaries are in DEVELOPMENT.md and QUALIFICATION.md; this document grants no acceptance.
+
 # Candidate-bound evidence contract
 
 ## Evidence root and identity

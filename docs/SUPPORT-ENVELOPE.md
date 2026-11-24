@@ -19,8 +19,9 @@ self-issued approval/qualification flags are invalid.
 
 `planning/support-envelope.json` is the source of truth; do not maintain a second
 hand-edited detailed table. Each row links to its owning goal and retained target
-IDs. `capability_disposition` accounts for all 44 existing targets without moving
-work out of its original milestone. The fixed false qualification/public-claim
+IDs. `capability_disposition` accounts for all 44 retained revision-1 targets
+without moving work out of its original milestone. Later additive `CAP-M*` planning
+targets do not silently rewrite this frozen contract. The fixed false qualification/public-claim
 flags apply to this proposal schema. Any future schema with accepted decisions
 or qualification must itself be adopted through trusted review; a string edit
 cannot supply that trust.

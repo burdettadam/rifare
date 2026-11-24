@@ -1,5 +1,6 @@
 /** Test-only ephemeral signing; no private key or upstream vector enters source exports. */
 import { createRequire } from 'node:module';
+import { pathToFileURL } from 'node:url';
 import { createHash, KeyObject, sign as signBytes } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { contentDigest, canonical } from '../../packages/commerce/configuration-values.mts';
@@ -9,7 +10,7 @@ import { PinnedReceiptJoseVerifier } from '../../packages/adapters/delegated-rec
 import type { ReceiptVerificationKey } from '../../packages/adapters/delegated-receipts/jose-verifier.mts';
 
 const requireReceipt = createRequire(new URL('../../packages/adapters/delegated-receipts/package.json', import.meta.url));
-const jose = await import(requireReceipt.resolve('jose'));
+const jose = await import(pathToFileURL(requireReceipt.resolve('jose')).href);
 export const clone = <T,>(value: T): T => JSON.parse(JSON.stringify(value));
 export const organization = '11111111-2222-4333-8444-555555555555';
 export const syntheticIssuer = { type: 'SERVICE_ACCOUNT' as const, id: 'urn:rifare:synthetic:receipt-issuer' };

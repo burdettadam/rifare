@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { claimOracle } from './delegated-command-claim-helpers.mts';
+import { claimOracle } from './command-fixtures.mts';
 import { delegatedUsePeer } from './delegated-use-client-helpers.mts';
 import { PublicDelegatedUseClient } from '../../packages/adapters/delegated-commands/public-use-client.mts';
 
