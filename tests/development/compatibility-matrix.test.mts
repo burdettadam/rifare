@@ -118,7 +118,7 @@ test('M07-G06-RUNTIME-SOURCE-01',async()=>{
 test('M07-G06-MINIMIZED-EXPORT-01',async()=>{
  const f=await setup(),m=f.matrix(),text=JSON.stringify(m);
  assert(!text.includes('ORD-FIXTURE'));assert(!text.includes('catalog-model-fixture'));
- assert.equal(m.catalog.adapter_count,37);assert.equal(m.catalog.operation_count,198);
+ assert.equal(m.catalog.adapter_count,50);assert.equal(m.catalog.operation_count,234);
  assert.equal(m.rows[0].report_hashes.evaluation,contentDigest(f.row.evidence.evaluation));
  assert.equal(m.rows[0].platform.api_version,'local-read-v1');assert.equal(m.rows[0].payment,null);
  assert.equal(m.rows[0].execution_authorized,false);assert.equal(m.rows[0].qualification,'local_fixture_only');

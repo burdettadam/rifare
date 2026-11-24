@@ -4,7 +4,7 @@ from pathlib import Path
 from playwright.sync_api import sync_playwright
 cfg=json.loads(os.environ['RIFARE_TEST_INPUT']);assert re.fullmatch(r'http://127\.0\.0\.1:[0-9]+',cfg['url'])
 assets=Path(__file__).resolve().parents[2]/'apps/commerce-api'
-html=re.sub(r'<script[^>]*>.*?</script>|<link[^>]*>','',(assets/'return-operations.html').read_text());network=[]
+html=re.sub(r'<script[^>]*>.*?</script>|<link[^>]*>','',(assets/'return-operations.html').read_text(encoding='utf-8'));network=[]
 def bridge(path,opts):
     assert path in ('/v1/return-workflows/open','/v1/return-workflows/status','/v1/return-workflows/quote','/v1/session/logout')
     request=urllib.request.Request(cfg['url']+path,data=opts['body'].encode(),headers=opts['headers'],method=opts['method'])
@@ -12,9 +12,9 @@ def bridge(path,opts):
         with urllib.request.urlopen(request,timeout=5) as r:return {'status':r.status,'value':json.load(r)}
     except urllib.error.HTTPError as e:return {'status':e.code,'value':json.load(e)}
 with sync_playwright() as p:
-    browser=p.chromium.launch(executable_path='/usr/bin/chromium',headless=True,args=['--no-sandbox']);page=browser.new_page(viewport={'width':390,'height':844})
-    page.route('**/*',lambda route:(network.append(route.request.url),route.abort()));page.set_content(html);page.add_style_tag(content=(assets/'return-operations.css').read_text());page.expose_function('bridge',bridge)
-    page.evaluate('''() => {window.storageAccess=false;for(const n of ['localStorage','sessionStorage'])Object.defineProperty(window,n,{get:()=>{window.storageAccess=true;throw Error('NO_STORAGE')}});window.fetch=async(path,opts)=>{const r=await window.bridge(path,opts);if(path==='/v1/return-workflows/quote'&&window.delayQuote)await new Promise(resolve=>window.releaseQuote=resolve);return {ok:r.status>=200&&r.status<300,json:async()=>r.value};};}''');page.add_script_tag(content=(assets/'return-operations-client.js').read_text())
+    browser=p.chromium.launch(executable_path=os.environ.get('RIFARE_TEST_BROWSER','/usr/bin/chromium'),headless=True,args=['--no-sandbox']);page=browser.new_page(viewport={'width':390,'height':844})
+    page.route('**/*',lambda route:(network.append(route.request.url),route.abort()));page.set_content(html);page.add_style_tag(content=(assets/'return-operations.css').read_text(encoding='utf-8'));page.expose_function('bridge',bridge)
+    page.evaluate('''() => {window.storageAccess=false;for(const n of ['localStorage','sessionStorage'])Object.defineProperty(window,n,{get:()=>{window.storageAccess=true;throw Error('NO_STORAGE')}});window.fetch=async(path,opts)=>{const r=await window.bridge(path,opts);if(path==='/v1/return-workflows/quote'&&window.delayQuote)await new Promise(resolve=>window.releaseQuote=resolve);return {ok:r.status>=200&&r.status<300,json:async()=>r.value};};}''');page.add_script_tag(content=(assets/'return-operations-client.js').read_text(encoding='utf-8'))
     page.locator('#token').fill(cfg['token']);page.locator('#request').fill(cfg['request_id']);page.locator('#skill').fill(cfg['skill_digest']);page.locator('#skill').press('Enter');page.wait_for_function("!document.getElementById('state').hidden")
     assert page.locator('#token').input_value()=='';assert 'complete' in page.locator('#summary').inner_text();assert 'Not started' in page.locator('#summary').inner_text()
     if cfg['scenario']=='late':page.evaluate('window.delayQuote=true')
