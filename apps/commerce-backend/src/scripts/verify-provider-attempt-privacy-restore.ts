@@ -5,6 +5,7 @@ import { operationJournalModule } from "../modules/operation-journal";
 import type OperationJournalService from "../modules/operation-journal/service";
 import { minimizedOperationFields } from "../modules/operation-journal/privacy";
 import { executionFingerprint } from "../modules/operation-journal/execution-claim";
+import { bytes } from "./native-receipt-fixture";
 
 /** Behavioral privacy and whole-database restore coverage for the durable
  * provider-attempt marker. This never invokes a payment provider. */
@@ -21,6 +22,8 @@ export default async function verifyProviderAttemptPrivacyRestore({ container }:
   const journal = container.resolve<OperationJournalService>(operationJournalModule);
   const postgres = container.resolve(ContainerRegistrationKeys.PG_CONNECTION);
   const completed = fixture.completed;
+  const claimed = fixture.execution;
+  if (claimed) assert.ok(["claim-commit", "activation-commit"].includes(claimed.stage));
   const nativeTables = ["cart", "cart_address", "cart_line_item", "cart_line_item_adjustment", "cart_line_item_tax_line",
     "cart_shipping_method", "cart_shipping_method_adjustment", "cart_shipping_method_tax_line",
     "order", "order_address", "order_item", "order_line_item", "order_line_item_adjustment", "order_line_item_tax_line",
@@ -34,21 +37,41 @@ export default async function verifyProviderAttemptPrivacyRestore({ container }:
     return JSON.stringify(rows);
   };
   let nativeBefore: string | undefined;
-  if (completed) {
-    assert.equal(completed.order_fingerprint, executionFingerprint(completed.order_id));
-    assert.ok(await postgres("order").where({ id: completed.order_id }).first());
-    assert.ok(await postgres("payment").where({ id: completed.payment_id }).first());
+  if (completed || claimed) {
     nativeBefore = await nativeSnapshot();
     const payments: any = container.resolve(Modules.PAYMENT);
     for (const owner of [payments, payments.paymentProviderService_])
       for (const method of ["authorizePaymentSession", "authorizePayment", "capturePayment", "cancelPayment", "refundPayment", "getStatus"])
         owner[method] = async () => { throw new Error("C12_AFTER_EFFECT_UNEXPECTED_PROVIDER_ACTION"); };
   }
+  if (completed) {
+    assert.equal(completed.order_fingerprint, executionFingerprint(completed.order_id));
+    assert.ok(await postgres("order").where({ id: completed.order_id }).first());
+    assert.ok(await postgres("payment").where({ id: completed.payment_id }).first());
+  }
   assert.equal((await postgres.raw("select has_function_privilege('public','public.rifare_require_native_execution_payment(text,text,text)','execute') as allowed")).rows[0].allowed, false);
   const selected = () => postgres("rifare_operation").where({ original_command_uuid: fixture.original_id }).first();
   const before = await selected();
-  assert.ok(before?.execution_payment_attempted_at instanceof Date);
-  const attemptedAt = before.execution_payment_attempted_at.toISOString();
+  if (claimed) {
+    assert.equal(before.state, "unknown");
+    assert.equal(before.execution_payment_attempted_at, null);
+    assert.equal(before.execution_order_id, null);
+    assert.equal(before.execution_owner_fingerprint, claimed.owner);
+    assert.equal(before.execution_seal_fingerprint, claimed.seal);
+    assert.equal(before.execution_payment_handle_fingerprint, claimed.handle);
+    const verifier = await journal.createAuthorityReceiptVerifier(bytes(fixture.trust));
+    const countRoles = async () => Number((await postgres.raw("select count(*) as n from pg_roles where rolname ~ '^rifare_exec_[a-f0-9]{32}$'")).rows[0].n);
+    const count = await countRoles();
+    try {
+      const recovered = await journal.claimNativeExecution(fixture.original_id, fixture.privacy.context, verifier);
+      assert.equal(recovered.disposition, "recovery_only");
+      assert.equal(recovered.worker, null); assert.equal(recovered.seal, null);
+      assert.equal(await countRoles(), count);
+      assert.deepEqual(await selected(), before);
+    } finally { verifier.close(); }
+  } else assert.ok(before?.execution_payment_attempted_at instanceof Date);
+  const attemptedAt = before.execution_payment_attempted_at?.toISOString() ?? null;
+  const attemptValue = (row: any) => row.execution_payment_attempted_at?.toISOString() ?? null;
   if (completed) {
     assert.equal(attemptedAt, completed.attempted_at);
     assert.equal(before.execution_order_fingerprint, completed.order_fingerprint);
@@ -58,10 +81,15 @@ export default async function verifyProviderAttemptPrivacyRestore({ container }:
   const assertRetainedAttempt = async () => {
     const row = await selected();
     assert.equal(row.state, "retired");
-    assert.equal(row.execution_payment_attempted_at.toISOString(), attemptedAt);
+    assert.equal(attemptValue(row), attemptedAt);
     assert.ok(row.execution_owner_fingerprint); assert.ok(row.execution_seal_fingerprint);
     assert.ok(row.execution_payment_handle_fingerprint); assert.ok(row.execution_revoked_at instanceof Date);
     assert.ok(row.execution_generation >= 2);
+    if (claimed) {
+      assert.equal(row.execution_owner_fingerprint, claimed.owner);
+      assert.equal(row.execution_seal_fingerprint, claimed.seal);
+      assert.equal(row.execution_payment_handle_fingerprint, claimed.handle);
+    }
     if (completed) {
       assert.equal(row.execution_order_fingerprint, completed.order_fingerprint);
       assert.equal(row.native_payment_fingerprint, before.native_payment_fingerprint);
@@ -76,17 +104,19 @@ export default async function verifyProviderAttemptPrivacyRestore({ container }:
   if (phase === "export" || phase === "recover") {
     const exported = await journal.exportPrivacySubject(fixture.privacy.customer_id, fixture.privacy.actor);
     const row = exported.find((candidate: any) => candidate.original_command_uuid === fixture.original_id);
-    assert.equal(row?.execution_payment_attempted_at.toISOString(), attemptedAt);
-    assert.equal((await selected()).execution_payment_attempted_at.toISOString(), attemptedAt);
+    assert.ok(row);
+    assert.equal(attemptValue(row), attemptedAt);
+    assert.equal(attemptValue(await selected()), attemptedAt);
   } else if (phase === "erase") {
     assert.equal(await journal.setPrivacyHold(fixture.privacy.customer_id, before.id, before.revision, true,
       fixture.privacy.actor), true);
     const heldBeforeErase = await selected();
     const heldExport = await journal.exportPrivacySubject(fixture.privacy.customer_id, fixture.privacy.actor);
-    assert.equal(heldExport.find((candidate: any) => candidate.id === before.id)?.execution_payment_attempted_at.toISOString(), attemptedAt);
+    const exported = heldExport.find((candidate: any) => candidate.id === before.id);
+    assert.ok(exported); assert.equal(attemptValue(exported), attemptedAt);
     await journal.erasePrivacySubject(fixture.privacy.customer_id, fixture.privacy.actor);
     const held = await selected(); assert.equal(held.state, "retired");
-    assert.equal(held.execution_payment_attempted_at.toISOString(), attemptedAt);
+    assert.equal(attemptValue(held), attemptedAt);
     assert.ok(held.execution_claimed_at instanceof Date);
     assert.equal(await journal.setPrivacyHold(fixture.privacy.customer_id, held.id, held.revision, false,
       fixture.privacy.actor), true);
@@ -98,8 +128,9 @@ export default async function verifyProviderAttemptPrivacyRestore({ container }:
     await reconcile(); await reconcile();
     await assertRetainedAttempt();
   }
-  if (completed) assert.equal(await nativeSnapshot(), nativeBefore, "Privacy restore must not mutate or repeat completed native effects");
+  if (completed || claimed) assert.equal(await nativeSnapshot(), nativeBefore, "Privacy restore must not mutate or repeat native effects");
   console.log("C12_PROVIDER_ATTEMPT_PRIVACY_RESTORE=" + JSON.stringify({ result: "pass", phase,
     attempted_at_retained: true, completed_effect_retained: Boolean(completed),
+    ...(claimed ? { claim_stage_retained: claimed.stage, inspected_native_tables: nativeTables.length } : {}),
     execution_authorized: false, provider_invoked: false }));
 }
