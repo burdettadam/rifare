@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Run actual native smoke tests and reject incomplete TAP runs."""
 import argparse
+import os
 from pathlib import Path
 import re
 import shutil
@@ -23,7 +24,10 @@ def run(budget_seconds: int = 240) -> int:
         print('FAIL: no runtime smoke tests discovered.', file=sys.stderr)
         return 1
     command = [node, '--experimental-strip-types', '--test', '--test-concurrency=1', *tests]
-    result = subprocess.run(command, cwd=root, text=True, capture_output=True, timeout=budget_seconds)
+    env = os.environ.copy()
+    env['RIFARE_TEST_PYTHON'] = os.environ.get('RIFARE_TEST_PYTHON', sys.executable)
+    result = subprocess.run(command, cwd=root, text=True, capture_output=True,
+                            timeout=budget_seconds, env=env)
     print(result.stdout, end='')
     print(result.stderr, end='', file=sys.stderr)
     counts = {key: int(value) for key, value in re.findall(

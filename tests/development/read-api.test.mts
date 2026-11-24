@@ -20,7 +20,7 @@ async function use(fn:(f:Awaited<ReturnType<typeof setup>>)=>unknown){const f=aw
 test('CASE-M01-G10-01',()=>use(async f=>{
   const response=await f.request('/v1/read-tasks',{order_id:f.order().id,profile_id:'default'});assert.equal(response.status,201);const task=await response.json();
   const client=fileURLToPath(new URL('../../clients/read_task.py',import.meta.url));
-  const child=await execute('python3',[client,'--base-url',f.server.url,'--task-id',task.id],{env:{PATH:process.env.PATH,RIFARE_BEARER:f.a.bearer},timeout:10000});
+  const child=await execute(process.env.RIFARE_TEST_PYTHON || 'python3',[client,'--base-url',f.server.url,'--task-id',task.id],{env:{PATH:process.env.PATH,RIFARE_BEARER:f.a.bearer},timeout:10000});
   const received=JSON.parse(child.stdout);assert.equal(received.id,task.id);assert.equal(received.facts.order.totals.amount_minor,12500);
   assert.equal(received.facts.source.native_id,'ORD-1001');assert.equal(received.profile.skill_digest,f.bundle.digest);
   assert.equal(received.agent_runtime_required,false);assert.equal(child.stdout.includes(f.a.bearer),false);

@@ -4,6 +4,7 @@ import importlib.util
 import io
 from pathlib import Path
 import subprocess
+import sys
 import unittest
 from unittest.mock import patch
 
@@ -22,9 +23,11 @@ class CumulativeBudgetTests(unittest.TestCase):
         return status, call
 
     def test_explicit_extension_runs_the_entire_discovered_inventory(self):
-        status, call = self.invoke()
+        with patch.dict(MODULE.os.environ, {}, clear=True):
+            status, call = self.invoke()
         self.assertEqual(status, 0)
         self.assertEqual(call.call_args.kwargs['timeout'], 480)
+        self.assertEqual(call.call_args.kwargs['env']['RIFARE_TEST_PYTHON'], sys.executable)
         command = call.call_args.args[0]
         self.assertIn('--test-concurrency=1', command)
         expected = sorted(str(p.relative_to(ROOT)) for p in (ROOT / 'tests/development').glob('*.test.mts'))

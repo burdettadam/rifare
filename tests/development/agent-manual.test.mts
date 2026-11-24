@@ -3,7 +3,7 @@ import { promisify } from 'node:util';import { execFile } from 'node:child_proce
 import { useAgent } from './agent-helpers.mts';
 const execute=promisify(execFile);
 const browser=fileURLToPath(new URL('../browser/manual_component.py',import.meta.url));
-async function render(f:any,scenario:string){const child=await execute('python3',[browser],{env:{PATH:process.env.PATH,HOME:process.env.HOME,
+async function render(f:any,scenario:string){const child=await execute(process.env.RIFARE_TEST_PYTHON || 'python3',[browser],{env:{PATH:process.env.PATH,HOME:process.env.HOME,
   RIFARE_TEST_BROWSER:process.env.RIFARE_BROWSER_EXECUTABLE??'/usr/bin/chromium',RIFARE_TEST_INPUT:JSON.stringify({url:f.server.url,bearer:f.a.bearer,
     order:f.order().id,other:f.order(f.b).id,scenario,facts:f.reads.orderStatus(f.a.scope,f.order().id)})},timeout:20000});return JSON.parse(child.stdout);}
 test('CASE-M01-G12-01',()=>useAgent(async f=>{const r=await render(f,'normal');assert.equal(r.order,'ORD-1001');assert.equal(r.model_calls,0);}));

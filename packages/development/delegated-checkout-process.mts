@@ -222,7 +222,7 @@ export class CheckoutProcessHarness {
   async #client(owned: Owned, url: string, args: string[], receipt: string, bearer: string): Promise<ClientResult> {
     this.#active();
     if (owned.child.exitCode !== null || owned.child.signalCode !== null) fail('CHECKOUT_PROCESS_NOT_RUNNING');
-    const child = spawn('python3', ['-I', this.clientPath, '--base-url', url, ...args], {
+    const child = spawn(process.env.RIFARE_TEST_PYTHON || 'python3', ['-I', this.clientPath, '--base-url', url, ...args], {
       cwd: this.clientDirectory, env: { ...childEnvironment(), RIFARE_BEARER: bearer },
       stdio: ['pipe', 'pipe', 'pipe'],
     });

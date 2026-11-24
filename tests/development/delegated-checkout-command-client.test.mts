@@ -25,7 +25,7 @@ function isolatedClient() {
   assert.deepEqual(readdirSync(directory), ['delegated_checkout.py']);
   const run = (url: string, args: string[], environment: Record<string, string | undefined> = {}): Promise<Run> =>
     new Promise((resolve, reject) => {
-      const child = spawn('python3', ['-I', filename, '--base-url', url, ...args], {
+      const child = spawn(process.env.RIFARE_TEST_PYTHON || 'python3', ['-I', filename, '--base-url', url, ...args], {
         cwd: directory, env: { PATH: process.env.PATH, RIFARE_BEARER: BEARER, ...environment },
         stdio: ['ignore', 'pipe', 'pipe'],
       });

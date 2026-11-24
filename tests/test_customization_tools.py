@@ -4,6 +4,7 @@ import importlib.util
 import io
 from pathlib import Path
 import subprocess
+import sys
 import unittest
 from unittest.mock import patch
 
@@ -19,14 +20,22 @@ class RuntimeSuiteBudgetTests(unittest.TestCase):
         return status, call
 
     def test_matches_existing_external_controller_bound(self):
-        status, call = self.invoke('# tests 2\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n')
+        with patch.dict(MODULE.os.environ, {}, clear=True):
+            status, call = self.invoke('# tests 2\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n')
         self.assertEqual(status, 0)
         self.assertEqual(call.call_args.kwargs['timeout'], 240)
+        self.assertEqual(call.call_args.kwargs['env']['RIFARE_TEST_PYTHON'], sys.executable)
         self.assertIn('--test-concurrency=1', call.call_args.args[0])
 
     def test_skips_still_rejected(self):
         status, _ = self.invoke('# tests 2\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 1\n# todo 0\n')
         self.assertEqual(status, 1)
+
+    def test_explicit_python_interpreter_is_preserved(self):
+        with patch.dict(MODULE.os.environ, {'RIFARE_TEST_PYTHON': '/fixture/python'}):
+            status, call = self.invoke('# tests 2\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n')
+        self.assertEqual(status, 0)
+        self.assertEqual(call.call_args.kwargs['env']['RIFARE_TEST_PYTHON'], '/fixture/python')
 
     def test_zero_inventory_still_rejected(self):
         status, _ = self.invoke('# tests 0\n# pass 0\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n')

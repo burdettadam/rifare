@@ -35,7 +35,7 @@ export async function runtimeHarness(f:any,caseId='resolution_case'){
 }
 
 export async function runtimeClient(language:'typescript'|'python',server:any,grant:any,extra:any={}){
- const command=language==='typescript'?process.execPath:'python3',args=language==='typescript'?['--experimental-strip-types','clients/return_runtime.mts']:['-I','clients/return_runtime.py'];
+ const command=language==='typescript'?process.execPath:process.env.RIFARE_TEST_PYTHON || 'python3',args=language==='typescript'?['--experimental-strip-types','clients/return_runtime.mts']:['-I','clients/return_runtime.py'];
  return new Promise<any>((resolve,reject)=>{
   const child=spawn(command,args,{cwd:process.cwd(),stdio:['pipe','pipe','pipe'],env:{PATH:process.env.PATH}});let out='',err='';
   const timer=setTimeout(()=>{child.kill('SIGKILL');reject(new Error('RUNTIME_CHILD_DEADLINE'));},20000);

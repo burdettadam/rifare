@@ -4,7 +4,7 @@ import {spawn} from 'node:child_process';
 import {usingReturnPortability,withPortabilityServer} from './return-portability-helpers.mts';
 async function component(f:any,app:any,phase:string){
  const input={url:app.url,staff_token:f.a.bearer,reviewer_token:f.reviewer.bearer,case_id:f.caseId,link_id:f.link.id,phase,screenshot:process.env.RIFARE_PORTABILITY_CAPTURE_DIR?process.env.RIFARE_PORTABILITY_CAPTURE_DIR+'/'+phase+'.png':null};
- const result=await new Promise<any>((resolve,reject)=>{const p=spawn('python3',['tests/browser/return_portability_component.py'],{env:{...process.env,RIFARE_TEST_INPUT:JSON.stringify(input)},stdio:['ignore','pipe','pipe']});let out='',err='';p.stdout.on('data',v=>out+=v);p.stderr.on('data',v=>err+=v);p.on('error',reject);p.on('close',code=>resolve({code,out,err}));});
+ const result=await new Promise<any>((resolve,reject)=>{const p=spawn(process.env.RIFARE_TEST_PYTHON || 'python3',['tests/browser/return_portability_component.py'],{env:{...process.env,RIFARE_TEST_INPUT:JSON.stringify(input)},stdio:['ignore','pipe','pipe']});let out='',err='';p.stdout.on('data',v=>out+=v);p.stderr.on('data',v=>err+=v);p.on('error',reject);p.on('close',code=>resolve({code,out,err}));});
  assert.equal(result.code,0,result.err);const r=JSON.parse(result.out);assert.equal(r.passed,true);assert.deepEqual(r.direct_browser_network,[]);return r;
 }
 test('M07-G03-BROWSER-COMMON-RETURN-REFUND-AND-NOTIFICATION',()=>usingReturnPortability(async f=>{await withPortabilityServer(f,async(_post,app)=>{

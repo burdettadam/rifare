@@ -7,7 +7,7 @@ async function run(f:any,transport='rest',extra:any={}) {
   const client=join(f.directory,'independent','status_agent.py');mkdirSync(join(f.directory,'independent'),{recursive:true});cpSync(source,client);
   let credential=f.a.bearer;
   if(transport==='mcp')credential=(await(await f.request('/v1/mcp-grants',{task_id:f.task.id,tools:['read_task','order_status','skill_content']})).json()).token;
-  const child=await execute('python3',[client,'--base-url',f.server.url,'--task-id',f.task.id,'--transport',transport],{
+  const child=await execute(process.env.RIFARE_TEST_PYTHON || 'python3',[client,'--base-url',f.server.url,'--task-id',f.task.id,'--transport',transport],{
     cwd:join(f.directory,'independent'),env:{PATH:process.env.PATH,[transport==='mcp'?'RIFARE_MCP_TOKEN':'RIFARE_BEARER']:credential,...extra},timeout:15000});
   assert.equal(child.stdout.includes(credential),false);return JSON.parse(child.stdout);
 }
@@ -51,7 +51,7 @@ test('M01-G15-PHYSICALLY-ABSENT-BUILTIN',()=>useAgent(async f=>{
    const details=await new Promise<any>((resolve,reject)=>{const timer=setTimeout(()=>reject(new Error('isolated startup timeout')),8000);
      processChild.stdout.on('data',b=>{text+=b.toString();if(text.includes('\n')){clearTimeout(timer);resolve(JSON.parse(text.split('\n')[0]));}});
      processChild.on('exit',code=>{clearTimeout(timer);reject(new Error('isolated startup failed: '+code+' '+errors));});});
-   const result=await execute('python3',[join(root,'status_agent.py'),'--base-url',details.url,'--task-id',details.task],{cwd:root,env:{PATH:process.env.PATH,RIFARE_BEARER:details.bearer},timeout:15000});
+   const result=await execute(process.env.RIFARE_TEST_PYTHON || 'python3',[join(root,'status_agent.py'),'--base-url',details.url,'--task-id',details.task],{cwd:root,env:{PATH:process.env.PATH,RIFARE_BEARER:details.bearer},timeout:15000});
    assert.equal(JSON.parse(result.stdout).status,'grounded_read');assert.equal(JSON.parse(result.stdout).claims[0].value,'ORD-1001');
  } finally {processChild.kill('SIGTERM');await new Promise<void>(resolve=>processChild.once('exit',()=>resolve()));}
 }));

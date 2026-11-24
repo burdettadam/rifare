@@ -32,7 +32,7 @@ function run(mode: 'browser' | 'probe-normal' | 'probe-hold', input: unknown, ti
     const env = { PATH: process.env.PATH,
       RIFARE_BROWSER_EXECUTABLE: process.env.RIFARE_BROWSER_EXECUTABLE ?? '/usr/bin/chromium',
       RIFARE_TEST_INPUT: JSON.stringify(input) };
-    const child = spawn('python3', ['-I', '-S', guardian, mode], {
+    const child = spawn(process.env.RIFARE_TEST_PYTHON || 'python3', ['-I', '-S', guardian, mode], {
       env, detached: true, stdio: ['pipe', 'pipe', 'pipe', 'pipe'],
     });
     let stdout = '', stderr = '', metadata = '', outputBytes = 0, metadataBytes = 0;

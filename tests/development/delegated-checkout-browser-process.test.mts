@@ -59,7 +59,7 @@ async function cleanup(owned?: Owned) {
   if (!owned) return;
   // A pidfd keeps the target stable between identity verification and signalling.
   // This fallback can only address the three exact harmless probe identities.
-  execFileSync('python3', ['-I', '-S', '-c', `import json, os, signal, sys
+  execFileSync(process.env.RIFARE_TEST_PYTHON || 'python3', ['-I', '-S', '-c', `import json, os, signal, sys
 from pathlib import Path
 for identity in json.loads(sys.argv[1]):
     descriptor = None
@@ -133,7 +133,7 @@ outerDeadline('RCG5C-OWNED-OUTER-FAULT', async () => {
     git('add', '.'); git('commit', '-qm', 'bounded outer deadline fixture');
     const output = join(directory, 'run');
     const result = await new Promise<{ code: number | null; stdout: string; stderr: string }>((resolve, reject) => {
-      const child = spawn('python3', [join(root, 'tools/dev_tests.py'), '--root', directory, '--files', source,
+      const child = spawn(process.env.RIFARE_TEST_PYTHON || 'python3', [join(root, 'tools/dev_tests.py'), '--root', directory, '--files', source,
         '--timeout', '2', '--output', output], {
         env: { PATH: process.env.PATH, RIFARE_DEV_NODE: process.execPath },
         stdio: ['ignore', 'pipe', 'pipe'],

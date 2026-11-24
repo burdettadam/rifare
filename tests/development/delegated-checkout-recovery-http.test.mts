@@ -46,7 +46,7 @@ async function withClient(fn: (run: (url: string, args: string[], bearer?: strin
   const directory = mkdtempSync(join(tmpdir(), 'rifare-recovery-client-')), client = join(directory, 'delegated_checkout.py');
   copyFileSync(new URL('../../clients/delegated_checkout.py', import.meta.url), client);
   const run = (url: string, args: string[], bearer = BEARER) => new Promise<Run>((resolve, reject) => {
-    const child = spawn('python3', ['-I', client, '--base-url', url, ...args], {
+    const child = spawn(process.env.RIFARE_TEST_PYTHON || 'python3', ['-I', client, '--base-url', url, ...args], {
       cwd: directory, env: { PATH: process.env.PATH, RIFARE_BEARER: bearer }, stdio: ['ignore','pipe','pipe'],
     });
     let stdout = '', stderr = '', length = 0;
