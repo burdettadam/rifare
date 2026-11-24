@@ -30,9 +30,10 @@ class CumulativeBudgetTests(unittest.TestCase):
         self.assertEqual(call.call_args.kwargs['env']['RIFARE_TEST_PYTHON'], sys.executable)
         command = call.call_args.args[0]
         self.assertIn('--test-concurrency=1', command)
+        self.assertIn('--test-reporter=tap', command)
         expected = sorted(str(p.relative_to(ROOT)) for p in (ROOT / 'tests/development').glob('*.test.mts'))
         self.assertGreater(len(expected), 0)
-        self.assertEqual(command[4:], expected)
+        self.assertEqual(command[5:], expected)
 
     def test_original_standalone_default_remains_240(self):
         status, call = self.invoke(240)

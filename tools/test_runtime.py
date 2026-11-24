@@ -23,7 +23,7 @@ def run(budget_seconds: int = 240) -> int:
     if not tests:
         print('FAIL: no runtime smoke tests discovered.', file=sys.stderr)
         return 1
-    command = [node, '--experimental-strip-types', '--test', '--test-concurrency=1', *tests]
+    command = [node, '--experimental-strip-types', '--test', '--test-concurrency=1', '--test-reporter=tap', *tests]
     env = os.environ.copy()
     env['RIFARE_TEST_PYTHON'] = os.environ.get('RIFARE_TEST_PYTHON', sys.executable)
     try:
