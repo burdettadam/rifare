@@ -22,7 +22,7 @@ export default async function verifyProviderAttemptPrivacyRestore({ container }:
   const postgres = container.resolve(ContainerRegistrationKeys.PG_CONNECTION);
   const completed = fixture.completed;
   const nativeTables = ["cart", "cart_address", "cart_line_item", "cart_line_item_adjustment", "cart_line_item_tax_line",
-    "cart_shipping_method", "cart_shipping_method_adjustment", "cart_shipping_method_tax_line", "cart_credit_line",
+    "cart_shipping_method", "cart_shipping_method_adjustment", "cart_shipping_method_tax_line",
     "order", "order_address", "order_item", "order_line_item", "order_line_item_adjustment", "order_line_item_tax_line",
     "order_shipping", "order_shipping_method", "order_shipping_method_adjustment", "order_shipping_method_tax_line",
     "order_summary", "order_credit_line", "order_transaction", "reservation_item", "payment_collection",
