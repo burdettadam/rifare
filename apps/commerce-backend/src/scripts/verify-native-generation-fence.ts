@@ -8,6 +8,7 @@ import type { ExecArgs } from "@medusajs/framework/types";
 import { ContainerRegistrationKeys, Modules } from "@medusajs/framework/utils";
 import { discoveryPath } from "@medusajs/medusa/payment";
 import { completeCartWorkflow } from "@medusajs/medusa/core-flows";
+import { StepResponse } from "@medusajs/framework/workflows-sdk";
 import { nativePaymentFixture } from "./native-payment-fixture";
 import { bytes } from "./native-receipt-fixture";
 import { operationJournalModule } from "../modules/operation-journal";
@@ -62,6 +63,19 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
     }
     try {
       if (task.healthy_completion) {
+        if (task.pause_after_validate) completeCartWorkflow.hooks.validate(async ({ input }) => {
+          if (input.id !== task.cart_id) return new StepResponse();
+          assert.equal(typeof process.send, "function");
+          const resume = new Promise<void>((resolve, reject) => {
+            const timer = setTimeout(() => reject(new Error("Paused completeCart validation deadline")), 30000);
+            process.once("message", message => { clearTimeout(timer); try {
+              assert.deepEqual(message, { phase: "resume-complete-cart" }); resolve();
+            } catch (error) { reject(error); } });
+          });
+          process.send!({ phase: "complete-cart-validated", identity, cart_id: input.id });
+          await resume;
+          return new StepResponse();
+        });
         let completed: any;
         try {
           completed = await completeCartWorkflow(container).run({ input: { id: task.cart_id },
@@ -78,7 +92,10 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
             message: entry.error?.message ?? String(entry.error), code: entry.error?.code ?? null,
             stack: entry.error?.stack ?? null,
           })), system_calls: calls };
-        if (completed.errors.length) throw completed.errors[0].error;
+        if (completed.errors.length) {
+          console.log("C12_NATIVE_HEALTHY_COMPLETION_OBSERVATION=" + JSON.stringify(observation));
+          throw completed.errors[0].error;
+        }
         if (task.lose_completion_ack) { process.exitCode = 79; return; }
         console.log("C12_NATIVE_HEALTHY_COMPLETION_OBSERVATION=" + JSON.stringify(observation));
         return;
