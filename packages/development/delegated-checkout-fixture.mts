@@ -168,7 +168,9 @@ export async function openCheckoutFixture(directory: string, instanceId: string,
     db = new DatabaseSync(join(directory, 'commerce.sqlite'));
     source = new DatabaseSync(join(directory, 'source.sqlite'), { readOnly: mode === 'history' });
     if (marker) validateStores(db, source, marker);
-    const kernel = new CommerceKernel(db), caps = new Capabilities(kernel), simulator = new StoreSimulator(kernel, caps);
+    const clockOrigin = Date.now() - Math.floor(performance.now());
+    const fixtureClock = () => clockOrigin + Math.floor(performance.now());
+    const kernel = new CommerceKernel(db, fixtureClock), caps = new Capabilities(kernel), simulator = new StoreSimulator(kernel, caps);
     let delivery: ProofDelivery | undefined;
     const customers = new CustomerAccess(kernel, value => { if (mode === 'fresh') delivery = value; });
     let credentials: Credentials | undefined, checkout: DelegatedCheckoutApi | undefined;
@@ -182,8 +184,6 @@ export async function openCheckoutFixture(directory: string, instanceId: string,
       if (!delivery) throw new Error('CHECKOUT_FIXTURE_PROOF_MISSING');
       const bearer = customers.complete({ store_id: store, challenge_id: challenge.challenge_id, proof: delivery.proof }).token;
       delivery = undefined;
-      const clockOrigin = Date.now() - Math.floor(performance.now());
-      const fixtureClock = () => clockOrigin + Math.floor(performance.now());
       const customer = kernel.authenticate(bearer), native = new OrderEditFixtureSource(source,
         { mode: 'fixture', identity: 'checkout-fixture-source', tenant, store }, fixtureClock);
       const now = fixtureClock();

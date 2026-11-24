@@ -56,7 +56,9 @@ function child(configuration: string[], arguments_: string[] = []) {
   return { process, ready, messages, output: () => ({ stdout, stderr }) };
 }
 
-test('RCG5A-FIXTURE-NATIVE-COMPOSITION', () => directory(async path => {
+test('RCG5A-FIXTURE-NATIVE-COMPOSITION', t => directory(async path => {
+  const wallTime = Date.now();
+  t.mock.timers.enable({ apis: ['Date'], now: wallTime });
   const f = await openCheckoutFixture(path, 'fixture-a', 'fresh');
   try {
     const r = f.ready, c = r.credentials!;
@@ -67,6 +69,9 @@ test('RCG5A-FIXTURE-NATIVE-COMPOSITION', () => directory(async path => {
     const preview = await request(r, c.bearer, 'preview', c.preview_request);
     assert.equal(preview.status, 200); assert.equal(preview.body.execution_authorized, false);
     assert.equal(preview.body.result.total_payable_minor, '6800'); assert.equal(preview.body.result.currency, 'USD');
+    t.mock.timers.setTime(wallTime - 60000);
+    const afterRewind = await request(r, c.bearer, 'preview', c.preview_request);
+    assert.equal(afterRewind.status, 200, 'Disposable fixture owners share a monotonic clock after a wall-clock rewind');
   } finally { await f.close(); }
   assert.equal(readCheckoutFixtureSnapshot(path, 'fixture-a').intent_count, 0);
   await assert.rejects(fetch(f.ready.url + '/health', { signal: AbortSignal.timeout(1000) }));
