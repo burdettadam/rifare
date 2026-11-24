@@ -12,5 +12,12 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           persist-credentials: false
-      - name: Run offline planning and helper checks
-        run: python3 tools/verify.py
+      - name: Set up supported Node
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Install pinned dependencies without lifecycle scripts
+        run: npm run install:dependencies
+      - name: Run current local-check equivalent
+        run: npm run check

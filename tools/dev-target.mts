@@ -6,7 +6,7 @@ const application = new URL('../apps/commerce-backend/', import.meta.url);
 const cli = new URL('node_modules/@medusajs/cli/cli.js', application);
 if (!existsSync(cli)) {
   console.error('TARGET_STACK_NOT_QUALIFIED: install the pinned commerce application with npm ci --prefix apps/commerce-backend --ignore-scripts and configure its local PostgreSQL profile.');
-  console.error('See docs/COMMERCE-ENGINE.md. Synthetic diagnostics remain explicit: npm run dev:smoke');
+  console.error('See docs/DEVELOPMENT.md. Medusa is the only application runtime.');
   process.exitCode = 2;
 } else {
   const child = spawn(process.execPath, [fileURLToPath(new URL('run.mjs', application)), 'develop'], {

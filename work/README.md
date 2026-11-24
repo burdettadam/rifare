@@ -1,3 +1,5 @@
+> Historical specifications/evidence. ADR-0093 retired the SQLite implementation and its bespoke workflow. Use the root README and npm commands for current development. These records do not qualify the new tree.
+
 # Work records
 
 These records preserve concise development decisions, source revisions,

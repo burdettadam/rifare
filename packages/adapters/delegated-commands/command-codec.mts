@@ -5,7 +5,7 @@
  */
 import { checkoutSnapshot } from '../../commerce/checkout-preview.mts';
 import { canonical, contentDigest } from '../../commerce/configuration-values.mts';
-import { digest } from '../../commerce/kernel.mts';
+import { digest } from '../../commerce/values.mts';
 import { receiptTimestampNs } from '../../commerce/delegated-receipt-binding.mts';
 import type { GrantRef, Operation } from '../../commerce/delegated-receipt-binding.mts';
 import { strictReceiptJson } from '../delegated-receipts/strict-json.mts';

@@ -1,5 +1,5 @@
-import { digest, exact, integer } from './kernel.mts';
-import type { Row } from './kernel.mts';
+import { digest, exact, integer } from './values.mts';
+import type { Row } from './values.mts';
 
 export class ConfigurationError extends Error {
   readonly issues: {path:string;code:string}[];

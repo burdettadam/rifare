@@ -1,169 +1,39 @@
-# Rifare architecture
+# Architecture
 
-[ADR-0083](decisions/0083-medusa-cart-context.md) adds the bounded
-[native cart context](MEDUSA-CART-CONTEXT.md): current customer access policy,
-child-reference checks and a separately versioned persisted-fact observation.
-It reuses Medusa services and adds no pricing/cart engine or authority database.
-Observation digests do not establish ElevenID approval or execution currentness.
+## Active application
 
-## Selected commerce target
+`apps/commerce-backend` owns the Medusa/PostgreSQL application. Use upstream
+catalog, pricing, cart, inventory, order and post-purchase modules and workflows.
+Use upstream Admin rather than maintaining a second merchant application.
 
-The owner selected **Medusa 2.23.0 with PostgreSQL** to replace commodity commerce
-under [ADR-0081](decisions/0081-upstream-commerce-engine.md). The runnable target
-is [`apps/commerce-backend`](../apps/commerce-backend/), using upstream APIs,
-workflows and Admin. The [engine guide](COMMERCE-ENGINE.md) maps actual local
-evidence and migration limits. The legacy domain map below describes the retained
-SQLite diagnostic implementation; it is not a second production commerce engine.
+Rifare-specific code provides external-customer identity binding, native cart
+context, an original-operation journal and guarded delegated-use execution.
+Native database migrations, stale-worker fencing, refusal identities and privacy
+minimization remain in that application. Their protection is not relaxed by
+retiring the replaced SQLite implementation.
 
-ElevenID remains the identity/trust dependency. Under [ADR-0082](decisions/0082-external-customer-identity.md),
-Rifare and ElevenID use separate clients of a shared external authentication
-provider such as Supabase. Rifare's [customer adapter](EXTERNAL-CUSTOMER-IDENTITY.md)
-uses maintained OIDC validation and Medusa identity persistence; hosted provider
-qualification and the ElevenID account/approval binding remain open.
-The [application identity contract](IDENTITY-APPLICATION-CONTRACT.md)
-separates authentication, commerce permission and lifecycle integration. Protected
-public commerce operations remain held until that bridge is implemented. None of
-the existing delegated-use or receipt controls is weakened by this migration.
+ElevenID owns identity/trust/delegation. The selected external identity provider
+owns authentication. Rifare owns commerce policy and actual effects. Connected
+provider/caller provisioning and production qualification remain open.
 
-**Retained diagnostic checkpoint: M20-G03 item-level drop-off handoffs.** Rifare has a
-substantial local implementation spanning commerce operations, decision assistance,
-shopper journeys and loyalty. Its legacy diagnostic environment uses
-TypeScript/Node and SQLite with synthetic source systems and plain browser
-surfaces. The selected Medusa/PostgreSQL target is described above. Connected services,
-independent deployment and formal product qualification remain open; see
-[project status](PROJECT-STATUS.md).
+## Shared authority code
 
-This document maps the current source and the boundaries new work must preserve.
-Native Git retains implementation history. [Active planning](../planning/README.md)
-tracks remaining work without repeating completed implementation instructions.
+`packages/adapters/delegated-commands` contains the strict codec and public mTLS
+client. `packages/adapters/delegated-receipts` contains strict JSON and JOSE
+verification. The small pure modules under `packages/commerce` supply canonical
+values, immutable checkout snapshots, receipt binding and command correlation.
+They contain no database engine. Primitive/correlation functions were extracted
+without changing their validation or error behavior.
 
-## Runtime and ownership
+`apps/commerce-backend/tools/build-authority-adapters.mjs` compiles this shared
+graph for the standalone backend. Generated stale modules are removed; no SQLite
+kernel or repository-source fallback is shipped. The relocation test exercises
+actual command bytes and mTLS after copying the compiled adapters elsewhere.
 
-The legacy diagnostic profile keeps durable commerce state in its own core. Human interfaces, rules,
-built-in agents and supported external callers use the same permissions, current
-facts, policies, approvals and operation owners. Portable skills describe a
-workflow; typed merchant profiles customize permitted fields; adapters translate
-supported native operations. Model output and skill text confer no authority.
+## Retired implementation
 
-| Layer | Source entry points | Responsibility |
-| --- | --- | --- |
-| Application surfaces | [`apps/commerce-api/`](../apps/commerce-api/), [`apps/api/`](../apps/api/), [`apps/worker/`](../apps/worker/), [`apps/web/`](../apps/web/) | Local HTTP/browser surfaces and separate service/worker processes. Their presence does not establish the target React application. |
-| Commerce core | [`packages/commerce/`](../packages/commerce/) | Tenant and resource authority, business state, workflow composition, exact approvals, durable operations and privacy. |
-| Adapters and source contracts | [`packages/adapters/`](../packages/adapters/), [`packages/conformance/`](../packages/conformance/) | Platform/provider translation, explicit capabilities and contract checks. Most write paths currently bind synthetic fixture sources. Shopify/WooCommerce read and Chatwoot/Resend wire mappings also exist; connected qualification is separate. |
-| Agents and skills | [`packages/agent/`](../packages/agent/), [`packages/commerce/skill-bundles/`](../packages/commerce/skill-bundles/), [`clients/`](../clients/) | Replaceable runtimes/providers, bounded model requests, reusable workflow resources and protocol clients. Existing local clients do not implement the missing M15 remote trust profile. |
-| Development and storage | [`packages/development/`](../packages/development/), [`migrations/`](../migrations/) | Legacy fixture lifecycle and transactional SQLite persistence. Separate synthetic source databases preserve the distinction between core state and provider observations. [`tools/dev-target.mts`](../tools/dev-target.mts) separately launches the selected Medusa application; it has no fixture fallback. |
-
-See [skill architecture](SKILL-ARCHITECTURE.md), [policy customization](POLICY-CUSTOMIZATION.md)
-and [development](DEVELOPMENT.md) for composition rules and runnable entry points.
-
-## Current domain map
-
-Source paths below are entry points into existing owners, not independent services
-to duplicate. Versioned contracts live beside the implementation in
-[`packages/commerce/contracts/`](../packages/commerce/contracts/) and
-[`packages/agent/contracts/`](../packages/agent/contracts/).
-
-| Domain | Current source owners | Design reference |
-| --- | --- | --- |
-| Authority and durable execution | `kernel.mts`, `authorization.mts`, `action-gateway.mts`, `case-configurations.mts`, `durable-work.mts`, `work-leases.mts`, `operation-store.mts`, `operation-receipts.mts` in `packages/commerce/` | [Operation reliability](OPERATION-RELIABILITY.md) |
-| Returns, exchanges and edits | `return-intake.mts`, `resolution-execution.mts`, `fulfillment-execution.mts`, `return-receiving.mts`, `exchange-lineage.mts`, `instant-exchanges.mts`, `order-edit-execution.mts` | [Return resolution](RETURN-RESOLUTION.md), [exchange depth](exchange-depth.md), [order editing](ORDER-EDITING.md) |
-| Support and delivery | `support-service.mts`, `support-conversations.mts`, `support-delivery.mts`, `support-consent.mts`, `model-budgets.mts` | [Support operations](SUPPORT-OPERATIONS.md) |
-| Shipping, warehouses and inventory | `shipping-batch-labels.mts`, `packing-sessions.mts`, `warehouse-connector.mts`, `location-inventory.mts`, `inventory-transfers.mts` | [Packing](PACKING-SESSIONS.md), versioned shipping/warehouse/inventory contracts |
-| Shopping and growth | `shopping-cart.mts`, `checkout-experiments.mts`, `growth-campaigns.mts`, `catalog-growth.mts` | Versioned cart, campaign, delivery and growth contracts |
-| Synthetic checkout preparation | `checkout-previews.mts`, `checkout-preview.mts`; `packages/adapters/checkout-quote-fixture-source.mts` | [Frozen checkout previews](CHECKOUT-PREVIEWS.md); current cart/customer owners, explicit scoped quotes and process-local snapshots, with no checkout execution |
-| Local delegated receipt evidence | `delegated-checkout-receipts.mts`, `delegated-receipt-binding.mts`; `packages/adapters/delegated-receipts/` | [Receipt verification](DELEGATED-RECEIPT-VERIFICATION.md); pinned JOSE verification and current native scope/source binding, with no provider final use or merchant execution |
-| Durable delegated checkout intent | `delegated-checkout-intents.mts`, `delegated-checkout-intent-records.mts`, `delegated-checkout-intent-privacy.mts` | [Intent and evidence storage](DELEGATED-CHECKOUT-INTENTS.md); original identity, local duplicate refusal, cancellation and privacy/recovery, with no dispatch |
-| Local checkout application access | `delegated-checkout-api.mts`; `apps/commerce-api/server.mts`; `clients/delegated_checkout.py` | [Authenticated diagnostic HTTP](DELEGATED-CHECKOUT-HTTP.md); current customer proof, native owner composition and independent local caller, with no provider final use |
-| Disposable checkout process journey | `packages/development/delegated-checkout-fixture.mts`, `delegated-checkout-process.mts`; `tools/demo-delegated-checkout.mts` | [Process lifecycle demonstration](DELEGATED-CHECKOUT-LIFECYCLE.md); original evidence after actual process loss, independent caller and two isolated local data stores, with synthetic fixtures and no external execution |
-| Original preparation recovery | `delegated-checkout-intents.mts`, `delegated-checkout-api.mts`; `tools/demo-delegated-checkout-recovery.mts` | [Explicit historical lookup](DELEGATED-CHECKOUT-RECOVERY.md) from original preview/context references after a lost preparation response, with complete identity matching and current proof; no replacement identity or restored live provenance |
-| Customer checkout review | `apps/commerce-api/checkout-review.html`, `checkout-review-client.js`, `checkout-review.css` | [Local review surface](DELEGATED-CHECKOUT-REVIEW.md) over unchanged preview/intent/recovery owners; one preparation, explicit original lookup and revision-bound cancellation; nine actual served Chromium cases pass on the authorized development host, with formal acceptance and target-stack qualification separate |
-| Receipt evidence review | Same checkout-review assets and existing native receipt API | [RCG-5D extension](DELEGATED-CHECKOUT-RECEIPT-REVIEW.md); explicit already-issued receipt submission for the original intent, transient input and original status after uncertainty; 33 controller/native and fourteen served-browser cases pass on the recorded candidate, with both independent reviews complete; native verification remains authoritative and no provider final use is introduced |
-| Delegated-use command consumer | `packages/adapters/delegated-commands/command-codec.mts` | [P03 consumer boundary](DELEGATED-COMMAND-CONSUMER.md); strict original command/result binding, immutable historical recovery and receipt-byte correlation; 42 focused cases pass with both independent reviews complete; parsed data remains unauthenticated, with no transport, current context, durable claim or execution authority |
-| Durable original command journal | `delegated-command-claims.mts`, `delegated-command-claim-records.mts`, `delegated-command-claim-privacy.mts` | [P03 original retention](DELEGATED-COMMAND-CLAIMS.md); complete original UUID/digest, immutable unverified first result, terminal challenge non-reuse and typed privacy/restore handling; 112 distinct focused cases covered and both independent reviews complete; no transport or execution |
-| Native checkout START construction | `delegated-checkout-starts.mts`, additive `delegated-command-claims.mts` method | [Current native purchase binding](DELEGATED-CHECKOUT-STARTS.md); actual preview provenance and fixed purchase operation with final currentness and exact-subject held-erasure checks inside the existing journal transaction; 115 focused cases supported by actual executions and unchanged-input equivalence, with both independent reviews complete; original grant/correlation remain unverified, with no transport or execution |
-| Local customer command access | `delegated-checkout-api.mts`, `apps/commerce-api/server.mts`, `clients/delegated_checkout.py` | [C4 command application](DELEGATED-CHECKOUT-COMMANDS.md); separate native START, original status, unsent recovery and revision-bound cancellation routes using fixed local correlation; concrete owner composition and independent original-response binding; 200 fresh focused cases passed with both independent reviews complete and both assigned faults detected; no provider dispatch or execution |
-| Internal delegated-command connection | `packages/adapters/delegated-commands/internal-use-client.mts`, `delegated-checkout-command-sender.mts`, additive C2 admission/currentness methods | [C5 internal profile](DELEGATED-USE-INTERNAL-CLIENT.md); atomic fresh admission, current native checks after authenticated TLS and before HTTP bytes, and explicit original recovery; all 158 focused cases passed with both independent reviews complete and both assigned faults detected; existing originals remain recovery-only, with no public route, finalization or execution |
-| Partners and procurement | `partner-readiness.mts`, `warranty-claims.mts`, `dispute-submissions.mts`, `delivery-trials.mts`, `replenishment-planning.mts`, `purchase-receiving.mts`, `production-orders.mts` | Versioned partner, claims, inventory-planning and procurement contracts |
-| Extension and agency control | `agency-access.mts`, `shared-templates.mts`, `extension-artifacts.mts`, `extension-compatibility.mts`; `packages/security/code-execution-decision.mts` | [Skill architecture](SKILL-ARCHITECTURE.md); generated-code execution remains disabled |
-| Decision assistance and routing | `packages/agent/decisions.mts`, `workers-ai.mts`, `systemone.mts`, `decision-calibration.mts`; commerce `decision-resources.mts`, `decision-shadow.mts`, `decision-routing.mts` | [Decision contracts](DECISION-MODELS.md), [shadow observations](DECISION-SHADOW.md), [routing](DECISION-ROUTING.md) |
-| Image evidence and suppression | `image-assistance.mts`, `image-resources.mts`, `image-privacy.mts`, `image-suppression.mts`; `packages/agent/image-reader.mts` | [Image assistance](IMAGE-ASSISTANCE.md), [image suppression](IMAGE-SUPPRESSION.md) |
-| Shopper continuity | `shopper-memory.mts`, `journey-readiness.mts`, `commerce-journeys.mts`, `journey-followups.mts` and their privacy/record modules | [Memory](SHOPPER-MEMORY.md), [journeys](COMMERCE-JOURNEYS.md), [follow-ups](JOURNEY-FOLLOWUPS.md) |
-| Loyalty | `loyalty-balances.mts`, `loyalty-accrual.mts`, `loyalty-redemptions.mts`, `loyalty-incentives.mts`, `loyalty-lifecycle.mts` | [Redemption](LOYALTY-REDEMPTION.md), [incentives and lifecycle](LOYALTY-INCENTIVES-LIFECYCLE.md), [remaining scope](M19-LOCAL-ASSESSMENT.md) |
-| Drop-off returns | `dropoff-choices.mts`, `dropoff-credentials.mts`, `dropoff-handoffs.mts` and their privacy/record modules; existing `InternationalHandoffs` custody owner | [Eligibility](DROPOFF-ELIGIBILITY.md), [credentials](DROPOFF-CREDENTIALS.md), [item handoffs](DROPOFF-HANDOFFS.md) |
-
-Unless a different package is named, module filenames in this table are under
-`packages/commerce/`. Privacy, recovery and portability cross these domains through
-`privacy-lifecycle.mts`, `privacy-coverage.mts`, `safe-recovery.mts` and
-`merchant-portability.mts`; see [merchant portability](MERCHANT-PORTABILITY.md).
-
-## Boundaries that compose the platform
-
-**Business effects have native owners.** A supported action starts with verified
-intent and current facts, passes policy evaluation and preview, obtains the
-required approval, then rechecks current authority before execution. Tenant,
-store, resource, customer proof, case ownership and configuration bindings remain
-in force through asynchronous work. New journey, loyalty or media projections
-reuse those checks rather than granting callers additional actions.
-
-**Each stage keeps its own evidence.** Return authorization, drop-off acceptance,
-warehouse receipt, inspection, stock movement, financial settlement and replacement
-fulfillment are distinct. A created replacement does not prove delivery; a
-confirmed cart does not prove payment; a provider-accepted message does not prove
-customer delivery. Handoff corrections retain original unit and event identities
-across credential replacement. No elapsed time, model answer or summary projection
-can advance an unobserved stage.
-
-**An unknown outcome retains its identity.** Durable work, approvals, receipts and
-applicable reservations bind the original operation. Timeouts, restarts, handovers,
-expired local reservations or new request keys cannot authorize a duplicate
-uncertain effect. Reconciliation queries the original source identity. Execution
-stops, current ownership generations and revocation fence stale work and late
-results; manual handling remains available within its ordinary authority.
-
-**Personal data follows its lifecycle across projections.** Memory, image records,
-journey follow-ups, loyalty and handoff records participate in scoped export,
-correction, retention, erasure and holds. Restore/import applies current suppression
-and invalidates copied authority before any continuation. Individual-image
-suppression is implemented, including replay of older backups with a separately
-retained current checkpoint. Logical suppression does not destroy old archives,
-provider copies or caller-held data. Held evidence keeps its retention duties and
-does not retain permission to process or send it.
-
-**Model observations stay separate from action authority.** Typed decision results
-validate finite answers against published questions. The server owns authorized
-evidence preparation, vault access, budgets, provenance, receipt identity and
-current-state rechecks. M13 supplies shadow observations; M14 adds calibrated-route
-intake and bounded diagnostic activation, canaries and rollback. Their local
-fixtures do not establish measured model quality or live backend portability.
-Image assistance is an opt-in, exact-version PNG usability path with advisory
-results and explicit cannot-assess handling; audio/video remain disabled. Its
-reader is fixture-only, and its qualification API reports pending actual inference.
-
-## Remaining implementation and qualification
-
-Completed local implementations are the foundation for the following work. The
-[active plan](../planning/README.md) identifies remaining scopes and exact outstanding criteria.
-
-| Work remaining | Architectural constraint |
-| --- | --- |
-| Sender-bound remote access and managed execution (M15/M16) | Later reported checkpoints are absent from recovered Git history. Recover/reconcile source or implement under a new assignment. Existing loopback grants do not supply issuer validation, sender proof, shared replay protection or operating-system isolation. |
-| Complete loyalty reconciliation | Add attributable provider award/reversal observations tied to original orders/units, duplicate/unknown handling and remaining-balance reconciliation. Current lifecycle reports retain missing-evidence exceptions and null valuation. Multi-unit/store-credit scope, bounded source retrieval and administrative resolution of retained holds without a source binding also remain open. |
-| Consolidation and shopper drop-off (M20-G04/G05) | Extend the existing custody owner with original-unit batch/movement/receiving references; preserve missing/disputed evidence. Add accurate instructions, accessibility and outage behavior, then qualify the actual method and its financial trigger. |
-| Warehouse routes/supplies and individualized campaigns (M21/M22) | Build on existing inventory, picking/packing, procurement, campaign approval, consent and dispatch owners. Those later workflows are not implemented by the current foundations. |
-| Browser inference (M23–M25) | The model loader, browser observation boundary, compact backend and image path are unimplemented here. Keep client-reported output distinct from trusted server inference; reuse question and privacy contracts without exporting vault capabilities or silently enabling hosted fallback. Detailed target design stays in the [browser worker handoff](BROWSER-WORKER-HANDOFF.md). |
-| Target application and real integrations | Implement and qualify the React/PostgreSQL deployment and missing real write/source adapters. Qualify configured platform reads, messaging, model backends, physical providers and supported installation/recovery combinations. |
-
-Qualification remains a distinct body of work. [M13](M13-QUALIFICATION.md) and
-[M14](M14-QUALIFICATION.md) retain actual model/cohort and backend-comparison
-obligations. Image assistance needs an authorized actual processing path, a frozen
-independently labeled cohort and privacy/host evidence. [M18](M18-QUALIFICATION.md)
-still needs the independent remote caller and complete merchant/channel journeys.
-[M19](M19-LOCAL-ASSESSMENT.md) and the drop-off guides retain provider, physical and
-formal assessment gaps. Required pilot, inherited milestone, target-host and
-release evidence cannot be supplied by fixture tests or source review.
-
-Keep executable tests, independent oracles, versioned contracts and accepted
-behavior intact when retiring completed planning. Development and release gates
-remain governed by [development](DEVELOPMENT.md) and [governance](GOVERNANCE.md).
-The consolidated [qualification guide](QUALIFICATION.md) keeps unresolved
-evidence visible without retaining completed milestone instructions.
+The custom SQLite kernel, its migrations, old API/worker/browser applications,
+clients, examples and associated harness are removed under ADR-0093. Historical
+feature documents, planning and work records remain specifications/reference.
+They do not establish that every old scenario is available in Medusa. Develop
+missing functionality in the active application instead of keeping two engines.

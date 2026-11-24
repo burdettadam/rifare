@@ -2,19 +2,9 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Rifare: test changed files (fast default)",
-      "type": "process",
-      "command": "python3",
-      "args": [
-        "tools/dev_tests.py"
-      ],
-      "windows": {
-        "command": "py",
-        "args": [
-          "-3",
-          "tools/dev_tests.py"
-        ]
-      },
+      "label": "Rifare: check",
+      "type": "shell",
+      "command": "npm run check",
       "options": {
         "cwd": "${workspaceFolder}"
       },
@@ -25,152 +15,21 @@
       "problemMatcher": []
     },
     {
-      "label": "Rifare: test core smoke (54 cases)",
-      "type": "process",
-      "command": "python3",
-      "args": [
-        "tools/dev_tests.py",
-        "--profile",
-        "smoke"
-      ],
-      "windows": {
-        "command": "py",
-        "args": [
-          "-3",
-          "tools/dev_tests.py",
-          "--profile",
-          "smoke"
-        ]
-      },
+      "label": "Rifare: develop",
+      "type": "shell",
+      "command": "npm run dev",
       "options": {
         "cwd": "${workspaceFolder}"
       },
-      "group": {
-        "kind": "test",
-        "isDefault": false
-      },
       "problemMatcher": []
     },
     {
-      "label": "Rifare: plan development tests",
-      "type": "process",
-      "command": "python3",
-      "args": [
-        "tools/dev_tests.py",
-        "--plan"
-      ],
-      "windows": {
-        "command": "py",
-        "args": [
-          "-3",
-          "tools/dev_tests.py",
-          "--plan"
-        ]
-      },
+      "label": "Rifare: build",
+      "type": "shell",
+      "command": "npm run build",
       "options": {
         "cwd": "${workspaceFolder}"
       },
-      "group": {
-        "kind": "test",
-        "isDefault": false
-      },
-      "problemMatcher": []
-    },
-    {
-      "label": "Rifare: full regression (explicit)",
-      "type": "process",
-      "command": "python3",
-      "args": [
-        "tools/verify.py",
-        "--runtime",
-        "--harness"
-      ],
-      "windows": {
-        "command": "py",
-        "args": [
-          "-3",
-          "tools/verify.py",
-          "--runtime",
-          "--harness"
-        ]
-      },
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "group": {
-        "kind": "test",
-        "isDefault": false
-      },
-      "problemMatcher": []
-    },
-    {
-      "label": "Rifare: verify starter",
-      "type": "process",
-      "command": "python3",
-      "args": [
-        "tools/verify.py"
-      ],
-      "windows": {
-        "command": "py",
-        "args": [
-          "-3",
-          "tools/verify.py"
-        ]
-      },
-      "group": {
-        "kind": "test",
-        "isDefault": false
-      },
-      "problemMatcher": []
-    },
-    {
-      "label": "Rifare: render goals",
-      "type": "process",
-      "command": "python3",
-      "args": [
-        "tools/render_plan.py",
-        "--root",
-        "."
-      ],
-      "windows": {
-        "command": "py",
-        "args": [
-          "-3",
-          "tools/render_plan.py",
-          "--root",
-          "."
-        ]
-      },
-      "problemMatcher": []
-    },
-    {
-      "label": "Rifare: start explicit smoke profile",
-      "type": "process",
-      "command": "node",
-      "args": [
-        "--experimental-strip-types",
-        "tools/dev-smoke.mts"
-      ],
-      "problemMatcher": []
-    },
-    {
-      "label": "Rifare: stop this smoke instance",
-      "type": "process",
-      "command": "node",
-      "args": [
-        "--experimental-strip-types",
-        "tools/dev-stop.mts"
-      ],
-      "problemMatcher": []
-    },
-    {
-      "label": "Rifare: verify including runtime smoke",
-      "type": "process",
-      "command": "python3",
-      "args": [
-        "tools/verify.py",
-        "--runtime"
-      ],
       "problemMatcher": []
     }
   ]

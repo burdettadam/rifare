@@ -8,7 +8,7 @@ import { tmpdir } from 'node:os';
 import { delimiter, join } from 'node:path';
 import { createSecureContext } from 'node:tls';
 import type { SecureContext } from 'node:tls';
-import { claimCorrelation, claimOracle } from './delegated-command-claim-helpers.mts';
+import { claimCorrelation, claimOracle } from './command-fixtures.mts';
 
 export const WORKLOAD_URI = 'spiffe://rifare.test/internal-use';
 type Identity = { certificate_pem: string; private_key_pem: string; certificate_sha256: string };

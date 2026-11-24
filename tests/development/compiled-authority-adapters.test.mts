@@ -1,12 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { cpSync, mkdtempSync, realpathSync, rmSync } from 'node:fs';
+import { cpSync, mkdtempSync, readFileSync, readdirSync, realpathSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { basename, dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { createRequire } from 'node:module';
-import { claimOracle } from './delegated-command-claim-helpers.mts';
+import { claimOracle } from './command-fixtures.mts';
 import { delegatedUsePeer } from './delegated-use-client-helpers.mts';
 
 test('compiled authority adapters relocate and perform C1 and public mTLS without repository imports', async () => {
@@ -15,6 +15,13 @@ test('compiled authority adapters relocate and perform C1 and public mTLS withou
     cwd: application, encoding: 'utf8', timeout: 30000,
   });
   assert.equal(build.status, 0, build.stderr);
+  const graph = join(application, '.medusa/server/rifare/shared');
+  const modules = readdirSync(graph, { recursive: true }).filter(name => String(name).endsWith('.mjs'));
+  assert.equal(modules.length, 9, 'Only the current shared authority graph is shipped');
+  for (const name of modules) {
+    const source = readFileSync(join(graph, String(name)), 'utf8');
+    assert.doesNotMatch(source, /node:sqlite|CommerceKernel|kernel\.mjs/);
+  }
   const parent = realpathSync(tmpdir());
   const directory = mkdtempSync(join(parent, 'rifare-compiled-authority-'));
   let peer: Awaited<ReturnType<typeof delegatedUsePeer>> | undefined;

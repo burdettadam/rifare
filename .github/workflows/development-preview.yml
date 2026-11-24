@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   preview:
-    name: Synthetic demos and repository checks
+    name: Medusa development checks
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -31,20 +31,14 @@ jobs:
           node-version: '24'
           package-manager-cache: false
 
-      - name: Verify the dependency-free quickstart install
-        run: npm ci --offline --ignore-scripts
+      - name: Install pinned application and receipt dependencies
+        run: npm run install:dependencies
 
-      - name: Check the advertised synthetic demonstrations
-        run: python3 tools/check_publication_preview.py
-
-      - name: Check repository links and remaining-work views
-        run: |
-          python3 tools/check_repository.py --root .
-          python3 tools/validate_plan.py --root .
-          python3 tools/check_generated.py --root .
+      - name: Check current Medusa and shared authority code
+        run: npm run check
 
       - name: Record the verification scope
         run: |
           echo '### Development preview' >> "$GITHUB_STEP_SUMMARY"
-          echo 'Passed the two synthetic demos, local links, and remaining-work views.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Passed TypeScript and the retained Medusa/shared authority development tests.' >> "$GITHUB_STEP_SUMMARY"
           echo 'This check does not establish full regression, live-provider, or production qualification.' >> "$GITHUB_STEP_SUMMARY"
