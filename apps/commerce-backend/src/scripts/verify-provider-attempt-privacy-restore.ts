@@ -19,6 +19,10 @@ export default async function verifyProviderAttemptPrivacyRestore({ container }:
     (minimizedOperationFields as any).execution_payment_attempted_at = null;
     console.log("C12_PROVIDER_ATTEMPT_PRIVACY_FAULT=clear-attempt-on-minimization");
   }
+  if (process.env.RIFARE_C12_ATTEMPT_PRIVACY_FAULT === "clear-order") {
+    (minimizedOperationFields as any).execution_order_fingerprint = null;
+    console.log("C12_PROVIDER_ATTEMPT_PRIVACY_FAULT=clear-order-on-minimization");
+  }
   const journal = container.resolve<OperationJournalService>(operationJournalModule);
   const postgres = container.resolve(ContainerRegistrationKeys.PG_CONNECTION);
   const completed = fixture.completed;
