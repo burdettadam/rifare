@@ -294,6 +294,40 @@ Two independent read-only reviews cleared this bounded slice. Own-dependency com
 execution, populated prior-schema upgrade/replay, the broader restore matrix,
 connected provider authority and full C12 remain open.
 
+## Compiled consumer and populated prior upgrade
+
+Candidate `c879283a7624c84b4ff67454b4f67609afd47c9d` makes the paused
+workflow's recovery subprocess select the compiled `.js` entry point only when the
+executing parent is itself compiled JavaScript. Source execution continues to select
+the `.ts` entry point. This closes a real portability failure found by running the
+relocated build without `ts-node`; it does not weaken the distinct-process recovery
+boundary.
+
+An isolated runtime installed the exact build's locked production dependencies
+offline, contained no `ts-node`, and passed the compiled durable claim, paused
+full-workflow reversal and healthy-completion suites. A detached checkout of actual
+prior component `c0359132500d1dd6c527819e1142e929283b2593` then ran its 27-group
+native payment-outcome verifier and populated 59 of 152 inspected native tables.
+Canonical table counts and row digests were byte-identical before and after prior
+replay, exact compiled C12 upgrade and exact compiled C12 replay. Only the ten new
+nullable execution-fence columns were excluded from the cross-schema digest.
+
+A corrected fresh resource census covers every `rifare_c12_%` database without a
+state filter and found zero sessions, including idle sessions. The exact
+`^rifare_exec_[0-9a-f]{32}$` role census retained a deterministic set digest for 536
+test roles and found zero with `LOGIN`. Two independent read-only reviews approved
+the bounded compiled and populated-upgrade evidence. The fixed prior checkout was
+then audited with no lifecycle blocker and removed normally without force; Rifare now
+has one primary checkout and zero linked checkouts, while the prior commit remains
+reachable from `origin/development` and the published feature branch. Failed setup
+and evidence-bookkeeping attempts remain retained and are not presented as passing
+qualification.
+
+This clears the own-dependency compiled-execution and populated prior-schema
+upgrade/replay gates for this candidate. The broader restore/fault matrix, connected
+provider enrollment and authority, managed-machine caller qualification, production
+acceptance and full C12 qualification remain open.
+
 ## Initial mechanism disposition
 
 The a4c7a7e native setup disproved the service-subclass/discoveryPath hypothesis.
