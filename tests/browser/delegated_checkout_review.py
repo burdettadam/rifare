@@ -52,8 +52,13 @@ def safe_failure(error, step):
         if traceback.tb_frame.f_code.co_filename == __file__:
             worker_line = traceback.tb_lineno
         traceback = traceback.tb_next
-    return {'stage': step, 'error': error_name if error_name in allowed else 'Exception',
-            'worker_line': worker_line, 'browser_error': browser_error}
+    failure = {'stage': step, 'error': error_name if error_name in allowed else 'Exception',
+               'worker_line': worker_line, 'browser_error': browser_error}
+    if isinstance(error, AssertionError) and len(error.args) == 1:
+        status = error.args[0]
+        if type(status) is int and 100 <= status <= 599:
+            failure['http_status'] = status
+    return failure
 
 
 def listener(step, callback):
@@ -127,7 +132,7 @@ try:
                             assert actual.status == 409
                             route.fulfill(response=actual)
                         else:
-                            assert actual.status == 200
+                            assert actual.status == 200, actual.status
                             native = actual.json()
                             if scenario in {'lost_prepare', 'receipt_lost', 'receipt_late_clear'}:
                                 committed_id = native['result']['intent_id']
