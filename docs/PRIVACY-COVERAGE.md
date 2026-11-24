@@ -21,6 +21,16 @@ an array of independently inventoried surface IDs. Matching that array is only
 a declaration comparison and is explicitly not authenticated deployment evidence.
 An unknown, omitted or duplicate surface fails the comparison.
 
+The source observer covers first-party executable/HTML files under `apps` and
+`packages`. It excludes only real directories named `node_modules`, `.medusa` or
+`.cache`; links and junctions are rejected before that exclusion. Lookalike
+names and ordinary added code remain visible. Bracketed route identifiers such
+as `[id]` are literal path segments, never glob expressions. The original
+entry, file-count and byte limits still apply. Installed dependencies, generated
+outputs and dynamically loaded stores require separate input and privacy audits;
+this source boundary supplies no deployment coverage. New Medusa source families
+remain subject to review before the retained source manifest may be renewed.
+
 For a running kernel, a server-local caller with the existing `privacy.manage`
 authority can call:
 

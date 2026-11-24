@@ -1,23 +1,21 @@
-import { readFileSync, readdirSync, lstatSync } from 'node:fs';
-import { join, relative, extname } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { readFileSync } from 'node:fs';
 import type { CommerceKernel, Scope, Row } from './kernel.mts';
-import { exact, digest } from './kernel.mts';
+import { exact } from './kernel.mts';
 import { contentDigest } from './configuration-values.mts';
 import { storageInventoryCurrent } from './privacy-lifecycle.mts';
+import { PRIVACY_SOURCE_EXTENSIONS, privacyRuntimeSourcePath as safePath, observePrivacyRuntimeSources } from './privacy-runtime-sources.mts';
+export { observePrivacyRuntimeSources } from './privacy-runtime-sources.mts';
 
 type SourcePin={path:string;sha256:string};
 type Surface={id:string;control:'local_sqlite'|'operator'|'external'|'synthetic_only';tables:string[];implementation:string[];export:string;erasure:string;retention:string;observation_required:string};
 type SurfaceContract={version:1;schema_digest:string;runtime_roots:string[];runtime_extensions:string[];runtime_sources:SourcePin[];surfaces:Surface[]};
-const ROOT=fileURLToPath(new URL('../../',import.meta.url));
-const EXTENSIONS=['.cjs','.html','.js','.jsx','.mjs','.mts','.py','.ts','.tsx'];
+const EXTENSIONS=[...PRIVACY_SOURCE_EXTENSIONS];
 const SURFACES=[
   'business_resources','support_conversations','attachment_media','retrieval_index','agent_task_state',
   'analytics_readmodels','integration_replicas','security_and_configuration','operation_audit','privacy_and_restore_controls',
   'provider_copies','process_and_browser_memory','caller_export_artifacts','recovery_files_and_database_pages','synthetic_fixture_storage',
 ];
 const hash=(v:unknown)=>typeof v==='string'&&/^[a-f0-9]{64}$/.test(v);
-const safePath=(v:unknown)=>typeof v==='string'&&/^(apps|packages)\/[A-Za-z0-9_./-]+$/.test(v)&&!v.split('/').some(x=>x==='.'||x==='..'||!x);
 const same=(a:string[],b:string[])=>a.length===b.length&&[...a].sort().every((x,i)=>x===[...b].sort()[i]);
 
 /** Proposed review inventory, never a deployment attestation. Source/schema
@@ -40,28 +38,6 @@ export function privacySurfaceContract():SurfaceContract{
     if(c.surfaces.some(s=>s.implementation.some(p=>!paths.has(p))))throw new Error();
   }catch{throw new Error('PRIVACY_SURFACE_CONTRACT_INVALID');}
   return c;
-}
-
-/** Read actual shipped executable/HTML source membership and bytes. This is a
- * review trigger for newly introduced stores, not discovery of live heap objects,
- * provider replicas, runtime-loaded plugins or caller-created export files. */
-export function observePrivacyRuntimeSources():SourcePin[]{
-  const sources:SourcePin[]=[];let totalBytes=0,visited=0;
-  function walk(directory:string){
-    const stat=lstatSync(directory);if(!stat.isDirectory()||stat.isSymbolicLink())throw new Error('PRIVACY_RUNTIME_SOURCE_UNSAFE');
-    for(const name of readdirSync(directory).sort()){
-      if(++visited>10000)throw new Error('PRIVACY_RUNTIME_SOURCE_LIMIT');
-      const path=join(directory,name),s=lstatSync(path);
-      if(s.isSymbolicLink())throw new Error('PRIVACY_RUNTIME_SOURCE_UNSAFE');
-      if(s.isDirectory()){walk(path);continue;}
-      if(!EXTENSIONS.includes(extname(name)))continue;
-      const rel=relative(ROOT,path).split('\\').join('/');
-      if(!s.isFile()||!safePath(rel)||s.size>2*1024*1024||sources.length>=2000||(totalBytes+=s.size)>32*1024*1024)throw new Error('PRIVACY_RUNTIME_SOURCE_LIMIT');
-      sources.push({path:rel,sha256:digest(readFileSync(path))});
-    }
-  }
-  for(const directory of ['apps','packages'])walk(join(ROOT,directory));
-  return sources.sort((a,b)=>a.path.localeCompare(b.path));
 }
 
 /** Pure comparison for source-review tooling. An arbitrary supplied list is not

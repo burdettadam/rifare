@@ -550,6 +550,16 @@ actual-file, supplied-hash and exact-occurrence checks. Existing negative covera
 also rejects forged pins at this boundary. All 11 historical catalog cases pass
 exploratorily; the earlier catalog checksum failure remains uncredited.
 
+The next privacy diagnostic correction extracts the actual source observer into
+a dependency-free module with a module-derived root. It rejects links before
+excluding only the three named installed/generated cache directories, accepts
+literal bracketed route identifiers and preserves ordinary source discovery,
+exact byte hashes, ordering and all resource limits. Isolated filesystem cases
+exercise each boundary without copying dependency trees. The original observer
+API remains re-exported. No privacy-manifest pins or storage surfaces are renewed:
+the pre-change tracked audit finds 104 added and five changed runtime sources,
+which still require family-specific review before inventory acceptance.
+
 Both roles cleared `f5742f7` for the bounded pinned local post-lock expiry case.
 The next source adds attempt-specific privacy behavior without invoking a provider:
 privacy export must contain the durable attempt time; erasure under hold must keep
