@@ -219,6 +219,28 @@ Two independent read-only reviews cleared this local slice. It does not establis
 connected provider authority, recovery of an effect whose acknowledgement was lost,
 or full C12 qualification; those gates remain pending.
 
+## Lost native-effect acknowledgement recovery
+
+Candidate `4769776c80eadae1a353b85cd515906d1b89873d` extends historical
+observation to the fenced execution payment commitment without changing the legacy
+System-provider commitment. Fenced recovery additionally requires the order derived
+from native cart/payment links to equal the journal's immutable execution order ID
+and SHA-256 fingerprint.
+
+Exact-source `completion32` completes one restricted order/payment, deliberately
+loses the first recovery reply and recovers the same result in a second process. A
+compatible foreign order then replaces both native link targets; recovery refuses
+until the exact original links are restored. Exact-source
+`completion33_lostack` completes the native effect but exits the worker with code 79
+before any completion observation is emitted. A fresh controller process recovers
+the durable original payment and immutable order without invoking a native payment
+method, provider method, new execution role or commerce-row mutation. Retained C11
+`effect_recovery2` passes the full legacy payment-outcome regression.
+
+Two independent read-only reviews cleared this bounded local recovery slice. It
+does not verify remote settlement or connected delegated-provider authority, and it
+does not by itself complete the broader C12 fault/restore matrix.
+
 ## Initial mechanism disposition
 
 The a4c7a7e native setup disproved the service-subclass/discoveryPath hypothesis.
