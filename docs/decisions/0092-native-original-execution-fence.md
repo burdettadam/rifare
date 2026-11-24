@@ -120,6 +120,26 @@ deployments. No ElevenID/Supabase source, settings or service will be changed he
 Hosted Actions remain skipped under the cost instruction; local checks, explicit
 independent review and normal authorized feature publication/integration apply.
 
+## Restricted completion baseline
+
+Candidate `9755bfbeb78312e01cd18d337ef12171c7f43892` invokes the pinned
+`completeCartWorkflow` from a genuine separately initialized native module worker
+using its per-original nonprivileged login. Fresh local PostgreSQL qualification
+`completion5` reaches `LocalWorkflow.run` but is refused before a commerce write or
+provider call. `DistributedTransaction.saveCheckpoint` raises
+`SkipExecutionError: Transaction already started` for its newly generated `auto-*`
+transaction ID after the workflow engine cannot persist its initial checkpoint.
+The worker intentionally has no access to `workflow_execution`; the retained native
+worker controls prove that infrastructure state is not generally readable or
+writable by an original-execution principal.
+
+The before/after cart, order, link, reservation and payment-family digest is equal,
+and the System authorization count is zero. This reproduces the first concrete
+healthy-completion blocker; it does not qualify healthy completion or full C12.
+Broad `workflow_execution` grants are not an accepted correction. Any continuation
+must preserve infrastructure isolation while proving that a workflow checkpoint is
+narrowly owned by, and cannot escape, the claimed original and current generation.
+
 ## Initial mechanism disposition
 
 The a4c7a7e native setup disproved the service-subclass/discoveryPath hypothesis.

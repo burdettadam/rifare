@@ -7,6 +7,7 @@ import { createRequire } from "node:module";
 import type { ExecArgs } from "@medusajs/framework/types";
 import { ContainerRegistrationKeys, Modules } from "@medusajs/framework/utils";
 import { discoveryPath } from "@medusajs/medusa/payment";
+import { completeCartWorkflow } from "@medusajs/medusa/core-flows";
 import { nativePaymentFixture } from "./native-payment-fixture";
 import { requireNativeExecutionProfile, retireOriginalExecutionWorker } from "../modules/operation-journal/execution-claim";
 
@@ -47,6 +48,27 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
       };
     }
     try {
+      if (task.healthy_completion) {
+        let completed: any;
+        try {
+          completed = await completeCartWorkflow(container).run({ input: { id: task.cart_id }, throwOnError: false });
+        } catch (error: any) {
+          console.log("C12_NATIVE_HEALTHY_COMPLETION_OBSERVATION=" + JSON.stringify({
+            result_id: null, errors: [{ message: error?.message ?? String(error), code: error?.code ?? null,
+              stack: error?.stack ?? null }],
+            system_calls: calls,
+          }));
+          throw error;
+        }
+        console.log("C12_NATIVE_HEALTHY_COMPLETION_OBSERVATION=" + JSON.stringify({
+          result_id: completed.result?.id ?? null, errors: completed.errors.map((entry: any) => ({
+            message: entry.error?.message ?? String(entry.error), code: entry.error?.code ?? null,
+            stack: entry.error?.stack ?? null,
+          })), system_calls: calls,
+        }));
+        if (completed.errors.length) throw completed.errors[0].error;
+        return;
+      }
       const current = { metadata: { c12_generation_probe: "current", asserted_generation: 999, asserted_worker: "postgres" } };
       if (task.ordering) {
         // Observe a real native Cart method inside its actual module transaction,

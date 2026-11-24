@@ -522,3 +522,10 @@ complete and exact; legacy or partial records cannot downgrade them. Import crea
 no worker, generation, lease, native order binding or provider permission. A fresh
 destination rehearsal, repeated import, collision cases and an attempt-field
 omission fault remain required before this transfer slice can be credited.
+
+Both independent roles cleared `9c7f874` for bounded execution-refusal transfer.
+The next source runs the actual upstream `completeCartWorkflow` under the genuine
+restricted worker to locate the first missing order-binding or native-read boundary.
+This is a failure baseline: it must retain zero System authorization, record any
+native order/payment residue after compensation and make no healthy-completion or
+full-C12 claim. The corrected mechanism must follow the observed upstream ordering.
