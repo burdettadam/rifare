@@ -7,6 +7,11 @@ import { setTimeout as delay } from 'node:timers/promises';
 import { configuration, childEnvironment } from '../../packages/development/config.mts';
 
 export const ROOT = fileURLToPath(new URL('../../', import.meta.url)).replace(/\/$/, '');
+export function fixtureSourceFilter(source: string) {
+  const entry = basename(source);
+  return !['node_modules', '.medusa', '.cache'].includes(entry)
+    && !(entry === '.env' || (entry.startsWith('.env.') && entry !== '.env.example'));
+}
 export function command(cwd: string, command: string, args: string[], env = childEnvironment()) {
   return spawnSync(command, args, { cwd, env, encoding: 'utf8', timeout: 15000 });
 }
@@ -18,11 +23,7 @@ export function fixture() {
   const temporary = mkdtempSync(join(tmpdir(), 'rifare-g05-'));
   const root = join(temporary, 'first'); mkdirSync(root);
   for (const name of ['apps', 'packages', 'migrations', 'package.json', 'package-lock.json', '.npmrc']) {
-    cpSync(join(ROOT, name), join(root, name), { recursive: true, filter: (source) => {
-      const entry = basename(source);
-      return !['node_modules', '.medusa', '.cache'].includes(entry)
-        && !(entry === '.env' || (entry.startsWith('.env.') && entry !== '.env.example'));
-    } });
+    cpSync(join(ROOT, name), join(root, name), { recursive: true, filter: fixtureSourceFilter });
   }
   mkdirSync(join(root, 'tools'));
   for (const name of ['dev-smoke.mts', 'dev-stop.mts', 'dev-migrate.mts', 'dev-target.mts']) cpSync(join(ROOT, 'tools', name), join(root, 'tools', name));

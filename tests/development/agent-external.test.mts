@@ -1,7 +1,8 @@
 import test from 'node:test';import assert from 'node:assert/strict';
 import { promisify } from 'node:util';import { execFile } from 'node:child_process';
-import { cpSync,readFileSync,writeFileSync,mkdirSync,rmSync } from 'node:fs';import { join } from 'node:path';import { fileURLToPath } from 'node:url';
+import { cpSync,readFileSync,writeFileSync,mkdirSync,rmSync,existsSync } from 'node:fs';import { join } from 'node:path';import { fileURLToPath } from 'node:url';
 import { useAgent } from './agent-helpers.mts';
+import { fixtureSourceFilter } from './helpers.mts';
 const execute=promisify(execFile),source=fileURLToPath(new URL('../../clients/status_agent.py',import.meta.url));
 async function run(f:any,transport='rest',extra:any={}) {
   const client=join(f.directory,'independent','status_agent.py');mkdirSync(join(f.directory,'independent'),{recursive:true});cpSync(source,client);
@@ -30,7 +31,8 @@ test('M01-G15-NO-PRIVATE-RUNTIME-PERSISTENCE',()=>useAgent(async f=>{const befor
  await run(f,'mcp');assert.equal(f.db.prepare('SELECT count(*) AS n FROM commerce_assistance_receipts').get().n,before);assert.equal(f.reads.task(f.a.scope,f.task.id).id,f.task.id);}));
 test('M01-G15-PHYSICALLY-ABSENT-BUILTIN',()=>useAgent(async f=>{
  const root=join(f.directory,'isolated-server');mkdirSync(root);
- for(const dir of ['packages','apps','migrations'])cpSync(fileURLToPath(new URL('../../'+dir,import.meta.url)),join(root,dir),{recursive:true});
+ for(const dir of ['packages','apps','migrations'])cpSync(fileURLToPath(new URL('../../'+dir,import.meta.url)),join(root,dir),{recursive:true,filter:fixtureSourceFilter});
+ for(const cache of ['node_modules','.medusa','.cache'])assert.equal(existsSync(join(root,'apps','commerce-backend',cache)),false);
  for(const file of ['runner.mts','providers.mts','facts.mts'])rmSync(join(root,'packages','agent',file));
  cpSync(source,join(root,'status_agent.py'));
  writeFileSync(join(root,'start.mts'),`import {DatabaseSync} from 'node:sqlite';
