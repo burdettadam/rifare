@@ -168,8 +168,8 @@ export async function openCheckoutFixture(directory: string, instanceId: string,
     db = new DatabaseSync(join(directory, 'commerce.sqlite'));
     source = new DatabaseSync(join(directory, 'source.sqlite'), { readOnly: mode === 'history' });
     if (marker) validateStores(db, source, marker);
-    const clockOrigin = Date.now() - Math.floor(performance.now());
-    const fixtureClock = () => clockOrigin + Math.floor(performance.now());
+    const clockOrigin = Date.now() - performance.now();
+    const fixtureClock = () => Math.floor(clockOrigin + performance.now());
     const kernel = new CommerceKernel(db, fixtureClock), caps = new Capabilities(kernel), simulator = new StoreSimulator(kernel, caps);
     let delivery: ProofDelivery | undefined;
     const customers = new CustomerAccess(kernel, value => { if (mode === 'fresh') delivery = value; });
