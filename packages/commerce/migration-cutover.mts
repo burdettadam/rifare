@@ -43,6 +43,7 @@ const AUTHORITY_TABLES=[
  'commerce_skills','commerce_profiles','commerce_skill_archive','commerce_skill_approvals',
  'commerce_skill_installations','commerce_skill_revocations','commerce_skill_releases','commerce_skill_activation','commerce_skill_activation_log',
  'commerce_policy_versions','commerce_policy_pins','commerce_execution_settings','commerce_action_readiness','commerce_action_approvals','commerce_case_effects',
+ 'commerce_shipping_label_approvals','commerce_inventory_transfer_approvals',
  'commerce_return_settings','commerce_return_overrides','commerce_return_review_events','commerce_return_policy_packs','commerce_return_evidence','commerce_gift_cases',
  'commerce_resolution_settings','commerce_resolution_plans','commerce_resolution_allocations','commerce_resolution_units','commerce_resolution_quotes',
  'commerce_fulfillment_settings','commerce_return_parcels','commerce_fulfillment_quotes','commerce_return_labels','commerce_return_shipments','commerce_replacement_orders',
@@ -62,7 +63,7 @@ const AUTHORITY_TABLES=[
 const IMPORT_LOCAL_AUTHORITY=new Set(['commerce_stores','commerce_members','commerce_permissions','commerce_sessions','commerce_worker_grants','commerce_gift_sessions','commerce_customer_proof_bindings','commerce_secrets']);
 const IMPORT_PAUSE:Record<string,Record<string,string|number>>={
  commerce_credential_slots:{active:0},commerce_webhook_routes:{enabled:0},commerce_execution_settings:{enabled:0},
- commerce_action_readiness:{revoked:1},commerce_action_approvals:{revoked:1},commerce_skill_approvals:{revoked:1},commerce_return_overrides:{revoked:1},
+ commerce_action_readiness:{revoked:1},commerce_action_approvals:{revoked:1},commerce_shipping_label_approvals:{revoked:1},commerce_inventory_transfer_approvals:{revoked:1},commerce_skill_approvals:{revoked:1},commerce_return_overrides:{revoked:1},
  commerce_prevention_confirmations:{revoked:1,session_hash:'revoked'},commerce_case_work:{state:'revoked',expires_at:0},commerce_support_documents:{state:'revoked'},
 };
 const HASH=/^[a-f0-9]{64}$/;

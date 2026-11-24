@@ -20,6 +20,8 @@ import {canonical,contentDigest} from '../../packages/commerce/configuration-val
 import {withMigrationWriter,withMigrationReconciliation} from '../../packages/commerce/migration-fence.mts';
 import {RUNBOOKS,validateRunbook} from '../../packages/commerce/operator-runbooks.mts';
 import {usingMigrationFixture,runOperatorDrill,prepareSingleMerchantFixture} from '../../tools/operator-drill-fixtures.mts';
+import {usingShipping} from './shipping-helpers.mts';
+import {usingLocationInventory} from './location-inventory-helpers.mts';
 
 test('CASE-M07-G08-01',()=>usingMigrationFixture(async f=>{
  const before=f.coordinator.compare(f.old.kernel,f.old.scope,f.next.kernel,f.next.scope);
@@ -212,6 +214,40 @@ test('M07-G08-MERCHANT-IMPORT-STAYS-QUARANTINED-AFTER-CUTOVER',()=>usingExecutio
   try{db.prepare("UPDATE commerce_support_documents SET digest=? WHERE kind='merchant_import'").run('0'.repeat(64));assert.throws(()=>coordinator.compare(f.kernel,f.owner.scope,k,scope),/MIGRATION_IMPORT_QUARANTINE_INVALID/);}
   finally{db.prepare("UPDATE commerce_support_documents SET digest=? WHERE kind='merchant_import'").run(receipt.digest);}
  }finally{db.close();}
+}));
+
+async function importedApprovalHistory(f:any,table:string) {
+ prepareSingleMerchantFixture(f);
+ const original=f.db.prepare('SELECT * FROM '+table+' ORDER BY id').all();
+ assert.ok(original.length>0);assert.equal(original.every((row:any)=>row.revoked===0),true);
+ const snapshot=exportMerchant(f.kernel,f.owner,{snapshot_id:'approval_import'});
+ const db=new DatabaseSync(join(f.directory,'approval-target.sqlite'));
+ try{
+  const next=new CommerceKernel(db,f.now);next.provisionStore(f.a.tenant,f.a.store);next.provisionMember(f.a.tenant,f.a.store,'new_owner','owner');
+  const scope=next.authenticate(next.issueSession(f.a.tenant,f.a.store,'new_owner'));
+  const suppression=exportMerchantSuppression(f.kernel,f.owner);
+  importMerchant(next,scope,snapshot,snapshot.digest,{suppression,suppression_sha256:merchantSnapshotDigest(suppression)});
+  assert.deepEqual(db.prepare('SELECT * FROM '+table+' ORDER BY id').all().map(row=>({...row})),original.map((row:any)=>({...row,revoked:1})));
+  const coordinator=MigrationCutover.create(join(f.directory,'approval-coordinator.sqlite'),{coordinator_id:'approval_cutover',tenant_id:f.a.tenant,store_id:f.a.store});
+  coordinator.bind(f.kernel,f.owner,'old',{initial_owner:true});coordinator.bind(next,scope,'next');
+  const compare=()=>coordinator.compare(f.kernel,f.owner,next,scope);
+  assert.equal(compare().matched,true);assert.equal(compare().live_activation_supported,false);
+  try{db.prepare('UPDATE '+table+' SET revoked=0 WHERE id=?').run(original[0].id);assert.throws(compare,/MIGRATION_IMPORT_PAUSE_CHANGED/);}
+  finally{db.prepare('UPDATE '+table+' SET revoked=1 WHERE id=?').run(original[0].id);}
+  const changed={...JSON.parse(String(original[0].body)),expires_at:f.now()+120000};
+  try{
+   db.prepare('UPDATE '+table+' SET body=?,digest=? WHERE id=?').run(canonical(changed),contentDigest(changed),original[0].id);
+   assert.equal(compare().matched,false,'Revocation normalization must not hide changed approval authority');
+  }finally{db.prepare('UPDATE '+table+' SET body=?,digest=? WHERE id=?').run(original[0].body,original[0].digest,original[0].id);}
+  assert.equal(compare().matched,true);assert.equal(db.prepare('SELECT mode FROM commerce_recovery_state').get()!.mode,'quarantine');
+ }finally{db.close();}
+}
+
+test('M07-G08-IMPORTED-SHIPPING-APPROVALS-REMAIN-REVOKED',()=>usingShipping(async f=>{
+ f.approved();await importedApprovalHistory(f,'commerce_shipping_label_approvals');assert.equal(f.source.calls.purchase.length,0);
+}));
+test('M07-G08-IMPORTED-INVENTORY-APPROVALS-REMAIN-REVOKED',()=>usingLocationInventory(async f=>{
+ f.plan();f.approved('reserve',5);await importedApprovalHistory(f,'commerce_inventory_transfer_approvals');assert.equal(f.source.calls.apply,0);
 }));
 
 test('CASE-M07-G09-01',async()=>{

@@ -506,6 +506,24 @@ and requires refusal before the pinned System method. Removing only the post-loc
 clock check must let System run and fail the unchanged expiry oracle; the original
 gate definition is then restored exactly.
 
+## Retained runtime quarantine correction
+
+The retained runtime gate exposed a separate SQLite diagnostic migration failure:
+merchant import already revokes shipping-label and inventory-transfer approvals,
+but cutover's finite import-transformation and authority lists omitted them.
+The bounded correction adds both tables to actual revocation validation and full
+approval-row comparison. Only the named revocation field normalizes; receipt
+transformations, identity, body/digest and other authority fields remain exact.
+
+Two new exploratory regressions create genuine approvals through the existing
+shipping and inventory fixtures, import them, reject destination unrevocation and
+detect a self-consistent changed approval body/digest. Both fail at the original
+quarantine rejection before the correction. The entire 21-case migration file
+passes locally afterward. This repairs diagnostic regression coverage; it does
+not qualify the remaining migration inventory, full runtime, native C12, connected
+provider or production transfer. Raw logs and independent review dispositions stay
+under ignored `evidence/operation-journal/`; root remains the branch writer.
+
 Both roles cleared `f5742f7` for the bounded pinned local post-lock expiry case.
 The next source adds attempt-specific privacy behavior without invoking a provider:
 privacy export must contain the durable attempt time; erasure under hold must keep
