@@ -195,6 +195,30 @@ recounting the returned primary key. This qualifies the bounded healthy path.
 Stale-worker reversal, lost-effect recovery, broader fault/restore qualification and
 full C12 remain pending.
 
+## Stale-worker reversal
+
+Candidate `f54a3ea2909b85e5602daa5d0393114abf06b3db` closes the bounded
+local stale-worker reversal. After canonical retirement commits, a separate
+controller process can recover only the retained original; it receives no worker
+login or seal and does not increase the execution-role count. The already-open
+worker then resumes and is refused on cart, line, address, reservation and payment
+writes. Its whole native snapshot and all five System-provider call counts remain
+unchanged.
+
+Exact-source `recovery_stale3` proves recovery before stale resume. Exact-source
+`recovery_revokefirst2` proves the inverse transaction ordering: the stale writer
+waits on an uncommitted canonical revocation, then recovery is established after
+that revocation commits. Supporting `recovery_writefirst1` and
+`recovery_reconnect1` exercise the write-first ordering and actual backend loss with
+an active reconnect before retirement. The targeted `recovery_stale_fault1` and
+`recovery_reconnect_fault1` campaigns make the unchanged oracle fail when generation
+enforcement is omitted or retired `LOGIN` is restored; cleanup verifies the exact
+function definition and `NOLOGIN` disposition are restored.
+
+Two independent read-only reviews cleared this local slice. It does not establish
+connected provider authority, recovery of an effect whose acknowledgement was lost,
+or full C12 qualification; those gates remain pending.
+
 ## Initial mechanism disposition
 
 The a4c7a7e native setup disproved the service-subclass/discoveryPath hypothesis.
