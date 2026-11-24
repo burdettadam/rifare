@@ -64,6 +64,16 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
     }
     try {
       if (task.healthy_completion) {
+        if (task.restore_stage === "payment-committed") {
+          const owner: any = payments, authorize = owner.authorizePaymentSession_;
+          owner.authorizePaymentSession_ = async function(...args: any[]) {
+            await authorize.apply(this, args);
+            assert.equal(calls.authorizePayment, 1);
+            assert.equal(typeof process.send, "function");
+            process.send!({ phase: "native-prefix-committed", stage: task.restore_stage, system_calls: calls });
+            return new Promise<never>(() => {});
+          };
+        }
         if (["order-only", "order-cart-only", "order-payment-only", "cart-completed-only"].includes(task.restore_stage)) {
           const hold = (): Promise<never> => new Promise(() => {});
           const pause = async (): Promise<never> => {
@@ -105,7 +115,7 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
             };
           }
         }
-        if (task.restore_stage === "pre-payment" || task.restore_stage === "provider-admitted") {
+        if (["pre-payment", "provider-admitted", "provider-returned"].includes(task.restore_stage)) {
           // Test-only interception of the pinned provider boundary, not an
           // upstream workflow hook or a production extension contract.
           const original = FencedSystemPaymentProvider.prototype.authorizePayment;
@@ -116,6 +126,11 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
               return new Promise<never>(() => {});
             };
             if (task.restore_stage === "pre-payment") return pause();
+            if (task.restore_stage === "provider-returned") {
+              await original.call(this, input);
+              assert.equal(calls.authorizePayment, 1);
+              return pause();
+            }
             const db: any = (this as any).postgres;
             const transaction = db.transaction;
             // Knex exposes a read-only transaction property. Replace only this

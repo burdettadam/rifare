@@ -13,7 +13,9 @@ export default async function verifyNativePrefixRestoreSeed({ container }: ExecA
   requireNativeExecutionProfile();
   const stage = process.env.RIFARE_C12_PREFIX_STAGE;
   const early = ["order-only", "order-cart-only", "order-payment-only", "cart-completed-only"].includes(stage ?? "");
-  assert.ok(early || ["pre-payment", "provider-admitted", "unobserved-completion"].includes(stage ?? ""));
+  assert.ok(early || ["pre-payment", "provider-admitted", "provider-returned", "payment-committed", "unobserved-completion"].includes(stage ?? ""));
+  const nativePaymentPresent = stage === "payment-committed" || stage === "unobserved-completion";
+  const systemCalled = nativePaymentPresent || stage === "provider-returned";
   const custody = process.env.RIFARE_C12_PREFIX_CUSTODY;
   assert.ok(custody && isAbsolute(custody) && custody.endsWith("-private.json"));
   assert.ok(/^[A-Za-z0-9_-]{43}$/.test(process.env.RIFARE_JOURNAL_PRIVACY_KEY ?? ""), "Explicit fixture privacy key required");
@@ -25,6 +27,7 @@ export default async function verifyNativePrefixRestoreSeed({ container }: ExecA
   try {
   await ensureNativeGenerationInstallation(f.postgres);
   const original = await f.makePaymentOriginal();
+  const collectionBefore = await f.postgres("payment_collection").where({ id: original.collection.id }).first();
   const claim = await f.journal.claimNativeExecution(original.command.command_id, f.context, f.verifier);
   assert.ok(claim.worker && claim.seal);
   workerRole = claim.worker.role;
@@ -59,7 +62,7 @@ export default async function verifyNativePrefixRestoreSeed({ container }: ExecA
       try {
         assert.equal(message.phase, "native-prefix-committed");
         assert.equal(message.stage, stage);
-        assert.deepEqual(message.system_calls, { initiatePayment: 0, authorizePayment: 0, capturePayment: 0, refundPayment: 0, cancelPayment: 0 });
+        assert.deepEqual(message.system_calls, { initiatePayment: 0, authorizePayment: Number(systemCalled), capturePayment: 0, refundPayment: 0, cancelPayment: 0 });
         observed = true; resolveBoundary();
       } catch (error) { reject(error); }
     });
@@ -96,7 +99,22 @@ export default async function verifyNativePrefixRestoreSeed({ container }: ExecA
     if (early && stage !== "cart-completed-only") assert.equal(cart.completed_at, null);
     else assert.ok(cart.completed_at instanceof Date);
     const payments = await f.postgres("payment").where({ payment_collection_id: original.collection.id, payment_session_id: original.session.id });
-    assert.equal(payments.length, stage === "unobserved-completion" ? 1 : 0);
+    assert.equal(payments.length, Number(nativePaymentPresent));
+    const collectionAfter = await f.postgres("payment_collection").where({ id: original.collection.id }).first();
+    if (!nativePaymentPresent) assert.deepEqual(collectionAfter, collectionBefore);
+    if (stage === "provider-returned") {
+      const session = await f.postgres("payment_session").where({ id: original.session.id }).first();
+      assert.equal(session.authorized_at, null); assert.equal(session.status, "pending");
+    }
+    if (stage === "payment-committed") {
+      assert.deepEqual(collectionAfter, collectionBefore, "Collection synchronization must not precede the selected boundary");
+      const session = await f.postgres("payment_session").where({ id: original.session.id }).first();
+      assert.equal(session.status, "authorized"); assert.ok(session.authorized_at instanceof Date);
+    }
+    if (stage === "unobserved-completion") {
+      assert.equal(collectionAfter.status, "authorized");
+      assert.equal(String(collectionAfter.raw_authorized_amount.value), String(Number(original.command.payable_minor_units) / 10 ** original.command.currency_exponent));
+    }
     if (early || stage === "pre-payment") assert.equal(row.execution_payment_attempted_at, null);
     else assert.ok(row.execution_payment_attempted_at instanceof Date);
     if (payments[0]) {
@@ -110,10 +128,13 @@ export default async function verifyNativePrefixRestoreSeed({ container }: ExecA
         seal: row.execution_seal_fingerprint, handle: row.execution_payment_handle_fingerprint,
         order_id: order.id, order_fingerprint: row.execution_order_fingerprint,
         cart_completed_at: cart.completed_at?.toISOString() ?? null,
+        collection_status: collectionAfter.status,
+        collection_authorized_amount: collectionAfter.raw_authorized_amount,
         attempted_at: row.execution_payment_attempted_at?.toISOString() ?? null, payment_id: payments[0]?.id ?? null },
       privacy: { merchant: f.merchant, customer_id: f.customer.id, actor: f.privacyActor, context: f.context }, trust: f.trust }, null, 2), { flag: "wx", mode: 0o600 });
     console.log("C12_NATIVE_PREFIX_SEED=" + JSON.stringify({ stage, native_order_links: cartLinks.length === 1 && paymentLinks.length === 1,
       cart_links: cartLinks.length, payment_links: paymentLinks.length, cart_completed: cart.completed_at !== null,
+      system_authorizations: Number(systemCalled), collection_synchronized: stage === "unobserved-completion",
       payment_present: payments.length === 1, attempted: row.execution_payment_attempted_at !== null,
       journal_outcome_observed: false, execution_authorized: false }));
   } finally {

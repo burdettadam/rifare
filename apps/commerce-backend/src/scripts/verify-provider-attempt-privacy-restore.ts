@@ -31,7 +31,7 @@ export default async function verifyProviderAttemptPrivacyRestore({ container }:
   const identity = claimed ?? prefix;
   const earlyPrefix = prefix && ["order-only", "order-cart-only", "order-payment-only", "cart-completed-only"].includes(prefix.stage);
   if (claimed) assert.ok(["claim-commit", "activation-commit"].includes(claimed.stage));
-  if (prefix) assert.ok(earlyPrefix || ["pre-payment", "provider-admitted", "unobserved-completion"].includes(prefix.stage));
+  if (prefix) assert.ok(earlyPrefix || ["pre-payment", "provider-admitted", "provider-returned", "payment-committed", "unobserved-completion"].includes(prefix.stage));
   const nativeTables = ["cart", "cart_address", "cart_line_item", "cart_line_item_adjustment", "cart_line_item_tax_line",
     "cart_shipping_method", "cart_shipping_method_adjustment", "cart_shipping_method_tax_line",
     "order", "order_address", "order_item", "order_line_item", "order_line_item_adjustment", "order_line_item_tax_line",
@@ -85,8 +85,13 @@ export default async function verifyProviderAttemptPrivacyRestore({ container }:
       else assert.ok(cart.completed_at instanceof Date);
       if ("cart_completed_at" in prefix) assert.equal(cart.completed_at?.toISOString() ?? null, prefix.cart_completed_at);
       const payments = await postgres("payment").where({ payment_collection_id: before.payment_collection_id });
-      assert.equal(payments.length, prefix.stage === "unobserved-completion" ? 1 : 0);
+      assert.equal(payments.length, ["payment-committed", "unobserved-completion"].includes(prefix.stage) ? 1 : 0);
       if (payments[0]) assert.equal(payments[0].id, prefix.payment_id);
+      if ("collection_status" in prefix) {
+        const collection = await postgres("payment_collection").where({ id: before.payment_collection_id }).first();
+        assert.equal(collection.status, prefix.collection_status);
+        assert.deepEqual(collection.raw_authorized_amount, prefix.collection_authorized_amount);
+      }
       assert.equal(before.native_payment_id, null); assert.equal(before.native_payment_fingerprint, null);
     }
     const verifier = await journal.createAuthorityReceiptVerifier(bytes(fixture.trust));
