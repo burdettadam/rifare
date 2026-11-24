@@ -524,6 +524,14 @@ not qualify the remaining migration inventory, full runtime, native C12, connect
 provider or production transfer. Raw logs and independent review dispositions stay
 under ignored `evidence/operation-journal/`; root remains the branch writer.
 
+Independent authority and regression review also examined `c4d1198` before
+renewing only the two pilot validator control digests. The frozen benchmark,
+support envelope, 676 revision-one scenario hashes, 67 retained seeds and false
+qualification flags stay unchanged; additive planning receives no pilot credit.
+The existing benchmark and envelope suites pass 73 and 50 cases locally. Stored
+pilot artifacts bound to older controls remain fail-closed; this renewal neither
+rewrites those artifacts nor supplies real observations or pilot authorization.
+
 Both roles cleared `f5742f7` for the bounded pinned local post-lock expiry case.
 The next source adds attempt-specific privacy behavior without invoking a provider:
 privacy export must contain the durable attempt time; erasure under hold must keep

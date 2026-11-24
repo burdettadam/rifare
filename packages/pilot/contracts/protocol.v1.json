@@ -18,11 +18,11 @@
     },
     {
       "path": "tools/check_release_benchmark.py",
-      "sha256": "9ec1db572b9f55488a1428626591d63e017e9d88997db0ab17129e29380de7eb"
+      "sha256": "3bda41b8d81efb988db551f9154f20c5ca00f1544d3b730b78ca70b67d280c06"
     },
     {
       "path": "tools/check_support_envelope.py",
-      "sha256": "f1d23672230102347d9fb2c996d82445d79a2b39ba443393181984a2b17f5d11"
+      "sha256": "6a41a9200c21e47636ff1647f539b4fbc9ce7403574276f8825f4dc6e8db817b"
     },
     {
       "path": "tests/fixtures/release-benchmark/expected-benchmark.v1.json",
