@@ -30,7 +30,7 @@ export default async function verifyNativeCompletionBaseline({ container }: Exec
   const custody = process.env.RIFARE_C12_COMPLETION_CUSTODY;
   if (custody) {
     assert.ok(isAbsolute(custody) && custody.endsWith("-private.json"));
-    assert.match(process.env.RIFARE_JOURNAL_PRIVACY_KEY ?? "", /^[A-Za-z0-9_-]{43}$/);
+    assert.ok(/^[A-Za-z0-9_-]{43}$/.test(process.env.RIFARE_JOURNAL_PRIVACY_KEY ?? ""), "Explicit fixture privacy key required");
   }
   await ensureNativeGenerationInstallation(postgres);
   const fixture = await nativePaymentFixture(container, Boolean(custody), true);
