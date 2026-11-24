@@ -1,9 +1,10 @@
 import assert from "node:assert/strict";
 import type { ExecArgs } from "@medusajs/framework/types";
-import { ContainerRegistrationKeys } from "@medusajs/framework/utils";
+import { ContainerRegistrationKeys, Modules } from "@medusajs/framework/utils";
 import { operationJournalModule } from "../modules/operation-journal";
 import type OperationJournalService from "../modules/operation-journal/service";
 import { minimizedOperationFields } from "../modules/operation-journal/privacy";
+import { executionFingerprint } from "../modules/operation-journal/execution-claim";
 
 /** Behavioral privacy and whole-database restore coverage for the durable
  * provider-attempt marker. This never invokes a payment provider. */
@@ -19,11 +20,41 @@ export default async function verifyProviderAttemptPrivacyRestore({ container }:
   }
   const journal = container.resolve<OperationJournalService>(operationJournalModule);
   const postgres = container.resolve(ContainerRegistrationKeys.PG_CONNECTION);
+  const completed = fixture.completed;
+  const nativeTables = ["cart", "cart_address", "cart_line_item", "cart_line_item_adjustment", "cart_line_item_tax_line",
+    "cart_shipping_method", "cart_shipping_method_adjustment", "cart_shipping_method_tax_line", "cart_credit_line",
+    "order", "order_address", "order_item", "order_line_item", "order_line_item_adjustment", "order_line_item_tax_line",
+    "order_shipping", "order_shipping_method", "order_shipping_method_adjustment", "order_shipping_method_tax_line",
+    "order_summary", "order_credit_line", "order_transaction", "reservation_item", "payment_collection",
+    "payment_session", "payment", "capture", "refund", "order_cart", "order_payment_collection", "order_promotion",
+    "cart_payment_collection"];
+  const nativeSnapshot = async () => {
+    const rows: Record<string, unknown> = {};
+    for (const table of nativeTables) rows[table] = await postgres(table).orderBy("id");
+    return JSON.stringify(rows);
+  };
+  let nativeBefore: string | undefined;
+  if (completed) {
+    assert.equal(completed.order_fingerprint, executionFingerprint(completed.order_id));
+    assert.ok(await postgres("order").where({ id: completed.order_id }).first());
+    assert.ok(await postgres("payment").where({ id: completed.payment_id }).first());
+    nativeBefore = await nativeSnapshot();
+    const payments: any = container.resolve(Modules.PAYMENT);
+    for (const owner of [payments, payments.paymentProviderService_])
+      for (const method of ["authorizePaymentSession", "authorizePayment", "capturePayment", "cancelPayment", "refundPayment", "getStatus"])
+        owner[method] = async () => { throw new Error("C12_AFTER_EFFECT_UNEXPECTED_PROVIDER_ACTION"); };
+  }
   assert.equal((await postgres.raw("select has_function_privilege('public','public.rifare_require_native_execution_payment(text,text,text)','execute') as allowed")).rows[0].allowed, false);
   const selected = () => postgres("rifare_operation").where({ original_command_uuid: fixture.original_id }).first();
   const before = await selected();
   assert.ok(before?.execution_payment_attempted_at instanceof Date);
   const attemptedAt = before.execution_payment_attempted_at.toISOString();
+  if (completed) {
+    assert.equal(attemptedAt, completed.attempted_at);
+    assert.equal(before.execution_order_fingerprint, completed.order_fingerprint);
+    assert.equal(before.native_payment_id, completed.payment_id);
+    assert.ok(before.native_payment_fingerprint);
+  }
   const assertRetainedAttempt = async () => {
     const row = await selected();
     assert.equal(row.state, "retired");
@@ -31,6 +62,11 @@ export default async function verifyProviderAttemptPrivacyRestore({ container }:
     assert.ok(row.execution_owner_fingerprint); assert.ok(row.execution_seal_fingerprint);
     assert.ok(row.execution_payment_handle_fingerprint); assert.ok(row.execution_revoked_at instanceof Date);
     assert.ok(row.execution_generation >= 2);
+    if (completed) {
+      assert.equal(row.execution_order_fingerprint, completed.order_fingerprint);
+      assert.equal(row.native_payment_fingerprint, before.native_payment_fingerprint);
+      assert.equal(row.native_payment_id, null);
+    }
     for (const field of ["execution_claimed_at", "execution_expires_at", "execution_order_id",
       "payment_collection_id", "payment_session_id", "payment_provider_id", "command_bytes", "receipt_bytes"])
       assert.equal(row[field], null, field);
@@ -62,6 +98,8 @@ export default async function verifyProviderAttemptPrivacyRestore({ container }:
     await reconcile(); await reconcile();
     await assertRetainedAttempt();
   }
+  if (completed) assert.equal(await nativeSnapshot(), nativeBefore, "Privacy restore must not mutate or repeat completed native effects");
   console.log("C12_PROVIDER_ATTEMPT_PRIVACY_RESTORE=" + JSON.stringify({ result: "pass", phase,
-    attempted_at_retained: true, execution_authorized: false, provider_invoked: false }));
+    attempted_at_retained: true, completed_effect_retained: Boolean(completed),
+    execution_authorized: false, provider_invoked: false }));
 }
