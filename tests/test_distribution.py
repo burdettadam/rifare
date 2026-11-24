@@ -426,13 +426,21 @@ class DistributionTests(unittest.TestCase):
                 review_stage(self.repo,self.stage,self.manifest)
 
     def test_stage_case_collision_rejected(self):
+        alias = self.stage/'readme.md'
+        if alias.exists() and os.path.samefile(alias,self.stage/'README.md'):
+            self.skipTest('Case-insensitive filesystem: case-distinct fixture names cannot coexist')
         with self.change(self.stage,'readme.md','synthetic collision'):
             with self.assertRaisesRegex(ValueError,'case-colliding artifact'):
                 review_stage(self.repo,self.stage,self.manifest)
 
     def test_stage_symlink_rejected(self):
         path=self.stage/'linked.txt'
-        path.symlink_to(self.stage/'README.md')
+        try:
+            path.symlink_to(self.stage/'README.md')
+        except OSError as error:
+            if os.name == 'nt' and getattr(error, 'winerror', None) == 1314:
+                self.skipTest('Windows symlink privilege unavailable (WinError 1314)')
+            raise
         try:
             with self.assertRaisesRegex(ValueError,'stage symlink'):
                 stage_paths(self.stage)
@@ -441,7 +449,12 @@ class DistributionTests(unittest.TestCase):
 
     def test_stage_symlink_directory_rejected(self):
         path=self.stage/'linked-dir'
-        path.symlink_to(self.stage/'docs',target_is_directory=True)
+        try:
+            path.symlink_to(self.stage/'docs',target_is_directory=True)
+        except OSError as error:
+            if os.name == 'nt' and getattr(error, 'winerror', None) == 1314:
+                self.skipTest('Windows symlink privilege unavailable (WinError 1314)')
+            raise
         try:
             with self.assertRaisesRegex(ValueError,'stage symlink'):
                 stage_paths(self.stage)
