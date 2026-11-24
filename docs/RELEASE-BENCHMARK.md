@@ -7,11 +7,13 @@ measurement contract, not a product release, pilot authorization or completed
 M00 milestone. Its proposed M00-G01 dependency is still awaiting acceptance.
 
 [Machine-readable benchmark](../planning/release-benchmark.json) is canonical for
-this proposal. [Scenario inventory](../planning/benchmark-scenarios.json) pins all
-676 existing specification IDs and their individual content digests, including
+this proposal. [Scenario inventory](../planning/benchmark-scenarios.json) pins the
+676 retained revision-1 specification IDs from milestones M00 through M12 and
+their individual content digests, including
 all 67 original seeds. There are 481 v1-candidate specifications and 195 expansion
 specifications. These counts are **not** executed scenarios, merchant outcomes,
-or proof of the 200-product-variant gate. No existing specification is rewritten.
+or proof of the 200-product-variant gate. Later additive planning remains outside
+revision 1 and cannot rewrite or replace its retained rows.
 
 ## Scope, categories and severity
 

@@ -233,9 +233,11 @@ def validate_envelope(document: Any, root: Path | None = None) -> list[str]:
             # retain historical ownership without granting qualification.
             goals = {t['goal_id'] for t in load_document(root/'planning/test-specifications.json')['tests']}
             targets = {c['id']:c for c in load_document(root/'planning/capability-targets.json')['capabilities']}
+            retained_targets = {key:value for key,value in targets.items()
+                                if re.fullmatch(r'CAP-\d{3}',key)}
             invariants = {i['id'] for i in load_document(root/'planning/invariants.json')['invariants']}
-            if set(disposition_index) != set(targets):
-                errors.append('capability_disposition: target coverage must retain every original target')
+            if set(disposition_index) != set(retained_targets):
+                errors.append('capability_disposition: target coverage must retain every revision-1 target')
             if set(invariant_ids) != invariants:
                 errors.append('invariant coverage must retain every original invariant')
             for row in capabilities:
@@ -248,7 +250,7 @@ def validate_envelope(document: Any, root: Path | None = None) -> list[str]:
                 if goal not in goals:
                     errors.append(f'boundaries: unknown goal {goal}')
             for key, row in disposition_index.items():
-                target = targets.get(key)
+                target = retained_targets.get(key)
                 if not target:
                     continue
                 milestone = target['target_milestone']

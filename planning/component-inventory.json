@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "id": "rifare-source-inventory",
-  "revision": 98,
+  "revision": 99,
   "status": "proposed",
   "components": [
     {
@@ -1823,6 +1823,17 @@
         "apps/commerce-backend/src/modules/operation-journal/execution-delivery.ts",
         "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123190000.ts",
         "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123200000.ts",
+        "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123210000.ts",
+        "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123220000.ts",
+        "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123230000.ts",
+        "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123240000.ts",
+        "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123250000.ts",
+        "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123260000.ts",
+        "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123270000.ts",
+        "apps/commerce-backend/src/scripts/verify-native-completion-baseline.ts",
+        "apps/commerce-backend/src/scripts/verify-native-workflow-reversal.ts",
+        "apps/commerce-backend/src/scripts/verify-execution-refusal-transfer.ts",
+        "apps/commerce-backend/src/scripts/verify-provider-attempt-privacy-restore.ts",
         "apps/commerce-backend/src/scripts/verify-fenced-system-provider.ts",
         "apps/commerce-backend/src/modules/fenced-system-payment/index.ts",
         "apps/commerce-backend/src/modules/fenced-system-payment/service.ts"

@@ -16,6 +16,8 @@ import json
 
 COST_KEYS = ('model', 'messaging', 'shipping', 'hosting', 'operator')
 STRATUM_KEYS = ('platform', 'profile', 'skill', 'policy', 'runtime', 'model', 'mode')
+REVISION_ONE_LAST_MILESTONE = 'M12'
+REVISION_ONE_SCENARIO_COUNT = 676
 GATES = {
     'mandatory_safety_pass_bps', 'correct_handling_bps_min',
     'unique_executed_product_variants_min', 'quality_stratum_cases_min',
@@ -133,17 +135,22 @@ def validate_benchmark(document: Any, root: Path) -> list[str]:
         require(inv['schema_version'] == '1.0' and inv['project'] == 'Rifare' and inv['goal_id'] == 'M00-G02'
                 and inv['status'] == 'proposed_specification_inventory', 'inventory identity/status invalid')
         require(inv['specifications_path'] == 'planning/test-specifications.json', 'inventory specification path invalid')
-        specs = load_verified_baseline(root / inv['specifications_path'], inv['specifications_sha256'])['tests']
+        require(bool(re.fullmatch(r'[0-9a-f]{64}', inv['specifications_sha256'])),
+                'inventory specification hash invalid')
+        specs = load_document(root / inv['specifications_path'])['tests']
         source = {s['id']:s for s in specs}
         require(len(source) == len(specs), 'duplicate source specification')
+        retained_source = {s['id']:s for s in specs if s['milestone'] <= REVISION_ONE_LAST_MILESTONE}
+        require(len(retained_source) == REVISION_ONE_SCENARIO_COUNT,
+                'inventory: revision-one source count changed')
         rows = index(inv['scenarios'], {k:str for k in ('id','goal_id','milestone','category','severity',
             'kind','layer','stage','specification_sha256','execution_status')}, 'scenarios')
-        require(set(rows) == set(source), 'inventory: missing or invented scenario ID')
+        require(set(rows) == set(retained_source), 'inventory: revision-one scenario membership changed')
         seeds = {s['id'] for s in load_document(root / 'planning/reference/original-acceptance-tests.json')['tests']}
         require(inventory_ref['scenario_count'] == len(rows), 'inventory scenario count mismatch')
         require(inventory_ref['retained_seed_count'] == len(seeds) and seeds <= set(rows), 'retained seeds mismatch')
         for identity, row in rows.items():
-            s = source[identity]
+            s = retained_source[identity]
             expected = {'id':identity, 'goal_id':s['goal_id'], 'milestone':s['milestone'],
                 'category':CATEGORIES[s['milestone']], 'severity':s['severity'], 'kind':s['kind'],
                 'layer':s.get('level','retained_source_scenario'),

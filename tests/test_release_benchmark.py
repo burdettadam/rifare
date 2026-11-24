@@ -386,11 +386,17 @@ class ReleaseBenchmarkTests(unittest.TestCase):
         self.b['gates']['mandatory_safety_pass_bps'] = 9999
         self.assertTrue(validate_benchmark(self.b,ROOT))
 
-    def test_inventory_covers_every_existing_case_and_original_seed(self):
+    def test_revision_one_inventory_retains_frozen_cases_and_original_seed(self):
         inv = load_document(ROOT/'planning/benchmark-scenarios.json')['scenarios']
+        current = load_document(ROOT/'planning/test-specifications.json')['tests']
         originals = load_document(ROOT/'planning/reference/original-acceptance-tests.json')['tests']
         self.assertEqual(len(inv),676)
         self.assertEqual(len({x['id'] for x in inv}),676)
+        self.assertGreater(len(current),len(inv))
+        self.assertTrue({x['id'] for x in inv} <= {x['id'] for x in current})
+        retained_current = [x for x in current if x['milestone'] <= 'M12']
+        self.assertEqual(len(retained_current),676)
+        self.assertEqual({x['id'] for x in inv},{x['id'] for x in retained_current})
         self.assertEqual(len(originals),67)
         self.assertTrue({x['id'] for x in originals} <= {x['id'] for x in inv})
         self.assertTrue(all(x['execution_status']=='not_run' for x in inv))
@@ -401,18 +407,22 @@ class ReleaseBenchmarkTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             shutil.copytree(ROOT/'planning',root/'planning')
-            shutil.copytree(ROOT/'reference',root/'reference')
             p = root/'planning/benchmark-scenarios.json'
             original = load_document(p)
-            for mutation in ('remove','change_severity','claim_execution','change_digest'):
+            seeds = {x['id'] for x in load_document(root/'planning/reference/original-acceptance-tests.json')['tests']}
+            for mutation in ('remove','remove_and_recount','change_severity','claim_execution','change_digest'):
                 with self.subTest(mutation=mutation):
                     inv = copy.deepcopy(original)
                     if mutation=='remove': inv['scenarios'].pop()
+                    if mutation=='remove_and_recount':
+                        nonseed = next(i for i,row in enumerate(inv['scenarios']) if row['id'] not in seeds)
+                        inv['scenarios'].pop(nonseed)
                     if mutation=='change_severity': inv['scenarios'][0]['severity']='minor'
                     if mutation=='claim_execution': inv['scenarios'][0]['execution_status']='passed'
                     if mutation=='change_digest': inv['scenarios'][0]['specification_sha256']='0'*64
                     p.write_text(json.dumps(inv),encoding='utf-8')
                     candidate = copy.deepcopy(self.b); candidate['scenario_inventory']['sha256']=sha(p)
+                    if mutation=='remove_and_recount': candidate['scenario_inventory']['scenario_count']=675
                     self.assertTrue(validate_benchmark(candidate,root))
 
     def test_support_and_scenario_bytes_are_pinned(self):

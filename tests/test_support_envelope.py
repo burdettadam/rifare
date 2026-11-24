@@ -252,6 +252,13 @@ class SupportEnvelopeTests(unittest.TestCase):
         self.assertEqual(compare_envelopes(self.document, frozen), [])
         self.assertEqual(self.document['revision'], frozen['revision'])
 
+    def test_additive_milestone_targets_do_not_rewrite_revision_one(self):
+        targets = load_document(ROOT/'planning/capability-targets.json')['capabilities']
+        self.assertTrue(any(row['id'].startswith('CAP-M') for row in targets))
+        self.assertFalse(any(row['target_id'].startswith('CAP-M')
+                             for row in self.document['capability_disposition']))
+        self.assertEqual(validate_envelope(self.document, ROOT), [])
+
     def test_invalid_owner_shapes_are_validation_errors(self):
         for group, field in (('target_customer','accountable_owner'), ('boundaries','owner')):
             for invalid in ([], {}, None, True, 17):
