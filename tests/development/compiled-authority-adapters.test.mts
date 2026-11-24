@@ -5,6 +5,7 @@ import { cpSync, mkdtempSync, realpathSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { basename, dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { createRequire } from 'node:module';
 import { claimOracle } from './delegated-command-claim-helpers.mts';
 import { delegatedUsePeer } from './delegated-use-client-helpers.mts';
 
@@ -20,6 +21,9 @@ test('compiled authority adapters relocate and perform C1 and public mTLS withou
   let client: { close(): void } | undefined;
   try {
     cpSync(join(application, '.medusa/server/rifare'), directory, { recursive: true });
+    const receiptRequire = createRequire(new URL('../../packages/adapters/delegated-receipts/package.json', import.meta.url));
+    const jose = dirname(dirname(dirname(receiptRequire.resolve('jose'))));
+    cpSync(jose, join(directory, 'node_modules/jose'), { recursive: true });
     const { wire, codec } = await import(pathToFileURL(join(directory, 'authority-adapters.mjs')).href);
     const original = claimOracle.commands.find((value: any) => value.name === 'start_use');
     const encoded = codec.encodeDelegatedCommand(original.request);
