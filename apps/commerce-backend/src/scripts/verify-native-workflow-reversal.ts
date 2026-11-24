@@ -70,7 +70,8 @@ export default async function verifyNativeWorkflowReversal({ container }: ExecAr
     await retireOriginalExecutionWorker(postgres, claim.worker.role);
     const revoked = await original.row(); assert.equal(revoked.execution_generation, 2); assert.ok(revoked.execution_revoked_at);
     const recovery = await new Promise<{ code: number | null; output: string }>((resolveChild, reject) => {
-      const recoveryChild = spawn(process.execPath, ["run.mjs", "exec", "./src/scripts/verify-native-generation-fence.ts"], {
+      const generationScript = "./src/scripts/verify-native-generation-fence." + (__filename.endsWith(".js") ? "js" : "ts");
+      const recoveryChild = spawn(process.execPath, ["run.mjs", "exec", generationScript], {
         cwd: process.cwd(), env: { ...process.env, RIFARE_C12_GENERATION_RECOVERY_TASK: JSON.stringify({
           id: original.command.command_id, context: fixture.context, trust: fixture.trust }) }, stdio: ["ignore", "pipe", "pipe"] });
       let recoveryOutput = ""; const timer = setTimeout(() => { recoveryChild.kill("SIGKILL"); reject(new Error("workflow recovery deadline")); }, 45000);
