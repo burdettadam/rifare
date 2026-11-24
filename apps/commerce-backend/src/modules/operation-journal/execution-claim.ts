@@ -34,6 +34,8 @@ export async function createOriginalExecutionWorker(tx: Postgres) {
       throw new Error("NATIVE_EXECUTION_SCHEMA_PRIVILEGE_UNAVAILABLE");
     await tx.raw(`grant usage on schema public to "${role}"`);
     await tx.raw(`grant execute on function public.rifare_require_native_execution_payment(text,text,text) to "${role}"`);
+    await tx.raw(`grant execute on function public.rifare_native_workflow_allowed(text,text) to "${role}"`);
+    await tx.raw(`grant select, insert, update, delete on table public.workflow_execution to "${role}"`);
     // Explicit native commerce allowlists; identity, user, API-key, workflow and
     // infrastructure state are never writable by an original execution worker.
     // Row-level original visibility/fencing is still a pending C12 boundary.
@@ -95,7 +97,8 @@ export async function retireOriginalExecutionWorker(postgres: Postgres, role: st
 
 
 async function postgresGenerationReady(postgres: Postgres) {
-  return (await postgres.raw("select public.rifare_native_generation_ready() as ready")).rows[0]?.ready === true;
+  return (await postgres.raw(`select public.rifare_native_generation_ready()
+    and public.rifare_native_workflow_ready() as ready`)).rows[0]?.ready === true;
 }
 
 /** Native links migrate after modules. The provisioning controller completes
@@ -106,5 +109,6 @@ export async function ensureNativeGenerationInstallation(postgres: Postgres) {
   const role = (await postgres.raw("select session_user as role")).rows[0]?.role;
   if (typeof role !== "string" || /^rifare_exec_[a-f0-9]{32}$/.test(role)) throw new Error("NATIVE_GENERATION_FENCE_NOT_READY");
   await postgres.raw("select public.rifare_install_native_generation_fences()");
+  await postgres.raw("select public.rifare_install_native_workflow_fence()");
   if (!(await postgresGenerationReady(postgres))) throw new Error("NATIVE_GENERATION_FENCE_NOT_READY");
 }

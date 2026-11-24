@@ -23,8 +23,9 @@ export default async function verifyNativeExecutionWorker({ container }: ExecArg
     const session = await payments.retrievePaymentSession(task.session_id);
     assert.equal(cart.id, task.cart_id); assert.equal(session.id, task.session_id);
     assert.equal(session.provider_id, "pp_rifare_fenced_system_fixture");
-    for (const table of ["rifare_operation", "auth_identity", "user", "api_key", "workflow_execution"])
+    for (const table of ["rifare_operation", "auth_identity", "user", "api_key"])
       await assert.rejects(postgres(table).select("id"), (error: any) => error.code === "42501");
+    assert.deepEqual(await postgres("workflow_execution").select("id"), []);
     const pools: Record<string, unknown> = {};
     const observePool = async (key: string, module: any) => {
       assert.equal(typeof module?.baseRepository_?.getFreshManager, "function", "Actual native repository absent: " + key);

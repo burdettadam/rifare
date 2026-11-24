@@ -140,6 +140,17 @@ Broad `workflow_execution` grants are not an accepted correction. Any continuati
 must preserve infrastructure isolation while proving that a workflow checkpoint is
 narrowly owned by, and cannot escape, the claimed original and current generation.
 
+Candidate `3cca6c9b47970b8036abcb83a03701db0317dc19` adds that narrow
+continuation. The worker receives table privileges only behind forced row-level
+security. The policy admits `complete-cart` only when the transaction ID hashes to
+the immutable execution seal owned by the authenticated per-original role and the
+claim is current, unrevoked and unexpired. Other workflow rows remain invisible.
+Fresh `completion9` advances beyond checkpoint creation and is next refused by the
+cart query's ungranted `cart_promotion` read. All 31 installed tables in the native
+write allowlist remain digest-equal and System authorization remains zero. This
+qualifies only checkpoint scoping and identifies the next read-visibility boundary;
+healthy completion and full C12 remain unqualified.
+
 ## Initial mechanism disposition
 
 The a4c7a7e native setup disproved the service-subclass/discoveryPath hypothesis.

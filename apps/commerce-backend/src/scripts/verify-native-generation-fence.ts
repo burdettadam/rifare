@@ -51,7 +51,8 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
       if (task.healthy_completion) {
         let completed: any;
         try {
-          completed = await completeCartWorkflow(container).run({ input: { id: task.cart_id }, throwOnError: false });
+          completed = await completeCartWorkflow(container).run({ input: { id: task.cart_id },
+            context: { transactionId: task.execution_seal } as any, throwOnError: false });
         } catch (error: any) {
           console.log("C12_NATIVE_HEALTHY_COMPLETION_OBSERVATION=" + JSON.stringify({
             result_id: null, errors: [{ message: error?.message ?? String(error), code: error?.code ?? null,

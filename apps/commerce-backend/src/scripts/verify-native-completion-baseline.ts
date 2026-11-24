@@ -43,7 +43,8 @@ export default async function verifyNativeCompletionBaseline({ container }: Exec
     database.username = claim.worker.role; database.password = claim.worker.password;
     const env: NodeJS.ProcessEnv = { ...process.env, DATABASE_URL: database.href, MEDUSA_WORKER_MODE: "server",
       RIFARE_C12_NATIVE_WORKER: JSON.stringify({ role: claim.worker.role }),
-      RIFARE_C12_GENERATION_TASK: JSON.stringify({ role: claim.worker.role, cart_id: original.cart.id, healthy_completion: true }) };
+      RIFARE_C12_GENERATION_TASK: JSON.stringify({ role: claim.worker.role, cart_id: original.cart.id,
+        execution_seal: claim.seal, healthy_completion: true }) };
     for (const key of Object.keys(env)) if (key.startsWith("PG") || key.endsWith("_CUSTODY") ||
       /(?:API_KEY|_TOKEN|_PASSWORD|_SECRET|_PRIVATE_KEY|_CREDENTIALS)$/.test(key) ||
       key.endsWith("DATABASE_URL") && key !== "DATABASE_URL" || key.startsWith("RIFARE_JOURNAL_PRIVACY_") ||

@@ -138,14 +138,75 @@ export default async function verifyNativeExecutionClaim({ container }: ExecArgs
       assert.equal((await pool.raw("select session_user as role")).rows[0].role, claim!.worker!.role);
       assert.ok(await pool("cart").where({ id: sample.cart.id }).first("id"));
       await assert.rejects(pool("rifare_operation").select("id"), (error: any) => error.code === "42501");
-      for (const table of ["auth_identity", "user", "api_key", "workflow_execution", "rifare_operation_privacy_subject"])
+      for (const table of ["auth_identity", "user", "api_key", "rifare_operation_privacy_subject"])
         await assert.rejects(pool(table).select("id"), (error: any) => error.code === "42501");
+      assert.deepEqual(await pool("workflow_execution").select("id"), []);
+      const checkpoint = { id: "wf_exec_" + randomUUID().replaceAll("-", ""), workflow_id: "complete-cart",
+        transaction_id: claim!.seal!, run_id: randomUUID(), state: "not_started" };
+      await pool("workflow_execution").insert(checkpoint);
+      assert.deepEqual(await pool("workflow_execution").select("id"), [{ id: checkpoint.id }]);
+      await pool("workflow_execution").where({ id: checkpoint.id }).delete();
+      for (const change of [{ transaction_id: randomUUID() }, { workflow_id: "capture-payment" }])
+        await assert.rejects(pool("workflow_execution").insert({ ...checkpoint, id: "wf_exec_" + randomUUID().replaceAll("-", ""),
+          run_id: randomUUID(), ...change }), (error: any) => error.code === "42501");
       await assert.rejects(pool("customer").where({ id: f.customer.id }).update({ has_account: false }), (error: any) => error.code === "42501");
       await assert.rejects(pool("rifare_operation").where({ id: (await sample.row()).id }).update({ execution_generation: 999 }), (error: any) => error.code === "42501");
       const controller = (await postgres.raw("select session_user as role")).rows[0].role;
       assert.match(controller, /^[a-zA-Z0-9_]+$/);
       await assert.rejects(pool.raw('set role "' + controller + '"'), (error: any) => error.code === "42501");
     } finally { await pool.destroy(); }
+  });
+  await check("C12-CLAIM-WORKFLOW-POLICY altered or additional permissive policy blocks worker creation", async () => {
+    const faults = [
+      {
+        apply: () => postgres.raw(`alter policy rifare_native_workflow_execution on public.workflow_execution
+          using (true) with check (true)`),
+        restore: () => postgres.raw(`alter policy rifare_native_workflow_execution on public.workflow_execution
+          using (public.rifare_native_workflow_allowed(workflow_id,transaction_id))
+          with check (public.rifare_native_workflow_allowed(workflow_id,transaction_id))`),
+      },
+      {
+        apply: () => postgres.raw(`create policy c12_unapproved_permissive on public.workflow_execution
+          as permissive for all to public using (true) with check (true)`),
+        restore: () => postgres.raw("drop policy c12_unapproved_permissive on public.workflow_execution"),
+      },
+    ];
+    for (const fault of faults) {
+      const original = await f.makePaymentOriginal(), before = await original.row(), count = await roleCount();
+      await fault.apply();
+      try {
+        assert.equal((await postgres.raw("select public.rifare_native_workflow_ready() as ready")).rows[0].ready, false);
+        await noEffect(() => assert.rejects(journal.claimNativeExecution(original.command.command_id, context, verifier)));
+        assert.deepEqual(await original.row(), before); assert.equal(await roleCount(), count);
+      } finally { await fault.restore(); }
+      assert.equal((await postgres.raw("select public.rifare_native_workflow_ready() as ready")).rows[0].ready, true);
+    }
+  });
+  await check("C12-CLAIM-WORKFLOW-CONTROL ordinary nonworker workflow role remains unaffected", async () => {
+    const role = "rifare_workflow_control_" + randomUUID().replaceAll("-", ""), password = randomUUID().replaceAll("-", "");
+    const row = { id: "wf_exec_" + randomUUID().replaceAll("-", ""), workflow_id: "ordinary-control",
+      transaction_id: randomUUID(), run_id: randomUUID(), state: "not_started" };
+    let pool: ReturnType<typeof ModulesSdkUtils.createPgConnection> | undefined, created = false;
+    try {
+      await postgres.raw(`create role "${role}" login password '${password}' nosuperuser nocreatedb nocreaterole noinherit noreplication nobypassrls`);
+      created = true;
+      await postgres.raw(`grant usage on schema public to "${role}"`);
+      await postgres.raw(`grant select,insert,update,delete on public.workflow_execution to "${role}"`);
+      const url = new URL(process.env.DATABASE_URL!); url.username = role; url.password = password;
+      pool = ModulesSdkUtils.createPgConnection({ clientUrl: url.href, pool: { min: 0, max: 1 } });
+      assert.equal((await pool.raw("select session_user as role")).rows[0].role, role);
+      await pool("workflow_execution").insert(row);
+      assert.deepEqual(await pool("workflow_execution").where({ id: row.id }).select("id"), [{ id: row.id }]);
+      await pool("workflow_execution").where({ id: row.id }).delete();
+    } finally {
+      if (pool) await pool.destroy();
+      await postgres("workflow_execution").where({ id: row.id }).delete();
+      if (created) {
+        await postgres.raw(`revoke all on public.workflow_execution from "${role}"`);
+        await postgres.raw(`revoke usage on schema public from "${role}"`);
+        await postgres.raw(`drop role "${role}"`);
+      }
+    }
   });
   await check("C12-CLAIM-ADMISSION missing genuine final or receipt and legacy System cannot mint a worker", async () => {
     for (const options of [{ withFinalization: false }, { retainReceipt: false }, { providerId: "pp_system_default" }]) {
