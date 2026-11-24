@@ -1452,7 +1452,7 @@
         "id": "catalog_destination",
         "adapter": {
           "id": "return_destination_source",
-          "version": "source-sha256:b1207f123a954b32262f4dc989db32563bcacf4f18bed4def8510f7043302cd1",
+          "version": "source-sha256:ef0aace5d1163b3736f01e5746c42e190ca2ea4a041266a6c126f923aed11b38",
           "api_version": "local-qualified-destination-source",
           "required_scopes": [],
           "semantics": "native",

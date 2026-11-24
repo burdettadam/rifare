@@ -8070,7 +8070,7 @@
     },
     {
       "path": "tests/fixtures/conformance/contract-cases.v1.json",
-      "sha256": "07c551fc00de3372ead114e8d892ae7ed01debc066f3b3fb91d00e33adc43bcb"
+      "sha256": "4f406d531d6206cf43118d9dbc834ca5fde722e4c93ce662aa44cd3c6aece75a"
     },
     {
       "path": "tests/fixtures/conformance/expected-coverage.v1.json",

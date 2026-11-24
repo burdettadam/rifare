@@ -328,6 +328,28 @@ upgrade/replay gates for this candidate. The broader restore/fault matrix, conne
 provider enrollment and authority, managed-machine caller qualification, production
 acceptance and full C12 qualification remain open.
 
+## Retained adapter-catalog reconciliation
+
+The cumulative retained development runner exposed two pre-existing catalog
+inconsistencies. The original M07 test still asserted its protected
+`38/199/262/47` scope directly against the additive current catalog, now
+`50/234/383/47`. Preserve the M07 counts by validating the complete current
+catalog and subtracting exactly the twelve named adapters added after checkpoint
+`0eec01456`; execute that exact retained M07 case set through a closed selector
+which still validates the complete current catalog before and after execution.
+The additive cases remain owned by their registered suites. Do not relabel the
+old counts as current totals or widen the native runner's timeout.
+
+Commit `7e695fc05` renewed `return_destination_source` from source hash `b1207f...`
+to `ef0aace...` but left the direct `destination` contract fixture at the old
+version. Renew only that fixture version and its catalog oracle pin. Before the
+pre-correction C5/C6 canonical catalog digests are compared, require the current
+fixture pin and restore the independently frozen old pin `07c551fc...` in the
+historical copy. The current fixture file becomes
+`4f406d531d6206cf43118d9dbc834ca5fde722e4c93ce662aa44cd3c6aece75a`.
+No adapter, operation, direct fixture, qualification claim or external authority
+is added by this reconciliation.
+
 ## Initial mechanism disposition
 
 The a4c7a7e native setup disproved the service-subclass/discoveryPath hypothesis.

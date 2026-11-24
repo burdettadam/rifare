@@ -2,23 +2,26 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {mkdirSync,writeFileSync} from 'node:fs';
 import {resolve,join} from 'node:path';
-import {readAdapterCatalog,validateAdapterCatalog,catalogCases} from '../../packages/conformance/adapter-catalog.mts';
+import {readAdapterCatalog,validateAdapterCatalog} from '../../packages/conformance/adapter-catalog.mts';
 import {readCatalogFixtures,validateCatalogFixtures,runCatalogFixtures} from '../../packages/conformance/catalog-fixtures.mts';
 import {runPinnedCatalogCases} from '../../packages/conformance/native-catalog-runner.mts';
 import {nativeCatalogFactories} from './adapter-catalog-bindings.mts';
+import {retainedM07Catalog} from './m07-catalog-baseline.mts';
 
 test('CASE-M07-G05-01',async t=>{
- const catalog=readAdapterCatalog(),fixtures=readCatalogFixtures(),checked=validateAdapterCatalog(catalog);
- assert.equal(checked.adapter_count,38);assert.equal(checked.operation_count,199);assert.equal(checked.direct_fixture_count,47);assert.equal(checked.native_case_count,262);
+ const catalog=readAdapterCatalog(),fixtures=readCatalogFixtures(),checked=validateAdapterCatalog(catalog),retained=retainedM07Catalog(catalog);
+ assert.equal(checked.adapter_count,50);assert.equal(checked.operation_count,234);assert.equal(checked.direct_fixture_count,47);assert.equal(checked.native_case_count,383);
+ assert.deepEqual(retained.counts,{adapters:38,operations:199,cases:262,fixtures:47});
  const direct=await runCatalogFixtures(catalog,fixtures,nativeCatalogFactories);
  assert.equal(direct.fixture_count,47);assert.equal(new Set(direct.results.map(r=>r.adapter.id)).size,25);
  for(const result of direct.results){assert.equal(result.outcome,'passed');assert.equal(result.source_observed,true);assert.equal(result.external_qualification,false);assert.equal(result.production_qualified,false);assert(['sandbox-only','unavailable'].includes(result.adapter.qualification));}
  const rma=direct.observations.find(r=>r.key==='woo_rma')!;assert.equal(rma.before.records.length,1);assert.equal(rma.after.records.length,2);assert.equal(rma.after.records[1].body.native_return_id,null);assert.deepEqual(rma.before.records[0],rma.after.records[0]);
  const manual=direct.observations.find(r=>r.key==='woo_manual')!;assert.equal(manual.after.records[0].body.refunded_payment,false);
  const gateway=direct.observations.find(r=>r.key==='woo_gateway')!;assert.equal(gateway.after.records[0].body.settled,false);
- const native=await runPinnedCatalogCases(catalog);assert.deepEqual(native.counts,{tests:262,pass:262,fail:0,cancelled:0,skipped:0,todo:0});assert.equal(native.cases.length,262);
- assert.deepEqual(native.cases.map(c=>c.id).sort(),catalogCases(catalog).map(c=>c.id).sort());
- t.diagnostic('38 declared adapters; 199 operations; 47 common-engine scenarios; 262 retained native cases executed; external qualification remains false.');
+ const retainedIds=retained.cases.map(c=>c.id),native=await runPinnedCatalogCases(catalog,{caseIds:retainedIds});
+ assert.deepEqual(native.counts,{tests:262,pass:262,fail:0,cancelled:0,skipped:0,todo:0});assert.equal(native.cases.length,262);
+ assert.deepEqual(native.cases.map(c=>c.id).sort(),retainedIds.sort());
+ t.diagnostic('50 current adapters; 234 operations; 47 common-engine scenarios; exact retained M07 38/199/262/47 scope executed; additive cases remain owned by their registered suites; external qualification remains false.');
  // Optional author capture keeps inspectable fixture records outside source.
  // The normal native gate neither requires this path nor reads a stored report.
  if(process.env.RIFARE_CATALOG_EVIDENCE){const path=resolve(process.env.RIFARE_CATALOG_EVIDENCE);mkdirSync(path,{recursive:true});
@@ -37,6 +40,12 @@ test('M07-G05-CATALOG-SOURCE-PIN-01',()=>{const c=readAdapterCatalog();c.adapter
 test('M07-G05-CATALOG-NATIVE-PIN-01',()=>{const c=readAdapterCatalog();c.adapters[0].operations[0].native_cases[0].sha256='0'.repeat(64);assert.throws(()=>validateAdapterCatalog(c),/ADAPTER_CATALOG_PIN_CHANGED/);});
 test('M07-G05-CATALOG-CASE-SET-01',()=>{const c=readAdapterCatalog();c.adapters.find(a=>a.id==='shopify_orders').operations[0].native_cases=[];assert.throws(()=>validateAdapterCatalog(c),/ADAPTER_CATALOG_CASE_SET_CHANGED/);});
 test('M07-G05-CATALOG-NATIVE-FIRST-TOKEN-01',()=>{const c=readAdapterCatalog(),r=c.adapters[0].operations[0].native_cases[0];r.id='invented_native_case';assert.throws(()=>validateAdapterCatalog(c),/ADAPTER_CATALOG_CASE_INVALID/);});
+test('M07-G05-CATALOG-NATIVE-SELECTION-01',async()=>{
+ const c=readAdapterCatalog();
+ await assert.rejects(()=>runPinnedCatalogCases(c,{caseIds:[]}),/ADAPTER_CATALOG_NATIVE_CASE_SELECTION_INVALID/);
+ await assert.rejects(()=>runPinnedCatalogCases(c,{caseIds:['CASE-M07-G05-01','CASE-M07-G05-01']}),/ADAPTER_CATALOG_NATIVE_CASE_SELECTION_INVALID/);
+ await assert.rejects(()=>runPinnedCatalogCases(c,{caseIds:['invented_native_case']}),/ADAPTER_CATALOG_NATIVE_CASE_SELECTION_INVALID/);
+});
 test('M07-G05-CATALOG-MISSING-BINDING-01',()=>{const factories={...nativeCatalogFactories};delete factories.woo_refund;assert.throws(()=>validateCatalogFixtures(readAdapterCatalog(),readCatalogFixtures(),factories),/ADAPTER_CATALOG_FIXTURE_BINDING_MISSING/);});
 test('M07-G05-CATALOG-MISSING-FIXTURE-01',()=>{const fixtures=readCatalogFixtures();fixtures.fixtures.pop();assert.throws(()=>validateCatalogFixtures(readAdapterCatalog(),fixtures,nativeCatalogFactories),/ADAPTER_CATALOG_FIXTURE_COVERAGE_CHANGED/);});
 test('M07-G05-CATALOG-FIXTURE-CONTRACT-DRIFT-01',()=>{const fixtures=readCatalogFixtures();fixtures.fixtures.find(f=>f.key==='woo_refund').fixture.adapter.version='unreviewed';assert.throws(()=>validateCatalogFixtures(readAdapterCatalog(),fixtures,nativeCatalogFactories),/ADAPTER_CATALOG_FIXTURE_CONTRACT_DRIFT/);});

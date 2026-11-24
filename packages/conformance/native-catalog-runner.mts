@@ -7,8 +7,13 @@ const escaped=(s:string)=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
 /** Existing native cases retain their identities and complete source assertions.
  * This runs them; it does not import a stored pass report or infer source effects
  * from an HTTP response. Test/helper/fixture bytes are pinned before and after. */
-export async function runPinnedCatalogCases(input:unknown,options:{root?:string}={}){
- const root=options.root??CATALOG_ROOT,checked=validateAdapterCatalog(input,root),cases=catalogCases(checked.catalog),paths=[...new Set(cases.map(c=>c.path))].sort();
+export async function runPinnedCatalogCases(input:unknown,options:{root?:string;caseIds?:readonly string[]}={}){
+ const root=options.root??CATALOG_ROOT,checked=validateAdapterCatalog(input,root),allCases=catalogCases(checked.catalog);
+ const requested=options.caseIds?[...options.caseIds]:undefined;
+ if(requested&&(!requested.length||new Set(requested).size!==requested.length))fail('CASE_SELECTION_INVALID');
+ const selected=requested?new Set(requested):undefined,cases=selected?allCases.filter(c=>selected.has(c.id)):allCases;
+ if(selected&&(cases.length!==selected.size||cases.some(c=>!selected.has(c.id))))fail('CASE_SELECTION_INVALID');
+ const paths=[...new Set(cases.map(c=>c.path))].sort();
  if(!cases.length)fail('ZERO_CASES');
  const pattern='^(?:'+cases.map(c=>escaped(c.id)).join('|')+')(?:\\s|$)',args=['--experimental-strip-types','--test','--test-reporter=tap','--test-concurrency=1','--test-name-pattern='+pattern,...paths];
  // Start a complete native runner, including when called by node:test. Its
