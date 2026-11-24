@@ -32,8 +32,13 @@ export default async function verifyNativeExecutionClaim({ container }: ExecArgs
   const roleCount = async () => Number((await postgres.raw("select count(*) as n from pg_roles where rolname ~ '^rifare_exec_[a-f0-9]{32}$'")).rows[0].n);
   const financial = async () => {
     const rows: Record<string, unknown> = {};
-    for (const table of ["cart", "cart_line_item", "order", "reservation_item", "payment_collection", "payment_session", "payment", "capture", "refund"])
-      rows[table] = await postgres(table).orderBy("id");
+    for (const table of ["cart", "cart_line_item", "order", "reservation_item", "payment_collection", "payment_session", "payment", "capture", "refund"]) {
+      const selected = await postgres(table).orderBy("id");
+      rows[table] = table === "cart" ? selected.map(({ metadata, ...row }: any) => {
+        const normalized = { ...(metadata ?? {}) }; delete normalized.rifare_execution_owner;
+        return { ...row, metadata: Object.keys(normalized).length ? normalized : null };
+      }) : selected;
+    }
     return createHash("sha256").update(JSON.stringify(rows)).digest("hex");
   };
   const noEffect = async (run: () => Promise<unknown>) => {
@@ -48,6 +53,8 @@ export default async function verifyNativeExecutionClaim({ container }: ExecArgs
     assert.ok(claim.worker); assert.ok(claim.seal); assert.equal(await roleCount(), count + 1);
     const row = await sample.row(); assert.equal(row.state, "unknown"); assert.equal(row.execution_generation, 1);
     assert.equal(row.execution_owner_fingerprint, executionFingerprint(claim.worker!.role));
+    assert.equal((await postgres("cart").where({ id: sample.cart.id }).first("metadata")).metadata.rifare_execution_owner,
+      row.execution_owner_fingerprint);
     assert.equal(row.execution_seal_fingerprint, executionFingerprint(claim.seal!));
     assert.equal(row.execution_payment_handle_fingerprint, executionFingerprint(sample.session.data.rifare_native_execution.handle));
     assert.equal(row.payment_provider_id, "pp_rifare_fenced_system_fixture");
@@ -168,6 +175,22 @@ export default async function verifyNativeExecutionClaim({ container }: ExecArgs
         [{ product_id: ownedProduct, shipping_profile_id: "sp_owned" }]);
       await assert.rejects(pool("product_shipping_profile").insert({ id: "psp_forbidden", product_id: ownedProduct,
         shipping_profile_id: "sp_forbidden" }), (error: any) => error.code === "42501");
+      await assert.rejects(pool("order").insert({ id: "order_" + randomUUID().replaceAll("-", ""), version: 1,
+        status: "pending", is_draft_order: false, currency_code: "usd", no_notification: false,
+        metadata: { rifare_execution_owner: "sha256:" + "0".repeat(64) } }), (error: any) => error.code === "42501");
+      const cart = await postgres("cart").where({ id: sample.cart.id }).first();
+      const foreignAddress = "ordaddr_" + randomUUID().replaceAll("-", "");
+      await postgres("order_address").insert({ id: foreignAddress,
+        metadata: { rifare_execution_owner: executionFingerprint(claim!.worker!.role) } });
+      try {
+        const orderCount = Number((await postgres("order").count("id as n").first())!.n);
+        await assert.rejects(pool("order").insert({ id: "order_" + randomUUID().replaceAll("-", ""), version: 1,
+          region_id: cart.region_id, customer_id: cart.customer_id, sales_channel_id: cart.sales_channel_id,
+          email: cart.email, currency_code: cart.currency_code, locale: cart.locale, status: "pending",
+          is_draft_order: false, no_notification: false, shipping_address_id: foreignAddress, metadata: cart.metadata }),
+        (error: any) => error.code === "42501");
+        assert.equal(Number((await postgres("order").count("id as n").first())!.n), orderCount);
+      } finally { await postgres("order_address").where({ id: foreignAddress }).delete(); }
       await assert.rejects(pool("customer").where({ id: f.customer.id }).update({ has_account: false }), (error: any) => error.code === "42501");
       await assert.rejects(pool("rifare_operation").where({ id: (await sample.row()).id }).update({ execution_generation: 999 }), (error: any) => error.code === "42501");
       const controller = (await postgres.raw("select session_user as role")).rows[0].role;
@@ -204,6 +227,34 @@ export default async function verifyNativeExecutionClaim({ container }: ExecArgs
       } finally { await fault.restore(); }
       assert.equal((await postgres.raw("select public.rifare_native_product_read_ready() as ready")).rows[0].ready, true);
     }
+  });
+  await check("C12-CLAIM-ORDER-BINDING missing binding or link serializer blocks worker creation", async () => {
+    for (const fault of [
+      { table: "order_item", trigger: "rifare_native_order_binding", ready: "rifare_native_order_binding_ready" },
+      { table: "order_cart", trigger: "rifare_native_00_serialize", ready: "rifare_native_link_serialization_ready" },
+    ]) {
+      const original = await f.makePaymentOriginal(), before = await original.row(), count = await roleCount();
+      await postgres.raw(`alter table public.${fault.table} disable trigger ${fault.trigger}`);
+      try {
+        assert.equal((await postgres.raw(`select public.${fault.ready}() as ready`)).rows[0].ready, false);
+        await noEffect(() => assert.rejects(journal.claimNativeExecution(original.command.command_id, context, verifier)));
+        assert.deepEqual(await original.row(), before); assert.equal(await roleCount(), count);
+      } finally { await postgres.raw(`alter table public.${fault.table} enable trigger ${fault.trigger}`); }
+      assert.equal((await postgres.raw(`select public.${fault.ready}() as ready`)).rows[0].ready, true);
+    }
+    const original = await f.makePaymentOriginal(), before = await original.row(), count = await roleCount();
+    await postgres.raw(`alter table public.order_cart disable trigger rifare_native_00_serialize;
+      create trigger rifare_native_00_serialize before insert or update or delete on public.cart_promotion
+      for each statement execute function public.rifare_serialize_native_links()`);
+    try {
+      assert.equal((await postgres.raw("select public.rifare_native_link_serialization_ready() as ready")).rows[0].ready, false);
+      await noEffect(() => assert.rejects(journal.claimNativeExecution(original.command.command_id, context, verifier)));
+      assert.deepEqual(await original.row(), before); assert.equal(await roleCount(), count);
+    } finally {
+      await postgres.raw(`drop trigger rifare_native_00_serialize on public.cart_promotion;
+        alter table public.order_cart enable trigger rifare_native_00_serialize`);
+    }
+    assert.equal((await postgres.raw("select public.rifare_native_link_serialization_ready() as ready")).rows[0].ready, true);
   });
   await check("C12-CLAIM-CART-READ-POLICY altered or additional policy blocks worker creation", async () => {
     const faults = [

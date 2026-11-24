@@ -173,6 +173,28 @@ no execution order has yet been bound. The workflow transaction rolls back with 
 product-link read visibility and exposes the order-binding boundary; it does not
 qualify healthy completion or full C12.
 
+Candidate `e019a1b7525643f65563600baeb7aa1d03bedd5e` adds a reserved
+owner marker to the claimed cart without changing its commerce timestamp. Upstream
+copies the marker into the order; pre-write guards validate exact cart/order fields
+and corresponding original shipping/billing addresses, then atomically bind the
+first order ID before the existing order-item guard. Bound-order updates cannot
+replace those address references. The two
+parallel remote-link writes are serialized by a per-original advisory transaction
+lock after an un-serialized repetition exposed a real deadlock. Distinct originals
+retain distinct lock keys.
+
+Exact-source `orderbind5` passes marker, foreign-address refusal, exact per-table
+serializer readiness, relocated-trigger masking, missing-trigger and retained claim
+controls. Fresh `completion26`, `completion27` and `completion28` each complete
+one actual upstream order, retain the immutable order fingerprint, authorize the
+original 1250 minor-unit USD payment exactly once and change exactly cart, order,
+order address/cart/item/line/payment-collection links, order summary, payment,
+payment collection and payment session. The oracle counts all owner-marked orders,
+the sole original-cart link and explicit native-family row deltas rather than only
+recounting the returned primary key. This qualifies the bounded healthy path.
+Stale-worker reversal, lost-effect recovery, broader fault/restore qualification and
+full C12 remain pending.
+
 ## Initial mechanism disposition
 
 The a4c7a7e native setup disproved the service-subclass/discoveryPath hypothesis.

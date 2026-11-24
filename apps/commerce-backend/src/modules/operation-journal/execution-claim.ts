@@ -104,7 +104,9 @@ async function postgresGenerationReady(postgres: Postgres) {
   return (await postgres.raw(`select public.rifare_native_generation_ready()
     and public.rifare_native_workflow_ready()
     and public.rifare_native_cart_read_ready()
-    and public.rifare_native_product_read_ready() as ready`)).rows[0]?.ready === true;
+    and public.rifare_native_product_read_ready()
+    and public.rifare_native_order_binding_ready()
+    and public.rifare_native_link_serialization_ready() as ready`)).rows[0]?.ready === true;
 }
 
 /** Native links migrate after modules. The provisioning controller completes
@@ -118,5 +120,7 @@ export async function ensureNativeGenerationInstallation(postgres: Postgres) {
   await postgres.raw("select public.rifare_install_native_workflow_fence()");
   await postgres.raw("select public.rifare_install_native_cart_read_fence()");
   await postgres.raw("select public.rifare_install_native_product_read_fence()");
+  await postgres.raw("select public.rifare_install_native_order_binding()");
+  await postgres.raw("select public.rifare_install_native_link_serialization()");
   if (!(await postgresGenerationReady(postgres))) throw new Error("NATIVE_GENERATION_FENCE_NOT_READY");
 }

@@ -660,6 +660,12 @@ export default class OperationJournalService {
           storeId: configuration.merchant.store_id, operatorId: configuration.privacyOperator,
           privacyIds: journalPrivacyMarkerIds(tx, configuration.subject, configuration.key),
           installationId: journalPrivacyInstallationId(configuration.merchant), role: claimed.worker.role };
+        const cart = await tx("cart").where({ id: row.cart_id }).whereNull("deleted_at").forUpdate().first("metadata");
+        if (!cart || cart.metadata?.rifare_execution_owner &&
+          cart.metadata.rifare_execution_owner !== row.execution_owner_fingerprint) throw conflict();
+        await tx("cart").where({ id: row.cart_id }).update({ metadata: {
+          ...(cart.metadata ?? {}), rifare_execution_owner: row.execution_owner_fingerprint,
+        } });
         const verifiedAt = await requestClock(tx);
         const delivery = await nativeExecutionDeliverySnapshot(tx, deliveryBinding);
         if (verifiedAt.getTime() < now.getTime() || delivery.observedAt.getTime() < verifiedAt.getTime()) throw conflict();
