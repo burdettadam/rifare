@@ -20,7 +20,7 @@ test('compiled authority adapters relocate and perform C1 and public mTLS withou
   assert.equal(modules.length, 9, 'Only the current shared authority graph is shipped');
   for (const name of modules) {
     const source = readFileSync(join(graph, String(name)), 'utf8');
-    assert.doesNotMatch(source, /node:sqlite|CommerceKernel|kernel\.mjs/);
+    assert.doesNotMatch(source, /node:sqlite|CommerceKernel|CheckoutPreviewComposer|kernel\.mjs/);
   }
   const parent = realpathSync(tmpdir());
   const directory = mkdtempSync(join(parent, 'rifare-compiled-authority-'));

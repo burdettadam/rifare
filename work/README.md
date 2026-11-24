@@ -1,19 +1,12 @@
-> Historical specifications/evidence. ADR-0093 retired the SQLite implementation and its bespoke workflow. Use the root README and npm commands for current development. These records do not qualify the new tree.
-
 # Work records
 
-These records preserve concise development decisions, source revisions,
-ownership, reviews and actual limits. Use the
-[current plan](../docs/PLANS.md) for today's continuation and the
-[architecture](../docs/ARCHITECTURE.md) for existing source owners.
+`records/` preserves decisions, source checkpoints, reviews and qualification
+limits. `MEDUSA-SIMPLIFY-01.md` records the current cleanup. Use the current root
+README and docs/DEVELOPMENT.md for commands; historical records are not an active
+queue or a requirement to revive the retired planning/test framework.
 
-When a remaining scope is assigned, create or update its record from
-[`GOAL-WORK-RECORD.md`](../planning/templates/GOAL-WORK-RECORD.md).
-Keep raw generated evidence under ignored `evidence/`. There is no separate task
-database or initial-state snapshot to maintain.
-
-Completed planning packets are retired from the active catalogue. Their original
-text remains in Git, and historical links point to that immutable version.
-Development outcomes and the [acceptance ledger](accepted-goals.json) retain
-their original meaning: local implementation or focused checks do not establish
-formal production qualification.
+Record new work concisely in the relevant record. Preserve existing records,
+acceptance decisions, configuration and private evidence. Older records may link
+to retired code or rendered planning files; inspect their recorded Git revisions.
+The historical acceptance ledger retains its meaning and does not qualify the
+current Medusa application or production.

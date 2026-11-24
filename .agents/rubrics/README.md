@@ -1,5 +1,9 @@
-# Development role rubrics
+# Review roles
 
-These optional task instructions refine the work-goal loop. They are not an autonomous scheduler, a permission grant or runtime code. An agent client can read the selected `SKILL.md` directly; no installation service is required.
+Use `review-commerce-authority/` and `review-commerce-regression/` for independent
+review of meaningful boundary changes. Current writer/checkout instructions are
+in AGENTS.md and .agents/skills. These roles do not confer external authority.
 
-Use `execute-commerce-goal/` for a writer, `review-commerce-authority/` and `review-commerce-regression/` for independently assigned reviewers, and `close-commerce-milestone/` for the integration acceptance task. Product workflows and customer tailoring examples are under `examples/skills/`, not here.
+The older execute/close milestone rubrics are historical references to the retired
+planning workflow. Do not use them to reinstate its scheduler, templates or broad
+qualification campaigns. There is no separate worker service to maintain.

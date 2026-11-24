@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "preview_id": "checkout_preview_demo",
+  "tenant_id": "tenant_demo",
+  "store_id": "store_demo",
+  "merchant_id": "merchant_demo",
+  "resource_id": "order_demo",
+  "customer_id": "customer_demo",
+  "cart_id": "cart_demo",
+  "cart_operation_id": "cart_op_demo",
+  "cart_preview_digest": "4d1bebf8aef6b021342e50e2821bf1c733a9ff46180d80ebb6baf447a0efb6c3",
+  "currency": "USD",
+  "items": [
+    {
+      "variant_id": "desk_lamp_basic",
+      "product_id": "desk_lamp",
+      "quantity": 1,
+      "unit_minor": "6800",
+      "tax_minor": "0",
+      "line_total_minor": "6800",
+      "currency": "USD",
+      "source_revision": "6f43926f827839b248e968ea7e6e4432cea4296e1d27d270613bba967cdc66fc",
+      "terms_digest": "860c9b476fe9662683a70c394a71b46b47da14202cd252beb3afd7fc34af1c38"
+    }
+  ],
+  "subtotal_minor": "6800",
+  "tax_minor": "0",
+  "shipping_minor": "0",
+  "fees_minor": "0",
+  "total_payable_minor": "6800",
+  "pricing_source_identity": "catalog_fixture_v1",
+  "pricing_source_revision": "fad285b9f34b51b0d8329e78b1451833e913e0c70c3792da258808ef7f1488be",
+  "shipping_quote": {
+    "quote_id": "ship_demo",
+    "source_identity": "shipping_fixture",
+    "source_revision": "ship_r1",
+    "amount_minor": "0",
+    "currency": "USD",
+    "explicit_zero": true
+  },
+  "fee_quote": {
+    "quote_id": "fee_demo",
+    "source_identity": "fee_fixture",
+    "source_revision": "fee_r1",
+    "amount_minor": "0",
+    "currency": "USD",
+    "explicit_zero": true
+  },
+  "terms_digest": "cc921d5f680009a6b44a142565028dcb6263ef890f8457c5afea5fb098620484",
+  "created_at": 1795104000000,
+  "expires_at": 1795104060000,
+  "qualification": "synthetic_only",
+  "preview_digest": "faac6890d8c5efbeb20224759738d1fded8e82ad550fe3c5bf6ff13d1d98e525"
+}

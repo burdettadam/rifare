@@ -10,7 +10,7 @@
   "scripts": {
     "dev": "node --experimental-strip-types tools/dev-target.mts",
     "install:dependencies": "npm ci --prefix apps/commerce-backend --ignore-scripts && npm ci --prefix packages/adapters/delegated-receipts --ignore-scripts",
-    "test": "node --experimental-strip-types --test --test-concurrency=1 tests/development/authority-output.test.mts tests/development/authority-values.test.mts tests/development/checkout-preview.test.mts tests/development/commerce-admin-build.test.mts tests/development/commerce-backend-config.test.mts tests/development/compiled-authority-adapters.test.mts tests/development/delegated-command-codec.test.mts tests/development/delegated-receipt-binding.test.mts tests/development/delegated-receipt-hardening.test.mts tests/development/delegated-receipt-jose.test.mts tests/development/external-identity-config.test.mts tests/development/public-delegated-continuation.test.mts tests/development/public-delegated-use.test.mts",
+    "test": "node --experimental-strip-types --test --test-concurrency=1 \"tests/development/*.test.mts\"",
     "typecheck": "node apps/commerce-backend/node_modules/typescript/bin/tsc --project apps/commerce-backend/tsconfig.json --noEmit --pretty false --incremental false",
     "check": "npm run typecheck && npm test",
     "build": "npm --prefix apps/commerce-backend run build",

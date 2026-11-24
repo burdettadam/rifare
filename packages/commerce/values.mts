@@ -17,7 +17,3 @@ export function exact(value: unknown, fields: string[]): Row {
     throw new Error('INVALID_INPUT');
   return value as Row;
 }
-export function integer(value: unknown, min = 0): number {
-  if (!Number.isSafeInteger(value) || Number(value) < min) throw new Error('INVALID_INPUT');
-  return value as number;
-}

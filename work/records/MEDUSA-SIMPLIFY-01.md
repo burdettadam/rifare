@@ -39,3 +39,28 @@ Scope: 1,161 old tracked files retired; 125,000+ lines removed. License terms,
 notices and historical specifications remain. Default checks use no private
 provider input. Existing CI triggers, job IDs and read-only permissions remain;
 commands now exercise current source, and no Actions were dispatched.
+
+## Second reconciliation pass
+
+The owner requested another pass after approving the minimal public PR text.
+PR #13 now uses that approved title/description.
+
+Retire 71 duplicate rendered goal/milestone/catalogue files and the unused root
+environment stub. Both roles verified exact file hashes and canonical coverage;
+all goals, criteria, specifications and historical work evidence remain intact.
+Reconcile planning/work/decision indexes so they no longer advertise an active
+legacy queue or regeneration commands.
+
+Remove the remaining test-only synthetic checkout/pricing composer and unused
+return-policy helpers. Keep the exact live immutable-snapshot, strict JSON,
+error and BigInt spending/currency ceiling code. The shared preview module drops
+from 413 to 115 lines. The receipt fixture is fixed synthetic data, independently
+hashed, and a separate comparison proves it equals the previous input exactly.
+Receipt authorization/identity/expiry assertion bodies are unchanged.
+
+Retire 15 composer cases, retain the historical sparse-array negative and add six
+direct snapshot/ceiling cases. The new focused suite is 158/158, zero failures,
+cancellations, skips or todos, in 4.341 seconds. TypeScript passes. Quoted native
+Node test discovery finds the same 158 cases as the former explicit file list;
+new whole test files need no package-script edit. This does not pass retired
+composer tests or grant native/provider/release acceptance. No CI was dispatched.

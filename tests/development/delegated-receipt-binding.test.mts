@@ -1,14 +1,14 @@
 /**
  * RCG-3 isolated boundary tests. The JOSE verifier here is intentionally a
  * trusted TEST DOUBLE; these tests do NOT exercise real JWS cryptography or an
- * ElevenID HTTP route. Uses the native composer/digest; separate files exercise actual signatures and native owners.
+ * ElevenID HTTP route. Uses a fixed synthetic preview; separate files exercise actual signatures and native owners.
  */
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 import {contentDigest} from '../../packages/commerce/configuration-values.mts';
-import {CheckoutPreviewComposer, type TrustedCheckoutObservation,
-  type FrozenCheckoutPreview} from '../../packages/commerce/checkout-preview.mts';
+import {checkoutSnapshot, type FrozenCheckoutPreview} from '../../packages/commerce/checkout-preview.mts';
+import { previewFixture, previewDigest } from './checkout-preview-helpers.mts';
 import {DelegatedReceiptBinder,ReceiptBindingDenied,
   type ExpectedReceiptBinding,type CryptographicallyVerifiedReceipt,
   type ReceiptTrustPolicy} from '../../packages/commerce/delegated-receipt-binding.mts';
@@ -29,30 +29,11 @@ const at=(offsetMs:number)=>new Date(now0+offsetMs).toISOString();
 const fakeCompact='eyJhbGciOiJFUzI1NiJ9.eyJwcm9maWxlIjoidGVzdCJ9.ZHVtbXktc2lnbmF0dXJl';
 
 async function checkout():Promise<FrozenCheckoutPreview> {
-  const existingPreviewDigest=hash('cart_source_snapshot');
-  const items=[{variant_id:'desk_lamp_basic',product_id:'desk_lamp',quantity:1,unit_minor:'6800',tax_minor:'0',
-    total_minor:'6800',currency:'USD',source_revision:hash('catalog_rev_1'),terms:{id:'terms1',version:1}}];
-  const source:TrustedCheckoutObservation={
-    tenant_id:'tenant_demo',store_id:'store_demo',merchant_id:'merchant_demo',
-    resource_id:'order_demo',customer_id:'customer_demo',valid_until:now0+60_000,
-    cart:{cart_id:'cart_demo',resource_id:'order_demo',subject_id:'customer_demo',
-      operation_id:'cart_op_demo',preview_digest:existingPreviewDigest,
-      state:'committed',status:'active',committed:true,native_id:'native_cart_demo',qualification:'synthetic_only'},
-    current:{cart_id:'cart_demo',resource_id:'order_demo',subject_id:'customer_demo',
-      source_identity:'catalog_fixture_v1',currency:'USD',items,
-      total_minor:'6800',catalog_digest:contentDigest(items),
-      preview_digest:existingPreviewDigest,stored_preview_digest:existingPreviewDigest,
-      requires_new_proposal:false,committed:true,state:'committed',checkout_supported:false,
-      payment_authorized:false,qualification:'synthetic_only'},
-    shipping_quote:{quote_id:'ship_demo',source_identity:'shipping_fixture',source_revision:'ship_r1',
-      amount_minor:'0',currency:'USD',explicit_zero:true},
-    fee_quote:{quote_id:'fee_demo',source_identity:'fee_fixture',source_revision:'fee_r1',
-      amount_minor:'0',currency:'USD',explicit_zero:true},
-  };
-  const composer=new CheckoutPreviewComposer({source:{observe:()=>clone(source)},contentDigest,
-    now:()=>now0,createId:()=> 'checkout_preview_demo',lifetime_ms:60_000});
-  return await composer.prepare({tenant_id:'tenant_demo',store_id:'store_demo'},
-    {cart_id:'cart_demo',shipping_quote_id:'ship_demo',fee_quote_id:'fee_demo'});
+  const preview=previewFixture();
+  const {preview_digest,...body}=preview;
+  assert.equal(preview_digest,previewDigest);
+  assert.equal(contentDigest(body),previewDigest);
+  return checkoutSnapshot(preview);
 }
 
 type Fixture=Awaited<ReturnType<typeof fixture>>;

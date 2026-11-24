@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { digest, exact, id, integer } from '../../packages/commerce/values.mts';
+import { digest, exact, id } from '../../packages/commerce/values.mts';
 import { commandCorrelation, CommandClaimDenied } from '../../packages/commerce/command-correlation.mts';
 import { claimCorrelation } from './command-fixtures.mts';
 
@@ -10,10 +10,7 @@ test('shared primitives retain SHA256 bytes and strict scalar boundaries', () =>
   assert.equal(id('A_1-2'), 'A_1-2'); assert.equal(id('x'.repeat(96)).length, 96);
   for (const value of ['', 'x'.repeat(97), '../escape', 'https://provider', 1, null])
     assert.throws(() => id(value), /INVALID_INPUT/);
-  assert.equal(integer(4, 4), 4);
-  for (const value of [-1, 1.5, '1', NaN, Infinity, Number.MAX_SAFE_INTEGER + 1])
-    assert.throws(() => integer(value), /INVALID_INPUT/);
-  assert.throws(() => integer(3, 4), /INVALID_INPUT/);
+
 });
 
 test('shared shape validation retains exact key sets', () => {
