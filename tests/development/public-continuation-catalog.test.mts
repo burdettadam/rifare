@@ -22,4 +22,15 @@ test('CONT-CATALOG-NEGATIVE subtraction refuses changed claims source cases and 
   assert.throws(() => withoutContinuationCoverage(changed));
   const previousChanged = readAdapterCatalog(); previousChanged.adapters[0].operations[0].semantics = 'unsupported';
   assert.throws(() => assertPreviousCatalog(previousChanged, expected));
+  for (const path of ['tests/fixtures/ecosystem-assurance/sdk-pins.v1.json', 'tests/fixtures/ecosystem-assurance/typed-source-pins.v1.json']) {
+    const changed = readAdapterCatalog(); changed.oracle_pins.find((pin: any) => pin.path === path).sha256 = '0'.repeat(64);
+    assert.throws(() => withoutContinuationCatalog(changed));
+  }
+  const changedCase = readAdapterCatalog();
+  changedCase.adapters.flatMap((adapter: any) => adapter.operations).flatMap((operation: any) => operation.native_cases)
+    .find((ref: any) => ref.path === 'tests/development/growth-marketing.test.mts').sha256 = '0'.repeat(64);
+  assert.throws(() => withoutContinuationCatalog(changedCase));
+  const changedCoverage = structuredClone(expected);
+  changedCoverage.native_cases.find((ref: any) => ref.path === 'tests/development/growth-marketing.test.mts').sha256 = '0'.repeat(64);
+  assert.throws(() => withoutContinuationCoverage(changedCoverage));
 });

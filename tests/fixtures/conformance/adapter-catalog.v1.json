@@ -3664,13 +3664,13 @@
               "id": "M09-G06-PREP-01",
               "name": "M09-G06-PREP-01",
               "path": "tests/development/growth-marketing.test.mts",
-              "sha256": "c6d1efb28caff707c65399a952e555a371772afb0b02397ad195c583adad3651"
+              "sha256": "e068b909ca74b9aebe2d16d1d0832c80bf92c14998112359477606e630345262"
             },
             {
               "id": "M09-G06-PREP-02",
               "name": "M09-G06-PREP-02",
               "path": "tests/development/growth-marketing.test.mts",
-              "sha256": "c6d1efb28caff707c65399a952e555a371772afb0b02397ad195c583adad3651"
+              "sha256": "e068b909ca74b9aebe2d16d1d0832c80bf92c14998112359477606e630345262"
             }
           ],
           "direct_fixtures": []
@@ -3686,7 +3686,7 @@
               "id": "M09-G06-PREP-01",
               "name": "M09-G06-PREP-01",
               "path": "tests/development/growth-marketing.test.mts",
-              "sha256": "c6d1efb28caff707c65399a952e555a371772afb0b02397ad195c583adad3651"
+              "sha256": "e068b909ca74b9aebe2d16d1d0832c80bf92c14998112359477606e630345262"
             }
           ],
           "direct_fixtures": []
@@ -3702,7 +3702,7 @@
               "id": "M09-G06-PREP-03",
               "name": "M09-G06-PREP-03",
               "path": "tests/development/growth-marketing.test.mts",
-              "sha256": "c6d1efb28caff707c65399a952e555a371772afb0b02397ad195c583adad3651"
+              "sha256": "e068b909ca74b9aebe2d16d1d0832c80bf92c14998112359477606e630345262"
             }
           ],
           "direct_fixtures": []
@@ -3718,7 +3718,7 @@
               "id": "CASE-M09-G05-01",
               "name": "CASE-M09-G05-01",
               "path": "tests/development/growth-marketing.test.mts",
-              "sha256": "c6d1efb28caff707c65399a952e555a371772afb0b02397ad195c583adad3651"
+              "sha256": "e068b909ca74b9aebe2d16d1d0832c80bf92c14998112359477606e630345262"
             }
           ],
           "direct_fixtures": []
@@ -3734,13 +3734,13 @@
               "id": "TEST-034",
               "name": "TEST-034",
               "path": "tests/development/growth-marketing.test.mts",
-              "sha256": "c6d1efb28caff707c65399a952e555a371772afb0b02397ad195c583adad3651"
+              "sha256": "e068b909ca74b9aebe2d16d1d0832c80bf92c14998112359477606e630345262"
             },
             {
               "id": "PORT-027",
               "name": "PORT-027",
               "path": "tests/development/growth-marketing.test.mts",
-              "sha256": "c6d1efb28caff707c65399a952e555a371772afb0b02397ad195c583adad3651"
+              "sha256": "e068b909ca74b9aebe2d16d1d0832c80bf92c14998112359477606e630345262"
             }
           ],
           "direct_fixtures": []
@@ -8074,7 +8074,7 @@
     },
     {
       "path": "tests/fixtures/conformance/expected-coverage.v1.json",
-      "sha256": "49571f15011a24e4df43797b2c4ec29ae0ec313cb0829e50299539080cf15412"
+      "sha256": "781d92c3518eecb5f5c7f1f6a3269578c9c7579a6ddb1380e976360cac357205"
     },
     {
       "path": "tests/fixtures/conformance/source-inputs.v1.json",
@@ -8582,7 +8582,7 @@
     },
     {
       "path": "tests/development/growth-marketing.test.mts",
-      "sha256": "c6d1efb28caff707c65399a952e555a371772afb0b02397ad195c583adad3651"
+      "sha256": "e068b909ca74b9aebe2d16d1d0832c80bf92c14998112359477606e630345262"
     },
     {
       "path": "tests/development/growth-optional-helpers.mts",
@@ -9126,11 +9126,11 @@
     },
     {
       "path": "tests/fixtures/ecosystem-assurance/sdk-pins.v1.json",
-      "sha256": "ce3736f79bd8c8e95836acec84ab2ed6ac84ca58b19d2b3c95b33d2387f1a107"
+      "sha256": "b729bce723fd803f8597a561b8b6524ddc6b2c0656d5531b558f39ae86f3d00c"
     },
     {
       "path": "tests/fixtures/ecosystem-assurance/typed-source-pins.v1.json",
-      "sha256": "6eec87b7021bc8a9f85eae12cc427e8cfacf70adbcf4c7faabd3a1ec57bf9f17"
+      "sha256": "75a744c8820f3f704c9c0095e297679f3722fb4bae0f6e8e19aa08d39b71de1f"
     },
     {
       "path": "tests/fixtures/ecosystem-assurance/typed-task-oracle.v1.json",

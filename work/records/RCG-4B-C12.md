@@ -541,6 +541,15 @@ conformance obligations, unqualified extension status and disabled code executio
 remain unchanged. Preparation-pin renewal does not renew submitted old packets or
 qualify an external contributor, adapter, sandbox or provider.
 
+The catalog's dependent input pins renew only the reviewed consent-marker test
+and those two preparation fixtures, plus the derived coverage-file digest.
+Adapter/operation/case membership and expected outcomes stay unchanged. Historical
+C2/C5/C6 comparisons preserve their frozen canonical digests through deep-copied
+reconstruction of only three explicitly reviewed current-to-prior pins, including
+actual-file, supplied-hash and exact-occurrence checks. Existing negative coverage
+also rejects forged pins at this boundary. All 11 historical catalog cases pass
+exploratorily; the earlier catalog checksum failure remains uncredited.
+
 Both roles cleared `f5742f7` for the bounded pinned local post-lock expiry case.
 The next source adds attempt-specific privacy behavior without invoking a provider:
 privacy export must contain the durable attempt time; erasure under hold must keep
