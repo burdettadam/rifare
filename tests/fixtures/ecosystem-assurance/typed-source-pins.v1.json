@@ -1,6 +1,8 @@
 {
   "schema_version": 1,
   "protected_source": "e36dbcd7cf392d04f21d082e834698bbc6a1ac79",
+  "reviewed_candidate": "c7ef1a111b66228e0e96babb9b0684de39073fdc",
+  "reviewed_candidate_status": "unprotected_feature_checkpoint",
   "pins": [
     {
       "path": "packages/agent/action-mcp.mts",
@@ -12,7 +14,7 @@
     },
     {
       "path": "packages/commerce/action-gateway.mts",
-      "sha256": "af5944ee783f8679ad114e7b613f9783812714e7cff0b429194747ad850b6ae7"
+      "sha256": "77885c013719a6da810627eae561529ba01a2a2c8d886a2ce7656ba104a1bbe0"
     },
     {
       "path": "packages/commerce/case-configurations.mts",
@@ -20,7 +22,7 @@
     },
     {
       "path": "packages/commerce/authorization.mts",
-      "sha256": "9811f1692f9dc57545b907fcf1c5982dc2cb61c5b9b54d3bd2e001823f87ec75"
+      "sha256": "ef99a16e5af8ba60eea95cd1abdb1bf4f5861695761cc928a8a121b873db9b97"
     },
     {
       "path": "packages/commerce/skills.mts",

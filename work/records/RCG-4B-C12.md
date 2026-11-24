@@ -532,6 +532,15 @@ The existing benchmark and envelope suites pass 73 and 50 cases locally. Stored
 pilot artifacts bound to older controls remain fail-closed; this renewal neither
 rewrites those artifacts nor supplies real observations or pilot authorization.
 
+The retained ecosystem preparation inputs similarly renew four independently
+reviewed source pins: optional loyalty/drop-off gateway paths, authorization
+formatting, and the bounded catalog/documentation changes. The original protected
+source remains historical metadata; the reviewed feature checkpoint is recorded
+separately as unprotected. Pin membership, frozen typed-task oracle, native
+conformance obligations, unqualified extension status and disabled code execution
+remain unchanged. Preparation-pin renewal does not renew submitted old packets or
+qualify an external contributor, adapter, sandbox or provider.
+
 Both roles cleared `f5742f7` for the bounded pinned local post-lock expiry case.
 The next source adds attempt-specific privacy behavior without invoking a provider:
 privacy export must contain the durable attempt time; erasure under hold must keep

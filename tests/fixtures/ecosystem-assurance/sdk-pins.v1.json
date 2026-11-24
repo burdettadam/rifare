@@ -1,6 +1,8 @@
 {
   "schema_version": 1,
   "protected_source": "e36dbcd7cf392d04f21d082e834698bbc6a1ac79",
+  "reviewed_candidate": "c7ef1a111b66228e0e96babb9b0684de39073fdc",
+  "reviewed_candidate_status": "unprotected_feature_checkpoint",
   "pins": [
     {
       "path": "packages/commerce/skills.mts",
@@ -20,7 +22,7 @@
     },
     {
       "path": "packages/conformance/adapter-catalog.mts",
-      "sha256": "6c69d00dd9229f9260320e49f0da5730409eb54c62609600455d3ec2e19cfa2f"
+      "sha256": "3b9d105658c9107d6ea61b7571bb16bd85fb5da2043709fb323d7c33533b558f"
     },
     {
       "path": "docs/SKILL-ARCHITECTURE.md",
@@ -28,7 +30,7 @@
     },
     {
       "path": "docs/ADAPTER-CONFORMANCE.md",
-      "sha256": "1576d667974495cf4c46bd04071a4cfe605e9755d55c0eeb0e7924c16500070a"
+      "sha256": "d255509ddf1cf6efe89a17964ebe7b3127164bfe5fb77a153713942995810e63"
     },
     {
       "path": "planning/licensing-policy.json",
