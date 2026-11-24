@@ -1,6 +1,7 @@
 # RCG-4B-C12 - Native original execution ownership and fencing
 
 State: assigned; mechanism proof and implementation pending.
+
 Base: `c0359132500d1dd6c527819e1142e929283b2593` (PR12).
 Branch: `feat/medusa-native-execution-fence`.
 Writer/integration owner: root, existing primary Rifare checkout.
@@ -609,3 +610,26 @@ restricted worker to locate the first missing order-binding or native-read bound
 This is a failure baseline: it must retain zero System authorization, record any
 native order/payment residue after compensation and make no healthy-completion or
 full-C12 claim. The corrected mechanism must follow the observed upstream ordering.
+
+## Candidate fixture clock correction
+
+The unmerged fixture's performance-based projection could produce timestamps in
+the future relative to the served browser and a fresh history process. Three
+deterministic regressions fail against the original candidate: preview wall-time
+binding, retained preparation in a separate process, and the actual browser
+receipt journey with its unchanged timestamp validation.
+
+The correction restores one shared wall-clock source, consistent with the accepted
+base. Future-time, backward-time, expiry, revocation and recovery-integrity guards
+remain unchanged. The candidate-only rewind-success expectation is replaced by
+exact clock refusal with unchanged intent/effect counts; fractional ticks and
+terminal expiry after rewind are covered.
+
+The new regressions pass with the correction, but the complete four-file affected
+campaign is **32/34**, with two existing guarded fixture-setup failures. Independent
+authority review approves the bounded source change; regression clearance is
+withheld. This is not a fix or acceptance claim for every earlier intermittent
+failure. Preserve the failed observations and establish a suitable qualification
+environment before renewing the unchanged complete runtime gate. Raw diagnostic
+and clock observations remain in ignored local evidence. No full C12, connected
+qualification, release or merge readiness follows from this correction.

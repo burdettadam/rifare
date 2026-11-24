@@ -4,8 +4,9 @@ import assert from 'node:assert/strict';
 import { runCheckoutBrowser } from './delegated-checkout-browser-process.mts';
 import { usingReview } from './delegated-checkout-review-helpers.mts';
 
-async function receiptJourney(scenario: string) {
+async function receiptJourney(scenario: string, ready?: () => void) {
   return usingReview(async fixture => {
+    ready?.();
     const result = await runCheckoutBrowser({
       scenario, url: fixture.url, bearer: fixture.bearer, original: fixture.original,
       receipts: { primary: fixture.primaryReceipt, wrong_binding: fixture.pendingReceipt },
@@ -36,3 +37,10 @@ test('RCG5D-BROWSER-LOST-RECEIPT', () => receiptJourney('receipt_lost'));
 test('RCG5D-BROWSER-WRONG-BINDING', () => receiptJourney('receipt_invalid_binding'));
 test('RCG5D-BROWSER-LATE-CLEAR', () => receiptJourney('receipt_late_clear'));
 test('RCG5D-BROWSER-MOBILE-KEYBOARD', () => receiptJourney('receipt_mobile_keyboard'));
+
+test('RCG5D-BROWSER-WALL-CLOCK', t => {
+  t.mock.timers.enable({ apis: ['Date'], now: Date.now() });
+  let elapsed = 10.9;
+  t.mock.method(performance, 'now', () => elapsed);
+  return receiptJourney('receipt_journey', () => { elapsed += 10000; });
+});

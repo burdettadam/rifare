@@ -168,8 +168,9 @@ export async function openCheckoutFixture(directory: string, instanceId: string,
     db = new DatabaseSync(join(directory, 'commerce.sqlite'));
     source = new DatabaseSync(join(directory, 'source.sqlite'), { readOnly: mode === 'history' });
     if (marker) validateStores(db, source, marker);
-    const clockOrigin = Date.now() - performance.now();
-    const fixtureClock = () => Math.floor(clockOrigin + performance.now());
+    // Persisted timestamps must share the browser and fresh history process's
+    // wall-clock domain. Owners retain their own backward-time refusal guards.
+    const fixtureClock = () => Date.now();
     const kernel = new CommerceKernel(db, fixtureClock), caps = new Capabilities(kernel), simulator = new StoreSimulator(kernel, caps);
     let delivery: ProofDelivery | undefined;
     const customers = new CustomerAccess(kernel, value => { if (mode === 'fresh') delivery = value; });

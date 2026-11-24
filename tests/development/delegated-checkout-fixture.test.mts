@@ -75,12 +75,82 @@ test('RCG5A-FIXTURE-NATIVE-COMPOSITION', t => directory(async path => {
     const fractionalTick = await request(r, c.bearer, 'preview', c.preview_request);
     assert.equal(fractionalTick.status, 200);
     assert.ok(fractionalTick.body.result.created_at <= wallTime, 'Fractional monotonic ticks must not create future records');
+    const beforeRewind = readCheckoutFixtureSnapshot(path, 'fixture-a');
     t.mock.timers.setTime(wallTime - 60000);
     const afterRewind = await request(r, c.bearer, 'preview', c.preview_request);
-    assert.equal(afterRewind.status, 200, 'Disposable fixture owners share a monotonic clock after a wall-clock rewind');
+    assert.equal(afterRewind.status, 409);
+    assert.deepEqual(afterRewind.body, { error: 'CHECKOUT_CLOCK_INVALID' });
+    assert.deepEqual(readCheckoutFixtureSnapshot(path, 'fixture-a'), beforeRewind);
   } finally { await f.close(); }
   assert.equal(readCheckoutFixtureSnapshot(path, 'fixture-a').intent_count, 0);
   await assert.rejects(fetch(f.ready.url + '/health', { signal: AbortSignal.timeout(1000) }));
+}));
+
+test('RCG5A-FIXTURE-CLOCK-DOMAIN', t => directory(async path => {
+  const wallTime = Date.now();
+  t.mock.timers.enable({ apis: ['Date'], now: wallTime });
+  let elapsed = 10.9;
+  t.mock.method(performance, 'now', () => elapsed);
+  const fixture = await openCheckoutFixture(path, 'clock-domain', 'fresh');
+  try {
+    elapsed += 10000;
+    const credentials = fixture.ready.credentials!;
+    const preview = await request(fixture.ready, credentials.bearer, 'preview', credentials.preview_request);
+    assert.equal(preview.status, 200);
+    assert.ok(preview.body.result.created_at <= Date.now(), 'Elapsed performance time must not mint a future wall timestamp');
+  } finally { await fixture.close(); }
+  const after = readCheckoutFixtureSnapshot(path, 'clock-domain');
+  assert.equal(after.intent_count, 0); assert.equal(after.effects_digest, fixture.ready.effects_digest);
+}));
+
+test('RCG5A-FIXTURE-CLOCK-HISTORY', t => directory(async path => {
+  t.mock.timers.enable({ apis: ['Date'], now: Date.now() });
+  let elapsed = 10.9;
+  t.mock.method(performance, 'now', () => elapsed);
+  const fixture = await openCheckoutFixture(path, 'clock-history', 'fresh');
+  const credentials = fixture.ready.credentials!;
+  let prepared: any;
+  try {
+    elapsed += 10000;
+    const response = await request(fixture.ready, credentials.bearer, 'prepare', {
+      preview_id: credentials.primary.preview_id, context_id: credentials.primary.context_id,
+    });
+    assert.equal(response.status, 200); prepared = response.body.result;
+  } finally { await fixture.close(); }
+  const before = readCheckoutFixtureSnapshot(path, 'clock-history');
+  const history = child([path, 'clock-history', 'history']);
+  try {
+    const ready = await history.ready;
+    assert.equal(ready.event, 'checkout_fixture_ready'); assert.notEqual(ready.pid, process.pid);
+    const retained = await request(ready as FixtureReady, credentials.bearer, 'status', { intent_id: prepared.intent_id });
+    assert.equal(retained.status, 200, 'Fresh history process must read the original wall-dated preparation');
+    assert.deepEqual(retained.body.result, prepared);
+  } finally {
+    if (history.process.exitCode === null && history.process.signalCode === null) history.process.kill();
+    await exit(history.process);
+  }
+  assert.deepEqual(readCheckoutFixtureSnapshot(path, 'clock-history'), before);
+}));
+
+test('RCG5A-FIXTURE-CLOCK-EXPIRY-REWIND', t => directory(async path => {
+  const wallTime = Date.now();
+  t.mock.timers.enable({ apis: ['Date'], now: wallTime });
+  const fixture = await openCheckoutFixture(path, 'clock-expiry', 'fresh');
+  const credentials = fixture.ready.credentials!;
+  try {
+    const prepared = await request(fixture.ready, credentials.bearer, 'prepare', {
+      preview_id: credentials.primary.preview_id, context_id: credentials.primary.context_id,
+    });
+    assert.equal(prepared.status, 200);
+    t.mock.timers.setTime(prepared.body.result.expires_at + 1);
+    const expired = await request(fixture.ready, credentials.bearer, 'status', { intent_id: prepared.body.result.intent_id });
+    assert.equal(expired.status, 200); assert.equal(expired.body.result.state, 'expired');
+    t.mock.timers.setTime(wallTime + 1000);
+    const retained = await request(fixture.ready, credentials.bearer, 'status', { intent_id: prepared.body.result.intent_id });
+    assert.equal(retained.status, 200); assert.deepEqual(retained.body.result, expired.body.result);
+  } finally { await fixture.close(); }
+  const after = readCheckoutFixtureSnapshot(path, 'clock-expiry');
+  assert.equal(after.intent_count, 1); assert.equal(after.effects_digest, fixture.ready.effects_digest);
 }));
 
 test('RCG5A-FIXTURE-TRANSIENT-SECRETS', () => directory(async path => {
