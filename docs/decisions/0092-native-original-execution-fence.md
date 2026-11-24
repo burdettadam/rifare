@@ -241,6 +241,37 @@ Two independent read-only reviews cleared this bounded local recovery slice. It
 does not verify remote settlement or connected delegated-provider authority, and it
 does not by itself complete the broader C12 fault/restore matrix.
 
+## Original-row scope and retained anchors
+
+Candidate `1a21c9f70663771ce998dd271f9d6686b2c306b3` installs an exact
+row-level scope trigger on every native commerce relation granted to an execution
+worker. Worker validity remains a strict conjunction against its one journal
+original. Ordinary granted roles use a separate membership predicate: touching
+either side of a protected cart, order, payment, link or child relation is refused,
+while an unrelated ordinary Cart update remains available.
+
+The membership path follows retained owner markers, payment-session handle
+fingerprints and original command identity after journal privacy minimization clears
+direct cart, collection, session and order IDs. It also survives soft-deleted parents.
+Workers cannot rotate the session correlation handle, remove the authenticated Cart
+owner marker or hard-delete those retained anchors; payment-session soft-delete and
+restore remain available. Actual controls cover mixed foreign/protected links,
+reservation parent identity, prebinding order children, deleted-parent adjustments
+and effects, and exact and mixed-reference writes after minimization.
+
+Fresh Windows PostgreSQL campaigns `scope11` and `completion44_scope` both pass at
+that exact source. The former runs the durable claim, worker-tampering, ordinary-role,
+privacy and fault controls; the latter completes the actual upstream healthy path.
+The final census found no active C12 clients and no execution roles with `LOGIN`.
+Two independent read-only reviews cleared this bounded slice with no remaining scoped
+blocker. Evidence from earlier failed and superseded scope campaigns is retained; two
+roles minted by the failed `scope10` experiment were explicitly changed to `NOLOGIN`
+before the successful rerun.
+
+This is not full C12 qualification. A paused `completeCartWorkflow` reversal witness,
+own-dependency compiled execution, populated prior-schema upgrade/replay, the broader
+restore matrix and connected provider authority remain open.
+
 ## Initial mechanism disposition
 
 The a4c7a7e native setup disproved the service-subclass/discoveryPath hypothesis.
