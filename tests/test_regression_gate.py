@@ -34,7 +34,8 @@ class GateFixture(unittest.TestCase):
                        'tests':[{'id':'python:test_feature.Feature.test_sum','suite':'python','runner_case_id':'test_feature.Feature.test_sum','source':'tests/test_feature.py','capability_id':'FEATURE-SYNTHETIC'}],
                        'protected_files':['tests/test_feature.py','tests/expected.json','contract.json'],
                        'source_count_fixture':None,'source_inventory':None}
-        self.save_registry();self.git('init','-b','main');self.git('config','user.name','Synthetic Fixture')
+        self.save_registry();self.git('init','-b','main');self.git('config','core.autocrlf','false')
+        self.git('config','user.name','Synthetic Fixture')
         self.git('config','user.email','test@example.invalid');self.base=self.commit('Synthetic retained fixture')
         self.control=self.home/'controller'
         self.pins=G.export_control(self.repo,self.base,self.base,self.control)
@@ -177,7 +178,16 @@ class BaselineRetentionTests(GateFixture):
         self.registry['tests'][0]['capability_id']='MISSING'
         with self.assertRaisesRegex(ValueError,'orphan'):G.validate_registry(self.registry)
     def test_source_mode_change_requires_review(self):
-        p=self.repo/'tests/test_feature.py';p.chmod(0o755);self.commit()
+        relative='tests/test_feature.py'
+        p=self.repo/relative
+        before_execute=p.stat().st_mode & 0o111
+        before_git_mode=self.git('ls-tree','HEAD','--',relative).split()[0]
+        p.chmod(0o755)
+        if p.stat().st_mode & 0o111 == before_execute:
+            self.skipTest('Filesystem cannot change executable mode bits with chmod')
+        self.commit()
+        if self.git('ls-tree','HEAD','--',relative).split()[0] == before_git_mode:
+            self.skipTest('Git cannot observe the filesystem executable mode change')
         self.assertIn('tests/test_feature.py',self.delta()['review_required_paths'])
     def test_candidate_approval_text_cannot_override_changed_oracle(self):
         self.write('approved.json','{"approved":true,"reviewer":"synthetic"}')
@@ -191,10 +201,22 @@ class BaselineRetentionTests(GateFixture):
         current=G.snapshot(self.repo,self.base)
         self.assertIn('inventory configuration',str(G.compare(base,current)['errors']))
     def test_source_symlink_in_commit_is_not_supported(self):
-        os.symlink('test_feature.py',self.repo/'tests/linked.py');self.commit()
+        try:
+            os.symlink('test_feature.py',self.repo/'tests/linked.py')
+        except OSError as error:
+            if os.name == 'nt' and getattr(error,'winerror',None) == 1314:
+                self.skipTest('Windows symlink privilege unavailable (WinError 1314)')
+            raise
+        self.commit()
         with self.assertRaisesRegex(ValueError,'links/submodules'):self.gate()
     def test_symlink_baseline_path_is_rejected(self):
-        link=self.home/'linked.json';link.symlink_to(self.control/'baseline.json')
+        link=self.home/'linked.json'
+        try:
+            link.symlink_to(self.control/'baseline.json')
+        except OSError as error:
+            if os.name == 'nt' and getattr(error,'winerror',None) == 1314:
+                self.skipTest('Windows symlink privilege unavailable (WinError 1314)')
+            raise
         with self.assertRaisesRegex(ValueError,'symlink'):G.load_baseline(link,self.pins['baseline_sha256'],self.repo)
 
 

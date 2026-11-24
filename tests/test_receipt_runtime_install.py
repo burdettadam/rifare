@@ -48,6 +48,14 @@ class ReceiptRuntimeInstallTests(unittest.TestCase):
         self.addCleanup(self.pins.stop)
         self.addCleanup(self.tmp.cleanup)
 
+    def symlink(self, path, target, *, target_is_directory=False):
+        try:
+            path.symlink_to(target, target_is_directory=target_is_directory)
+        except OSError as error:
+            if os.name == 'nt' and getattr(error, 'winerror', None) == 1314:
+                self.skipTest('Windows symlink privilege unavailable (WinError 1314)')
+            raise
+
     def npm(self, command, **kwargs):
         self.assertEqual(command[:2], [shutil.which('npm') or 'npm', 'ci'])
         self.assertIn('--ignore-scripts', command)
@@ -140,7 +148,7 @@ class ReceiptRuntimeInstallTests(unittest.TestCase):
                     destination = self.root / relative
                     destination.parent.mkdir(parents=True, exist_ok=True)
                     if linked:
-                        destination.symlink_to(self.root / 'absent', target_is_directory=True)
+                        self.symlink(destination, self.root / 'absent', target_is_directory=True)
                     else:
                         destination.mkdir()
                     try:
@@ -153,17 +161,23 @@ class ReceiptRuntimeInstallTests(unittest.TestCase):
 
     def test_symlinked_modules_or_destination_and_non_directory_are_rejected(self):
         modules = self.root / 'node_modules'
-        modules.symlink_to(self.root / 'absent', target_is_directory=True)
         with patch.object(installer.subprocess, 'run') as npm:
-            with self.assertRaisesRegex(ValueError, 'real directory'):
-                installer.install(self.root)
-            modules.unlink()
+            with self.subTest(entry='modules_symlink'):
+                self.symlink(modules, self.root / 'absent', target_is_directory=True)
+                try:
+                    with self.assertRaisesRegex(ValueError, 'real directory'):
+                        installer.install(self.root)
+                finally:
+                    modules.unlink()
             modules.mkdir()
             destination = modules / 'jose'
-            destination.symlink_to(self.root / 'absent', target_is_directory=True)
-            with self.assertRaisesRegex(ValueError, 'real directory'):
-                installer.install(self.root)
-            destination.unlink()
+            with self.subTest(entry='destination_symlink'):
+                self.symlink(destination, self.root / 'absent', target_is_directory=True)
+                try:
+                    with self.assertRaisesRegex(ValueError, 'real directory'):
+                        installer.install(self.root)
+                finally:
+                    destination.unlink()
             destination.write_bytes(b'foreign file')
             with self.assertRaisesRegex(ValueError, 'real directory'):
                 installer.install(self.root)
@@ -213,10 +227,12 @@ class ReceiptRuntimeInstallTests(unittest.TestCase):
 
     def test_staged_symlink_hardlink_or_special_file_is_rejected(self):
         def symlink(prefix):
-            (prefix / 'node_modules/jose/unsafe').symlink_to(self.root / 'absent')
+            self.symlink(prefix / 'node_modules/jose/unsafe', self.root / 'absent')
         def hardlink(prefix):
             os.link(prefix / 'node_modules/jose/LICENSE.md', prefix / 'node_modules/jose/unsafe')
         def fifo(prefix):
+            if not hasattr(os, 'mkfifo'):
+                raise unittest.SkipTest('FIFO fixture unavailable: os.mkfifo is not supported')
             os.mkfifo(prefix / 'node_modules/jose/unsafe')
         for mutate in (symlink, hardlink, fifo):
             with self.subTest(mutation=mutate.__name__):

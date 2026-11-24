@@ -24,7 +24,7 @@ def digest(data: bytes) -> str: return hashlib.sha256(data).hexdigest()
 
 
 def clean_environment(source, scratch: Path):
-    env={k:v for k,v in source.items() if k in ('PATH','SystemRoot','WINDIR','COMSPEC')}
+    env={name:source[name] for name in ('PATH','SystemRoot','WINDIR','COMSPEC') if name in source}
     home=scratch/'home'; home.mkdir(exist_ok=True)
     env.update({'HOME':str(home),'TMPDIR':str(scratch),'TMP':str(scratch),'TEMP':str(scratch),
                 'TZ':'UTC','LANG':'C.UTF-8','LC_ALL':'C.UTF-8','NODE_ENV':'test',
@@ -162,9 +162,9 @@ def execute_native(root: Path, command: list[str], expected: list[str], timeout=
         # Never retain output containing inherited secrets/canaries unredacted.
         out=redact(native,secrets); err=redact(result.stderr,secrets); stdout=redact(result.stdout,secrets)
         if output:
-            (output/'native.xml').write_text(out)
-            (output/'native.stderr.txt').write_text(err)
-            (output/'native.stdout.txt').write_text(stdout)
+            (output/'native.xml').write_bytes(out.encode('utf-8'))
+            (output/'native.stderr.txt').write_bytes(err.encode('utf-8'))
+            (output/'native.stdout.txt').write_bytes(stdout.encode('utf-8'))
         record={'order':'reverse' if reverse else 'forward','command':command,'exit_code':result.returncode,'status':'passed' if error is None else 'failed',
                 'native_sha256':digest(out.encode()),'diagnostics_sha256':digest((stdout+'\n'+err).encode()),'error':error,'counts':counts}
         return record
@@ -179,7 +179,7 @@ def commands_for(root: Path, manifest, layer, pattern=None, reverse=False):
     else:
         node=shutil.which('node')
         if not node: raise ValueError('Node is required for the diagnostic harness')
-        command=[node,'--experimental-strip-types','--import',str(root/'tests/harness/network-deny.mts'),
+        command=[node,'--experimental-strip-types','--import',(root/'tests/harness/network-deny.mts').resolve().as_uri(),
                  '--test','--test-concurrency=1','--test-reporter=junit']
         if pattern: command+=['--test-name-pattern='+pattern]
         # Reverse is implemented by the native loader entry, not by changing expected IDs.

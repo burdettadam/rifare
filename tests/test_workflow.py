@@ -28,6 +28,14 @@ class WorkflowContracts(unittest.TestCase):
         fixture = json.loads(FIX.read_text())
         self.record = fixture['checkpoint']; self.binding = fixture['binding']
         self.attestations = fixture['attestations']
+        fixture_worktree = '/tmp/rifare-synthetic-one'
+        if not Path(fixture_worktree).is_absolute():
+            host_worktree = str((Path(tempfile.gettempdir())/'rifare-synthetic-one').resolve())
+            if self.binding['worktree'] == fixture_worktree:
+                self.binding['worktree'] = host_worktree
+            for assignment in self.attestations['assignments']:
+                if assignment['worktree'] == fixture_worktree:
+                    assignment['worktree'] = host_worktree
         self.policy = json.loads((ROOT / 'planning/workflow-policy.json').read_text())
 
     def assess(self):

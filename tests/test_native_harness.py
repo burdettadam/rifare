@@ -104,7 +104,7 @@ class NativeProcessTests(unittest.TestCase):
             root=Path(temp);p=root/'probe.mts'
             p.write_text("import test from 'node:test'; import assert from 'node:assert/strict';\n"+body)
             command=[shutil.which('node'),'--experimental-strip-types']
-            if guard:command+=['--import',str(ROOT/'tests/harness/network-deny.mts')]
+            if guard:command+=['--import',(ROOT/'tests/harness/network-deny.mts').resolve().as_uri()]
             command+=['--test','--test-reporter=junit']
             if pattern:command+=['--test-name-pattern='+pattern]
             command+=[str(p)]
@@ -155,7 +155,7 @@ class CandidateIdentityTests(unittest.TestCase):
     def setUp(self):
         self.temp=tempfile.TemporaryDirectory();self.root=Path(self.temp.name)
         self.git('init','-q');self.git('config','user.name','Rifare Fixture');self.git('config','user.email','fixture@example.invalid')
-        (self.root/'sample.txt').write_text('accepted\n');self.git('add','.');self.git('commit','-qm','Synthetic source baseline')
+        (self.root/'sample.txt').write_bytes(b'accepted\n');self.git('add','.');self.git('commit','-qm','Synthetic source baseline')
     def tearDown(self):self.temp.cleanup()
     def git(self,*args):
         return subprocess.check_output(['git','-c','core.hooksPath=/dev/null','-C',str(self.root),*args],stderr=subprocess.DEVNULL)

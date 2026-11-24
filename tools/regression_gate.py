@@ -204,7 +204,7 @@ def validate_membership(root, candidate):
 
 def inspect_checkout(root, commit):
     root=root.resolve(); commit_id(commit)
-    if git(root,'rev-parse','--show-toplevel').decode().strip()!=str(root): raise ValueError('candidate must be the exact worktree root')
+    if Path(git(root,'rev-parse','--show-toplevel').decode().strip()).resolve()!=root: raise ValueError('candidate must be the exact worktree root')
     tracked=set(git_files(root,commit))
     identity=native.source_identity(root)
     if not identity['clean'] or identity['commit']!=commit: raise ValueError('candidate is dirty or does not match pinned commit')

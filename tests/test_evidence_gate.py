@@ -250,18 +250,36 @@ class CaptureAndIntegrityTests(EvidenceFixture):
         (self.bundle/'unlisted.txt').write_text('extra')
         with self.assertRaisesRegex(ValueError,'artifact inventory'):self.verify()
     def test_symlink_artifact_rejected(self):
-        p=self.bundle/'supporting/demo.md';p.unlink();p.symlink_to(self.home/'notes/demo.md')
+        p=self.bundle/'supporting/demo.md';p.unlink()
+        try:
+            p.symlink_to(self.home/'notes/demo.md')
+        except OSError as error:
+            if os.name == 'nt' and getattr(error,'winerror',None) == 1314:
+                self.skipTest('Windows symlink privilege unavailable (WinError 1314)')
+            raise
         with self.assertRaisesRegex(ValueError,'symlink'):self.verify()
     def test_hardlinked_artifact_rejected(self):
         p=self.bundle/'supporting/demo.md';p.unlink();os.link(self.home/'notes/demo.md',p)
         with self.assertRaisesRegex(ValueError,'single-link'):self.verify()
     def test_symlink_ancestor_rejected(self):
-        p=self.home/'alias';p.symlink_to(self.bundle,target_is_directory=True);self.bundle=p
+        p=self.home/'alias'
+        try:
+            p.symlink_to(self.bundle,target_is_directory=True)
+        except OSError as error:
+            if os.name == 'nt' and getattr(error,'winerror',None) == 1314:
+                self.skipTest('Windows symlink privilege unavailable (WinError 1314)')
+            raise
+        self.bundle=p
         with self.assertRaisesRegex(ValueError,'symlink'):self.verify()
     def test_nonregular_artifact_does_not_block_on_fifo(self):
+        if not hasattr(os,'mkfifo'):
+            self.skipTest('FIFO fixture unavailable: os.mkfifo is not supported')
         os.mkfifo(self.bundle/'fifo')
         with self.assertRaisesRegex(ValueError,'regular single-link'):self.verify()
     def test_case_colliding_paths_rejected(self):
+        alias=self.bundle/'MANIFEST.json'
+        if alias.exists() and os.path.samefile(alias,self.bundle/'manifest.json'):
+            self.skipTest('Case-insensitive filesystem: case-distinct fixture names cannot coexist')
         (self.bundle/'MANIFEST.json').write_text('{}')
         with self.assertRaisesRegex(ValueError,'case-colliding'):self.verify()
     def test_no_leaking_known_secret_in_exception_text(self):
