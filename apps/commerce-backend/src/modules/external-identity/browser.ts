@@ -14,13 +14,12 @@ export async function browserBinding(cookie: unknown): Promise<string | undefine
   return value && /^[A-Za-z0-9_-]{43}$/.test(value) ? value : undefined;
 }
 
-export async function newBrowserBinding() {
+export async function newBrowserBinding(secure: boolean) {
   const { stringifySetCookie } = await import("cookie");
   const value = randomBytes(32).toString("base64url");
   return { value, requestCookie: `${cookieName}=${value}`, responseCookie: stringifySetCookie({
     name: cookieName, value, path: loginPath, maxAge: flowLifetime,
-    httpOnly: true, sameSite: "lax", secure: false,
-    // This application profile serves loopback HTTP only. HTTPS hosting needs qualification.
+    httpOnly: true, sameSite: "lax", secure,
   }) };
 }
 

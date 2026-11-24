@@ -23,7 +23,7 @@ export function identityMiddlewares(): MiddlewareRoute[] {
     if (!callback) {
       if (names.length || Object.keys(body).length) return deny();
       if (!await browserBinding(req.headers.cookie)) {
-        const binding = await newBrowserBinding();
+        const binding = await newBrowserBinding(new URL(config.webOrigin).protocol === "https:");
         res.appendHeader("Set-Cookie", binding.responseCookie);
         // The new server-generated binding is visible to the provider in this request.
         req.headers.cookie = binding.requestCookie;
