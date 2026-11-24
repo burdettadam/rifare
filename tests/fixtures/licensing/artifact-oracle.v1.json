@@ -1,6 +1,6 @@
 {
-  "source_file_count": 1992,
-  "source_count_reason": "Revision 100 records the current reviewed 1,992-member inventory, adding only the retained M07 catalog-baseline helper. The count is only a membership observation and changes no publication or legal gate.",
+  "source_file_count": 1996,
+  "source_count_reason": "Revision 101 records 1,996 reviewed members by adding only the native claim-interruption and prefix-restore-seed scripts, privacy runtime-source observer and its filesystem regression file. All previous paths and every component obligation, publication gate and legal gate remain unchanged.",
   "component_ids": [
     "git-agent-adaptations",
     "rifare-developer-helpers",

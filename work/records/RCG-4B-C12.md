@@ -582,6 +582,9 @@ An actual checkout review separately found four previously reviewed source/test
 files absent from the component inventory. They are added only to the existing
 project-material component with its historical ownership/licensing declarations
 unchanged; no policy, scope grant, third-party obligation or release gate is renewed.
+Under ADR-0008's narrow membership extension, both independent roles approve
+updating only the artifact oracle's source count and explanation from 1,992 to
+the exact 1,996 committed paths. All other oracle fields remain unchanged.
 
 Both roles cleared `f5742f7` for the bounded pinned local post-lock expiry case.
 The next source adds attempt-specific privacy behavior without invoking a provider:
