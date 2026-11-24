@@ -25,8 +25,9 @@ export default async function verifyProviderAttemptPrivacyRestore({ container }:
   const claimed = fixture.execution;
   const prefix = fixture.prefix;
   const identity = claimed ?? prefix;
+  const earlyPrefix = prefix && ["order-only", "order-cart-only", "order-payment-only", "cart-completed-only"].includes(prefix.stage);
   if (claimed) assert.ok(["claim-commit", "activation-commit"].includes(claimed.stage));
-  if (prefix) assert.ok(["pre-payment", "provider-admitted", "unobserved-completion"].includes(prefix.stage));
+  if (prefix) assert.ok(earlyPrefix || ["pre-payment", "provider-admitted", "unobserved-completion"].includes(prefix.stage));
   const nativeTables = ["cart", "cart_address", "cart_line_item", "cart_line_item_adjustment", "cart_line_item_tax_line",
     "cart_shipping_method", "cart_shipping_method_adjustment", "cart_shipping_method_tax_line",
     "order", "order_address", "order_item", "order_line_item", "order_line_item_adjustment", "order_line_item_tax_line",
@@ -57,7 +58,7 @@ export default async function verifyProviderAttemptPrivacyRestore({ container }:
   const before = await selected();
   if (identity) {
     assert.equal(before.state, "unknown");
-    if (claimed || prefix.stage === "pre-payment") assert.equal(before.execution_payment_attempted_at, null);
+    if (claimed || earlyPrefix || prefix.stage === "pre-payment") assert.equal(before.execution_payment_attempted_at, null);
     else {
       assert.ok(before.execution_payment_attempted_at instanceof Date);
       assert.equal(before.execution_payment_attempted_at.toISOString(), prefix.attempted_at);
@@ -70,8 +71,15 @@ export default async function verifyProviderAttemptPrivacyRestore({ container }:
       assert.equal(prefix.order_fingerprint, executionFingerprint(prefix.order_id));
       assert.equal(before.execution_order_fingerprint, prefix.order_fingerprint);
       assert.ok(await postgres("order").where({ id: prefix.order_id }).first());
-      assert.equal((await postgres("order_cart").where({ order_id: prefix.order_id, cart_id: before.cart_id })).length, 1);
-      assert.equal((await postgres("order_payment_collection").where({ order_id: prefix.order_id, payment_collection_id: before.payment_collection_id })).length, 1);
+      const cartLinks = await postgres("order_cart").where({ cart_id: before.cart_id });
+      const paymentLinks = await postgres("order_payment_collection").where({ payment_collection_id: before.payment_collection_id });
+      assert.equal(cartLinks.length, earlyPrefix ? Number(prefix.stage === "order-cart-only") : 1);
+      assert.equal(paymentLinks.length, earlyPrefix ? Number(prefix.stage === "order-payment-only") : 1);
+      for (const link of [...cartLinks, ...paymentLinks]) assert.equal(link.order_id, prefix.order_id);
+      const cart = await postgres("cart").where({ id: before.cart_id }).first();
+      if (earlyPrefix && prefix.stage !== "cart-completed-only") assert.equal(cart.completed_at, null);
+      else assert.ok(cart.completed_at instanceof Date);
+      if ("cart_completed_at" in prefix) assert.equal(cart.completed_at?.toISOString() ?? null, prefix.cart_completed_at);
       const payments = await postgres("payment").where({ payment_collection_id: before.payment_collection_id });
       assert.equal(payments.length, prefix.stage === "unobserved-completion" ? 1 : 0);
       if (payments[0]) assert.equal(payments[0].id, prefix.payment_id);

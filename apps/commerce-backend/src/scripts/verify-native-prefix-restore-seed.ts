@@ -12,7 +12,8 @@ import { ensureNativeGenerationInstallation, executionFingerprint, requireNative
 export default async function verifyNativePrefixRestoreSeed({ container }: ExecArgs) {
   requireNativeExecutionProfile();
   const stage = process.env.RIFARE_C12_PREFIX_STAGE;
-  assert.ok(["pre-payment", "provider-admitted", "unobserved-completion"].includes(stage ?? ""));
+  const early = ["order-only", "order-cart-only", "order-payment-only", "cart-completed-only"].includes(stage ?? "");
+  assert.ok(early || ["pre-payment", "provider-admitted", "unobserved-completion"].includes(stage ?? ""));
   const custody = process.env.RIFARE_C12_PREFIX_CUSTODY;
   assert.ok(custody && isAbsolute(custody) && custody.endsWith("-private.json"));
   assert.ok(/^[A-Za-z0-9_-]{43}$/.test(process.env.RIFARE_JOURNAL_PRIVACY_KEY ?? ""), "Explicit fixture privacy key required");
@@ -85,14 +86,18 @@ export default async function verifyNativePrefixRestoreSeed({ container }: ExecA
     const order = await f.postgres("order").where({ id: row.execution_order_id }).first();
     assert.equal(order.metadata.rifare_execution_owner, executionFingerprint(claim.worker.role));
     assert.equal(order.customer_id, f.customer.id); assert.equal(order.currency_code, original.command.currency);
-    for (const [table, criteria] of [
-      ["order_cart", { cart_id: original.cart.id, order_id: order.id }],
-      ["order_payment_collection", { payment_collection_id: original.collection.id, order_id: order.id }],
-      ["order_item", { order_id: order.id }],
-    ] as const) assert.equal((await f.postgres(table).where(criteria)).length, 1, table);
+    const cartLinks = await f.postgres("order_cart").where({ cart_id: original.cart.id });
+    const paymentLinks = await f.postgres("order_payment_collection").where({ payment_collection_id: original.collection.id });
+    assert.equal(cartLinks.length, early ? Number(stage === "order-cart-only") : 1);
+    assert.equal(paymentLinks.length, early ? Number(stage === "order-payment-only") : 1);
+    for (const link of [...cartLinks, ...paymentLinks]) assert.equal(link.order_id, order.id);
+    assert.equal((await f.postgres("order_item").where({ order_id: order.id })).length, 1);
+    const cart = await f.postgres("cart").where({ id: original.cart.id }).first();
+    if (early && stage !== "cart-completed-only") assert.equal(cart.completed_at, null);
+    else assert.ok(cart.completed_at instanceof Date);
     const payments = await f.postgres("payment").where({ payment_collection_id: original.collection.id, payment_session_id: original.session.id });
     assert.equal(payments.length, stage === "unobserved-completion" ? 1 : 0);
-    if (stage === "pre-payment") assert.equal(row.execution_payment_attempted_at, null);
+    if (early || stage === "pre-payment") assert.equal(row.execution_payment_attempted_at, null);
     else assert.ok(row.execution_payment_attempted_at instanceof Date);
     if (payments[0]) {
       assert.equal(payments[0].provider_id, "pp_rifare_fenced_system_fixture");
@@ -104,9 +109,11 @@ export default async function verifyNativePrefixRestoreSeed({ container }: ExecA
       original_id: original.command.command_id, prefix: { stage, owner: row.execution_owner_fingerprint,
         seal: row.execution_seal_fingerprint, handle: row.execution_payment_handle_fingerprint,
         order_id: order.id, order_fingerprint: row.execution_order_fingerprint,
+        cart_completed_at: cart.completed_at?.toISOString() ?? null,
         attempted_at: row.execution_payment_attempted_at?.toISOString() ?? null, payment_id: payments[0]?.id ?? null },
       privacy: { merchant: f.merchant, customer_id: f.customer.id, actor: f.privacyActor, context: f.context }, trust: f.trust }, null, 2), { flag: "wx", mode: 0o600 });
-    console.log("C12_NATIVE_PREFIX_SEED=" + JSON.stringify({ stage, native_order_links: true,
+    console.log("C12_NATIVE_PREFIX_SEED=" + JSON.stringify({ stage, native_order_links: cartLinks.length === 1 && paymentLinks.length === 1,
+      cart_links: cartLinks.length, payment_links: paymentLinks.length, cart_completed: cart.completed_at !== null,
       payment_present: payments.length === 1, attempted: row.execution_payment_attempted_at !== null,
       journal_outcome_observed: false, execution_authorized: false }));
   } finally {

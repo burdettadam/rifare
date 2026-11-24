@@ -64,6 +64,47 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
     }
     try {
       if (task.healthy_completion) {
+        if (["order-only", "order-cart-only", "order-payment-only", "cart-completed-only"].includes(task.restore_stage)) {
+          const hold = (): Promise<never> => new Promise(() => {});
+          const pause = async (): Promise<never> => {
+            assert.equal(typeof process.send, "function");
+            process.send!({ phase: "native-prefix-committed", stage: task.restore_stage, system_calls: calls });
+            return hold();
+          };
+          // These are pinned test interceptions of actual module returns, not
+          // public workflow hooks. Preserve receivers, arguments and commits.
+          if (task.restore_stage === "order-only") {
+            const orders: any = container.resolve(Modules.ORDER), create = orders.createOrders;
+            orders.createOrders = async function(...args: any[]) {
+              await create.apply(this, args);
+              return pause();
+            };
+          } else {
+            const link: any = container.resolve(ContainerRegistrationKeys.LINK);
+            const cartLink = link.getLinkModule(Modules.ORDER, "order_id", Modules.CART, "cart_id");
+            const paymentLink = link.getLinkModule(Modules.ORDER, "order_id", Modules.PAYMENT, "payment_collection_id");
+            assert.ok(cartLink && paymentLink && cartLink !== paymentLink);
+            for (const [service, selected] of [[cartLink, task.restore_stage === "order-cart-only"],
+              [paymentLink, task.restore_stage === "order-payment-only"]] as const) {
+              const create = service.create;
+              service.create = async function(...args: any[]) {
+                if (!selected) return hold();
+                await create.apply(this, args);
+                return pause();
+              };
+            }
+            const update = (carts as any).updateCarts;
+            (carts as any).updateCarts = async function(...args: any[]) {
+              const rows = Array.isArray(args[0]) ? args[0] : [args[0]];
+              if (rows.some((row: any) => row.id === task.cart_id && row.completed_at != null)) {
+                if (task.restore_stage !== "cart-completed-only") return hold();
+                await update.apply(this, args);
+                return pause();
+              }
+              return update.apply(this, args);
+            };
+          }
+        }
         if (task.restore_stage === "pre-payment" || task.restore_stage === "provider-admitted") {
           // Test-only interception of the pinned provider boundary, not an
           // upstream workflow hook or a production extension contract.
