@@ -268,9 +268,31 @@ blocker. Evidence from earlier failed and superseded scope campaigns is retained
 roles minted by the failed `scope10` experiment were explicitly changed to `NOLOGIN`
 before the successful rerun.
 
-This is not full C12 qualification. A paused `completeCartWorkflow` reversal witness,
-own-dependency compiled execution, populated prior-schema upgrade/replay, the broader
-restore matrix and connected provider authority remain open.
+This is not full C12 qualification. At this checkpoint, a paused
+`completeCartWorkflow` reversal witness, own-dependency compiled execution, populated
+prior-schema upgrade/replay, the broader restore matrix and connected provider
+authority remained open; the next section records the later workflow witness.
+
+## Paused full-workflow reversal
+
+Candidate `ad23fe752cea1cb3070bad6e7c31cdbe1721a8b6` pauses the genuine
+upstream `completeCartWorkflow` in its public `validate` hook after validation and
+before any native commerce write. The controller verifies the 31 installed
+worker-writable commerce tables are unchanged, retires the original worker, and has
+a distinct process observe recovery-only disposition before resuming that same
+workflow execution.
+
+The stale workflow is refused during order creation before payment authorization.
+`workflow4` asserts all 31 commerce snapshots remain byte-equivalent and that all
+five System-provider method counters are zero. The worker close promise is installed
+at spawn; every failure path terminates and joins the owned child before credential
+retirement and verifier cleanup. Exact-source `completion46_workflow` separately
+passes the healthy completion path. The final census found no active C12 clients and
+no execution roles with `LOGIN`.
+
+Two independent read-only reviews cleared this bounded slice. Own-dependency compiled
+execution, populated prior-schema upgrade/replay, the broader restore matrix,
+connected provider authority and full C12 remain open.
 
 ## Initial mechanism disposition
 
