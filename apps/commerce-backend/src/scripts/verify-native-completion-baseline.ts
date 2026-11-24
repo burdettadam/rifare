@@ -1,7 +1,8 @@
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
 import { randomBytes } from "node:crypto";
-import { dirname, resolve } from "node:path";
+import { writeFileSync } from "node:fs";
+import { dirname, isAbsolute, resolve } from "node:path";
 import type { ExecArgs } from "@medusajs/framework/types";
 import { ContainerRegistrationKeys, Modules } from "@medusajs/framework/utils";
 import { nativePaymentFixture } from "./native-payment-fixture";
@@ -26,8 +27,13 @@ export default async function verifyNativeCompletionBaseline({ container }: Exec
     return;
   }
   const postgres = container.resolve(ContainerRegistrationKeys.PG_CONNECTION);
+  const custody = process.env.RIFARE_C12_COMPLETION_CUSTODY;
+  if (custody) {
+    assert.ok(isAbsolute(custody) && custody.endsWith("-private.json"));
+    assert.match(process.env.RIFARE_JOURNAL_PRIVACY_KEY ?? "", /^[A-Za-z0-9_-]{43}$/);
+  }
   await ensureNativeGenerationInstallation(postgres);
-  const fixture = await nativePaymentFixture(container, false, true);
+  const fixture = await nativePaymentFixture(container, Boolean(custody), true);
   const loseCompletionAck = process.env.RIFARE_C12_LOST_COMPLETION_ACK === "verify";
   let workerRole: string | undefined;
   const writableTables = [
@@ -148,6 +154,14 @@ export default async function verifyNativeCompletionBaseline({ container }: Exec
     }
     assert.deepEqual(await snapshot(), recoveryBefore); assert.equal(Number((await postgres.raw(
       "select count(*) as n from pg_roles where rolname ~ '^rifare_exec_[a-f0-9]{32}$'")).rows[0].n), roleCount);
+    if (custody) writeFileSync(custody, JSON.stringify({
+      source: process.env.RIFARE_C12_SOURCE, original_id: original.command.command_id,
+      privacy: { merchant: fixture.merchant, customer_id: fixture.customer.id,
+        actor: fixture.privacyActor, context: fixture.context },
+      completed: { order_id: observation.result_id, payment_id: payments[0].id,
+        order_fingerprint: row.execution_order_fingerprint,
+        attempted_at: row.execution_payment_attempted_at.toISOString() },
+    }, null, 2), { flag: "wx", mode: 0o600 });
     console.log("C12_NATIVE_COMPLETION_BASELINE=" + JSON.stringify({ result: "completed", errors: observation.errors,
       native_commerce_write_residue: residue, inspected_native_tables: tables.length,
       changed_native_tables: changedTables,
