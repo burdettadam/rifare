@@ -74,13 +74,13 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
           }));
           throw error;
         }
-        console.log("C12_NATIVE_HEALTHY_COMPLETION_OBSERVATION=" + JSON.stringify({
-          result_id: completed.result?.id ?? null, errors: completed.errors.map((entry: any) => ({
+        const observation = { result_id: completed.result?.id ?? null, errors: completed.errors.map((entry: any) => ({
             message: entry.error?.message ?? String(entry.error), code: entry.error?.code ?? null,
             stack: entry.error?.stack ?? null,
-          })), system_calls: calls,
-        }));
+          })), system_calls: calls };
         if (completed.errors.length) throw completed.errors[0].error;
+        if (task.lose_completion_ack) { process.exitCode = 79; return; }
+        console.log("C12_NATIVE_HEALTHY_COMPLETION_OBSERVATION=" + JSON.stringify(observation));
         return;
       }
       const current = { metadata: { c12_generation_probe: "current", asserted_generation: 999, asserted_worker: "postgres" } };

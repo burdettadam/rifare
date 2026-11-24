@@ -747,7 +747,8 @@ export default class OperationJournalService {
       payment_collection_id: row.payment_collection_id, payment_session_id: row.payment_session_id,
       payment_provider_id: row.payment_provider_id, payment_context_digest: row.payment_context_digest,
       payment_fingerprint: row.payment_fingerprint, native_payment_id: row.native_payment_id,
-      native_payment_fingerprint: row.native_payment_fingerprint }, configuration.verifiedContext.actor, configuration.verifiedContext.salesChannelIds);
+      native_payment_fingerprint: row.native_payment_fingerprint, execution_order_id: row.execution_order_id,
+      execution_order_fingerprint: row.execution_order_fingerprint }, configuration.verifiedContext.actor, configuration.verifiedContext.salesChannelIds);
     const observed = await requestClock(tx);
     if (observed.getTime() < row.payment_observed_at.getTime() ||
         row.native_payment_observed_at && observed.getTime() < row.native_payment_observed_at.getTime()) throw conflict();
