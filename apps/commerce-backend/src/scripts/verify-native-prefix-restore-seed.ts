@@ -17,10 +17,16 @@ export default async function verifyNativePrefixRestoreSeed({ container }: ExecA
   assert.ok(custody && isAbsolute(custody) && custody.endsWith("-private.json"));
   assert.ok(/^[A-Za-z0-9_-]{43}$/.test(process.env.RIFARE_JOURNAL_PRIVACY_KEY ?? ""), "Explicit fixture privacy key required");
   const f = await nativePaymentFixture(container, true, true);
+  let workerRole: string | undefined;
+  let ownedChild: ReturnType<typeof spawn> | undefined;
+  let join: Promise<{ code: number | null; signal: string | null }> | undefined;
+  let deadline: ReturnType<typeof setTimeout> | undefined;
+  try {
   await ensureNativeGenerationInstallation(f.postgres);
   const original = await f.makePaymentOriginal();
   const claim = await f.journal.claimNativeExecution(original.command.command_id, f.context, f.verifier);
   assert.ok(claim.worker && claim.seal);
+  workerRole = claim.worker.role;
   const database = new URL(process.env.DATABASE_URL!);
   database.username = claim.worker.role; database.password = claim.worker.password;
   const env: NodeJS.ProcessEnv = { ...process.env, DATABASE_URL: database.href, MEDUSA_WORKER_MODE: "server",
@@ -37,14 +43,15 @@ export default async function verifyNativePrefixRestoreSeed({ container }: ExecA
   const entry = resolve(dirname(__filename), "native-execution-worker-entry." + (compiled ? "js" : "ts"));
   const args = compiled ? [entry] : ["-r", "ts-node/register", "-r", "tsconfig-paths/register", entry];
   const child = spawn(process.execPath, args, { cwd: process.cwd(), env, stdio: ["ignore", "pipe", "pipe", "ipc"] });
+  ownedChild = child;
   let output = "", observed = false;
   const closed = new Promise<{ code: number | null; signal: string | null }>((resolveChild, reject) => {
     child.once("error", reject);
     child.once("close", (code, signal) => resolveChild({ code, signal }));
   });
+  join = closed;
   // Install all child listeners before waiting. Every error joins the child.
   for (const stream of [child.stdout!, child.stderr!]) stream.on("data", data => { output = (output + data).slice(-40000); });
-  let deadline: ReturnType<typeof setTimeout> | undefined;
   const boundary = new Promise<void>((resolveBoundary, reject) => {
     deadline = setTimeout(() => reject(new Error("Native prefix deadline")), 60000);
     child.on("message", (message: any) => {
@@ -60,7 +67,6 @@ export default async function verifyNativePrefixRestoreSeed({ container }: ExecA
       else if (!observed) reject(new Error("Native prefix child exited before boundary: " + output));
     }, reject);
   });
-  try {
     await boundary;
     if (stage !== "unobserved-completion") {
       assert.equal(child.kill("SIGKILL"), true);
@@ -105,11 +111,11 @@ export default async function verifyNativePrefixRestoreSeed({ container }: ExecA
       journal_outcome_observed: false, execution_authorized: false }));
   } finally {
     if (deadline) clearTimeout(deadline);
-    if (child.exitCode === null && child.signalCode === null) child.kill("SIGKILL");
-    try { await closed; }
+    if (ownedChild && ownedChild.exitCode === null && ownedChild.signalCode === null) ownedChild.kill("SIGKILL");
+    try { if (join) await join; }
     finally {
       // Only contain this role. Preserve generation and unknown state for backup.
-      try { await f.postgres.raw(`alter role "${claim.worker.role}" nologin`); }
+      try { if (workerRole) await f.postgres.raw(`alter role "${workerRole}" nologin`); }
       finally { f.requestVerifier.close(); f.verifier.close(); }
     }
   }

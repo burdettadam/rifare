@@ -77,13 +77,15 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
             if (task.restore_stage === "pre-payment") return pause();
             const db: any = (this as any).postgres;
             const transaction = db.transaction;
-            db.transaction = async function(...args: any[]) {
-              const result = await transaction.apply(this, args);
+            // Knex exposes a read-only transaction property. Replace only this
+            // test provider's reference, delegating to the real database API.
+            (this as any).postgres = { transaction: async (...args: any[]) => {
+              const result = await transaction.apply(db, args);
               // The authorize transaction returns this original only after
               // durable provider admission COMMIT, before delegate validation.
               if (result === task.original_id) return pause();
               return result;
-            };
+            } };
             return original.call(this, input);
           };
         }
