@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import type { CommerceKernel, Scope, Row } from './kernel.mts';
-import { exact } from './kernel.mts';
-import { contentDigest } from './configuration-values.mts';
+import { exact, digest } from './kernel.mts';
+import { contentDigest, jsonValue } from './configuration-values.mts';
 import { storageInventoryCurrent } from './privacy-lifecycle.mts';
 import { PRIVACY_SOURCE_EXTENSIONS, privacyRuntimeSourcePath as safePath, observePrivacyRuntimeSources } from './privacy-runtime-sources.mts';
 export { observePrivacyRuntimeSources } from './privacy-runtime-sources.mts';
@@ -10,10 +10,12 @@ type SourcePin={path:string;sha256:string};
 type Surface={id:string;control:'local_sqlite'|'operator'|'external'|'synthetic_only';tables:string[];implementation:string[];export:string;erasure:string;retention:string;observation_required:string};
 type SurfaceContract={version:1;schema_digest:string;runtime_roots:string[];runtime_extensions:string[];runtime_sources:SourcePin[];surfaces:Surface[]};
 const EXTENSIONS=[...PRIVACY_SOURCE_EXTENSIONS];
+const CONTRACT_BYTES=2*1024*1024;
 const SURFACES=[
   'business_resources','support_conversations','attachment_media','retrieval_index','agent_task_state',
   'analytics_readmodels','integration_replicas','security_and_configuration','operation_audit','privacy_and_restore_controls',
   'provider_copies','process_and_browser_memory','caller_export_artifacts','recovery_files_and_database_pages','synthetic_fixture_storage',
+  'native_medusa_storage',
 ];
 const hash=(v:unknown)=>typeof v==='string'&&/^[a-f0-9]{64}$/.test(v);
 const same=(a:string[],b:string[])=>a.length===b.length&&[...a].sort().every((x,i)=>x===[...b].sort()[i]);
@@ -22,7 +24,7 @@ const same=(a:string[],b:string[])=>a.length===b.length&&[...a].sort().every((x,
  * changes require review before this diagnostic can report a current inventory. */
 export function privacySurfaceContract():SurfaceContract{
   const bytes=readFileSync(new URL('./contracts/privacy-storage-surfaces.v1.json',import.meta.url));
-  if(bytes.length>2*1024*1024)throw new Error('PRIVACY_SURFACE_CONTRACT_INVALID');
+  if(bytes.length>CONTRACT_BYTES)throw new Error('PRIVACY_SURFACE_CONTRACT_INVALID');
   let c:SurfaceContract;
   try{
     c=exact(JSON.parse(bytes.toString('utf8')),['version','schema_digest','runtime_roots','runtime_extensions','runtime_sources','surfaces']) as SurfaceContract;
@@ -31,6 +33,7 @@ export function privacySurfaceContract():SurfaceContract{
       exact(s,['id','control','tables','implementation','export','erasure','retention','observation_required']);
       if(!['local_sqlite','operator','external','synthetic_only'].includes(s.control)||!Array.isArray(s.tables)||!Array.isArray(s.implementation)||!s.implementation.length||s.implementation.some(p=>!safePath(p))||s.tables.some(t=>!/^commerce_[a-z_]+$/.test(t)))throw new Error();
       if((s.control==='local_sqlite')!==(s.tables.length>0)||[s.export,s.erasure,s.retention,s.observation_required].some(x=>typeof x!=='string'||!x.length||x.length>3000))throw new Error();
+      if(s.id==='native_medusa_storage'&&(s.control!=='operator'||s.tables.length!==0))throw new Error();
     }
     for(const p of c.runtime_sources){exact(p,['path','sha256']);if(!safePath(p.path)||!hash(p.sha256))throw new Error();}
     if(new Set(c.runtime_sources.map(p=>p.path)).size!==c.runtime_sources.length)throw new Error();
@@ -81,13 +84,13 @@ export function auditPrivacyCoverage(k:CommerceKernel,scope:Scope,input:unknown=
     }));
     return {
       version:'rifare-privacy-coverage-v1',tenant_id:s.tenant_id,store_id:s.store_id,observed_at:k.clock(),
-      schema_digest:inventory.schema_digest,contract_sha256:contentDigest(contract),runtime,
+      schema_digest:inventory.schema_digest,contract_sha256:digest(JSON.stringify(jsonValue(contract,CONTRACT_BYTES))),runtime,
       local_inventory_current:true,surface_declaration_matched:surfaceDeclarationMatched,
       tables,surfaces:contract.surfaces,
       outstanding:contract.surfaces.filter(surface=>surface.control!=='local_sqlite').map(surface=>({surface:surface.id,control:surface.control,required:surface.observation_required,state:'not_verified'})),
       subject_copy_outcomes:'not_exercised_by_inventory_audit',deployment_coverage_verified:false,
       privacy_qualified:false,physical_erasure:false,legal_compliance_certification:false,
-      claims_limit:'Exact SQLite schema and source bytes identify review drift. They do not discover every dynamic cache, erase caller copies, authenticate deployment declarations, prove legal retention or verify physical deletion.',
+      claims_limit:'Exact diagnostic SQLite schema and reviewed first-party source bytes identify review drift. Native Medusa PostgreSQL and other outstanding storage remain independently unverified. This audit does not discover every dynamic cache, erase caller copies, authenticate deployment declarations, prove legal retention or verify physical deletion.',
     };
   });
 }

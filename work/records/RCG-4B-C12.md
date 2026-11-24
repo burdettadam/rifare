@@ -560,6 +560,17 @@ API remains re-exported. No privacy-manifest pins or storage surfaces are renewe
 the pre-change tracked audit finds 104 added and five changed runtime sources,
 which still require family-specific review before inventory acceptance.
 
+Independent review of the actual added/changed source families permits a source
+inventory renewal with an explicit outstanding native Medusa surface. The original
+fifteen clauses and all 262 diagnostic SQLite assignments remain exact. Native
+PostgreSQL/auth/customer/cart/order/payment/workflow/journal records, transient
+identity state and qualification artifacts remain operator-managed and unverified;
+journal minimization does not erase other native records. Credentialed test and
+Admin artifacts require custody/permission review rather than a synthetic-only
+classification. Fixed original-clause hashing and new negative cases refuse
+relabeling native storage or borrowing SQLite coverage. The contract hash uses
+the privacy reader's existing 2 MiB bound; generic 128 KiB inputs remain unchanged.
+
 Both roles cleared `f5742f7` for the bounded pinned local post-lock expiry case.
 The next source adds attempt-specific privacy behavior without invoking a provider:
 privacy export must contain the durable attempt time; erasure under hold must keep

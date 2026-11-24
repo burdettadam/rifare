@@ -26,6 +26,14 @@
       "sha256": "bad819583ddd5fe55d7162289988e291178d404fd0a228b485e95004c614a5ef"
     },
     {
+      "path": "apps/commerce-api/checkout-review-client.js",
+      "sha256": "8116813c7b7c61e0817d02c80b592d6c1fb37585ab5f558cd9004a42c0281478"
+    },
+    {
+      "path": "apps/commerce-api/checkout-review.html",
+      "sha256": "bdb96675e4b7f6172a17d2fd91a9d62e8949cd0df8b5ae3767e6074707dad1f4"
+    },
+    {
       "path": "apps/commerce-api/client.js",
       "sha256": "e1420048eef2ee68b89584bdc4158fd0a8e7b52df50baed79b3cc34db0f5ff4a"
     },
@@ -154,6 +162,418 @@
       "sha256": "468df05ae23b171d80e8276e9aae0993356814fa40cd1445799c292815a3b792"
     },
     {
+      "path": "apps/commerce-backend/medusa-config.ts",
+      "sha256": "c119796e2bbb3499fc91245cb77b0594d9ac811cf980e57541fbbebfccffc85e"
+    },
+    {
+      "path": "apps/commerce-backend/run.mjs",
+      "sha256": "c95ed3fde065fa0d9af591f42ffa23f2141130ba4942b965b69e8884f37e0c90"
+    },
+    {
+      "path": "apps/commerce-backend/src/api/cart-context-middleware.ts",
+      "sha256": "634a2e8cb82f1930c03e38c6c3e42f2845229bfff9ce04a134c585284ef2fa4e"
+    },
+    {
+      "path": "apps/commerce-backend/src/api/identity-middleware.ts",
+      "sha256": "2b4734004b1bd5343e2ee629578a139389a42218e3253f6bfb1bd962a320b839"
+    },
+    {
+      "path": "apps/commerce-backend/src/api/middlewares.ts",
+      "sha256": "d9a4c80bfb34e499ee43851cfa768dddfce134d78c027abce3d4994f12ef4956"
+    },
+    {
+      "path": "apps/commerce-backend/src/api/store/rifare/cart-observations/[id]/route.ts",
+      "sha256": "bdab8216447aff8a0a2a3810fb3602ccfb3ed6ac793e53c30e383763ed99dbda"
+    },
+    {
+      "path": "apps/commerce-backend/src/cart-context/observation.ts",
+      "sha256": "8d69a60dcf55ddec437bb1e5fb301392063a2033a958204591dc69c671feb110"
+    },
+    {
+      "path": "apps/commerce-backend/src/cart-context/policy.ts",
+      "sha256": "de922c205e385fa7c5ef78eee27717c56ab14e06f53de86b31e9e5afa088ec23"
+    },
+    {
+      "path": "apps/commerce-backend/src/config/local-commerce.ts",
+      "sha256": "55beaf75610a05dda32986b7ea410cc7260f4c8d192a3649e5a1a31bdc2edf28"
+    },
+    {
+      "path": "apps/commerce-backend/src/modules/external-identity/browser.ts",
+      "sha256": "8940213cd4504f356447c94bc431effe50662721bee31c8ecd04d23f5cde0104"
+    },
+    {
+      "path": "apps/commerce-backend/src/modules/external-identity/index.ts",
+      "sha256": "150ae597b443ecc69092c241e042e51a4c873b63bd231ac5170a986afacdb227"
+    },
+    {
+      "path": "apps/commerce-backend/src/modules/external-identity/provider.ts",
+      "sha256": "9347e73d0c8f8a48b6491c813f57ce9c4973959f7669155da4a37b09f6d22ad7"
+    },
+    {
+      "path": "apps/commerce-backend/src/modules/fenced-system-payment/index.ts",
+      "sha256": "a250a8831b69d0cb8c3a9e753402333ea8365316f0088fe9beb206ccfaac4c44"
+    },
+    {
+      "path": "apps/commerce-backend/src/modules/fenced-system-payment/service.ts",
+      "sha256": "021da002b6bc5924cf062f8252a1cc6bcdebe18d17e0131e7068672121dc8484"
+    },
+    {
+      "path": "apps/commerce-backend/src/modules/operation-journal/authority-assets.ts",
+      "sha256": "6d7fd75b8864d09a1770f1050a3b6089881566b905437341b047ea0ef5e1b1ce"
+    },
+    {
+      "path": "apps/commerce-backend/src/modules/operation-journal/authority-sender.ts",
+      "sha256": "99c6b5492ed1918aac07eba34395255c25197d380a5916d5be4fe647d4e1e688"
+    },
+    {
+      "path": "apps/commerce-backend/src/modules/operation-journal/authority-start.ts",
+      "sha256": "4a6eb7c5111ff180067726e03c454c916cb12d319ae6a62121314896180e2a03"
+    },
+    {
+      "path": "apps/commerce-backend/src/modules/operation-journal/cart-facts.ts",
+      "sha256": "9938db1cd575ecfd919117db4ef1ff8c74d85625451131ba8931943c5135f0c2"
+    },
+    {
+      "path": "apps/commerce-backend/src/modules/operation-journal/command.ts",
+      "sha256": "fe4b714397badf8e6a4894cb09d4468753e2694b1003390b485fecc678973daf"
+    },
+    {
+      "path": "apps/commerce-backend/src/modules/operation-journal/continuation-session.ts",
+      "sha256": "3fff5b25a36abf8bb77c42e7bf20f1f08cfca60230cb247b99739b73ad5936b6"
+    },
+    {
+      "path": "apps/commerce-backend/src/modules/operation-journal/execution-claim.ts",
+      "sha256": "7d70af0501c8b02a9283f1ad64b4085628f766f34e093581c22fd4f253b3b264"
+    },
+    {
+      "path": "apps/commerce-backend/src/modules/operation-journal/execution-delivery.ts",
+      "sha256": "5b688143fa1cfd328f79a1d35e771a582133d2796b2c6207f2fe56a1fb9588e1"
+    },
+    {
+      "path": "apps/commerce-backend/src/modules/operation-journal/index.ts",
+      "sha256": "b10f9758d780abc271e38fbf5e03ad4744cfef72c30f44ef4169525b702c1482"
+    },
+    {
+      "path": "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123030615.ts",
+      "sha256": "552f45067275b8b08785588841fca5707bc530049cb7ba854545e8cdf2e4e5e7"
+    },
+    {
+      "path": "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123031903.ts",
+      "sha256": "99f35c9e3a40a0eda51be449a384158f686219b6428fa2228b534d932cae5a48"
+    },
+    {
+      "path": "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123033322.ts",
+      "sha256": "3831f4e033d5deec928f33773f9e1ee81ae0ab42c713ee5e43a5d72dab939bc8"
+    },
+    {
+      "path": "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123074932.ts",
+      "sha256": "3290bdd129602b1c6398f83ad76edfa3ca3d80644ffb8eff8f16fcab204ed27f"
+    },
+    {
+      "path": "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123075407.ts",
+      "sha256": "9c4d31ba4e41c0aa78d65b90d349593757db8425074d48dc2259f32d119b42ed"
+    },
+    {
+      "path": "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123081406.ts",
+      "sha256": "c25c1f0c63ed9e0118df7150e319a107619e6382a143ac81625c8f39b136288b"
+    },
+    {
+      "path": "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123094926.ts",
+      "sha256": "9217d03a010eac73533d3ac0c17eef744b4933ac17def3354bf734a5104f9b3d"
+    },
+    {
+      "path": "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123110127.ts",
+      "sha256": "a34ea8d4624c661672f15615db0a47a19e206fbee8437e8f11a196bf3a6188c0"
+    },
+    {
+      "path": "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123121939.ts",
+      "sha256": "15be4eb3a39c7a864265ec8207c4c2016baced1d2bfc3eab684e339444d8a435"
+    },
+    {
+      "path": "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123124010.ts",
+      "sha256": "29ad57f057b7ec9a7a01f2bc4baa677ff9252413d355daa2fd3d885431ba8cd2"
+    },
+    {
+      "path": "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123133906.ts",
+      "sha256": "9325ccb30824da94a3393a064fedf03ca0abfa6ec761db324207878df36e8f79"
+    },
+    {
+      "path": "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123162000.ts",
+      "sha256": "17a987e2691e4394b87223cb95233e06ca78ab5cfde5d3d7c3db6c1093d05f08"
+    },
+    {
+      "path": "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123171000.ts",
+      "sha256": "f906c9dbaafd9dec92438efd12693b51c3f560b6f3bde46cbfcc3c7fb775bcb7"
+    },
+    {
+      "path": "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123190000.ts",
+      "sha256": "b8cb525cad4f509ca5fb2dcb7f71d539f1b9f3c116626c3784cfaf388a4c44fb"
+    },
+    {
+      "path": "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123200000.ts",
+      "sha256": "dba370ea59e5a8eb11d91cd5e761e5960bd9e9c42110a0e498ed244c6ace05b5"
+    },
+    {
+      "path": "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123210000.ts",
+      "sha256": "67564edada993737ca5b37344dcf54d346e0df58402289c5f1777b7dbf778d69"
+    },
+    {
+      "path": "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123220000.ts",
+      "sha256": "ab2189065698f04fca58ff364af3fccceeac10877c06555ea510e217bb200f11"
+    },
+    {
+      "path": "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123230000.ts",
+      "sha256": "36a46bb32d3d591784b3ac26d2ff90323ad5d6b6f32d91dc8d012f4fcfdb88e5"
+    },
+    {
+      "path": "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123240000.ts",
+      "sha256": "664fee4e5821fe6877316f1bde86e3da181299f7347215b952744c9a192a287b"
+    },
+    {
+      "path": "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123250000.ts",
+      "sha256": "615b8296e1ec2f6e167ea95c9f8ae692afe2a2597de44994745413305167476c"
+    },
+    {
+      "path": "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123260000.ts",
+      "sha256": "ae4508f70b06a5cfce8858db038fe50cedcf073659e9927292dc2ba25f929ab6"
+    },
+    {
+      "path": "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123270000.ts",
+      "sha256": "492f96ecd0886245ed919468e7c19c0420733babf9bb8b9b9d8c9d4dfcd695f1"
+    },
+    {
+      "path": "apps/commerce-backend/src/modules/operation-journal/models/operation.ts",
+      "sha256": "92da575d2a75b84ffd5f3b1fc1b1b8a8153f756c2fe447bff436e8a742c6ab06"
+    },
+    {
+      "path": "apps/commerce-backend/src/modules/operation-journal/models/privacy-installation.ts",
+      "sha256": "64567312eaaed8cdbf3064681b7e68df85e9d3a458830d67dbd96a93e9c2a68e"
+    },
+    {
+      "path": "apps/commerce-backend/src/modules/operation-journal/models/privacy-subject.ts",
+      "sha256": "c368f8f828b843ed509f38d23f0e79df0ba0baaa376c7623bab5f2e32a9ce1bd"
+    },
+    {
+      "path": "apps/commerce-backend/src/modules/operation-journal/payment-context.ts",
+      "sha256": "496ba8fe3fe7d9d5c7f3e978487e162211377a7556ef44fb570b9ef81652ceb7"
+    },
+    {
+      "path": "apps/commerce-backend/src/modules/operation-journal/payment-outcome.ts",
+      "sha256": "4af04bdd8ebb02848cc82a0617f83210dd08dc00f648488a96740c2325a7dd68"
+    },
+    {
+      "path": "apps/commerce-backend/src/modules/operation-journal/privacy.ts",
+      "sha256": "27c1a7ea2931e90ddedf9cdd725d040410e58ac2fcb4f61e5970e146ec22074f"
+    },
+    {
+      "path": "apps/commerce-backend/src/modules/operation-journal/proof-association.ts",
+      "sha256": "bb41d8d88e63e3896b1870ef8fd0018e3072a1268a8969a51f58f661296d0bca"
+    },
+    {
+      "path": "apps/commerce-backend/src/modules/operation-journal/proof-context.ts",
+      "sha256": "75a975952ed551c1673d42ea01ff7fa01467a0dec64f04b6c3d409f990f85003"
+    },
+    {
+      "path": "apps/commerce-backend/src/modules/operation-journal/receipt-context.ts",
+      "sha256": "cdef9bb2891e10900e18576544190f8c3cfcf41cc25eba140529f6cab2ddadec"
+    },
+    {
+      "path": "apps/commerce-backend/src/modules/operation-journal/receipt-verifier.ts",
+      "sha256": "b908a8f18e19365742e9477034166801b3fc771db70ac3a2a5197a28666cde1c"
+    },
+    {
+      "path": "apps/commerce-backend/src/modules/operation-journal/request-session.ts",
+      "sha256": "ec4437ca4f057fe9e55211e4b0242d8f330b892abab118edd994564103765ce9"
+    },
+    {
+      "path": "apps/commerce-backend/src/modules/operation-journal/request-verifier.ts",
+      "sha256": "4531698d25d7b2f4be9e642a00394d9e39447923be64345d59981eaf56ec2c90"
+    },
+    {
+      "path": "apps/commerce-backend/src/modules/operation-journal/service.ts",
+      "sha256": "05b087aa5d05c2f335a26f4451b6e88dd99ed7608f900e1215dace9e52ab4dba"
+    },
+    {
+      "path": "apps/commerce-backend/src/scripts/native-claim-qualification.ts",
+      "sha256": "3525372ad3727343ae579d6eb0f412b934c052e84bc70a10ca1dfd5dc65d3063"
+    },
+    {
+      "path": "apps/commerce-backend/src/scripts/native-execution-worker-entry.ts",
+      "sha256": "32136cbd6c97f640634365c75ad7d10fe50dc13555c73b8e1f1e4dca8086d17b"
+    },
+    {
+      "path": "apps/commerce-backend/src/scripts/native-payment-fixture.ts",
+      "sha256": "b11211c5b0ecd2868a3d8c5f57f50eb5b6297a32424ebce4e58347e683fbe9ff"
+    },
+    {
+      "path": "apps/commerce-backend/src/scripts/native-receipt-fixture.ts",
+      "sha256": "d79a1a37fe4d789c2c5a5a08be34e93e9d2b707bbd5ee0d58799094022da4b85"
+    },
+    {
+      "path": "apps/commerce-backend/src/scripts/verify-authority-recovery-worker.ts",
+      "sha256": "5969ced46ffafd322a46032e71b4668f7008cf20f909b54335492206d709ba88"
+    },
+    {
+      "path": "apps/commerce-backend/src/scripts/verify-cart-context.ts",
+      "sha256": "42321f6d279a4cac2b0cf6b99cc222e21e4b51e7e0bf7cde288f760fb0bb25d0"
+    },
+    {
+      "path": "apps/commerce-backend/src/scripts/verify-claim-admission.ts",
+      "sha256": "6672519ee390de8b9fc9df386514bde5b39a7bd8b1455b135e23389962ea5c4c"
+    },
+    {
+      "path": "apps/commerce-backend/src/scripts/verify-commerce.ts",
+      "sha256": "82c0931ca801d651f323acf9b2684ea278038d00331639a9935ced1853bb6837"
+    },
+    {
+      "path": "apps/commerce-backend/src/scripts/verify-continuation-restore.ts",
+      "sha256": "b74b89bbdc6cae7c46d07b221dfa858e28c2c5a7f32435558f405d96f71211e4"
+    },
+    {
+      "path": "apps/commerce-backend/src/scripts/verify-continuation-retention.ts",
+      "sha256": "d5c51c7ed7801ddd74d4f7f9fcbe7dbdd96996758a59c40b7097f29f7ae0e37a"
+    },
+    {
+      "path": "apps/commerce-backend/src/scripts/verify-continuation-session.ts",
+      "sha256": "a364f9e0bf78a77a05f9f715f10f473f4d8bc3d9bb411a657a37fa1f56c78e85"
+    },
+    {
+      "path": "apps/commerce-backend/src/scripts/verify-continuation-upgrade.ts",
+      "sha256": "28bfcd645713e1b69eb511ee069fa676c3ffeec47a235a618b4df42b40050476"
+    },
+    {
+      "path": "apps/commerce-backend/src/scripts/verify-execution-refusal-transfer.ts",
+      "sha256": "85b1a8e831aa40206eee18f872e5a8aed5933ca670036320de707774ed5ecc16"
+    },
+    {
+      "path": "apps/commerce-backend/src/scripts/verify-fenced-system-provider.ts",
+      "sha256": "a76ff321f659e586b3faef9f5a1feaed17ae52d465e8ed3590c14380c962df6d"
+    },
+    {
+      "path": "apps/commerce-backend/src/scripts/verify-identity.ts",
+      "sha256": "b5dde733e26c4b0da8f0ca1ea90d537369f5014d2f86d40a08e28d68ae518a51"
+    },
+    {
+      "path": "apps/commerce-backend/src/scripts/verify-native-claim-interruption.ts",
+      "sha256": "da5df370d9ca440d2c7eabd300ff8c58dc5634b78a587dbdf15f7a725b6d20cc"
+    },
+    {
+      "path": "apps/commerce-backend/src/scripts/verify-native-completion-baseline.ts",
+      "sha256": "fd91c808b2fe97a64fed59a2ef5feea5e4e7ef8fc8f90748f366a92f9a537314"
+    },
+    {
+      "path": "apps/commerce-backend/src/scripts/verify-native-execution-claim.ts",
+      "sha256": "d13d93b9ab494c2724d1ad1ebaf65d4bd41592c9d74efe69284ad409d925c4ae"
+    },
+    {
+      "path": "apps/commerce-backend/src/scripts/verify-native-execution-worker.ts",
+      "sha256": "0927e6cfd90648d5a77c88e777daac67dd80427b7d27462bd6cf309fd251ed50"
+    },
+    {
+      "path": "apps/commerce-backend/src/scripts/verify-native-generation-fence.ts",
+      "sha256": "217ce623c919898367ac80da9c086693ab621a44acc5e752df00a53781ddf85a"
+    },
+    {
+      "path": "apps/commerce-backend/src/scripts/verify-native-prefix-restore-seed.ts",
+      "sha256": "7e56fcec95b7719a3178109190789b5c6a564ad08559f810ade9722672ee8631"
+    },
+    {
+      "path": "apps/commerce-backend/src/scripts/verify-native-receipts.ts",
+      "sha256": "c1dedd58baadbd68414973942db207daaf2b672f871e5d15af63168091220244"
+    },
+    {
+      "path": "apps/commerce-backend/src/scripts/verify-native-worker-identity.ts",
+      "sha256": "0d8dbc85fc3553e9b00fd973f1024713249eba422f6ddaf789580ff50bba4341"
+    },
+    {
+      "path": "apps/commerce-backend/src/scripts/verify-native-workflow-reversal.ts",
+      "sha256": "5a1374e102adc3c7b3bcd3b0610dccea4afc094ab6825bfa416620762b0c04ad"
+    },
+    {
+      "path": "apps/commerce-backend/src/scripts/verify-native-write-fence.ts",
+      "sha256": "b302f4224b0d7bec06c3d39ce92441b9994497b4bd456fece56dc1e6092a1a03"
+    },
+    {
+      "path": "apps/commerce-backend/src/scripts/verify-operation-cart-lock.ts",
+      "sha256": "66e50031f8dabd4be04c1c8ccb4e60bf871b112332a06cc16f97308b67d7a32b"
+    },
+    {
+      "path": "apps/commerce-backend/src/scripts/verify-operation-database-restore.ts",
+      "sha256": "2c393ce988c6c680616b8bac22197df4236f3fa89f92059a92789d0f30a61780"
+    },
+    {
+      "path": "apps/commerce-backend/src/scripts/verify-operation-journal-schema.ts",
+      "sha256": "2884de89046472a73415370e83a8877430cbac03dfeb9444946e9e44d8e8e4bd"
+    },
+    {
+      "path": "apps/commerce-backend/src/scripts/verify-operation-journal-worker.ts",
+      "sha256": "b86994158c3b603e77db2dbd1b630b4852c71da01dec46dad3e673a892feb998"
+    },
+    {
+      "path": "apps/commerce-backend/src/scripts/verify-operation-privacy.ts",
+      "sha256": "13f974660f88dadbc95e2e26f4c1541d4a1d9a693f8458e232f0ccb9da9344b3"
+    },
+    {
+      "path": "apps/commerce-backend/src/scripts/verify-payment-association.ts",
+      "sha256": "58fff7cd6ef41a7c3717ba0878f13d80484f642ffbfa41b1d70a675c2f594573"
+    },
+    {
+      "path": "apps/commerce-backend/src/scripts/verify-payment-outcomes-restore.ts",
+      "sha256": "20de12bf38203a3baf7a4b79a7d885432f247daab88fc439d09f5f94469f148a"
+    },
+    {
+      "path": "apps/commerce-backend/src/scripts/verify-payment-outcomes.ts",
+      "sha256": "01101bf36a7d5dbf615c0a4abe75b92b7ee8401a318f54460e7f806c492ec38e"
+    },
+    {
+      "path": "apps/commerce-backend/src/scripts/verify-payment-restore.ts",
+      "sha256": "be6ea774526b73681338e293ab269eb919ecd83e8c04195276297170797de1bc"
+    },
+    {
+      "path": "apps/commerce-backend/src/scripts/verify-proof-association.ts",
+      "sha256": "5b588b11456b857f4fafeb24adcfbf3153efcf9eb4a94dd925447a98f1b36c89"
+    },
+    {
+      "path": "apps/commerce-backend/src/scripts/verify-provider-attempt-privacy-restore.ts",
+      "sha256": "2fe1a3f3cdb4a0875a6928f002d82f6e00cf4dbb4c3fb1dc8b116870f1b3421c"
+    },
+    {
+      "path": "apps/commerce-backend/src/scripts/verify-receipt-retention.ts",
+      "sha256": "42c33555af1fcbf08836ca80229720b51932443d702856b60b61293b57a4b5fb"
+    },
+    {
+      "path": "apps/commerce-backend/src/scripts/verify-receipt-upgrade.ts",
+      "sha256": "849bcae8856a11316202a3f087ccbab1f93abc36f0a33ed8c0d10301f233067f"
+    },
+    {
+      "path": "apps/commerce-backend/src/scripts/verify-request-retention.ts",
+      "sha256": "75cfa2f40da0ebac4bdbdf72164dc4c53120b83be55cdfc80a67408f7e0c754e"
+    },
+    {
+      "path": "apps/commerce-backend/src/scripts/verify-request-signatures.ts",
+      "sha256": "861a21103c1de7bacf78db58eba26eae0d5821b427eb9918c2f18c28b34e0714"
+    },
+    {
+      "path": "apps/commerce-backend/src/scripts/verify-request-upgrade.ts",
+      "sha256": "a6c984744ac579e7fca990b7036c688be758a3f3b46180cb243c23469bea1b12"
+    },
+    {
+      "path": "apps/commerce-backend/src/scripts/verify-standalone-admin.ts",
+      "sha256": "b5f1025218fa048de2aa44100b42f079329234d3582a5b62d93fcb7374f4f1a3"
+    },
+    {
+      "path": "apps/commerce-backend/tools/build-authority-adapters.mjs",
+      "sha256": "12fbf9fda3b580d6e1935e146b00ae3282791a73e99d2e90d462acf53d8b3cae"
+    },
+    {
+      "path": "apps/commerce-backend/tools/build-runtime.mjs",
+      "sha256": "6ad7c23271d41c11d9fa3c6f9ae24d4896cfc779c2d11390a1fa5ac08f954d84"
+    },
+    {
+      "path": "apps/commerce-backend/tools/verify-standalone-admin.mjs",
+      "sha256": "ec4eeec5532a5af2e17785d2db8a9d616acdc7db71ac86ec482a53140de27c87"
+    },
+    {
       "path": "apps/web/index.html",
       "sha256": "3a3407c82ed4fe82a0aaecff56731b36f1c29cc977c8da0c60084adb3f793a3a"
     },
@@ -174,6 +594,10 @@
       "sha256": "07697f3b4b65ee69c82b1a6ca170f1ebce695b4cbd8eb920baf9ce5c45c07f5f"
     },
     {
+      "path": "packages/adapters/checkout-quote-fixture-source.mts",
+      "sha256": "4da11a8db56fa2a5cecd678bc47fecf3f59523f4ddd84d3081d09df73e749af5"
+    },
+    {
       "path": "packages/adapters/claims-fixture-source.mts",
       "sha256": "012802db6348686e55b3410bfc3ee301761eb8e43ae809aecfe2f4210423bd9f"
     },
@@ -182,12 +606,44 @@
       "sha256": "6d342f0fe446ed3743d8d5e67fa7f16104ae15e78973797568741103642d64a8"
     },
     {
+      "path": "packages/adapters/delegated-commands/command-codec.mts",
+      "sha256": "ac201f5f9202ce5df438e89afdfa34d79fd5e049a311d2139c4e72fa209fcf3c"
+    },
+    {
+      "path": "packages/adapters/delegated-commands/internal-use-client.mts",
+      "sha256": "8d0c09ba2f4f386faf3b679ecce57be99bfe783dcf3e165b5800820c732874dd"
+    },
+    {
+      "path": "packages/adapters/delegated-commands/public-use-client.mts",
+      "sha256": "3cad5aa3c7086b4073df641d6ba2afcb7e4c49d803164afaacf2c61a4a558068"
+    },
+    {
+      "path": "packages/adapters/delegated-receipts/jose-verifier.mts",
+      "sha256": "42f724028b21e4412a721bbe08aabb0fc144df06924f14d401ede88b6814d502"
+    },
+    {
+      "path": "packages/adapters/delegated-receipts/strict-json.mts",
+      "sha256": "35665ff4c3d7244bb973a24c5dbf661d884e8b1ed52d60c24045fc86c81c5bba"
+    },
+    {
       "path": "packages/adapters/delivery-trial-source-guards.mts",
       "sha256": "2fc3a8b420cf27bd011f267f1e49cf2ecc7640f0ed277e23b862eced16bcef81"
     },
     {
       "path": "packages/adapters/demand-fixture-source.mts",
       "sha256": "53bdfc3eb9d96f343a934fec0417d1555d8acb8229026fbc1d7d3f79b19c4676"
+    },
+    {
+      "path": "packages/adapters/dropoff-credential-fixture-source.mts",
+      "sha256": "d09c93f274b30327d353d377de21a766c446a4676c6468cce4f277bc6409c380"
+    },
+    {
+      "path": "packages/adapters/dropoff-fixture-source.mts",
+      "sha256": "2babbfd2052e7971a2f63f6a18f0f7da2f2c1365209147734e6fd85e9eced1be"
+    },
+    {
+      "path": "packages/adapters/dropoff-handoff-fixture-source.mts",
+      "sha256": "544200fbca4c1ac8f7ec2c4adbd8a62df9d3cb7c61161d615f6c0fb924d94a7b"
     },
     {
       "path": "packages/adapters/exchange-lineage-fixture-source.mts",
@@ -208,6 +664,22 @@
     {
       "path": "packages/adapters/instant-exchange-fixture-source.mts",
       "sha256": "20418ccb6c7edb20eb8bae927171752855840ddb5925ae4bdcc052f0f60dd590"
+    },
+    {
+      "path": "packages/adapters/loyalty-accrual-fixture-source.mts",
+      "sha256": "a38f828c142856a5a9415f6eadce15b12e6258f650fdfc78eaf1fb0c2b335592"
+    },
+    {
+      "path": "packages/adapters/loyalty-fixture-source.mts",
+      "sha256": "9703b912e78974612196ebb84aaa1818186b4b7e7f239d8df92fe7d2ff106a54"
+    },
+    {
+      "path": "packages/adapters/loyalty-incentive-fixture-source.mts",
+      "sha256": "08036f8bee81d7eec68cc5fb507d864e0c924842a7d88b74dc8a454466743f91"
+    },
+    {
+      "path": "packages/adapters/loyalty-redemption-fixture-source.mts",
+      "sha256": "cb98ee1a03e457b3ac6f2fc272fb34fedee562c879c0d0635ade29192877c7fe"
     },
     {
       "path": "packages/adapters/marketing-fixture-source.mts",
@@ -358,6 +830,10 @@
       "sha256": "15b8137cb555ff4076e71333d73d43ec4ff343d9077825aa84d09c2088941314"
     },
     {
+      "path": "packages/agent/image-reader.mts",
+      "sha256": "63e91e5e5f3a8f96152cab6bea759a3b4e4404ffce925b63286e424274b7209e"
+    },
+    {
       "path": "packages/agent/local-model.mts",
       "sha256": "eaa6988cd176dce8f6a7402d1cb99a5ed054ec4c72f9407e6a1c940efc1a4d42"
     },
@@ -442,12 +918,24 @@
       "sha256": "b890f9c64f077f9b4dc5898284b38f750460cc4b03cd1bc9338eb864608c20c5"
     },
     {
+      "path": "packages/commerce/checkout-preview.mts",
+      "sha256": "a130b5730a7610a040b01bcaeda701e81d0433dbd8aa36ff8fbeeecdafb178ac"
+    },
+    {
+      "path": "packages/commerce/checkout-previews.mts",
+      "sha256": "a88c4a5aa81eb08885694d3a80a4771a5f9afe2a9e5d9dfd5f1536949b56aee5"
+    },
+    {
       "path": "packages/commerce/claims-core.mts",
       "sha256": "222824c1746232450ddaabe1100477d7a0d2a0bb799c4d8ae238c9da218d50d3"
     },
     {
       "path": "packages/commerce/claims-privacy.mts",
       "sha256": "8bdc765c8da62bf99fb51c4b477a7afd291cf017c13d64205a088a0d8b66f288"
+    },
+    {
+      "path": "packages/commerce/commerce-journeys.mts",
+      "sha256": "5e5ed27efeb0e48e9153fa6bbb546cab91e4aed544f7281f9122543d7afa285a"
     },
     {
       "path": "packages/commerce/configuration-values.mts",
@@ -478,6 +966,50 @@
       "sha256": "061de841dfdfd238e3caa4a0ac8d05ac72ab386b510edb7658eea7a58411dd4a"
     },
     {
+      "path": "packages/commerce/delegated-checkout-api.mts",
+      "sha256": "a0a69d5a494be78a7a7d83b4dda89da5bb42bd1b948fc2bec6cffe7368065090"
+    },
+    {
+      "path": "packages/commerce/delegated-checkout-command-sender.mts",
+      "sha256": "64e21b83d033372ac1670816ae10048a8fdbb8d51f99855810b646e05100aecc"
+    },
+    {
+      "path": "packages/commerce/delegated-checkout-intent-privacy.mts",
+      "sha256": "5fc96a48714442a1ae9a36ab425fb729c35f630e70c389b7dc59858675075f5a"
+    },
+    {
+      "path": "packages/commerce/delegated-checkout-intent-records.mts",
+      "sha256": "1d91faa2db4cc56cad5c12915d16ccd6eba994d12cb18a2f70d3bbe03fccce4f"
+    },
+    {
+      "path": "packages/commerce/delegated-checkout-intents.mts",
+      "sha256": "81e2700150c5a2bdb7631c26c584ca1c1f4a58330ba6acd65f622ddf93a64f41"
+    },
+    {
+      "path": "packages/commerce/delegated-checkout-receipts.mts",
+      "sha256": "1023ec7598ba47b46b30451f37a0f42a804409a462edf3c346aefba1ecb21d58"
+    },
+    {
+      "path": "packages/commerce/delegated-checkout-starts.mts",
+      "sha256": "b47cf68fed78cd4b173a0f9e326d41351c7597f46c470204b796c6e358c223a9"
+    },
+    {
+      "path": "packages/commerce/delegated-command-claim-privacy.mts",
+      "sha256": "91e474554863c3275d02f59b43285072e88e3f59292192e02c7d7098d1a3294c"
+    },
+    {
+      "path": "packages/commerce/delegated-command-claim-records.mts",
+      "sha256": "74a6232a9999c47a1c26cf9b588b9110afa714f98af61c64c518a2add7e8ec8f"
+    },
+    {
+      "path": "packages/commerce/delegated-command-claims.mts",
+      "sha256": "adf9ba359d042b64468eb31110c9bed16dfc864011fcee24c1f71627881e9929"
+    },
+    {
+      "path": "packages/commerce/delegated-receipt-binding.mts",
+      "sha256": "eb7f43d680c86034e49e9cfd83c5924ee00116d1d596672a9f14faf9d54f6362"
+    },
+    {
       "path": "packages/commerce/delivery-trial-core.mts",
       "sha256": "6f7643fcdb92b1a6b8f1bd4f578877ef9fff5f397c7b9edde17f309e74f910fd"
     },
@@ -500,6 +1032,42 @@
     {
       "path": "packages/commerce/dispute-submissions.mts",
       "sha256": "60d95f429f1b328495cea077e555b53c5f939681834224f797281a10417b0b51"
+    },
+    {
+      "path": "packages/commerce/dropoff-choices.mts",
+      "sha256": "e6de31a3a9dfe5667b230aa76055485f784a4384a1a546827393925fc4886e2c"
+    },
+    {
+      "path": "packages/commerce/dropoff-credential-privacy.mts",
+      "sha256": "714ef53fe5004c39901b6f97bd284c21d7e31eab0e96ea26ec317211d2090954"
+    },
+    {
+      "path": "packages/commerce/dropoff-credential-records.mts",
+      "sha256": "b038a0f2291e8cb2634f7a438e7cb045dcef8b71815fa57090f95bce5a9b4d4b"
+    },
+    {
+      "path": "packages/commerce/dropoff-credential-values.mts",
+      "sha256": "4ebef678789b09f9f062ec23878b6d88d7f541dfc3f2503bb5f28687f0c61214"
+    },
+    {
+      "path": "packages/commerce/dropoff-credentials.mts",
+      "sha256": "626356e8a242985d2664afb93ad382e809395af590c36c6ff1dc3ddf41b9333a"
+    },
+    {
+      "path": "packages/commerce/dropoff-handoff-privacy.mts",
+      "sha256": "ae946af37deff3b247421d2d16c75b63ec30bb0a4e49ff340ca7176031f08561"
+    },
+    {
+      "path": "packages/commerce/dropoff-handoff-records.mts",
+      "sha256": "ee0e5931fe437082918a8d1602c379f5c62723f9022c2417866b5c40fe936c68"
+    },
+    {
+      "path": "packages/commerce/dropoff-handoff-values.mts",
+      "sha256": "16c6ada90cfb4ff4e66b9d22819f3eeb21ffcc7309cb7842143b0f6d7cfecbf9"
+    },
+    {
+      "path": "packages/commerce/dropoff-handoffs.mts",
+      "sha256": "7be9060136fcb0c20e60172bfc96222bd550266f318585ed1581d42bdba1f075"
     },
     {
       "path": "packages/commerce/durable-work.mts",
@@ -626,6 +1194,22 @@
       "sha256": "3aa8a08fc79091edb1dccabbdaf6ef482b36e1a9935f5324635c637a8c401538"
     },
     {
+      "path": "packages/commerce/image-assistance.mts",
+      "sha256": "bfacd4576f46f64f66b8ff7dea22d27a9c48a9ccd6d65e66e0f80abe181cf647"
+    },
+    {
+      "path": "packages/commerce/image-privacy.mts",
+      "sha256": "5677f020376d02b6ace1e99883d900635b562974f7e65be367fe2ddf4bb916dd"
+    },
+    {
+      "path": "packages/commerce/image-resources.mts",
+      "sha256": "bbf1f3fa3036dc02c5b60d51cbf3b8eef37b2f8ef96a7811d92d945861135e9b"
+    },
+    {
+      "path": "packages/commerce/image-suppression.mts",
+      "sha256": "131c8f201ee60e7678e4abe4a0aee7bb28b04eaa4f725a034c6d9943acabf26f"
+    },
+    {
       "path": "packages/commerce/instant-exchanges.mts",
       "sha256": "20fd30ecb864f5dc093a89e4f7f9fc1cdc58f343f0e60c008b36268d6f0fbe5d"
     },
@@ -654,6 +1238,38 @@
       "sha256": "8ac1b7f1ca8ea5aa6510abaf9fcd26127b0ae53142889a7b76cbd9513af3aea5"
     },
     {
+      "path": "packages/commerce/journey-followup-guard.mts",
+      "sha256": "fed0836e74144b4609eefbc7b6870a9044e49edf4113f83756b102d4c4a175df"
+    },
+    {
+      "path": "packages/commerce/journey-followup-privacy.mts",
+      "sha256": "9c299394d1af0774b2725f10cc4921b2572904432dae7eedcf858a17f411b4df"
+    },
+    {
+      "path": "packages/commerce/journey-followup-records.mts",
+      "sha256": "344cd2bf4f9bd941c7a3be5b554a693c74c69993bfe36008ac7412ac0a25b28e"
+    },
+    {
+      "path": "packages/commerce/journey-followups.mts",
+      "sha256": "18c65589e9145814aafa7ce21fc4d24cd19e1fd41e418c2d7e90c4b549b0a966"
+    },
+    {
+      "path": "packages/commerce/journey-privacy.mts",
+      "sha256": "9b307497a2abe9bcd0f3e150d17cbd585ad1d3037cca0b5d24d4f76669ce0785"
+    },
+    {
+      "path": "packages/commerce/journey-readiness.mts",
+      "sha256": "fa9a906ecd906a4d18ff77ac1a5b346abf365b32a9c314ffbae66622b70da9ad"
+    },
+    {
+      "path": "packages/commerce/journey-records.mts",
+      "sha256": "9f4cd5dbf814c4cc587328d750cef525a31b5d035cd1664c787822574c47158d"
+    },
+    {
+      "path": "packages/commerce/journey-references.mts",
+      "sha256": "b6c483595f89862cb66ca2ab9bc1b841c91db9596d3a5d06551868777b773edb"
+    },
+    {
       "path": "packages/commerce/kernel.mts",
       "sha256": "03a073a04df511cd730f9fa73bd2bae3d771bdc68402241a612c450575209af3"
     },
@@ -670,6 +1286,46 @@
       "sha256": "75a33328aef5cd226c8e261347bb3e514abbae92a93d0448946382289e79c0b8"
     },
     {
+      "path": "packages/commerce/loyalty-accrual-evidence.mts",
+      "sha256": "45ce725fe67f5fd87af96f16f4754f2330a67dd97beccef1cbe6b721cc7015e4"
+    },
+    {
+      "path": "packages/commerce/loyalty-accrual.mts",
+      "sha256": "bb8ac823d9488ab83c32b97a60f804669826ddc5da80200eb5ac234630cdcf19"
+    },
+    {
+      "path": "packages/commerce/loyalty-balances.mts",
+      "sha256": "8be06ebc247181bc37ee351bcab581d7371a07a4b342f763205d9179db88abb2"
+    },
+    {
+      "path": "packages/commerce/loyalty-incentives.mts",
+      "sha256": "4c0d588ca769a98b1220bcb3c464dae17c0e791777ee9991292661495bcb40e9"
+    },
+    {
+      "path": "packages/commerce/loyalty-lifecycle.mts",
+      "sha256": "c29b67bc1c35b5726e86933f22775be457d061818fb69069235c4137433d1c31"
+    },
+    {
+      "path": "packages/commerce/loyalty-redemption-privacy.mts",
+      "sha256": "bb39340fd567d5ecd2c09094f3506e5ceefe7bf2af7843bc3fab7e0237bced55"
+    },
+    {
+      "path": "packages/commerce/loyalty-redemption-records.mts",
+      "sha256": "0aaf8f380478896dd1b8ad39b23ee7020494dc3b8f59363eb1ac85adf53dfe82"
+    },
+    {
+      "path": "packages/commerce/loyalty-redemption-values.mts",
+      "sha256": "2ef9c7e3008dda6ae4c847b09d72d19234d1f35e777ac4870df3720265635cb0"
+    },
+    {
+      "path": "packages/commerce/loyalty-redemptions.mts",
+      "sha256": "62665aa220b317f46b56698b2a8cf95f004c0ca99cfe61a29ab97855376e9913"
+    },
+    {
+      "path": "packages/commerce/loyalty-values.mts",
+      "sha256": "5fdc4d00d4c4c790e0124a7d01449547fd2c5629179f9636c44489a5ef4c26f5"
+    },
+    {
       "path": "packages/commerce/marketing-segments.mts",
       "sha256": "22a6bd89adc16571186c969df532633d6bb74a01fa26e169079d986698f63c4a"
     },
@@ -679,7 +1335,7 @@
     },
     {
       "path": "packages/commerce/migration-cutover.mts",
-      "sha256": "c82b1dbeeb9c79f480fe847a4982a12ecd6160468401c4576df7a0438b4659cb"
+      "sha256": "ac286c8d786a4cea56436b1491dc837817ae438b8779ae4a642de9012dae5e8e"
     },
     {
       "path": "packages/commerce/migration-fence.mts",
@@ -767,11 +1423,15 @@
     },
     {
       "path": "packages/commerce/privacy-coverage.mts",
-      "sha256": "e002011022b4c145bfe602dec276e8d0976099c88c737b811dfbf280f577f178"
+      "sha256": "93e7c8a467d7fdcd28c192ef5b58df36e286e3ac9d7ac0940f3c936e8dade1ec"
     },
     {
       "path": "packages/commerce/privacy-lifecycle.mts",
       "sha256": "eb3eda2ceb7de0f317e30cb3203170eaf920bb234e4f4fbbe13ef54030cd11dd"
+    },
+    {
+      "path": "packages/commerce/privacy-runtime-sources.mts",
+      "sha256": "a3cc9b88034bd685cb89dd6a06607e763de73467658e39f2fb662e22bdaf0fc1"
     },
     {
       "path": "packages/commerce/procurement-approvals.mts",
@@ -974,6 +1634,18 @@
       "sha256": "1c102d935949afdb1ac79f2fbaea1fa84a48c95afeef1bd5450e05e694c6ab6d"
     },
     {
+      "path": "packages/commerce/shopper-memory-privacy.mts",
+      "sha256": "ddcc3db18b45c1d2074544abc5233299aa31f0fdccbc9254d5d65b9dd17c21eb"
+    },
+    {
+      "path": "packages/commerce/shopper-memory-records.mts",
+      "sha256": "7d7d5aa00bf797fbab24016596918562204a2c795bb77b9f5ff8464be9e51bd4"
+    },
+    {
+      "path": "packages/commerce/shopper-memory.mts",
+      "sha256": "ebc3abb3c7cfd52f326f378ac81e2009ab9f7e793b157b87430b44276caac174"
+    },
+    {
       "path": "packages/commerce/shopping-cart.mts",
       "sha256": "d67f10f0fb15af9d5a5d0ce5412524e7fd51c7d60f6cdd218852c52cfeb4a0a2"
     },
@@ -1115,7 +1787,7 @@
     },
     {
       "path": "packages/conformance/adapter-catalog.mts",
-      "sha256": "6c69d00dd9229f9260320e49f0da5730409eb54c62609600455d3ec2e19cfa2f"
+      "sha256": "3b9d105658c9107d6ea61b7571bb16bd85fb5da2043709fb323d7c33533b558f"
     },
     {
       "path": "packages/conformance/adapter-fixtures.mts",
@@ -1131,11 +1803,19 @@
     },
     {
       "path": "packages/conformance/native-catalog-runner.mts",
-      "sha256": "41579bb2d4e3a610219b70754ccdcef4affb17d8f7001d02d447cfd6300731f5"
+      "sha256": "d0ffc0f6d63e24316cb5590cf9b4f4a3cd5c9f8d254f1d2475ec240471ba71ab"
     },
     {
       "path": "packages/development/config.mts",
       "sha256": "04051bb33980ddaf757a0791774cd5dac1eb20e69e3b880851dfb3d1221d6260"
+    },
+    {
+      "path": "packages/development/delegated-checkout-fixture.mts",
+      "sha256": "3713278f2da1a80fceb25d989e6b983039aca82a18b7c199695c40eb011a1f5c"
+    },
+    {
+      "path": "packages/development/delegated-checkout-process.mts",
+      "sha256": "0e774936eedbf820489b29203d47054fec37b934946177e9c4dfaf42503dde33"
     },
     {
       "path": "packages/development/egress.mts",
@@ -1204,266 +1884,6 @@
     {
       "path": "packages/security/release-audit.py",
       "sha256": "356ca9b8c4ed6d5fe358fd9928322da8971c29f0b8484f8c068674d44c232827"
-    },
-    {
-      "path": "packages/agent/image-reader.mts",
-      "sha256": "63e91e5e5f3a8f96152cab6bea759a3b4e4404ffce925b63286e424274b7209e"
-    },
-    {
-      "path": "packages/commerce/image-assistance.mts",
-      "sha256": "bfacd4576f46f64f66b8ff7dea22d27a9c48a9ccd6d65e66e0f80abe181cf647"
-    },
-    {
-      "path": "packages/commerce/image-resources.mts",
-      "sha256": "bbf1f3fa3036dc02c5b60d51cbf3b8eef37b2f8ef96a7811d92d945861135e9b"
-    },
-    {
-      "path": "packages/commerce/image-privacy.mts",
-      "sha256": "5677f020376d02b6ace1e99883d900635b562974f7e65be367fe2ddf4bb916dd"
-    },
-    {
-      "path": "packages/commerce/image-suppression.mts",
-      "sha256": "131c8f201ee60e7678e4abe4a0aee7bb28b04eaa4f725a034c6d9943acabf26f"
-    },
-    {
-      "path": "packages/commerce/shopper-memory.mts",
-      "sha256": "ebc3abb3c7cfd52f326f378ac81e2009ab9f7e793b157b87430b44276caac174"
-    },
-    {
-      "path": "packages/commerce/shopper-memory-records.mts",
-      "sha256": "7d7d5aa00bf797fbab24016596918562204a2c795bb77b9f5ff8464be9e51bd4"
-    },
-    {
-      "path": "packages/commerce/shopper-memory-privacy.mts",
-      "sha256": "ddcc3db18b45c1d2074544abc5233299aa31f0fdccbc9254d5d65b9dd17c21eb"
-    },
-    {
-      "path": "packages/commerce/journey-readiness.mts",
-      "sha256": "fa9a906ecd906a4d18ff77ac1a5b346abf365b32a9c314ffbae66622b70da9ad"
-    },
-    {
-      "path": "packages/commerce/commerce-journeys.mts",
-      "sha256": "5e5ed27efeb0e48e9153fa6bbb546cab91e4aed544f7281f9122543d7afa285a"
-    },
-    {
-      "path": "packages/commerce/journey-records.mts",
-      "sha256": "9f4cd5dbf814c4cc587328d750cef525a31b5d035cd1664c787822574c47158d"
-    },
-    {
-      "path": "packages/commerce/journey-references.mts",
-      "sha256": "b6c483595f89862cb66ca2ab9bc1b841c91db9596d3a5d06551868777b773edb"
-    },
-    {
-      "path": "packages/commerce/journey-privacy.mts",
-      "sha256": "9b307497a2abe9bcd0f3e150d17cbd585ad1d3037cca0b5d24d4f76669ce0785"
-    },
-    {
-      "path": "packages/commerce/journey-followups.mts",
-      "sha256": "18c65589e9145814aafa7ce21fc4d24cd19e1fd41e418c2d7e90c4b549b0a966"
-    },
-    {
-      "path": "packages/commerce/journey-followup-records.mts",
-      "sha256": "344cd2bf4f9bd941c7a3be5b554a693c74c69993bfe36008ac7412ac0a25b28e"
-    },
-    {
-      "path": "packages/commerce/journey-followup-guard.mts",
-      "sha256": "fed0836e74144b4609eefbc7b6870a9044e49edf4113f83756b102d4c4a175df"
-    },
-    {
-      "path": "packages/commerce/journey-followup-privacy.mts",
-      "sha256": "9c299394d1af0774b2725f10cc4921b2572904432dae7eedcf858a17f411b4df"
-    },
-    {
-      "path": "packages/commerce/loyalty-values.mts",
-      "sha256": "5fdc4d00d4c4c790e0124a7d01449547fd2c5629179f9636c44489a5ef4c26f5"
-    },
-    {
-      "path": "packages/commerce/loyalty-balances.mts",
-      "sha256": "8be06ebc247181bc37ee351bcab581d7371a07a4b342f763205d9179db88abb2"
-    },
-    {
-      "path": "packages/adapters/loyalty-fixture-source.mts",
-      "sha256": "9703b912e78974612196ebb84aaa1818186b4b7e7f239d8df92fe7d2ff106a54"
-    },
-    {
-      "path": "packages/commerce/loyalty-accrual.mts",
-      "sha256": "bb8ac823d9488ab83c32b97a60f804669826ddc5da80200eb5ac234630cdcf19"
-    },
-    {
-      "path": "packages/commerce/loyalty-accrual-evidence.mts",
-      "sha256": "45ce725fe67f5fd87af96f16f4754f2330a67dd97beccef1cbe6b721cc7015e4"
-    },
-    {
-      "path": "packages/adapters/loyalty-accrual-fixture-source.mts",
-      "sha256": "a38f828c142856a5a9415f6eadce15b12e6258f650fdfc78eaf1fb0c2b335592"
-    },
-    {
-      "path": "packages/adapters/loyalty-redemption-fixture-source.mts",
-      "sha256": "cb98ee1a03e457b3ac6f2fc272fb34fedee562c879c0d0635ade29192877c7fe"
-    },
-    {
-      "path": "packages/commerce/loyalty-redemption-values.mts",
-      "sha256": "2ef9c7e3008dda6ae4c847b09d72d19234d1f35e777ac4870df3720265635cb0"
-    },
-    {
-      "path": "packages/commerce/loyalty-redemption-records.mts",
-      "sha256": "0aaf8f380478896dd1b8ad39b23ee7020494dc3b8f59363eb1ac85adf53dfe82"
-    },
-    {
-      "path": "packages/commerce/loyalty-redemptions.mts",
-      "sha256": "62665aa220b317f46b56698b2a8cf95f004c0ca99cfe61a29ab97855376e9913"
-    },
-    {
-      "path": "packages/commerce/loyalty-redemption-privacy.mts",
-      "sha256": "bb39340fd567d5ecd2c09094f3506e5ceefe7bf2af7843bc3fab7e0237bced55"
-    },
-    {
-      "path": "packages/adapters/loyalty-incentive-fixture-source.mts",
-      "sha256": "08036f8bee81d7eec68cc5fb507d864e0c924842a7d88b74dc8a454466743f91"
-    },
-    {
-      "path": "packages/commerce/loyalty-incentives.mts",
-      "sha256": "4c0d588ca769a98b1220bcb3c464dae17c0e791777ee9991292661495bcb40e9"
-    },
-    {
-      "path": "packages/commerce/loyalty-lifecycle.mts",
-      "sha256": "c29b67bc1c35b5726e86933f22775be457d061818fb69069235c4137433d1c31"
-    },
-    {
-      "path": "packages/adapters/dropoff-fixture-source.mts",
-      "sha256": "2babbfd2052e7971a2f63f6a18f0f7da2f2c1365209147734e6fd85e9eced1be"
-    },
-    {
-      "path": "packages/commerce/dropoff-choices.mts",
-      "sha256": "e6de31a3a9dfe5667b230aa76055485f784a4384a1a546827393925fc4886e2c"
-    },
-    {
-      "path": "packages/adapters/dropoff-credential-fixture-source.mts",
-      "sha256": "d09c93f274b30327d353d377de21a766c446a4676c6468cce4f277bc6409c380"
-    },
-    {
-      "path": "packages/commerce/dropoff-credential-values.mts",
-      "sha256": "4ebef678789b09f9f062ec23878b6d88d7f541dfc3f2503bb5f28687f0c61214"
-    },
-    {
-      "path": "packages/commerce/dropoff-credential-records.mts",
-      "sha256": "b038a0f2291e8cb2634f7a438e7cb045dcef8b71815fa57090f95bce5a9b4d4b"
-    },
-    {
-      "path": "packages/commerce/dropoff-credential-privacy.mts",
-      "sha256": "714ef53fe5004c39901b6f97bd284c21d7e31eab0e96ea26ec317211d2090954"
-    },
-    {
-      "path": "packages/commerce/dropoff-credentials.mts",
-      "sha256": "626356e8a242985d2664afb93ad382e809395af590c36c6ff1dc3ddf41b9333a"
-    },
-    {
-      "path": "packages/adapters/dropoff-handoff-fixture-source.mts",
-      "sha256": "544200fbca4c1ac8f7ec2c4adbd8a62df9d3cb7c61161d615f6c0fb924d94a7b"
-    },
-    {
-      "path": "packages/commerce/dropoff-handoff-values.mts",
-      "sha256": "16c6ada90cfb4ff4e66b9d22819f3eeb21ffcc7309cb7842143b0f6d7cfecbf9"
-    },
-    {
-      "path": "packages/commerce/dropoff-handoff-records.mts",
-      "sha256": "ee0e5931fe437082918a8d1602c379f5c62723f9022c2417866b5c40fe936c68"
-    },
-    {
-      "path": "packages/commerce/dropoff-handoff-privacy.mts",
-      "sha256": "ae946af37deff3b247421d2d16c75b63ec30bb0a4e49ff340ca7176031f08561"
-    },
-    {
-      "path": "packages/commerce/dropoff-handoffs.mts",
-      "sha256": "7be9060136fcb0c20e60172bfc96222bd550266f318585ed1581d42bdba1f075"
-    },
-    {
-      "path": "packages/adapters/checkout-quote-fixture-source.mts",
-      "sha256": "4da11a8db56fa2a5cecd678bc47fecf3f59523f4ddd84d3081d09df73e749af5"
-    },
-    {
-      "path": "packages/commerce/checkout-preview.mts",
-      "sha256": "a130b5730a7610a040b01bcaeda701e81d0433dbd8aa36ff8fbeeecdafb178ac"
-    },
-    {
-      "path": "packages/commerce/checkout-previews.mts",
-      "sha256": "a88c4a5aa81eb08885694d3a80a4771a5f9afe2a9e5d9dfd5f1536949b56aee5"
-    },
-    {
-      "path": "packages/adapters/delegated-receipts/jose-verifier.mts",
-      "sha256": "42f724028b21e4412a721bbe08aabb0fc144df06924f14d401ede88b6814d502"
-    },
-    {
-      "path": "packages/adapters/delegated-receipts/strict-json.mts",
-      "sha256": "35665ff4c3d7244bb973a24c5dbf661d884e8b1ed52d60c24045fc86c81c5bba"
-    },
-    {
-      "path": "packages/commerce/delegated-checkout-receipts.mts",
-      "sha256": "1023ec7598ba47b46b30451f37a0f42a804409a462edf3c346aefba1ecb21d58"
-    },
-    {
-      "path": "packages/commerce/delegated-receipt-binding.mts",
-      "sha256": "eb7f43d680c86034e49e9cfd83c5924ee00116d1d596672a9f14faf9d54f6362"
-    },
-    {
-      "path": "packages/commerce/delegated-checkout-intent-records.mts",
-      "sha256": "1d91faa2db4cc56cad5c12915d16ccd6eba994d12cb18a2f70d3bbe03fccce4f"
-    },
-    {
-      "path": "packages/commerce/delegated-checkout-intents.mts",
-      "sha256": "81e2700150c5a2bdb7631c26c584ca1c1f4a58330ba6acd65f622ddf93a64f41"
-    },
-    {
-      "path": "packages/commerce/delegated-checkout-intent-privacy.mts",
-      "sha256": "5fc96a48714442a1ae9a36ab425fb729c35f630e70c389b7dc59858675075f5a"
-    },
-    {
-      "path": "packages/commerce/delegated-checkout-api.mts",
-      "sha256": "a0a69d5a494be78a7a7d83b4dda89da5bb42bd1b948fc2bec6cffe7368065090"
-    },
-    {
-      "path": "packages/development/delegated-checkout-fixture.mts",
-      "sha256": "bcf0bac41879f4ee233c12eb04c7093d8aee40a4bfbfc726547ed196006b5ef6"
-    },
-    {
-      "path": "packages/development/delegated-checkout-process.mts",
-      "sha256": "7fba344275675fda27cb4c091517da0bcdcb16fa692daf76a867307442eb3733"
-    },
-    {
-      "path": "apps/commerce-api/checkout-review.html",
-      "sha256": "bdb96675e4b7f6172a17d2fd91a9d62e8949cd0df8b5ae3767e6074707dad1f4"
-    },
-    {
-      "path": "apps/commerce-api/checkout-review-client.js",
-      "sha256": "8116813c7b7c61e0817d02c80b592d6c1fb37585ab5f558cd9004a42c0281478"
-    },
-    {
-      "path": "packages/adapters/delegated-commands/command-codec.mts",
-      "sha256": "ac201f5f9202ce5df438e89afdfa34d79fd5e049a311d2139c4e72fa209fcf3c"
-    },
-    {
-      "path": "packages/commerce/delegated-command-claim-privacy.mts",
-      "sha256": "91e474554863c3275d02f59b43285072e88e3f59292192e02c7d7098d1a3294c"
-    },
-    {
-      "path": "packages/commerce/delegated-command-claim-records.mts",
-      "sha256": "74a6232a9999c47a1c26cf9b588b9110afa714f98af61c64c518a2add7e8ec8f"
-    },
-    {
-      "path": "packages/commerce/delegated-command-claims.mts",
-      "sha256": "adf9ba359d042b64468eb31110c9bed16dfc864011fcee24c1f71627881e9929"
-    },
-    {
-      "path": "packages/commerce/delegated-checkout-starts.mts",
-      "sha256": "b47cf68fed78cd4b173a0f9e326d41351c7597f46c470204b796c6e358c223a9"
-    },
-    {
-      "path": "packages/adapters/delegated-commands/internal-use-client.mts",
-      "sha256": "8d0c09ba2f4f386faf3b679ecce57be99bfe783dcf3e165b5800820c732874dd"
-    },
-    {
-      "path": "packages/commerce/delegated-checkout-command-sender.mts",
-      "sha256": "64e21b83d033372ac1670816ae10048a8fdbb8d51f99855810b646e05100aecc"
     }
   ],
   "surfaces": [
@@ -2299,6 +2719,121 @@
       "erasure": "Commerce erasure cannot attest cleanup of independent fixture databases or filesystem attachments. Commerce erasure blocks reauthorized resource access but does not rewrite these independent source ledgers, warehouse binding records or source orders; only synthetic inputs are authorized. Commerce minimization cannot physically erase these source journals or invalidate caller-held native observations; the owning operator must retain or clean those synthetic copies independently. Operators own source-file cleanup; optional deletion queues address original effects and never replay processing. Separate fixture files require operator cleanup, with original unknown identities retained for reconciliation. Fixture files require separate operator cleanup; canonical privacy dispatches no native mutation. M19 loyalty fixture cleanup belongs to the test/operator; commerce erasure does not attest deletion of independent provider storage. The RCG-5A parent stops its own child handles and removes only its allocated temporary directory after normal completion, failure or handled interruption. Forced parent termination can leave files for operator cleanup; this is not crash-proof reclamation or forensic erasure.",
       "retention": "Fixture cleanup belongs to its owning test/operator directory; no migration to a production storage backend is claimed. Separate fixture files and old checkpoints are not physically erased by canonical erasure. Durable bound warranty/trial commands deny fresh-adapter new effects without current guards; original committed lookup remains distinct. Current guards are required for new bound effects; original committed lookup remains distinct. M13 development and distinct held-out texts and wire outputs are synthetic; held-out observations remain unrun and fixture results cannot become live evidence. M14 twelve-case local cohorts are insufficient for fixed60/60/30 qualification. Numeric120-case fixtures prove arithmetic/capacity only, without canonical inference provenance. RCG-5A allocates a private disposable parent directory, one copied standard-library client, and separate native/source SQLite files per instance with a small nonsecret identity/schema marker. Only original invented fixture data and native hashed session/proof bindings are persisted; raw bearer, compact JWS, private signing keys and complete contexts are not written. History startup validates the exact original files and performs no reseeding or replacement-session issuance.",
       "observation_required": "Verify that only synthetic data is used and inventory/clean owned fixture directories separately; treating them as a real deployment blocks privacy qualification. Inspect and clean the owned carrier and warehouse fixture databases and their files independently; source identities and configuration are not claimed anonymous. Inspect native event/correction/transfer IDs and independently handle warehouse database files, pages and source copies; this declaration does not attest physical stock or provider cleanup. Observe every new separate source database, purpose scope and original native effect ledger. Observe actual source bindings, separate fixture databases, and native effect/observation ledgers. Observe independent database identity, native receipt and output event identity, and shared warehouse_stock ownership."
+    },
+    {
+      "id": "native_medusa_storage",
+      "control": "operator",
+      "tables": [],
+      "implementation": [
+        "apps/commerce-backend/medusa-config.ts",
+        "apps/commerce-backend/run.mjs",
+        "apps/commerce-backend/src/api/cart-context-middleware.ts",
+        "apps/commerce-backend/src/api/identity-middleware.ts",
+        "apps/commerce-backend/src/api/middlewares.ts",
+        "apps/commerce-backend/src/api/store/rifare/cart-observations/[id]/route.ts",
+        "apps/commerce-backend/src/cart-context/observation.ts",
+        "apps/commerce-backend/src/cart-context/policy.ts",
+        "apps/commerce-backend/src/config/local-commerce.ts",
+        "apps/commerce-backend/src/modules/external-identity/browser.ts",
+        "apps/commerce-backend/src/modules/external-identity/index.ts",
+        "apps/commerce-backend/src/modules/external-identity/provider.ts",
+        "apps/commerce-backend/src/modules/fenced-system-payment/index.ts",
+        "apps/commerce-backend/src/modules/fenced-system-payment/service.ts",
+        "apps/commerce-backend/src/modules/operation-journal/authority-assets.ts",
+        "apps/commerce-backend/src/modules/operation-journal/authority-sender.ts",
+        "apps/commerce-backend/src/modules/operation-journal/authority-start.ts",
+        "apps/commerce-backend/src/modules/operation-journal/cart-facts.ts",
+        "apps/commerce-backend/src/modules/operation-journal/command.ts",
+        "apps/commerce-backend/src/modules/operation-journal/continuation-session.ts",
+        "apps/commerce-backend/src/modules/operation-journal/execution-claim.ts",
+        "apps/commerce-backend/src/modules/operation-journal/execution-delivery.ts",
+        "apps/commerce-backend/src/modules/operation-journal/index.ts",
+        "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123030615.ts",
+        "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123031903.ts",
+        "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123033322.ts",
+        "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123074932.ts",
+        "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123075407.ts",
+        "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123081406.ts",
+        "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123094926.ts",
+        "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123110127.ts",
+        "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123121939.ts",
+        "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123124010.ts",
+        "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123133906.ts",
+        "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123162000.ts",
+        "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123171000.ts",
+        "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123190000.ts",
+        "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123200000.ts",
+        "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123210000.ts",
+        "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123220000.ts",
+        "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123230000.ts",
+        "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123240000.ts",
+        "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123250000.ts",
+        "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123260000.ts",
+        "apps/commerce-backend/src/modules/operation-journal/migrations/Migration20261123270000.ts",
+        "apps/commerce-backend/src/modules/operation-journal/models/operation.ts",
+        "apps/commerce-backend/src/modules/operation-journal/models/privacy-installation.ts",
+        "apps/commerce-backend/src/modules/operation-journal/models/privacy-subject.ts",
+        "apps/commerce-backend/src/modules/operation-journal/payment-context.ts",
+        "apps/commerce-backend/src/modules/operation-journal/payment-outcome.ts",
+        "apps/commerce-backend/src/modules/operation-journal/privacy.ts",
+        "apps/commerce-backend/src/modules/operation-journal/proof-association.ts",
+        "apps/commerce-backend/src/modules/operation-journal/proof-context.ts",
+        "apps/commerce-backend/src/modules/operation-journal/receipt-context.ts",
+        "apps/commerce-backend/src/modules/operation-journal/receipt-verifier.ts",
+        "apps/commerce-backend/src/modules/operation-journal/request-session.ts",
+        "apps/commerce-backend/src/modules/operation-journal/request-verifier.ts",
+        "apps/commerce-backend/src/modules/operation-journal/service.ts",
+        "apps/commerce-backend/src/scripts/native-claim-qualification.ts",
+        "apps/commerce-backend/src/scripts/native-execution-worker-entry.ts",
+        "apps/commerce-backend/src/scripts/native-payment-fixture.ts",
+        "apps/commerce-backend/src/scripts/native-receipt-fixture.ts",
+        "apps/commerce-backend/src/scripts/verify-authority-recovery-worker.ts",
+        "apps/commerce-backend/src/scripts/verify-cart-context.ts",
+        "apps/commerce-backend/src/scripts/verify-claim-admission.ts",
+        "apps/commerce-backend/src/scripts/verify-commerce.ts",
+        "apps/commerce-backend/src/scripts/verify-continuation-restore.ts",
+        "apps/commerce-backend/src/scripts/verify-continuation-retention.ts",
+        "apps/commerce-backend/src/scripts/verify-continuation-session.ts",
+        "apps/commerce-backend/src/scripts/verify-continuation-upgrade.ts",
+        "apps/commerce-backend/src/scripts/verify-execution-refusal-transfer.ts",
+        "apps/commerce-backend/src/scripts/verify-fenced-system-provider.ts",
+        "apps/commerce-backend/src/scripts/verify-identity.ts",
+        "apps/commerce-backend/src/scripts/verify-native-claim-interruption.ts",
+        "apps/commerce-backend/src/scripts/verify-native-completion-baseline.ts",
+        "apps/commerce-backend/src/scripts/verify-native-execution-claim.ts",
+        "apps/commerce-backend/src/scripts/verify-native-execution-worker.ts",
+        "apps/commerce-backend/src/scripts/verify-native-generation-fence.ts",
+        "apps/commerce-backend/src/scripts/verify-native-prefix-restore-seed.ts",
+        "apps/commerce-backend/src/scripts/verify-native-receipts.ts",
+        "apps/commerce-backend/src/scripts/verify-native-worker-identity.ts",
+        "apps/commerce-backend/src/scripts/verify-native-workflow-reversal.ts",
+        "apps/commerce-backend/src/scripts/verify-native-write-fence.ts",
+        "apps/commerce-backend/src/scripts/verify-operation-cart-lock.ts",
+        "apps/commerce-backend/src/scripts/verify-operation-database-restore.ts",
+        "apps/commerce-backend/src/scripts/verify-operation-journal-schema.ts",
+        "apps/commerce-backend/src/scripts/verify-operation-journal-worker.ts",
+        "apps/commerce-backend/src/scripts/verify-operation-privacy.ts",
+        "apps/commerce-backend/src/scripts/verify-payment-association.ts",
+        "apps/commerce-backend/src/scripts/verify-payment-outcomes-restore.ts",
+        "apps/commerce-backend/src/scripts/verify-payment-outcomes.ts",
+        "apps/commerce-backend/src/scripts/verify-payment-restore.ts",
+        "apps/commerce-backend/src/scripts/verify-proof-association.ts",
+        "apps/commerce-backend/src/scripts/verify-provider-attempt-privacy-restore.ts",
+        "apps/commerce-backend/src/scripts/verify-receipt-retention.ts",
+        "apps/commerce-backend/src/scripts/verify-receipt-upgrade.ts",
+        "apps/commerce-backend/src/scripts/verify-request-retention.ts",
+        "apps/commerce-backend/src/scripts/verify-request-signatures.ts",
+        "apps/commerce-backend/src/scripts/verify-request-upgrade.ts",
+        "apps/commerce-backend/src/scripts/verify-standalone-admin.ts",
+        "apps/commerce-backend/tools/build-authority-adapters.mjs",
+        "apps/commerce-backend/tools/build-runtime.mjs",
+        "apps/commerce-backend/tools/verify-standalone-admin.mjs",
+        "packages/adapters/delegated-commands/public-use-client.mts"
+      ],
+      "export": "Rifare operates native Medusa PostgreSQL separately from the diagnostic SQLite database. Native Auth/provider identities retain issuer/subject, verified email and customer association; customer/contact/address, cart/order/payment/provider records and workflow checkpoints are distinct from rifare_operation journal records. The scoped journal export does not export these other native records. OIDC state/nonce/PKCE storage is delegated to native Auth state and its deployed cache backend is not established here. Browser cookies, bearer credentials, mTLS keys and proof/response buffers also pass through process memory or private custody. This SQLite audit neither enumerates native PostgreSQL tables nor reads their customer rows.",
+      "erasure": "The authorized native journal privacy owner can retire and minimize scoped journal rows, retain eligible payloads under holds, and reconcile current suppression/refusal identities after restore. This does not erase native Auth/customer/contact/address/cart/order/payment/provider records, workflow checkpoints or external provider copies. SQLite subject erasure and uninstall do not delete native PostgreSQL data, cached auth state, custody files, logs, backups or browser artifacts. Journal retention behavior is bounded local evidence, not full native privacy acceptance or physical deletion.",
+      "retention": "Original UUIDs, fingerprints, HMAC suppression markers and attempt timestamps are potentially linkable refusal evidence, not anonymous data or an approved legal retention schedule. PostgreSQL dumps/WAL/pages, old snapshots, generated outputs and browser/admin artifacts require separate operator custody and retention. Qualification flags and synthetic fixture creation do not prove every read or output is synthetic: scripts can inspect whole installed native tables, emit restore contexts and retain credentialed subprocess environments/IPC, worker roles/seals and customer tokens. The current Admin fixture writer lacks an explicit restrictive file mode. No automatic credential-free artifact, restrictive permission, deletion or cleanup claim follows from this source inventory.",
+      "observation_required": "Inventory the actual native PostgreSQL databases/schemas, native Auth state/cache, service roles, identity/customer associations, workflow checkpoints and configured providers. Qualify subject export, erasure, holds, journal key custody, upstream native-record treatment, current suppression/refusal restore and no-reexecution behavior separately. Inspect private worker credentials/seals, Admin customer-token fixtures, logs, IPC, backup/WAL/page copies, generated outputs, screenshots and browser state for scope, file permissions, retention and owner cleanup. Verify transient OIDC state/cache and TLS/proof buffers against the actual deployed backends. Keep native Medusa and connected-provider privacy outstanding until that evidence exists."
     }
   ]
 }

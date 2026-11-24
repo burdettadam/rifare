@@ -1,6 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { cpSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { tmpdir } from 'node:os';
+import { pathToFileURL } from 'node:url';
 import { DatabaseSync } from 'node:sqlite';
 import { usingSupport } from './support-helpers.mts';
 import { syntheticHeaders } from './execution-helpers.mts';
@@ -25,6 +28,7 @@ import { usingMarketing, populateMarketingPrivacy, usingCancellation } from './g
 import { EXTENDED_SERVICE_TABLES, extendedServicesPrivacy, extendedServicesRestore, extendedServicesUninstall } from './extended-services-privacy-helpers.mts';
 import { INVENTORY_PLANNING_TABLES, inventoryPlanningPrivacy, inventoryPlanningRestore, inventoryPlanningUninstall } from './inventory-planning-privacy-helpers.mts';
 import { ECOSYSTEM_TABLES, ecosystemPrivacy, ecosystemRestore, ecosystemUninstall } from './ecosystem-privacy-helpers.mts';
+import { fixtureSourceFilter } from './helpers.mts';
 
 const SENTINEL='SYNTHETIC_PRIVACY_CUSTOMER_NOTE';
 const PHOTO=JSON.parse(readFileSync(new URL('../fixtures/return-intake/photo.v1.json',import.meta.url),'utf8')).base64;
@@ -322,6 +326,15 @@ test('M07-G14-ALL-170-TABLES-HAVE-EXPLICIT-SURFACES',()=>usingSupport(f=>{
   assert.ok(r.tables.every((t:any)=>t.surface&&t.handling));assert.equal(r.local_inventory_current,true);
   assert.equal(r.deployment_coverage_verified,false);assert.equal(r.privacy_qualified,false);assert.equal(r.physical_erasure,false);
   assert.ok(r.outstanding.some((x:any)=>x.surface==='provider_copies'));assert.ok(r.outstanding.some((x:any)=>x.surface==='recovery_files_and_database_pages'));
+  assert.deepEqual(r.outstanding.find((x:any)=>x.surface==='native_medusa_storage'),{
+    surface:'native_medusa_storage',control:'operator',required:privacySurfaceContract().surfaces.find(s=>s.id==='native_medusa_storage')!.observation_required,state:'not_verified',
+  });
+  const contract=privacySurfaceContract(),native=contract.surfaces.find(s=>s.id==='native_medusa_storage')!;
+  assert.equal(native.control,'operator');assert.deepEqual(native.tables,[]);
+  // Original fifteen complete clauses at feature checkpoint 0cedc63; no native
+  // privacy acceptance is implied by preserving these diagnostic declarations.
+  assert.equal(contentDigest(contract.surfaces.filter(s=>s.id!=='native_medusa_storage')),'69d8452eee447500a8bb38824d3df5860550bb678ec918646694917d41855902');
+  assert.throws(()=>jsonValue(contract),/CONFIGURATION_INVALID/,'The local privacy contract budget must not widen generic configuration input');
   // The additive catalog retains all prior obligations. Its dedicated bounded
   // decoder must not widen the generic configuration-input limit.
   const catalog=readAdapterCatalog(),checked=validateAdapterCatalog(catalog);
@@ -335,6 +348,7 @@ test('M07-G14-MISSING-AND-UNKNOWN-SURFACES-BLOCK',()=>usingSupport(f=>{
   assert.throws(()=>auditPrivacyCoverage(f.kernel,f.owner.scope,{observed_surfaces:surfaces.filter((s:string)=>s!=='agent_task_state')}),/PRIVACY_SURFACE_INVENTORY_INCOMPLETE/);
   assert.throws(()=>auditPrivacyCoverage(f.kernel,f.owner.scope,{observed_surfaces:surfaces.filter((s:string)=>s!=='analytics_readmodels')}),/PRIVACY_SURFACE_INVENTORY_INCOMPLETE/);
   assert.throws(()=>auditPrivacyCoverage(f.kernel,f.owner.scope,{observed_surfaces:[...surfaces,'unregistered_vector_cache']}),/PRIVACY_SURFACE_INVENTORY_INCOMPLETE/);
+  assert.throws(()=>auditPrivacyCoverage(f.kernel,f.owner.scope,{observed_surfaces:surfaces.filter((s:string)=>s!=='native_medusa_storage')}),/PRIVACY_SURFACE_INVENTORY_INCOMPLETE/);
   const r=auditPrivacyCoverage(f.kernel,f.owner.scope,{observed_surfaces:surfaces});assert.equal(r.surface_declaration_matched,true);assert.equal(r.deployment_coverage_verified,false);
 }));
 
@@ -344,6 +358,31 @@ test('M07-G14-RUNTIME-CACHE-ADDITION-OR-DRIFT-REQUIRES-REVIEW',()=>{
   assert.throws(()=>checkPrivacyRuntimeSources([...sources,{path:'packages/commerce/new-vector-cache.mts',sha256:'0'.repeat(64)}]),/PRIVACY_RUNTIME_REVIEW_REQUIRED/);
   const modified=structuredClone(sources);modified.find((x:any)=>x.path==='packages/agent/runner.mts').sha256='0'.repeat(64);
   assert.throws(()=>checkPrivacyRuntimeSources(modified),/PRIVACY_RUNTIME_REVIEW_REQUIRED/);
+});
+
+test('M07-G14-NATIVE-STORAGE-CANNOT-MASQUERADE-AS-SQLITE-OR-SYNTHETIC',async()=>{
+  const temporary=mkdtempSync(join(tmpdir(),'rifare-privacy-surface-'));
+  try{
+    cpSync(new URL('../../packages',import.meta.url),join(temporary,'packages'),{recursive:true,filter:fixtureSourceFilter});
+    mkdirSync(join(temporary,'apps'));
+    const path=join(temporary,'packages/commerce/contracts/privacy-storage-surfaces.v1.json');
+    const original=JSON.parse(readFileSync(path,'utf8'));
+    const copied=await import(pathToFileURL(join(temporary,'packages/commerce/privacy-coverage.mts')).href);
+    assert.equal(copied.privacySurfaceContract().surfaces.length,16);
+    for(const mode of ['borrow_sqlite','synthetic_only','omit']){
+      const changed=structuredClone(original),native=changed.surfaces.find((s:any)=>s.id==='native_medusa_storage');
+      if(mode==='borrow_sqlite'){
+        const business=changed.surfaces.find((s:any)=>s.id==='business_resources'),table=business.tables.pop();
+        assert.ok(table);native.control='local_sqlite';native.tables=[table];
+        assert.equal(changed.surfaces.flatMap((s:any)=>s.tables).length,262,'All table assignments still exist; storage ownership must nevertheless fail');
+      }else if(mode==='synthetic_only')native.control='synthetic_only';
+      else changed.surfaces=changed.surfaces.filter((s:any)=>s.id!=='native_medusa_storage');
+      writeFileSync(path,JSON.stringify(changed));
+      assert.throws(()=>copied.privacySurfaceContract(),/PRIVACY_SURFACE_CONTRACT_INVALID/);
+    }
+    writeFileSync(path,JSON.stringify(original)+' '.repeat(2*1024*1024));
+    assert.throws(()=>copied.privacySurfaceContract(),/PRIVACY_SURFACE_CONTRACT_INVALID/,'The privacy contract retains its existing 2 MiB byte limit');
+  }finally{rmSync(temporary,{recursive:true,force:true});}
 });
 
 test('M07-G14-EXPORT-CONSENT-AND-ANALYTICS-ARE-SUBJECT-SCOPED',()=>usingSupport(f=>{
