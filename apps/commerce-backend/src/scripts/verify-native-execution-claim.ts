@@ -134,6 +134,11 @@ export default async function verifyNativeExecutionClaim({ container }: ExecArgs
   await check("C12-CLAIM-ROLE native login cannot read or forge journal authority or become controller", async () => {
     const url = new URL(process.env.DATABASE_URL!); url.username = claim!.worker!.role; url.password = claim!.worker!.password;
     const pool = ModulesSdkUtils.createPgConnection({ clientUrl: url.href, pool: { min: 0, max: 1 } });
+    const promotionLinks = [
+      { id: "cp_" + randomUUID().replaceAll("-", ""), cart_id: sample.cart.id, promotion_id: "promo_owned" },
+      { id: "cp_" + randomUUID().replaceAll("-", ""), cart_id: "cart_foreign", promotion_id: "promo_foreign" },
+    ];
+    await postgres("cart_promotion").insert(promotionLinks);
     try {
       assert.equal((await pool.raw("select session_user as role")).rows[0].role, claim!.worker!.role);
       assert.ok(await pool("cart").where({ id: sample.cart.id }).first("id"));
@@ -149,12 +154,45 @@ export default async function verifyNativeExecutionClaim({ container }: ExecArgs
       for (const change of [{ transaction_id: randomUUID() }, { workflow_id: "capture-payment" }])
         await assert.rejects(pool("workflow_execution").insert({ ...checkpoint, id: "wf_exec_" + randomUUID().replaceAll("-", ""),
           run_id: randomUUID(), ...change }), (error: any) => error.code === "42501");
+      assert.deepEqual(await pool("cart_promotion").select("cart_id", "promotion_id"),
+        [{ cart_id: sample.cart.id, promotion_id: "promo_owned" }]);
+      await assert.rejects(pool("cart_promotion").insert({ id: "cp_forbidden", cart_id: sample.cart.id,
+        promotion_id: "promo_forbidden" }), (error: any) => error.code === "42501");
       await assert.rejects(pool("customer").where({ id: f.customer.id }).update({ has_account: false }), (error: any) => error.code === "42501");
       await assert.rejects(pool("rifare_operation").where({ id: (await sample.row()).id }).update({ execution_generation: 999 }), (error: any) => error.code === "42501");
       const controller = (await postgres.raw("select session_user as role")).rows[0].role;
       assert.match(controller, /^[a-zA-Z0-9_]+$/);
       await assert.rejects(pool.raw('set role "' + controller + '"'), (error: any) => error.code === "42501");
-    } finally { await pool.destroy(); }
+    } finally {
+      await pool.destroy();
+      await postgres("cart_promotion").whereIn("id", promotionLinks.map(row => row.id)).delete();
+    }
+  });
+  await check("C12-CLAIM-CART-READ-POLICY altered or additional policy blocks worker creation", async () => {
+    const faults = [
+      {
+        apply: () => postgres.raw(`alter policy rifare_native_cart_read on public.cart_promotion
+          using (true) with check (true)`),
+        restore: () => postgres.raw(`alter policy rifare_native_cart_read on public.cart_promotion
+          using (public.rifare_native_cart_read_allowed(cart_id))
+          with check (public.rifare_native_cart_read_allowed(cart_id))`),
+      },
+      {
+        apply: () => postgres.raw(`create policy c12_unapproved_cart_read on public.cart_promotion
+          as permissive for all to public using (true) with check (true)`),
+        restore: () => postgres.raw("drop policy c12_unapproved_cart_read on public.cart_promotion"),
+      },
+    ];
+    for (const fault of faults) {
+      const original = await f.makePaymentOriginal(), before = await original.row(), count = await roleCount();
+      await fault.apply();
+      try {
+        assert.equal((await postgres.raw("select public.rifare_native_cart_read_ready() as ready")).rows[0].ready, false);
+        await noEffect(() => assert.rejects(journal.claimNativeExecution(original.command.command_id, context, verifier)));
+        assert.deepEqual(await original.row(), before); assert.equal(await roleCount(), count);
+      } finally { await fault.restore(); }
+      assert.equal((await postgres.raw("select public.rifare_native_cart_read_ready() as ready")).rows[0].ready, true);
+    }
   });
   await check("C12-CLAIM-WORKFLOW-POLICY altered or additional permissive policy blocks worker creation", async () => {
     const faults = [
@@ -186,23 +224,30 @@ export default async function verifyNativeExecutionClaim({ container }: ExecArgs
     const role = "rifare_workflow_control_" + randomUUID().replaceAll("-", ""), password = randomUUID().replaceAll("-", "");
     const row = { id: "wf_exec_" + randomUUID().replaceAll("-", ""), workflow_id: "ordinary-control",
       transaction_id: randomUUID(), run_id: randomUUID(), state: "not_started" };
+    const cartLink = { id: "cp_" + randomUUID().replaceAll("-", ""), cart_id: "cart_nonworker_control",
+      promotion_id: "promo_nonworker_control" };
     let pool: ReturnType<typeof ModulesSdkUtils.createPgConnection> | undefined, created = false;
     try {
+      await postgres("cart_promotion").insert(cartLink);
       await postgres.raw(`create role "${role}" login password '${password}' nosuperuser nocreatedb nocreaterole noinherit noreplication nobypassrls`);
       created = true;
       await postgres.raw(`grant usage on schema public to "${role}"`);
       await postgres.raw(`grant select,insert,update,delete on public.workflow_execution to "${role}"`);
+      await postgres.raw(`grant select on public.cart_promotion to "${role}"`);
       const url = new URL(process.env.DATABASE_URL!); url.username = role; url.password = password;
       pool = ModulesSdkUtils.createPgConnection({ clientUrl: url.href, pool: { min: 0, max: 1 } });
       assert.equal((await pool.raw("select session_user as role")).rows[0].role, role);
       await pool("workflow_execution").insert(row);
       assert.deepEqual(await pool("workflow_execution").where({ id: row.id }).select("id"), [{ id: row.id }]);
       await pool("workflow_execution").where({ id: row.id }).delete();
+      assert.deepEqual(await pool("cart_promotion").where({ id: cartLink.id }).select("id"), [{ id: cartLink.id }]);
     } finally {
       if (pool) await pool.destroy();
       await postgres("workflow_execution").where({ id: row.id }).delete();
+      await postgres("cart_promotion").where({ id: cartLink.id }).delete();
       if (created) {
         await postgres.raw(`revoke all on public.workflow_execution from "${role}"`);
+        await postgres.raw(`revoke all on public.cart_promotion from "${role}"`);
         await postgres.raw(`revoke usage on schema public from "${role}"`);
         await postgres.raw(`drop role "${role}"`);
       }

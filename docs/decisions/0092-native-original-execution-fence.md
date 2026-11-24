@@ -151,6 +151,16 @@ write allowlist remain digest-equal and System authorization remains zero. This
 qualifies only checkpoint scoping and identifies the next read-visibility boundary;
 healthy completion and full C12 remain unqualified.
 
+Fresh `cartread2` and `completion12` at
+`ed975ebe9f5c4e7e85677b0ffb737114dbcd1a03` add forced row-level
+visibility for `cart_promotion`. The current per-original role sees only its
+claimed cart's link rows; a wrong-cart row is hidden, writes remain ungranted, and
+altered or additional policy composition prevents worker creation. An ordinary
+nonworker role remains unaffected. The actual completion query advances to the next
+ungranted link, `product_shipping_profile`, with the 31-table native write digest
+unchanged and zero System authorizations. This is a cart-link read-visibility slice,
+not healthy completion or full C12 qualification.
+
 ## Initial mechanism disposition
 
 The a4c7a7e native setup disproved the service-subclass/discoveryPath hypothesis.
