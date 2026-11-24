@@ -14,6 +14,7 @@ import { bytes } from "./native-receipt-fixture";
 import { operationJournalModule } from "../modules/operation-journal";
 import type OperationJournalService from "../modules/operation-journal/service";
 import { requireNativeExecutionProfile, retireOriginalExecutionWorker } from "../modules/operation-journal/execution-claim";
+import FencedSystemPaymentProvider from "../modules/fenced-system-payment/service";
 
 /** Journal-generation primitive on already-open actual native worker sessions.
  * No workflow dispatch, current-grant/row visibility or full C12 is claimed. */
@@ -63,6 +64,29 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
     }
     try {
       if (task.healthy_completion) {
+        if (task.restore_stage === "pre-payment" || task.restore_stage === "provider-admitted") {
+          // Test-only interception of the pinned provider boundary, not an
+          // upstream workflow hook or a production extension contract.
+          const original = FencedSystemPaymentProvider.prototype.authorizePayment;
+          FencedSystemPaymentProvider.prototype.authorizePayment = async function(input) {
+            const pause = async (): Promise<never> => {
+              assert.equal(typeof process.send, "function");
+              process.send!({ phase: "native-prefix-committed", stage: task.restore_stage, system_calls: calls });
+              return new Promise<never>(() => {});
+            };
+            if (task.restore_stage === "pre-payment") return pause();
+            const db: any = (this as any).postgres;
+            const transaction = db.transaction;
+            db.transaction = async function(...args: any[]) {
+              const result = await transaction.apply(this, args);
+              // The authorize transaction returns this original only after
+              // durable provider admission COMMIT, before delegate validation.
+              if (result === task.original_id) return pause();
+              return result;
+            };
+            return original.call(this, input);
+          };
+        }
         if (task.pause_after_validate) completeCartWorkflow.hooks.validate(async ({ input }) => {
           if (input.id !== task.cart_id) return new StepResponse();
           assert.equal(typeof process.send, "function");
@@ -96,7 +120,11 @@ export default async function verifyNativeGenerationFence({ container }: ExecArg
           console.log("C12_NATIVE_HEALTHY_COMPLETION_OBSERVATION=" + JSON.stringify(observation));
           throw completed.errors[0].error;
         }
-        if (task.lose_completion_ack) { process.exitCode = 79; return; }
+        if (task.lose_completion_ack) {
+          if (task.restore_stage === "unobserved-completion") assert.deepEqual(calls,
+            { initiatePayment: 0, authorizePayment: 1, capturePayment: 0, refundPayment: 0, cancelPayment: 0 });
+          process.exitCode = 79; return;
+        }
         console.log("C12_NATIVE_HEALTHY_COMPLETION_OBSERVATION=" + JSON.stringify(observation));
         return;
       }

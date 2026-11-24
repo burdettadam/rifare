@@ -23,7 +23,10 @@ export default async function verifyProviderAttemptPrivacyRestore({ container }:
   const postgres = container.resolve(ContainerRegistrationKeys.PG_CONNECTION);
   const completed = fixture.completed;
   const claimed = fixture.execution;
+  const prefix = fixture.prefix;
+  const identity = claimed ?? prefix;
   if (claimed) assert.ok(["claim-commit", "activation-commit"].includes(claimed.stage));
+  if (prefix) assert.ok(["pre-payment", "provider-admitted", "unobserved-completion"].includes(prefix.stage));
   const nativeTables = ["cart", "cart_address", "cart_line_item", "cart_line_item_adjustment", "cart_line_item_tax_line",
     "cart_shipping_method", "cart_shipping_method_adjustment", "cart_shipping_method_tax_line",
     "order", "order_address", "order_item", "order_line_item", "order_line_item_adjustment", "order_line_item_tax_line",
@@ -37,7 +40,7 @@ export default async function verifyProviderAttemptPrivacyRestore({ container }:
     return JSON.stringify(rows);
   };
   let nativeBefore: string | undefined;
-  if (completed || claimed) {
+  if (completed || identity) {
     nativeBefore = await nativeSnapshot();
     const payments: any = container.resolve(Modules.PAYMENT);
     for (const owner of [payments, payments.paymentProviderService_])
@@ -52,13 +55,28 @@ export default async function verifyProviderAttemptPrivacyRestore({ container }:
   assert.equal((await postgres.raw("select has_function_privilege('public','public.rifare_require_native_execution_payment(text,text,text)','execute') as allowed")).rows[0].allowed, false);
   const selected = () => postgres("rifare_operation").where({ original_command_uuid: fixture.original_id }).first();
   const before = await selected();
-  if (claimed) {
+  if (identity) {
     assert.equal(before.state, "unknown");
-    assert.equal(before.execution_payment_attempted_at, null);
-    assert.equal(before.execution_order_id, null);
-    assert.equal(before.execution_owner_fingerprint, claimed.owner);
-    assert.equal(before.execution_seal_fingerprint, claimed.seal);
-    assert.equal(before.execution_payment_handle_fingerprint, claimed.handle);
+    if (claimed || prefix.stage === "pre-payment") assert.equal(before.execution_payment_attempted_at, null);
+    else {
+      assert.ok(before.execution_payment_attempted_at instanceof Date);
+      assert.equal(before.execution_payment_attempted_at.toISOString(), prefix.attempted_at);
+    }
+    assert.equal(before.execution_order_id, prefix?.order_id ?? null);
+    assert.equal(before.execution_owner_fingerprint, identity.owner);
+    assert.equal(before.execution_seal_fingerprint, identity.seal);
+    assert.equal(before.execution_payment_handle_fingerprint, identity.handle);
+    if (prefix) {
+      assert.equal(prefix.order_fingerprint, executionFingerprint(prefix.order_id));
+      assert.equal(before.execution_order_fingerprint, prefix.order_fingerprint);
+      assert.ok(await postgres("order").where({ id: prefix.order_id }).first());
+      assert.equal((await postgres("order_cart").where({ order_id: prefix.order_id, cart_id: before.cart_id })).length, 1);
+      assert.equal((await postgres("order_payment_collection").where({ order_id: prefix.order_id, payment_collection_id: before.payment_collection_id })).length, 1);
+      const payments = await postgres("payment").where({ payment_collection_id: before.payment_collection_id });
+      assert.equal(payments.length, prefix.stage === "unobserved-completion" ? 1 : 0);
+      if (payments[0]) assert.equal(payments[0].id, prefix.payment_id);
+      assert.equal(before.native_payment_id, null); assert.equal(before.native_payment_fingerprint, null);
+    }
     const verifier = await journal.createAuthorityReceiptVerifier(bytes(fixture.trust));
     const countRoles = async () => Number((await postgres.raw("select count(*) as n from pg_roles where rolname ~ '^rifare_exec_[a-f0-9]{32}$'")).rows[0].n);
     const count = await countRoles();
@@ -85,10 +103,14 @@ export default async function verifyProviderAttemptPrivacyRestore({ container }:
     assert.ok(row.execution_owner_fingerprint); assert.ok(row.execution_seal_fingerprint);
     assert.ok(row.execution_payment_handle_fingerprint); assert.ok(row.execution_revoked_at instanceof Date);
     assert.ok(row.execution_generation >= 2);
-    if (claimed) {
-      assert.equal(row.execution_owner_fingerprint, claimed.owner);
-      assert.equal(row.execution_seal_fingerprint, claimed.seal);
-      assert.equal(row.execution_payment_handle_fingerprint, claimed.handle);
+    if (identity) {
+      assert.equal(row.execution_owner_fingerprint, identity.owner);
+      assert.equal(row.execution_seal_fingerprint, identity.seal);
+      assert.equal(row.execution_payment_handle_fingerprint, identity.handle);
+    }
+    if (prefix) {
+      assert.equal(row.execution_order_fingerprint, prefix.order_fingerprint);
+      assert.equal(row.native_payment_id, null); assert.equal(row.native_payment_fingerprint, null);
     }
     if (completed) {
       assert.equal(row.execution_order_fingerprint, completed.order_fingerprint);
@@ -128,9 +150,10 @@ export default async function verifyProviderAttemptPrivacyRestore({ container }:
     await reconcile(); await reconcile();
     await assertRetainedAttempt();
   }
-  if (completed || claimed) assert.equal(await nativeSnapshot(), nativeBefore, "Privacy restore must not mutate or repeat native effects");
+  if (completed || identity) assert.equal(await nativeSnapshot(), nativeBefore, "Privacy restore must not mutate or repeat native effects");
   console.log("C12_PROVIDER_ATTEMPT_PRIVACY_RESTORE=" + JSON.stringify({ result: "pass", phase,
     attempted_at_retained: true, completed_effect_retained: Boolean(completed),
     ...(claimed ? { claim_stage_retained: claimed.stage, inspected_native_tables: nativeTables.length } : {}),
+    ...(prefix ? { native_prefix_retained: prefix.stage, inspected_native_tables: nativeTables.length } : {}),
     execution_authorized: false, provider_invoked: false }));
 }
