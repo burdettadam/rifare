@@ -39,7 +39,7 @@ def bridge(path, opts):
     return result
 
 with sync_playwright() as playwright:
-    browser = playwright.chromium.launch(executable_path='/usr/bin/chromium', headless=True, args=['--no-sandbox'])
+    browser = playwright.chromium.launch(executable_path=os.environ.get('RIFARE_TEST_BROWSER', '/usr/bin/chromium'), headless=True, args=['--no-sandbox'])
     page = browser.new_page(viewport={'width': 390, 'height': 844})
     page.route('**/*', lambda route: (network.append(route.request.url), route.abort()))
     page.set_content(html)

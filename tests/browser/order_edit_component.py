@@ -14,7 +14,7 @@ def bridge(path,opts):
         with urllib.request.urlopen(req,timeout=8) as r:return {'status':r.status,'value':json.load(r)}
     except urllib.error.HTTPError as e:return {'status':e.code,'value':json.load(e)}
 with sync_playwright() as p:
-    browser=p.chromium.launch(executable_path='/usr/bin/chromium',headless=True,args=['--no-sandbox'])
+    browser=p.chromium.launch(executable_path=os.environ.get('RIFARE_TEST_BROWSER','/usr/bin/chromium'),headless=True,args=['--no-sandbox'])
     page=browser.new_page(viewport={'width':390,'height':844}); page.set_default_timeout(10000)
     page.route('**/*',lambda r:(network.append(r.request.url),r.abort()))
     page.set_content(html);page.add_style_tag(content=(assets/'order-edits.css').read_text());page.expose_function('bridge',bridge)
