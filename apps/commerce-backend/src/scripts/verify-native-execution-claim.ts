@@ -152,9 +152,32 @@ export default async function verifyNativeExecutionClaim({ container }: ExecArgs
     ];
     await postgres("cart_promotion").insert(promotionLinks);
     await postgres("product_shipping_profile").insert(productLinks);
+    const foreignOrderPaymentLink = { id: "ordpaycol_" + randomUUID().replaceAll("-", ""),
+      order_id: "order_foreign", payment_collection_id: "pay_col_foreign" };
+    await postgres("order_payment_collection").insert(foreignOrderPaymentLink);
+    const foreignShippingMethod = { id: "ordsm_" + randomUUID().replaceAll("-", ""), name: "Foreign shipping",
+      amount: 1, raw_amount: { value: "1", precision: 20 }, is_tax_inclusive: false, is_custom_amount: false, metadata: null };
+    await postgres("order_shipping_method").insert(foreignShippingMethod);
     try {
       assert.equal((await pool.raw("select session_user as role")).rows[0].role, claim!.worker!.role);
       assert.ok(await pool("cart").where({ id: sample.cart.id }).first("id"));
+      assert.equal(await pool("cart").where({ id: sample.cart.id }).update({
+        metadata: { rifare_execution_owner: "sha256:" + "0".repeat(64) } }), 1);
+      assert.equal((await postgres("cart").where({ id: sample.cart.id }).first("metadata")).metadata.rifare_execution_owner,
+        executionFingerprint(claim!.worker!.role), "Cart anchor must be restamped after worker metadata replacement");
+      const sessionData = (await postgres("payment_session").where({ id: sample.session.id }).first("data")).data;
+      await assert.rejects(pool("payment_session").where({ id: sample.session.id }).update({
+        data: { ...sessionData, rifare_native_execution: { ...sessionData.rifare_native_execution, handle: "0".repeat(64) } } }),
+      (error: any) => error.code === "42501");
+      assert.deepEqual((await postgres("payment_session").where({ id: sample.session.id }).first("data")).data, sessionData);
+      for (const table of ["cart", "payment_session"])
+        await assert.rejects(pool(table).where({ id: table === "cart" ? sample.cart.id : sample.session.id }).delete(),
+          (error: any) => error.code === "42501");
+      assert.ok(await postgres("cart").where({ id: sample.cart.id }).first("id"));
+      assert.ok(await postgres("payment_session").where({ id: sample.session.id }).first("id"));
+      const softDeleted = new Date();
+      assert.equal(await pool("payment_session").where({ id: sample.session.id }).update({ deleted_at: softDeleted }), 1);
+      assert.equal(await pool("payment_session").where({ id: sample.session.id }).update({ deleted_at: null }), 1);
       await assert.rejects(pool("rifare_operation").select("id"), (error: any) => error.code === "42501");
       for (const table of ["auth_identity", "user", "api_key", "rifare_operation_privacy_subject"])
         await assert.rejects(pool(table).select("id"), (error: any) => error.code === "42501");
@@ -175,6 +198,18 @@ export default async function verifyNativeExecutionClaim({ container }: ExecArgs
         [{ product_id: ownedProduct, shipping_profile_id: "sp_owned" }]);
       await assert.rejects(pool("product_shipping_profile").insert({ id: "psp_forbidden", product_id: ownedProduct,
         shipping_profile_id: "sp_forbidden" }), (error: any) => error.code === "42501");
+      const foreignLinkBefore = await postgres("order_payment_collection").where({ id: foreignOrderPaymentLink.id }).first();
+      await assert.rejects(pool("order_payment_collection").where({ id: foreignOrderPaymentLink.id })
+        .update({ payment_collection_id: sample.collection.id }), (error: any) => error.code === "42501");
+      assert.deepEqual(await postgres("order_payment_collection").where({ id: foreignOrderPaymentLink.id }).first(), foreignLinkBefore);
+      await assert.rejects(pool("order_shipping_method").where({ id: foreignShippingMethod.id }).delete(),
+        (error: any) => error.code === "42501");
+      assert.ok(await postgres("order_shipping_method").where({ id: foreignShippingMethod.id }).first("id"));
+      await assert.rejects(pool("payment").insert({ id: "pay_" + randomUUID().replaceAll("-", ""),
+        payment_collection_id: sample.collection.id, payment_session_id: sample.session.id,
+        provider_id: "pp_rifare_fenced_system_fixture", currency_code: sample.command.currency,
+        amount: 12.5, raw_amount: { value: "12.5", precision: 20 }, data: {} }),
+      (error: any) => error.code === "42501");
       await assert.rejects(pool("order").insert({ id: "order_" + randomUUID().replaceAll("-", ""), version: 1,
         status: "pending", is_draft_order: false, currency_code: "usd", no_notification: false,
         metadata: { rifare_execution_owner: "sha256:" + "0".repeat(64) } }), (error: any) => error.code === "42501");
@@ -200,6 +235,91 @@ export default async function verifyNativeExecutionClaim({ container }: ExecArgs
       await pool.destroy();
       await postgres("cart_promotion").whereIn("id", promotionLinks.map(row => row.id)).delete();
       await postgres("product_shipping_profile").whereIn("id", productLinks.map(row => row.id)).delete();
+      await postgres("order_payment_collection").where({ id: foreignOrderPaymentLink.id }).delete();
+      await postgres("order_shipping_method").where({ id: foreignShippingMethod.id }).delete();
+    }
+  });
+  await check("C12-CLAIM-MISSING-IDENTITY ordinary granted login cannot use the administrative native-table bypass", async () => {
+    const unclaimed = await f.makeCart();
+    const owner = executionFingerprint(claim!.worker!.role), protectedOrder = "order_probe_" + randomUUID().replaceAll("-", ""),
+      foreignOrder = "order_probe_" + randomUUID().replaceAll("-", ""), protectedLine = "ordli_probe_" + randomUUID().replaceAll("-", ""),
+      protectedItem = "orditem_probe_" + randomUUID().replaceAll("-", "");
+    await postgres.raw("alter table public.order disable trigger rifare_native_order_binding");
+    try {
+      await postgres("order").insert({ id: protectedOrder, currency_code: "usd", metadata: { rifare_execution_owner: owner } });
+    } finally { await postgres.raw("alter table public.order enable trigger rifare_native_order_binding"); }
+    assert.equal((await sample.row()).execution_order_id, null, "Prebinding fixture must not finalize journal order identity");
+    await postgres("order").insert({ id: foreignOrder, currency_code: "usd" });
+    await postgres("order_line_item").insert({ id: protectedLine, title: "Protected probe", unit_price: 1,
+      raw_unit_price: { value: "1", precision: 20 } });
+    await postgres("order_item").insert({ id: protectedItem, order_id: foreignOrder, version: 1, item_id: protectedLine,
+      quantity: 1, raw_quantity: { value: "1", precision: 20 }, fulfilled_quantity: 0, shipped_quantity: 0,
+      return_requested_quantity: 0, return_received_quantity: 0, return_dismissed_quantity: 0, written_off_quantity: 0,
+      metadata: { rifare_execution_owner: owner } });
+    const protectedCartLine = (await postgres("cart_line_item").where({ cart_id: sample.cart.id }).first("id")).id,
+      protectedPayment = "pay_probe_" + randomUUID().replaceAll("-", "");
+    await postgres("cart_line_item").where({ id: protectedCartLine }).update({ deleted_at: new Date() });
+    await postgres("payment").insert({ id: protectedPayment, payment_collection_id: sample.collection.id,
+      payment_session_id: sample.session.id, provider_id: "pp_rifare_fenced_system_fixture", currency_code: sample.command.currency,
+      amount: 12.5, raw_amount: { value: "12.5", precision: 20 },
+      data: { rifare_native_execution: { original_command_id: sample.command.command_id } }, deleted_at: new Date() });
+    const role = "rifare_probe_" + randomUUID().replaceAll("-", ""), password = randomUUID().replaceAll("-", "");
+    await postgres.raw(`create role "${role}" login password '${password}' nosuperuser nocreatedb nocreaterole noinherit noreplication nobypassrls;
+      grant usage on schema public to "${role}"; grant select,update on table public.cart to "${role}";
+      grant insert,select,update,delete on table public.order_cart,public.order_payment_collection,public.payment,
+        public.order_summary,public.reservation_item,public.cart_line_item_adjustment,public.capture,public.refund to "${role}"`);
+    const database = new URL(process.env.DATABASE_URL!); database.username = role; database.password = password;
+    const pool = ModulesSdkUtils.createPgConnection({ clientUrl: database.href, pool: { min: 0, max: 1 } });
+    try {
+      assert.equal((await pool.raw("select session_user as role")).rows[0].role, role);
+      assert.equal(await pool("cart").where({ id: unclaimed.id }).update({ updated_at: new Date() }), 1,
+        "Unrelated ordinary Cart behavior must remain available");
+      await assert.rejects(pool("cart").where({ id: sample.cart.id }).update({ updated_at: new Date() }),
+        (error: any) => error.code === "42501" && error.message.includes("Native original scope unavailable"));
+      const orderCartId = "ordcart_probe_" + randomUUID().replaceAll("-", "");
+      await assert.rejects(pool("order_cart").insert({ id: orderCartId, cart_id: sample.cart.id,
+        order_id: "order_foreign_" + randomUUID().replaceAll("-", "") }), (error: any) => error.code === "42501");
+      assert.equal(await postgres("order_cart").where({ id: orderCartId }).first(), undefined);
+      const orderCollectionId = "ordpaycol_probe_" + randomUUID().replaceAll("-", "");
+      await assert.rejects(pool("order_payment_collection").insert({ id: orderCollectionId,
+        payment_collection_id: sample.collection.id, order_id: "order_foreign_" + randomUUID().replaceAll("-", "") }),
+      (error: any) => error.code === "42501");
+      assert.equal(await postgres("order_payment_collection").where({ id: orderCollectionId }).first(), undefined);
+      const paymentId = "pay_probe_" + randomUUID().replaceAll("-", "");
+      await assert.rejects(pool("payment").insert({ id: paymentId, payment_collection_id: sample.collection.id,
+        payment_session_id: "payses_foreign_" + randomUUID().replaceAll("-", ""), provider_id: "pp_other",
+        currency_code: "usd", amount: 12.5, raw_amount: { value: "12.5", precision: 20 }, data: {} }),
+      (error: any) => error.code === "42501");
+      assert.equal(await postgres("payment").where({ id: paymentId }).first(), undefined);
+      const summaryId = "ordsum_probe_" + randomUUID().replaceAll("-", "");
+      await assert.rejects(pool("order_summary").insert({ id: summaryId, order_id: protectedOrder, version: 1 }),
+        (error: any) => error.code === "42501");
+      assert.equal(await postgres("order_summary").where({ id: summaryId }).first(), undefined);
+      const reservationId = "res_probe_" + randomUUID().replaceAll("-", "");
+      await assert.rejects(pool("reservation_item").insert({ id: reservationId, line_item_id: protectedLine,
+        location_id: "sloc_foreign", inventory_item_id: "iitem_foreign", quantity: 1 }),
+      (error: any) => error.code === "42501");
+      assert.equal(await postgres("reservation_item").where({ id: reservationId }).first(), undefined);
+      const adjustmentId = "cali_probe_" + randomUUID().replaceAll("-", "");
+      await assert.rejects(pool("cart_line_item_adjustment").insert({ id: adjustmentId, item_id: protectedCartLine,
+        amount: 1, raw_amount: { value: "1", precision: 20 } }), (error: any) => error.code === "42501");
+      assert.equal(await postgres("cart_line_item_adjustment").where({ id: adjustmentId }).first(), undefined);
+      for (const table of ["capture", "refund"]) {
+        const effectId = (table === "capture" ? "cap_probe_" : "ref_probe_") + randomUUID().replaceAll("-", "");
+        await assert.rejects(pool(table).insert({ id: effectId, payment_id: protectedPayment, amount: 1,
+          raw_amount: { value: "1", precision: 20 } }), (error: any) => error.code === "42501");
+        assert.equal(await postgres(table).where({ id: effectId }).first(), undefined);
+      }
+    } finally {
+      await pool.destroy();
+      await postgres.raw(`revoke insert,select,update,delete on table public.order_cart,public.order_payment_collection,public.payment,
+        public.order_summary,public.reservation_item,public.cart_line_item_adjustment,public.capture,public.refund from "${role}";
+        revoke update,select on table public.cart from "${role}"; revoke usage on schema public from "${role}"; drop role "${role}"`);
+      await postgres("order_item").where({ id: protectedItem }).delete();
+      await postgres("order_line_item").where({ id: protectedLine }).delete();
+      await postgres("order").whereIn("id", [protectedOrder, foreignOrder]).delete();
+      await postgres("payment").where({ id: protectedPayment }).delete();
+      await postgres("cart_line_item").where({ id: protectedCartLine }).update({ deleted_at: null });
     }
   });
   await check("C12-CLAIM-PRODUCT-READ-POLICY altered or additional policy blocks worker creation", async () => {
@@ -232,6 +352,7 @@ export default async function verifyNativeExecutionClaim({ container }: ExecArgs
     for (const fault of [
       { table: "order_item", trigger: "rifare_native_order_binding", ready: "rifare_native_order_binding_ready" },
       { table: "order_cart", trigger: "rifare_native_00_serialize", ready: "rifare_native_link_serialization_ready" },
+      { table: "order_payment_collection", trigger: "rifare_native_scope", ready: "rifare_native_scope_ready" },
     ]) {
       const original = await f.makePaymentOriginal(), before = await original.row(), count = await roleCount();
       await postgres.raw(`alter table public.${fault.table} disable trigger ${fault.trigger}`);
@@ -534,6 +655,38 @@ export default async function verifyNativeExecutionClaim({ container }: ExecArgs
     for (const field of ["execution_owner_fingerprint", "execution_seal_fingerprint", "execution_payment_handle_fingerprint"])
       assert.equal(minimized[field], first[field]);
     assert.equal(minimized.execution_generation, 2);
+    assert.equal((await postgres("cart").where({ id: sample.cart.id }).first("metadata")).metadata.rifare_execution_owner,
+      first.execution_owner_fingerprint);
+    const role = "rifare_probe_" + randomUUID().replaceAll("-", ""), password = randomUUID().replaceAll("-", ""),
+      lineId = (await postgres("cart_line_item").where({ cart_id: sample.cart.id }).first("id")).id;
+    await postgres.raw(`create role "${role}" login password '${password}' nosuperuser nocreatedb nocreaterole noinherit noreplication nobypassrls;
+      grant usage on schema public to "${role}";
+      grant select,update on table public.cart,public.cart_line_item,public.payment_collection,public.payment_session to "${role}";
+      grant insert,select,delete on table public.order_cart,public.payment_session,public.payment to "${role}"`);
+    const database = new URL(process.env.DATABASE_URL!); database.username = role; database.password = password;
+    const pool = ModulesSdkUtils.createPgConnection({ clientUrl: database.href, pool: { min: 0, max: 1 } });
+    try {
+      for (const [table, selected] of [["cart", sample.cart.id], ["cart_line_item", lineId],
+        ["payment_collection", sample.collection.id], ["payment_session", sample.session.id]] as const)
+        await assert.rejects(pool(table).where({ id: selected }).update({ updated_at: new Date() }),
+          (error: any) => error.code === "42501");
+      await assert.rejects(pool("order_cart").insert({ id: "ordcart_probe_" + randomUUID().replaceAll("-", ""),
+        cart_id: sample.cart.id, order_id: "order_foreign_" + randomUUID().replaceAll("-", "") }),
+      (error: any) => error.code === "42501");
+      await assert.rejects(pool("payment_session").insert({ id: "payses_probe_" + randomUUID().replaceAll("-", ""),
+        payment_collection_id: sample.collection.id, provider_id: "pp_other", currency_code: "usd", amount: 12.5,
+        raw_amount: { value: "12.5", precision: 20 }, data: { rifare_native_execution: { handle: "0".repeat(64) } } }),
+      (error: any) => error.code === "42501");
+      await assert.rejects(pool("payment").insert({ id: "pay_probe_" + randomUUID().replaceAll("-", ""),
+        payment_collection_id: sample.collection.id, payment_session_id: "payses_foreign_" + randomUUID().replaceAll("-", ""),
+        provider_id: "pp_other", currency_code: "usd", amount: 12.5,
+        raw_amount: { value: "12.5", precision: 20 }, data: {} }), (error: any) => error.code === "42501");
+    } finally {
+      await pool.destroy();
+      await postgres.raw(`revoke insert,select,delete on table public.order_cart,public.payment_session,public.payment from "${role}";
+        revoke update,select on table public.cart,public.cart_line_item,public.payment_collection,public.payment_session from "${role}";
+        revoke usage on schema public from "${role}"; drop role "${role}"`);
+    }
     const count = await roleCount(); await assert.rejects(journal.claimNativeExecution(id, context, verifier)); assert.equal(await roleCount(), count);
   });
   f.requestVerifier.close(); verifier.close();
