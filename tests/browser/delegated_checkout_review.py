@@ -27,6 +27,7 @@ origin = urlsplit(cfg['url'])
 assert origin.scheme == 'http' and origin.hostname == '127.0.0.1' and origin.port
 calls, external, errors, console, assets = [], [], [], [], {}
 receipt_responses = []
+api_diagnostics = []
 fault_applied = False
 committed_id = None
 browser = None
@@ -88,6 +89,15 @@ try:
             page.on('websocket', listener('websocket_callback', lambda _: external.append('websocket')))
             def response_seen(response):
                 path = urlsplit(response.url).path
+                operation = path.rsplit('/', 1)[-1]
+                if path in {'/v1/delegated-checkout/' + name for name in
+                            ('preview-status', 'prepare', 'status', 'cancel')} and len(api_diagnostics) < 16:
+                    diagnostic = {'operation': operation, 'status': response.status}
+                    if response.status == 200:
+                        result = response.json().get('result')
+                        if isinstance(result, dict) and type(result.get('created_at')) is int:
+                            diagnostic['created_in_browser_future'] = result['created_at'] > page.evaluate('Date.now()')
+                    api_diagnostics.append(diagnostic)
                 if path in {'/checkout-review', '/checkout-review-client.js', '/checkout-review.css'}:
                     assets[path] = response.status
                 if path == '/v1/delegated-checkout/receipt':
@@ -430,6 +440,7 @@ if primary_failure is not None or callback_failures or cleanup_failures:
     # Never emit exception messages, Playwright call logs, paths or traceback text.
     print(json.dumps({'passed': False, 'scenario': scenario, **first,
                       'primary_failure': primary_failure, 'callback_failures': callback_failures,
+                      'api_diagnostics': api_diagnostics,
                       'cleanup_failures': cleanup_failures, 'actual_served_browser': False}), file=sys.stderr)
     sys.exit(1)
 
