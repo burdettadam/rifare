@@ -328,6 +328,35 @@ upgrade/replay gates for this candidate. The broader restore/fault matrix, conne
 provider enrollment and authority, managed-machine caller qualification, production
 acceptance and full C12 qualification remain open.
 
+## Completed-effect privacy and whole-database restore
+
+Candidate `33c16f742853d6bb3ccb0309bb0ac59e85fbbdd2` extends the existing
+attempt-marker verifier to the actual completed original. The healthy seed on
+`fb9beb9c927acdfb9863b6404f6089a599f4edcc` completed one native order with one
+System authorization and passed original recovery. Opt-in private custody retains
+the original's privacy context and completed order/payment identities, without
+worker credentials, seal or privacy key. No default application behavior changes.
+
+Actual PostgreSQL backup/restore passed export, hold/erasure, restored recovery,
+erasure reconciliation and uninstall reconciliation. Each phase preserves the
+attempt time, order and native-payment refusal fingerprints and compares all 31
+installed native write tables unchanged. Payment/provider calls are forbidden
+during the verifier. The backup SHA-256 is
+`d5423466625d7d7742d390841d097c022c84d4389d2a1d79ffe37f4b6e5083be`.
+
+Clearing the attempted-effect marker during minimization is rejected by the
+database's immutable-attempt guard. Correct code passes on a fresh copy of the
+same backup. A failed rerun on the partially held fault database remains failed
+setup evidence and is not credited. Both independent review roles approved the
+bounded source and evidence; the final census found zero C12 sessions (including
+idle) and zero login-capable execution roles. Raw records remain in ignored
+`evidence/operation-journal/c12-aftereffect-restore1*`.
+
+This closes this completed-effect privacy/restore slice only. Complete C12
+input/output/vendor/tool/evidence receipts, other required committed-stage and
+fault coverage, the full runtime/browser gate, connected authority and production
+acceptance remain open.
+
 ## Retained adapter-catalog reconciliation
 
 The cumulative retained development runner exposed two pre-existing catalog
