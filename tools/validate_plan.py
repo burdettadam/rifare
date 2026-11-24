@@ -7,7 +7,7 @@ import json
 import re
 import sys
 from collections import Counter
-from pathlib import Path
+from pathlib import Path, PurePosixPath, PureWindowsPath
 from typing import Any
 
 # Prior authority: ADR-0042 / 97b888a. This is a closed, byte-pinned addition,
@@ -63,7 +63,8 @@ def validate_documents(docs: dict[str, Any]) -> list[str]:
             errors.append(f'{owner}: missing integration scope or finding')
         paths = row.get('evidence_paths', [])
         if (not paths or any(not isinstance(path, str) or not path.strip()
-                             or Path(path).is_absolute() or '..' in Path(path).parts for path in paths)):
+                             or PurePosixPath(path).is_absolute() or PureWindowsPath(path).is_absolute()
+                             or '..' in Path(path).parts for path in paths)):
             errors.append(f'{owner}: missing or invalid integration evidence paths')
     for g in goals:
         gid = g['id']
