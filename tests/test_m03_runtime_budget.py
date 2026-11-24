@@ -56,7 +56,12 @@ class CumulativeBudgetTests(unittest.TestCase):
             self.assertEqual(status, 1)
 
     def test_timeout_is_not_retried_or_reported_green(self):
-        with patch.object(MODULE.shutil, 'which', return_value='/fixture/node'), patch.object(MODULE.subprocess, 'run', side_effect=subprocess.TimeoutExpired(['node'], 480)) as call:
-            with self.assertRaises(subprocess.TimeoutExpired):
-                MODULE.run(480)
+        timeout = subprocess.TimeoutExpired(['node'], 480, output=b'# partial native output\n', stderr=b'partial stderr\n')
+        stdout, stderr = io.StringIO(), io.StringIO()
+        with patch.object(MODULE.shutil, 'which', return_value='/fixture/node'), patch.object(MODULE.subprocess, 'run', side_effect=timeout) as call, contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(stderr):
+            status = MODULE.run(480)
+        self.assertEqual(status, 1)
         self.assertEqual(call.call_count, 1)
+        self.assertIn('# partial native output', stdout.getvalue())
+        self.assertIn('partial stderr', stderr.getvalue())
+        self.assertIn('partial output is diagnostic only', stderr.getvalue())

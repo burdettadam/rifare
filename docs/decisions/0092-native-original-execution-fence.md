@@ -340,6 +340,12 @@ which still validates the complete current catalog before and after execution.
 The additive cases remain owned by their registered suites. Do not relabel the
 old counts as current totals or widen the native runner's timeout.
 
+The exact retained campaign uses six isolated Node file workers inside the
+unchanged 120-second native-runner controller. This changes neither the selected
+case identities nor the serial outer cumulative inventory; it removes nested
+test-file serialization as a false timeout source while preserving every
+pin, source assertion, TAP completeness check and before/after catalog check.
+
 Commit `7e695fc05` renewed `return_destination_source` from source hash `b1207f...`
 to `ef0aace...` but left the direct `destination` contract fixture at the old
 version. Renew only that fixture version and its catalog oracle pin. Before the

@@ -5,6 +5,7 @@ import type { Stats } from 'node:fs';
 import { isAbsolute, join, resolve } from 'node:path';
 import { randomUUID } from 'node:crypto';
 import { createRequire } from 'node:module';
+import { pathToFileURL } from 'node:url';
 import { CommerceKernel, digest, exact, id } from '../commerce/kernel.mts';
 import type { Row } from '../commerce/kernel.mts';
 import { canonical, contentDigest } from '../commerce/configuration-values.mts';
@@ -181,9 +182,11 @@ export async function openCheckoutFixture(directory: string, instanceId: string,
       if (!delivery) throw new Error('CHECKOUT_FIXTURE_PROOF_MISSING');
       const bearer = customers.complete({ store_id: store, challenge_id: challenge.challenge_id, proof: delivery.proof }).token;
       delivery = undefined;
+      const clockOrigin = Date.now() - Math.floor(performance.now());
+      const fixtureClock = () => clockOrigin + Math.floor(performance.now());
       const customer = kernel.authenticate(bearer), native = new OrderEditFixtureSource(source,
-        { mode: 'fixture', identity: 'checkout-fixture-source', tenant, store });
-      const now = Date.now();
+        { mode: 'fixture', identity: 'checkout-fixture-source', tenant, store }, fixtureClock);
+      const now = fixtureClock();
       native.seed({ tenant_id: tenant, store_id: store, resource_id: order.id, customer_id: order.customer_id,
         version: 1, created_at: now - 1000, currency: 'USD', shipping_minor: '0', total_minor: '6800',
         net_paid_minor: '6800', balance_due_minor: '0', financial_state: 'paid', cancelled: false,
@@ -202,11 +205,11 @@ export async function openCheckoutFixture(directory: string, instanceId: string,
       kernel.revoke(operator);
       quotes = new CheckoutQuoteFixtureSource(catalog);
       for (const kind of ['shipping', 'fee'] as const) quotes.fixtureQuote({ quote_id: kind + '-quote', kind,
-        cart_id: cart.cart_id, expected_revision: 0, amount_minor: '0', currency: 'USD', explicit_zero: true, expires_at: Date.now() + 90000 });
+        cart_id: cart.cart_id, expected_revision: 0, amount_minor: '0', currency: 'USD', explicit_zero: true, expires_at: fixtureClock() + 90000 });
       previews = new CheckoutPreviews(kernel, carts, quotes);
       const request = { cart_id: cart.cart_id, shipping_quote_id: 'shipping-quote', fee_quote_id: 'fee-quote' };
       const requireReceipt = createRequire(new URL('../adapters/delegated-receipts/package.json', import.meta.url));
-      const jose = await import(requireReceipt.resolve('jose'));
+      const jose = await import(pathToFileURL(requireReceipt.resolve('jose')).href);
       const pair = await jose.generateKeyPair('ES256');
       const issuer = { type: 'SERVICE_ACCOUNT' as const, id: 'urn:rifare:synthetic:receipt-issuer' };
       const organization = '11111111-2222-4333-8444-555555555555';
@@ -217,7 +220,7 @@ export async function openCheckoutFixture(directory: string, instanceId: string,
       const contexts = new Map<string, ReceiptBindingContext>();
       const makePair = async (label: string): Promise<Pair> => {
         const preview: FrozenCheckoutPreview = await previews!.prepare(customer, request);
-        const at = Date.now(), time = (offset: number) => new Date(at + offset).toISOString();
+        const at = fixtureClock(), time = (offset: number) => new Date(at + offset).toISOString();
         const sha = (value: unknown) => 'sha256:' + contentDigest(value);
         const context: ReceiptBindingContext = {
           context_id: 'context-' + label, revision: 1, valid_until: preview.expires_at,

@@ -10,7 +10,11 @@ from playwright.sync_api import sync_playwright
 cfg = json.loads(os.environ['RIFARE_TEST_INPUT'])
 assert re.fullmatch(r'http://127\.0\.0\.1:[0-9]+', cfg['url'])
 assets = Path(__file__).resolve().parents[2] / 'apps/commerce-api'
-html = re.sub(r'<script[^>]*>.*?</script>|<link[^>]*>', '', (assets / 'configuration.html').read_text())
+html = re.sub(
+    r'<script[^>]*>.*?</script>|<link[^>]*>',
+    '',
+    (assets / 'configuration.html').read_text(encoding='utf-8'),
+)
 requests = []
 network = []
 
@@ -34,14 +38,14 @@ with sync_playwright() as p:
     page = browser.new_page(viewport={'width': 390 if cfg['scenario'] == 'mobile' else 1100, 'height': 850})
     page.route('**/*', lambda route: (network.append(route.request.url), route.abort()))
     page.set_content(html)
-    page.add_style_tag(content=(assets / 'configuration.css').read_text())
+    page.add_style_tag(content=(assets / 'configuration.css').read_text(encoding='utf-8'))
     page.expose_function('requestBridge', bridge)
     page.evaluate("""() => {
       window.privateStorageAccessed=false;
       for(const name of ['localStorage','sessionStorage'])Object.defineProperty(window,name,{get:()=>{window.privateStorageAccessed=true;throw new Error('PRIVATE_STORAGE_DENIED');}});
       window.fetch=async(path,options)=>{const r=await window.requestBridge(path,options);return {ok:r.status>=200&&r.status<300,status:r.status,json:async()=>r.result};};
     }""")
-    page.add_script_tag(content=(assets / 'configuration-client.js').read_text())
+    page.add_script_tag(content=(assets / 'configuration-client.js').read_text(encoding='utf-8'))
     page.get_by_label('Session token', exact=True).fill(cfg['bearer'])
     page.get_by_label('Draft ID', exact=True).press('Enter')
     page.wait_for_function("!document.getElementById('workspace').hidden")

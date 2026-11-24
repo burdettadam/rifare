@@ -8,8 +8,10 @@ const source = 'packages/adapters/delegated-commands/public-use-client.mts';
 const tests = 'tests/development/public-delegated-continuation.test.mts';
 const coverage = 'tests/fixtures/conformance/expected-coverage.v1.json';
 const fixtures = 'tests/fixtures/conformance/contract-cases.v1.json';
+const receiptHelper = 'tests/development/receipt-signature-helpers.mts';
 const previousHash = 'e05461dc4bec360cdcb2ce58cd6965f1c63ee53092e186d174aa9825636bf0a1';
 const previousFixtureHash = '07c551fc00de3372ead114e8d892ae7ed01debc066f3b3fb91d00e33adc43bcb';
+const previousReceiptHelperHash = 'c6707e20284f7aad81e56cc7c7c1e936141c6e3fef1b6e3b17815130a61ff477';
 const fileHash = (path: string) => createHash('sha256').update(readFileSync(new URL('../../' + path, import.meta.url))).digest('hex');
 const version = 'source-sha256:' + fileHash(source);
 const api = 'public-mtls-p03-proof-finalize-receipt-v1';
@@ -50,11 +52,17 @@ export function restorePreviousCatalogFixturePin(value: any) {
   assert.equal(pin.sha256, fileHash(fixtures)); pin.sha256 = previousFixtureHash;
   return value;
 }
+export function restorePreviousReceiptHelperPin(value: any) {
+  const pin = value.oracle_pins.find((entry: any) => entry.path === receiptHelper);
+  assert.equal(pin.sha256, fileHash(receiptHelper)); pin.sha256 = previousReceiptHelperHash;
+  return value;
+}
 export function assertPreviousCatalog(catalog: any, expected: any) {
   const previous = structuredClone(withoutContinuationCatalog(catalog)); previousPublicVersion(previous);
   const pin = previous.oracle_pins.find((entry: any) => entry.path === coverage);
   assert.equal(pin.sha256, fileHash(coverage)); pin.sha256 = 'd6f5f15a8e60033ecfc585fe1760bd7019ff0523f21008dc784393460e3c6b53';
   restorePreviousCatalogFixturePin(previous);
+  restorePreviousReceiptHelperPin(previous);
   assert.equal(createHash('sha256').update(JSON.stringify(jsonValue(previous, 327680))).digest('hex'),
     '525fe0356ee0912d35ab1cd0c9404837e4054d524f602850ed6293990e37256a');
   const coverageBefore = withoutContinuationCoverage(expected);

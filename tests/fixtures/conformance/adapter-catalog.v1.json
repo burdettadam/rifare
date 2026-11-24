@@ -9782,7 +9782,7 @@
     },
     {
       "path": "tests/development/receipt-signature-helpers.mts",
-      "sha256": "c6707e20284f7aad81e56cc7c7c1e936141c6e3fef1b6e3b17815130a61ff477"
+      "sha256": "60fa90c735e4a12681afd0ae05a67f64982fe0a8579ef7cf2f0c9c13ea5d1788"
     },
     {
       "path": "packages/adapters/delegated-receipts/package.json",

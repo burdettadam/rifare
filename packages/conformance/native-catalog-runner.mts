@@ -15,7 +15,9 @@ export async function runPinnedCatalogCases(input:unknown,options:{root?:string;
  if(selected&&(cases.length!==selected.size||cases.some(c=>!selected.has(c.id))))fail('CASE_SELECTION_INVALID');
  const paths=[...new Set(cases.map(c=>c.path))].sort();
  if(!cases.length)fail('ZERO_CASES');
- const pattern='^(?:'+cases.map(c=>escaped(c.id)).join('|')+')(?:\\s|$)',args=['--experimental-strip-types','--test','--test-reporter=tap','--test-concurrency=1','--test-name-pattern='+pattern,...paths];
+ // Six isolated file workers keep the exact retained campaign within its
+ // existing controller bound. The outer cumulative inventory remains serial.
+ const pattern='^(?:'+cases.map(c=>escaped(c.id)).join('|')+')(?:\\s|$)',args=['--experimental-strip-types','--test','--test-reporter=tap','--test-concurrency=6','--test-name-pattern='+pattern,...paths];
  // Start a complete native runner, including when called by node:test. Its
  // inherited private child-IPC flag would otherwise replace TAP with V8 bytes.
  const env={...process.env};delete env.NODE_TEST_CONTEXT;

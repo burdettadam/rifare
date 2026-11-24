@@ -26,8 +26,18 @@ def run(budget_seconds: int = 240) -> int:
     command = [node, '--experimental-strip-types', '--test', '--test-concurrency=1', *tests]
     env = os.environ.copy()
     env['RIFARE_TEST_PYTHON'] = os.environ.get('RIFARE_TEST_PYTHON', sys.executable)
-    result = subprocess.run(command, cwd=root, text=True, capture_output=True,
-                            timeout=budget_seconds, env=env)
+    try:
+        result = subprocess.run(command, cwd=root, text=True, capture_output=True,
+                                timeout=budget_seconds, env=env)
+    except subprocess.TimeoutExpired as exc:
+        def captured(value):
+            if isinstance(value, bytes):
+                return value.decode('utf-8', errors='replace')
+            return value or ''
+        print(captured(exc.stdout), end='')
+        print(captured(exc.stderr), end='', file=sys.stderr)
+        print(f'FAIL: runtime exceeded the fixed {budget_seconds}-second budget; partial output is diagnostic only.', file=sys.stderr)
+        return 1
     print(result.stdout, end='')
     print(result.stderr, end='', file=sys.stderr)
     counts = {key: int(value) for key, value in re.findall(
